@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using libvlc;
+using libvlcsharp;
 
 namespace Sample
 {
     public class Instance
     {
-        private LibvlcInstanceT _instance;
+        private libvlcsharp.Instance _instance;
 
         public Instance(int argc, string[] args)
         {
             unsafe
             {
                 if (args == null || !args.Any())
-                    _instance = libvlc.libvlc.LibvlcNew(argc, null);
+                    _instance = libvlc.LibvlcNew(argc, null);
                 else
                 {
                     fixed (byte* arg0 = Encoding.ASCII.GetBytes(args[0]),
@@ -25,14 +25,14 @@ namespace Sample
                         sbyte*[] arr = { (sbyte*)arg0, (sbyte*)arg1, (sbyte*)arg2 };
                         fixed (sbyte** argv = arr)
                         {
-                            _instance = libvlc.libvlc.LibvlcNew(argc, argv);
+                            _instance = libvlc.LibvlcNew(argc, argv);
                         }
                     }
                 }
             }
         }
 
-        public LibvlcInstanceT NativeReference => _instance;
+        public libvlcsharp.Instance NativeReference => _instance;
 
     }
 }

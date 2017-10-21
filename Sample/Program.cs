@@ -1,5 +1,5 @@
 ﻿using System;
-using libvlc;
+using libvlcsharp;
 
 namespace Sample
 {

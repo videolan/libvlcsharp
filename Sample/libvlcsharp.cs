@@ -8,20 +8,20 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace libvlc
+namespace libvlcsharp
 {
     /// <summary>Logging messages level.</summary>
     /// <remarks>Future LibVLC versions may define new levels.</remarks>
-    public enum LibvlcLogLevel
+    public enum LogLevel
     {
         /// <summary>Debug message</summary>
-        LIBVLC_DEBUG = 0,
+        Debug = 0,
         /// <summary>Important informational message</summary>
-        LIBVLC_NOTICE = 2,
+        Notice = 2,
         /// <summary>Warning (potential error) message</summary>
-        LIBVLC_WARNING = 3,
+        Warning = 3,
         /// <summary>Error message</summary>
-        LIBVLC_ERROR = 4
+        Error = 4
     }
 
     /// <summary>This structure is opaque. It represents a libvlc instance</summary>
@@ -35,7 +35,7 @@ namespace libvlc
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate void LibvlcCallbackT(global::System.IntPtr p_event, global::System.IntPtr p_data);
 
-    public unsafe partial class LibvlcInstanceT
+    public unsafe partial class Instance
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -45,36 +45,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcInstanceT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcInstanceT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Instance> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Instance>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcInstanceT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.Instance __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcInstanceT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.Instance(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcInstanceT __CreateInstance(global::libvlc.LibvlcInstanceT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.Instance __CreateInstance(global::libvlcsharp.Instance.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcInstanceT(native, skipVTables);
+            return new global::libvlcsharp.Instance(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcInstanceT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.Instance.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcInstanceT.__Internal));
-            *(global::libvlc.LibvlcInstanceT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.Instance.__Internal));
+            *(global::libvlcsharp.Instance.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcInstanceT(global::libvlc.LibvlcInstanceT.__Internal native, bool skipVTables = false)
+        private Instance(global::libvlcsharp.Instance.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcInstanceT(void* native, bool skipVTables = false)
+        protected Instance(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -82,7 +82,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class LibvlcEventManagerT
+    public unsafe partial class EventManager
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -92,36 +92,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcEventManagerT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcEventManagerT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.EventManager> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.EventManager>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcEventManagerT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.EventManager __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcEventManagerT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.EventManager(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcEventManagerT __CreateInstance(global::libvlc.LibvlcEventManagerT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.EventManager __CreateInstance(global::libvlcsharp.EventManager.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcEventManagerT(native, skipVTables);
+            return new global::libvlcsharp.EventManager(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcEventManagerT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.EventManager.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcEventManagerT.__Internal));
-            *(global::libvlc.LibvlcEventManagerT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.EventManager.__Internal));
+            *(global::libvlcsharp.EventManager.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcEventManagerT(global::libvlc.LibvlcEventManagerT.__Internal native, bool skipVTables = false)
+        private EventManager(global::libvlcsharp.EventManager.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcEventManagerT(void* native, bool skipVTables = false)
+        protected EventManager(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -129,7 +129,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class VlcLogT
+    public unsafe partial class Log
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -139,36 +139,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.VlcLogT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.VlcLogT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Log> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Log>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.VlcLogT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.Log __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.VlcLogT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.Log(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.VlcLogT __CreateInstance(global::libvlc.VlcLogT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.Log __CreateInstance(global::libvlcsharp.Log.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.VlcLogT(native, skipVTables);
+            return new global::libvlcsharp.Log(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.VlcLogT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.Log.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.VlcLogT.__Internal));
-            *(global::libvlc.VlcLogT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.Log.__Internal));
+            *(global::libvlcsharp.Log.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private VlcLogT(global::libvlc.VlcLogT.__Internal native, bool skipVTables = false)
+        private Log(global::libvlcsharp.Log.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected VlcLogT(void* native, bool skipVTables = false)
+        protected Log(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -177,7 +177,7 @@ namespace libvlc
     }
 
     /// <summary>Description of a module.</summary>
-    public unsafe partial class LibvlcModuleDescriptionT : IDisposable
+    public unsafe partial class ModuleDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 40)]
         public partial struct __Internal
@@ -196,45 +196,65 @@ namespace libvlc
 
             [FieldOffset(32)]
             internal global::System.IntPtr p_next;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_module_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcModuleDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcModuleDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ModuleDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ModuleDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcModuleDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.ModuleDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcModuleDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.ModuleDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcModuleDescriptionT __CreateInstance(global::libvlc.LibvlcModuleDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.ModuleDescription __CreateInstance(global::libvlcsharp.ModuleDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcModuleDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.ModuleDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcModuleDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.ModuleDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcModuleDescriptionT.__Internal));
-            *(global::libvlc.LibvlcModuleDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.__Internal));
+            *(global::libvlcsharp.ModuleDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcModuleDescriptionT(global::libvlc.LibvlcModuleDescriptionT.__Internal native, bool skipVTables = false)
+        private ModuleDescription(global::libvlcsharp.ModuleDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcModuleDescriptionT(void* native, bool skipVTables = false)
+        protected ModuleDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public ModuleDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public ModuleDescription(global::libvlcsharp.ModuleDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.ModuleDescription.__Internal*) __Instance) = *((global::libvlcsharp.ModuleDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -246,7 +266,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcModuleDescriptionT __dummy;
+            global::libvlcsharp.ModuleDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -257,12 +277,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
@@ -270,12 +290,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_shortname;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_shortname;
             }
 
             set
             {
-                ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_shortname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_shortname = (global::System.IntPtr) value;
             }
         }
 
@@ -283,12 +303,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_longname;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_longname;
             }
 
             set
             {
-                ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
             }
         }
 
@@ -296,30 +316,30 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_help;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_help;
             }
 
             set
             {
-                ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->psz_help = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->psz_help = (global::System.IntPtr) value;
             }
         }
 
-        public global::libvlc.LibvlcModuleDescriptionT PNext
+        public global::libvlcsharp.ModuleDescription PNext
         {
             get
             {
-                global::libvlc.LibvlcModuleDescriptionT __result0;
-                if (((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                else if (global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap.ContainsKey(((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->p_next))
-                    __result0 = (global::libvlc.LibvlcModuleDescriptionT) global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap[((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->p_next];
-                else __result0 = global::libvlc.LibvlcModuleDescriptionT.__CreateInstance(((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->p_next);
+                global::libvlcsharp.ModuleDescription __result0;
+                if (((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
+                else if (global::libvlcsharp.ModuleDescription.NativeToManagedMap.ContainsKey(((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->p_next))
+                    __result0 = (global::libvlcsharp.ModuleDescription) global::libvlcsharp.ModuleDescription.NativeToManagedMap[((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->p_next];
+                else __result0 = global::libvlcsharp.ModuleDescription.__CreateInstance(((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlc.LibvlcModuleDescriptionT.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.ModuleDescription.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
             }
         }
     }
@@ -452,6 +472,11 @@ namespace libvlc
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_clock")]
             internal static extern long LibvlcClock();
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="?libvlc_delay@@YA_J_J@Z")]
+            internal static extern long LibvlcDelay(long pts);
         }
 
         /// <summary>
@@ -531,14 +556,14 @@ namespace libvlc
         /// <para>cross-platform compatibility with regards to libvlc_new() arguments.</para>
         /// <para>We recommend that you do not use them, other than when debugging.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcInstanceT LibvlcNew(int argc, sbyte** argv)
+        public static global::libvlcsharp.Instance LibvlcNew(int argc, sbyte** argv)
         {
             var __ret = __Internal.LibvlcNew(argc, argv);
-            global::libvlc.LibvlcInstanceT __result0;
+            global::libvlcsharp.Instance __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcInstanceT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcInstanceT) global::libvlc.LibvlcInstanceT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcInstanceT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Instance.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Instance) global::libvlcsharp.Instance.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Instance.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -547,7 +572,7 @@ namespace libvlc
         /// <para>if it reaches zero.</para>
         /// </summary>
         /// <param name="p_instance">the instance to destroy</param>
-        public static void LibvlcRelease(global::libvlc.LibvlcInstanceT p_instance)
+        public static void LibvlcRelease(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcRelease(__arg0);
@@ -558,7 +583,7 @@ namespace libvlc
         /// <para>The initial reference count is 1 after libvlc_new() returns.</para>
         /// </summary>
         /// <param name="p_instance">the instance to reference</param>
-        public static void LibvlcRetain(global::libvlc.LibvlcInstanceT p_instance)
+        public static void LibvlcRetain(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcRetain(__arg0);
@@ -568,7 +593,7 @@ namespace libvlc
         /// <param name="p_instance">the instance</param>
         /// <param name="name">interface name, or NULL for default</param>
         /// <returns>0 on success, -1 on error.</returns>
-        public static int LibvlcAddIntf(global::libvlc.LibvlcInstanceT p_instance, string name)
+        public static int LibvlcAddIntf(global::libvlcsharp.Instance p_instance, string name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAddIntf(__arg0, name);
@@ -594,7 +619,7 @@ namespace libvlc
         /// <para>be raised before the handler is registered.</para>
         /// <para>This function and libvlc_wait() cannot be used at the same time.</para>
         /// </remarks>
-        public static void LibvlcSetExitHandler(global::libvlc.LibvlcInstanceT p_instance, global::libvlc.Delegates.Action_IntPtr cb, global::System.IntPtr opaque)
+        public static void LibvlcSetExitHandler(global::libvlcsharp.Instance p_instance, global::libvlcsharp.Delegates.Action_IntPtr cb, global::System.IntPtr opaque)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __arg1 = cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
@@ -609,7 +634,7 @@ namespace libvlc
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public static void LibvlcSetUserAgent(global::libvlc.LibvlcInstanceT p_instance, string name, string http)
+        public static void LibvlcSetUserAgent(global::libvlcsharp.Instance p_instance, string name, string http)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcSetUserAgent(__arg0, name, http);
@@ -624,7 +649,7 @@ namespace libvlc
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public static void LibvlcSetAppId(global::libvlc.LibvlcInstanceT p_instance, string id, string version, string icon)
+        public static void LibvlcSetAppId(global::libvlcsharp.Instance p_instance, string id, string version, string icon)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcSetAppId(__arg0, id, version, icon);
@@ -678,7 +703,7 @@ namespace libvlc
         /// <param name="f_callback">the function to call when i_event_type occurs</param>
         /// <param name="user_data">user provided data to carry with the event</param>
         /// <returns>0 on success, ENOMEM on error</returns>
-        public static int LibvlcEventAttach(global::libvlc.LibvlcEventManagerT p_event_manager, int i_event_type, global::libvlc.LibvlcCallbackT f_callback, global::System.IntPtr user_data)
+        public static int LibvlcEventAttach(global::libvlcsharp.EventManager p_event_manager, int i_event_type, global::libvlcsharp.LibvlcCallbackT f_callback, global::System.IntPtr user_data)
         {
             var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
             var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
@@ -691,7 +716,7 @@ namespace libvlc
         /// <param name="i_event_type">the desired event to which we want to unregister</param>
         /// <param name="f_callback">the function to call when i_event_type occurs</param>
         /// <param name="p_user_data">user provided data to carry with the event</param>
-        public static void LibvlcEventDetach(global::libvlc.LibvlcEventManagerT p_event_manager, int i_event_type, global::libvlc.LibvlcCallbackT f_callback, global::System.IntPtr p_user_data)
+        public static void LibvlcEventDetach(global::libvlcsharp.EventManager p_event_manager, int i_event_type, global::libvlcsharp.LibvlcCallbackT f_callback, global::System.IntPtr p_user_data)
         {
             var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
             var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
@@ -722,7 +747,7 @@ namespace libvlc
         /// <para>are only valid until the logging callback returns.</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
-        public static void LibvlcLogGetContext(global::libvlc.VlcLogT ctx, sbyte** module, sbyte** file, ref uint line)
+        public static void LibvlcLogGetContext(global::libvlcsharp.Log ctx, sbyte** module, sbyte** file, ref uint line)
         {
             var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
             fixed (uint* __refParamPtr3 = &line)
@@ -752,7 +777,7 @@ namespace libvlc
         /// <para>are only valid until the logging callback returns.</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
-        public static void LibvlcLogGetObject(global::libvlc.VlcLogT ctx, sbyte** name, sbyte** header, ref ulong id)
+        public static void LibvlcLogGetObject(global::libvlcsharp.Log ctx, sbyte** name, sbyte** header, ref ulong id)
         {
             var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
             fixed (ulong* __refParamPtr3 = &id)
@@ -772,7 +797,7 @@ namespace libvlc
         /// <para>complete (causing a deadlock if called from within the callback).</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
-        public static void LibvlcLogUnset(global::libvlc.LibvlcInstanceT p_instance)
+        public static void LibvlcLogUnset(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcLogUnset(__arg0);
@@ -785,7 +810,7 @@ namespace libvlc
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
         /// </param>
         /// <remarks>LibVLC 2.1.0 or later</remarks>
-        public static void LibvlcLogSetFile(global::libvlc.LibvlcInstanceT p_instance, global::System.IntPtr stream)
+        public static void LibvlcLogSetFile(global::libvlcsharp.Instance p_instance, global::System.IntPtr stream)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcLogSetFile(__arg0, stream);
@@ -793,7 +818,7 @@ namespace libvlc
 
         /// <summary>Release a list of module descriptions.</summary>
         /// <param name="p_list">the list to be released</param>
-        public static void LibvlcModuleDescriptionListRelease(global::libvlc.LibvlcModuleDescriptionT p_list)
+        public static void LibvlcModuleDescriptionListRelease(global::libvlcsharp.ModuleDescription p_list)
         {
             var __arg0 = ReferenceEquals(p_list, null) ? global::System.IntPtr.Zero : p_list.__Instance;
             __Internal.LibvlcModuleDescriptionListRelease(__arg0);
@@ -809,15 +834,15 @@ namespace libvlc
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public static global::libvlc.LibvlcModuleDescriptionT LibvlcAudioFilterListGet(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.ModuleDescription LibvlcAudioFilterListGet(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioFilterListGet(__arg0);
-            global::libvlc.LibvlcModuleDescriptionT __result0;
+            global::libvlcsharp.ModuleDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcModuleDescriptionT) global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcModuleDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.ModuleDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.ModuleDescription) global::libvlcsharp.ModuleDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.ModuleDescription.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -831,15 +856,15 @@ namespace libvlc
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public static global::libvlc.LibvlcModuleDescriptionT LibvlcVideoFilterListGet(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.ModuleDescription LibvlcVideoFilterListGet(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVideoFilterListGet(__arg0);
-            global::libvlc.LibvlcModuleDescriptionT __result0;
+            global::libvlcsharp.ModuleDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcModuleDescriptionT) global::libvlc.LibvlcModuleDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcModuleDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.ModuleDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.ModuleDescription) global::libvlcsharp.ModuleDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.ModuleDescription.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -854,6 +879,18 @@ namespace libvlc
         public static long LibvlcClock()
         {
             var __ret = __Internal.LibvlcClock();
+            return __ret;
+        }
+
+        /// <summary>Return the delay (in microseconds) until a certain timestamp.</summary>
+        /// <param name="pts">timestamp</param>
+        /// <returns>
+        /// <para>negative if timestamp is in the past,</para>
+        /// <para>positive if it is in the future</para>
+        /// </returns>
+        public static long LibvlcDelay(long pts)
+        {
+            var __ret = __Internal.LibvlcDelay(pts);
             return __ret;
         }
     }
@@ -873,7 +910,7 @@ namespace libvlc
     /// <para>is called with the same pointer.</para>
     /// <para>libvlc_renderer_discoverer_event_manager()</para>
     /// </remarks>
-    public unsafe partial class LibvlcRendererItemT
+    public unsafe partial class RendererItem
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -883,36 +920,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRendererItemT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRendererItemT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererItem> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererItem>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcRendererItemT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererItem __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRendererItemT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.RendererItem(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcRendererItemT __CreateInstance(global::libvlc.LibvlcRendererItemT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererItem __CreateInstance(global::libvlcsharp.RendererItem.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRendererItemT(native, skipVTables);
+            return new global::libvlcsharp.RendererItem(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcRendererItemT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.RendererItem.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcRendererItemT.__Internal));
-            *(global::libvlc.LibvlcRendererItemT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.RendererItem.__Internal));
+            *(global::libvlcsharp.RendererItem.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcRendererItemT(global::libvlc.LibvlcRendererItemT.__Internal native, bool skipVTables = false)
+        private RendererItem(global::libvlcsharp.RendererItem.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcRendererItemT(void* native, bool skipVTables = false)
+        protected RendererItem(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -920,7 +957,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class LibvlcRendererDiscovererT
+    public unsafe partial class RendererDiscoverer
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -930,36 +967,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRendererDiscovererT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRendererDiscovererT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererDiscoverer> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererDiscoverer>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcRendererDiscovererT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererDiscoverer __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRendererDiscovererT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.RendererDiscoverer(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcRendererDiscovererT __CreateInstance(global::libvlc.LibvlcRendererDiscovererT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererDiscoverer __CreateInstance(global::libvlcsharp.RendererDiscoverer.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRendererDiscovererT(native, skipVTables);
+            return new global::libvlcsharp.RendererDiscoverer(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcRendererDiscovererT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.RendererDiscoverer.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcRendererDiscovererT.__Internal));
-            *(global::libvlc.LibvlcRendererDiscovererT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.RendererDiscoverer.__Internal));
+            *(global::libvlcsharp.RendererDiscoverer.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcRendererDiscovererT(global::libvlc.LibvlcRendererDiscovererT.__Internal native, bool skipVTables = false)
+        private RendererDiscoverer(global::libvlcsharp.RendererDiscoverer.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcRendererDiscovererT(void* native, bool skipVTables = false)
+        protected RendererDiscoverer(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -969,7 +1006,7 @@ namespace libvlc
 
     /// <summary>Renderer discoverer description</summary>
     /// <remarks>libvlc_renderer_discoverer_list_get()</remarks>
-    public unsafe partial class LibvlcRdDescriptionT : IDisposable
+    public unsafe partial class RendererDiscovererDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 16)]
         public partial struct __Internal
@@ -979,45 +1016,65 @@ namespace libvlc
 
             [FieldOffset(8)]
             internal global::System.IntPtr psz_longname;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_rd_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRdDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcRdDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererDiscovererDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.RendererDiscovererDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcRdDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererDiscovererDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRdDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.RendererDiscovererDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcRdDescriptionT __CreateInstance(global::libvlc.LibvlcRdDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.RendererDiscovererDescription __CreateInstance(global::libvlcsharp.RendererDiscovererDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcRdDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.RendererDiscovererDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcRdDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.RendererDiscovererDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcRdDescriptionT.__Internal));
-            *(global::libvlc.LibvlcRdDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.RendererDiscovererDescription.__Internal));
+            *(global::libvlcsharp.RendererDiscovererDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcRdDescriptionT(global::libvlc.LibvlcRdDescriptionT.__Internal native, bool skipVTables = false)
+        private RendererDiscovererDescription(global::libvlcsharp.RendererDiscovererDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcRdDescriptionT(void* native, bool skipVTables = false)
+        protected RendererDiscovererDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public RendererDiscovererDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.RendererDiscovererDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public RendererDiscovererDescription(global::libvlcsharp.RendererDiscovererDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.RendererDiscovererDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.RendererDiscovererDescription.__Internal*) __Instance) = *((global::libvlcsharp.RendererDiscovererDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -1029,7 +1086,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcRdDescriptionT __dummy;
+            global::libvlcsharp.RendererDiscovererDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -1040,12 +1097,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcRdDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.RendererDiscovererDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcRdDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.RendererDiscovererDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
@@ -1053,12 +1110,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcRdDescriptionT.__Internal*) __Instance)->psz_longname;
+                return (sbyte*) ((global::libvlcsharp.RendererDiscovererDescription.__Internal*) __Instance)->psz_longname;
             }
 
             set
             {
-                ((global::libvlc.LibvlcRdDescriptionT.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.RendererDiscovererDescription.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
             }
         }
     }
@@ -1126,7 +1183,7 @@ namespace libvlc
         /// <summary>Get the human readable name of a renderer item</summary>
         /// <returns>the name of the item (can't be NULL, must *not* be freed)</returns>
         /// <remarks>LibVLC 3.0.0 or later</remarks>
-        public static string LibvlcRendererItemName(global::libvlc.LibvlcRendererItemT p_item)
+        public static string LibvlcRendererItemName(global::libvlcsharp.RendererItem p_item)
         {
             var __arg0 = ReferenceEquals(p_item, null) ? global::System.IntPtr.Zero : p_item.__Instance;
             var __ret = __Internal.LibvlcRendererItemName(__arg0);
@@ -1139,7 +1196,7 @@ namespace libvlc
         /// </summary>
         /// <returns>the type of the item (can't be NULL, must *not* be freed)</returns>
         /// <remarks>LibVLC 3.0.0 or later</remarks>
-        public static string LibvlcRendererItemType(global::libvlc.LibvlcRendererItemT p_item)
+        public static string LibvlcRendererItemType(global::libvlcsharp.RendererItem p_item)
         {
             var __arg0 = ReferenceEquals(p_item, null) ? global::System.IntPtr.Zero : p_item.__Instance;
             var __ret = __Internal.LibvlcRendererItemType(__arg0);
@@ -1149,7 +1206,7 @@ namespace libvlc
         /// <summary>Get the icon uri of a renderer item</summary>
         /// <returns>the uri of the item's icon (can be NULL, must *not* be freed)</returns>
         /// <remarks>LibVLC 3.0.0 or later</remarks>
-        public static string LibvlcRendererItemIconUri(global::libvlc.LibvlcRendererItemT p_item)
+        public static string LibvlcRendererItemIconUri(global::libvlcsharp.RendererItem p_item)
         {
             var __arg0 = ReferenceEquals(p_item, null) ? global::System.IntPtr.Zero : p_item.__Instance;
             var __ret = __Internal.LibvlcRendererItemIconUri(__arg0);
@@ -1163,7 +1220,7 @@ namespace libvlc
         /// <para>LIBVLC_RENDERER_CAN_VIDEO</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static int LibvlcRendererItemFlags(global::libvlc.LibvlcRendererItemT p_item)
+        public static int LibvlcRendererItemFlags(global::libvlcsharp.RendererItem p_item)
         {
             var __arg0 = ReferenceEquals(p_item, null) ? global::System.IntPtr.Zero : p_item.__Instance;
             var __ret = __Internal.LibvlcRendererItemFlags(__arg0);
@@ -1186,22 +1243,22 @@ namespace libvlc
         /// <para>libvlc_renderer_discoverer_start()</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcRendererDiscovererT LibvlcRendererDiscovererNew(global::libvlc.LibvlcInstanceT p_inst, string psz_name)
+        public static global::libvlcsharp.RendererDiscoverer LibvlcRendererDiscovererNew(global::libvlcsharp.Instance p_inst, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.__Instance;
             var __ret = __Internal.LibvlcRendererDiscovererNew(__arg0, psz_name);
-            global::libvlc.LibvlcRendererDiscovererT __result0;
+            global::libvlcsharp.RendererDiscoverer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcRendererDiscovererT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcRendererDiscovererT) global::libvlc.LibvlcRendererDiscovererT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcRendererDiscovererT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.RendererDiscoverer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.RendererDiscoverer) global::libvlcsharp.RendererDiscoverer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.RendererDiscoverer.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Release a renderer discoverer object</summary>
         /// <param name="p_rd">renderer discoverer object</param>
         /// <remarks>LibVLC 3.0.0 or later</remarks>
-        public static void LibvlcRendererDiscovererRelease(global::libvlc.LibvlcRendererDiscovererT p_rd)
+        public static void LibvlcRendererDiscovererRelease(global::libvlcsharp.RendererDiscoverer p_rd)
         {
             var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
             __Internal.LibvlcRendererDiscovererRelease(__arg0);
@@ -1216,7 +1273,7 @@ namespace libvlc
         /// <para>libvlc_renderer_discoverer_stop()</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static int LibvlcRendererDiscovererStart(global::libvlc.LibvlcRendererDiscovererT p_rd)
+        public static int LibvlcRendererDiscovererStart(global::libvlcsharp.RendererDiscoverer p_rd)
         {
             var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
             var __ret = __Internal.LibvlcRendererDiscovererStart(__arg0);
@@ -1229,7 +1286,7 @@ namespace libvlc
         /// <para>libvlc_renderer_discoverer_start()</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcRendererDiscovererStop(global::libvlc.LibvlcRendererDiscovererT p_rd)
+        public static void LibvlcRendererDiscovererStop(global::libvlcsharp.RendererDiscoverer p_rd)
         {
             var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
             __Internal.LibvlcRendererDiscovererStop(__arg0);
@@ -1246,15 +1303,15 @@ namespace libvlc
         /// <para>libvlc_event_t.u.renderer_discoverer_item_removed.item</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcEventManagerT LibvlcRendererDiscovererEventManager(global::libvlc.LibvlcRendererDiscovererT p_rd)
+        public static global::libvlcsharp.EventManager LibvlcRendererDiscovererEventManager(global::libvlcsharp.RendererDiscoverer p_rd)
         {
             var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
             var __ret = __Internal.LibvlcRendererDiscovererEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -1270,7 +1327,7 @@ namespace libvlc
         /// <para>libvlc_renderer_list_release()</para>
         /// <para>LibVLC 3.0.0 and later</para>
         /// </remarks>
-        public static ulong LibvlcRendererDiscovererListGet(global::libvlc.LibvlcInstanceT p_inst, global::libvlc.LibvlcRdDescriptionT ppp_services)
+        public static ulong LibvlcRendererDiscovererListGet(global::libvlcsharp.Instance p_inst, global::libvlcsharp.RendererDiscovererDescription ppp_services)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.__Instance;
             var __arg1 = ReferenceEquals(ppp_services, null) ? global::System.IntPtr.Zero : ppp_services.__Instance;
@@ -1285,7 +1342,7 @@ namespace libvlc
         /// <para>libvlc_renderer_discoverer_list_get()</para>
         /// <para>LibVLC 3.0.0 and later</para>
         /// </remarks>
-        public static void LibvlcRendererDiscovererListRelease(global::libvlc.LibvlcRdDescriptionT pp_services, ulong i_count)
+        public static void LibvlcRendererDiscovererListRelease(global::libvlcsharp.RendererDiscovererDescription pp_services, ulong i_count)
         {
             var __arg0 = ReferenceEquals(pp_services, null) ? global::System.IntPtr.Zero : pp_services.__Instance;
             __Internal.LibvlcRendererDiscovererListRelease(__arg0, i_count);
@@ -1293,42 +1350,42 @@ namespace libvlc
     }
 
     /// <summary>Meta data types</summary>
-    public enum LibvlcMetaT
+    public enum MetadataType
     {
-        LibvlcMetaTitle = 0,
-        LibvlcMetaArtist = 1,
-        LibvlcMetaGenre = 2,
-        LibvlcMetaCopyright = 3,
-        LibvlcMetaAlbum = 4,
-        LibvlcMetaTrackNumber = 5,
-        LibvlcMetaDescription = 6,
-        LibvlcMetaRating = 7,
-        LibvlcMetaDate = 8,
-        LibvlcMetaSetting = 9,
-        LibvlcMetaURL = 10,
-        LibvlcMetaLanguage = 11,
-        LibvlcMetaNowPlaying = 12,
-        LibvlcMetaPublisher = 13,
-        LibvlcMetaEncodedBy = 14,
-        LibvlcMetaArtworkURL = 15,
-        LibvlcMetaTrackID = 16,
-        LibvlcMetaTrackTotal = 17,
-        LibvlcMetaDirector = 18,
-        LibvlcMetaSeason = 19,
-        LibvlcMetaEpisode = 20,
-        LibvlcMetaShowName = 21,
-        LibvlcMetaActors = 22,
-        LibvlcMetaAlbumArtist = 23,
-        LibvlcMetaDiscNumber = 24,
-        LibvlcMetaDiscTotal = 25
+        Title = 0,
+        Artist = 1,
+        Genre = 2,
+        Copyright = 3,
+        Album = 4,
+        TrackNumber = 5,
+        Description = 6,
+        Rating = 7,
+        Date = 8,
+        Setting = 9,
+        URL = 10,
+        Language = 11,
+        NowPlaying = 12,
+        Publisher = 13,
+        EncodedBy = 14,
+        ArtworkURL = 15,
+        TrackID = 16,
+        TrackTotal = 17,
+        Director = 18,
+        Season = 19,
+        Episode = 20,
+        ShowName = 21,
+        Actors = 22,
+        AlbumArtist = 23,
+        DiscNumber = 24,
+        DiscTotal = 25
     }
 
-    public enum LibvlcTrackTypeT
+    public enum TrackType
     {
-        LibvlcTrackUnknown = -1,
-        LibvlcTrackAudio = 0,
-        LibvlcTrackVideo = 1,
-        LibvlcTrackText = 2
+        Unknown = -1,
+        Audio = 0,
+        Video = 1,
+        Text = 2
     }
 
     /// <summary>Note the order of libvlc_state_t enum must match exactly the order of</summary>
@@ -1340,85 +1397,85 @@ namespace libvlc
     /// <para>IDLE/CLOSE=0, OPENING=1, PLAYING=3, PAUSED=4,</para>
     /// <para>STOPPING=5, ENDED=6, ERROR=7</para>
     /// </remarks>
-    public enum LibvlcStateT
+    public enum VLCState
     {
-        LibvlcNothingSpecial = 0,
-        LibvlcOpening = 1,
-        LibvlcBuffering = 2,
-        LibvlcPlaying = 3,
-        LibvlcPaused = 4,
-        LibvlcStopped = 5,
-        LibvlcEnded = 6,
-        LibvlcError = 7
+        NothingSpecial = 0,
+        Opening = 1,
+        Buffering = 2,
+        Playing = 3,
+        Paused = 4,
+        Stopped = 5,
+        Ended = 6,
+        Error = 7
     }
 
     [Flags]
-    public enum LibvlcMediaOption
+    public enum MediaOption
     {
-        LibvlcMediaOptionTrusted = 2,
-        LibvlcMediaOptionUnique = 256
+        Trusted = 2,
+        Unique = 256
     }
 
-    public enum LibvlcVideoOrientT
+    public enum VideoOrientation
     {
         /// <summary>Normal. Top line represents top, left column left.</summary>
-        LibvlcVideoOrientTopLeft = 0,
+        TopLeft = 0,
         /// <summary>Flipped horizontally</summary>
-        LibvlcVideoOrientTopRight = 1,
+        TopRight = 1,
         /// <summary>Flipped vertically</summary>
-        LibvlcVideoOrientBottomLeft = 2,
+        BottomLeft = 2,
         /// <summary>Rotated 180 degrees</summary>
-        LibvlcVideoOrientBottomRight = 3,
+        BottomRight = 3,
         /// <summary>Transposed</summary>
-        LibvlcVideoOrientLeftTop = 4,
+        LeftTop = 4,
         /// <summary>Rotated 90 degrees clockwise (or 270 anti-clockwise)</summary>
-        LibvlcVideoOrientLeftBottom = 5,
+        LeftBottom = 5,
         /// <summary>Rotated 90 degrees anti-clockwise</summary>
-        LibvlcVideoOrientRightTop = 6,
+        RightTop = 6,
         /// <summary>Anti-transposed</summary>
-        LibvlcVideoOrientRightBottom = 7
+        RightBottom = 7
     }
 
     [Flags]
-    public enum LibvlcVideoProjectionT
+    public enum VideoProjection
     {
-        LibvlcVideoProjectionRectangular = 0,
+        Rectangular = 0,
         /// <summary>360 spherical</summary>
-        LibvlcVideoProjectionEquirectangular = 1,
-        LibvlcVideoProjectionCubemapLayoutStandard = 256
+        Equirectangular = 1,
+        CubemapLayoutStandard = 256
     }
 
     /// <summary>Media type</summary>
     /// <remarks>libvlc_media_get_type</remarks>
-    public enum LibvlcMediaTypeT
+    public enum MediaType
     {
-        LibvlcMediaTypeUnknown = 0,
-        LibvlcMediaTypeFile = 1,
-        LibvlcMediaTypeDirectory = 2,
-        LibvlcMediaTypeDisc = 3,
-        LibvlcMediaTypeStream = 4,
-        LibvlcMediaTypePlaylist = 5
+        Unknown = 0,
+        File = 1,
+        Directory = 2,
+        Disc = 3,
+        Stream = 4,
+        Playlist = 5
     }
 
     /// <summary>Parse flags used by libvlc_media_parse_with_options()</summary>
     /// <remarks>libvlc_media_parse_with_options</remarks>
     [Flags]
-    public enum LibvlcMediaParseFlagT
+    public enum MediaParseOptions
     {
         /// <summary>Parse media if it's a local file</summary>
-        LibvlcMediaParseLocal = 0,
+        ParseLocal = 0,
         /// <summary>Parse media even if it's a network file</summary>
-        LibvlcMediaParseNetwork = 1,
+        ParseNetwork = 1,
         /// <summary>Fetch meta and covert art using local resources</summary>
-        LibvlcMediaFetchLocal = 2,
+        FetchLocal = 2,
         /// <summary>Fetch meta and covert art using network resources</summary>
-        LibvlcMediaFetchNetwork = 4,
+        FetchNetwork = 4,
         /// <summary>
         /// <para>Interact with the user (via libvlc_dialog_cbs) when preparsing this item</para>
         /// <para>(and not its sub items). Set this flag in order to receive a callback</para>
         /// <para>when the input is asking for credentials.</para>
         /// </summary>
-        LibvlcMediaDoInteract = 8
+        DoInteract = 8
     }
 
     /// <summary>
@@ -1429,19 +1486,19 @@ namespace libvlc
     /// <para>libvlc_media_parse_with_options</para>
     /// <para>libvlc_media_get_parsed_status</para>
     /// </remarks>
-    public enum LibvlcMediaParsedStatusT
+    public enum MediaParsedStatus
     {
-        LibvlcMediaParsedStatusSkipped = 1,
-        LibvlcMediaParsedStatusFailed = 2,
-        LibvlcMediaParsedStatusTimeout = 3,
-        LibvlcMediaParsedStatusDone = 4
+        Skipped = 1,
+        Failed = 2,
+        Timeout = 3,
+        Done = 4
     }
 
     /// <summary>Type of a media slave: subtitle or audio.</summary>
-    public enum LibvlcMediaSlaveTypeT
+    public enum MediaSlaveType
     {
-        LibvlcMediaSlaveTypeSubtitle = 0,
-        LibvlcMediaSlaveTypeAudio = 1
+        Subtitle = 0,
+        Audio = 1
     }
 
     /// <summary>
@@ -1501,7 +1558,7 @@ namespace libvlc
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate void LibvlcMediaCloseCb(global::System.IntPtr opaque);
 
-    public unsafe partial class LibvlcMediaT
+    public unsafe partial class Media
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -1511,36 +1568,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Media> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Media>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.Media __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.Media(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaT __CreateInstance(global::libvlc.LibvlcMediaT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.Media __CreateInstance(global::libvlcsharp.Media.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaT(native, skipVTables);
+            return new global::libvlcsharp.Media(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.Media.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaT.__Internal));
-            *(global::libvlc.LibvlcMediaT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.Media.__Internal));
+            *(global::libvlcsharp.Media.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaT(global::libvlc.LibvlcMediaT.__Internal native, bool skipVTables = false)
+        private Media(global::libvlcsharp.Media.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaT(void* native, bool skipVTables = false)
+        protected Media(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -1548,7 +1605,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class LibvlcMediaListT
+    public unsafe partial class MediaList
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -1558,36 +1615,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaListT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaListT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaList> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaList>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaListT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaList __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaListT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaList(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaListT __CreateInstance(global::libvlc.LibvlcMediaListT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaList __CreateInstance(global::libvlcsharp.MediaList.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaListT(native, skipVTables);
+            return new global::libvlcsharp.MediaList(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaListT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaList.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaListT.__Internal));
-            *(global::libvlc.LibvlcMediaListT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaList.__Internal));
+            *(global::libvlcsharp.MediaList.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaListT(global::libvlc.LibvlcMediaListT.__Internal native, bool skipVTables = false)
+        private MediaList(global::libvlcsharp.MediaList.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaListT(void* native, bool skipVTables = false)
+        protected MediaList(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -1595,7 +1652,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class LibvlcMediaStatsT : IDisposable
+    public unsafe partial class MediaStats : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 60)]
         public partial struct __Internal
@@ -1644,45 +1701,65 @@ namespace libvlc
 
             [FieldOffset(56)]
             internal float f_send_bitrate;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_media_stats_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaStatsT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaStatsT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaStats> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaStats>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaStatsT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaStats __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaStatsT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaStats(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaStatsT __CreateInstance(global::libvlc.LibvlcMediaStatsT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaStats __CreateInstance(global::libvlcsharp.MediaStats.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaStatsT(native, skipVTables);
+            return new global::libvlcsharp.MediaStats(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaStatsT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaStats.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaStatsT.__Internal));
-            *(global::libvlc.LibvlcMediaStatsT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaStats.__Internal));
+            *(global::libvlcsharp.MediaStats.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaStatsT(global::libvlc.LibvlcMediaStatsT.__Internal native, bool skipVTables = false)
+        private MediaStats(global::libvlcsharp.MediaStats.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaStatsT(void* native, bool skipVTables = false)
+        protected MediaStats(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public MediaStats()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaStats.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public MediaStats(global::libvlcsharp.MediaStats _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaStats.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.MediaStats.__Internal*) __Instance) = *((global::libvlcsharp.MediaStats.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -1694,7 +1771,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcMediaStatsT __dummy;
+            global::libvlcsharp.MediaStats __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -1705,12 +1782,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_read_bytes;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_read_bytes;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_read_bytes = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_read_bytes = value;
             }
         }
 
@@ -1718,12 +1795,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_input_bitrate;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_input_bitrate;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_input_bitrate = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_input_bitrate = value;
             }
         }
 
@@ -1731,12 +1808,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_read_bytes;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_read_bytes;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_read_bytes = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_read_bytes = value;
             }
         }
 
@@ -1744,12 +1821,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_demux_bitrate;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_demux_bitrate;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_demux_bitrate = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_demux_bitrate = value;
             }
         }
 
@@ -1757,12 +1834,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_corrupted;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_corrupted;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_corrupted = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_corrupted = value;
             }
         }
 
@@ -1770,12 +1847,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_discontinuity;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_discontinuity;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_demux_discontinuity = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_demux_discontinuity = value;
             }
         }
 
@@ -1783,12 +1860,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_decoded_video;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_decoded_video;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_decoded_video = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_decoded_video = value;
             }
         }
 
@@ -1796,12 +1873,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_decoded_audio;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_decoded_audio;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_decoded_audio = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_decoded_audio = value;
             }
         }
 
@@ -1809,12 +1886,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_displayed_pictures;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_displayed_pictures;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_displayed_pictures = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_displayed_pictures = value;
             }
         }
 
@@ -1822,12 +1899,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_lost_pictures;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_lost_pictures;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_lost_pictures = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_lost_pictures = value;
             }
         }
 
@@ -1835,12 +1912,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_played_abuffers;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_played_abuffers;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_played_abuffers = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_played_abuffers = value;
             }
         }
 
@@ -1848,12 +1925,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_lost_abuffers;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_lost_abuffers;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_lost_abuffers = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_lost_abuffers = value;
             }
         }
 
@@ -1861,12 +1938,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_sent_packets;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_sent_packets;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_sent_packets = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_sent_packets = value;
             }
         }
 
@@ -1874,12 +1951,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_sent_bytes;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_sent_bytes;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->i_sent_bytes = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->i_sent_bytes = value;
             }
         }
 
@@ -1887,17 +1964,17 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_send_bitrate;
+                return ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_send_bitrate;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaStatsT.__Internal*) __Instance)->f_send_bitrate = value;
+                ((global::libvlcsharp.MediaStats.__Internal*) __Instance)->f_send_bitrate = value;
             }
         }
     }
 
-    public unsafe partial class LibvlcMediaTrackInfoT : IDisposable
+    public unsafe partial class MediaTrackInfo : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 28)]
         public partial struct __Internal
@@ -1909,7 +1986,7 @@ namespace libvlc
             internal int i_id;
 
             [FieldOffset(8)]
-            internal global::libvlc.LibvlcTrackTypeT i_type;
+            internal global::libvlcsharp.TrackType i_type;
 
             [FieldOffset(12)]
             internal int i_profile;
@@ -1918,7 +1995,12 @@ namespace libvlc
             internal int i_level;
 
             [FieldOffset(20)]
-            internal global::libvlc.LibvlcMediaTrackInfoT._.__Internal u;
+            internal global::libvlcsharp.MediaTrackInfo._.__Internal u;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_media_track_info_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public unsafe partial struct _
@@ -1927,10 +2009,10 @@ namespace libvlc
             public partial struct __Internal
             {
                 [FieldOffset(0)]
-                internal global::libvlc.LibvlcMediaTrackInfoT._.__.__Internal audio;
+                internal global::libvlcsharp.MediaTrackInfo._.__.__Internal audio;
 
                 [FieldOffset(0)]
-                internal global::libvlc.LibvlcMediaTrackInfoT._.___.__Internal video;
+                internal global::libvlcsharp.MediaTrackInfo._.___.__Internal video;
             }
 
             public unsafe partial class __
@@ -1963,40 +2045,55 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaTrackInfoT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaTrackInfoT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaTrackInfo> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaTrackInfo>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaTrackInfoT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaTrackInfo __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaTrackInfoT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaTrackInfo(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaTrackInfoT __CreateInstance(global::libvlc.LibvlcMediaTrackInfoT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaTrackInfo __CreateInstance(global::libvlcsharp.MediaTrackInfo.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaTrackInfoT(native, skipVTables);
+            return new global::libvlcsharp.MediaTrackInfo(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaTrackInfoT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaTrackInfo.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaTrackInfoT.__Internal));
-            *(global::libvlc.LibvlcMediaTrackInfoT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrackInfo.__Internal));
+            *(global::libvlcsharp.MediaTrackInfo.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaTrackInfoT(global::libvlc.LibvlcMediaTrackInfoT.__Internal native, bool skipVTables = false)
+        private MediaTrackInfo(global::libvlcsharp.MediaTrackInfo.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaTrackInfoT(void* native, bool skipVTables = false)
+        protected MediaTrackInfo(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public MediaTrackInfo()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrackInfo.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public MediaTrackInfo(global::libvlcsharp.MediaTrackInfo _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrackInfo.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance) = *((global::libvlcsharp.MediaTrackInfo.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2008,7 +2105,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcMediaTrackInfoT __dummy;
+            global::libvlcsharp.MediaTrackInfo __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2019,12 +2116,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_codec;
+                return ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_codec;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_codec = value;
+                ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_codec = value;
             }
         }
 
@@ -2032,25 +2129,25 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_id;
+                return ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_id;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_id = value;
+                ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_id = value;
             }
         }
 
-        public global::libvlc.LibvlcTrackTypeT IType
+        public global::libvlcsharp.TrackType IType
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_type;
+                return ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_type;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_type = value;
+                ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_type = value;
             }
         }
 
@@ -2058,12 +2155,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_profile;
+                return ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_profile;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_profile = value;
+                ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_profile = value;
             }
         }
 
@@ -2071,17 +2168,17 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_level;
+                return ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_level;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackInfoT.__Internal*) __Instance)->i_level = value;
+                ((global::libvlcsharp.MediaTrackInfo.__Internal*) __Instance)->i_level = value;
             }
         }
     }
 
-    public unsafe partial class LibvlcAudioTrackT : IDisposable
+    public unsafe partial class AudioTrack : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 8)]
         public partial struct __Internal
@@ -2091,45 +2188,65 @@ namespace libvlc
 
             [FieldOffset(4)]
             internal uint i_rate;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_audio_track_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioTrackT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioTrackT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioTrack>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcAudioTrackT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioTrackT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.AudioTrack(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcAudioTrackT __CreateInstance(global::libvlc.LibvlcAudioTrackT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioTrack __CreateInstance(global::libvlcsharp.AudioTrack.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioTrackT(native, skipVTables);
+            return new global::libvlcsharp.AudioTrack(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcAudioTrackT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.AudioTrack.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcAudioTrackT.__Internal));
-            *(global::libvlc.LibvlcAudioTrackT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioTrack.__Internal));
+            *(global::libvlcsharp.AudioTrack.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcAudioTrackT(global::libvlc.LibvlcAudioTrackT.__Internal native, bool skipVTables = false)
+        private AudioTrack(global::libvlcsharp.AudioTrack.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcAudioTrackT(void* native, bool skipVTables = false)
+        protected AudioTrack(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public AudioTrack()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public AudioTrack(global::libvlcsharp.AudioTrack _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.AudioTrack.__Internal*) __Instance) = *((global::libvlcsharp.AudioTrack.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2141,7 +2258,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcAudioTrackT __dummy;
+            global::libvlcsharp.AudioTrack __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2152,12 +2269,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcAudioTrackT.__Internal*) __Instance)->i_channels;
+                return ((global::libvlcsharp.AudioTrack.__Internal*) __Instance)->i_channels;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioTrackT.__Internal*) __Instance)->i_channels = value;
+                ((global::libvlcsharp.AudioTrack.__Internal*) __Instance)->i_channels = value;
             }
         }
 
@@ -2165,17 +2282,17 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcAudioTrackT.__Internal*) __Instance)->i_rate;
+                return ((global::libvlcsharp.AudioTrack.__Internal*) __Instance)->i_rate;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioTrackT.__Internal*) __Instance)->i_rate = value;
+                ((global::libvlcsharp.AudioTrack.__Internal*) __Instance)->i_rate = value;
             }
         }
     }
 
-    public unsafe partial class LibvlcVideoTrackT : IDisposable
+    public unsafe partial class VideoTrack : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 48)]
         public partial struct __Internal
@@ -2199,13 +2316,18 @@ namespace libvlc
             internal uint i_frame_rate_den;
 
             [FieldOffset(24)]
-            internal global::libvlc.LibvlcVideoOrientT i_orientation;
+            internal global::libvlcsharp.VideoOrientation i_orientation;
 
             [FieldOffset(28)]
-            internal global::libvlc.LibvlcVideoProjectionT i_projection;
+            internal global::libvlcsharp.VideoProjection i_projection;
 
             [FieldOffset(32)]
-            internal global::libvlc.LibvlcVideoTrackT._.__Internal pose;
+            internal global::libvlcsharp.VideoTrack._.__Internal pose;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_video_track_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public unsafe partial class _
@@ -2230,40 +2352,55 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcVideoTrackT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcVideoTrackT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.VideoTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.VideoTrack>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcVideoTrackT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.VideoTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcVideoTrackT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.VideoTrack(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcVideoTrackT __CreateInstance(global::libvlc.LibvlcVideoTrackT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.VideoTrack __CreateInstance(global::libvlcsharp.VideoTrack.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcVideoTrackT(native, skipVTables);
+            return new global::libvlcsharp.VideoTrack(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcVideoTrackT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.VideoTrack.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcVideoTrackT.__Internal));
-            *(global::libvlc.LibvlcVideoTrackT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoTrack.__Internal));
+            *(global::libvlcsharp.VideoTrack.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcVideoTrackT(global::libvlc.LibvlcVideoTrackT.__Internal native, bool skipVTables = false)
+        private VideoTrack(global::libvlcsharp.VideoTrack.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcVideoTrackT(void* native, bool skipVTables = false)
+        protected VideoTrack(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public VideoTrack()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public VideoTrack(global::libvlcsharp.VideoTrack _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.VideoTrack.__Internal*) __Instance) = *((global::libvlcsharp.VideoTrack.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2275,7 +2412,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcVideoTrackT __dummy;
+            global::libvlcsharp.VideoTrack __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2286,12 +2423,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_height;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_height;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_height = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_height = value;
             }
         }
 
@@ -2299,12 +2436,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_width;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_width;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_width = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_width = value;
             }
         }
 
@@ -2312,12 +2449,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_sar_num;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_sar_num;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_sar_num = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_sar_num = value;
             }
         }
 
@@ -2325,12 +2462,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_sar_den;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_sar_den;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_sar_den = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_sar_den = value;
             }
         }
 
@@ -2338,12 +2475,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_frame_rate_num;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_frame_rate_num;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_frame_rate_num = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_frame_rate_num = value;
             }
         }
 
@@ -2351,88 +2488,108 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_frame_rate_den;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_frame_rate_den;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_frame_rate_den = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_frame_rate_den = value;
             }
         }
 
-        public global::libvlc.LibvlcVideoOrientT IOrientation
+        public global::libvlcsharp.VideoOrientation IOrientation
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_orientation;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_orientation;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_orientation = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_orientation = value;
             }
         }
 
-        public global::libvlc.LibvlcVideoProjectionT IProjection
+        public global::libvlcsharp.VideoProjection IProjection
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_projection;
+                return ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_projection;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoTrackT.__Internal*) __Instance)->i_projection = value;
+                ((global::libvlcsharp.VideoTrack.__Internal*) __Instance)->i_projection = value;
             }
         }
     }
 
-    public unsafe partial class LibvlcSubtitleTrackT : IDisposable
+    public unsafe partial class SubtitleTrack : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 8)]
         public partial struct __Internal
         {
             [FieldOffset(0)]
             internal global::System.IntPtr psz_encoding;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_subtitle_track_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcSubtitleTrackT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcSubtitleTrackT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.SubtitleTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.SubtitleTrack>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcSubtitleTrackT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.SubtitleTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcSubtitleTrackT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.SubtitleTrack(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcSubtitleTrackT __CreateInstance(global::libvlc.LibvlcSubtitleTrackT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.SubtitleTrack __CreateInstance(global::libvlcsharp.SubtitleTrack.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcSubtitleTrackT(native, skipVTables);
+            return new global::libvlcsharp.SubtitleTrack(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcSubtitleTrackT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.SubtitleTrack.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcSubtitleTrackT.__Internal));
-            *(global::libvlc.LibvlcSubtitleTrackT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.SubtitleTrack.__Internal));
+            *(global::libvlcsharp.SubtitleTrack.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcSubtitleTrackT(global::libvlc.LibvlcSubtitleTrackT.__Internal native, bool skipVTables = false)
+        private SubtitleTrack(global::libvlcsharp.SubtitleTrack.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcSubtitleTrackT(void* native, bool skipVTables = false)
+        protected SubtitleTrack(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public SubtitleTrack()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.SubtitleTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public SubtitleTrack(global::libvlcsharp.SubtitleTrack _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.SubtitleTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.SubtitleTrack.__Internal*) __Instance) = *((global::libvlcsharp.SubtitleTrack.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2444,7 +2601,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcSubtitleTrackT __dummy;
+            global::libvlcsharp.SubtitleTrack __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2455,17 +2612,17 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcSubtitleTrackT.__Internal*) __Instance)->psz_encoding;
+                return (sbyte*) ((global::libvlcsharp.SubtitleTrack.__Internal*) __Instance)->psz_encoding;
             }
 
             set
             {
-                ((global::libvlc.LibvlcSubtitleTrackT.__Internal*) __Instance)->psz_encoding = (global::System.IntPtr) value;
+                ((global::libvlcsharp.SubtitleTrack.__Internal*) __Instance)->psz_encoding = (global::System.IntPtr) value;
             }
         }
     }
 
-    public unsafe partial class LibvlcMediaTrackT : IDisposable
+    public unsafe partial class MediaTrack : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 56)]
         public partial struct __Internal
@@ -2480,7 +2637,7 @@ namespace libvlc
             internal int i_id;
 
             [FieldOffset(12)]
-            internal global::libvlc.LibvlcTrackTypeT i_type;
+            internal global::libvlcsharp.TrackType i_type;
 
             [FieldOffset(16)]
             internal int i_profile;
@@ -2489,7 +2646,7 @@ namespace libvlc
             internal int i_level;
 
             [FieldOffset(24)]
-            internal global::libvlc.LibvlcMediaTrackT._.__Internal _;
+            internal global::libvlcsharp.MediaTrack._.__Internal _;
 
             [FieldOffset(32)]
             internal uint i_bitrate;
@@ -2499,6 +2656,11 @@ namespace libvlc
 
             [FieldOffset(48)]
             internal global::System.IntPtr psz_description;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_media_track_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public unsafe partial struct _
@@ -2520,40 +2682,55 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaTrackT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaTrackT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaTrack>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaTrackT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaTrackT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaTrack(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaTrackT __CreateInstance(global::libvlc.LibvlcMediaTrackT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaTrack __CreateInstance(global::libvlcsharp.MediaTrack.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaTrackT(native, skipVTables);
+            return new global::libvlcsharp.MediaTrack(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaTrackT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaTrack.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaTrackT.__Internal));
-            *(global::libvlc.LibvlcMediaTrackT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrack.__Internal));
+            *(global::libvlcsharp.MediaTrack.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaTrackT(global::libvlc.LibvlcMediaTrackT.__Internal native, bool skipVTables = false)
+        private MediaTrack(global::libvlcsharp.MediaTrack.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaTrackT(void* native, bool skipVTables = false)
+        protected MediaTrack(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public MediaTrack()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public MediaTrack(global::libvlcsharp.MediaTrack _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaTrack.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.MediaTrack.__Internal*) __Instance) = *((global::libvlcsharp.MediaTrack.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2565,7 +2742,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcMediaTrackT __dummy;
+            global::libvlcsharp.MediaTrack __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2576,12 +2753,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_codec;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_codec;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_codec = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_codec = value;
             }
         }
 
@@ -2589,12 +2766,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_original_fourcc;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_original_fourcc;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_original_fourcc = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_original_fourcc = value;
             }
         }
 
@@ -2602,25 +2779,25 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_id;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_id;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_id = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_id = value;
             }
         }
 
-        public global::libvlc.LibvlcTrackTypeT IType
+        public global::libvlcsharp.TrackType IType
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_type;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_type;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_type = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_type = value;
             }
         }
 
@@ -2628,12 +2805,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_profile;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_profile;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_profile = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_profile = value;
             }
         }
 
@@ -2641,12 +2818,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_level;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_level;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_level = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_level = value;
             }
         }
 
@@ -2654,12 +2831,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_bitrate;
+                return ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_bitrate;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->i_bitrate = value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->i_bitrate = value;
             }
         }
 
@@ -2667,12 +2844,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->psz_language;
+                return (sbyte*) ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->psz_language;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->psz_language = (global::System.IntPtr) value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->psz_language = (global::System.IntPtr) value;
             }
         }
 
@@ -2680,19 +2857,19 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->psz_description;
+                return (sbyte*) ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->psz_description;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaTrackT.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
+                ((global::libvlcsharp.MediaTrack.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
             }
         }
     }
 
     /// <summary>A slave of a libvlc_media_t</summary>
     /// <remarks>libvlc_media_slaves_get</remarks>
-    public unsafe partial class LibvlcMediaSlaveT : IDisposable
+    public unsafe partial class MediaSlave : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 16)]
         public partial struct __Internal
@@ -2701,49 +2878,69 @@ namespace libvlc
             internal global::System.IntPtr psz_uri;
 
             [FieldOffset(8)]
-            internal global::libvlc.LibvlcMediaSlaveTypeT i_type;
+            internal global::libvlcsharp.MediaSlaveType i_type;
 
             [FieldOffset(12)]
             internal uint i_priority;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_media_slave_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaSlaveT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaSlaveT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaSlave> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaSlave>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaSlaveT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaSlave __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaSlaveT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaSlave(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaSlaveT __CreateInstance(global::libvlc.LibvlcMediaSlaveT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaSlave __CreateInstance(global::libvlcsharp.MediaSlave.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaSlaveT(native, skipVTables);
+            return new global::libvlcsharp.MediaSlave(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaSlaveT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaSlave.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaSlaveT.__Internal));
-            *(global::libvlc.LibvlcMediaSlaveT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaSlave.__Internal));
+            *(global::libvlcsharp.MediaSlave.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaSlaveT(global::libvlc.LibvlcMediaSlaveT.__Internal native, bool skipVTables = false)
+        private MediaSlave(global::libvlcsharp.MediaSlave.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaSlaveT(void* native, bool skipVTables = false)
+        protected MediaSlave(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public MediaSlave()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaSlave.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public MediaSlave(global::libvlcsharp.MediaSlave _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaSlave.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.MediaSlave.__Internal*) __Instance) = *((global::libvlcsharp.MediaSlave.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -2755,7 +2952,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcMediaSlaveT __dummy;
+            global::libvlcsharp.MediaSlave __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -2766,25 +2963,25 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->psz_uri;
+                return (sbyte*) ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->psz_uri;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->psz_uri = (global::System.IntPtr) value;
+                ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->psz_uri = (global::System.IntPtr) value;
             }
         }
 
-        public global::libvlc.LibvlcMediaSlaveTypeT IType
+        public global::libvlcsharp.MediaSlaveType IType
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->i_type;
+                return ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->i_type;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->i_type = value;
+                ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->i_type = value;
             }
         }
 
@@ -2792,12 +2989,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->i_priority;
+                return ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->i_priority;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaSlaveT.__Internal*) __Instance)->i_priority = value;
+                ((global::libvlcsharp.MediaSlave.__Internal*) __Instance)->i_priority = value;
             }
         }
     }
@@ -2864,12 +3061,12 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_meta")]
-            internal static extern sbyte* LibvlcMediaGetMeta(global::System.IntPtr p_md, global::libvlc.LibvlcMetaT e_meta);
+            internal static extern sbyte* LibvlcMediaGetMeta(global::System.IntPtr p_md, global::libvlcsharp.MetadataType e_meta);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_set_meta")]
-            internal static extern void LibvlcMediaSetMeta(global::System.IntPtr p_md, global::libvlc.LibvlcMetaT e_meta, [MarshalAs(UnmanagedType.LPStr)] string psz_value);
+            internal static extern void LibvlcMediaSetMeta(global::System.IntPtr p_md, global::libvlcsharp.MetadataType e_meta, [MarshalAs(UnmanagedType.LPStr)] string psz_value);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2879,7 +3076,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_state")]
-            internal static extern global::libvlc.LibvlcStateT LibvlcMediaGetState(global::System.IntPtr p_md);
+            internal static extern global::libvlcsharp.VLCState LibvlcMediaGetState(global::System.IntPtr p_md);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2904,7 +3101,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_parse_with_options")]
-            internal static extern int LibvlcMediaParseWithOptions(global::System.IntPtr p_md, global::libvlc.LibvlcMediaParseFlagT parse_flag, int timeout);
+            internal static extern int LibvlcMediaParseWithOptions(global::System.IntPtr p_md, global::libvlcsharp.MediaParseOptions parse_flag, int timeout);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2914,7 +3111,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_parsed_status")]
-            internal static extern global::libvlc.LibvlcMediaParsedStatusT LibvlcMediaGetParsedStatus(global::System.IntPtr p_md);
+            internal static extern global::libvlcsharp.MediaParsedStatus LibvlcMediaGetParsedStatus(global::System.IntPtr p_md);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2934,7 +3131,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_codec_description")]
-            internal static extern global::System.IntPtr LibvlcMediaGetCodecDescription(global::libvlc.LibvlcTrackTypeT i_type, uint i_codec);
+            internal static extern global::System.IntPtr LibvlcMediaGetCodecDescription(global::libvlcsharp.TrackType i_type, uint i_codec);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2944,12 +3141,12 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_type")]
-            internal static extern global::libvlc.LibvlcMediaTypeT LibvlcMediaGetType(global::System.IntPtr p_md);
+            internal static extern global::libvlcsharp.MediaType LibvlcMediaGetType(global::System.IntPtr p_md);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_slaves_add")]
-            internal static extern int LibvlcMediaSlavesAdd(global::System.IntPtr p_md, global::libvlc.LibvlcMediaSlaveTypeT i_type, uint i_priority, [MarshalAs(UnmanagedType.LPStr)] string psz_uri);
+            internal static extern int LibvlcMediaSlavesAdd(global::System.IntPtr p_md, global::libvlcsharp.MediaSlaveType i_type, uint i_priority, [MarshalAs(UnmanagedType.LPStr)] string psz_uri);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -2981,15 +3178,15 @@ namespace libvlc
         /// <para>local files.</para>
         /// <para>libvlc_media_release</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaNewLocation(global::libvlc.LibvlcInstanceT p_instance, string psz_mrl)
+        public static global::libvlcsharp.Media LibvlcMediaNewLocation(global::libvlcsharp.Instance p_instance, string psz_mrl)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaNewLocation(__arg0, psz_mrl);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -2998,15 +3195,15 @@ namespace libvlc
         /// <param name="path">local filesystem path</param>
         /// <returns>the newly created media or NULL on error</returns>
         /// <remarks>libvlc_media_release</remarks>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaNewPath(global::libvlc.LibvlcInstanceT p_instance, string path)
+        public static global::libvlcsharp.Media LibvlcMediaNewPath(global::libvlcsharp.Instance p_instance, string path)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaNewPath(__arg0, path);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3031,15 +3228,15 @@ namespace libvlc
         /// <para>libvlc_media_release</para>
         /// <para>LibVLC 1.1.5 and later.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaNewFd(global::libvlc.LibvlcInstanceT p_instance, int fd)
+        public static global::libvlcsharp.Media LibvlcMediaNewFd(global::libvlcsharp.Instance p_instance, int fd)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaNewFd(__arg0, fd);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3062,7 +3259,7 @@ namespace libvlc
         /// <para>libvlc_media_release</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaNewCallbacks(global::libvlc.LibvlcInstanceT instance, global::libvlc.LibvlcMediaOpenCb open_cb, global::libvlc.LibvlcMediaReadCb read_cb, global::libvlc.LibvlcMediaSeekCb seek_cb, global::libvlc.LibvlcMediaCloseCb close_cb, global::System.IntPtr opaque)
+        public static global::libvlcsharp.Media LibvlcMediaNewCallbacks(global::libvlcsharp.Instance instance, global::libvlcsharp.LibvlcMediaOpenCb open_cb, global::libvlcsharp.LibvlcMediaReadCb read_cb, global::libvlcsharp.LibvlcMediaSeekCb seek_cb, global::libvlcsharp.LibvlcMediaCloseCb close_cb, global::System.IntPtr opaque)
         {
             var __arg0 = ReferenceEquals(instance, null) ? global::System.IntPtr.Zero : instance.__Instance;
             var __arg1 = open_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(open_cb);
@@ -3070,11 +3267,11 @@ namespace libvlc
             var __arg3 = seek_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(seek_cb);
             var __arg4 = close_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(close_cb);
             var __ret = __Internal.LibvlcMediaNewCallbacks(__arg0, __arg1, __arg2, __arg3, __arg4, opaque);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3083,15 +3280,15 @@ namespace libvlc
         /// <param name="psz_name">the name of the node</param>
         /// <returns>the new empty media or NULL on error</returns>
         /// <remarks>libvlc_media_release</remarks>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaNewAsNode(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static global::libvlcsharp.Media LibvlcMediaNewAsNode(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaNewAsNode(__arg0, psz_name);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3110,7 +3307,7 @@ namespace libvlc
         /// <para>such as text renderer options, have no effects on an individual media.</para>
         /// <para>These options must be set through libvlc_new() instead.</para>
         /// </remarks>
-        public static void LibvlcMediaAddOption(global::libvlc.LibvlcMediaT p_md, string psz_options)
+        public static void LibvlcMediaAddOption(global::libvlcsharp.Media p_md, string psz_options)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaAddOption(__arg0, psz_options);
@@ -3130,7 +3327,7 @@ namespace libvlc
         /// <para>such as text renderer options cannot be set on a single media. They</para>
         /// <para>must be set on the whole libvlc instance instead.</para>
         /// </remarks>
-        public static void LibvlcMediaAddOptionFlag(global::libvlc.LibvlcMediaT p_md, string psz_options, uint i_flags)
+        public static void LibvlcMediaAddOptionFlag(global::libvlcsharp.Media p_md, string psz_options, uint i_flags)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaAddOptionFlag(__arg0, psz_options, i_flags);
@@ -3142,7 +3339,7 @@ namespace libvlc
         /// <para>media descriptor object.</para>
         /// </summary>
         /// <param name="p_md">the media descriptor</param>
-        public static void LibvlcMediaRetain(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaRetain(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaRetain(__arg0);
@@ -3156,7 +3353,7 @@ namespace libvlc
         /// <para>should not be used again.</para>
         /// </summary>
         /// <param name="p_md">the media descriptor</param>
-        public static void LibvlcMediaRelease(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaRelease(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaRelease(__arg0);
@@ -3165,7 +3362,7 @@ namespace libvlc
         /// <summary>Get the media resource locator (mrl) from a media descriptor object</summary>
         /// <param name="p_md">a media descriptor object</param>
         /// <returns>string with mrl of media descriptor object</returns>
-        public static sbyte* LibvlcMediaGetMrl(global::libvlc.LibvlcMediaT p_md)
+        public static sbyte* LibvlcMediaGetMrl(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetMrl(__arg0);
@@ -3174,15 +3371,15 @@ namespace libvlc
 
         /// <summary>Duplicate a media descriptor object.</summary>
         /// <param name="p_md">a media descriptor object.</param>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaDuplicate(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.Media LibvlcMediaDuplicate(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaDuplicate(__arg0);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3196,7 +3393,7 @@ namespace libvlc
         /// <para>libvlc_media_parse_with_options</para>
         /// <para>libvlc_MediaMetaChanged</para>
         /// </remarks>
-        public static sbyte* LibvlcMediaGetMeta(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMetaT e_meta)
+        public static sbyte* LibvlcMediaGetMeta(global::libvlcsharp.Media p_md, global::libvlcsharp.MetadataType e_meta)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetMeta(__arg0, e_meta);
@@ -3210,7 +3407,7 @@ namespace libvlc
         /// <param name="p_md">the media descriptor</param>
         /// <param name="e_meta">the meta to write</param>
         /// <param name="psz_value">the media's meta</param>
-        public static void LibvlcMediaSetMeta(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMetaT e_meta, string psz_value)
+        public static void LibvlcMediaSetMeta(global::libvlcsharp.Media p_md, global::libvlcsharp.MetadataType e_meta, string psz_value)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaSetMeta(__arg0, e_meta, psz_value);
@@ -3219,7 +3416,7 @@ namespace libvlc
         /// <summary>Save the meta previously set</summary>
         /// <param name="p_md">the media desriptor</param>
         /// <returns>true if the write operation was successful</returns>
-        public static int LibvlcMediaSaveMeta(global::libvlc.LibvlcMediaT p_md)
+        public static int LibvlcMediaSaveMeta(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaSaveMeta(__arg0);
@@ -3234,7 +3431,7 @@ namespace libvlc
         /// <param name="p_md">a media descriptor object</param>
         /// <returns>state of media descriptor object</returns>
         /// <remarks>libvlc_state_t</remarks>
-        public static global::libvlc.LibvlcStateT LibvlcMediaGetState(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.VLCState LibvlcMediaGetState(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetState(__arg0);
@@ -3248,7 +3445,7 @@ namespace libvlc
         /// <para>(this structure must be allocated by the caller)</para>
         /// </param>
         /// <returns>true if the statistics are available, false otherwise</returns>
-        public static int LibvlcMediaGetStats(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaStatsT p_stats)
+        public static int LibvlcMediaGetStats(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaStats p_stats)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __arg1 = ReferenceEquals(p_stats, null) ? global::System.IntPtr.Zero : p_stats.__Instance;
@@ -3263,15 +3460,15 @@ namespace libvlc
         /// </summary>
         /// <param name="p_md">media descriptor object</param>
         /// <returns>list of media descriptor subitems or NULL</returns>
-        public static global::libvlc.LibvlcMediaListT LibvlcMediaSubitems(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.MediaList LibvlcMediaSubitems(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaSubitems(__arg0);
-            global::libvlc.LibvlcMediaListT __result0;
+            global::libvlcsharp.MediaList __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaListT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaListT) global::libvlc.LibvlcMediaListT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaListT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaList.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaList) global::libvlcsharp.MediaList.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaList.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -3281,22 +3478,22 @@ namespace libvlc
         /// </summary>
         /// <param name="p_md">a media descriptor object</param>
         /// <returns>event manager object</returns>
-        public static global::libvlc.LibvlcEventManagerT LibvlcMediaEventManager(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.EventManager LibvlcMediaEventManager(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Get duration (in ms) of media descriptor object item.</summary>
         /// <param name="p_md">media descriptor object</param>
         /// <returns>duration of media item or -1 on error</returns>
-        public static long LibvlcMediaGetDuration(global::libvlc.LibvlcMediaT p_md)
+        public static long LibvlcMediaGetDuration(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetDuration(__arg0);
@@ -3329,7 +3526,7 @@ namespace libvlc
         /// <para>libvlc_media_parse_flag_t</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static int LibvlcMediaParseWithOptions(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaParseFlagT parse_flag, int timeout)
+        public static int LibvlcMediaParseWithOptions(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaParseOptions parse_flag, int timeout)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaParseWithOptions(__arg0, parse_flag, timeout);
@@ -3344,7 +3541,7 @@ namespace libvlc
         /// <para>libvlc_media_parse_with_options</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcMediaParseStop(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaParseStop(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaParseStop(__arg0);
@@ -3358,7 +3555,7 @@ namespace libvlc
         /// <para>libvlc_media_parsed_status_t</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaParsedStatusT LibvlcMediaGetParsedStatus(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.MediaParsedStatus LibvlcMediaGetParsedStatus(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetParsedStatus(__arg0);
@@ -3372,7 +3569,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_md">media descriptor object</param>
         /// <param name="p_new_user_data">pointer to user data</param>
-        public static void LibvlcMediaSetUserData(global::libvlc.LibvlcMediaT p_md, global::System.IntPtr p_new_user_data)
+        public static void LibvlcMediaSetUserData(global::libvlcsharp.Media p_md, global::System.IntPtr p_new_user_data)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaSetUserData(__arg0, p_new_user_data);
@@ -3384,7 +3581,7 @@ namespace libvlc
         /// <para>an native object that references a libvlc_media_t pointer</para>
         /// </summary>
         /// <param name="p_md">media descriptor object</param>
-        public static global::System.IntPtr LibvlcMediaGetUserData(global::libvlc.LibvlcMediaT p_md)
+        public static global::System.IntPtr LibvlcMediaGetUserData(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetUserData(__arg0);
@@ -3405,7 +3602,7 @@ namespace libvlc
         /// <para>Not doing this will result in an empty array.</para>
         /// <para>LibVLC 2.1.0 and later.</para>
         /// </remarks>
-        public static uint LibvlcMediaTracksGet(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaTrackT tracks)
+        public static uint LibvlcMediaTracksGet(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaTrack tracks)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __arg1 = ReferenceEquals(tracks, null) ? global::System.IntPtr.Zero : tracks.__Instance;
@@ -3421,7 +3618,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_track_t</para>
         /// </remarks>
-        public static string LibvlcMediaGetCodecDescription(global::libvlc.LibvlcTrackTypeT i_type, uint i_codec)
+        public static string LibvlcMediaGetCodecDescription(global::libvlcsharp.TrackType i_type, uint i_codec)
         {
             var __ret = __Internal.LibvlcMediaGetCodecDescription(i_type, i_codec);
             return Marshal.PtrToStringAnsi(__ret);
@@ -3431,7 +3628,7 @@ namespace libvlc
         /// <param name="p_tracks">tracks info array to release</param>
         /// <param name="i_count">number of elements in the array</param>
         /// <remarks>LibVLC 2.1.0 and later.</remarks>
-        public static void LibvlcMediaTracksRelease(global::libvlc.LibvlcMediaTrackT p_tracks, uint i_count)
+        public static void LibvlcMediaTracksRelease(global::libvlcsharp.MediaTrack p_tracks, uint i_count)
         {
             var __arg0 = ReferenceEquals(p_tracks, null) ? global::System.IntPtr.Zero : p_tracks.__Instance;
             __Internal.LibvlcMediaTracksRelease(__arg0, i_count);
@@ -3444,7 +3641,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_type_t</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaTypeT LibvlcMediaGetType(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.MediaType LibvlcMediaGetType(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaGetType(__arg0);
@@ -3465,7 +3662,7 @@ namespace libvlc
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public static int LibvlcMediaSlavesAdd(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaSlaveTypeT i_type, uint i_priority, string psz_uri)
+        public static int LibvlcMediaSlavesAdd(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaSlaveType i_type, uint i_priority, string psz_uri)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaSlavesAdd(__arg0, i_type, i_priority, psz_uri);
@@ -3478,7 +3675,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_md">media descriptor object</param>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcMediaSlavesClear(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaSlavesClear(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaSlavesClear(__arg0);
@@ -3498,7 +3695,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public static uint LibvlcMediaSlavesGet(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaSlaveT ppp_slaves)
+        public static uint LibvlcMediaSlavesGet(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaSlave ppp_slaves)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __arg1 = ReferenceEquals(ppp_slaves, null) ? global::System.IntPtr.Zero : ppp_slaves.__Instance;
@@ -3510,7 +3707,7 @@ namespace libvlc
         /// <param name="pp_slaves">slave array to release</param>
         /// <param name="i_count">number of elements in the array</param>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcMediaSlavesRelease(global::libvlc.LibvlcMediaSlaveT pp_slaves, uint i_count)
+        public static void LibvlcMediaSlavesRelease(global::libvlcsharp.MediaSlave pp_slaves, uint i_count)
         {
             var __arg0 = ReferenceEquals(pp_slaves, null) ? global::System.IntPtr.Zero : pp_slaves.__Instance;
             __Internal.LibvlcMediaSlavesRelease(__arg0, i_count);
@@ -3518,122 +3715,122 @@ namespace libvlc
     }
 
     /// <summary>Description for titles</summary>
-    public enum LibvlcTitle
+    public enum Title
     {
-        LibvlcTitleMenu = 1,
-        LibvlcTitleInteractive = 2
+        Menu = 1,
+        Interactive = 2
     }
 
     /// <summary>Marq options definition</summary>
-    public enum LibvlcVideoMarqueeOptionT
+    public enum VideoMarqueeOption
     {
-        LibvlcMarqueeEnable = 0,
-        LibvlcMarqueeText = 1,
+        Enable = 0,
+        Text = 1,
         /// <summary>string argument</summary>
-        LibvlcMarqueeColor = 2,
+        Color = 2,
         /// <summary>string argument</summary>
-        LibvlcMarqueeOpacity = 3,
+        Opacity = 3,
         /// <summary>string argument</summary>
-        LibvlcMarqueePosition = 4,
+        Position = 4,
         /// <summary>string argument</summary>
-        LibvlcMarqueeRefresh = 5,
+        Refresh = 5,
         /// <summary>string argument</summary>
-        LibvlcMarqueeSize = 6,
+        Size = 6,
         /// <summary>string argument</summary>
-        LibvlcMarqueeTimeout = 7,
+        Timeout = 7,
         /// <summary>string argument</summary>
-        LibvlcMarqueeX = 8,
+        X = 8,
         /// <summary>string argument</summary>
-        LibvlcMarqueeY = 9
+        Y = 9
     }
 
     /// <summary>Navigation mode</summary>
-    public enum LibvlcNavigateModeT
+    public enum NavigationMode
     {
-        LibvlcNavigateActivate = 0,
-        LibvlcNavigateUp = 1,
-        LibvlcNavigateDown = 2,
-        LibvlcNavigateLeft = 3,
-        LibvlcNavigateRight = 4,
-        LibvlcNavigatePopup = 5
+        Activate = 0,
+        Up = 1,
+        Down = 2,
+        Left = 3,
+        Right = 4,
+        Popup = 5
     }
 
     /// <summary>Enumeration of values used to set position (e.g. of video title).</summary>
-    public enum LibvlcPositionT
+    public enum Position
     {
-        LibvlcPositionDisable = -1,
-        LibvlcPositionCenter = 0,
-        LibvlcPositionLeft = 1,
-        LibvlcPositionRight = 2,
-        LibvlcPositionTop = 3,
-        LibvlcPositionTopLeft = 4,
-        LibvlcPositionTopRight = 5,
-        LibvlcPositionBottom = 6,
-        LibvlcPositionBottomLeft = 7,
-        LibvlcPositionBottomRight = 8
+        Disable = -1,
+        Center = 0,
+        Left = 1,
+        Right = 2,
+        Top = 3,
+        TopLeft = 4,
+        TopRight = 5,
+        Bottom = 6,
+        BottomLeft = 7,
+        BottomRight = 8
     }
 
     /// <summary>
     /// <para>Enumeration of teletext keys than can be passed via</para>
     /// <para>libvlc_video_set_teletext()</para>
     /// </summary>
-    public enum LibvlcTeletextKeyT
+    public enum TeletextKey
     {
-        LibvlcTeletextKeyRed = 7471104,
-        LibvlcTeletextKeyGreen = 6750208,
-        LibvlcTeletextKeyYellow = 7929856,
-        LibvlcTeletextKeyBlue = 6422528,
-        LibvlcTeletextKeyIndex = 6881280
+        Red = 7471104,
+        Green = 6750208,
+        Yellow = 7929856,
+        Blue = 6422528,
+        Index = 6881280
     }
 
     /// <summary>option values for libvlc_video_{get,set}_logo_{int,string}</summary>
-    public enum LibvlcVideoLogoOptionT
+    public enum VideoLogoOption
     {
-        LibvlcLogoEnable = 0,
+        Enable = 0,
         /// <summary>string argument, &quot;file,d,t;file,d,t;...&quot;</summary>
-        LibvlcLogoFile = 1,
-        LibvlcLogoX = 2,
-        LibvlcLogoY = 3,
-        LibvlcLogoDelay = 4,
-        LibvlcLogoRepeat = 5,
-        LibvlcLogoOpacity = 6,
-        LibvlcLogoPosition = 7
+        File = 1,
+        X = 2,
+        Y = 3,
+        Delay = 4,
+        Repeat = 5,
+        Opacity = 6,
+        Position = 7
     }
 
     /// <summary>option values for libvlc_video_{get,set}_adjust_{int,float,bool}</summary>
-    public enum LibvlcVideoAdjustOptionT
+    public enum VideoAdjustOption
     {
-        LibvlcAdjustEnable = 0,
-        LibvlcAdjustContrast = 1,
-        LibvlcAdjustBrightness = 2,
-        LibvlcAdjustHue = 3,
-        LibvlcAdjustSaturation = 4,
-        LibvlcAdjustGamma = 5
+        Enable = 0,
+        Contrast = 1,
+        Brightness = 2,
+        Hue = 3,
+        Saturation = 4,
+        Gamma = 5
     }
 
     /// <summary>Audio device types</summary>
-    public enum LibvlcAudioOutputDeviceTypesT
+    public enum AudioOutputDeviceType
     {
-        LibvlcAudioOutputDeviceError = -1,
-        LibvlcAudioOutputDeviceMono = 1,
-        LibvlcAudioOutputDeviceStereo = 2,
-        LibvlcAudioOutputDevice2F2R = 4,
-        LibvlcAudioOutputDevice3F2R = 5,
-        LibvlcAudioOutputDevice5_1 = 6,
-        LibvlcAudioOutputDevice6_1 = 7,
-        LibvlcAudioOutputDevice7_1 = 8,
-        LibvlcAudioOutputDeviceSPDIF = 10
+        DeviceError = -1,
+        DeviceMono = 1,
+        DeviceStereo = 2,
+        Device2F2R = 4,
+        Device3F2R = 5,
+        Device5_1 = 6,
+        Device6_1 = 7,
+        Device7_1 = 8,
+        DeviceSPDIF = 10
     }
 
     /// <summary>Audio channels</summary>
-    public enum LibvlcAudioOutputChannelT
+    public enum AudioOutputChannel
     {
-        LibvlcAudioChannelError = -1,
-        LibvlcAudioChannelStereo = 1,
-        LibvlcAudioChannelRStereo = 2,
-        LibvlcAudioChannelLeft = 3,
-        LibvlcAudioChannelRight = 4,
-        LibvlcAudioChannelDolbys = 5
+        Error = -1,
+        Stereo = 1,
+        RStereo = 2,
+        Left = 3,
+        Right = 4,
+        Dolbys = 5
     }
 
     /// <summary>Media player roles.</summary>
@@ -3641,27 +3838,27 @@ namespace libvlc
     /// <para>LibVLC 3.0.0 and later.</para>
     /// <para>See</para>
     /// </remarks>
-    public enum LibvlcMediaPlayerRole
+    public enum MediaPlayerRole
     {
         /// <summary>Don't use a media player role</summary>
-        LibvlcRoleNone = 0,
+        None = 0,
         /// <summary>Music (or radio) playback</summary>
-        LibvlcRoleMusic = 1,
+        Music = 1,
         /// <summary>Video playback</summary>
-        LibvlcRoleVideo = 2,
+        Video = 2,
         /// <summary>Speech, real-time communication</summary>
-        LibvlcRoleCommunication = 3,
+        Communication = 3,
         /// <summary>Video game</summary>
-        LibvlcRoleGame = 4,
+        Game = 4,
         /// <summary>User interaction feedback</summary>
         LiblvcRoleNotification = 5,
         /// <summary>Embedded animation (e.g. in web page)</summary>
-        LibvlcRoleAnimation = 6,
+        Animation = 6,
         /// <summary>Audio editting/production</summary>
-        LibvlcRoleProduction = 7,
+        Production = 7,
         /// <summary>Accessibility</summary>
-        LibvlcRoleAccessibility = 8,
-        LibvlcRoleTest = 9
+        Accessibility = 8,
+        Test = 9
     }
 
     /// <summary>
@@ -3846,7 +4043,7 @@ namespace libvlc
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
     public unsafe delegate void LibvlcAudioCleanupCb(global::System.IntPtr data);
 
-    public unsafe partial class LibvlcMediaPlayerT
+    public unsafe partial class MediaPlayer
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -3856,36 +4053,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaPlayerT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaPlayerT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaPlayer> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaPlayer>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaPlayerT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaPlayer __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaPlayerT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaPlayer(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaPlayerT __CreateInstance(global::libvlc.LibvlcMediaPlayerT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaPlayer __CreateInstance(global::libvlcsharp.MediaPlayer.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaPlayerT(native, skipVTables);
+            return new global::libvlcsharp.MediaPlayer(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaPlayerT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaPlayer.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaPlayerT.__Internal));
-            *(global::libvlc.LibvlcMediaPlayerT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaPlayer.__Internal));
+            *(global::libvlcsharp.MediaPlayer.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaPlayerT(global::libvlc.LibvlcMediaPlayerT.__Internal native, bool skipVTables = false)
+        private MediaPlayer(global::libvlcsharp.MediaPlayer.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaPlayerT(void* native, bool skipVTables = false)
+        protected MediaPlayer(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -3893,7 +4090,7 @@ namespace libvlc
         }
     }
 
-    public unsafe partial class LibvlcEqualizerT
+    public unsafe partial class Equalizer
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -3903,36 +4100,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcEqualizerT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcEqualizerT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Equalizer> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.Equalizer>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcEqualizerT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.Equalizer __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcEqualizerT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.Equalizer(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcEqualizerT __CreateInstance(global::libvlc.LibvlcEqualizerT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.Equalizer __CreateInstance(global::libvlcsharp.Equalizer.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcEqualizerT(native, skipVTables);
+            return new global::libvlcsharp.Equalizer(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcEqualizerT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.Equalizer.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcEqualizerT.__Internal));
-            *(global::libvlc.LibvlcEqualizerT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.Equalizer.__Internal));
+            *(global::libvlcsharp.Equalizer.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcEqualizerT(global::libvlc.LibvlcEqualizerT.__Internal native, bool skipVTables = false)
+        private Equalizer(global::libvlcsharp.Equalizer.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcEqualizerT(void* native, bool skipVTables = false)
+        protected Equalizer(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -3944,7 +4141,7 @@ namespace libvlc
     /// <para>Description for video, audio tracks and subtitles. It contains</para>
     /// <para>id, name (description string) and pointer to next record.</para>
     /// </summary>
-    public unsafe partial class LibvlcTrackDescriptionT : IDisposable
+    public unsafe partial class TrackDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -3957,45 +4154,65 @@ namespace libvlc
 
             [FieldOffset(16)]
             internal global::System.IntPtr p_next;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_track_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcTrackDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcTrackDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.TrackDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.TrackDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcTrackDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.TrackDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcTrackDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.TrackDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcTrackDescriptionT __CreateInstance(global::libvlc.LibvlcTrackDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.TrackDescription __CreateInstance(global::libvlcsharp.TrackDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcTrackDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.TrackDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcTrackDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.TrackDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcTrackDescriptionT.__Internal));
-            *(global::libvlc.LibvlcTrackDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TrackDescription.__Internal));
+            *(global::libvlcsharp.TrackDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcTrackDescriptionT(global::libvlc.LibvlcTrackDescriptionT.__Internal native, bool skipVTables = false)
+        private TrackDescription(global::libvlcsharp.TrackDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcTrackDescriptionT(void* native, bool skipVTables = false)
+        protected TrackDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public TrackDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TrackDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public TrackDescription(global::libvlcsharp.TrackDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TrackDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.TrackDescription.__Internal*) __Instance) = *((global::libvlcsharp.TrackDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4007,7 +4224,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcTrackDescriptionT __dummy;
+            global::libvlcsharp.TrackDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -4018,12 +4235,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->i_id;
+                return ((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->i_id;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->i_id = value;
+                ((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->i_id = value;
             }
         }
 
@@ -4031,35 +4248,35 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
-        public global::libvlc.LibvlcTrackDescriptionT PNext
+        public global::libvlcsharp.TrackDescription PNext
         {
             get
             {
-                global::libvlc.LibvlcTrackDescriptionT __result0;
-                if (((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->p_next))
-                    __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->p_next];
-                else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->p_next);
+                global::libvlcsharp.TrackDescription __result0;
+                if (((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
+                else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->p_next))
+                    __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->p_next];
+                else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTrackDescriptionT.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.TrackDescription.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
             }
         }
     }
 
-    public unsafe partial class LibvlcTitleDescriptionT : IDisposable
+    public unsafe partial class TitleDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -4072,45 +4289,65 @@ namespace libvlc
 
             [FieldOffset(16)]
             internal uint i_flags;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_title_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcTitleDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcTitleDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.TitleDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.TitleDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcTitleDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.TitleDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcTitleDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.TitleDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcTitleDescriptionT __CreateInstance(global::libvlc.LibvlcTitleDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.TitleDescription __CreateInstance(global::libvlcsharp.TitleDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcTitleDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.TitleDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcTitleDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.TitleDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcTitleDescriptionT.__Internal));
-            *(global::libvlc.LibvlcTitleDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TitleDescription.__Internal));
+            *(global::libvlcsharp.TitleDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcTitleDescriptionT(global::libvlc.LibvlcTitleDescriptionT.__Internal native, bool skipVTables = false)
+        private TitleDescription(global::libvlcsharp.TitleDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcTitleDescriptionT(void* native, bool skipVTables = false)
+        protected TitleDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public TitleDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TitleDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public TitleDescription(global::libvlcsharp.TitleDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.TitleDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.TitleDescription.__Internal*) __Instance) = *((global::libvlcsharp.TitleDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4122,7 +4359,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcTitleDescriptionT __dummy;
+            global::libvlcsharp.TitleDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -4133,12 +4370,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->i_duration;
+                return ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->i_duration;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->i_duration = value;
+                ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->i_duration = value;
             }
         }
 
@@ -4146,12 +4383,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
@@ -4159,18 +4396,18 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->i_flags;
+                return ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->i_flags;
             }
 
             set
             {
-                ((global::libvlc.LibvlcTitleDescriptionT.__Internal*) __Instance)->i_flags = value;
+                ((global::libvlcsharp.TitleDescription.__Internal*) __Instance)->i_flags = value;
             }
         }
     }
 
     /// <summary>Description for chapters</summary>
-    public unsafe partial class LibvlcChapterDescriptionT : IDisposable
+    public unsafe partial class ChapterDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -4183,45 +4420,65 @@ namespace libvlc
 
             [FieldOffset(16)]
             internal global::System.IntPtr psz_name;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_chapter_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcChapterDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcChapterDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ChapterDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ChapterDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcChapterDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.ChapterDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcChapterDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.ChapterDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcChapterDescriptionT __CreateInstance(global::libvlc.LibvlcChapterDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.ChapterDescription __CreateInstance(global::libvlcsharp.ChapterDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcChapterDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.ChapterDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcChapterDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.ChapterDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcChapterDescriptionT.__Internal));
-            *(global::libvlc.LibvlcChapterDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ChapterDescription.__Internal));
+            *(global::libvlcsharp.ChapterDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcChapterDescriptionT(global::libvlc.LibvlcChapterDescriptionT.__Internal native, bool skipVTables = false)
+        private ChapterDescription(global::libvlcsharp.ChapterDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcChapterDescriptionT(void* native, bool skipVTables = false)
+        protected ChapterDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public ChapterDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ChapterDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public ChapterDescription(global::libvlcsharp.ChapterDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ChapterDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.ChapterDescription.__Internal*) __Instance) = *((global::libvlcsharp.ChapterDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4233,7 +4490,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcChapterDescriptionT __dummy;
+            global::libvlcsharp.ChapterDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -4244,12 +4501,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->i_time_offset;
+                return ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->i_time_offset;
             }
 
             set
             {
-                ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->i_time_offset = value;
+                ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->i_time_offset = value;
             }
         }
 
@@ -4257,12 +4514,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->i_duration;
+                return ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->i_duration;
             }
 
             set
             {
-                ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->i_duration = value;
+                ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->i_duration = value;
             }
         }
 
@@ -4270,12 +4527,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcChapterDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ChapterDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
     }
@@ -4284,7 +4541,7 @@ namespace libvlc
     /// <para>Description for audio output. It contains</para>
     /// <para>name, description and pointer to next record.</para>
     /// </summary>
-    public unsafe partial class LibvlcAudioOutputT : IDisposable
+    public unsafe partial class AudioOutput : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -4297,45 +4554,65 @@ namespace libvlc
 
             [FieldOffset(16)]
             internal global::System.IntPtr p_next;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_audio_output_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioOutputT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioOutputT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutput> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutput>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcAudioOutputT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioOutput __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioOutputT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.AudioOutput(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcAudioOutputT __CreateInstance(global::libvlc.LibvlcAudioOutputT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioOutput __CreateInstance(global::libvlcsharp.AudioOutput.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioOutputT(native, skipVTables);
+            return new global::libvlcsharp.AudioOutput(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcAudioOutputT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.AudioOutput.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcAudioOutputT.__Internal));
-            *(global::libvlc.LibvlcAudioOutputT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutput.__Internal));
+            *(global::libvlcsharp.AudioOutput.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcAudioOutputT(global::libvlc.LibvlcAudioOutputT.__Internal native, bool skipVTables = false)
+        private AudioOutput(global::libvlcsharp.AudioOutput.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcAudioOutputT(void* native, bool skipVTables = false)
+        protected AudioOutput(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public AudioOutput()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutput.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public AudioOutput(global::libvlcsharp.AudioOutput _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutput.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.AudioOutput.__Internal*) __Instance) = *((global::libvlcsharp.AudioOutput.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4347,7 +4624,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcAudioOutputT __dummy;
+            global::libvlcsharp.AudioOutput __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -4358,12 +4635,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
@@ -4371,36 +4648,36 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->psz_description;
+                return (sbyte*) ((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->psz_description;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
+                ((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
             }
         }
 
-        public global::libvlc.LibvlcAudioOutputT PNext
+        public global::libvlcsharp.AudioOutput PNext
         {
             get
             {
-                global::libvlc.LibvlcAudioOutputT __result0;
-                if (((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                else if (global::libvlc.LibvlcAudioOutputT.NativeToManagedMap.ContainsKey(((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->p_next))
-                    __result0 = (global::libvlc.LibvlcAudioOutputT) global::libvlc.LibvlcAudioOutputT.NativeToManagedMap[((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->p_next];
-                else __result0 = global::libvlc.LibvlcAudioOutputT.__CreateInstance(((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->p_next);
+                global::libvlcsharp.AudioOutput __result0;
+                if (((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
+                else if (global::libvlcsharp.AudioOutput.NativeToManagedMap.ContainsKey(((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->p_next))
+                    __result0 = (global::libvlcsharp.AudioOutput) global::libvlcsharp.AudioOutput.NativeToManagedMap[((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->p_next];
+                else __result0 = global::libvlcsharp.AudioOutput.__CreateInstance(((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputT.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.AudioOutput.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
             }
         }
     }
 
     /// <summary>Description for audio output device.</summary>
-    public unsafe partial class LibvlcAudioOutputDeviceT : IDisposable
+    public unsafe partial class AudioOutputDevice : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -4413,45 +4690,65 @@ namespace libvlc
 
             [FieldOffset(16)]
             internal global::System.IntPtr psz_description;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_audio_output_device_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioOutputDeviceT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcAudioOutputDeviceT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutputDevice> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutputDevice>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcAudioOutputDeviceT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioOutputDevice __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioOutputDeviceT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.AudioOutputDevice(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcAudioOutputDeviceT __CreateInstance(global::libvlc.LibvlcAudioOutputDeviceT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.AudioOutputDevice __CreateInstance(global::libvlcsharp.AudioOutputDevice.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcAudioOutputDeviceT(native, skipVTables);
+            return new global::libvlcsharp.AudioOutputDevice(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcAudioOutputDeviceT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.AudioOutputDevice.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcAudioOutputDeviceT.__Internal));
-            *(global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.__Internal));
+            *(global::libvlcsharp.AudioOutputDevice.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcAudioOutputDeviceT(global::libvlc.LibvlcAudioOutputDeviceT.__Internal native, bool skipVTables = false)
+        private AudioOutputDevice(global::libvlcsharp.AudioOutputDevice.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcAudioOutputDeviceT(void* native, bool skipVTables = false)
+        protected AudioOutputDevice(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public AudioOutputDevice()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public AudioOutputDevice(global::libvlcsharp.AudioOutputDevice _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance) = *((global::libvlcsharp.AudioOutputDevice.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4463,28 +4760,28 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcAudioOutputDeviceT __dummy;
+            global::libvlcsharp.AudioOutputDevice __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
             __Instance = IntPtr.Zero;
         }
 
-        public global::libvlc.LibvlcAudioOutputDeviceT PNext
+        public global::libvlcsharp.AudioOutputDevice PNext
         {
             get
             {
-                global::libvlc.LibvlcAudioOutputDeviceT __result0;
-                if (((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                else if (global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap.ContainsKey(((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->p_next))
-                    __result0 = (global::libvlc.LibvlcAudioOutputDeviceT) global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap[((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->p_next];
-                else __result0 = global::libvlc.LibvlcAudioOutputDeviceT.__CreateInstance(((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->p_next);
+                global::libvlcsharp.AudioOutputDevice __result0;
+                if (((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
+                else if (global::libvlcsharp.AudioOutputDevice.NativeToManagedMap.ContainsKey(((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->p_next))
+                    __result0 = (global::libvlcsharp.AudioOutputDevice) global::libvlcsharp.AudioOutputDevice.NativeToManagedMap[((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->p_next];
+                else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
             }
         }
 
@@ -4492,12 +4789,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->psz_device;
+                return (sbyte*) ((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->psz_device;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->psz_device = (global::System.IntPtr) value;
+                ((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->psz_device = (global::System.IntPtr) value;
             }
         }
 
@@ -4505,19 +4802,19 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->psz_description;
+                return (sbyte*) ((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->psz_description;
             }
 
             set
             {
-                ((global::libvlc.LibvlcAudioOutputDeviceT.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
+                ((global::libvlcsharp.AudioOutputDevice.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
             }
         }
     }
 
     /// <summary>Viewpoint for video outputs</summary>
     /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
-    public unsafe partial class LibvlcVideoViewpointT : IDisposable
+    public unsafe partial class VideoViewpoint : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 16)]
         public partial struct __Internal
@@ -4533,45 +4830,65 @@ namespace libvlc
 
             [FieldOffset(12)]
             internal float f_field_of_view;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_video_viewpoint_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcVideoViewpointT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcVideoViewpointT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.VideoViewpoint> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.VideoViewpoint>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcVideoViewpointT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.VideoViewpoint __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcVideoViewpointT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.VideoViewpoint(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcVideoViewpointT __CreateInstance(global::libvlc.LibvlcVideoViewpointT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.VideoViewpoint __CreateInstance(global::libvlcsharp.VideoViewpoint.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcVideoViewpointT(native, skipVTables);
+            return new global::libvlcsharp.VideoViewpoint(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcVideoViewpointT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.VideoViewpoint.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcVideoViewpointT.__Internal));
-            *(global::libvlc.LibvlcVideoViewpointT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoViewpoint.__Internal));
+            *(global::libvlcsharp.VideoViewpoint.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcVideoViewpointT(global::libvlc.LibvlcVideoViewpointT.__Internal native, bool skipVTables = false)
+        private VideoViewpoint(global::libvlcsharp.VideoViewpoint.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcVideoViewpointT(void* native, bool skipVTables = false)
+        protected VideoViewpoint(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public VideoViewpoint()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoViewpoint.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public VideoViewpoint(global::libvlcsharp.VideoViewpoint _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.VideoViewpoint.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance) = *((global::libvlcsharp.VideoViewpoint.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -4583,7 +4900,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcVideoViewpointT __dummy;
+            global::libvlcsharp.VideoViewpoint __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -4594,12 +4911,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_yaw;
+                return ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_yaw;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_yaw = value;
+                ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_yaw = value;
             }
         }
 
@@ -4607,12 +4924,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_pitch;
+                return ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_pitch;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_pitch = value;
+                ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_pitch = value;
             }
         }
 
@@ -4620,12 +4937,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_roll;
+                return ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_roll;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_roll = value;
+                ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_roll = value;
             }
         }
 
@@ -4633,12 +4950,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_field_of_view;
+                return ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_field_of_view;
             }
 
             set
             {
-                ((global::libvlc.LibvlcVideoViewpointT.__Internal*) __Instance)->f_field_of_view = value;
+                ((global::libvlcsharp.VideoViewpoint.__Internal*) __Instance)->f_field_of_view = value;
             }
         }
     }
@@ -4706,6 +5023,11 @@ namespace libvlc
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_player_stop")]
             internal static extern void LibvlcMediaPlayerStop(global::System.IntPtr p_mi);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="libvlc_media_player_set_renderer")]
+            internal static extern int LibvlcMediaPlayerSetRenderer(global::System.IntPtr p_mi, global::System.IntPtr p_item);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -4870,7 +5192,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_player_get_state")]
-            internal static extern global::libvlc.LibvlcStateT LibvlcMediaPlayerGetState(global::System.IntPtr p_mi);
+            internal static extern global::libvlcsharp.VLCState LibvlcMediaPlayerGetState(global::System.IntPtr p_mi);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -4905,12 +5227,12 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_player_set_video_title_display")]
-            internal static extern void LibvlcMediaPlayerSetVideoTitleDisplay(global::System.IntPtr p_mi, global::libvlc.LibvlcPositionT position, uint timeout);
+            internal static extern void LibvlcMediaPlayerSetVideoTitleDisplay(global::System.IntPtr p_mi, global::libvlcsharp.Position position, uint timeout);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_player_add_slave")]
-            internal static extern int LibvlcMediaPlayerAddSlave(global::System.IntPtr p_mi, global::libvlc.LibvlcMediaSlaveTypeT i_type, [MarshalAs(UnmanagedType.LPStr)] string psz_uri, bool b_select);
+            internal static extern int LibvlcMediaPlayerAddSlave(global::System.IntPtr p_mi, global::libvlcsharp.MediaSlaveType i_type, [MarshalAs(UnmanagedType.LPStr)] string psz_uri, bool b_select);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -5319,15 +5641,15 @@ namespace libvlc
         /// <para>should be created.</para>
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public static global::libvlc.LibvlcMediaPlayerT LibvlcMediaPlayerNew(global::libvlc.LibvlcInstanceT p_libvlc_instance)
+        public static global::libvlcsharp.MediaPlayer LibvlcMediaPlayerNew(global::libvlcsharp.Instance p_libvlc_instance)
         {
             var __arg0 = ReferenceEquals(p_libvlc_instance, null) ? global::System.IntPtr.Zero : p_libvlc_instance.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerNew(__arg0);
-            global::libvlc.LibvlcMediaPlayerT __result0;
+            global::libvlcsharp.MediaPlayer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaPlayerT) global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaPlayerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaPlayer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaPlayer) global::libvlcsharp.MediaPlayer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaPlayer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -5337,15 +5659,15 @@ namespace libvlc
         /// <para>destroyed.</para>
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public static global::libvlc.LibvlcMediaPlayerT LibvlcMediaPlayerNewFromMedia(global::libvlc.LibvlcMediaT p_md)
+        public static global::libvlcsharp.MediaPlayer LibvlcMediaPlayerNewFromMedia(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerNewFromMedia(__arg0);
-            global::libvlc.LibvlcMediaPlayerT __result0;
+            global::libvlcsharp.MediaPlayer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaPlayerT) global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaPlayerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaPlayer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaPlayer) global::libvlcsharp.MediaPlayer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaPlayer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -5357,7 +5679,7 @@ namespace libvlc
         /// <para>has been released, then it should not be used again.</para>
         /// </summary>
         /// <param name="p_mi">the Media Player to free</param>
-        public static void LibvlcMediaPlayerRelease(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerRelease(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerRelease(__arg0);
@@ -5368,7 +5690,7 @@ namespace libvlc
         /// <para>libvlc_media_player_release() to decrement reference count.</para>
         /// </summary>
         /// <param name="p_mi">media player object</param>
-        public static void LibvlcMediaPlayerRetain(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerRetain(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerRetain(__arg0);
@@ -5383,7 +5705,7 @@ namespace libvlc
         /// <para>the Media. Afterwards the p_md can be safely</para>
         /// <para>destroyed.</para>
         /// </param>
-        public static void LibvlcMediaPlayerSetMedia(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaPlayerSetMedia(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -5396,37 +5718,37 @@ namespace libvlc
         /// <para>the media associated with p_mi, or NULL if no</para>
         /// <para>media is associated</para>
         /// </returns>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaPlayerGetMedia(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.Media LibvlcMediaPlayerGetMedia(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetMedia(__arg0);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Get the Event Manager from which the media player send event.</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the event manager associated with p_mi</returns>
-        public static global::libvlc.LibvlcEventManagerT LibvlcMediaPlayerEventManager(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.EventManager LibvlcMediaPlayerEventManager(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>is_playing</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>1 if the media player is playing, 0 otherwise</returns>
-        public static int LibvlcMediaPlayerIsPlaying(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerIsPlaying(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerIsPlaying(__arg0);
@@ -5436,7 +5758,7 @@ namespace libvlc
         /// <summary>Play</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>0 if playback started (and was already started), or -1 on error.</returns>
-        public static int LibvlcMediaPlayerPlay(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerPlay(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerPlay(__arg0);
@@ -5447,7 +5769,7 @@ namespace libvlc
         /// <param name="mp">the Media Player</param>
         /// <param name="do_pause">play/resume if zero, pause if non-zero</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public static void LibvlcMediaPlayerSetPause(global::libvlc.LibvlcMediaPlayerT mp, int do_pause)
+        public static void LibvlcMediaPlayerSetPause(global::libvlcsharp.MediaPlayer mp, int do_pause)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             __Internal.LibvlcMediaPlayerSetPause(__arg0, do_pause);
@@ -5455,7 +5777,7 @@ namespace libvlc
 
         /// <summary>Toggle pause (no effect if there is no media)</summary>
         /// <param name="p_mi">the Media Player</param>
-        public static void LibvlcMediaPlayerPause(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerPause(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerPause(__arg0);
@@ -5463,10 +5785,28 @@ namespace libvlc
 
         /// <summary>Stop (no effect if there is no media)</summary>
         /// <param name="p_mi">the Media Player</param>
-        public static void LibvlcMediaPlayerStop(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerStop(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerStop(__arg0);
+        }
+
+        /// <summary>Set a renderer to the media player</summary>
+        /// <param name="p_mi">the Media Player</param>
+        /// <param name="p_item">an item discovered by libvlc_renderer_discoverer_start()</param>
+        /// <returns>0 on success, -1 on error.</returns>
+        /// <remarks>
+        /// <para>must be called before the first call of libvlc_media_player_play() to</para>
+        /// <para>take effect.</para>
+        /// <para>libvlc_renderer_discoverer_new</para>
+        /// <para>LibVLC 3.0.0 or later</para>
+        /// </remarks>
+        public static int LibvlcMediaPlayerSetRenderer(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.RendererItem p_item)
+        {
+            var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
+            var __arg1 = ReferenceEquals(p_item, null) ? global::System.IntPtr.Zero : p_item.__Instance;
+            var __ret = __Internal.LibvlcMediaPlayerSetRenderer(__arg0, __arg1);
+            return __ret;
         }
 
         /// <summary>
@@ -5503,7 +5843,7 @@ namespace libvlc
         /// <para>application buffers (between lock and unlock callbacks).</para>
         /// <para>LibVLC 1.1.1 or later</para>
         /// </remarks>
-        public static void LibvlcVideoSetCallbacks(global::libvlc.LibvlcMediaPlayerT mp, global::libvlc.LibvlcVideoLockCb @lock, global::libvlc.LibvlcVideoUnlockCb unlock, global::libvlc.LibvlcVideoDisplayCb display, global::System.IntPtr opaque)
+        public static void LibvlcVideoSetCallbacks(global::libvlcsharp.MediaPlayer mp, global::libvlcsharp.LibvlcVideoLockCb @lock, global::libvlcsharp.LibvlcVideoUnlockCb unlock, global::libvlcsharp.LibvlcVideoDisplayCb display, global::System.IntPtr opaque)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __arg1 = @lock == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(@lock);
@@ -5531,7 +5871,7 @@ namespace libvlc
         /// <para>To use the YCbCr color space with chrominance subsampling,</para>
         /// <para>consider using libvlc_video_set_format_callbacks() instead.</para>
         /// </remarks>
-        public static void LibvlcVideoSetFormat(global::libvlc.LibvlcMediaPlayerT mp, string chroma, uint width, uint height, uint pitch)
+        public static void LibvlcVideoSetFormat(global::libvlcsharp.MediaPlayer mp, string chroma, uint width, uint height, uint pitch)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             __Internal.LibvlcVideoSetFormat(__arg0, chroma, width, height, pitch);
@@ -5545,7 +5885,7 @@ namespace libvlc
         /// <param name="setup">callback to select the video format (cannot be NULL)</param>
         /// <param name="cleanup">callback to release any allocated resources (or NULL)</param>
         /// <remarks>LibVLC 2.0.0 or later</remarks>
-        public static void LibvlcVideoSetFormatCallbacks(global::libvlc.LibvlcMediaPlayerT mp, global::libvlc.LibvlcVideoFormatCb setup, global::libvlc.LibvlcVideoCleanupCb cleanup)
+        public static void LibvlcVideoSetFormatCallbacks(global::libvlcsharp.MediaPlayer mp, global::libvlcsharp.LibvlcVideoFormatCb setup, global::libvlcsharp.LibvlcVideoCleanupCb cleanup)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __arg1 = setup == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(setup);
@@ -5568,7 +5908,7 @@ namespace libvlc
         /// <para>the following code should work:</para>
         /// <para>You can find a live example in VLCVideoView in VLCKit.framework.</para>
         /// </remarks>
-        public static void LibvlcMediaPlayerSetNsobject(global::libvlc.LibvlcMediaPlayerT p_mi, global::System.IntPtr drawable)
+        public static void LibvlcMediaPlayerSetNsobject(global::libvlcsharp.MediaPlayer p_mi, global::System.IntPtr drawable)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetNsobject(__arg0, drawable);
@@ -5577,7 +5917,7 @@ namespace libvlc
         /// <summary>Get the NSView handler previously set with libvlc_media_player_set_nsobject().</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the NSView handler or 0 if none where set</returns>
-        public static global::System.IntPtr LibvlcMediaPlayerGetNsobject(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::System.IntPtr LibvlcMediaPlayerGetNsobject(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetNsobject(__arg0);
@@ -5616,7 +5956,7 @@ namespace libvlc
         /// <para>will be rendered into external windows beyond the control of the</para>
         /// <para>application.</para>
         /// </remarks>
-        public static void LibvlcMediaPlayerSetXwindow(global::libvlc.LibvlcMediaPlayerT p_mi, uint drawable)
+        public static void LibvlcMediaPlayerSetXwindow(global::libvlcsharp.MediaPlayer p_mi, uint drawable)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetXwindow(__arg0, drawable);
@@ -5630,7 +5970,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>an X window ID, or 0 if none where set.</returns>
-        public static uint LibvlcMediaPlayerGetXwindow(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static uint LibvlcMediaPlayerGetXwindow(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetXwindow(__arg0);
@@ -5644,7 +5984,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_mi">the Media Player</param>
         /// <param name="drawable">windows handle of the drawable</param>
-        public static void LibvlcMediaPlayerSetHwnd(global::libvlc.LibvlcMediaPlayerT p_mi, global::System.IntPtr drawable)
+        public static void LibvlcMediaPlayerSetHwnd(global::libvlcsharp.MediaPlayer p_mi, global::System.IntPtr drawable)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetHwnd(__arg0, drawable);
@@ -5657,7 +5997,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>a window handle or NULL if there are none.</returns>
-        public static global::System.IntPtr LibvlcMediaPlayerGetHwnd(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::System.IntPtr LibvlcMediaPlayerGetHwnd(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetHwnd(__arg0);
@@ -5671,7 +6011,7 @@ namespace libvlc
         /// <para>org.videolan.libvlc.MediaPlayer class from the libvlc-android project.</para>
         /// </param>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcMediaPlayerSetAndroidContext(global::libvlc.LibvlcMediaPlayerT p_mi, global::System.IntPtr p_awindow_handler)
+        public static void LibvlcMediaPlayerSetAndroidContext(global::libvlcsharp.MediaPlayer p_mi, global::System.IntPtr p_awindow_handler)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetAndroidContext(__arg0, p_awindow_handler);
@@ -5682,7 +6022,7 @@ namespace libvlc
         /// <param name="p_evas_object">a valid EFL Evas Object (Evas_Object)</param>
         /// <returns>-1 if an error was detected, 0 otherwise.</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static int LibvlcMediaPlayerSetEvasObject(global::libvlc.LibvlcMediaPlayerT p_mi, global::System.IntPtr p_evas_object)
+        public static int LibvlcMediaPlayerSetEvasObject(global::libvlcsharp.MediaPlayer p_mi, global::System.IntPtr p_evas_object)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerSetEvasObject(__arg0, p_evas_object);
@@ -5704,7 +6044,7 @@ namespace libvlc
         /// <para>If the callbacks are set, LibVLC willnotoutput audio in any way.</para>
         /// <para>LibVLC 2.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcAudioSetCallbacks(global::libvlc.LibvlcMediaPlayerT mp, global::libvlc.LibvlcAudioPlayCb play, global::libvlc.LibvlcAudioPauseCb pause, global::libvlc.LibvlcAudioResumeCb resume, global::libvlc.LibvlcAudioFlushCb flush, global::libvlc.LibvlcAudioDrainCb drain, global::System.IntPtr opaque)
+        public static void LibvlcAudioSetCallbacks(global::libvlcsharp.MediaPlayer mp, global::libvlcsharp.LibvlcAudioPlayCb play, global::libvlcsharp.LibvlcAudioPauseCb pause, global::libvlcsharp.LibvlcAudioResumeCb resume, global::libvlcsharp.LibvlcAudioFlushCb flush, global::libvlcsharp.LibvlcAudioDrainCb drain, global::System.IntPtr opaque)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __arg1 = play == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(play);
@@ -5727,7 +6067,7 @@ namespace libvlc
         /// <para>or NULL to apply volume in software</para>
         /// </param>
         /// <remarks>LibVLC 2.0.0 or later</remarks>
-        public static void LibvlcAudioSetVolumeCallback(global::libvlc.LibvlcMediaPlayerT mp, global::libvlc.LibvlcAudioSetVolumeCb set_volume)
+        public static void LibvlcAudioSetVolumeCallback(global::libvlcsharp.MediaPlayer mp, global::libvlcsharp.LibvlcAudioSetVolumeCb set_volume)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __arg1 = set_volume == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(set_volume);
@@ -5742,7 +6082,7 @@ namespace libvlc
         /// <para>This only works in combination with libvlc_audio_set_callbacks().</para>
         /// <para>LibVLC 2.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcAudioSetFormatCallbacks(global::libvlc.LibvlcMediaPlayerT mp, global::libvlc.LibvlcAudioSetupCb setup, global::libvlc.LibvlcAudioCleanupCb cleanup)
+        public static void LibvlcAudioSetFormatCallbacks(global::libvlcsharp.MediaPlayer mp, global::libvlcsharp.LibvlcAudioSetupCb setup, global::libvlcsharp.LibvlcAudioCleanupCb cleanup)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __arg1 = setup == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(setup);
@@ -5763,7 +6103,7 @@ namespace libvlc
         /// <para>and is mutually exclusive with libvlc_audio_set_format_callbacks().</para>
         /// <para>LibVLC 2.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcAudioSetFormat(global::libvlc.LibvlcMediaPlayerT mp, string format, uint rate, uint channels)
+        public static void LibvlcAudioSetFormat(global::libvlcsharp.MediaPlayer mp, string format, uint rate, uint channels)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             __Internal.LibvlcAudioSetFormat(__arg0, format, rate, channels);
@@ -5772,7 +6112,7 @@ namespace libvlc
         /// <summary>Get the current movie length (in ms).</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the movie length (in ms), or -1 if there is no media.</returns>
-        public static long LibvlcMediaPlayerGetLength(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static long LibvlcMediaPlayerGetLength(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetLength(__arg0);
@@ -5782,7 +6122,7 @@ namespace libvlc
         /// <summary>Get the current movie time (in ms).</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the movie time (in ms), or -1 if there is no media.</returns>
-        public static long LibvlcMediaPlayerGetTime(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static long LibvlcMediaPlayerGetTime(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetTime(__arg0);
@@ -5795,7 +6135,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_mi">the Media Player</param>
         /// <param name="i_time">the movie time (in ms).</param>
-        public static void LibvlcMediaPlayerSetTime(global::libvlc.LibvlcMediaPlayerT p_mi, long i_time)
+        public static void LibvlcMediaPlayerSetTime(global::libvlcsharp.MediaPlayer p_mi, long i_time)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetTime(__arg0, i_time);
@@ -5804,7 +6144,7 @@ namespace libvlc
         /// <summary>Get movie position as percentage between 0.0 and 1.0.</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>movie position, or -1. in case of error</returns>
-        public static float LibvlcMediaPlayerGetPosition(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static float LibvlcMediaPlayerGetPosition(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetPosition(__arg0);
@@ -5818,7 +6158,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_mi">the Media Player</param>
         /// <param name="f_pos">the position</param>
-        public static void LibvlcMediaPlayerSetPosition(global::libvlc.LibvlcMediaPlayerT p_mi, float f_pos)
+        public static void LibvlcMediaPlayerSetPosition(global::libvlcsharp.MediaPlayer p_mi, float f_pos)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetPosition(__arg0, f_pos);
@@ -5827,7 +6167,7 @@ namespace libvlc
         /// <summary>Set movie chapter (if applicable).</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <param name="i_chapter">chapter number to play</param>
-        public static void LibvlcMediaPlayerSetChapter(global::libvlc.LibvlcMediaPlayerT p_mi, int i_chapter)
+        public static void LibvlcMediaPlayerSetChapter(global::libvlcsharp.MediaPlayer p_mi, int i_chapter)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetChapter(__arg0, i_chapter);
@@ -5836,7 +6176,7 @@ namespace libvlc
         /// <summary>Get movie chapter.</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>chapter number currently playing, or -1 if there is no media.</returns>
-        public static int LibvlcMediaPlayerGetChapter(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerGetChapter(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetChapter(__arg0);
@@ -5846,7 +6186,7 @@ namespace libvlc
         /// <summary>Get movie chapter count</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>number of chapters in movie, or -1.</returns>
-        public static int LibvlcMediaPlayerGetChapterCount(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerGetChapterCount(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetChapterCount(__arg0);
@@ -5856,7 +6196,7 @@ namespace libvlc
         /// <summary>Is the player able to play</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>boolean</returns>
-        public static int LibvlcMediaPlayerWillPlay(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerWillPlay(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerWillPlay(__arg0);
@@ -5867,7 +6207,7 @@ namespace libvlc
         /// <param name="p_mi">the Media Player</param>
         /// <param name="i_title">title</param>
         /// <returns>number of chapters in title, or -1</returns>
-        public static int LibvlcMediaPlayerGetChapterCountForTitle(global::libvlc.LibvlcMediaPlayerT p_mi, int i_title)
+        public static int LibvlcMediaPlayerGetChapterCountForTitle(global::libvlcsharp.MediaPlayer p_mi, int i_title)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetChapterCountForTitle(__arg0, i_title);
@@ -5877,7 +6217,7 @@ namespace libvlc
         /// <summary>Set movie title</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <param name="i_title">title number to play</param>
-        public static void LibvlcMediaPlayerSetTitle(global::libvlc.LibvlcMediaPlayerT p_mi, int i_title)
+        public static void LibvlcMediaPlayerSetTitle(global::libvlcsharp.MediaPlayer p_mi, int i_title)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetTitle(__arg0, i_title);
@@ -5886,7 +6226,7 @@ namespace libvlc
         /// <summary>Get movie title</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>title number currently playing, or -1</returns>
-        public static int LibvlcMediaPlayerGetTitle(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerGetTitle(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetTitle(__arg0);
@@ -5896,7 +6236,7 @@ namespace libvlc
         /// <summary>Get movie title count</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>title number count, or -1</returns>
-        public static int LibvlcMediaPlayerGetTitleCount(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerGetTitleCount(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetTitleCount(__arg0);
@@ -5905,7 +6245,7 @@ namespace libvlc
 
         /// <summary>Set previous chapter (if applicable)</summary>
         /// <param name="p_mi">the Media Player</param>
-        public static void LibvlcMediaPlayerPreviousChapter(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerPreviousChapter(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerPreviousChapter(__arg0);
@@ -5913,7 +6253,7 @@ namespace libvlc
 
         /// <summary>Set next chapter (if applicable)</summary>
         /// <param name="p_mi">the Media Player</param>
-        public static void LibvlcMediaPlayerNextChapter(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerNextChapter(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerNextChapter(__arg0);
@@ -5926,7 +6266,7 @@ namespace libvlc
         /// <para>Depending on the underlying media, the requested rate may be</para>
         /// <para>different from the real playback rate.</para>
         /// </remarks>
-        public static float LibvlcMediaPlayerGetRate(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static float LibvlcMediaPlayerGetRate(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetRate(__arg0);
@@ -5940,7 +6280,7 @@ namespace libvlc
         /// <para>-1 if an error was detected, 0 otherwise (but even then, it might</para>
         /// <para>not actually work depending on the underlying media protocol)</para>
         /// </returns>
-        public static int LibvlcMediaPlayerSetRate(global::libvlc.LibvlcMediaPlayerT p_mi, float rate)
+        public static int LibvlcMediaPlayerSetRate(global::libvlcsharp.MediaPlayer p_mi, float rate)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerSetRate(__arg0, rate);
@@ -5951,7 +6291,7 @@ namespace libvlc
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the current state of the media player (playing, paused, ...)</returns>
         /// <remarks>libvlc_state_t</remarks>
-        public static global::libvlc.LibvlcStateT LibvlcMediaPlayerGetState(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.VLCState LibvlcMediaPlayerGetState(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetState(__arg0);
@@ -5961,7 +6301,7 @@ namespace libvlc
         /// <summary>How many video outputs does this media player have?</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>the number of video outputs</returns>
-        public static uint LibvlcMediaPlayerHasVout(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static uint LibvlcMediaPlayerHasVout(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerHasVout(__arg0);
@@ -5971,7 +6311,7 @@ namespace libvlc
         /// <summary>Is this media player seekable?</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>true if the media player can seek</returns>
-        public static int LibvlcMediaPlayerIsSeekable(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerIsSeekable(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerIsSeekable(__arg0);
@@ -5981,7 +6321,7 @@ namespace libvlc
         /// <summary>Can this media player be paused?</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>true if the media player can pause</returns>
-        public static int LibvlcMediaPlayerCanPause(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerCanPause(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerCanPause(__arg0);
@@ -5992,7 +6332,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <returns>true if the current program is scrambled</returns>
         /// <remarks>LibVLC 2.2.0 or later</remarks>
-        public static int LibvlcMediaPlayerProgramScrambled(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerProgramScrambled(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerProgramScrambled(__arg0);
@@ -6001,7 +6341,7 @@ namespace libvlc
 
         /// <summary>Display the next frame (if supported)</summary>
         /// <param name="p_mi">the media player</param>
-        public static void LibvlcMediaPlayerNextFrame(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaPlayerNextFrame(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerNextFrame(__arg0);
@@ -6011,7 +6351,7 @@ namespace libvlc
         /// <param name="p_mi">the Media Player</param>
         /// <param name="navigate">the Navigation mode</param>
         /// <remarks>libVLC 2.0.0 or later</remarks>
-        public static void LibvlcMediaPlayerNavigate(global::libvlc.LibvlcMediaPlayerT p_mi, uint navigate)
+        public static void LibvlcMediaPlayerNavigate(global::libvlcsharp.MediaPlayer p_mi, uint navigate)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerNavigate(__arg0, navigate);
@@ -6022,7 +6362,7 @@ namespace libvlc
         /// <param name="position">position at which to display the title, or libvlc_position_disable to prevent the title from being displayed</param>
         /// <param name="timeout">title display timeout in milliseconds (ignored if libvlc_position_disable)</param>
         /// <remarks>libVLC 2.1.0 or later</remarks>
-        public static void LibvlcMediaPlayerSetVideoTitleDisplay(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcPositionT position, uint timeout)
+        public static void LibvlcMediaPlayerSetVideoTitleDisplay(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.Position position, uint timeout)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetVideoTitleDisplay(__arg0, position, timeout);
@@ -6040,7 +6380,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public static int LibvlcMediaPlayerAddSlave(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcMediaSlaveTypeT i_type, string psz_uri, bool b_select)
+        public static int LibvlcMediaPlayerAddSlave(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.MediaSlaveType i_type, string psz_uri, bool b_select)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerAddSlave(__arg0, i_type, psz_uri, b_select);
@@ -6049,7 +6389,7 @@ namespace libvlc
 
         /// <summary>Release (free) libvlc_track_description_t</summary>
         /// <param name="p_track_description">the structure to release</param>
-        public static void LibvlcTrackDescriptionListRelease(global::libvlc.LibvlcTrackDescriptionT p_track_description)
+        public static void LibvlcTrackDescriptionListRelease(global::libvlcsharp.TrackDescription p_track_description)
         {
             var __arg0 = ReferenceEquals(p_track_description, null) ? global::System.IntPtr.Zero : p_track_description.__Instance;
             __Internal.LibvlcTrackDescriptionListRelease(__arg0);
@@ -6061,7 +6401,7 @@ namespace libvlc
         /// <para>The same limitations applies to this function</para>
         /// <para>as to libvlc_set_fullscreen().</para>
         /// </remarks>
-        public static void LibvlcToggleFullscreen(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcToggleFullscreen(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcToggleFullscreen(__arg0);
@@ -6078,7 +6418,7 @@ namespace libvlc
         /// <para>to the root windowbeforefullscreen mode is enabled. You will want</para>
         /// <para>to reparent it back to its normal parent when disabling fullscreen.</para>
         /// </remarks>
-        public static void LibvlcSetFullscreen(global::libvlc.LibvlcMediaPlayerT p_mi, int b_fullscreen)
+        public static void LibvlcSetFullscreen(global::libvlcsharp.MediaPlayer p_mi, int b_fullscreen)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcSetFullscreen(__arg0, b_fullscreen);
@@ -6087,7 +6427,7 @@ namespace libvlc
         /// <summary>Get current fullscreen status.</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>the fullscreen status (boolean)</returns>
-        public static int LibvlcGetFullscreen(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcGetFullscreen(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcGetFullscreen(__arg0);
@@ -6108,7 +6448,7 @@ namespace libvlc
         /// <para>handle key presses and mouse clicks in any case.</para>
         /// <para>This function is only implemented for X11 and Win32 at the moment.</para>
         /// </remarks>
-        public static void LibvlcVideoSetKeyInput(global::libvlc.LibvlcMediaPlayerT p_mi, uint on)
+        public static void LibvlcVideoSetKeyInput(global::libvlcsharp.MediaPlayer p_mi, uint on)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetKeyInput(__arg0, on);
@@ -6125,7 +6465,7 @@ namespace libvlc
         /// <para>libvlc_video_set_key_input().</para>
         /// <para>This function is only implemented for X11 and Win32 at the moment.</para>
         /// </remarks>
-        public static void LibvlcVideoSetMouseInput(global::libvlc.LibvlcMediaPlayerT p_mi, uint on)
+        public static void LibvlcVideoSetMouseInput(global::libvlcsharp.MediaPlayer p_mi, uint on)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetMouseInput(__arg0, on);
@@ -6137,7 +6477,7 @@ namespace libvlc
         /// <param name="px">pointer to get the pixel width [OUT]</param>
         /// <param name="py">pointer to get the pixel height [OUT]</param>
         /// <returns>0 on success, -1 if the specified video does not exist</returns>
-        public static int LibvlcVideoGetSize(global::libvlc.LibvlcMediaPlayerT p_mi, uint num, ref uint px, ref uint py)
+        public static int LibvlcVideoGetSize(global::libvlcsharp.MediaPlayer p_mi, uint num, ref uint px, ref uint py)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             fixed (uint* __refParamPtr2 = &px)
@@ -6172,7 +6512,7 @@ namespace libvlc
         /// <para>LibVLC does not support multiple pointers (it does of course support</para>
         /// <para>multiple input devices sharing the same pointer) at the moment.</para>
         /// </remarks>
-        public static int LibvlcVideoGetCursor(global::libvlc.LibvlcMediaPlayerT p_mi, uint num, ref int px, ref int py)
+        public static int LibvlcVideoGetCursor(global::libvlcsharp.MediaPlayer p_mi, uint num, ref int px, ref int py)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             fixed (int* __refParamPtr2 = &px)
@@ -6196,7 +6536,7 @@ namespace libvlc
         /// <para>the currently configured zoom factor, or 0. if the video is set</para>
         /// <para>to fit to the output window/drawable automatically.</para>
         /// </returns>
-        public static float LibvlcVideoGetScale(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static float LibvlcVideoGetScale(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetScale(__arg0);
@@ -6212,7 +6552,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <param name="f_factor">the scaling factor, or zero</param>
         /// <remarks>Note that not all video outputs support scaling.</remarks>
-        public static void LibvlcVideoSetScale(global::libvlc.LibvlcMediaPlayerT p_mi, float f_factor)
+        public static void LibvlcVideoSetScale(global::libvlcsharp.MediaPlayer p_mi, float f_factor)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetScale(__arg0, f_factor);
@@ -6224,7 +6564,7 @@ namespace libvlc
         /// <para>the video aspect ratio or NULL if unspecified</para>
         /// <para>(the result must be released with free() or libvlc_free()).</para>
         /// </returns>
-        public static sbyte* LibvlcVideoGetAspectRatio(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static sbyte* LibvlcVideoGetAspectRatio(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetAspectRatio(__arg0);
@@ -6235,7 +6575,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <param name="psz_aspect">new video aspect-ratio or NULL to reset to default</param>
         /// <remarks>Invalid aspect ratios are ignored.</remarks>
-        public static void LibvlcVideoSetAspectRatio(global::libvlc.LibvlcMediaPlayerT p_mi, string psz_aspect)
+        public static void LibvlcVideoSetAspectRatio(global::libvlcsharp.MediaPlayer p_mi, string psz_aspect)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetAspectRatio(__arg0, psz_aspect);
@@ -6247,14 +6587,14 @@ namespace libvlc
         /// <para>(the result must be released with free() or libvlc_free()).</para>
         /// </returns>
         /// <remarks>LibVLC 3.0.0 and later</remarks>
-        public static global::libvlc.LibvlcVideoViewpointT LibvlcVideoNewViewpoint()
+        public static global::libvlcsharp.VideoViewpoint LibvlcVideoNewViewpoint()
         {
             var __ret = __Internal.LibvlcVideoNewViewpoint();
-            global::libvlc.LibvlcVideoViewpointT __result0;
+            global::libvlcsharp.VideoViewpoint __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcVideoViewpointT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcVideoViewpointT) global::libvlc.LibvlcVideoViewpointT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcVideoViewpointT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.VideoViewpoint.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.VideoViewpoint) global::libvlcsharp.VideoViewpoint.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.VideoViewpoint.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -6271,7 +6611,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later</para>
         /// <para>the values are set asynchronously, it will be used by the next frame displayed.</para>
         /// </remarks>
-        public static int LibvlcVideoUpdateViewpoint(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcVideoViewpointT p_viewpoint, bool b_absolute)
+        public static int LibvlcVideoUpdateViewpoint(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.VideoViewpoint p_viewpoint, bool b_absolute)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __arg1 = ReferenceEquals(p_viewpoint, null) ? global::System.IntPtr.Zero : p_viewpoint.__Instance;
@@ -6282,7 +6622,7 @@ namespace libvlc
         /// <summary>Get current video subtitle.</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>the video subtitle selected, or -1 if none</returns>
-        public static int LibvlcVideoGetSpu(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetSpu(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetSpu(__arg0);
@@ -6292,7 +6632,7 @@ namespace libvlc
         /// <summary>Get the number of available video subtitles.</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>the number of available video subtitles</returns>
-        public static int LibvlcVideoGetSpuCount(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetSpuCount(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetSpuCount(__arg0);
@@ -6305,15 +6645,15 @@ namespace libvlc
         /// <para>list containing description of available video subtitles.</para>
         /// <para>It must be freed with libvlc_track_description_list_release()</para>
         /// </returns>
-        public static global::libvlc.LibvlcTrackDescriptionT LibvlcVideoGetSpuDescription(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.TrackDescription LibvlcVideoGetSpuDescription(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetSpuDescription(__arg0);
-            global::libvlc.LibvlcTrackDescriptionT __result0;
+            global::libvlcsharp.TrackDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -6321,7 +6661,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <param name="i_spu">video subtitle track to select (i_id from track description)</param>
         /// <returns>0 on success, -1 if out of range</returns>
-        public static int LibvlcVideoSetSpu(global::libvlc.LibvlcMediaPlayerT p_mi, int i_spu)
+        public static int LibvlcVideoSetSpu(global::libvlcsharp.MediaPlayer p_mi, int i_spu)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoSetSpu(__arg0, i_spu);
@@ -6335,7 +6675,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <returns>time (in microseconds) the display of subtitles is being delayed</returns>
         /// <remarks>LibVLC 2.0.0 or later</remarks>
-        public static long LibvlcVideoGetSpuDelay(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static long LibvlcVideoGetSpuDelay(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetSpuDelay(__arg0);
@@ -6354,7 +6694,7 @@ namespace libvlc
         /// <para>The subtitle delay will be reset to zero each time the media changes.</para>
         /// <para>LibVLC 2.0.0 or later</para>
         /// </remarks>
-        public static int LibvlcVideoSetSpuDelay(global::libvlc.LibvlcMediaPlayerT p_mi, long i_delay)
+        public static int LibvlcVideoSetSpuDelay(global::libvlcsharp.MediaPlayer p_mi, long i_delay)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoSetSpuDelay(__arg0, i_delay);
@@ -6370,7 +6710,7 @@ namespace libvlc
         /// </param>
         /// <returns>the number of titles (-1 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static int LibvlcMediaPlayerGetFullTitleDescriptions(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcTitleDescriptionT titles)
+        public static int LibvlcMediaPlayerGetFullTitleDescriptions(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.TitleDescription titles)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __arg1 = ReferenceEquals(titles, null) ? global::System.IntPtr.Zero : titles.__Instance;
@@ -6382,7 +6722,7 @@ namespace libvlc
         /// <param name="p_titles">title description array to release</param>
         /// <param name="i_count">number of title descriptions to release</param>
         /// <remarks>LibVLC 3.0.0 and later</remarks>
-        public static void LibvlcTitleDescriptionsRelease(global::libvlc.LibvlcTitleDescriptionT p_titles, uint i_count)
+        public static void LibvlcTitleDescriptionsRelease(global::libvlcsharp.TitleDescription p_titles, uint i_count)
         {
             var __arg0 = ReferenceEquals(p_titles, null) ? global::System.IntPtr.Zero : p_titles.__Instance;
             __Internal.LibvlcTitleDescriptionsRelease(__arg0, i_count);
@@ -6398,7 +6738,7 @@ namespace libvlc
         /// </param>
         /// <returns>the number of chapters (-1 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static int LibvlcMediaPlayerGetFullChapterDescriptions(global::libvlc.LibvlcMediaPlayerT p_mi, int i_chapters_of_title, global::libvlc.LibvlcChapterDescriptionT pp_chapters)
+        public static int LibvlcMediaPlayerGetFullChapterDescriptions(global::libvlcsharp.MediaPlayer p_mi, int i_chapters_of_title, global::libvlcsharp.ChapterDescription pp_chapters)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __arg2 = ReferenceEquals(pp_chapters, null) ? global::System.IntPtr.Zero : pp_chapters.__Instance;
@@ -6410,7 +6750,7 @@ namespace libvlc
         /// <param name="p_chapters">chapter description array to release</param>
         /// <param name="i_count">number of chapter descriptions to release</param>
         /// <remarks>LibVLC 3.0.0 and later</remarks>
-        public static void LibvlcChapterDescriptionsRelease(global::libvlc.LibvlcChapterDescriptionT p_chapters, uint i_count)
+        public static void LibvlcChapterDescriptionsRelease(global::libvlcsharp.ChapterDescription p_chapters, uint i_count)
         {
             var __arg0 = ReferenceEquals(p_chapters, null) ? global::System.IntPtr.Zero : p_chapters.__Instance;
             __Internal.LibvlcChapterDescriptionsRelease(__arg0, i_count);
@@ -6419,7 +6759,7 @@ namespace libvlc
         /// <summary>Get current crop filter geometry.</summary>
         /// <param name="p_mi">the media player</param>
         /// <returns>the crop filter geometry or NULL if unset</returns>
-        public static sbyte* LibvlcVideoGetCropGeometry(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static sbyte* LibvlcVideoGetCropGeometry(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetCropGeometry(__arg0);
@@ -6429,7 +6769,7 @@ namespace libvlc
         /// <summary>Set new crop filter geometry.</summary>
         /// <param name="p_mi">the media player</param>
         /// <param name="psz_geometry">new crop filter geometry (NULL to unset)</param>
-        public static void LibvlcVideoSetCropGeometry(global::libvlc.LibvlcMediaPlayerT p_mi, string psz_geometry)
+        public static void LibvlcVideoSetCropGeometry(global::libvlcsharp.MediaPlayer p_mi, string psz_geometry)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetCropGeometry(__arg0, psz_geometry);
@@ -6442,7 +6782,7 @@ namespace libvlc
         /// <para>Teletext is disabled by default, call libvlc_video_set_teletext() to enable</para>
         /// <para>it.</para>
         /// </remarks>
-        public static int LibvlcVideoGetTeletext(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetTeletext(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetTeletext(__arg0);
@@ -6456,7 +6796,7 @@ namespace libvlc
         /// <para>teletext, a number in the range ]0;1000[ to show the requested page, or a</para>
         /// </param>
         /// <remarks>This function can also be used to send a teletext key.</remarks>
-        public static void LibvlcVideoSetTeletext(global::libvlc.LibvlcMediaPlayerT p_mi, int i_page)
+        public static void LibvlcVideoSetTeletext(global::libvlcsharp.MediaPlayer p_mi, int i_page)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetTeletext(__arg0, i_page);
@@ -6465,7 +6805,7 @@ namespace libvlc
         /// <summary>Get number of available video tracks.</summary>
         /// <param name="p_mi">media player</param>
         /// <returns>the number of available video tracks (int)</returns>
-        public static int LibvlcVideoGetTrackCount(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetTrackCount(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetTrackCount(__arg0);
@@ -6478,22 +6818,22 @@ namespace libvlc
         /// <para>list with description of available video tracks, or NULL on error.</para>
         /// <para>It must be freed with libvlc_track_description_list_release()</para>
         /// </returns>
-        public static global::libvlc.LibvlcTrackDescriptionT LibvlcVideoGetTrackDescription(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.TrackDescription LibvlcVideoGetTrackDescription(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetTrackDescription(__arg0);
-            global::libvlc.LibvlcTrackDescriptionT __result0;
+            global::libvlcsharp.TrackDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Get current video track.</summary>
         /// <param name="p_mi">media player</param>
         /// <returns>the video track ID (int) or -1 if no active input</returns>
-        public static int LibvlcVideoGetTrack(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetTrack(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetTrack(__arg0);
@@ -6504,7 +6844,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <param name="i_track">the track ID (i_id field from track description)</param>
         /// <returns>0 on success, -1 if out of range</returns>
-        public static int LibvlcVideoSetTrack(global::libvlc.LibvlcMediaPlayerT p_mi, int i_track)
+        public static int LibvlcVideoSetTrack(global::libvlcsharp.MediaPlayer p_mi, int i_track)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoSetTrack(__arg0, i_track);
@@ -6522,7 +6862,7 @@ namespace libvlc
         /// <para>If i_width AND i_height is 0, original size is used.</para>
         /// <para>If i_width XOR i_height is 0, original aspect-ratio is preserved.</para>
         /// </remarks>
-        public static int LibvlcVideoTakeSnapshot(global::libvlc.LibvlcMediaPlayerT p_mi, uint num, string psz_filepath, uint i_width, uint i_height)
+        public static int LibvlcVideoTakeSnapshot(global::libvlcsharp.MediaPlayer p_mi, uint num, string psz_filepath, uint i_width, uint i_height)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoTakeSnapshot(__arg0, num, psz_filepath, i_width, i_height);
@@ -6532,7 +6872,7 @@ namespace libvlc
         /// <summary>Enable or disable deinterlace filter</summary>
         /// <param name="p_mi">libvlc media player</param>
         /// <param name="psz_mode">type of deinterlace filter, NULL to disable</param>
-        public static void LibvlcVideoSetDeinterlace(global::libvlc.LibvlcMediaPlayerT p_mi, string psz_mode)
+        public static void LibvlcVideoSetDeinterlace(global::libvlcsharp.MediaPlayer p_mi, string psz_mode)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetDeinterlace(__arg0, psz_mode);
@@ -6542,7 +6882,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player</param>
         /// <param name="option">marq option to get</param>
         /// <remarks>libvlc_video_marquee_int_option_t</remarks>
-        public static int LibvlcVideoGetMarqueeInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option)
+        public static int LibvlcVideoGetMarqueeInt(global::libvlcsharp.MediaPlayer p_mi, uint option)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetMarqueeInt(__arg0, option);
@@ -6553,7 +6893,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player</param>
         /// <param name="option">marq option to get</param>
         /// <remarks>libvlc_video_marquee_string_option_t</remarks>
-        public static sbyte* LibvlcVideoGetMarqueeString(global::libvlc.LibvlcMediaPlayerT p_mi, uint option)
+        public static sbyte* LibvlcVideoGetMarqueeString(global::libvlcsharp.MediaPlayer p_mi, uint option)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetMarqueeString(__arg0, option);
@@ -6569,7 +6909,7 @@ namespace libvlc
         /// <para>or disabling (arg 0) the marq filter.</para>
         /// <para>libvlc_video_marquee_int_option_t</para>
         /// </remarks>
-        public static void LibvlcVideoSetMarqueeInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, int i_val)
+        public static void LibvlcVideoSetMarqueeInt(global::libvlcsharp.MediaPlayer p_mi, uint option, int i_val)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetMarqueeInt(__arg0, option, i_val);
@@ -6580,7 +6920,7 @@ namespace libvlc
         /// <param name="option">marq option to set</param>
         /// <param name="psz_text">marq option value</param>
         /// <remarks>libvlc_video_marquee_string_option_t</remarks>
-        public static void LibvlcVideoSetMarqueeString(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, string psz_text)
+        public static void LibvlcVideoSetMarqueeString(global::libvlcsharp.MediaPlayer p_mi, uint option, string psz_text)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetMarqueeString(__arg0, option, psz_text);
@@ -6589,7 +6929,7 @@ namespace libvlc
         /// <summary>Get integer logo option.</summary>
         /// <param name="p_mi">libvlc media player instance</param>
         /// <param name="option">logo option to get, values of libvlc_video_logo_option_t</param>
-        public static int LibvlcVideoGetLogoInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option)
+        public static int LibvlcVideoGetLogoInt(global::libvlcsharp.MediaPlayer p_mi, uint option)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetLogoInt(__arg0, option);
@@ -6605,7 +6945,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player instance</param>
         /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
         /// <param name="value">logo option value</param>
-        public static void LibvlcVideoSetLogoInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, int value)
+        public static void LibvlcVideoSetLogoInt(global::libvlcsharp.MediaPlayer p_mi, uint option, int value)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetLogoInt(__arg0, option, value);
@@ -6618,7 +6958,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player instance</param>
         /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
         /// <param name="psz_value">logo option value</param>
-        public static void LibvlcVideoSetLogoString(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, string psz_value)
+        public static void LibvlcVideoSetLogoString(global::libvlcsharp.MediaPlayer p_mi, uint option, string psz_value)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetLogoString(__arg0, option, psz_value);
@@ -6628,7 +6968,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player instance</param>
         /// <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
         /// <remarks>LibVLC 1.1.1 and later.</remarks>
-        public static int LibvlcVideoGetAdjustInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option)
+        public static int LibvlcVideoGetAdjustInt(global::libvlcsharp.MediaPlayer p_mi, uint option)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetAdjustInt(__arg0, option);
@@ -6645,7 +6985,7 @@ namespace libvlc
         /// <param name="option">adust option to set, values of libvlc_video_adjust_option_t</param>
         /// <param name="value">adjust option value</param>
         /// <remarks>LibVLC 1.1.1 and later.</remarks>
-        public static void LibvlcVideoSetAdjustInt(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, int value)
+        public static void LibvlcVideoSetAdjustInt(global::libvlcsharp.MediaPlayer p_mi, uint option, int value)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetAdjustInt(__arg0, option, value);
@@ -6655,7 +6995,7 @@ namespace libvlc
         /// <param name="p_mi">libvlc media player instance</param>
         /// <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
         /// <remarks>LibVLC 1.1.1 and later.</remarks>
-        public static float LibvlcVideoGetAdjustFloat(global::libvlc.LibvlcMediaPlayerT p_mi, uint option)
+        public static float LibvlcVideoGetAdjustFloat(global::libvlcsharp.MediaPlayer p_mi, uint option)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetAdjustFloat(__arg0, option);
@@ -6670,7 +7010,7 @@ namespace libvlc
         /// <param name="option">adust option to set, values of libvlc_video_adjust_option_t</param>
         /// <param name="value">adjust option value</param>
         /// <remarks>LibVLC 1.1.1 and later.</remarks>
-        public static void LibvlcVideoSetAdjustFloat(global::libvlc.LibvlcMediaPlayerT p_mi, uint option, float value)
+        public static void LibvlcVideoSetAdjustFloat(global::libvlcsharp.MediaPlayer p_mi, uint option, float value)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcVideoSetAdjustFloat(__arg0, option, value);
@@ -6684,21 +7024,21 @@ namespace libvlc
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcAudioOutputT LibvlcAudioOutputListGet(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.AudioOutput LibvlcAudioOutputListGet(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioOutputListGet(__arg0);
-            global::libvlc.LibvlcAudioOutputT __result0;
+            global::libvlcsharp.AudioOutput __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcAudioOutputT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcAudioOutputT) global::libvlc.LibvlcAudioOutputT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcAudioOutputT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.AudioOutput.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.AudioOutput) global::libvlcsharp.AudioOutput.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.AudioOutput.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Frees the list of available audio output modules.</summary>
         /// <param name="p_list">list with audio outputs for release</param>
-        public static void LibvlcAudioOutputListRelease(global::libvlc.LibvlcAudioOutputT p_list)
+        public static void LibvlcAudioOutputListRelease(global::libvlcsharp.AudioOutput p_list)
         {
             var __arg0 = ReferenceEquals(p_list, null) ? global::System.IntPtr.Zero : p_list.__Instance;
             __Internal.LibvlcAudioOutputListRelease(__arg0);
@@ -6716,7 +7056,7 @@ namespace libvlc
         /// <para>restarted. Audio output cannot be changed while playing.</para>
         /// <para>libvlc_audio_output_t</para>
         /// </remarks>
-        public static int LibvlcAudioOutputSet(global::libvlc.LibvlcMediaPlayerT p_mi, string psz_name)
+        public static int LibvlcAudioOutputSet(global::libvlcsharp.MediaPlayer p_mi, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioOutputSet(__arg0, psz_name);
@@ -6739,15 +7079,15 @@ namespace libvlc
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.2.0 or later.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcAudioOutputDeviceT LibvlcAudioOutputDeviceEnum(global::libvlc.LibvlcMediaPlayerT mp)
+        public static global::libvlcsharp.AudioOutputDevice LibvlcAudioOutputDeviceEnum(global::libvlcsharp.MediaPlayer mp)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceEnum(__arg0);
-            global::libvlc.LibvlcAudioOutputDeviceT __result0;
+            global::libvlcsharp.AudioOutputDevice __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcAudioOutputDeviceT) global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcAudioOutputDeviceT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.AudioOutputDevice.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.AudioOutputDevice) global::libvlcsharp.AudioOutputDevice.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -6772,22 +7112,22 @@ namespace libvlc
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public static global::libvlc.LibvlcAudioOutputDeviceT LibvlcAudioOutputDeviceListGet(global::libvlc.LibvlcInstanceT p_instance, string aout)
+        public static global::libvlcsharp.AudioOutputDevice LibvlcAudioOutputDeviceListGet(global::libvlcsharp.Instance p_instance, string aout)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceListGet(__arg0, aout);
-            global::libvlc.LibvlcAudioOutputDeviceT __result0;
+            global::libvlcsharp.AudioOutputDevice __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcAudioOutputDeviceT) global::libvlc.LibvlcAudioOutputDeviceT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcAudioOutputDeviceT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.AudioOutputDevice.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.AudioOutputDevice) global::libvlcsharp.AudioOutputDevice.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Frees a list of available audio output devices.</summary>
         /// <param name="p_list">list with audio outputs for release</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public static void LibvlcAudioOutputDeviceListRelease(global::libvlc.LibvlcAudioOutputDeviceT p_list)
+        public static void LibvlcAudioOutputDeviceListRelease(global::libvlcsharp.AudioOutputDevice p_list)
         {
             var __arg0 = ReferenceEquals(p_list, null) ? global::System.IntPtr.Zero : p_list.__Instance;
             __Internal.LibvlcAudioOutputDeviceListRelease(__arg0);
@@ -6824,7 +7164,7 @@ namespace libvlc
         /// <para>in the case of ALSA).</para>
         /// <para>libvlc_audio_output_t)</para>
         /// </remarks>
-        public static void LibvlcAudioOutputDeviceSet(global::libvlc.LibvlcMediaPlayerT mp, string module, string device_id)
+        public static void LibvlcAudioOutputDeviceSet(global::libvlcsharp.MediaPlayer mp, string module, string device_id)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             __Internal.LibvlcAudioOutputDeviceSet(__arg0, module, device_id);
@@ -6850,7 +7190,7 @@ namespace libvlc
         /// <para>dynamic audio device changes as they happen.</para>
         /// <para>LibVLC 3.0.0 or later.</para>
         /// </remarks>
-        public static sbyte* LibvlcAudioOutputDeviceGet(global::libvlc.LibvlcMediaPlayerT mp)
+        public static sbyte* LibvlcAudioOutputDeviceGet(global::libvlcsharp.MediaPlayer mp)
         {
             var __arg0 = ReferenceEquals(mp, null) ? global::System.IntPtr.Zero : mp.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceGet(__arg0);
@@ -6865,7 +7205,7 @@ namespace libvlc
         /// <para>there is a small race condition where toggling will not work.</para>
         /// <para>See also the limitations of libvlc_audio_set_mute().</para>
         /// </remarks>
-        public static void LibvlcAudioToggleMute(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcAudioToggleMute(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcAudioToggleMute(__arg0);
@@ -6874,7 +7214,7 @@ namespace libvlc
         /// <summary>Get current mute status.</summary>
         /// <param name="p_mi">media player</param>
         /// <returns>the mute status (boolean) if defined, -1 if undefined/unapplicable</returns>
-        public static int LibvlcAudioGetMute(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioGetMute(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetMute(__arg0);
@@ -6892,7 +7232,7 @@ namespace libvlc
         /// <para>To force silent playback, disable all audio tracks. This is more</para>
         /// <para>efficient and reliable than mute.</para>
         /// </remarks>
-        public static void LibvlcAudioSetMute(global::libvlc.LibvlcMediaPlayerT p_mi, int status)
+        public static void LibvlcAudioSetMute(global::libvlcsharp.MediaPlayer p_mi, int status)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcAudioSetMute(__arg0, status);
@@ -6904,7 +7244,7 @@ namespace libvlc
         /// <para>the software volume in percents</para>
         /// <para>(0 = mute, 100 = nominal / 0dB)</para>
         /// </returns>
-        public static int LibvlcAudioGetVolume(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioGetVolume(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetVolume(__arg0);
@@ -6915,7 +7255,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <param name="i_volume">the volume in percents (0 = mute, 100 = 0dB)</param>
         /// <returns>0 if the volume was set, -1 if it was out of range</returns>
-        public static int LibvlcAudioSetVolume(global::libvlc.LibvlcMediaPlayerT p_mi, int i_volume)
+        public static int LibvlcAudioSetVolume(global::libvlcsharp.MediaPlayer p_mi, int i_volume)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioSetVolume(__arg0, i_volume);
@@ -6925,7 +7265,7 @@ namespace libvlc
         /// <summary>Get number of available audio tracks.</summary>
         /// <param name="p_mi">media player</param>
         /// <returns>the number of available audio tracks (int), or -1 if unavailable</returns>
-        public static int LibvlcAudioGetTrackCount(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioGetTrackCount(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetTrackCount(__arg0);
@@ -6938,22 +7278,22 @@ namespace libvlc
         /// <para>list with description of available audio tracks, or NULL.</para>
         /// <para>It must be freed with libvlc_track_description_list_release()</para>
         /// </returns>
-        public static global::libvlc.LibvlcTrackDescriptionT LibvlcAudioGetTrackDescription(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.TrackDescription LibvlcAudioGetTrackDescription(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetTrackDescription(__arg0);
-            global::libvlc.LibvlcTrackDescriptionT __result0;
+            global::libvlcsharp.TrackDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Get current audio track.</summary>
         /// <param name="p_mi">media player</param>
         /// <returns>the audio track ID or -1 if no active input.</returns>
-        public static int LibvlcAudioGetTrack(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioGetTrack(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetTrack(__arg0);
@@ -6964,7 +7304,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <param name="i_track">the track ID (i_id field from track description)</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcAudioSetTrack(global::libvlc.LibvlcMediaPlayerT p_mi, int i_track)
+        public static int LibvlcAudioSetTrack(global::libvlcsharp.MediaPlayer p_mi, int i_track)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioSetTrack(__arg0, i_track);
@@ -6975,7 +7315,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <returns>the audio channel</returns>
         /// <remarks>libvlc_audio_output_channel_t</remarks>
-        public static int LibvlcAudioGetChannel(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioGetChannel(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetChannel(__arg0);
@@ -6987,7 +7327,7 @@ namespace libvlc
         /// <param name="channel">the audio channel,</param>
         /// <returns>0 on success, -1 on error</returns>
         /// <remarks>libvlc_audio_output_channel_t</remarks>
-        public static int LibvlcAudioSetChannel(global::libvlc.LibvlcMediaPlayerT p_mi, int channel)
+        public static int LibvlcAudioSetChannel(global::libvlcsharp.MediaPlayer p_mi, int channel)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioSetChannel(__arg0, channel);
@@ -6998,7 +7338,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <returns>the audio delay (microseconds)</returns>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public static long LibvlcAudioGetDelay(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static long LibvlcAudioGetDelay(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioGetDelay(__arg0);
@@ -7010,7 +7350,7 @@ namespace libvlc
         /// <param name="i_delay">the audio delay (microseconds)</param>
         /// <returns>0 on success, -1 on error</returns>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public static int LibvlcAudioSetDelay(global::libvlc.LibvlcMediaPlayerT p_mi, long i_delay)
+        public static int LibvlcAudioSetDelay(global::libvlcsharp.MediaPlayer p_mi, long i_delay)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioSetDelay(__arg0, i_delay);
@@ -7072,14 +7412,14 @@ namespace libvlc
         /// <para>it is no longer needed.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcEqualizerT LibvlcAudioEqualizerNew()
+        public static global::libvlcsharp.Equalizer LibvlcAudioEqualizerNew()
         {
             var __ret = __Internal.LibvlcAudioEqualizerNew();
-            global::libvlc.LibvlcEqualizerT __result0;
+            global::libvlcsharp.Equalizer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEqualizerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEqualizerT) global::libvlc.LibvlcEqualizerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEqualizerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Equalizer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Equalizer) global::libvlcsharp.Equalizer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Equalizer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7096,14 +7436,14 @@ namespace libvlc
         /// <para>it is no longer needed.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcEqualizerT LibvlcAudioEqualizerNewFromPreset(uint u_index)
+        public static global::libvlcsharp.Equalizer LibvlcAudioEqualizerNewFromPreset(uint u_index)
         {
             var __ret = __Internal.LibvlcAudioEqualizerNewFromPreset(u_index);
-            global::libvlc.LibvlcEqualizerT __result0;
+            global::libvlcsharp.Equalizer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEqualizerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEqualizerT) global::libvlc.LibvlcEqualizerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEqualizerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Equalizer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Equalizer) global::libvlcsharp.Equalizer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Equalizer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7115,7 +7455,7 @@ namespace libvlc
         /// <para>It is safe to invoke this method with a NULL p_equalizer parameter for no effect.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static void LibvlcAudioEqualizerRelease(global::libvlc.LibvlcEqualizerT p_equalizer)
+        public static void LibvlcAudioEqualizerRelease(global::libvlcsharp.Equalizer p_equalizer)
         {
             var __arg0 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
             __Internal.LibvlcAudioEqualizerRelease(__arg0);
@@ -7131,7 +7471,7 @@ namespace libvlc
         /// <para>The supplied amplification value will be clamped to the -20.0 to +20.0 range.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static int LibvlcAudioEqualizerSetPreamp(global::libvlc.LibvlcEqualizerT p_equalizer, float f_preamp)
+        public static int LibvlcAudioEqualizerSetPreamp(global::libvlcsharp.Equalizer p_equalizer, float f_preamp)
         {
             var __arg0 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
             var __ret = __Internal.LibvlcAudioEqualizerSetPreamp(__arg0, f_preamp);
@@ -7142,7 +7482,7 @@ namespace libvlc
         /// <param name="p_equalizer">valid equalizer handle, must not be NULL</param>
         /// <returns>preamp value (Hz)</returns>
         /// <remarks>LibVLC 2.2.0 or later</remarks>
-        public static float LibvlcAudioEqualizerGetPreamp(global::libvlc.LibvlcEqualizerT p_equalizer)
+        public static float LibvlcAudioEqualizerGetPreamp(global::libvlcsharp.Equalizer p_equalizer)
         {
             var __arg0 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
             var __ret = __Internal.LibvlcAudioEqualizerGetPreamp(__arg0);
@@ -7160,7 +7500,7 @@ namespace libvlc
         /// <para>The supplied amplification value will be clamped to the -20.0 to +20.0 range.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static int LibvlcAudioEqualizerSetAmpAtIndex(global::libvlc.LibvlcEqualizerT p_equalizer, float f_amp, uint u_band)
+        public static int LibvlcAudioEqualizerSetAmpAtIndex(global::libvlcsharp.Equalizer p_equalizer, float f_amp, uint u_band)
         {
             var __arg0 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
             var __ret = __Internal.LibvlcAudioEqualizerSetAmpAtIndex(__arg0, f_amp, u_band);
@@ -7172,7 +7512,7 @@ namespace libvlc
         /// <param name="u_band">index, counting from zero, of the frequency band to get</param>
         /// <returns>amplification value (Hz); NaN if there is no such frequency band</returns>
         /// <remarks>LibVLC 2.2.0 or later</remarks>
-        public static float LibvlcAudioEqualizerGetAmpAtIndex(global::libvlc.LibvlcEqualizerT p_equalizer, uint u_band)
+        public static float LibvlcAudioEqualizerGetAmpAtIndex(global::libvlcsharp.Equalizer p_equalizer, uint u_band)
         {
             var __arg0 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
             var __ret = __Internal.LibvlcAudioEqualizerGetAmpAtIndex(__arg0, u_band);
@@ -7200,7 +7540,7 @@ namespace libvlc
         /// <para>returns.</para>
         /// <para>LibVLC 2.2.0 or later</para>
         /// </remarks>
-        public static int LibvlcMediaPlayerSetEqualizer(global::libvlc.LibvlcMediaPlayerT p_mi, global::libvlc.LibvlcEqualizerT p_equalizer)
+        public static int LibvlcMediaPlayerSetEqualizer(global::libvlcsharp.MediaPlayer p_mi, global::libvlcsharp.Equalizer p_equalizer)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __arg1 = ReferenceEquals(p_equalizer, null) ? global::System.IntPtr.Zero : p_equalizer.__Instance;
@@ -7212,7 +7552,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <returns>the media player role (</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static int LibvlcMediaPlayerGetRole(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcMediaPlayerGetRole(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetRole(__arg0);
@@ -7223,7 +7563,7 @@ namespace libvlc
         /// <param name="p_mi">media player</param>
         /// <param name="role">the media player role (</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcMediaPlayerSetRole(global::libvlc.LibvlcMediaPlayerT p_mi, uint role)
+        public static int LibvlcMediaPlayerSetRole(global::libvlcsharp.MediaPlayer p_mi, uint role)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerSetRole(__arg0, role);
@@ -7320,21 +7660,21 @@ namespace libvlc
         /// <summary>Create an empty media list.</summary>
         /// <param name="p_instance">libvlc instance</param>
         /// <returns>empty media list, or NULL on error</returns>
-        public static global::libvlc.LibvlcMediaListT LibvlcMediaListNew(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.MediaList LibvlcMediaListNew(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaListNew(__arg0);
-            global::libvlc.LibvlcMediaListT __result0;
+            global::libvlcsharp.MediaList __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaListT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaListT) global::libvlc.LibvlcMediaListT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaListT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaList.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaList) global::libvlcsharp.MediaList.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaList.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Release media list created with libvlc_media_list_new().</summary>
         /// <param name="p_ml">a media list created with libvlc_media_list_new()</param>
-        public static void LibvlcMediaListRelease(global::libvlc.LibvlcMediaListT p_ml)
+        public static void LibvlcMediaListRelease(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             __Internal.LibvlcMediaListRelease(__arg0);
@@ -7342,7 +7682,7 @@ namespace libvlc
 
         /// <summary>Retain reference to a media list</summary>
         /// <param name="p_ml">a media list created with libvlc_media_list_new()</param>
-        public static void LibvlcMediaListRetain(global::libvlc.LibvlcMediaListT p_ml)
+        public static void LibvlcMediaListRetain(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             __Internal.LibvlcMediaListRetain(__arg0);
@@ -7355,7 +7695,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
         /// <param name="p_md">media instance to add</param>
-        public static void LibvlcMediaListSetMedia(global::libvlc.LibvlcMediaListT p_ml, global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaListSetMedia(global::libvlcsharp.MediaList p_ml, global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -7369,15 +7709,15 @@ namespace libvlc
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
         /// <returns>media instance</returns>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaListMedia(global::libvlc.LibvlcMediaListT p_ml)
+        public static global::libvlcsharp.Media LibvlcMediaListMedia(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListMedia(__arg0);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7388,7 +7728,7 @@ namespace libvlc
         /// <param name="p_ml">a media list instance</param>
         /// <param name="p_md">a media instance</param>
         /// <returns>0 on success, -1 if the media list is read-only</returns>
-        public static int LibvlcMediaListAddMedia(global::libvlc.LibvlcMediaListT p_ml, global::libvlc.LibvlcMediaT p_md)
+        public static int LibvlcMediaListAddMedia(global::libvlcsharp.MediaList p_ml, global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -7404,7 +7744,7 @@ namespace libvlc
         /// <param name="p_md">a media instance</param>
         /// <param name="i_pos">position in array where to insert</param>
         /// <returns>0 on success, -1 if the media list is read-only</returns>
-        public static int LibvlcMediaListInsertMedia(global::libvlc.LibvlcMediaListT p_ml, global::libvlc.LibvlcMediaT p_md, int i_pos)
+        public static int LibvlcMediaListInsertMedia(global::libvlcsharp.MediaList p_ml, global::libvlcsharp.Media p_md, int i_pos)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -7419,7 +7759,7 @@ namespace libvlc
         /// <param name="p_ml">a media list instance</param>
         /// <param name="i_pos">position in array where to insert</param>
         /// <returns>0 on success, -1 if the list is read-only or the item was not found</returns>
-        public static int LibvlcMediaListRemoveIndex(global::libvlc.LibvlcMediaListT p_ml, int i_pos)
+        public static int LibvlcMediaListRemoveIndex(global::libvlcsharp.MediaList p_ml, int i_pos)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListRemoveIndex(__arg0, i_pos);
@@ -7432,7 +7772,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
         /// <returns>number of items in media list</returns>
-        public static int LibvlcMediaListCount(global::libvlc.LibvlcMediaListT p_ml)
+        public static int LibvlcMediaListCount(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListCount(__arg0);
@@ -7450,15 +7790,15 @@ namespace libvlc
         /// <para>In case of success, libvlc_media_retain() is called to increase the refcount</para>
         /// <para>on the media.</para>
         /// </returns>
-        public static global::libvlc.LibvlcMediaT LibvlcMediaListItemAtIndex(global::libvlc.LibvlcMediaListT p_ml, int i_pos)
+        public static global::libvlcsharp.Media LibvlcMediaListItemAtIndex(global::libvlcsharp.MediaList p_ml, int i_pos)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListItemAtIndex(__arg0, i_pos);
-            global::libvlc.LibvlcMediaT __result0;
+            global::libvlcsharp.Media __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaT) global::libvlc.LibvlcMediaT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Media.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Media) global::libvlcsharp.Media.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Media.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7470,7 +7810,7 @@ namespace libvlc
         /// <param name="p_ml">a media list instance</param>
         /// <param name="p_md">media instance</param>
         /// <returns>position of media instance or -1 if media not found</returns>
-        public static int LibvlcMediaListIndexOfItem(global::libvlc.LibvlcMediaListT p_ml, global::libvlc.LibvlcMediaT p_md)
+        public static int LibvlcMediaListIndexOfItem(global::libvlcsharp.MediaList p_ml, global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -7481,7 +7821,7 @@ namespace libvlc
         /// <summary>This indicates if this media list is read-only from a user point of view</summary>
         /// <param name="p_ml">media list instance</param>
         /// <returns>1 on readonly, 0 on readwrite</returns>
-        public static int LibvlcMediaListIsReadonly(global::libvlc.LibvlcMediaListT p_ml)
+        public static int LibvlcMediaListIsReadonly(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListIsReadonly(__arg0);
@@ -7490,7 +7830,7 @@ namespace libvlc
 
         /// <summary>Get lock on media list items</summary>
         /// <param name="p_ml">a media list instance</param>
-        public static void LibvlcMediaListLock(global::libvlc.LibvlcMediaListT p_ml)
+        public static void LibvlcMediaListLock(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             __Internal.LibvlcMediaListLock(__arg0);
@@ -7501,7 +7841,7 @@ namespace libvlc
         /// <para>The libvlc_media_list_lock should be held upon entering this function.</para>
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
-        public static void LibvlcMediaListUnlock(global::libvlc.LibvlcMediaListT p_ml)
+        public static void LibvlcMediaListUnlock(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             __Internal.LibvlcMediaListUnlock(__arg0);
@@ -7513,25 +7853,25 @@ namespace libvlc
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
         /// <returns>libvlc_event_manager</returns>
-        public static global::libvlc.LibvlcEventManagerT LibvlcMediaListEventManager(global::libvlc.LibvlcMediaListT p_ml)
+        public static global::libvlcsharp.EventManager LibvlcMediaListEventManager(global::libvlcsharp.MediaList p_ml)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
     }
 
     /// <summary>Defines playback modes for playlist.</summary>
-    public enum LibvlcPlaybackModeT
+    public enum PlaybackMode
     {
-        LibvlcPlaybackModeDefault = 0,
-        LibvlcPlaybackModeLoop = 1,
-        LibvlcPlaybackModeRepeat = 2
+        Default = 0,
+        Loop = 1,
+        Repeat = 2
     }
 
     /// <summary>The LibVLC media list player plays a</summary>
@@ -7554,29 +7894,29 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaListPlayerT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaListPlayerT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcMediaListPlayerT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcMediaListPlayerT>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaListPlayerT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcMediaListPlayerT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaListPlayerT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcMediaListPlayerT(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaListPlayerT __CreateInstance(global::libvlc.LibvlcMediaListPlayerT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcMediaListPlayerT __CreateInstance(global::libvlcsharp.LibvlcMediaListPlayerT.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaListPlayerT(native, skipVTables);
+            return new global::libvlcsharp.LibvlcMediaListPlayerT(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaListPlayerT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcMediaListPlayerT.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaListPlayerT.__Internal));
-            *(global::libvlc.LibvlcMediaListPlayerT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcMediaListPlayerT.__Internal));
+            *(global::libvlcsharp.LibvlcMediaListPlayerT.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaListPlayerT(global::libvlc.LibvlcMediaListPlayerT.__Internal native, bool skipVTables = false)
+        private LibvlcMediaListPlayerT(global::libvlcsharp.LibvlcMediaListPlayerT.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -7648,7 +7988,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_list_player_get_state")]
-            internal static extern global::libvlc.LibvlcStateT LibvlcMediaListPlayerGetState(global::System.IntPtr p_mlp);
+            internal static extern global::libvlcsharp.VLCState LibvlcMediaListPlayerGetState(global::System.IntPtr p_mlp);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -7678,21 +8018,21 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_list_player_set_playback_mode")]
-            internal static extern void LibvlcMediaListPlayerSetPlaybackMode(global::System.IntPtr p_mlp, global::libvlc.LibvlcPlaybackModeT e_mode);
+            internal static extern void LibvlcMediaListPlayerSetPlaybackMode(global::System.IntPtr p_mlp, global::libvlcsharp.PlaybackMode e_mode);
         }
 
         /// <summary>Create new media_list_player.</summary>
         /// <param name="p_instance">libvlc instance</param>
         /// <returns>media list player instance or NULL on error</returns>
-        public static global::libvlc.LibvlcMediaListPlayerT LibvlcMediaListPlayerNew(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.LibvlcMediaListPlayerT LibvlcMediaListPlayerNew(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerNew(__arg0);
-            global::libvlc.LibvlcMediaListPlayerT __result0;
+            global::libvlcsharp.LibvlcMediaListPlayerT __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaListPlayerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaListPlayerT) global::libvlc.LibvlcMediaListPlayerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaListPlayerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.LibvlcMediaListPlayerT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.LibvlcMediaListPlayerT) global::libvlcsharp.LibvlcMediaListPlayerT.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.LibvlcMediaListPlayerT.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7704,7 +8044,7 @@ namespace libvlc
         /// <para>has been released, then it should not be used again.</para>
         /// </summary>
         /// <param name="p_mlp">media list player instance</param>
-        public static void LibvlcMediaListPlayerRelease(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static void LibvlcMediaListPlayerRelease(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerRelease(__arg0);
@@ -7715,7 +8055,7 @@ namespace libvlc
         /// <para>libvlc_media_list_player_release() to decrement reference count.</para>
         /// </summary>
         /// <param name="p_mlp">media player list object</param>
-        public static void LibvlcMediaListPlayerRetain(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static void LibvlcMediaListPlayerRetain(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerRetain(__arg0);
@@ -7724,22 +8064,22 @@ namespace libvlc
         /// <summary>Return the event manager of this media_list_player.</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>the event manager</returns>
-        public static global::libvlc.LibvlcEventManagerT LibvlcMediaListPlayerEventManager(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static global::libvlcsharp.EventManager LibvlcMediaListPlayerEventManager(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Replace media player in media_list_player with this instance.</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <param name="p_mi">media player instance</param>
-        public static void LibvlcMediaListPlayerSetMediaPlayer(global::libvlc.LibvlcMediaListPlayerT p_mlp, global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcMediaListPlayerSetMediaPlayer(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp, global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __arg1 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
@@ -7750,22 +8090,22 @@ namespace libvlc
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>media player instance</returns>
         /// <remarks>the caller is responsible for releasing the returned instance</remarks>
-        public static global::libvlc.LibvlcMediaPlayerT LibvlcMediaListPlayerGetMediaPlayer(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static global::libvlcsharp.MediaPlayer LibvlcMediaListPlayerGetMediaPlayer(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerGetMediaPlayer(__arg0);
-            global::libvlc.LibvlcMediaPlayerT __result0;
+            global::libvlcsharp.MediaPlayer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaPlayerT) global::libvlc.LibvlcMediaPlayerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaPlayerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaPlayer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaPlayer) global::libvlcsharp.MediaPlayer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaPlayer.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Set the media list associated with the player</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <param name="p_mlist">list of media</param>
-        public static void LibvlcMediaListPlayerSetMediaList(global::libvlc.LibvlcMediaListPlayerT p_mlp, global::libvlc.LibvlcMediaListT p_mlist)
+        public static void LibvlcMediaListPlayerSetMediaList(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp, global::libvlcsharp.MediaList p_mlist)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __arg1 = ReferenceEquals(p_mlist, null) ? global::System.IntPtr.Zero : p_mlist.__Instance;
@@ -7774,7 +8114,7 @@ namespace libvlc
 
         /// <summary>Play media list</summary>
         /// <param name="p_mlp">media list player instance</param>
-        public static void LibvlcMediaListPlayerPlay(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static void LibvlcMediaListPlayerPlay(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerPlay(__arg0);
@@ -7782,7 +8122,7 @@ namespace libvlc
 
         /// <summary>Toggle pause (or resume) media list</summary>
         /// <param name="p_mlp">media list player instance</param>
-        public static void LibvlcMediaListPlayerPause(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static void LibvlcMediaListPlayerPause(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerPause(__arg0);
@@ -7791,7 +8131,7 @@ namespace libvlc
         /// <summary>Is media list playing?</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>true for playing and false for not playing</returns>
-        public static int LibvlcMediaListPlayerIsPlaying(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static int LibvlcMediaListPlayerIsPlaying(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerIsPlaying(__arg0);
@@ -7801,7 +8141,7 @@ namespace libvlc
         /// <summary>Get current libvlc_state of media list player</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>libvlc_state_t for media list player</returns>
-        public static global::libvlc.LibvlcStateT LibvlcMediaListPlayerGetState(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static global::libvlcsharp.VLCState LibvlcMediaListPlayerGetState(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerGetState(__arg0);
@@ -7812,7 +8152,7 @@ namespace libvlc
         /// <param name="p_mlp">media list player instance</param>
         /// <param name="i_index">index in media list to play</param>
         /// <returns>0 upon success -1 if the item wasn't found</returns>
-        public static int LibvlcMediaListPlayerPlayItemAtIndex(global::libvlc.LibvlcMediaListPlayerT p_mlp, int i_index)
+        public static int LibvlcMediaListPlayerPlayItemAtIndex(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp, int i_index)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerPlayItemAtIndex(__arg0, i_index);
@@ -7823,7 +8163,7 @@ namespace libvlc
         /// <param name="p_mlp">media list player instance</param>
         /// <param name="p_md">the media instance</param>
         /// <returns>0 upon success, -1 if the media is not part of the media list</returns>
-        public static int LibvlcMediaListPlayerPlayItem(global::libvlc.LibvlcMediaListPlayerT p_mlp, global::libvlc.LibvlcMediaT p_md)
+        public static int LibvlcMediaListPlayerPlayItem(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp, global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
@@ -7833,7 +8173,7 @@ namespace libvlc
 
         /// <summary>Stop playing media list</summary>
         /// <param name="p_mlp">media list player instance</param>
-        public static void LibvlcMediaListPlayerStop(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static void LibvlcMediaListPlayerStop(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerStop(__arg0);
@@ -7842,7 +8182,7 @@ namespace libvlc
         /// <summary>Play next item from media list</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>0 upon success -1 if there is no next item</returns>
-        public static int LibvlcMediaListPlayerNext(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static int LibvlcMediaListPlayerNext(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerNext(__arg0);
@@ -7852,7 +8192,7 @@ namespace libvlc
         /// <summary>Play previous item from media list</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>0 upon success -1 if there is no previous item</returns>
-        public static int LibvlcMediaListPlayerPrevious(global::libvlc.LibvlcMediaListPlayerT p_mlp)
+        public static int LibvlcMediaListPlayerPrevious(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             var __ret = __Internal.LibvlcMediaListPlayerPrevious(__arg0);
@@ -7862,7 +8202,7 @@ namespace libvlc
         /// <summary>Sets the playback mode for the playlist</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <param name="e_mode">playback mode specification</param>
-        public static void LibvlcMediaListPlayerSetPlaybackMode(global::libvlc.LibvlcMediaListPlayerT p_mlp, global::libvlc.LibvlcPlaybackModeT e_mode)
+        public static void LibvlcMediaListPlayerSetPlaybackMode(global::libvlcsharp.LibvlcMediaListPlayerT p_mlp, global::libvlcsharp.PlaybackMode e_mode)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
             __Internal.LibvlcMediaListPlayerSetPlaybackMode(__arg0, e_mode);
@@ -7884,29 +8224,29 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaLibraryT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaLibraryT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcMediaLibraryT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcMediaLibraryT>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaLibraryT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcMediaLibraryT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaLibraryT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcMediaLibraryT(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaLibraryT __CreateInstance(global::libvlc.LibvlcMediaLibraryT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcMediaLibraryT __CreateInstance(global::libvlcsharp.LibvlcMediaLibraryT.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaLibraryT(native, skipVTables);
+            return new global::libvlcsharp.LibvlcMediaLibraryT(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaLibraryT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcMediaLibraryT.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaLibraryT.__Internal));
-            *(global::libvlc.LibvlcMediaLibraryT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcMediaLibraryT.__Internal));
+            *(global::libvlcsharp.LibvlcMediaLibraryT.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaLibraryT(global::libvlc.LibvlcMediaLibraryT.__Internal native, bool skipVTables = false)
+        private LibvlcMediaLibraryT(global::libvlcsharp.LibvlcMediaLibraryT.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -7954,15 +8294,15 @@ namespace libvlc
         /// <summary>Create an new Media Library object</summary>
         /// <param name="p_instance">the libvlc instance</param>
         /// <returns>a new object or NULL on error</returns>
-        public static global::libvlc.LibvlcMediaLibraryT LibvlcMediaLibraryNew(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.LibvlcMediaLibraryT LibvlcMediaLibraryNew(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcMediaLibraryNew(__arg0);
-            global::libvlc.LibvlcMediaLibraryT __result0;
+            global::libvlcsharp.LibvlcMediaLibraryT __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaLibraryT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaLibraryT) global::libvlc.LibvlcMediaLibraryT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaLibraryT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.LibvlcMediaLibraryT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.LibvlcMediaLibraryT) global::libvlcsharp.LibvlcMediaLibraryT.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.LibvlcMediaLibraryT.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -7972,7 +8312,7 @@ namespace libvlc
         /// <para>then the object will be released.</para>
         /// </summary>
         /// <param name="p_mlib">media library object</param>
-        public static void LibvlcMediaLibraryRelease(global::libvlc.LibvlcMediaLibraryT p_mlib)
+        public static void LibvlcMediaLibraryRelease(global::libvlcsharp.LibvlcMediaLibraryT p_mlib)
         {
             var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
             __Internal.LibvlcMediaLibraryRelease(__arg0);
@@ -7984,7 +8324,7 @@ namespace libvlc
         /// <para>libvlc_media_library_release() to decrement the reference count.</para>
         /// </summary>
         /// <param name="p_mlib">media library object</param>
-        public static void LibvlcMediaLibraryRetain(global::libvlc.LibvlcMediaLibraryT p_mlib)
+        public static void LibvlcMediaLibraryRetain(global::libvlcsharp.LibvlcMediaLibraryT p_mlib)
         {
             var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
             __Internal.LibvlcMediaLibraryRetain(__arg0);
@@ -7993,7 +8333,7 @@ namespace libvlc
         /// <summary>Load media library.</summary>
         /// <param name="p_mlib">media library object</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcMediaLibraryLoad(global::libvlc.LibvlcMediaLibraryT p_mlib)
+        public static int LibvlcMediaLibraryLoad(global::libvlcsharp.LibvlcMediaLibraryT p_mlib)
         {
             var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
             var __ret = __Internal.LibvlcMediaLibraryLoad(__arg0);
@@ -8003,31 +8343,31 @@ namespace libvlc
         /// <summary>Get media library subitems.</summary>
         /// <param name="p_mlib">media library object</param>
         /// <returns>media list subitems</returns>
-        public static global::libvlc.LibvlcMediaListT LibvlcMediaLibraryMediaList(global::libvlc.LibvlcMediaLibraryT p_mlib)
+        public static global::libvlcsharp.MediaList LibvlcMediaLibraryMediaList(global::libvlcsharp.LibvlcMediaLibraryT p_mlib)
         {
             var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
             var __ret = __Internal.LibvlcMediaLibraryMediaList(__arg0);
-            global::libvlc.LibvlcMediaListT __result0;
+            global::libvlcsharp.MediaList __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaListT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaListT) global::libvlc.LibvlcMediaListT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaListT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaList.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaList) global::libvlcsharp.MediaList.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaList.__CreateInstance(__ret);
             return __result0;
         }
     }
 
     /// <summary>Category of a media discoverer</summary>
     /// <remarks>libvlc_media_discoverer_list_get()</remarks>
-    public enum LibvlcMediaDiscovererCategoryT
+    public enum MediaDiscovererCategory
     {
         /// <summary>devices, like portable music player</summary>
-        LibvlcMediaDiscovererDevices = 0,
+        Devices = 0,
         /// <summary>LAN/WAN services, like Upnp, SMB, or SAP</summary>
-        LibvlcMediaDiscovererLan = 1,
+        Lan = 1,
         /// <summary>Podcasts</summary>
-        LibvlcMediaDiscovererPodcasts = 2,
+        Podcasts = 2,
         /// <summary>Local directories, like Video, Music or Pictures directories</summary>
-        LibvlcMediaDiscovererLocaldirs = 3
+        Localdirs = 3
     }
 
     /// <summary>
@@ -8040,7 +8380,7 @@ namespace libvlc
     /// <para></para>
     /// <para>LibVLC media discovery external API</para>
     /// </summary>
-    public unsafe partial class LibvlcMediaDiscovererT
+    public unsafe partial class MediaDiscoverer
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
@@ -8050,36 +8390,36 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaDiscovererT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaDiscovererT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaDiscoverer> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaDiscoverer>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaDiscovererT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaDiscoverer __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaDiscovererT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaDiscoverer(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaDiscovererT __CreateInstance(global::libvlc.LibvlcMediaDiscovererT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaDiscoverer __CreateInstance(global::libvlcsharp.MediaDiscoverer.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaDiscovererT(native, skipVTables);
+            return new global::libvlcsharp.MediaDiscoverer(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaDiscovererT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaDiscoverer.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaDiscovererT.__Internal));
-            *(global::libvlc.LibvlcMediaDiscovererT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaDiscoverer.__Internal));
+            *(global::libvlcsharp.MediaDiscoverer.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaDiscovererT(global::libvlc.LibvlcMediaDiscovererT.__Internal native, bool skipVTables = false)
+        private MediaDiscoverer(global::libvlcsharp.MediaDiscoverer.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaDiscovererT(void* native, bool skipVTables = false)
+        protected MediaDiscoverer(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
@@ -8089,7 +8429,7 @@ namespace libvlc
 
     /// <summary>Media discoverer description</summary>
     /// <remarks>libvlc_media_discoverer_list_get()</remarks>
-    public unsafe partial class LibvlcMediaDiscovererDescriptionT : IDisposable
+    public unsafe partial class MediaDiscovererDescription : IDisposable
     {
         [StructLayout(LayoutKind.Explicit, Size = 24)]
         public partial struct __Internal
@@ -8101,46 +8441,66 @@ namespace libvlc
             internal global::System.IntPtr psz_longname;
 
             [FieldOffset(16)]
-            internal global::libvlc.LibvlcMediaDiscovererCategoryT i_cat;
+            internal global::libvlcsharp.MediaDiscovererCategory i_cat;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_media_discoverer_description_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaDiscovererDescriptionT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcMediaDiscovererDescriptionT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaDiscovererDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.MediaDiscovererDescription>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcMediaDiscovererDescriptionT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaDiscovererDescription __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaDiscovererDescriptionT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.MediaDiscovererDescription(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcMediaDiscovererDescriptionT __CreateInstance(global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.MediaDiscovererDescription __CreateInstance(global::libvlcsharp.MediaDiscovererDescription.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcMediaDiscovererDescriptionT(native, skipVTables);
+            return new global::libvlcsharp.MediaDiscovererDescription(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.MediaDiscovererDescription.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal));
-            *(global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaDiscovererDescription.__Internal));
+            *(global::libvlcsharp.MediaDiscovererDescription.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcMediaDiscovererDescriptionT(global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal native, bool skipVTables = false)
+        private MediaDiscovererDescription(global::libvlcsharp.MediaDiscovererDescription.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
             NativeToManagedMap[__Instance] = this;
         }
 
-        protected LibvlcMediaDiscovererDescriptionT(void* native, bool skipVTables = false)
+        protected MediaDiscovererDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
             __Instance = new global::System.IntPtr(native);
+        }
+
+        public MediaDiscovererDescription()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaDiscovererDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public MediaDiscovererDescription(global::libvlcsharp.MediaDiscovererDescription _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.MediaDiscovererDescription.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance) = *((global::libvlcsharp.MediaDiscovererDescription.__Internal*) _0.__Instance);
         }
 
         public void Dispose()
@@ -8152,7 +8512,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcMediaDiscovererDescriptionT __dummy;
+            global::libvlcsharp.MediaDiscovererDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -8163,12 +8523,12 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->psz_name;
+                return (sbyte*) ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->psz_name;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
             }
         }
 
@@ -8176,25 +8536,25 @@ namespace libvlc
         {
             get
             {
-                return (sbyte*) ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->psz_longname;
+                return (sbyte*) ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->psz_longname;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
             }
         }
 
-        public global::libvlc.LibvlcMediaDiscovererCategoryT ICat
+        public global::libvlcsharp.MediaDiscovererCategory ICat
         {
             get
             {
-                return ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->i_cat;
+                return ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->i_cat;
             }
 
             set
             {
-                ((global::libvlc.LibvlcMediaDiscovererDescriptionT.__Internal*) __Instance)->i_cat = value;
+                ((global::libvlcsharp.MediaDiscovererDescription.__Internal*) __Instance)->i_cat = value;
             }
         }
     }
@@ -8236,7 +8596,7 @@ namespace libvlc
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibvlcMediaDiscovererListGet(global::System.IntPtr p_inst, global::libvlc.LibvlcMediaDiscovererCategoryT i_cat, global::System.IntPtr ppp_services);
+            internal static extern ulong LibvlcMediaDiscovererListGet(global::System.IntPtr p_inst, global::libvlcsharp.MediaDiscovererCategory i_cat, global::System.IntPtr ppp_services);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -8261,15 +8621,15 @@ namespace libvlc
         /// <para>libvlc_media_discoverer_start</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::libvlc.LibvlcMediaDiscovererT LibvlcMediaDiscovererNew(global::libvlc.LibvlcInstanceT p_inst, string psz_name)
+        public static global::libvlcsharp.MediaDiscoverer LibvlcMediaDiscovererNew(global::libvlcsharp.Instance p_inst, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererNew(__arg0, psz_name);
-            global::libvlc.LibvlcMediaDiscovererT __result0;
+            global::libvlcsharp.MediaDiscoverer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaDiscovererT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaDiscovererT) global::libvlc.LibvlcMediaDiscovererT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaDiscovererT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaDiscoverer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaDiscoverer) global::libvlcsharp.MediaDiscoverer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaDiscoverer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -8282,7 +8642,7 @@ namespace libvlc
         /// <para>libvlc_media_discoverer_stop</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static int LibvlcMediaDiscovererStart(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static int LibvlcMediaDiscovererStart(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererStart(__arg0);
@@ -8295,7 +8655,7 @@ namespace libvlc
         /// <para>libvlc_media_discoverer_start</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static void LibvlcMediaDiscovererStop(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static void LibvlcMediaDiscovererStop(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             __Internal.LibvlcMediaDiscovererStop(__arg0);
@@ -8306,7 +8666,7 @@ namespace libvlc
         /// <para>the object will be released.</para>
         /// </summary>
         /// <param name="p_mdis">media service discover object</param>
-        public static void LibvlcMediaDiscovererRelease(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static void LibvlcMediaDiscovererRelease(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             __Internal.LibvlcMediaDiscovererRelease(__arg0);
@@ -8315,22 +8675,22 @@ namespace libvlc
         /// <summary>Get media service discover media list.</summary>
         /// <param name="p_mdis">media service discover object</param>
         /// <returns>list of media items</returns>
-        public static global::libvlc.LibvlcMediaListT LibvlcMediaDiscovererMediaList(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static global::libvlcsharp.MediaList LibvlcMediaDiscovererMediaList(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererMediaList(__arg0);
-            global::libvlc.LibvlcMediaListT __result0;
+            global::libvlcsharp.MediaList __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaListT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaListT) global::libvlc.LibvlcMediaListT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaListT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaList.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaList) global::libvlcsharp.MediaList.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaList.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Query if media service discover object is running.</summary>
         /// <param name="p_mdis">media service discover object</param>
         /// <returns>true if running, false if not</returns>
-        public static int LibvlcMediaDiscovererIsRunning(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static int LibvlcMediaDiscovererIsRunning(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererIsRunning(__arg0);
@@ -8347,7 +8707,7 @@ namespace libvlc
         /// </param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static ulong LibvlcMediaDiscovererListGet(global::libvlc.LibvlcInstanceT p_inst, global::libvlc.LibvlcMediaDiscovererCategoryT i_cat, global::libvlc.LibvlcMediaDiscovererDescriptionT ppp_services)
+        public static ulong LibvlcMediaDiscovererListGet(global::libvlcsharp.Instance p_inst, global::libvlcsharp.MediaDiscovererCategory i_cat, global::libvlcsharp.MediaDiscovererDescription ppp_services)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.__Instance;
             var __arg2 = ReferenceEquals(ppp_services, null) ? global::System.IntPtr.Zero : ppp_services.__Instance;
@@ -8362,7 +8722,7 @@ namespace libvlc
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_discoverer_list_get()</para>
         /// </remarks>
-        public static void LibvlcMediaDiscovererListRelease(global::libvlc.LibvlcMediaDiscovererDescriptionT pp_services, ulong i_count)
+        public static void LibvlcMediaDiscovererListRelease(global::libvlcsharp.MediaDiscovererDescription pp_services, ulong i_count)
         {
             var __arg0 = ReferenceEquals(pp_services, null) ? global::System.IntPtr.Zero : pp_services.__Instance;
             __Internal.LibvlcMediaDiscovererListRelease(__arg0, i_count);
@@ -8374,11 +8734,11 @@ namespace libvlc
     /// <para></para>
     /// <para>LibVLC dialog external API</para>
     /// </summary>
-    public enum LibvlcDialogQuestionType
+    public enum DialogQuestionType
     {
-        LIBVLC_DIALOG_QUESTION_NORMAL = 0,
-        LIBVLC_DIALOG_QUESTION_WARNING = 1,
-        LIBVLC_DIALOG_QUESTION_CRITICAL = 2
+        Normal = 0,
+        Warning = 1,
+        Critical = 2
     }
 
     public unsafe partial class LibvlcDialogId
@@ -8391,29 +8751,29 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcDialogId> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcDialogId>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcDialogId> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcDialogId>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcDialogId __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcDialogId __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcDialogId(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcDialogId(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcDialogId __CreateInstance(global::libvlc.LibvlcDialogId.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcDialogId __CreateInstance(global::libvlcsharp.LibvlcDialogId.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcDialogId(native, skipVTables);
+            return new global::libvlcsharp.LibvlcDialogId(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcDialogId.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcDialogId.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcDialogId.__Internal));
-            *(global::libvlc.LibvlcDialogId.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcDialogId.__Internal));
+            *(global::libvlcsharp.LibvlcDialogId.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcDialogId(global::libvlc.LibvlcDialogId.__Internal native, bool skipVTables = false)
+        private LibvlcDialogId(global::libvlcsharp.LibvlcDialogId.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -8451,34 +8811,39 @@ namespace libvlc
 
             [FieldOffset(40)]
             internal global::System.IntPtr pf_update_progress;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_dialog_cbs@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcDialogCbs> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcDialogCbs>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcDialogCbs> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcDialogCbs>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcDialogCbs __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcDialogCbs __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcDialogCbs(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcDialogCbs(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcDialogCbs __CreateInstance(global::libvlc.LibvlcDialogCbs.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcDialogCbs __CreateInstance(global::libvlcsharp.LibvlcDialogCbs.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcDialogCbs(native, skipVTables);
+            return new global::libvlcsharp.LibvlcDialogCbs(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcDialogCbs.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcDialogCbs.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcDialogCbs.__Internal));
-            *(global::libvlc.LibvlcDialogCbs.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcDialogCbs.__Internal));
+            *(global::libvlcsharp.LibvlcDialogCbs.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcDialogCbs(global::libvlc.LibvlcDialogCbs.__Internal native, bool skipVTables = false)
+        private LibvlcDialogCbs(global::libvlcsharp.LibvlcDialogCbs.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -8492,6 +8857,21 @@ namespace libvlc
             __Instance = new global::System.IntPtr(native);
         }
 
+        public LibvlcDialogCbs()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcDialogCbs.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public LibvlcDialogCbs(global::libvlcsharp.LibvlcDialogCbs _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcDialogCbs.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.LibvlcDialogCbs.__Internal*) __Instance) = *((global::libvlcsharp.LibvlcDialogCbs.__Internal*) _0.__Instance);
+        }
+
         public void Dispose()
         {
             Dispose(disposing: true);
@@ -8501,7 +8881,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcDialogCbs __dummy;
+            global::libvlcsharp.LibvlcDialogCbs __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -8548,7 +8928,7 @@ namespace libvlc
         /// <param name="p_cbs">a pointer to callbacks, or NULL to unregister callbacks.</param>
         /// <param name="p_data">opaque pointer for the callback</param>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcDialogSetCallbacks(global::libvlc.LibvlcInstanceT p_instance, global::libvlc.LibvlcDialogCbs p_cbs, global::System.IntPtr p_data)
+        public static void LibvlcDialogSetCallbacks(global::libvlcsharp.Instance p_instance, global::libvlcsharp.LibvlcDialogCbs p_cbs, global::System.IntPtr p_data)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __arg1 = ReferenceEquals(p_cbs, null) ? global::System.IntPtr.Zero : p_cbs.__Instance;
@@ -8557,7 +8937,7 @@ namespace libvlc
 
         /// <summary>Associate an opaque pointer with the dialog id</summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcDialogSetContext(global::libvlc.LibvlcDialogId p_id, global::System.IntPtr p_context)
+        public static void LibvlcDialogSetContext(global::libvlcsharp.LibvlcDialogId p_id, global::System.IntPtr p_context)
         {
             var __arg0 = ReferenceEquals(p_id, null) ? global::System.IntPtr.Zero : p_id.__Instance;
             __Internal.LibvlcDialogSetContext(__arg0, p_context);
@@ -8565,7 +8945,7 @@ namespace libvlc
 
         /// <summary>Return the opaque pointer associated with the dialog id</summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static global::System.IntPtr LibvlcDialogGetContext(global::libvlc.LibvlcDialogId p_id)
+        public static global::System.IntPtr LibvlcDialogGetContext(global::libvlcsharp.LibvlcDialogId p_id)
         {
             var __arg0 = ReferenceEquals(p_id, null) ? global::System.IntPtr.Zero : p_id.__Instance;
             var __ret = __Internal.LibvlcDialogGetContext(__arg0);
@@ -8583,7 +8963,7 @@ namespace libvlc
         /// <para>libvlc_dialog_cbs.pf_display_login</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public static int LibvlcDialogPostLogin(global::libvlc.LibvlcDialogId p_id, string psz_username, string psz_password, bool b_store)
+        public static int LibvlcDialogPostLogin(global::libvlcsharp.LibvlcDialogId p_id, string psz_username, string psz_password, bool b_store)
         {
             var __arg0 = ReferenceEquals(p_id, null) ? global::System.IntPtr.Zero : p_id.__Instance;
             var __ret = __Internal.LibvlcDialogPostLogin(__arg0, psz_username, psz_password, b_store);
@@ -8599,7 +8979,7 @@ namespace libvlc
         /// <para>libvlc_dialog_cbs.pf_display_question</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public static int LibvlcDialogPostAction(global::libvlc.LibvlcDialogId p_id, int i_action)
+        public static int LibvlcDialogPostAction(global::libvlcsharp.LibvlcDialogId p_id, int i_action)
         {
             var __arg0 = ReferenceEquals(p_id, null) ? global::System.IntPtr.Zero : p_id.__Instance;
             var __ret = __Internal.LibvlcDialogPostAction(__arg0, i_action);
@@ -8614,7 +8994,7 @@ namespace libvlc
         /// <para>libvlc_dialog_cbs.pf_cancel</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public static int LibvlcDialogDismiss(global::libvlc.LibvlcDialogId p_id)
+        public static int LibvlcDialogDismiss(global::libvlcsharp.LibvlcDialogId p_id)
         {
             var __arg0 = ReferenceEquals(p_id, null) ? global::System.IntPtr.Zero : p_id.__Instance;
             var __ret = __Internal.LibvlcDialogDismiss(__arg0);
@@ -8734,7 +9114,7 @@ namespace libvlc
 
         /// <summary>Release the vlm instance related to the given libvlc_instance_t</summary>
         /// <param name="p_instance">the instance</param>
-        public static void LibvlcVlmRelease(global::libvlc.LibvlcInstanceT p_instance)
+        public static void LibvlcVlmRelease(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcVlmRelease(__arg0);
@@ -8750,7 +9130,7 @@ namespace libvlc
         /// <param name="b_enabled">boolean for enabling the new broadcast</param>
         /// <param name="b_loop">Should this broadcast be played in loop ?</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddBroadcast(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
+        public static int LibvlcVlmAddBroadcast(global::libvlcsharp.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmAddBroadcast(__arg0, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop);
@@ -8766,7 +9146,7 @@ namespace libvlc
         /// <param name="b_enabled">boolean for enabling the new vod</param>
         /// <param name="psz_mux">the muxer of the vod media</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddVod(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_input, int i_options, sbyte** ppsz_options, int b_enabled, string psz_mux)
+        public static int LibvlcVlmAddVod(global::libvlcsharp.Instance p_instance, string psz_name, string psz_input, int i_options, sbyte** ppsz_options, int b_enabled, string psz_mux)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmAddVod(__arg0, psz_name, psz_input, i_options, ppsz_options, b_enabled, psz_mux);
@@ -8777,7 +9157,7 @@ namespace libvlc
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the media to delete</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmDelMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static int LibvlcVlmDelMedia(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmDelMedia(__arg0, psz_name);
@@ -8789,7 +9169,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="b_enabled">the new status</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetEnabled(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int b_enabled)
+        public static int LibvlcVlmSetEnabled(global::libvlcsharp.Instance p_instance, string psz_name, int b_enabled)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSetEnabled(__arg0, psz_name, b_enabled);
@@ -8801,7 +9181,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_output">the output MRL (the parameter to the &quot;sout&quot; variable)</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetOutput(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_output)
+        public static int LibvlcVlmSetOutput(global::libvlcsharp.Instance p_instance, string psz_name, string psz_output)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSetOutput(__arg0, psz_name, psz_output);
@@ -8816,7 +9196,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_input">the input MRL</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetInput(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_input)
+        public static int LibvlcVlmSetInput(global::libvlcsharp.Instance p_instance, string psz_name, string psz_input)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSetInput(__arg0, psz_name, psz_input);
@@ -8828,7 +9208,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_input">the input MRL</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddInput(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_input)
+        public static int LibvlcVlmAddInput(global::libvlcsharp.Instance p_instance, string psz_name, string psz_input)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmAddInput(__arg0, psz_name, psz_input);
@@ -8840,7 +9220,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="b_loop">the new status</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetLoop(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int b_loop)
+        public static int LibvlcVlmSetLoop(global::libvlcsharp.Instance p_instance, string psz_name, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSetLoop(__arg0, psz_name, b_loop);
@@ -8852,7 +9232,7 @@ namespace libvlc
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_mux">the new muxer</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetMux(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_mux)
+        public static int LibvlcVlmSetMux(global::libvlcsharp.Instance p_instance, string psz_name, string psz_mux)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSetMux(__arg0, psz_name, psz_mux);
@@ -8872,7 +9252,7 @@ namespace libvlc
         /// <param name="b_enabled">boolean for enabling the new broadcast</param>
         /// <param name="b_loop">Should this broadcast be played in loop ?</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmChangeMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
+        public static int LibvlcVlmChangeMedia(global::libvlcsharp.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmChangeMedia(__arg0, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop);
@@ -8883,7 +9263,7 @@ namespace libvlc
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmPlayMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static int LibvlcVlmPlayMedia(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmPlayMedia(__arg0, psz_name);
@@ -8894,7 +9274,7 @@ namespace libvlc
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmStopMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static int LibvlcVlmStopMedia(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmStopMedia(__arg0, psz_name);
@@ -8905,7 +9285,7 @@ namespace libvlc
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmPauseMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static int LibvlcVlmPauseMedia(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmPauseMedia(__arg0, psz_name);
@@ -8917,7 +9297,7 @@ namespace libvlc
         /// <param name="psz_name">the name of the broadcast</param>
         /// <param name="f_percentage">the percentage to seek to</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSeekMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name, float f_percentage)
+        public static int LibvlcVlmSeekMedia(global::libvlcsharp.Instance p_instance, string psz_name, float f_percentage)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmSeekMedia(__arg0, psz_name, f_percentage);
@@ -8942,7 +9322,7 @@ namespace libvlc
         /// <para>Currently there are no such functions available for</para>
         /// <para>vlm_media_t though.</para>
         /// </remarks>
-        public static string LibvlcVlmShowMedia(global::libvlc.LibvlcInstanceT p_instance, string psz_name)
+        public static string LibvlcVlmShowMedia(global::libvlcsharp.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmShowMedia(__arg0, psz_name);
@@ -8954,7 +9334,7 @@ namespace libvlc
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>position as float or -1. on error</returns>
-        public static float LibvlcVlmGetMediaInstancePosition(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int i_instance)
+        public static float LibvlcVlmGetMediaInstancePosition(global::libvlcsharp.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmGetMediaInstancePosition(__arg0, psz_name, i_instance);
@@ -8966,7 +9346,7 @@ namespace libvlc
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>time as integer or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceTime(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceTime(global::libvlcsharp.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceTime(__arg0, psz_name, i_instance);
@@ -8978,7 +9358,7 @@ namespace libvlc
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>length of media item or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceLength(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceLength(global::libvlcsharp.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceLength(__arg0, psz_name, i_instance);
@@ -8990,7 +9370,7 @@ namespace libvlc
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>playback rate or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceRate(global::libvlc.LibvlcInstanceT p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceRate(global::libvlcsharp.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceRate(__arg0, psz_name, i_instance);
@@ -9003,15 +9383,15 @@ namespace libvlc
         /// </summary>
         /// <param name="p_instance">a libvlc instance</param>
         /// <returns>libvlc_event_manager</returns>
-        public static global::libvlc.LibvlcEventManagerT LibvlcVlmGetEventManager(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.EventManager LibvlcVlmGetEventManager(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcVlmGetEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
     }
@@ -9027,29 +9407,29 @@ namespace libvlc
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcLogIteratorT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcLogIteratorT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcLogIteratorT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcLogIteratorT>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcLogIteratorT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcLogIteratorT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcLogIteratorT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcLogIteratorT(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcLogIteratorT __CreateInstance(global::libvlc.LibvlcLogIteratorT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcLogIteratorT __CreateInstance(global::libvlcsharp.LibvlcLogIteratorT.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcLogIteratorT(native, skipVTables);
+            return new global::libvlcsharp.LibvlcLogIteratorT(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcLogIteratorT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcLogIteratorT.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcLogIteratorT.__Internal));
-            *(global::libvlc.LibvlcLogIteratorT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcLogIteratorT.__Internal));
+            *(global::libvlcsharp.LibvlcLogIteratorT.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcLogIteratorT(global::libvlc.LibvlcLogIteratorT.__Internal native, bool skipVTables = false)
+        private LibvlcLogIteratorT(global::libvlcsharp.LibvlcLogIteratorT.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -9083,34 +9463,39 @@ namespace libvlc
 
             [FieldOffset(32)]
             internal global::System.IntPtr psz_message;
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
+                EntryPoint="??0libvlc_log_message_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public global::System.IntPtr __Instance { get; protected set; }
 
         protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcLogMessageT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlc.LibvlcLogMessageT>();
+        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcLogMessageT> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.LibvlcLogMessageT>();
         protected void*[] __OriginalVTables;
 
         protected bool __ownsNativeInstance;
 
-        internal static global::libvlc.LibvlcLogMessageT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcLogMessageT __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcLogMessageT(native.ToPointer(), skipVTables);
+            return new global::libvlcsharp.LibvlcLogMessageT(native.ToPointer(), skipVTables);
         }
 
-        internal static global::libvlc.LibvlcLogMessageT __CreateInstance(global::libvlc.LibvlcLogMessageT.__Internal native, bool skipVTables = false)
+        internal static global::libvlcsharp.LibvlcLogMessageT __CreateInstance(global::libvlcsharp.LibvlcLogMessageT.__Internal native, bool skipVTables = false)
         {
-            return new global::libvlc.LibvlcLogMessageT(native, skipVTables);
+            return new global::libvlcsharp.LibvlcLogMessageT(native, skipVTables);
         }
 
-        private static void* __CopyValue(global::libvlc.LibvlcLogMessageT.__Internal native)
+        private static void* __CopyValue(global::libvlcsharp.LibvlcLogMessageT.__Internal native)
         {
-            var ret = Marshal.AllocHGlobal(sizeof(global::libvlc.LibvlcLogMessageT.__Internal));
-            *(global::libvlc.LibvlcLogMessageT.__Internal*) ret = native;
+            var ret = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcLogMessageT.__Internal));
+            *(global::libvlcsharp.LibvlcLogMessageT.__Internal*) ret = native;
             return ret.ToPointer();
         }
 
-        private LibvlcLogMessageT(global::libvlc.LibvlcLogMessageT.__Internal native, bool skipVTables = false)
+        private LibvlcLogMessageT(global::libvlcsharp.LibvlcLogMessageT.__Internal native, bool skipVTables = false)
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
@@ -9124,6 +9509,21 @@ namespace libvlc
             __Instance = new global::System.IntPtr(native);
         }
 
+        public LibvlcLogMessageT()
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcLogMessageT.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+        }
+
+        public LibvlcLogMessageT(global::libvlcsharp.LibvlcLogMessageT _0)
+        {
+            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.LibvlcLogMessageT.__Internal));
+            __ownsNativeInstance = true;
+            NativeToManagedMap[__Instance] = this;
+            *((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance) = *((global::libvlcsharp.LibvlcLogMessageT.__Internal*) _0.__Instance);
+        }
+
         public void Dispose()
         {
             Dispose(disposing: true);
@@ -9133,7 +9533,7 @@ namespace libvlc
         {
             if (__Instance == IntPtr.Zero)
                 return;
-            global::libvlc.LibvlcLogMessageT __dummy;
+            global::libvlcsharp.LibvlcLogMessageT __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
                 Marshal.FreeHGlobal(__Instance);
@@ -9144,12 +9544,12 @@ namespace libvlc
         {
             get
             {
-                return ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->i_severity;
+                return ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->i_severity;
             }
 
             set
             {
-                ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->i_severity = value;
+                ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->i_severity = value;
             }
         }
 
@@ -9157,12 +9557,12 @@ namespace libvlc
         {
             get
             {
-                return Marshal.PtrToStringAnsi(((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_type);
+                return Marshal.PtrToStringAnsi(((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_type);
             }
 
             set
             {
-                ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_type = Marshal.StringToHGlobalAnsi(value);
+                ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_type = Marshal.StringToHGlobalAnsi(value);
             }
         }
 
@@ -9170,12 +9570,12 @@ namespace libvlc
         {
             get
             {
-                return Marshal.PtrToStringAnsi(((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_name);
+                return Marshal.PtrToStringAnsi(((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_name);
             }
 
             set
             {
-                ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_name = Marshal.StringToHGlobalAnsi(value);
+                ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_name = Marshal.StringToHGlobalAnsi(value);
             }
         }
 
@@ -9183,12 +9583,12 @@ namespace libvlc
         {
             get
             {
-                return Marshal.PtrToStringAnsi(((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_header);
+                return Marshal.PtrToStringAnsi(((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_header);
             }
 
             set
             {
-                ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_header = Marshal.StringToHGlobalAnsi(value);
+                ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_header = Marshal.StringToHGlobalAnsi(value);
             }
         }
 
@@ -9196,12 +9596,12 @@ namespace libvlc
         {
             get
             {
-                return Marshal.PtrToStringAnsi(((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_message);
+                return Marshal.PtrToStringAnsi(((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_message);
             }
 
             set
             {
-                ((global::libvlc.LibvlcLogMessageT.__Internal*) __Instance)->psz_message = Marshal.StringToHGlobalAnsi(value);
+                ((global::libvlcsharp.LibvlcLogMessageT.__Internal*) __Instance)->psz_message = Marshal.StringToHGlobalAnsi(value);
             }
         }
     }
@@ -9395,7 +9795,7 @@ namespace libvlc
         /// <para>if the file format did not convey the frame rate explicitly.</para>
         /// <para>Consider using libvlc_media_tracks_get() instead.</para>
         /// </remarks>
-        public static float LibvlcMediaPlayerGetFps(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static float LibvlcMediaPlayerGetFps(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetFps(__arg0);
@@ -9403,14 +9803,14 @@ namespace libvlc
         }
 
         /// <remarks>Use libvlc_media_player_set_nsobject() instead</remarks>
-        public static void LibvlcMediaPlayerSetAgl(global::libvlc.LibvlcMediaPlayerT p_mi, uint drawable)
+        public static void LibvlcMediaPlayerSetAgl(global::libvlcsharp.MediaPlayer p_mi, uint drawable)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcMediaPlayerSetAgl(__arg0, drawable);
         }
 
         /// <remarks>Use libvlc_media_player_get_nsobject() instead</remarks>
-        public static uint LibvlcMediaPlayerGetAgl(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static uint LibvlcMediaPlayerGetAgl(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcMediaPlayerGetAgl(__arg0);
@@ -9418,7 +9818,7 @@ namespace libvlc
         }
 
         /// <remarks>Use libvlc_track_description_list_release() instead</remarks>
-        public static void LibvlcTrackDescriptionRelease(global::libvlc.LibvlcTrackDescriptionT p_track_description)
+        public static void LibvlcTrackDescriptionRelease(global::libvlcsharp.TrackDescription p_track_description)
         {
             var __arg0 = ReferenceEquals(p_track_description, null) ? global::System.IntPtr.Zero : p_track_description.__Instance;
             __Internal.LibvlcTrackDescriptionRelease(__arg0);
@@ -9428,7 +9828,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <returns>the video pixel height or 0 if not applicable</returns>
         /// <remarks>Use libvlc_video_get_size() instead.</remarks>
-        public static int LibvlcVideoGetHeight(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetHeight(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetHeight(__arg0);
@@ -9439,7 +9839,7 @@ namespace libvlc
         /// <param name="p_mi">the media player</param>
         /// <returns>the video pixel width or 0 if not applicable</returns>
         /// <remarks>Use libvlc_video_get_size() instead.</remarks>
-        public static int LibvlcVideoGetWidth(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcVideoGetWidth(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetWidth(__arg0);
@@ -9452,15 +9852,15 @@ namespace libvlc
         /// <para>list containing description of available titles.</para>
         /// <para>It must be freed with libvlc_track_description_list_release()</para>
         /// </returns>
-        public static global::libvlc.LibvlcTrackDescriptionT LibvlcVideoGetTitleDescription(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static global::libvlcsharp.TrackDescription LibvlcVideoGetTitleDescription(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetTitleDescription(__arg0);
-            global::libvlc.LibvlcTrackDescriptionT __result0;
+            global::libvlcsharp.TrackDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -9471,15 +9871,15 @@ namespace libvlc
         /// <para>list containing description of available chapter for title i_title.</para>
         /// <para>It must be freed with libvlc_track_description_list_release()</para>
         /// </returns>
-        public static global::libvlc.LibvlcTrackDescriptionT LibvlcVideoGetChapterDescription(global::libvlc.LibvlcMediaPlayerT p_mi, int i_title)
+        public static global::libvlcsharp.TrackDescription LibvlcVideoGetChapterDescription(global::libvlcsharp.MediaPlayer p_mi, int i_title)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoGetChapterDescription(__arg0, i_title);
-            global::libvlc.LibvlcTrackDescriptionT __result0;
+            global::libvlcsharp.TrackDescription __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcTrackDescriptionT) global::libvlc.LibvlcTrackDescriptionT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcTrackDescriptionT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.TrackDescription.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.TrackDescription) global::libvlcsharp.TrackDescription.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.TrackDescription.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -9488,7 +9888,7 @@ namespace libvlc
         /// <param name="psz_subtitle">new video subtitle file</param>
         /// <returns>the success status (boolean)</returns>
         /// <remarks>Use libvlc_media_player_add_slave() instead.</remarks>
-        public static int LibvlcVideoSetSubtitleFile(global::libvlc.LibvlcMediaPlayerT p_mi, string psz_subtitle)
+        public static int LibvlcVideoSetSubtitleFile(global::libvlcsharp.MediaPlayer p_mi, string psz_subtitle)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcVideoSetSubtitleFile(__arg0, psz_subtitle);
@@ -9498,7 +9898,7 @@ namespace libvlc
         /// <summary>Toggle teletext transparent status on video output.</summary>
         /// <param name="p_mi">the media player</param>
         /// <remarks>use libvlc_video_set_teletext() instead.</remarks>
-        public static void LibvlcToggleTeletext(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static void LibvlcToggleTeletext(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             __Internal.LibvlcToggleTeletext(__arg0);
@@ -9507,7 +9907,7 @@ namespace libvlc
         /// <summary>Backward compatibility stub. Do not use in new code.</summary>
         /// <returns>always 0.</returns>
         /// <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
-        public static int LibvlcAudioOutputDeviceCount(global::libvlc.LibvlcInstanceT p_instance, string psz_audio_output)
+        public static int LibvlcAudioOutputDeviceCount(global::libvlcsharp.Instance p_instance, string psz_audio_output)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceCount(__arg0, psz_audio_output);
@@ -9517,7 +9917,7 @@ namespace libvlc
         /// <summary>Backward compatibility stub. Do not use in new code.</summary>
         /// <returns>always NULL.</returns>
         /// <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
-        public static sbyte* LibvlcAudioOutputDeviceLongname(global::libvlc.LibvlcInstanceT p_instance, string psz_output, int i_device)
+        public static sbyte* LibvlcAudioOutputDeviceLongname(global::libvlcsharp.Instance p_instance, string psz_output, int i_device)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceLongname(__arg0, psz_output, i_device);
@@ -9527,7 +9927,7 @@ namespace libvlc
         /// <summary>Backward compatibility stub. Do not use in new code.</summary>
         /// <returns>always NULL.</returns>
         /// <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
-        public static sbyte* LibvlcAudioOutputDeviceId(global::libvlc.LibvlcInstanceT p_instance, string psz_audio_output, int i_device)
+        public static sbyte* LibvlcAudioOutputDeviceId(global::libvlcsharp.Instance p_instance, string psz_audio_output, int i_device)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcAudioOutputDeviceId(__arg0, psz_audio_output, i_device);
@@ -9536,7 +9936,7 @@ namespace libvlc
 
         /// <summary>Stub for backward compatibility.</summary>
         /// <returns>always -1.</returns>
-        public static int LibvlcAudioOutputGetDeviceType(global::libvlc.LibvlcMediaPlayerT p_mi)
+        public static int LibvlcAudioOutputGetDeviceType(global::libvlcsharp.MediaPlayer p_mi)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
             var __ret = __Internal.LibvlcAudioOutputGetDeviceType(__arg0);
@@ -9544,7 +9944,7 @@ namespace libvlc
         }
 
         /// <summary>Stub for backward compatibility.</summary>
-        public static void LibvlcAudioOutputSetDeviceType(global::libvlc.LibvlcMediaPlayerT p_mp, int device_type)
+        public static void LibvlcAudioOutputSetDeviceType(global::libvlcsharp.MediaPlayer p_mp, int device_type)
         {
             var __arg0 = ReferenceEquals(p_mp, null) ? global::System.IntPtr.Zero : p_mp.__Instance;
             __Internal.LibvlcAudioOutputSetDeviceType(__arg0, device_type);
@@ -9561,7 +9961,7 @@ namespace libvlc
         /// <para>libvlc_media_get_meta</para>
         /// <para>libvlc_media_get_tracks_info</para>
         /// </remarks>
-        public static void LibvlcMediaParse(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaParse(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaParse(__arg0);
@@ -9583,7 +9983,7 @@ namespace libvlc
         /// <para>libvlc_media_get_meta</para>
         /// <para>libvlc_media_get_tracks_info</para>
         /// </remarks>
-        public static void LibvlcMediaParseAsync(global::libvlc.LibvlcMediaT p_md)
+        public static void LibvlcMediaParseAsync(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             __Internal.LibvlcMediaParseAsync(__arg0);
@@ -9597,7 +9997,7 @@ namespace libvlc
         /// <para>Use libvlc_media_get_parsed_status() instead</para>
         /// <para>libvlc_MediaParsedChanged</para>
         /// </remarks>
-        public static int LibvlcMediaIsParsed(global::libvlc.LibvlcMediaT p_md)
+        public static int LibvlcMediaIsParsed(global::libvlcsharp.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __ret = __Internal.LibvlcMediaIsParsed(__arg0);
@@ -9617,7 +10017,7 @@ namespace libvlc
         /// <para>Not doing this will result in an empty array.</para>
         /// <para>Use libvlc_media_tracks_get() instead</para>
         /// </remarks>
-        public static int LibvlcMediaGetTracksInfo(global::libvlc.LibvlcMediaT p_md, global::libvlc.LibvlcMediaTrackInfoT tracks)
+        public static int LibvlcMediaGetTracksInfo(global::libvlcsharp.Media p_md, global::libvlcsharp.MediaTrackInfo tracks)
         {
             var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
             var __arg1 = ReferenceEquals(tracks, null) ? global::System.IntPtr.Zero : tracks.__Instance;
@@ -9626,7 +10026,7 @@ namespace libvlc
         }
 
         /// <summary>@{</summary>
-        public static int LibvlcMediaListAddFileContent(global::libvlc.LibvlcMediaListT p_ml, string psz_uri)
+        public static int LibvlcMediaListAddFileContent(global::libvlcsharp.MediaList p_ml, string psz_uri)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
             var __ret = __Internal.LibvlcMediaListAddFileContent(__arg0, psz_uri);
@@ -9634,15 +10034,15 @@ namespace libvlc
         }
 
         /// <remarks>Use libvlc_media_discoverer_new() and libvlc_media_discoverer_start().</remarks>
-        public static global::libvlc.LibvlcMediaDiscovererT LibvlcMediaDiscovererNewFromName(global::libvlc.LibvlcInstanceT p_inst, string psz_name)
+        public static global::libvlcsharp.MediaDiscoverer LibvlcMediaDiscovererNewFromName(global::libvlcsharp.Instance p_inst, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererNewFromName(__arg0, psz_name);
-            global::libvlc.LibvlcMediaDiscovererT __result0;
+            global::libvlcsharp.MediaDiscoverer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcMediaDiscovererT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcMediaDiscovererT) global::libvlc.LibvlcMediaDiscovererT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcMediaDiscovererT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.MediaDiscoverer.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.MediaDiscoverer) global::libvlcsharp.MediaDiscoverer.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.MediaDiscoverer.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -9653,7 +10053,7 @@ namespace libvlc
         /// <para>Useless, use libvlc_media_discoverer_list_get() to get the</para>
         /// <para>longname of the service discovery.</para>
         /// </remarks>
-        public static sbyte* LibvlcMediaDiscovererLocalizedName(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static sbyte* LibvlcMediaDiscovererLocalizedName(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererLocalizedName(__arg0);
@@ -9667,15 +10067,15 @@ namespace libvlc
         /// <para>Useless, media_discoverer events are only triggered when calling</para>
         /// <para>libvlc_media_discoverer_start() and libvlc_media_discoverer_stop().</para>
         /// </remarks>
-        public static global::libvlc.LibvlcEventManagerT LibvlcMediaDiscovererEventManager(global::libvlc.LibvlcMediaDiscovererT p_mdis)
+        public static global::libvlcsharp.EventManager LibvlcMediaDiscovererEventManager(global::libvlcsharp.MediaDiscoverer p_mdis)
         {
             var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
             var __ret = __Internal.LibvlcMediaDiscovererEventManager(__arg0);
-            global::libvlc.LibvlcEventManagerT __result0;
+            global::libvlcsharp.EventManager __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcEventManagerT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcEventManagerT) global::libvlc.LibvlcEventManagerT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcEventManagerT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.EventManager.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.EventManager) global::libvlcsharp.EventManager.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.EventManager.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -9688,7 +10088,7 @@ namespace libvlc
         /// <para>This function wastes one thread doing basically nothing.</para>
         /// <para>libvlc_set_exit_handler() should be used instead.</para>
         /// </remarks>
-        public static void LibvlcWait(global::libvlc.LibvlcInstanceT p_instance)
+        public static void LibvlcWait(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcWait(__arg0);
@@ -9700,7 +10100,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_instance">ignored</param>
         /// <returns>always -1</returns>
-        public static uint LibvlcGetLogVerbosity(global::libvlc.LibvlcInstanceT p_instance)
+        public static uint LibvlcGetLogVerbosity(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcGetLogVerbosity(__arg0);
@@ -9713,7 +10113,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_instance">ignored</param>
         /// <param name="level">ignored</param>
-        public static void LibvlcSetLogVerbosity(global::libvlc.LibvlcInstanceT p_instance, uint level)
+        public static void LibvlcSetLogVerbosity(global::libvlcsharp.Instance p_instance, uint level)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcSetLogVerbosity(__arg0, level);
@@ -9725,21 +10125,21 @@ namespace libvlc
         /// </summary>
         /// <param name="p_instance">libvlc instance</param>
         /// <returns>an unique pointer or NULL on error</returns>
-        public static global::libvlc.VlcLogT LibvlcLogOpen(global::libvlc.LibvlcInstanceT p_instance)
+        public static global::libvlcsharp.Log LibvlcLogOpen(global::libvlcsharp.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             var __ret = __Internal.LibvlcLogOpen(__arg0);
-            global::libvlc.VlcLogT __result0;
+            global::libvlcsharp.Log __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.VlcLogT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.VlcLogT) global::libvlc.VlcLogT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.VlcLogT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.Log.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.Log) global::libvlcsharp.Log.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.Log.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Frees memory allocated by libvlc_log_open().</summary>
         /// <param name="p_log">libvlc log instance or NULL</param>
-        public static void LibvlcLogClose(global::libvlc.VlcLogT p_log)
+        public static void LibvlcLogClose(global::libvlcsharp.Log p_log)
         {
             var __arg0 = ReferenceEquals(p_log, null) ? global::System.IntPtr.Zero : p_log.__Instance;
             __Internal.LibvlcLogClose(__arg0);
@@ -9751,7 +10151,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_log">ignored</param>
         /// <returns>always zero</returns>
-        public static uint LibvlcLogCount(global::libvlc.VlcLogT p_log)
+        public static uint LibvlcLogCount(global::libvlcsharp.Log p_log)
         {
             var __arg0 = ReferenceEquals(p_log, null) ? global::System.IntPtr.Zero : p_log.__Instance;
             var __ret = __Internal.LibvlcLogCount(__arg0);
@@ -9763,7 +10163,7 @@ namespace libvlc
         /// <para>It is only provided for backward compatibility.</para>
         /// </summary>
         /// <param name="p_log">ignored</param>
-        public static void LibvlcLogClear(global::libvlc.VlcLogT p_log)
+        public static void LibvlcLogClear(global::libvlcsharp.Log p_log)
         {
             var __arg0 = ReferenceEquals(p_log, null) ? global::System.IntPtr.Zero : p_log.__Instance;
             __Internal.LibvlcLogClear(__arg0);
@@ -9775,21 +10175,21 @@ namespace libvlc
         /// </summary>
         /// <param name="p_log">ignored</param>
         /// <returns>an unique pointer or NULL on error or if the parameter was NULL</returns>
-        public static global::libvlc.LibvlcLogIteratorT LibvlcLogGetIterator(global::libvlc.VlcLogT p_log)
+        public static global::libvlcsharp.LibvlcLogIteratorT LibvlcLogGetIterator(global::libvlcsharp.Log p_log)
         {
             var __arg0 = ReferenceEquals(p_log, null) ? global::System.IntPtr.Zero : p_log.__Instance;
             var __ret = __Internal.LibvlcLogGetIterator(__arg0);
-            global::libvlc.LibvlcLogIteratorT __result0;
+            global::libvlcsharp.LibvlcLogIteratorT __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcLogIteratorT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcLogIteratorT) global::libvlc.LibvlcLogIteratorT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcLogIteratorT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.LibvlcLogIteratorT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.LibvlcLogIteratorT) global::libvlcsharp.LibvlcLogIteratorT.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.LibvlcLogIteratorT.__CreateInstance(__ret);
             return __result0;
         }
 
         /// <summary>Frees memory allocated by libvlc_log_get_iterator().</summary>
         /// <param name="p_iter">libvlc log iterator or NULL</param>
-        public static void LibvlcLogIteratorFree(global::libvlc.LibvlcLogIteratorT p_iter)
+        public static void LibvlcLogIteratorFree(global::libvlcsharp.LibvlcLogIteratorT p_iter)
         {
             var __arg0 = ReferenceEquals(p_iter, null) ? global::System.IntPtr.Zero : p_iter.__Instance;
             __Internal.LibvlcLogIteratorFree(__arg0);
@@ -9801,7 +10201,7 @@ namespace libvlc
         /// </summary>
         /// <param name="p_iter">ignored</param>
         /// <returns>always zero</returns>
-        public static int LibvlcLogIteratorHasNext(global::libvlc.LibvlcLogIteratorT p_iter)
+        public static int LibvlcLogIteratorHasNext(global::libvlcsharp.LibvlcLogIteratorT p_iter)
         {
             var __arg0 = ReferenceEquals(p_iter, null) ? global::System.IntPtr.Zero : p_iter.__Instance;
             var __ret = __Internal.LibvlcLogIteratorHasNext(__arg0);
@@ -9815,16 +10215,16 @@ namespace libvlc
         /// <param name="p_iter">libvlc log iterator or NULL</param>
         /// <param name="p_buf">ignored</param>
         /// <returns>always NULL</returns>
-        public static global::libvlc.LibvlcLogMessageT LibvlcLogIteratorNext(global::libvlc.LibvlcLogIteratorT p_iter, global::libvlc.LibvlcLogMessageT p_buf)
+        public static global::libvlcsharp.LibvlcLogMessageT LibvlcLogIteratorNext(global::libvlcsharp.LibvlcLogIteratorT p_iter, global::libvlcsharp.LibvlcLogMessageT p_buf)
         {
             var __arg0 = ReferenceEquals(p_iter, null) ? global::System.IntPtr.Zero : p_iter.__Instance;
             var __arg1 = ReferenceEquals(p_buf, null) ? global::System.IntPtr.Zero : p_buf.__Instance;
             var __ret = __Internal.LibvlcLogIteratorNext(__arg0, __arg1);
-            global::libvlc.LibvlcLogMessageT __result0;
+            global::libvlcsharp.LibvlcLogMessageT __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlc.LibvlcLogMessageT.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlc.LibvlcLogMessageT) global::libvlc.LibvlcLogMessageT.NativeToManagedMap[__ret];
-            else __result0 = global::libvlc.LibvlcLogMessageT.__CreateInstance(__ret);
+            else if (global::libvlcsharp.LibvlcLogMessageT.NativeToManagedMap.ContainsKey(__ret))
+                __result0 = (global::libvlcsharp.LibvlcLogMessageT) global::libvlcsharp.LibvlcLogMessageT.NativeToManagedMap[__ret];
+            else __result0 = global::libvlcsharp.LibvlcLogMessageT.__CreateInstance(__ret);
             return __result0;
         }
 
@@ -9841,7 +10241,7 @@ namespace libvlc
         /// <para>Additionnal playlist item options can be specified for addition to the</para>
         /// <para>item before it is played.</para>
         /// </remarks>
-        public static void LibvlcPlaylistPlay(global::libvlc.LibvlcInstanceT p_instance, int i_id, int i_options, sbyte** ppsz_options)
+        public static void LibvlcPlaylistPlay(global::libvlcsharp.Instance p_instance, int i_id, int i_options, sbyte** ppsz_options)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.__Instance;
             __Internal.LibvlcPlaylistPlay(__arg0, i_id, i_options, ppsz_options);
