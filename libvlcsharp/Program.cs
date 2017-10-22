@@ -134,11 +134,12 @@ namespace libvlcsharp
                 options.GeneratorKind = GeneratorKind.CSharp;
                 options.CompileCode = true;
                 options.OutputDir = Path.Combine(rootPath, "..\\Sample\\");
-
+                options.StripLibPrefix = false;
+                
                 var module = options.AddModule("libvlcsharp");
+                module.SharedLibraryName = "libvlc";
                 module.Headers.Add("vlc.h");
                 module.LibraryDirs.Add(libFolder);
-                module.Libraries.AddRange(new[] { "libvlc.lib", "libvlccore.lib" });
             }
 
             public void SetupPasses(Driver driver)
