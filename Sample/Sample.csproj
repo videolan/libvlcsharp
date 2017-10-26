@@ -83,8 +83,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generated\deprecated.cs" />
+    <Compile Include="Generated\libvlc.cs" />
+    <Compile Include="Generated\libvlc_dialog.cs" />
+    <Compile Include="Generated\libvlc_events.cs" />
+    <Compile Include="Generated\libvlc_media.cs" />
+    <Compile Include="Generated\libvlc_media_discoverer.cs" />
+    <Compile Include="Generated\libvlc_media_library.cs" />
+    <Compile Include="Generated\libvlc_media_list.cs" />
+    <Compile Include="Generated\libvlc_media_list_player.cs" />
+    <Compile Include="Generated\libvlc_media_player.cs" />
+    <Compile Include="Generated\libvlc_renderer_discoverer.cs" />
+    <Compile Include="Generated\libvlc_vlm.cs" />
+    <Compile Include="Generated\vlc.cs" />
+    <Compile Include="Manual\deprecated.cs" />
+    <Compile Include="Manual\libvlc.cs" />
+    <Compile Include="Manual\libvlc_dialog.cs" />
+    <Compile Include="Manual\libvlc_events.cs" />
+    <Compile Include="Manual\libvlc_media.cs" />
+    <Compile Include="Manual\libvlc_media_discoverer.cs" />
+    <Compile Include="Manual\libvlc_media_library.cs" />
+    <Compile Include="Manual\libvlc_media_list.cs" />
+    <Compile Include="Manual\libvlc_media_list_player.cs" />
+    <Compile Include="Manual\libvlc_media_player.cs" />
+    <Compile Include="Manual\libvlc_renderer_discoverer.cs" />
+    <Compile Include="Manual\libvlc_vlm.cs" />
+    <Compile Include="Manual\vlc.cs" />
     <Compile Include="Instance.cs" />
-    <Compile Include="libvlcsharp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -103,5 +128,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
