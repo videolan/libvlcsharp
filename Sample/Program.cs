@@ -9,7 +9,7 @@ namespace Sample
         {
             var instance = new Instance(0, null);
             //var audiolist = instance.AudioFilterList;
-            var au = instance.AudioFilterList;
+            var au = instance.AudioFilters;
 
             //var media = libvlc_media.LibvlcMediaNewLocation(instance,
             //    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");

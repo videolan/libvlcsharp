@@ -108,8 +108,8 @@
     <Compile Include="Manual\libvlc_media_player.cs" />
     <Compile Include="Manual\libvlc_renderer_discoverer.cs" />
     <Compile Include="Manual\libvlc_vlm.cs" />
+    <Compile Include="Manual\Utf8StringMarshaler.cs" />
     <Compile Include="Manual\vlc.cs" />
-    <Compile Include="Instance.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

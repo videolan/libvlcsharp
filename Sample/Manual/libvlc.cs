@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security;
 using System.Text;
+using Sample.Manual;
 
 namespace libvlcsharp
 {
@@ -35,9 +37,9 @@ namespace libvlcsharp
     /// </summary>
     /// <summary>Type of a LibVLC event.</summary>
     /// <summary>Callback function notification</summary>
-    /// <param name="p_event">the event triggering the callback</param>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void LibvlcCallbackT(global::System.IntPtr p_event, global::System.IntPtr p_data);
+    /// <param name="libvlcEvent">the event triggering the callback</param>
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void LibvlcCallbackT(IntPtr libvlcEvent, IntPtr data);
 
     public class Instance
     {
@@ -88,13 +90,23 @@ namespace libvlcsharp
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_module_description_list_release")]
-            internal static extern void LibVLCModuleDescriptionListRelease(IntPtr moduleDescriptionList);
+                EntryPoint = "libvlc_audio_filter_list_get")]
+            internal static extern IntPtr LibVLCAudioFilterListGet(IntPtr instance);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_filter_list_get")]
-            internal static extern IntPtr LibVLCAudioFilterListGet(IntPtr instance);
+                EntryPoint = "libvlc_video_filter_list_get")]
+            internal static extern IntPtr LibVLCVideoFilterListGet(IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_output_list_get")]
+            internal static extern IntPtr LibVLCAudioOutputListGet(IntPtr instance);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_output_device_list_get")]
+            internal static extern IntPtr LibVLCAudioOutputDeviceListGet(IntPtr instance, [MarshalAs(UnmanagedType.LPStr)] string aout);
 
         }
 
@@ -111,7 +123,7 @@ namespace libvlcsharp
         /// <para>main(). These arguments affect the LibVLC instance default configuration.</para>
         /// </summary>
         /// <param name="argc">the number of arguments (should be 0)</param>
-        /// <param name="argv">list of arguments (should be NULL)</param>
+        /// <param name="args">list of arguments (should be NULL)</param>
         /// <returns>the libvlc instance or NULL in case of error</returns>
         /// <remarks>
         /// <para>LibVLC may create threads. Therefore, any thread-unsafe process</para>
@@ -186,12 +198,8 @@ namespace libvlcsharp
                 return;
 
             Internal.LibVLCRelease(NativeReference);
-
-            // TODO: Is this needed if we already freed the memory on the C side?
-            Instance __dummy;
-            NativeToManagedMap.TryRemove(NativeReference, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(NativeReference);
+            
+            NativeToManagedMap.TryRemove(NativeReference, out var dummy);
             NativeReference = IntPtr.Zero;
         }
         
@@ -212,7 +220,7 @@ namespace libvlcsharp
         */
         public bool AddInterface(string name)
         {
-            return Internal.LibVLCAddInterface(NativeReference, name) == 0;
+            return Internal.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
         }
         
         /// <summary>
@@ -222,7 +230,6 @@ namespace libvlcsharp
         /// <para>Typically, this function will wake up your application main loop (from</para>
         /// <para>another thread).</para>
         /// </summary>
-        /// <param name="p_instance">LibVLC instance</param>
         /// <param name="cb">
         /// <para>callback to invoke when LibVLC wants to exit,</para>
         /// <para>or NULL to disable the exit handler (as by default)</para>
@@ -239,12 +246,11 @@ namespace libvlcsharp
             var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
             Internal.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
         }
-
+        
         /// <summary>
         /// <para>Sets the application name. LibVLC passes this as the user agent string</para>
         /// <para>when a protocol requires it.</para>
         /// </summary>
-        /// <param name="p_instance">LibVLC instance</param>
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
@@ -288,36 +294,10 @@ namespace libvlcsharp
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
         /// </param>
         /// <remarks>LibVLC 2.1.0 or later</remarks>
-        public void LogSetFile(IntPtr stream)
+        public void SetLogFile(IntPtr stream)
         {
             Internal.LibVLCLogSetFile(NativeReference, stream);
         }
-
-      
-        private void ModuleDescriptionListRelease(ModuleDescription list)
-        {
-            Internal.LibVLCModuleDescriptionListRelease(list.__Instance);
-        }
-
-        //public IEnumerable<ModuleDescription> AudioFilterList
-        //{
-        //    get
-        //    {
-        //        var listPtr = Internal.LibVLCAudioFilterListGet(NativeReference); // TODO: use libvlc_module_description_list_release
-        //        if (listPtr == IntPtr.Zero) return Enumerable.Empty<ModuleDescription>();
-        //        var audioFilter = Marshal.PtrToStructure<ModuleDescription>(listPtr);
-        //        //var emptyAudioFilter = default(ModuleDescription.Internal);
-        //        //if (audioFilter.Equals(emptyAudioFilter)) return Enumerable.Empty<ModuleDescription>();
-
-        //        var audioFilterList = new List<ModuleDescription>();
-        //        //while (!audioFilter.Equals(emptyAudioFilter))
-        //        //{
-        //        //    audioFilterList.Add(audioFilter);
-        //        //    audioFilter = audioFilter.PNext;
-        //        //}
-        //        return audioFilterList;
-        //    }
-        //}
 
         /// <summary>Returns a list of audio filters that are available.</summary>
         /// <returns>
@@ -328,31 +308,125 @@ namespace libvlcsharp
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public IEnumerable<ModuleDescription> AudioFilterList
+        public IEnumerable<ModuleDescription> AudioFilters
         {
             get
             {
-                var filterList = Internal.LibVLCAudioFilterListGet(NativeReference);
-                if (filterList == IntPtr.Zero) return Enumerable.Empty<ModuleDescription>();
-
-                var moduleDescription = ModuleDescription.NativeToManagedMap.ContainsKey(filterList) ?
-                    ModuleDescription.NativeToManagedMap[filterList] : ModuleDescription.__CreateInstance(filterList);
-
-                var audioFilterList = new List<ModuleDescription>();
-                //try
-                //{
-                    while (moduleDescription != null)
-                    {
-                        audioFilterList.Add(moduleDescription);
-                        moduleDescription = moduleDescription.PNext;
-                    }
-                //}
-                //catch (Exception ex)
-                //{
-                //    Debug.WriteLine(ex);
-                //}
-                return audioFilterList;
+                return Retrieve(
+                    () => Marshal.PtrToStructure<ModuleDescription.Internal>(
+                        Internal.LibVLCAudioFilterListGet(NativeReference)),
+                    intern => ModuleDescription.__CreateInstance(intern),
+                    module => module.PNext);
             }
+        }
+
+        private IEnumerable<TU> Retrieve<T, TU>(Func<T> retrieve, Func<T, TU> create, Func<TU, TU> next)
+        {
+            var structure = retrieve();
+            //if (ptr == IntPtr.Zero) return Enumerable.Empty<T>();
+
+            var obj = create(structure);
+
+            var resultList = new List<TU>();
+            while (obj != null)
+            {
+                resultList.Add(obj);
+                obj = next(obj);
+            }
+            return resultList;
+        }
+
+
+        /// <summary>Returns a list of video filters that are available.</summary>
+        /// <returns>
+        /// <para>a list of module descriptions. It should be freed with libvlc_module_description_list_release().</para>
+        /// <para>In case of an error, NULL is returned.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>libvlc_module_description_t</para>
+        /// <para>libvlc_module_description_list_release</para>
+        /// </remarks>
+        public IEnumerable<ModuleDescription> VideoFilters
+        {
+            get
+            {
+                return Retrieve(
+                    () => Marshal.PtrToStructure<ModuleDescription.Internal>(
+                        Internal.LibVLCVideoFilterListGet(NativeReference)),
+                    intern => ModuleDescription.__CreateInstance(intern),
+                    module => module.PNext);
+
+                //return Retrieve(() => Internal.LibVLCVideoFilterListGet(NativeReference), 
+                //    ptr => ModuleDescription.NativeToManagedMap.ContainsKey(ptr) ?
+                //            ModuleDescription.NativeToManagedMap[ptr] : ModuleDescription.__CreateInstance(ptr),
+                //    module => module.PNext);
+            }
+        }
+
+        /// <summary>Gets the list of available audio output modules.</summary>
+        /// <returns>list of available audio outputs. It must be freed with</returns>
+        /// <remarks>
+        /// <para>libvlc_audio_output_list_release</para>
+        /// <para>libvlc_audio_output_t .</para>
+        /// <para>In case of error, NULL is returned.</para>
+        /// </remarks>
+        public IEnumerable<AudioOutputDescription> AudioOutputs
+        {
+            get
+            {
+                return Retrieve(
+                    () => Marshal.PtrToStructure<AudioOutputDescription.Internal>(
+                        Internal.LibVLCAudioOutputListGet(NativeReference)),
+                    intern => AudioOutputDescription.__CreateInstance(intern),
+                    module => module.PNext);
+
+                //return Retrieve(() => Internal.LibVLCAudioOutputListGet(NativeReference),
+                //    ptr => AudioOutputDescription.NativeToManagedMap.ContainsKey(ptr) ?
+                //        AudioOutputDescription.NativeToManagedMap[ptr] : AudioOutputDescription.__CreateInstance(ptr),
+                //    audioOutput => audioOutput.PNext);
+            }
+        }
+
+        /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
+        /// <param name="audioOutputName">
+        /// <para>audio output name</para>
+        /// <para>(as returned by libvlc_audio_output_list_get())</para>
+        /// </param>
+        /// <returns>
+        /// <para>A NULL-terminated linked list of potential audio output devices.</para>
+        /// <para>It must be freed with libvlc_audio_output_device_list_release()</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>libvlc_audio_output_device_set().</para>
+        /// <para>Not all audio outputs support this. In particular, an empty (NULL)</para>
+        /// <para>list of devices doesnotimply that the specified audio output does</para>
+        /// <para>not work.</para>
+        /// <para>The list might not be exhaustive.</para>
+        /// <para>Some audio output devices in the list might not actually work in</para>
+        /// <para>some circumstances. By default, it is recommended to not specify any</para>
+        /// <para>explicit audio device.</para>
+        /// <para>LibVLC 2.1.0 or later.</para>
+        /// </remarks>
+        public IEnumerable<AudioOutputDevice> AudioOutputDevices(string audioOutputName)
+        {
+            return Retrieve(
+                () => Marshal.PtrToStructure<AudioOutputDevice.Internal>(
+                    Internal.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName)),
+                intern => AudioOutputDevice.__CreateInstance(intern),
+                module => module.PNext);
+
+            //return Retrieve(() => Internal.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName),
+            //    ptr => AudioOutputDevice.NativeToManagedMap.ContainsKey(ptr)
+            //        ? AudioOutputDevice.NativeToManagedMap[ptr]
+            //        : AudioOutputDevice.__CreateInstance(ptr),
+            //    audioOutputDevice => audioOutputDevice.PNext);
+        }
+        
+        
+
+        public void SetDialogHandlers()
+        {
+            
         }
     }
 
@@ -453,31 +527,42 @@ namespace libvlcsharp
     /// <summary>Description of a module.</summary>
     public unsafe partial class ModuleDescription : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 40)]
+        //[StructLayout(LayoutKind.Explicit, Size = 40)]
+        [StructLayout(LayoutKind.Sequential)]
         public partial struct Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr psz_name;
+            //[FieldOffset(0)]
+            //[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
+            internal IntPtr psz_name;
 
-            [FieldOffset(8)]
-            internal global::System.IntPtr psz_shortname;
+            //[FieldOffset(8)]
+            //[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
+            internal IntPtr psz_shortname;
 
-            [FieldOffset(16)]
-            internal global::System.IntPtr psz_longname;
+            //[FieldOffset(16)]
+            //[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
+            internal IntPtr psz_longname;
 
-            [FieldOffset(24)]
-            internal global::System.IntPtr psz_help;
+            //[FieldOffset(24)]
+            //[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
+            internal IntPtr psz_help;
 
-            [FieldOffset(32)]
-            internal global::System.IntPtr p_next;
+            //[FieldOffset(32)]
+            //[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
+            internal IntPtr p_next;
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="??0libvlc_module_description_t@@QEAA@AEBU0@@Z")]
             internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_module_description_list_release")]
+            internal static extern void LibVLCModuleDescriptionListRelease(IntPtr moduleDescriptionList);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public IntPtr NativeReference { get; protected set; }
 
         protected int __PointerAdjustment;
         internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ModuleDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.ModuleDescription>();
@@ -506,29 +591,34 @@ namespace libvlcsharp
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
+        }
+
+        private void ModuleDescriptionListRelease()
+        {
+            Internal.LibVLCModuleDescriptionListRelease(NativeReference);
         }
 
         protected ModuleDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            NativeReference = new global::System.IntPtr(native);
         }
 
         public ModuleDescription()
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
         }
 
         public ModuleDescription(global::libvlcsharp.ModuleDescription _0)
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.ModuleDescription.Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::libvlcsharp.ModuleDescription.Internal*) __Instance) = *((global::libvlcsharp.ModuleDescription.Internal*) _0.__Instance);
+            NativeToManagedMap[NativeReference] = this;
+            *((global::libvlcsharp.ModuleDescription.Internal*) NativeReference) = *((global::libvlcsharp.ModuleDescription.Internal*) _0.NativeReference);
         }
 
         public void Dispose()
@@ -538,38 +628,42 @@ namespace libvlcsharp
 
         public virtual void Dispose(bool disposing)
         {
-            if (__Instance == IntPtr.Zero)
+            if (NativeReference == IntPtr.Zero)
                 return;
-            global::libvlcsharp.ModuleDescription __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
+
+
+            NativeToManagedMap.TryRemove(NativeReference, out var dummy);
+
+            ModuleDescriptionListRelease();
+
+            NativeReference = IntPtr.Zero;
         }
 
         public sbyte* PszName
         {
             get
             {
-                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_name;
+                return (sbyte*)((global::libvlcsharp.ModuleDescription.Internal*)NativeReference)->psz_name;
             }
 
             set
             {
-                ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_name = (global::System.IntPtr) value;
             }
         }
+
+        public string Name => new String(PszName);
 
         public sbyte* PszShortname
         {
             get
             {
-                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_shortname;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_shortname;
             }
 
             set
             {
-                ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_shortname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_shortname = (global::System.IntPtr) value;
             }
         }
 
@@ -577,12 +671,12 @@ namespace libvlcsharp
         {
             get
             {
-                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_longname;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_longname;
             }
 
             set
             {
-                ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_longname = (global::System.IntPtr) value;
             }
         }
 
@@ -590,12 +684,12 @@ namespace libvlcsharp
         {
             get
             {
-                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_help;
+                return (sbyte*) ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_help;
             }
 
             set
             {
-                ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->psz_help = (global::System.IntPtr) value;
+                ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->psz_help = (global::System.IntPtr) value;
             }
         }
 
@@ -604,17 +698,17 @@ namespace libvlcsharp
             get
             {
                 global::libvlcsharp.ModuleDescription __result0;
-                //if (((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                //if (NativeToManagedMap.ContainsKey(((Internal*) __Instance)->p_next))
-                if (NativeToManagedMap.ContainsKey(((Internal*) __Instance)->p_next))
-                    __result0 = NativeToManagedMap[((Internal*) __Instance)->p_next];
-                else __result0 = __CreateInstance(((Internal*) __Instance)->p_next);
+                //Internal.
+                if (((global::libvlcsharp.ModuleDescription.Internal*)NativeReference)->p_next == IntPtr.Zero) __result0 = null;
+                else if (NativeToManagedMap.ContainsKey(((Internal*) NativeReference)->p_next))
+                    __result0 = NativeToManagedMap[((Internal*) NativeReference)->p_next];
+                else __result0 = __CreateInstance(((Internal*) NativeReference)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlcsharp.ModuleDescription.Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.ModuleDescription.Internal*) NativeReference)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.NativeReference;
             }
         }
     }
@@ -698,10 +792,7 @@ namespace libvlcsharp
 
           
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_video_filter_list_get")]
-            internal static extern global::System.IntPtr LibvlcVideoFilterListGet(global::System.IntPtr p_instance);
+            
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -909,27 +1000,7 @@ namespace libvlcsharp
 
        
 
-        /// <summary>Returns a list of video filters that are available.</summary>
-        /// <param name="p_instance">libvlc instance</param>
-        /// <returns>
-        /// <para>a list of module descriptions. It should be freed with libvlc_module_description_list_release().</para>
-        /// <para>In case of an error, NULL is returned.</para>
-        /// </returns>
-        /// <remarks>
-        /// <para>libvlc_module_description_t</para>
-        /// <para>libvlc_module_description_list_release</para>
-        /// </remarks>
-        public static global::libvlcsharp.ModuleDescription LibvlcVideoFilterListGet(global::libvlcsharp.Instance p_instance)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcVideoFilterListGet(__arg0);
-            global::libvlcsharp.ModuleDescription __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::libvlcsharp.ModuleDescription.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::libvlcsharp.ModuleDescription) global::libvlcsharp.ModuleDescription.NativeToManagedMap[__ret];
-            else __result0 = global::libvlcsharp.ModuleDescription.__CreateInstance(__ret);
-            return __result0;
-        }
+      
 
         /// <summary>
         /// <para>Return the current time as defined by LibVLC. The unit is the microsecond.</para>
