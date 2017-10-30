@@ -97,6 +97,7 @@
     <Compile Include="Generated\libvlc_vlm.cs" />
     <Compile Include="Generated\vlc.cs" />
     <Compile Include="Manual\deprecated.cs" />
+    <Compile Include="Manual\Instance.cs" />
     <Compile Include="Manual\libvlc.cs" />
     <Compile Include="Manual\libvlc_dialog.cs" />
     <Compile Include="Manual\libvlc_events.cs" />

@@ -7,6 +7,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using Sample.Manual;
 
 namespace libvlcsharp
 {
@@ -839,27 +840,21 @@ namespace libvlcsharp
     /// </summary>
     public unsafe partial class AudioOutputDescription : IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 24)]
+        [StructLayout(LayoutKind.Sequential)]
         public partial struct Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr psz_name;
+            internal IntPtr psz_name;
 
-            [FieldOffset(8)]
-            internal global::System.IntPtr psz_description;
+            internal IntPtr psz_description;
 
-            [FieldOffset(16)]
-            internal global::System.IntPtr p_next;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_audio_output_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
+            internal IntPtr p_next;
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_output_list_release")]
-            internal static extern void LibVLCAudioOutputListRelease(IntPtr list);
+                EntryPoint="??0libvlc_audio_output_t@@QEAA@AEBU0@@Z")]
+            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
+
+       
 
         }
 
@@ -917,13 +912,7 @@ namespace libvlcsharp
             *((global::libvlcsharp.AudioOutputDescription.Internal*) __Instance) = *((global::libvlcsharp.AudioOutputDescription.Internal*) _0.__Instance);
         }
 
-        /// <summary>Frees the list of available audio output modules.</summary>
-        private void AudioOutputRelease()
-        {
-            var nativeReference = ReferenceEquals(this, null) ? IntPtr.Zero : __Instance;
-            Internal.LibVLCAudioOutputListRelease(nativeReference);
-        }
-
+      
         public void Dispose()
         {
             Dispose(disposing: true);
@@ -934,8 +923,6 @@ namespace libvlcsharp
             if (__Instance == IntPtr.Zero)
                 return;
 
-            AudioOutputRelease();
-
             global::libvlcsharp.AudioOutputDescription __dummy;
             NativeToManagedMap.TryRemove(__Instance, out __dummy);
             if (__ownsNativeInstance)
@@ -943,33 +930,12 @@ namespace libvlcsharp
             __Instance = IntPtr.Zero;
         }
 
-        public sbyte* PszName
-        {
-            get
-            {
-                return (sbyte*) ((global::libvlcsharp.AudioOutputDescription.Internal*) __Instance)->psz_name;
-            }
-
-            set
-            {
-                ((global::libvlcsharp.AudioOutputDescription.Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
-            }
-        }
-
-        public sbyte* PszDescription
-        {
-            get
-            {
-                return (sbyte*) ((global::libvlcsharp.AudioOutputDescription.Internal*) __Instance)->psz_description;
-            }
-
-            set
-            {
-                ((global::libvlcsharp.AudioOutputDescription.Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
-            }
-        }
-
-        public global::libvlcsharp.AudioOutputDescription PNext
+        //public string Name => Marshal.PtrToStringAnsi(((Internal *) __Instance)->psz_name);
+        public string Name => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal *) __Instance)->psz_name);
+      
+        public string Description => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)__Instance)->psz_description);
+      
+        public AudioOutputDescription Next
         {
             get
             {
@@ -995,13 +961,13 @@ namespace libvlcsharp
         public partial struct Internal
         {
             [FieldOffset(0)]
-            internal global::System.IntPtr p_next;
+            internal IntPtr p_next;
 
             [FieldOffset(8)]
-            internal global::System.IntPtr psz_device;
+            internal IntPtr psz_device;
 
             [FieldOffset(16)]
-            internal global::System.IntPtr psz_description;
+            internal IntPtr psz_description;
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -1009,7 +975,7 @@ namespace libvlcsharp
             internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public IntPtr NativeReference { get; protected set; }
 
         protected int __PointerAdjustment;
         internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutputDevice> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::libvlcsharp.AudioOutputDevice>();
@@ -1038,29 +1004,29 @@ namespace libvlcsharp
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
         }
 
         protected AudioOutputDevice(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            NativeReference = new global::System.IntPtr(native);
         }
 
         public AudioOutputDevice()
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
         }
 
         public AudioOutputDevice(global::libvlcsharp.AudioOutputDevice _0)
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::libvlcsharp.AudioOutputDevice.Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance) = *((global::libvlcsharp.AudioOutputDevice.Internal*) _0.__Instance);
+            NativeToManagedMap[NativeReference] = this;
+            *((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference) = *((global::libvlcsharp.AudioOutputDevice.Internal*) _0.NativeReference);
         }
 
         public void Dispose()
@@ -1070,58 +1036,36 @@ namespace libvlcsharp
 
         public virtual void Dispose(bool disposing)
         {
-            if (__Instance == IntPtr.Zero)
+            if (NativeReference == IntPtr.Zero)
                 return;
             global::libvlcsharp.AudioOutputDevice __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(NativeReference, out __dummy);
             if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
+                Marshal.FreeHGlobal(NativeReference);
+            NativeReference = IntPtr.Zero;
         }
-
-        public global::libvlcsharp.AudioOutputDevice PNext
+        
+        public AudioOutputDevice Next
         {
             get
             {
                 global::libvlcsharp.AudioOutputDevice __result0;
-                if (((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->p_next == IntPtr.Zero) __result0 = null;
-                else if (global::libvlcsharp.AudioOutputDevice.NativeToManagedMap.ContainsKey(((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->p_next))
-                    __result0 = (global::libvlcsharp.AudioOutputDevice) global::libvlcsharp.AudioOutputDevice.NativeToManagedMap[((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->p_next];
-                else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->p_next);
+                if (((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference)->p_next == IntPtr.Zero) __result0 = null;
+                else if (global::libvlcsharp.AudioOutputDevice.NativeToManagedMap.ContainsKey(((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference)->p_next))
+                    __result0 = (global::libvlcsharp.AudioOutputDevice) global::libvlcsharp.AudioOutputDevice.NativeToManagedMap[((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference)->p_next];
+                else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference)->p_next);
                 return __result0;
             }
 
             set
             {
-                ((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.__Instance;
+                ((global::libvlcsharp.AudioOutputDevice.Internal*) NativeReference)->p_next = ReferenceEquals(value, null) ? global::System.IntPtr.Zero : value.NativeReference;
             }
         }
 
-        public sbyte* PszDevice
-        {
-            get
-            {
-                return (sbyte*) ((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->psz_device;
-            }
+        public string Device => (string) Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*) NativeReference)->psz_device);
 
-            set
-            {
-                ((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->psz_device = (global::System.IntPtr) value;
-            }
-        }
-
-        public sbyte* PszDescription
-        {
-            get
-            {
-                return (sbyte*) ((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->psz_description;
-            }
-
-            set
-            {
-                ((global::libvlcsharp.AudioOutputDevice.Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
-            }
-        }
+        public string Description => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_description);
     }
 
     /// <summary>Viewpoint for video outputs</summary>
@@ -1776,10 +1720,7 @@ namespace libvlcsharp
                 EntryPoint="libvlc_audio_output_list_get")]
             internal static extern global::System.IntPtr LibvlcAudioOutputListGet(global::System.IntPtr p_instance);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_audio_output_list_release")]
-            internal static extern void LibvlcAudioOutputListRelease(global::System.IntPtr p_list);
+         
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -1792,10 +1733,7 @@ namespace libvlcsharp
             internal static extern global::System.IntPtr LibvlcAudioOutputDeviceEnum(global::System.IntPtr mp);
 
             
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_audio_output_device_list_release")]
-            internal static extern void LibvlcAudioOutputDeviceListRelease(global::System.IntPtr p_list);
+           
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -3344,14 +3282,7 @@ namespace libvlcsharp
             return __result0;
         }
 
-        /// <summary>Frees the list of available audio output modules.</summary>
-        /// <param name="p_list">list with audio outputs for release</param>
-        public static void LibvlcAudioOutputListRelease(global::libvlcsharp.AudioOutputDescription p_list)
-        {
-            var __arg0 = ReferenceEquals(p_list, null) ? global::System.IntPtr.Zero : p_list.__Instance;
-            __Internal.LibvlcAudioOutputListRelease(__arg0);
-        }
-
+    
         /// <summary>Selects an audio output module.</summary>
         /// <param name="p_mi">media player</param>
         /// <param name="psz_name">
@@ -3398,17 +3329,7 @@ namespace libvlcsharp
             else __result0 = global::libvlcsharp.AudioOutputDevice.__CreateInstance(__ret);
             return __result0;
         }
-
         
-        /// <summary>Frees a list of available audio output devices.</summary>
-        /// <param name="p_list">list with audio outputs for release</param>
-        /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public static void LibvlcAudioOutputDeviceListRelease(global::libvlcsharp.AudioOutputDevice p_list)
-        {
-            var __arg0 = ReferenceEquals(p_list, null) ? global::System.IntPtr.Zero : p_list.__Instance;
-            __Internal.LibvlcAudioOutputDeviceListRelease(__arg0);
-        }
-
         /// <summary>Configures an explicit audio output device.</summary>
         /// <param name="mp">media player</param>
         /// <param name="module">

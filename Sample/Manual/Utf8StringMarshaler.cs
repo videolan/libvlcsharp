@@ -61,7 +61,7 @@ namespace Sample.Manual
             return -1;
         }
 
-        public static ICustomMarshaler GetInstance(string s)
+        public static ICustomMarshaler GetInstance()
         {
             return _instance;
         }
