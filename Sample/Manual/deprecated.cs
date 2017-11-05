@@ -865,6 +865,6 @@ namespace libvlcsharp
     namespace Delegates
     {
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public unsafe delegate void Action_IntPtr(global::System.IntPtr _0);
+        public unsafe delegate void Action_IntPtr();
     }
 }

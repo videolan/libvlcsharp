@@ -77,5 +77,23 @@ namespace Bindings.Tests
                 Debug.WriteLine(audioOutputDevice.Device);
             }
         }
+
+        [Test]
+        public void EqualityTests()
+        {
+            var instance1 = new Instance(0, null);
+            var instance2 = new Instance(0, null);
+            Assert.True(instance1 != instance2);
+        }
+
+        [Test]
+        public void Categories()
+        {
+            var instance = new Instance(0, null);
+            //var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
+            var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
+            //var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
+
+        }
     }
 }

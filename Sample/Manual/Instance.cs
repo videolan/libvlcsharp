@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using Sample.Manual;
 
 namespace libvlcsharp
 {
@@ -87,7 +89,17 @@ namespace libvlcsharp
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
-            internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);      
+            internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_discoverer_list_get")]
+            internal static extern IntPtr LibVLCMediaDiscovererListGet(IntPtr instance, MediaDiscovererCategory category, ref IntPtr pppServices);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_discoverer_list_release")]
+            internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
         }
 
         public IntPtr NativeReference { get; protected set; }
@@ -261,11 +273,15 @@ namespace libvlcsharp
         /// <para>complete (causing a deadlock if called from within the callback).</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
-        public  void UnsetLog()
+        public void UnsetLog()
         {
             Internal.LibVLCLogUnset(NativeReference);
         }
 
+        public void SetLog()
+        {
+            
+        }
         //TODO: void logSet(LogCb&& logCb)
 
         /// <summary>Sets up logging to a file.</summary>
@@ -385,9 +401,73 @@ namespace libvlcsharp
                 s => AudioOutputDevice.__CreateInstance(s),
                 device => device.Next, Internal.LibVLCAudioOutputDeviceListRelease);
         }
-        
+
+        //https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__discoverer.html#ga9a4676e452daa2fd4b5eb371542afc29
+        // code inspired from https://code.videolan.org/videolan/libvlcpp/blob/master/vlcpp/Instance.hpp
+        // https://stackoverflow.com/questions/13457375/how-do-i-call-an-unmanaged-function-that-has-a-char-as-out-parameter-from-c
+        // https://stackoverflow.com/questions/11131676/how-do-i-marshall-a-pointer-to-a-pointer-of-an-array-of-structures
+        public IEnumerable<MediaDiscovererDescription> MediaDiscoverers(MediaDiscovererCategory category)
+        {
+            var arrayResultPtr = IntPtr.Zero;
+            var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr).ToInt32();
+            //var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, out var arrayResultPtr).ToInt32();
+
+            if (count == 0) return Enumerable.Empty<MediaDiscovererDescription>();
+
+            var size = Marshal.SizeOf(typeof(MediaDiscovererDescription.Internal));
+            var mediaDiscovererDescription = new List<MediaDiscovererDescription>();
+    
+            for (var i = 0; i < count; i++)
+            {
+                var s = (MediaDiscovererDescription.Internal) Marshal.PtrToStructure(
+                    new IntPtr(arrayResultPtr.ToInt32() + (size * i)), typeof(MediaDiscovererDescription.Internal));
+
+                var mdd = MediaDiscovererDescription.__CreateInstance(s);
+                Debug.WriteLine(mdd.Longname);
+                Debug.WriteLine(mdd.Name);
+                mediaDiscovererDescription.Add(mdd);
+            }
+
+            return mediaDiscovererDescription;
+        }
+
+        /// <summary>Get media discoverer services by category</summary>
+        /// <param name="p_inst">libvlc instance</param>
+        /// <param name="i_cat">category of services to fetch</param>
+        /// <param name="ppp_services">
+        /// <para>address to store an allocated array of media discoverer</para>
+        /// <para>services (must be freed with libvlc_media_discoverer_list_release() by</para>
+        /// <para>the caller) [OUT]</para>
+        /// </param>
+        /// <returns>the number of media discoverer services (0 on error)</returns>
+        /// <remarks>LibVLC 3.0.0 and later.</remarks>
+        //private ulong LibvlcMediaDiscovererListGet(global::libvlcsharp.Instance p_inst, global::libvlcsharp.MediaDiscovererCategory i_cat, global::libvlcsharp.MediaDiscovererDescription ppp_services)
+        //{
+        //    var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
+        //    var __arg2 = ReferenceEquals(ppp_services, null) ? global::System.IntPtr.Zero : ppp_services.NativeReference;
+        //    var __ret = __Internal.LibvlcMediaDiscovererListGet(__arg0, i_cat, __arg2);
+        //    return __ret;
+        //}
+
+        /// <summary>Release an array of media discoverer services</summary>
+        /// <param name="ppServices">array to release</param>
+        /// <param name="count">number of elements in the array</param>
+        /// <remarks>
+        /// <para>LibVLC 3.0.0 and later.</para>
+        /// <para>libvlc_media_discoverer_list_get()</para>
+        /// </remarks>
+        private void ReleaseMediaDiscovererList(MediaDiscovererDescription ppServices, ulong count)
+        {
+            Internal.LibVLCMediaDiscovererListRelease(ppServices.NativeReference, count);
+        }
+
         public void SetDialogHandlers()
         {
+        }
+
+        public void SetExistHandler(Action cb)
+        {
+            //Internal.LibVLCSetExitHandler();
         }
     }
 }
