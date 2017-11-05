@@ -94,7 +94,7 @@ namespace libvlcsharp
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
-            internal static extern IntPtr LibVLCMediaDiscovererListGet(IntPtr instance, MediaDiscovererCategory category, ref IntPtr pppServices);
+            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr instance, MediaDiscovererCategory category, ref IntPtr pppServices);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -409,24 +409,25 @@ namespace libvlcsharp
         public IEnumerable<MediaDiscovererDescription> MediaDiscoverers(MediaDiscovererCategory category)
         {
             var arrayResultPtr = IntPtr.Zero;
-            var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr).ToInt32();
+            var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
             //var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, out var arrayResultPtr).ToInt32();
 
             if (count == 0) return Enumerable.Empty<MediaDiscovererDescription>();
-
-            var size = Marshal.SizeOf(typeof(MediaDiscovererDescription.Internal));
-            var mediaDiscovererDescription = new List<MediaDiscovererDescription>();
+            
+            var mediaDiscovererDescription = new MediaDiscovererDescription[(int)count];
     
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < (int)count; i++)
             {
-                var s = (MediaDiscovererDescription.Internal) Marshal.PtrToStructure(
-                    new IntPtr(arrayResultPtr.ToInt32() + (size * i)), typeof(MediaDiscovererDescription.Internal));
+                var ptr = Marshal.ReadIntPtr(arrayResultPtr, i * IntPtr.Size);
+                var s = (MediaDiscovererDescription.Internal) Marshal.PtrToStructure(ptr, typeof(MediaDiscovererDescription.Internal));
 
                 var mdd = MediaDiscovererDescription.__CreateInstance(s);
                 Debug.WriteLine(mdd.Longname);
                 Debug.WriteLine(mdd.Name);
-                mediaDiscovererDescription.Add(mdd);
+                mediaDiscovererDescription[i] = mdd;
             }
+
+            Internal.LibVLCMediaDiscovererListRelease(arrayResultPtr, count);
 
             return mediaDiscovererDescription;
         }
