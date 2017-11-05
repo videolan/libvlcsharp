@@ -10,6 +10,24 @@ namespace VideoLAN.LibVLC
 {
     public class Instance
     {
+        protected bool Equals(Instance other)
+        {
+            return NativeReference.Equals(other.NativeReference);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Instance) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeReference.GetHashCode();
+        }
+
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         internal struct Internal
         {
