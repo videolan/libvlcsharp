@@ -88,25 +88,16 @@ namespace libvlcsharp
 
     /// <summary>Media discoverer description</summary>
     /// <remarks>libvlc_media_discoverer_list_get()</remarks>
-    public unsafe partial class MediaDiscovererDescription //: IDisposable
+    public unsafe class MediaDiscovererDescription //: IDisposable
     {
         [StructLayout(LayoutKind.Sequential)]
         public struct Internal
         {
-            //[FieldOffset(0)]
             internal IntPtr psz_name;
 
-            //[FieldOffset(8)]
             internal IntPtr psz_longname;
 
-            //[FieldOffset(16)]
-            //internal IntPtr i_cat;
             internal int i_cat;
-
-            //[SuppressUnmanagedCodeSecurity]
-            //[DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-            //    EntryPoint="??0libvlc_media_discoverer_description_t@@QEAA@AEBU0@@Z")]
-            //internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
         }
 
         public IntPtr NativeReference { get; protected set; }
@@ -179,25 +170,9 @@ namespace libvlcsharp
             NativeReference = IntPtr.Zero;
         }
 
-        public string Name
-        {
-            get
-            {
-                //Encoding.UTF8.GetBytes(((Internal*)NativeReference)->psz_name))
-
-                var r2 = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_name);
-                //var r2 = Marshal.PtrToStringAuto(((Internal*)NativeReference)->psz_name);
-                var r1 =  Marshal.PtrToStringAnsi(((Internal*)NativeReference)->psz_name);
-                return r1;
-                //var r4 = Marshal.PtrToStringUni(((Internal*)NativeReference)->psz_name);
-                //return r3;
-            }
-        }
-        //=> (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_name);
+        public string Name => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_name);
         public string Longname => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_longname);
-        //public string Longname => Marshal.PtrToStringAnsi(((Internal*)NativeReference)->psz_longname);
-
-        //public MediaDiscovererCategory Category => (MediaDiscovererCategory) ((Internal*) NativeReference)->i_cat;
+        public MediaDiscovererCategory Category => (MediaDiscovererCategory)((Internal*)NativeReference)->i_cat;
     }
 
     public unsafe partial class libvlc_media_discoverer

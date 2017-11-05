@@ -90,10 +90,9 @@ namespace Bindings.Tests
         public void Categories()
         {
             var instance = new Instance(0, null);
-            //var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
+            var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
             var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
-            //var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
-
+            var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
         }
     }
 }
