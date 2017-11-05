@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using CppSharp;
 using CppSharp.AST;
 using CppSharp.Generators;
@@ -133,15 +134,13 @@ namespace libvlcsharp
 
             public void Setup(Driver driver)
             {
-                var rootPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
-                var libvlcHeaders = Path.Combine(rootPath, "include\\vlc");
-                var libvlcPluginsHeaders = Path.Combine(rootPath, "include\\vlc\\plugins");
+                var rootPath = Directory.GetParent(Assembly.GetExecutingAssembly().Location).Parent.Parent.Parent.FullName;
                 var h = Path.Combine(rootPath, "include");
                 var libFolder = Path.Combine(rootPath, "include\\lib");
 
                 driver.ParserOptions = new ParserOptions
                 {
-                    IncludeDirs = new List<string> { libvlcHeaders, libvlcPluginsHeaders, h },
+                    IncludeDirs = new List<string> { h },
                     //Verbose = true
                 };
                 
@@ -155,7 +154,7 @@ namespace libvlcsharp
 
                 var module = options.AddModule("libvlcsharp.generated");
                 module.SharedLibraryName = "libvlc";
-                module.Headers.Add("vlc.h");
+                module.Headers.Add("vlc\\vlc.h");
                 module.LibraryDirs.Add(libFolder);
             }
 

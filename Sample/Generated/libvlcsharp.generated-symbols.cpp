@@ -1,4 +1,4 @@
-#include <vlc.h>
+#include <vlc\vlc.h>
 
 extern "C" { void libvlcsharp_generated_symbols1(void* instance) { new (instance) libvlc_module_description_t(); } }
 extern "C" { void libvlcsharp_generated_symbols2(void* instance, const libvlc_module_description_t& _0) { new (instance) libvlc_module_description_t(_0); } }

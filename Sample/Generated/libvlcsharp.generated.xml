@@ -752,8 +752,8 @@
         </member>
         <member name="M:libvlcsharp.generated.libvlc_media.LibvlcMediaGetStats(libvlcsharp.generated.Media,libvlcsharp.generated.MediaStats)">
             <summary>Get the current statistics about the media</summary>
-            <param name="p_md::">media descriptor object</param>
-            <param name="p_stats::">
+            <param name="p_md:">media descriptor object</param>
+            <param name="p_stats:">
             <para>structure that contain the statistics about the media</para>
             <para>(this structure must be allocated by the caller)</para>
             </param>
