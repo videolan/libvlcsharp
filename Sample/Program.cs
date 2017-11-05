@@ -1,5 +1,5 @@
 ﻿using System;
-using libvlcsharp;
+using VideoLAN.LibVLC;
 
 namespace Sample
 {

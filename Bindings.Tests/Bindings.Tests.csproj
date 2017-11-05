@@ -12,6 +12,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sample\Sample.csproj" />
+    <ProjectReference Include="..\LibVlcSharp\LibVlcSharp.csproj" />
   </ItemGroup>
 </Project>

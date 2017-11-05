@@ -2,10 +2,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net47</TargetFrameworks>
-    <Platforms>AnyCPU;x64;x86</Platforms>
-    <RuntimeIdentifiers>win7-x64;win7-x86</RuntimeIdentifiers>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibVlcSharp\LibVlcSharp.csproj" />
+    <PackageReference Include="CppSharp" Version="0.8.14" />
   </ItemGroup>
 </Project>

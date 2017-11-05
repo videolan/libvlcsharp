@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using libvlcsharp;
 using NUnit.Framework;
+using VideoLAN.LibVLC;
 
 namespace Bindings.Tests
 {

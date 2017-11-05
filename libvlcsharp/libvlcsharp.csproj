@@ -1,10 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>net47</TargetFrameworks>
-    <PlatformTarget>x64</PlatformTarget>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>VideoLAN.LibVLC</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="CppSharp" Version="0.8.14" />
-  </ItemGroup>
 </Project>
