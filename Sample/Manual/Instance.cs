@@ -100,7 +100,11 @@ namespace libvlcsharp
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
             internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
+
         }
+
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void ExitCallback();
 
         public IntPtr NativeReference { get; protected set; }
 
@@ -233,7 +237,7 @@ namespace libvlcsharp
         /// <para>be raised before the handler is registered.</para>
         /// <para>This function and libvlc_wait() cannot be used at the same time.</para>
         /// </remarks>
-        public void SetExitHandler(Delegates.Action_IntPtr cb, IntPtr opaque)
+        public void SetExitHandler(ExitCallback cb, IntPtr opaque)
         {
             var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
             Internal.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
@@ -430,11 +434,6 @@ namespace libvlcsharp
         
         public void SetDialogHandlers()
         {
-        }
-
-        public void SetExistHandler(Action cb)
-        {
-            //Internal.LibVLCSetExitHandler();
         }
     }
 }

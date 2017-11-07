@@ -94,5 +94,23 @@ namespace Bindings.Tests
             var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
         }
+
+        [Test]
+        public void SetExitHandler()
+        {
+            var instance = new Instance(0, null);
+            var called = false;
+
+            var exitCb = new Instance.ExitCallback(() =>
+            {
+                called = true;
+            });
+
+            instance.SetExitHandler(exitCb, IntPtr.Zero);
+
+            instance.Dispose();
+
+            Assert.IsTrue(called);
+        }
     }
 }
