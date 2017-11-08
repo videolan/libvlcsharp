@@ -7,9 +7,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
 
 namespace VideoLAN.LibVLC
 {
+
     /// <summary>Category of a media discoverer</summary>
     /// <remarks>libvlc_media_discoverer_list_get()</remarks>
     public enum MediaDiscovererCategory
@@ -36,6 +38,8 @@ namespace VideoLAN.LibVLC
     /// </summary>
     public unsafe partial class MediaDiscoverer
     {
+       
+
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         public partial struct __Internal
         {
@@ -83,27 +87,19 @@ namespace VideoLAN.LibVLC
 
     /// <summary>Media discoverer description</summary>
     /// <remarks>libvlc_media_discoverer_list_get()</remarks>
-    public unsafe partial class MediaDiscovererDescription : IDisposable
+    public unsafe class MediaDiscovererDescription //: IDisposable
     {
-        [StructLayout(LayoutKind.Explicit, Size = 24)]
-        public partial struct __Internal
+        [StructLayout(LayoutKind.Sequential)]
+        public struct __Internal
         {
-            [FieldOffset(0)]
-            internal global::System.IntPtr psz_name;
+            internal IntPtr psz_name;
 
-            [FieldOffset(8)]
-            internal global::System.IntPtr psz_longname;
+            internal IntPtr psz_longname;
 
-            [FieldOffset(16)]
-            internal global::VideoLAN.LibVLC.MediaDiscovererCategory i_cat;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_media_discoverer_description_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
+            internal int i_cat;
         }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+        public IntPtr NativeReference { get; protected set; }
 
         protected int __PointerAdjustment;
         internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaDiscovererDescription> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaDiscovererDescription>();
@@ -132,29 +128,29 @@ namespace VideoLAN.LibVLC
             : this(__CopyValue(native), skipVTables)
         {
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
         }
 
         protected MediaDiscovererDescription(void* native, bool skipVTables = false)
         {
             if (native == null)
                 return;
-            __Instance = new global::System.IntPtr(native);
+            NativeReference = new global::System.IntPtr(native);
         }
 
         public MediaDiscovererDescription()
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
+            NativeToManagedMap[NativeReference] = this;
         }
 
         public MediaDiscovererDescription(global::VideoLAN.LibVLC.MediaDiscovererDescription _0)
         {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal));
+            NativeReference = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal));
             __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) _0.__Instance);
+            NativeToManagedMap[NativeReference] = this;
+            *((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*)NativeReference) = *((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) _0.NativeReference);
         }
 
         public void Dispose()
@@ -164,53 +160,18 @@ namespace VideoLAN.LibVLC
 
         public virtual void Dispose(bool disposing)
         {
-            if (__Instance == IntPtr.Zero)
+            if (NativeReference == IntPtr.Zero)
                 return;
             global::VideoLAN.LibVLC.MediaDiscovererDescription __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
+            NativeToManagedMap.TryRemove(NativeReference, out __dummy);
             if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
+                Marshal.FreeHGlobal(NativeReference);
+            NativeReference = IntPtr.Zero;
         }
 
-        public sbyte* PszName
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->psz_name;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->psz_name = (global::System.IntPtr) value;
-            }
-        }
-
-        public sbyte* PszLongname
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->psz_longname;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->psz_longname = (global::System.IntPtr) value;
-            }
-        }
-
-        public global::VideoLAN.LibVLC.MediaDiscovererCategory ICat
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->i_cat;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaDiscovererDescription.__Internal*) __Instance)->i_cat = value;
-            }
-        }
+        public string Name => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((__Internal*)NativeReference)->psz_name);
+        public string Longname => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((__Internal*)NativeReference)->psz_longname);
+        public MediaDiscovererCategory Category => (MediaDiscovererCategory)((__Internal*)NativeReference)->i_cat;
     }
 
     public unsafe partial class libvlc_media_discoverer
@@ -247,15 +208,6 @@ namespace VideoLAN.LibVLC
                 EntryPoint="libvlc_media_discoverer_is_running")]
             internal static extern int LibvlcMediaDiscovererIsRunning(global::System.IntPtr p_mdis);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibvlcMediaDiscovererListGet(global::System.IntPtr p_inst, global::VideoLAN.LibVLC.MediaDiscovererCategory i_cat, global::System.IntPtr ppp_services);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_discoverer_list_release")]
-            internal static extern void LibvlcMediaDiscovererListRelease(global::System.IntPtr pp_services, ulong i_count);
         }
 
         /// <summary>Create a media discoverer object by name.</summary>
@@ -351,35 +303,6 @@ namespace VideoLAN.LibVLC
             return __ret;
         }
 
-        /// <summary>Get media discoverer services by category</summary>
-        /// <param name="p_inst">libvlc instance</param>
-        /// <param name="i_cat">category of services to fetch</param>
-        /// <param name="ppp_services">
-        /// <para>address to store an allocated array of media discoverer</para>
-        /// <para>services (must be freed with libvlc_media_discoverer_list_release() by</para>
-        /// <para>the caller) [OUT]</para>
-        /// </param>
-        /// <returns>the number of media discoverer services (0 on error)</returns>
-        /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static ulong LibvlcMediaDiscovererListGet(global::VideoLAN.LibVLC.Instance p_inst, global::VideoLAN.LibVLC.MediaDiscovererCategory i_cat, global::VideoLAN.LibVLC.MediaDiscovererDescription ppp_services)
-        {
-            var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
-            var __arg2 = ReferenceEquals(ppp_services, null) ? global::System.IntPtr.Zero : ppp_services.__Instance;
-            var __ret = __Internal.LibvlcMediaDiscovererListGet(__arg0, i_cat, __arg2);
-            return __ret;
-        }
-
-        /// <summary>Release an array of media discoverer services</summary>
-        /// <param name="pp_services">array to release</param>
-        /// <param name="i_count">number of elements in the array</param>
-        /// <remarks>
-        /// <para>LibVLC 3.0.0 and later.</para>
-        /// <para>libvlc_media_discoverer_list_get()</para>
-        /// </remarks>
-        public static void LibvlcMediaDiscovererListRelease(global::VideoLAN.LibVLC.MediaDiscovererDescription pp_services, ulong i_count)
-        {
-            var __arg0 = ReferenceEquals(pp_services, null) ? global::System.IntPtr.Zero : pp_services.__Instance;
-            __Internal.LibvlcMediaDiscovererListRelease(__arg0, i_count);
-        }
+        
     }
 }

@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>libvlcsharp</name>
+        <name>VideoLAN.LibVLC</name>
     </assembly>
     <members>
-        <member name="T:libvlcsharp.LogLevel">
+        <member name="T:VideoLAN.LibVLC.LogLevel">
             <summary>Logging messages level.</summary>
             <remarks>Future LibVLC versions may define new levels.</remarks>
         </member>
-        <member name="F:libvlcsharp.LogLevel.Debug">
+        <member name="F:VideoLAN.LibVLC.LogLevel.Debug">
             <summary>Debug message</summary>
         </member>
-        <member name="F:libvlcsharp.LogLevel.Notice">
+        <member name="F:VideoLAN.LibVLC.LogLevel.Notice">
             <summary>Important informational message</summary>
         </member>
-        <member name="F:libvlcsharp.LogLevel.Warning">
+        <member name="F:VideoLAN.LibVLC.LogLevel.Warning">
             <summary>Warning (potential error) message</summary>
         </member>
-        <member name="F:libvlcsharp.LogLevel.Error">
+        <member name="F:VideoLAN.LibVLC.LogLevel.Error">
             <summary>Error message</summary>
         </member>
-        <member name="T:libvlcsharp.LibvlcCallbackT">
+        <member name="T:VideoLAN.LibVLC.LibvlcCallbackT">
             <summary>This structure is opaque. It represents a libvlc instance</summary>
             <summary>
             <para>Event manager that belongs to a libvlc object, and from whom events can</para>
@@ -30,7 +30,7 @@
             <summary>Callback function notification</summary>
             <param name="p_event">the event triggering the callback</param>
         </member>
-        <member name="M:libvlcsharp.Instance.#ctor(System.Int32,System.SByte**)">
+        <member name="M:VideoLAN.LibVLC.Instance.#ctor(System.Int32,System.SByte**)">
             <summary>
             <para>Create and initialize a libvlc instance.</para>
             <para>This functions accept a list of &quot;command line&quot; arguments similar to the</para>
@@ -74,10 +74,10 @@
             <para>We recommend that you do not use them, other than when debugging.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.ModuleDescription">
+        <member name="T:VideoLAN.LibVLC.ModuleDescription">
             <summary>Description of a module.</summary>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcErrmsg">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcErrmsg">
             <summary>
             <para>A human-readable error message for the last LibVLC error in the calling</para>
             <para>thread. The resulting string is valid until another error occurs (at least</para>
@@ -85,14 +85,14 @@
             </summary>
             <remarks>This will be NULL if there was no error.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcClearerr">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcClearerr">
             <summary>
             <para>Clears the LibVLC error status for the current thread. This is optional.</para>
             <para>By default, the error status is automatically overridden when a new error</para>
             <para>occurs, and destroyed when the thread exits.</para>
             </summary>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcPrinterr(System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcPrinterr(System.String)">
             <summary>
             <para>Sets the LibVLC error status and message for the current thread.</para>
             <para>Any previous error is overridden.</para>
@@ -101,27 +101,27 @@
             <param name="args">the arguments</param>
             <returns>a nul terminated string in any case</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcRelease(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcRelease(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Decrement the reference count of a libvlc instance, and destroy it</para>
             <para>if it reaches zero.</para>
             </summary>
             <param name="p_instance">the instance to destroy</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcRetain(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcRetain(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Increments the reference count of a libvlc instance.</para>
             <para>The initial reference count is 1 after libvlc_new() returns.</para>
             </summary>
             <param name="p_instance">the instance to reference</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcAddIntf(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcAddIntf(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Try to start a user interface for the libvlc instance.</summary>
             <param name="p_instance">the instance</param>
             <param name="name">interface name, or NULL for default</param>
             <returns>0 on success, -1 on error.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcSetExitHandler(libvlcsharp.Instance,libvlcsharp.Delegates.Action_IntPtr,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcSetExitHandler(VideoLAN.LibVLC.Instance,VideoLAN.LibVLC.Delegates.Action_IntPtr,System.IntPtr)">
             <summary>
             <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
             <para>the VLC playlist and/or at least one interface are started with</para>
@@ -142,7 +142,7 @@
             <para>This function and libvlc_wait() cannot be used at the same time.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcSetUserAgent(libvlcsharp.Instance,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcSetUserAgent(VideoLAN.LibVLC.Instance,System.String,System.String)">
             <summary>
             <para>Sets the application name. LibVLC passes this as the user agent string</para>
             <para>when a protocol requires it.</para>
@@ -152,7 +152,7 @@
             <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
             <remarks>LibVLC 1.1.1 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcSetAppId(libvlcsharp.Instance,System.String,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcSetAppId(VideoLAN.LibVLC.Instance,System.String,System.String,System.String)">
             <summary>
             <para>Sets some meta-information about the application.</para>
             <para>See also libvlc_set_user_agent().</para>
@@ -163,22 +163,22 @@
             <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
             <remarks>LibVLC 2.1.0 or later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcGetVersion">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcGetVersion">
             <summary>Retrieve libvlc version.</summary>
             <returns>a string containing the libvlc version</returns>
             <remarks>Example: &quot;1.1.0-git The Luggage&quot;</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcGetCompiler">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcGetCompiler">
             <summary>Retrieve libvlc compiler version.</summary>
             <returns>a string containing the libvlc compiler version</returns>
             <remarks>Example: &quot;gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)&quot;</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcGetChangeset">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcGetChangeset">
             <summary>Retrieve libvlc changeset.</summary>
             <returns>a string containing the libvlc changeset</returns>
             <remarks>Example: &quot;aa9bce0bc4&quot;</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcFree(System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcFree(System.IntPtr)">
             <summary>
             <para>Frees an heap allocation returned by a LibVLC function.</para>
             <para>If you know you're using the same underlying C run-time as the LibVLC</para>
@@ -186,7 +186,7 @@
             </summary>
             <param name="ptr">the pointer</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcEventAttach(libvlcsharp.EventManager,System.Int32,libvlcsharp.LibvlcCallbackT,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventAttach(VideoLAN.LibVLC.EventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
             <summary>Register for an event notification.</summary>
             <param name="p_event_manager">
             <para>the event manager to which you want to attach to.</para>
@@ -198,18 +198,18 @@
             <param name="user_data">user provided data to carry with the event</param>
             <returns>0 on success, ENOMEM on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcEventDetach(libvlcsharp.EventManager,System.Int32,libvlcsharp.LibvlcCallbackT,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventDetach(VideoLAN.LibVLC.EventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
             <summary>Unregister an event notification.</summary>
             <param name="p_event_manager">the event manager</param>
             <param name="i_event_type">the desired event to which we want to unregister</param>
             <param name="f_callback">the function to call when i_event_type occurs</param>
             <param name="p_user_data">user provided data to carry with the event</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcEventTypeName(System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventTypeName(System.Int32)">
             <summary>Get an event's type name.</summary>
             <param name="event_type">the desired event</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcLogGetContext(libvlcsharp.Log,System.SByte**,System.SByte**,System.UInt32@)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLogGetContext(VideoLAN.LibVLC.Log,System.SByte**,System.SByte**,System.UInt32@)">
             <summary>Gets log message debug infos.</summary>
             <param name="ctx">message context (as passed to the</param>
             <param name="module">module name storage (or NULL) [OUT]</param>
@@ -227,7 +227,7 @@
             <para>LibVLC 2.1.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcLogGetObject(libvlcsharp.Log,System.SByte**,System.SByte**,System.UInt64@)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLogGetObject(VideoLAN.LibVLC.Log,System.SByte**,System.SByte**,System.UInt64@)">
             <summary>Gets log message info.</summary>
             <param name="ctx">message context (as passed to the</param>
             <param name="name">object name storage (or NULL) [OUT]</param>
@@ -249,7 +249,7 @@
             <para>LibVLC 2.1.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcLogUnset(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLogUnset(VideoLAN.LibVLC.Instance)">
             <summary>Unsets the logging callback.</summary>
             <param name="p_instance">libvlc instance</param>
             <remarks>
@@ -261,7 +261,7 @@
             <para>LibVLC 2.1.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcLogSetFile(libvlcsharp.Instance,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLogSetFile(VideoLAN.LibVLC.Instance,System.IntPtr)">
             <summary>Sets up logging to a file.</summary>
             <param name="p_instance">libvlc instance</param>
             <param name="stream">
@@ -270,11 +270,11 @@
             </param>
             <remarks>LibVLC 2.1.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcModuleDescriptionListRelease(libvlcsharp.ModuleDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcModuleDescriptionListRelease(VideoLAN.LibVLC.ModuleDescription)">
             <summary>Release a list of module descriptions.</summary>
             <param name="p_list">the list to be released</param>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcAudioFilterListGet(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcAudioFilterListGet(VideoLAN.LibVLC.Instance)">
             <summary>Returns a list of audio filters that are available.</summary>
             <param name="p_instance">libvlc instance</param>
             <returns>
@@ -286,7 +286,7 @@
             <para>libvlc_module_description_list_release</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcVideoFilterListGet(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcVideoFilterListGet(VideoLAN.LibVLC.Instance)">
             <summary>Returns a list of video filters that are available.</summary>
             <param name="p_instance">libvlc instance</param>
             <returns>
@@ -298,7 +298,7 @@
             <para>libvlc_module_description_list_release</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcClock">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcClock">
             <summary>
             <para>Return the current time as defined by LibVLC. The unit is the microsecond.</para>
             <para>Time increases monotonically (regardless of time zone changes and RTC</para>
@@ -308,7 +308,7 @@
             </summary>
             <remarks>On systems that support it, the POSIX monotonic clock is used.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc.LibvlcDelay(System.Int64)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcDelay(System.Int64)">
             <summary>Return the delay (in microseconds) until a certain timestamp.</summary>
             <param name="pts">timestamp</param>
             <returns>
@@ -316,7 +316,7 @@
             <para>positive if it is in the future</para>
             </returns>
         </member>
-        <member name="T:libvlcsharp.RendererItem">
+        <member name="T:VideoLAN.LibVLC.RendererItem">
             <summary>
             <para>LibVLC renderer discoverer finds available renderers available on the local</para>
             <para>network</para>
@@ -333,16 +333,16 @@
             <para>libvlc_renderer_discoverer_event_manager()</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.RendererDiscovererDescription">
+        <member name="T:VideoLAN.LibVLC.RendererDiscovererDescription">
             <summary>Renderer discoverer description</summary>
             <remarks>libvlc_renderer_discoverer_list_get()</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererItemName(libvlcsharp.RendererItem)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererItemName(VideoLAN.LibVLC.RendererItem)">
             <summary>Get the human readable name of a renderer item</summary>
             <returns>the name of the item (can't be NULL, must *not* be freed)</returns>
             <remarks>LibVLC 3.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererItemType(libvlcsharp.RendererItem)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererItemType(VideoLAN.LibVLC.RendererItem)">
             <summary>
             <para>Get the type (not translated) of a renderer item. For now, the type can only</para>
             <para>be &quot;chromecast&quot; (&quot;upnp&quot;, &quot;airplay&quot; may come later).</para>
@@ -350,12 +350,12 @@
             <returns>the type of the item (can't be NULL, must *not* be freed)</returns>
             <remarks>LibVLC 3.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererItemIconUri(libvlcsharp.RendererItem)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererItemIconUri(VideoLAN.LibVLC.RendererItem)">
             <summary>Get the icon uri of a renderer item</summary>
             <returns>the uri of the item's icon (can be NULL, must *not* be freed)</returns>
             <remarks>LibVLC 3.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererItemFlags(libvlcsharp.RendererItem)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererItemFlags(VideoLAN.LibVLC.RendererItem)">
             <summary>Get the flags of a renderer item</summary>
             <returns>bitwise flag: capabilities of the renderer, see</returns>
             <remarks>
@@ -364,7 +364,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererNew(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererNew(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Create a renderer discoverer object by name</summary>
             <param name="p_inst">libvlc instance</param>
             <param name="psz_name">
@@ -382,12 +382,12 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererRelease(libvlcsharp.RendererDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererRelease(VideoLAN.LibVLC.RendererDiscoverer)">
             <summary>Release a renderer discoverer object</summary>
             <param name="p_rd">renderer discoverer object</param>
             <remarks>LibVLC 3.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererStart(libvlcsharp.RendererDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererStart(VideoLAN.LibVLC.RendererDiscoverer)">
             <summary>Start renderer discovery</summary>
             <param name="p_rd">renderer discoverer object</param>
             <returns>-1 in case of error, 0 otherwise</returns>
@@ -398,7 +398,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererStop(libvlcsharp.RendererDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererStop(VideoLAN.LibVLC.RendererDiscoverer)">
             <summary>Stop renderer discovery.</summary>
             <param name="p_rd">renderer discoverer object</param>
             <remarks>
@@ -406,7 +406,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererEventManager(libvlcsharp.RendererDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererEventManager(VideoLAN.LibVLC.RendererDiscoverer)">
             <summary>Get the event manager of the renderer discoverer</summary>
             <returns>a valid event manager (can't fail)</returns>
             <remarks>
@@ -419,7 +419,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererListGet(libvlcsharp.Instance,libvlcsharp.RendererDiscovererDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererListGet(VideoLAN.LibVLC.Instance,VideoLAN.LibVLC.RendererDiscovererDescription)">
             <summary>Get media discoverer services</summary>
             <param name="p_inst">libvlc instance</param>
             <param name="ppp_services">
@@ -433,7 +433,7 @@
             <para>LibVLC 3.0.0 and later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_renderer_discoverer.LibvlcRendererDiscovererListRelease(libvlcsharp.RendererDiscovererDescription,System.UInt64)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererListRelease(VideoLAN.LibVLC.RendererDiscovererDescription,System.UInt64)">
             <summary>Release an array of media discoverer services</summary>
             <param name="pp_services">array to release</param>
             <param name="i_count">number of elements in the array</param>
@@ -442,10 +442,10 @@
             <para>LibVLC 3.0.0 and later</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.MetadataType">
+        <member name="T:VideoLAN.LibVLC.MetadataType">
             <summary>Meta data types</summary>
         </member>
-        <member name="T:libvlcsharp.VLCState">
+        <member name="T:VideoLAN.LibVLC.VLCState">
             <summary>Note the order of libvlc_state_t enum must match exactly the order of</summary>
             <remarks>
             <para>mediacontrol_PlayerStatus,</para>
@@ -456,61 +456,61 @@
             <para>STOPPING=5, ENDED=6, ERROR=7</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.TopLeft">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.TopLeft">
             <summary>Normal. Top line represents top, left column left.</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.TopRight">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.TopRight">
             <summary>Flipped horizontally</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.BottomLeft">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.BottomLeft">
             <summary>Flipped vertically</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.BottomRight">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.BottomRight">
             <summary>Rotated 180 degrees</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.LeftTop">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.LeftTop">
             <summary>Transposed</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.LeftBottom">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.LeftBottom">
             <summary>Rotated 90 degrees clockwise (or 270 anti-clockwise)</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.RightTop">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.RightTop">
             <summary>Rotated 90 degrees anti-clockwise</summary>
         </member>
-        <member name="F:libvlcsharp.VideoOrientation.RightBottom">
+        <member name="F:VideoLAN.LibVLC.VideoOrientation.RightBottom">
             <summary>Anti-transposed</summary>
         </member>
-        <member name="F:libvlcsharp.VideoProjection.Equirectangular">
+        <member name="F:VideoLAN.LibVLC.VideoProjection.Equirectangular">
             <summary>360 spherical</summary>
         </member>
-        <member name="T:libvlcsharp.MediaType">
+        <member name="T:VideoLAN.LibVLC.MediaType">
             <summary>Media type</summary>
             <remarks>libvlc_media_get_type</remarks>
         </member>
-        <member name="T:libvlcsharp.MediaParseOptions">
+        <member name="T:VideoLAN.LibVLC.MediaParseOptions">
             <summary>Parse flags used by libvlc_media_parse_with_options()</summary>
             <remarks>libvlc_media_parse_with_options</remarks>
         </member>
-        <member name="F:libvlcsharp.MediaParseOptions.ParseLocal">
+        <member name="F:VideoLAN.LibVLC.MediaParseOptions.ParseLocal">
             <summary>Parse media if it's a local file</summary>
         </member>
-        <member name="F:libvlcsharp.MediaParseOptions.ParseNetwork">
+        <member name="F:VideoLAN.LibVLC.MediaParseOptions.ParseNetwork">
             <summary>Parse media even if it's a network file</summary>
         </member>
-        <member name="F:libvlcsharp.MediaParseOptions.FetchLocal">
+        <member name="F:VideoLAN.LibVLC.MediaParseOptions.FetchLocal">
             <summary>Fetch meta and covert art using local resources</summary>
         </member>
-        <member name="F:libvlcsharp.MediaParseOptions.FetchNetwork">
+        <member name="F:VideoLAN.LibVLC.MediaParseOptions.FetchNetwork">
             <summary>Fetch meta and covert art using network resources</summary>
         </member>
-        <member name="F:libvlcsharp.MediaParseOptions.DoInteract">
+        <member name="F:VideoLAN.LibVLC.MediaParseOptions.DoInteract">
             <summary>
             <para>Interact with the user (via libvlc_dialog_cbs) when preparsing this item</para>
             <para>(and not its sub items). Set this flag in order to receive a callback</para>
             <para>when the input is asking for credentials.</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.MediaParsedStatus">
+        <member name="T:VideoLAN.LibVLC.MediaParsedStatus">
             <summary>
             <para>Parse status used sent by libvlc_media_parse_with_options() or returned by</para>
             <para>libvlc_media_get_parsed_status()</para>
@@ -520,10 +520,10 @@
             <para>libvlc_media_get_parsed_status</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.MediaSlaveType">
+        <member name="T:VideoLAN.LibVLC.MediaSlaveType">
             <summary>Type of a media slave: subtitle or audio.</summary>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaOpenCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaOpenCb">
             <summary>
             <para>It consists of a media location and various optional meta data.</para>
             <para>@{</para>
@@ -547,7 +547,7 @@
             <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaReadCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaReadCb">
             <summary>Callback prototype to read data from a custom bitstream input media.</summary>
             <param name="opaque">private pointer as set by the</param>
             <param name="buf">start address of the buffer to read data into</param>
@@ -564,23 +564,23 @@
             <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaSeekCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaSeekCb">
             <summary>Callback prototype to seek a custom bitstream input media.</summary>
             <param name="opaque">private pointer as set by the</param>
             <param name="offset">absolute byte offset to seek to</param>
             <returns>0 on success, -1 on error.</returns>
             <remarks>callback</remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaCloseCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaCloseCb">
             <summary>Callback prototype to close a custom bitstream input media.</summary>
             <param name="opaque">private pointer as set by the</param>
             <remarks>callback</remarks>
         </member>
-        <member name="T:libvlcsharp.MediaSlave">
+        <member name="T:VideoLAN.LibVLC.MediaSlave">
             <summary>A slave of a libvlc_media_t</summary>
             <remarks>libvlc_media_slaves_get</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaNewLocation(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaNewLocation(VideoLAN.LibVLC.Instance,System.String)">
             <summary>
             <para>Create a media with a certain given media resource location,</para>
             <para>for instance a valid URL.</para>
@@ -596,14 +596,14 @@
             <para>libvlc_media_release</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaNewPath(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaNewPath(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Create a media for a certain file path.</summary>
             <param name="p_instance">the instance</param>
             <param name="path">local filesystem path</param>
             <returns>the newly created media or NULL on error</returns>
             <remarks>libvlc_media_release</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaNewFd(libvlcsharp.Instance,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaNewFd(VideoLAN.LibVLC.Instance,System.Int32)">
             <summary>
             <para>Create a media for an already open file descriptor.</para>
             <para>The file descriptor shall be open for reading (or reading and writing).</para>
@@ -626,7 +626,7 @@
             <para>LibVLC 1.1.5 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaNewCallbacks(libvlcsharp.Instance,libvlcsharp.LibvlcMediaOpenCb,libvlcsharp.LibvlcMediaReadCb,libvlcsharp.LibvlcMediaSeekCb,libvlcsharp.LibvlcMediaCloseCb,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaNewCallbacks(VideoLAN.LibVLC.Instance,VideoLAN.LibVLC.LibvlcMediaOpenCb,VideoLAN.LibVLC.LibvlcMediaReadCb,VideoLAN.LibVLC.LibvlcMediaSeekCb,VideoLAN.LibVLC.LibvlcMediaCloseCb,System.IntPtr)">
             <summary>Create a media with custom callbacks to read the data from.</summary>
             <param name="instance">LibVLC instance</param>
             <param name="open_cb">callback to open the custom bitstream input media</param>
@@ -647,14 +647,14 @@
             <para>LibVLC 3.0.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaNewAsNode(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaNewAsNode(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Create a media as an empty node with a given name.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the node</param>
             <returns>the new empty media or NULL on error</returns>
             <remarks>libvlc_media_release</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaAddOption(libvlcsharp.Media,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaAddOption(VideoLAN.LibVLC.Media,System.String)">
             <summary>Add an option to the media.</summary>
             <param name="p_md">the media descriptor</param>
             <param name="psz_options">the options (as a string)</param>
@@ -671,7 +671,7 @@
             <para>These options must be set through libvlc_new() instead.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaAddOptionFlag(libvlcsharp.Media,System.String,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaAddOptionFlag(VideoLAN.LibVLC.Media,System.String,System.UInt32)">
             <summary>Add an option to the media with configurable flags.</summary>
             <param name="p_md">the media descriptor</param>
             <param name="psz_options">the options (as a string)</param>
@@ -687,7 +687,7 @@
             <para>must be set on the whole libvlc instance instead.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaRetain(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaRetain(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Retain a reference to a media descriptor object (libvlc_media_t). Use</para>
             <para>libvlc_media_release() to decrement the reference count of a</para>
@@ -695,7 +695,7 @@
             </summary>
             <param name="p_md">the media descriptor</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaRelease(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaRelease(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Decrement the reference count of a media descriptor object. If the</para>
             <para>reference count is 0, then libvlc_media_release() will release the</para>
@@ -705,16 +705,16 @@
             </summary>
             <param name="p_md">the media descriptor</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetMrl(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetMrl(VideoLAN.LibVLC.Media)">
             <summary>Get the media resource locator (mrl) from a media descriptor object</summary>
             <param name="p_md">a media descriptor object</param>
             <returns>string with mrl of media descriptor object</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaDuplicate(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaDuplicate(VideoLAN.LibVLC.Media)">
             <summary>Duplicate a media descriptor object.</summary>
             <param name="p_md">a media descriptor object.</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetMeta(libvlcsharp.Media,libvlcsharp.MetadataType)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetMeta(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MetadataType)">
             <summary>Read the meta of the media.</summary>
             <param name="p_md">the media descriptor</param>
             <param name="e_meta">the meta to read</param>
@@ -726,7 +726,7 @@
             <para>libvlc_MediaMetaChanged</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSetMeta(libvlcsharp.Media,libvlcsharp.MetadataType,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSetMeta(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MetadataType,System.String)">
             <summary>
             <para>Set the meta of the media (this function will not save the meta, call</para>
             <para>libvlc_media_save_meta in order to save the meta)</para>
@@ -735,12 +735,12 @@
             <param name="e_meta">the meta to write</param>
             <param name="psz_value">the media's meta</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSaveMeta(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSaveMeta(VideoLAN.LibVLC.Media)">
             <summary>Save the meta previously set</summary>
             <param name="p_md">the media desriptor</param>
             <returns>true if the write operation was successful</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetState(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetState(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Get current state of media descriptor object. Possible media states are</para>
             <para>libvlc_NothingSpecial=0, libvlc_Opening, libvlc_Playing, libvlc_Paused,</para>
@@ -750,7 +750,7 @@
             <returns>state of media descriptor object</returns>
             <remarks>libvlc_state_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetStats(libvlcsharp.Media,libvlcsharp.MediaStats)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetStats(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaStats)">
             <summary>Get the current statistics about the media</summary>
             <param name="p_md::">media descriptor object</param>
             <param name="p_stats::">
@@ -759,7 +759,7 @@
             </param>
             <returns>true if the statistics are available, false otherwise</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSubitems(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSubitems(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Get subitems of media descriptor object. This will increment</para>
             <para>the reference count of supplied media descriptor object. Use</para>
@@ -768,7 +768,7 @@
             <param name="p_md">media descriptor object</param>
             <returns>list of media descriptor subitems or NULL</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaEventManager(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaEventManager(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Get event manager from media descriptor object.</para>
             <para>NOTE: this function doesn't increment reference counting.</para>
@@ -776,12 +776,12 @@
             <param name="p_md">a media descriptor object</param>
             <returns>event manager object</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetDuration(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetDuration(VideoLAN.LibVLC.Media)">
             <summary>Get duration (in ms) of media descriptor object item.</summary>
             <param name="p_md">media descriptor object</param>
             <returns>duration of media item or -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaParseWithOptions(libvlcsharp.Media,libvlcsharp.MediaParseOptions,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaParseWithOptions(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaParseOptions,System.Int32)">
             <summary>Parse the media asynchronously with options.</summary>
             <param name="p_md">media descriptor object</param>
             <param name="parse_flag">parse options:</param>
@@ -809,7 +809,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaParseStop(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaParseStop(VideoLAN.LibVLC.Media)">
             <summary>Stop the parsing of the media</summary>
             <param name="p_md">media descriptor object</param>
             <remarks>
@@ -819,7 +819,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetParsedStatus(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetParsedStatus(VideoLAN.LibVLC.Media)">
             <summary>Get Parsed status for media descriptor object.</summary>
             <param name="p_md">media descriptor object</param>
             <returns>a value of the libvlc_media_parsed_status_t enum</returns>
@@ -829,7 +829,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSetUserData(libvlcsharp.Media,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSetUserData(VideoLAN.LibVLC.Media,System.IntPtr)">
             <summary>
             <para>Sets media descriptor's user_data. user_data is specialized data</para>
             <para>accessed by the host application, VLC.framework uses it as a pointer to</para>
@@ -838,7 +838,7 @@
             <param name="p_md">media descriptor object</param>
             <param name="p_new_user_data">pointer to user data</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetUserData(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetUserData(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Get media descriptor's user_data. user_data is specialized data</para>
             <para>accessed by the host application, VLC.framework uses it as a pointer to</para>
@@ -846,7 +846,7 @@
             </summary>
             <param name="p_md">media descriptor object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaTracksGet(libvlcsharp.Media,libvlcsharp.MediaTrack)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaTracksGet(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaTrack)">
             <summary>Get media descriptor's elementary streams description</summary>
             <param name="p_md">media descriptor object</param>
             <param name="tracks">
@@ -862,7 +862,7 @@
             <para>LibVLC 2.1.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetCodecDescription(libvlcsharp.TrackType,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetCodecDescription(VideoLAN.LibVLC.TrackType,System.UInt32)">
             <summary>Get codec description from media elementary stream</summary>
             <param name="i_type">i_type from libvlc_media_track_t</param>
             <param name="i_codec">i_codec or i_original_fourcc from libvlc_media_track_t</param>
@@ -872,13 +872,13 @@
             <para>libvlc_media_track_t</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaTracksRelease(libvlcsharp.MediaTrack,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaTracksRelease(VideoLAN.LibVLC.MediaTrack,System.UInt32)">
             <summary>Release media descriptor's elementary streams description array</summary>
             <param name="p_tracks">tracks info array to release</param>
             <param name="i_count">number of elements in the array</param>
             <remarks>LibVLC 2.1.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaGetType(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaGetType(VideoLAN.LibVLC.Media)">
             <summary>Get the media type of the media descriptor object</summary>
             <param name="p_md">media descriptor object</param>
             <returns>media type</returns>
@@ -887,7 +887,7 @@
             <para>libvlc_media_type_t</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSlavesAdd(libvlcsharp.Media,libvlcsharp.MediaSlaveType,System.UInt32,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSlavesAdd(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaSlaveType,System.UInt32,System.String)">
             <summary>Add a slave to the current media.</summary>
             <param name="p_md">media descriptor object</param>
             <param name="i_type">subtitle or audio</param>
@@ -903,7 +903,7 @@
             <para>LibVLC 3.0.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSlavesClear(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSlavesClear(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Clear all slaves previously added by libvlc_media_slaves_add() or</para>
             <para>internally.</para>
@@ -911,7 +911,7 @@
             <param name="p_md">media descriptor object</param>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSlavesGet(libvlcsharp.Media,libvlcsharp.MediaSlave)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSlavesGet(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaSlave)">
             <summary>Get a media descriptor's slave list</summary>
             <param name="p_md">media descriptor object</param>
             <param name="ppp_slaves">
@@ -927,104 +927,104 @@
             <para>libvlc_media_slaves_add</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media.LibvlcMediaSlavesRelease(libvlcsharp.MediaSlave,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaSlavesRelease(VideoLAN.LibVLC.MediaSlave,System.UInt32)">
             <summary>Release a media descriptor's slave list</summary>
             <param name="pp_slaves">slave array to release</param>
             <param name="i_count">number of elements in the array</param>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="T:libvlcsharp.Title">
+        <member name="T:VideoLAN.LibVLC.Title">
             <summary>Description for titles</summary>
         </member>
-        <member name="T:libvlcsharp.VideoMarqueeOption">
+        <member name="T:VideoLAN.LibVLC.VideoMarqueeOption">
             <summary>Marq options definition</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Color">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Color">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Opacity">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Opacity">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Position">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Position">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Refresh">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Refresh">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Size">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Size">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Timeout">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Timeout">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.X">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.X">
             <summary>string argument</summary>
         </member>
-        <member name="F:libvlcsharp.VideoMarqueeOption.Y">
+        <member name="F:VideoLAN.LibVLC.VideoMarqueeOption.Y">
             <summary>string argument</summary>
         </member>
-        <member name="T:libvlcsharp.NavigationMode">
+        <member name="T:VideoLAN.LibVLC.NavigationMode">
             <summary>Navigation mode</summary>
         </member>
-        <member name="T:libvlcsharp.Position">
+        <member name="T:VideoLAN.LibVLC.Position">
             <summary>Enumeration of values used to set position (e.g. of video title).</summary>
         </member>
-        <member name="T:libvlcsharp.TeletextKey">
+        <member name="T:VideoLAN.LibVLC.TeletextKey">
             <summary>
             <para>Enumeration of teletext keys than can be passed via</para>
             <para>libvlc_video_set_teletext()</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.VideoLogoOption">
+        <member name="T:VideoLAN.LibVLC.VideoLogoOption">
             <summary>option values for libvlc_video_{get,set}_logo_{int,string}</summary>
         </member>
-        <member name="F:libvlcsharp.VideoLogoOption.File">
+        <member name="F:VideoLAN.LibVLC.VideoLogoOption.File">
             <summary>string argument, &quot;file,d,t;file,d,t;...&quot;</summary>
         </member>
-        <member name="T:libvlcsharp.VideoAdjustOption">
+        <member name="T:VideoLAN.LibVLC.VideoAdjustOption">
             <summary>option values for libvlc_video_{get,set}_adjust_{int,float,bool}</summary>
         </member>
-        <member name="T:libvlcsharp.AudioOutputDeviceType">
+        <member name="T:VideoLAN.LibVLC.AudioOutputDeviceType">
             <summary>Audio device types</summary>
         </member>
-        <member name="T:libvlcsharp.AudioOutputChannel">
+        <member name="T:VideoLAN.LibVLC.AudioOutputChannel">
             <summary>Audio channels</summary>
         </member>
-        <member name="T:libvlcsharp.MediaPlayerRole">
+        <member name="T:VideoLAN.LibVLC.MediaPlayerRole">
             <summary>Media player roles.</summary>
             <remarks>
             <para>LibVLC 3.0.0 and later.</para>
             <para>See</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.None">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.None">
             <summary>Don't use a media player role</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Music">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Music">
             <summary>Music (or radio) playback</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Video">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Video">
             <summary>Video playback</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Communication">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Communication">
             <summary>Speech, real-time communication</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Game">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Game">
             <summary>Video game</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.LiblvcRoleNotification">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.LiblvcRoleNotification">
             <summary>User interaction feedback</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Animation">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Animation">
             <summary>Embedded animation (e.g. in web page)</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Production">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Production">
             <summary>Audio editting/production</summary>
         </member>
-        <member name="F:libvlcsharp.MediaPlayerRole.Accessibility">
+        <member name="F:VideoLAN.LibVLC.MediaPlayerRole.Accessibility">
             <summary>Accessibility</summary>
         </member>
-        <member name="T:libvlcsharp.LibvlcVideoLockCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcVideoLockCb">
             <summary>
             <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
             <para>@{</para>
@@ -1050,7 +1050,7 @@
             <para>planes must be aligned on 32-bytes boundaries.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcVideoUnlockCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcVideoUnlockCb">
             <summary>Callback prototype to unlock a picture buffer.</summary>
             <param name="opaque">private pointer as passed to libvlc_video_set_callbacks() [IN]</param>
             <param name="picture">private pointer returned from the</param>
@@ -1065,7 +1065,7 @@
             <para>callback (this parameter is only for convenience) [IN]</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcVideoDisplayCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcVideoDisplayCb">
             <summary>Callback prototype to display a picture.</summary>
             <param name="opaque">private pointer as passed to libvlc_video_set_callbacks() [IN]</param>
             <param name="picture">private pointer returned from the</param>
@@ -1075,7 +1075,7 @@
             <para>callback [IN]</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcVideoFormatCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcVideoFormatCb">
             <summary>
             <para>Callback prototype to configure picture buffers format.</para>
             <para>This callback gets the format of the video as output by the video decoder</para>
@@ -1106,14 +1106,14 @@
             <para>in the video decoders, video filters and/or video converters.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcVideoCleanupCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcVideoCleanupCb">
             <summary>Callback prototype to configure picture buffers format.</summary>
             <param name="opaque">
             <para>private pointer as passed to libvlc_video_set_callbacks()</para>
             <para>(and possibly modified by</para>
             </param>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioPlayCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioPlayCb">
             <summary>Callback prototype for audio playback.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <param name="samples">pointer to a table of audio samples to play back [IN]</param>
@@ -1133,7 +1133,7 @@
             <para>of audio signal - regardless of the number of audio channels.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioPauseCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioPauseCb">
             <summary>Callback prototype for audio pause.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <param name="pts">time stamp of the pause request (should be elapsed already)</param>
@@ -1142,7 +1142,7 @@
             <para>The pause callback is never called if the audio is already paused.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioResumeCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioResumeCb">
             <summary>Callback prototype for audio resumption.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <param name="pts">time stamp of the resumption request (should be elapsed already)</param>
@@ -1152,7 +1152,7 @@
             <para>The resume callback is never called if the audio is not paused.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioFlushCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioFlushCb">
             <summary>Callback prototype for audio buffer flush.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <remarks>
@@ -1161,7 +1161,7 @@
             <para>stopped.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioDrainCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioDrainCb">
             <summary>Callback prototype for audio buffer drain.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <remarks>
@@ -1170,13 +1170,13 @@
             <para>nevertheless continue until all already pending buffers are rendered.</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioSetVolumeCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioSetVolumeCb">
             <summary>Callback prototype for audio volume change.</summary>
             <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <param name="volume">software volume (1. = nominal, 0. = mute)</param>
             <param name="mute">muted flag</param>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioSetupCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioSetupCb">
             <summary>Callback prototype to setup the audio playback.</summary>
             <param name="opaque">
             <para>pointer to the data pointer passed to</para>
@@ -1188,34 +1188,34 @@
             <returns>0 on success, anything else to skip audio playback</returns>
             <remarks>This is called when the media player needs to create a new audio output.</remarks>
         </member>
-        <member name="T:libvlcsharp.LibvlcAudioCleanupCb">
+        <member name="T:VideoLAN.LibVLC.LibvlcAudioCleanupCb">
             <summary>Callback prototype for audio playback cleanup.</summary>
             <param name="opaque">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
             <remarks>This is called when the media player no longer needs an audio output.</remarks>
         </member>
-        <member name="T:libvlcsharp.TrackDescription">
+        <member name="T:VideoLAN.LibVLC.TrackDescription">
             <summary>
             <para>Description for video, audio tracks and subtitles. It contains</para>
             <para>id, name (description string) and pointer to next record.</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.ChapterDescription">
+        <member name="T:VideoLAN.LibVLC.ChapterDescription">
             <summary>Description for chapters</summary>
         </member>
-        <member name="T:libvlcsharp.AudioOutput">
+        <member name="T:VideoLAN.LibVLC.AudioOutput">
             <summary>
             <para>Description for audio output. It contains</para>
             <para>name, description and pointer to next record.</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.AudioOutputDevice">
+        <member name="T:VideoLAN.LibVLC.AudioOutputDevice">
             <summary>Description for audio output device.</summary>
         </member>
-        <member name="T:libvlcsharp.VideoViewpoint">
+        <member name="T:VideoLAN.LibVLC.VideoViewpoint">
             <summary>Viewpoint for video outputs</summary>
             <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerNew(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerNew(VideoLAN.LibVLC.Instance)">
             <summary>Create an empty Media Player object</summary>
             <param name="p_libvlc_instance">
             <para>the libvlc instance in which the Media Player</para>
@@ -1223,7 +1223,7 @@
             </param>
             <returns>a new media player object, or NULL on error.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerNewFromMedia(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerNewFromMedia(VideoLAN.LibVLC.Media)">
             <summary>Create a Media Player object from a Media</summary>
             <param name="p_md">
             <para>the media. Afterwards the p_md can be safely</para>
@@ -1231,7 +1231,7 @@
             </param>
             <returns>a new media player object, or NULL on error.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerRelease(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerRelease(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Release a media_player after use</para>
             <para>Decrement the reference count of a media player object. If the</para>
@@ -1241,14 +1241,14 @@
             </summary>
             <param name="p_mi">the Media Player to free</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerRetain(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerRetain(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Retain a reference to a media player object. Use</para>
             <para>libvlc_media_player_release() to decrement reference count.</para>
             </summary>
             <param name="p_mi">media player object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetMedia(libvlcsharp.MediaPlayer,libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetMedia(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.Media)">
             <summary>
             <para>Set the media that will be used by the media_player. If any,</para>
             <para>previous md will be released.</para>
@@ -1259,7 +1259,7 @@
             <para>destroyed.</para>
             </param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetMedia(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetMedia(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the media used by the media_player.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>
@@ -1267,36 +1267,36 @@
             <para>media is associated</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerEventManager(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerEventManager(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the Event Manager from which the media player send event.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the event manager associated with p_mi</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerIsPlaying(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerIsPlaying(VideoLAN.LibVLC.MediaPlayer)">
             <summary>is_playing</summary>
             <param name="p_mi">the Media Player</param>
             <returns>1 if the media player is playing, 0 otherwise</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerPlay(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerPlay(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Play</summary>
             <param name="p_mi">the Media Player</param>
             <returns>0 if playback started (and was already started), or -1 on error.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetPause(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetPause(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Pause or resume (no effect if there is no media)</summary>
             <param name="mp">the Media Player</param>
             <param name="do_pause">play/resume if zero, pause if non-zero</param>
             <remarks>LibVLC 1.1.1 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerPause(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerPause(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Toggle pause (no effect if there is no media)</summary>
             <param name="p_mi">the Media Player</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerStop(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerStop(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Stop (no effect if there is no media)</summary>
             <param name="p_mi">the Media Player</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetRenderer(libvlcsharp.MediaPlayer,libvlcsharp.RendererItem)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetRenderer(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.RendererItem)">
             <summary>Set a renderer to the media player</summary>
             <param name="p_mi">the Media Player</param>
             <param name="p_item">an item discovered by libvlc_renderer_discoverer_start()</param>
@@ -1308,7 +1308,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetCallbacks(libvlcsharp.MediaPlayer,libvlcsharp.LibvlcVideoLockCb,libvlcsharp.LibvlcVideoUnlockCb,libvlcsharp.LibvlcVideoDisplayCb,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetCallbacks(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.LibvlcVideoLockCb,VideoLAN.LibVLC.LibvlcVideoUnlockCb,VideoLAN.LibVLC.LibvlcVideoDisplayCb,System.IntPtr)">
             <summary>
             <para>Set callbacks and private data to render decoded video to a custom area</para>
             <para>in memory.</para>
@@ -1344,7 +1344,7 @@
             <para>LibVLC 1.1.1 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetFormat(libvlcsharp.MediaPlayer,System.String,System.UInt32,System.UInt32,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetFormat(VideoLAN.LibVLC.MediaPlayer,System.String,System.UInt32,System.UInt32,System.UInt32)">
             <summary>
             <para>Set decoded video chroma and dimensions.</para>
             <para>This only works in combination with libvlc_video_set_callbacks(),</para>
@@ -1365,7 +1365,7 @@
             <para>consider using libvlc_video_set_format_callbacks() instead.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetFormatCallbacks(libvlcsharp.MediaPlayer,libvlcsharp.LibvlcVideoFormatCb,libvlcsharp.LibvlcVideoCleanupCb)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetFormatCallbacks(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.LibvlcVideoFormatCb,VideoLAN.LibVLC.LibvlcVideoCleanupCb)">
             <summary>
             <para>Set decoded video chroma and dimensions. This only works in combination with</para>
             <para>libvlc_video_set_callbacks().</para>
@@ -1375,7 +1375,7 @@
             <param name="cleanup">callback to release any allocated resources (or NULL)</param>
             <remarks>LibVLC 2.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetNsobject(libvlcsharp.MediaPlayer,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetNsobject(VideoLAN.LibVLC.MediaPlayer,System.IntPtr)">
             <summary>Set the NSView handler where the media player should render its video output.</summary>
             <param name="p_mi">the Media Player</param>
             <param name="drawable">
@@ -1392,12 +1392,12 @@
             <para>You can find a live example in VLCVideoView in VLCKit.framework.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetNsobject(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetNsobject(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the NSView handler previously set with libvlc_media_player_set_nsobject().</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the NSView handler or 0 if none where set</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetXwindow(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetXwindow(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>
             <para>Set an X Window System drawable where the media player should render its</para>
             <para>video output. The call takes effect when the playback starts. If it is</para>
@@ -1431,7 +1431,7 @@
             <para>application.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetXwindow(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetXwindow(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Get the X Window System window identifier previously set with</para>
             <para>libvlc_media_player_set_xwindow(). Note that this will return the identifier</para>
@@ -1441,7 +1441,7 @@
             <param name="p_mi">the Media Player</param>
             <returns>an X window ID, or 0 if none where set.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetHwnd(libvlcsharp.MediaPlayer,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetHwnd(VideoLAN.LibVLC.MediaPlayer,System.IntPtr)">
             <summary>
             <para>Set a Win32/Win64 API window handle (HWND) where the media player should</para>
             <para>render its video output. If LibVLC was built without Win32/Win64 API output</para>
@@ -1450,7 +1450,7 @@
             <param name="p_mi">the Media Player</param>
             <param name="drawable">windows handle of the drawable</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetHwnd(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetHwnd(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Get the Windows API window handle (HWND) previously set with</para>
             <para>libvlc_media_player_set_hwnd(). The handle will be returned even if LibVLC</para>
@@ -1459,7 +1459,7 @@
             <param name="p_mi">the Media Player</param>
             <returns>a window handle or NULL if there are none.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetAndroidContext(libvlcsharp.MediaPlayer,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetAndroidContext(VideoLAN.LibVLC.MediaPlayer,System.IntPtr)">
             <summary>Set the android context.</summary>
             <param name="p_mi">the media player</param>
             <param name="p_awindow_handler">
@@ -1468,14 +1468,14 @@
             </param>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetEvasObject(libvlcsharp.MediaPlayer,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetEvasObject(VideoLAN.LibVLC.MediaPlayer,System.IntPtr)">
             <summary>Set the EFL Evas Object.</summary>
             <param name="p_mi">the media player</param>
             <param name="p_evas_object">a valid EFL Evas Object (Evas_Object)</param>
             <returns>-1 if an error was detected, 0 otherwise.</returns>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetCallbacks(libvlcsharp.MediaPlayer,libvlcsharp.LibvlcAudioPlayCb,libvlcsharp.LibvlcAudioPauseCb,libvlcsharp.LibvlcAudioResumeCb,libvlcsharp.LibvlcAudioFlushCb,libvlcsharp.LibvlcAudioDrainCb,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetCallbacks(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.LibvlcAudioPlayCb,VideoLAN.LibVLC.LibvlcAudioPauseCb,VideoLAN.LibVLC.LibvlcAudioResumeCb,VideoLAN.LibVLC.LibvlcAudioFlushCb,VideoLAN.LibVLC.LibvlcAudioDrainCb,System.IntPtr)">
             <summary>Sets callbacks and private data for decoded audio.</summary>
             <param name="mp">the media player</param>
             <param name="play">callback to play audio samples (must not be NULL)</param>
@@ -1492,7 +1492,7 @@
             <para>LibVLC 2.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetVolumeCallback(libvlcsharp.MediaPlayer,libvlcsharp.LibvlcAudioSetVolumeCb)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetVolumeCallback(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.LibvlcAudioSetVolumeCb)">
             <summary>
             <para>Set callbacks and private data for decoded audio. This only works in</para>
             <para>combination with libvlc_audio_set_callbacks().</para>
@@ -1506,7 +1506,7 @@
             </param>
             <remarks>LibVLC 2.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetFormatCallbacks(libvlcsharp.MediaPlayer,libvlcsharp.LibvlcAudioSetupCb,libvlcsharp.LibvlcAudioCleanupCb)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetFormatCallbacks(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.LibvlcAudioSetupCb,VideoLAN.LibVLC.LibvlcAudioCleanupCb)">
             <summary>Sets decoded audio format via callbacks.</summary>
             <param name="mp">the media player</param>
             <param name="setup">callback to select the audio format (cannot be NULL)</param>
@@ -1516,7 +1516,7 @@
             <para>LibVLC 2.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetFormat(libvlcsharp.MediaPlayer,System.String,System.UInt32,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetFormat(VideoLAN.LibVLC.MediaPlayer,System.String,System.UInt32,System.UInt32)">
             <summary>Sets a fixed decoded audio format.</summary>
             <param name="mp">the media player</param>
             <param name="format">
@@ -1531,17 +1531,17 @@
             <para>LibVLC 2.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetLength(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetLength(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the current movie length (in ms).</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the movie length (in ms), or -1 if there is no media.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetTime(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetTime(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the current movie time (in ms).</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the movie time (in ms), or -1 if there is no media.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetTime(libvlcsharp.MediaPlayer,System.Int64)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetTime(VideoLAN.LibVLC.MediaPlayer,System.Int64)">
             <summary>
             <para>Set the movie time (in ms). This has no effect if no media is being played.</para>
             <para>Not all formats and protocols support this.</para>
@@ -1549,12 +1549,12 @@
             <param name="p_mi">the Media Player</param>
             <param name="i_time">the movie time (in ms).</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetPosition(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetPosition(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie position as percentage between 0.0 and 1.0.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>movie position, or -1. in case of error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetPosition(libvlcsharp.MediaPlayer,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetPosition(VideoLAN.LibVLC.MediaPlayer,System.Single)">
             <summary>
             <para>Set movie position as percentage between 0.0 and 1.0.</para>
             <para>This has no effect if playback is not enabled.</para>
@@ -1563,56 +1563,56 @@
             <param name="p_mi">the Media Player</param>
             <param name="f_pos">the position</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetChapter(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetChapter(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set movie chapter (if applicable).</summary>
             <param name="p_mi">the Media Player</param>
             <param name="i_chapter">chapter number to play</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetChapter(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetChapter(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie chapter.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>chapter number currently playing, or -1 if there is no media.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetChapterCount(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetChapterCount(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie chapter count</summary>
             <param name="p_mi">the Media Player</param>
             <returns>number of chapters in movie, or -1.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerWillPlay(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerWillPlay(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Is the player able to play</summary>
             <param name="p_mi">the Media Player</param>
             <returns>boolean</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetChapterCountForTitle(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetChapterCountForTitle(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Get title chapter count</summary>
             <param name="p_mi">the Media Player</param>
             <param name="i_title">title</param>
             <returns>number of chapters in title, or -1</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetTitle(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetTitle(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set movie title</summary>
             <param name="p_mi">the Media Player</param>
             <param name="i_title">title number to play</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetTitle(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetTitle(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie title</summary>
             <param name="p_mi">the Media Player</param>
             <returns>title number currently playing, or -1</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetTitleCount(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetTitleCount(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie title count</summary>
             <param name="p_mi">the Media Player</param>
             <returns>title number count, or -1</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerPreviousChapter(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerPreviousChapter(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Set previous chapter (if applicable)</summary>
             <param name="p_mi">the Media Player</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerNextChapter(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerNextChapter(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Set next chapter (if applicable)</summary>
             <param name="p_mi">the Media Player</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetRate(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetRate(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the requested movie play rate.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>movie play rate</returns>
@@ -1621,7 +1621,7 @@
             <para>different from the real playback rate.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetRate(libvlcsharp.MediaPlayer,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetRate(VideoLAN.LibVLC.MediaPlayer,System.Single)">
             <summary>Set movie play rate</summary>
             <param name="p_mi">the Media Player</param>
             <param name="rate">movie play rate to set</param>
@@ -1630,51 +1630,51 @@
             <para>not actually work depending on the underlying media protocol)</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetState(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetState(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current movie state</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the current state of the media player (playing, paused, ...)</returns>
             <remarks>libvlc_state_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerHasVout(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerHasVout(VideoLAN.LibVLC.MediaPlayer)">
             <summary>How many video outputs does this media player have?</summary>
             <param name="p_mi">the media player</param>
             <returns>the number of video outputs</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerIsSeekable(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerIsSeekable(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Is this media player seekable?</summary>
             <param name="p_mi">the media player</param>
             <returns>true if the media player can seek</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerCanPause(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerCanPause(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Can this media player be paused?</summary>
             <param name="p_mi">the media player</param>
             <returns>true if the media player can pause</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerProgramScrambled(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerProgramScrambled(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Check if the current program is scrambled</summary>
             <param name="p_mi">the media player</param>
             <returns>true if the current program is scrambled</returns>
             <remarks>LibVLC 2.2.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerNextFrame(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerNextFrame(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Display the next frame (if supported)</summary>
             <param name="p_mi">the media player</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerNavigate(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerNavigate(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Navigate through DVD Menu</summary>
             <param name="p_mi">the Media Player</param>
             <param name="navigate">the Navigation mode</param>
             <remarks>libVLC 2.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetVideoTitleDisplay(libvlcsharp.MediaPlayer,libvlcsharp.Position,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetVideoTitleDisplay(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.Position,System.UInt32)">
             <summary>Set if, and how, the video title will be shown when media is played.</summary>
             <param name="p_mi">the media player</param>
             <param name="position">position at which to display the title, or libvlc_position_disable to prevent the title from being displayed</param>
             <param name="timeout">title display timeout in milliseconds (ignored if libvlc_position_disable)</param>
             <remarks>libVLC 2.1.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerAddSlave(libvlcsharp.MediaPlayer,libvlcsharp.MediaSlaveType,System.String,System.Boolean)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerAddSlave(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.MediaSlaveType,System.String,System.Boolean)">
             <summary>Add a slave to the current media player.</summary>
             <param name="p_mi">the media player</param>
             <param name="i_type">subtitle or audio</param>
@@ -1688,11 +1688,11 @@
             <para>libvlc_media_slaves_add</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcTrackDescriptionListRelease(libvlcsharp.TrackDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcTrackDescriptionListRelease(VideoLAN.LibVLC.TrackDescription)">
             <summary>Release (free) libvlc_track_description_t</summary>
             <param name="p_track_description">the structure to release</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcToggleFullscreen(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcToggleFullscreen(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Toggle fullscreen status on non-embedded video outputs.</summary>
             <param name="p_mi">the media player</param>
             <remarks>
@@ -1700,7 +1700,7 @@
             <para>as to libvlc_set_fullscreen().</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcSetFullscreen(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcSetFullscreen(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Enable or disable fullscreen.</summary>
             <param name="p_mi">the media player</param>
             <param name="b_fullscreen">boolean for fullscreen status</param>
@@ -1713,12 +1713,12 @@
             <para>to reparent it back to its normal parent when disabling fullscreen.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcGetFullscreen(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcGetFullscreen(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current fullscreen status.</summary>
             <param name="p_mi">the media player</param>
             <returns>the fullscreen status (boolean)</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetKeyInput(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetKeyInput(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>
             <para>Enable or disable key press events handling, according to the LibVLC hotkeys</para>
             <para>configuration. By default and for historical reasons, keyboard events are</para>
@@ -1734,7 +1734,7 @@
             <para>This function is only implemented for X11 and Win32 at the moment.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetMouseInput(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetMouseInput(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>
             <para>Enable or disable mouse click events handling. By default, those events are</para>
             <para>handled. This is needed for DVD menus to work, as well as a few video</para>
@@ -1747,7 +1747,7 @@
             <para>This function is only implemented for X11 and Win32 at the moment.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetSize(libvlcsharp.MediaPlayer,System.UInt32,System.UInt32@,System.UInt32@)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetSize(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.UInt32@,System.UInt32@)">
             <summary>Get the pixel dimensions of a video.</summary>
             <param name="p_mi">media player</param>
             <param name="num">number of the video (starting from, and most commonly 0)</param>
@@ -1755,7 +1755,7 @@
             <param name="py">pointer to get the pixel height [OUT]</param>
             <returns>0 on success, -1 if the specified video does not exist</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetCursor(libvlcsharp.MediaPlayer,System.UInt32,System.Int32@,System.Int32@)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetCursor(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.Int32@,System.Int32@)">
             <summary>
             <para>Get the mouse pointer coordinates over a video.</para>
             <para>Coordinates are expressed in terms of the decoded video resolution,</para>
@@ -1777,7 +1777,7 @@
             <para>multiple input devices sharing the same pointer) at the moment.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetScale(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetScale(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Get the current video scaling factor.</para>
             <para>See also libvlc_video_set_scale().</para>
@@ -1788,7 +1788,7 @@
             <para>to fit to the output window/drawable automatically.</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetScale(libvlcsharp.MediaPlayer,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetScale(VideoLAN.LibVLC.MediaPlayer,System.Single)">
             <summary>
             <para>Set the video scaling factor. That is the ratio of the number of pixels on</para>
             <para>screen to the number of pixels in the original decoded video in each</para>
@@ -1799,7 +1799,7 @@
             <param name="f_factor">the scaling factor, or zero</param>
             <remarks>Note that not all video outputs support scaling.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetAspectRatio(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetAspectRatio(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current video aspect ratio.</summary>
             <param name="p_mi">the media player</param>
             <returns>
@@ -1807,13 +1807,13 @@
             <para>(the result must be released with free() or libvlc_free()).</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetAspectRatio(libvlcsharp.MediaPlayer,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetAspectRatio(VideoLAN.LibVLC.MediaPlayer,System.String)">
             <summary>Set new video aspect ratio.</summary>
             <param name="p_mi">the media player</param>
             <param name="psz_aspect">new video aspect-ratio or NULL to reset to default</param>
             <remarks>Invalid aspect ratios are ignored.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoNewViewpoint">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoNewViewpoint">
             <summary>Create a video viewpoint structure.</summary>
             <returns>
             <para>video viewpoint or NULL</para>
@@ -1821,7 +1821,7 @@
             </returns>
             <remarks>LibVLC 3.0.0 and later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoUpdateViewpoint(libvlcsharp.MediaPlayer,libvlcsharp.VideoViewpoint,System.Boolean)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoUpdateViewpoint(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.VideoViewpoint,System.Boolean)">
             <summary>Update the video viewpoint information.</summary>
             <param name="p_mi">the media player</param>
             <param name="p_viewpoint">video viewpoint allocated via libvlc_video_new_viewpoint()</param>
@@ -1836,17 +1836,17 @@
             <para>the values are set asynchronously, it will be used by the next frame displayed.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetSpu(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetSpu(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current video subtitle.</summary>
             <param name="p_mi">the media player</param>
             <returns>the video subtitle selected, or -1 if none</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetSpuCount(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetSpuCount(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the number of available video subtitles.</summary>
             <param name="p_mi">the media player</param>
             <returns>the number of available video subtitles</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetSpuDescription(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetSpuDescription(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the description of available video subtitles.</summary>
             <param name="p_mi">the media player</param>
             <returns>
@@ -1854,13 +1854,13 @@
             <para>It must be freed with libvlc_track_description_list_release()</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetSpu(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetSpu(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set new video subtitle.</summary>
             <param name="p_mi">the media player</param>
             <param name="i_spu">video subtitle track to select (i_id from track description)</param>
             <returns>0 on success, -1 if out of range</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetSpuDelay(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetSpuDelay(VideoLAN.LibVLC.MediaPlayer)">
             <summary>
             <para>Get the current subtitle delay. Positive values means subtitles are being</para>
             <para>displayed later, negative values earlier.</para>
@@ -1869,7 +1869,7 @@
             <returns>time (in microseconds) the display of subtitles is being delayed</returns>
             <remarks>LibVLC 2.0.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetSpuDelay(libvlcsharp.MediaPlayer,System.Int64)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetSpuDelay(VideoLAN.LibVLC.MediaPlayer,System.Int64)">
             <summary>
             <para>Set the subtitle delay. This affects the timing of when the subtitle will</para>
             <para>be displayed. Positive values result in subtitles being displayed later,</para>
@@ -1883,7 +1883,7 @@
             <para>LibVLC 2.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetFullTitleDescriptions(libvlcsharp.MediaPlayer,libvlcsharp.TitleDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetFullTitleDescriptions(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.TitleDescription)">
             <summary>Get the full description of available titles</summary>
             <param name="p_mi">the media player</param>
             <param name="titles">
@@ -1894,13 +1894,13 @@
             <returns>the number of titles (-1 on error)</returns>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcTitleDescriptionsRelease(libvlcsharp.TitleDescription,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcTitleDescriptionsRelease(VideoLAN.LibVLC.TitleDescription,System.UInt32)">
             <summary>Release a title description</summary>
             <param name="p_titles">title description array to release</param>
             <param name="i_count">number of title descriptions to release</param>
             <remarks>LibVLC 3.0.0 and later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetFullChapterDescriptions(libvlcsharp.MediaPlayer,System.Int32,libvlcsharp.ChapterDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetFullChapterDescriptions(VideoLAN.LibVLC.MediaPlayer,System.Int32,VideoLAN.LibVLC.ChapterDescription)">
             <summary>Get the full description of available chapters</summary>
             <param name="p_mi">the media player</param>
             <param name="i_chapters_of_title">index of the title to query for chapters (uses current title if set to -1)</param>
@@ -1912,23 +1912,23 @@
             <returns>the number of chapters (-1 on error)</returns>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcChapterDescriptionsRelease(libvlcsharp.ChapterDescription,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcChapterDescriptionsRelease(VideoLAN.LibVLC.ChapterDescription,System.UInt32)">
             <summary>Release a chapter description</summary>
             <param name="p_chapters">chapter description array to release</param>
             <param name="i_count">number of chapter descriptions to release</param>
             <remarks>LibVLC 3.0.0 and later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetCropGeometry(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetCropGeometry(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current crop filter geometry.</summary>
             <param name="p_mi">the media player</param>
             <returns>the crop filter geometry or NULL if unset</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetCropGeometry(libvlcsharp.MediaPlayer,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetCropGeometry(VideoLAN.LibVLC.MediaPlayer,System.String)">
             <summary>Set new crop filter geometry.</summary>
             <param name="p_mi">the media player</param>
             <param name="psz_geometry">new crop filter geometry (NULL to unset)</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetTeletext(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetTeletext(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current teletext page requested or 0 if it's disabled.</summary>
             <param name="p_mi">the media player</param>
             <returns>the current teletext page requested.</returns>
@@ -1937,7 +1937,7 @@
             <para>it.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetTeletext(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetTeletext(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set new teletext page to retrieve.</summary>
             <param name="p_mi">the media player</param>
             <param name="i_page">
@@ -1946,12 +1946,12 @@
             </param>
             <remarks>This function can also be used to send a teletext key.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetTrackCount(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetTrackCount(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get number of available video tracks.</summary>
             <param name="p_mi">media player</param>
             <returns>the number of available video tracks (int)</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetTrackDescription(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetTrackDescription(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the description of available video tracks.</summary>
             <param name="p_mi">media player</param>
             <returns>
@@ -1959,18 +1959,18 @@
             <para>It must be freed with libvlc_track_description_list_release()</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetTrack(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetTrack(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current video track.</summary>
             <param name="p_mi">media player</param>
             <returns>the video track ID (int) or -1 if no active input</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetTrack(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetTrack(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set video track.</summary>
             <param name="p_mi">media player</param>
             <param name="i_track">the track ID (i_id field from track description)</param>
             <returns>0 on success, -1 if out of range</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoTakeSnapshot(libvlcsharp.MediaPlayer,System.UInt32,System.String,System.UInt32,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoTakeSnapshot(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.String,System.UInt32,System.UInt32)">
             <summary>Take a snapshot of the current video window.</summary>
             <param name="p_mi">media player instance</param>
             <param name="num">number of video output (typically 0 for the first/only one)</param>
@@ -1983,24 +1983,24 @@
             <para>If i_width XOR i_height is 0, original aspect-ratio is preserved.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetDeinterlace(libvlcsharp.MediaPlayer,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetDeinterlace(VideoLAN.LibVLC.MediaPlayer,System.String)">
             <summary>Enable or disable deinterlace filter</summary>
             <param name="p_mi">libvlc media player</param>
             <param name="psz_mode">type of deinterlace filter, NULL to disable</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetMarqueeInt(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetMarqueeInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Get an integer marquee option value</summary>
             <param name="p_mi">libvlc media player</param>
             <param name="option">marq option to get</param>
             <remarks>libvlc_video_marquee_int_option_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetMarqueeString(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetMarqueeString(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Get a string marquee option value</summary>
             <param name="p_mi">libvlc media player</param>
             <param name="option">marq option to get</param>
             <remarks>libvlc_video_marquee_string_option_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetMarqueeInt(libvlcsharp.MediaPlayer,System.UInt32,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetMarqueeInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.Int32)">
             <summary>Enable, disable or set an integer marquee option</summary>
             <param name="p_mi">libvlc media player</param>
             <param name="option">marq option to set</param>
@@ -2011,19 +2011,19 @@
             <para>libvlc_video_marquee_int_option_t</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetMarqueeString(libvlcsharp.MediaPlayer,System.UInt32,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetMarqueeString(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.String)">
             <summary>Set a marquee string option</summary>
             <param name="p_mi">libvlc media player</param>
             <param name="option">marq option to set</param>
             <param name="psz_text">marq option value</param>
             <remarks>libvlc_video_marquee_string_option_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetLogoInt(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetLogoInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Get integer logo option.</summary>
             <param name="p_mi">libvlc media player instance</param>
             <param name="option">logo option to get, values of libvlc_video_logo_option_t</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetLogoInt(libvlcsharp.MediaPlayer,System.UInt32,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetLogoInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.Int32)">
             <summary>
             <para>Set logo option as integer. Options that take a different type value</para>
             <para>are ignored.</para>
@@ -2034,7 +2034,7 @@
             <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
             <param name="value">logo option value</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetLogoString(libvlcsharp.MediaPlayer,System.UInt32,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetLogoString(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.String)">
             <summary>
             <para>Set logo option as string. Options that take a different type value</para>
             <para>are ignored.</para>
@@ -2043,13 +2043,13 @@
             <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
             <param name="psz_value">logo option value</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetAdjustInt(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetAdjustInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Get integer adjust option.</summary>
             <param name="p_mi">libvlc media player instance</param>
             <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
             <remarks>LibVLC 1.1.1 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetAdjustInt(libvlcsharp.MediaPlayer,System.UInt32,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetAdjustInt(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.Int32)">
             <summary>
             <para>Set adjust option as integer. Options that take a different type value</para>
             <para>are ignored.</para>
@@ -2061,13 +2061,13 @@
             <param name="value">adjust option value</param>
             <remarks>LibVLC 1.1.1 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoGetAdjustFloat(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoGetAdjustFloat(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Get float adjust option.</summary>
             <param name="p_mi">libvlc media player instance</param>
             <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
             <remarks>LibVLC 1.1.1 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcVideoSetAdjustFloat(libvlcsharp.MediaPlayer,System.UInt32,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcVideoSetAdjustFloat(VideoLAN.LibVLC.MediaPlayer,System.UInt32,System.Single)">
             <summary>
             <para>Set adjust option as float. Options that take a different type value</para>
             <para>are ignored.</para>
@@ -2077,7 +2077,7 @@
             <param name="value">adjust option value</param>
             <remarks>LibVLC 1.1.1 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputListGet(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputListGet(VideoLAN.LibVLC.Instance)">
             <summary>Gets the list of available audio output modules.</summary>
             <param name="p_instance">libvlc instance</param>
             <returns>list of available audio outputs. It must be freed with</returns>
@@ -2087,11 +2087,11 @@
             <para>In case of error, NULL is returned.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputListRelease(libvlcsharp.AudioOutput)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputListRelease(VideoLAN.LibVLC.AudioOutput)">
             <summary>Frees the list of available audio output modules.</summary>
             <param name="p_list">list with audio outputs for release</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputSet(libvlcsharp.MediaPlayer,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputSet(VideoLAN.LibVLC.MediaPlayer,System.String)">
             <summary>Selects an audio output module.</summary>
             <param name="p_mi">media player</param>
             <param name="psz_name">
@@ -2105,7 +2105,7 @@
             <para>libvlc_audio_output_t</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputDeviceEnum(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputDeviceEnum(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Gets a list of potential audio output devices,</summary>
             <param name="mp">media player</param>
             <returns>
@@ -2123,7 +2123,7 @@
             <para>LibVLC 2.2.0 or later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputDeviceListGet(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputDeviceListGet(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Gets a list of audio output devices for a given audio output module,</summary>
             <param name="p_instance">libvlc instance</param>
             <param name="aout">
@@ -2146,12 +2146,12 @@
             <para>LibVLC 2.1.0 or later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputDeviceListRelease(libvlcsharp.AudioOutputDevice)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputDeviceListRelease(VideoLAN.LibVLC.AudioOutputDevice)">
             <summary>Frees a list of available audio output devices.</summary>
             <param name="p_list">list with audio outputs for release</param>
             <remarks>LibVLC 2.1.0 or later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputDeviceSet(libvlcsharp.MediaPlayer,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputDeviceSet(VideoLAN.LibVLC.MediaPlayer,System.String,System.String)">
             <summary>Configures an explicit audio output device.</summary>
             <param name="mp">media player</param>
             <param name="module">
@@ -2184,7 +2184,7 @@
             <para>libvlc_audio_output_t)</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioOutputDeviceGet(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioOutputDeviceGet(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the current audio output device identifier.</summary>
             <param name="mp">media player</param>
             <returns>
@@ -2206,7 +2206,7 @@
             <para>LibVLC 3.0.0 or later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioToggleMute(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioToggleMute(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Toggle mute status.</summary>
             <param name="p_mi">media player</param>
             <remarks>
@@ -2216,12 +2216,12 @@
             <para>See also the limitations of libvlc_audio_set_mute().</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetMute(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetMute(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current mute status.</summary>
             <param name="p_mi">media player</param>
             <returns>the mute status (boolean) if defined, -1 if undefined/unapplicable</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetMute(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetMute(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set mute status.</summary>
             <param name="p_mi">media player</param>
             <param name="status">If status is true then mute, otherwise unmute</param>
@@ -2234,7 +2234,7 @@
             <para>efficient and reliable than mute.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetVolume(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetVolume(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current software audio volume.</summary>
             <param name="p_mi">media player</param>
             <returns>
@@ -2242,18 +2242,18 @@
             <para>(0 = mute, 100 = nominal / 0dB)</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetVolume(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetVolume(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set current software audio volume.</summary>
             <param name="p_mi">media player</param>
             <param name="i_volume">the volume in percents (0 = mute, 100 = 0dB)</param>
             <returns>0 if the volume was set, -1 if it was out of range</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetTrackCount(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetTrackCount(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get number of available audio tracks.</summary>
             <param name="p_mi">media player</param>
             <returns>the number of available audio tracks (int), or -1 if unavailable</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetTrackDescription(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetTrackDescription(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the description of available audio tracks.</summary>
             <param name="p_mi">media player</param>
             <returns>
@@ -2261,49 +2261,49 @@
             <para>It must be freed with libvlc_track_description_list_release()</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetTrack(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetTrack(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current audio track.</summary>
             <param name="p_mi">media player</param>
             <returns>the audio track ID or -1 if no active input.</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetTrack(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetTrack(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set current audio track.</summary>
             <param name="p_mi">media player</param>
             <param name="i_track">the track ID (i_id field from track description)</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetChannel(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetChannel(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current audio channel.</summary>
             <param name="p_mi">media player</param>
             <returns>the audio channel</returns>
             <remarks>libvlc_audio_output_channel_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetChannel(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetChannel(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Set current audio channel.</summary>
             <param name="p_mi">media player</param>
             <param name="channel">the audio channel,</param>
             <returns>0 on success, -1 on error</returns>
             <remarks>libvlc_audio_output_channel_t</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioGetDelay(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioGetDelay(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current audio delay.</summary>
             <param name="p_mi">media player</param>
             <returns>the audio delay (microseconds)</returns>
             <remarks>LibVLC 1.1.1 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioSetDelay(libvlcsharp.MediaPlayer,System.Int64)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioSetDelay(VideoLAN.LibVLC.MediaPlayer,System.Int64)">
             <summary>Set current audio delay. The audio delay will be reset to zero each time the media changes.</summary>
             <param name="p_mi">media player</param>
             <param name="i_delay">the audio delay (microseconds)</param>
             <returns>0 on success, -1 on error</returns>
             <remarks>LibVLC 1.1.1 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetPresetCount">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetPresetCount">
             <summary>Get the number of equalizer presets.</summary>
             <returns>number of presets</returns>
             <remarks>LibVLC 2.2.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetPresetName(System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetPresetName(System.UInt32)">
             <summary>Get the name of a particular equalizer preset.</summary>
             <param name="u_index">index of the preset, counting from zero</param>
             <returns>preset name, or NULL if there is no such preset</returns>
@@ -2313,12 +2313,12 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetBandCount">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetBandCount">
             <summary>Get the number of distinct frequency bands for an equalizer.</summary>
             <returns>number of frequency bands</returns>
             <remarks>LibVLC 2.2.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetBandFrequency(System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetBandFrequency(System.UInt32)">
             <summary>Get a particular equalizer band frequency.</summary>
             <param name="u_index">index of the band, counting from zero</param>
             <returns>equalizer band frequency (Hz), or -1 if there is no such band</returns>
@@ -2328,7 +2328,7 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerNew">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerNew">
             <summary>Create a new default equalizer, with all frequency values zeroed.</summary>
             <returns>opaque equalizer handle, or NULL on error</returns>
             <remarks>
@@ -2339,7 +2339,7 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerNewFromPreset(System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerNewFromPreset(System.UInt32)">
             <summary>
             <para>Create a new equalizer, with initial frequency values copied from an existing</para>
             <para>preset.</para>
@@ -2354,7 +2354,7 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerRelease(libvlcsharp.Equalizer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerRelease(VideoLAN.LibVLC.Equalizer)">
             <summary>Release a previously created equalizer instance.</summary>
             <param name="p_equalizer">opaque equalizer handle, or NULL</param>
             <remarks>
@@ -2364,7 +2364,7 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerSetPreamp(libvlcsharp.Equalizer,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerSetPreamp(VideoLAN.LibVLC.Equalizer,System.Single)">
             <summary>Set a new pre-amplification value for an equalizer.</summary>
             <param name="p_equalizer">valid equalizer handle, must not be NULL</param>
             <param name="f_preamp">preamp value (-20.0 to 20.0 Hz)</param>
@@ -2376,13 +2376,13 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetPreamp(libvlcsharp.Equalizer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetPreamp(VideoLAN.LibVLC.Equalizer)">
             <summary>Get the current pre-amplification value from an equalizer.</summary>
             <param name="p_equalizer">valid equalizer handle, must not be NULL</param>
             <returns>preamp value (Hz)</returns>
             <remarks>LibVLC 2.2.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerSetAmpAtIndex(libvlcsharp.Equalizer,System.Single,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerSetAmpAtIndex(VideoLAN.LibVLC.Equalizer,System.Single,System.UInt32)">
             <summary>Set a new amplification value for a particular equalizer frequency band.</summary>
             <param name="p_equalizer">valid equalizer handle, must not be NULL</param>
             <param name="f_amp">amplification value (-20.0 to 20.0 Hz)</param>
@@ -2395,14 +2395,14 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcAudioEqualizerGetAmpAtIndex(libvlcsharp.Equalizer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcAudioEqualizerGetAmpAtIndex(VideoLAN.LibVLC.Equalizer,System.UInt32)">
             <summary>Get the amplification value for a particular equalizer frequency band.</summary>
             <param name="p_equalizer">valid equalizer handle, must not be NULL</param>
             <param name="u_band">index, counting from zero, of the frequency band to get</param>
             <returns>amplification value (Hz); NaN if there is no such frequency band</returns>
             <remarks>LibVLC 2.2.0 or later</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetEqualizer(libvlcsharp.MediaPlayer,libvlcsharp.Equalizer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetEqualizer(VideoLAN.LibVLC.MediaPlayer,VideoLAN.LibVLC.Equalizer)">
             <summary>Apply new equalizer settings to a media player.</summary>
             <param name="p_mi">opaque media player handle</param>
             <param name="p_equalizer">opaque equalizer handle, or NULL to disable the equalizer for this media player</param>
@@ -2425,19 +2425,19 @@
             <para>LibVLC 2.2.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerGetRole(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerGetRole(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Gets the media role.</summary>
             <param name="p_mi">media player</param>
             <returns>the media player role (</returns>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_player.LibvlcMediaPlayerSetRole(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerSetRole(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <summary>Sets the media role.</summary>
             <param name="p_mi">media player</param>
             <param name="role">the media player role (</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="T:libvlcsharp.libvlc_media_list">
+        <member name="T:VideoLAN.LibVLC.libvlc_media_list">
             <summary>A LibVLC media list holds multiple</summary>
             <remarks>
             <para>@{</para>
@@ -2445,20 +2445,20 @@
             <para>LibVLC media list (playlist) external API</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListNew(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListNew(VideoLAN.LibVLC.Instance)">
             <summary>Create an empty media list.</summary>
             <param name="p_instance">libvlc instance</param>
             <returns>empty media list, or NULL on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListRelease(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListRelease(VideoLAN.LibVLC.MediaList)">
             <summary>Release media list created with libvlc_media_list_new().</summary>
             <param name="p_ml">a media list created with libvlc_media_list_new()</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListRetain(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListRetain(VideoLAN.LibVLC.MediaList)">
             <summary>Retain reference to a media list</summary>
             <param name="p_ml">a media list created with libvlc_media_list_new()</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListSetMedia(libvlcsharp.MediaList,libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListSetMedia(VideoLAN.LibVLC.MediaList,VideoLAN.LibVLC.Media)">
             <summary>
             <para>Associate media instance with this media list instance.</para>
             <para>If another media instance was present it will be released.</para>
@@ -2467,7 +2467,7 @@
             <param name="p_ml">a media list instance</param>
             <param name="p_md">media instance to add</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListMedia(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListMedia(VideoLAN.LibVLC.MediaList)">
             <summary>
             <para>Get media instance from this media list instance. This action will increase</para>
             <para>the refcount on the media instance.</para>
@@ -2476,7 +2476,7 @@
             <param name="p_ml">a media list instance</param>
             <returns>media instance</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListAddMedia(libvlcsharp.MediaList,libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListAddMedia(VideoLAN.LibVLC.MediaList,VideoLAN.LibVLC.Media)">
             <summary>
             <para>Add media instance to media list</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
@@ -2485,7 +2485,7 @@
             <param name="p_md">a media instance</param>
             <returns>0 on success, -1 if the media list is read-only</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListInsertMedia(libvlcsharp.MediaList,libvlcsharp.Media,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListInsertMedia(VideoLAN.LibVLC.MediaList,VideoLAN.LibVLC.Media,System.Int32)">
             <summary>
             <para>Insert media instance in media list on a position</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
@@ -2495,7 +2495,7 @@
             <param name="i_pos">position in array where to insert</param>
             <returns>0 on success, -1 if the media list is read-only</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListRemoveIndex(libvlcsharp.MediaList,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListRemoveIndex(VideoLAN.LibVLC.MediaList,System.Int32)">
             <summary>
             <para>Remove media instance from media list on a position</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
@@ -2504,7 +2504,7 @@
             <param name="i_pos">position in array where to insert</param>
             <returns>0 on success, -1 if the list is read-only or the item was not found</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListCount(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListCount(VideoLAN.LibVLC.MediaList)">
             <summary>
             <para>Get count on media list items</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
@@ -2512,7 +2512,7 @@
             <param name="p_ml">a media list instance</param>
             <returns>number of items in media list</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListItemAtIndex(libvlcsharp.MediaList,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListItemAtIndex(VideoLAN.LibVLC.MediaList,System.Int32)">
             <summary>
             <para>List media instance in media list at a position</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
@@ -2525,7 +2525,7 @@
             <para>on the media.</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListIndexOfItem(libvlcsharp.MediaList,libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListIndexOfItem(VideoLAN.LibVLC.MediaList,VideoLAN.LibVLC.Media)">
             <summary>
             <para>Find index position of List media instance in media list.</para>
             <para>Warning: the function will return the first matched position.</para>
@@ -2535,23 +2535,23 @@
             <param name="p_md">media instance</param>
             <returns>position of media instance or -1 if media not found</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListIsReadonly(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListIsReadonly(VideoLAN.LibVLC.MediaList)">
             <summary>This indicates if this media list is read-only from a user point of view</summary>
             <param name="p_ml">media list instance</param>
             <returns>1 on readonly, 0 on readwrite</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListLock(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListLock(VideoLAN.LibVLC.MediaList)">
             <summary>Get lock on media list items</summary>
             <param name="p_ml">a media list instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListUnlock(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListUnlock(VideoLAN.LibVLC.MediaList)">
             <summary>
             <para>Release lock on media list items</para>
             <para>The libvlc_media_list_lock should be held upon entering this function.</para>
             </summary>
             <param name="p_ml">a media list instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list.LibvlcMediaListEventManager(libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListEventManager(VideoLAN.LibVLC.MediaList)">
             <summary>
             <para>Get libvlc_event_manager from this media list instance.</para>
             <para>The p_event_manager is immutable, so you don't have to hold the lock</para>
@@ -2559,10 +2559,10 @@
             <param name="p_ml">a media list instance</param>
             <returns>libvlc_event_manager</returns>
         </member>
-        <member name="T:libvlcsharp.PlaybackMode">
+        <member name="T:VideoLAN.LibVLC.PlaybackMode">
             <summary>Defines playback modes for playlist.</summary>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaListPlayerT">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaListPlayerT">
             <summary>The LibVLC media list player plays a</summary>
             <remarks>
             <para>in a certain order.</para>
@@ -2574,12 +2574,12 @@
             <para>LibVLC media list player external API</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerNew(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerNew(VideoLAN.LibVLC.Instance)">
             <summary>Create new media_list_player.</summary>
             <param name="p_instance">libvlc instance</param>
             <returns>media list player instance or NULL on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerRelease(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerRelease(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>
             <para>Release a media_list_player after use</para>
             <para>Decrement the reference count of a media player object. If the</para>
@@ -2589,96 +2589,96 @@
             </summary>
             <param name="p_mlp">media list player instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerRetain(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerRetain(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>
             <para>Retain a reference to a media player list object. Use</para>
             <para>libvlc_media_list_player_release() to decrement reference count.</para>
             </summary>
             <param name="p_mlp">media player list object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerEventManager(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerEventManager(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Return the event manager of this media_list_player.</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>the event manager</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerSetMediaPlayer(libvlcsharp.LibvlcMediaListPlayerT,libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerSetMediaPlayer(VideoLAN.LibVLC.LibvlcMediaListPlayerT,VideoLAN.LibVLC.MediaPlayer)">
             <summary>Replace media player in media_list_player with this instance.</summary>
             <param name="p_mlp">media list player instance</param>
             <param name="p_mi">media player instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerGetMediaPlayer(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerGetMediaPlayer(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Get media player of the media_list_player instance.</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>media player instance</returns>
             <remarks>the caller is responsible for releasing the returned instance</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerSetMediaList(libvlcsharp.LibvlcMediaListPlayerT,libvlcsharp.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerSetMediaList(VideoLAN.LibVLC.LibvlcMediaListPlayerT,VideoLAN.LibVLC.MediaList)">
             <summary>Set the media list associated with the player</summary>
             <param name="p_mlp">media list player instance</param>
             <param name="p_mlist">list of media</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerPlay(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerPlay(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Play media list</summary>
             <param name="p_mlp">media list player instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerPause(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerPause(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Toggle pause (or resume) media list</summary>
             <param name="p_mlp">media list player instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerIsPlaying(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerIsPlaying(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Is media list playing?</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>true for playing and false for not playing</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerGetState(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerGetState(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Get current libvlc_state of media list player</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>libvlc_state_t for media list player</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerPlayItemAtIndex(libvlcsharp.LibvlcMediaListPlayerT,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerPlayItemAtIndex(VideoLAN.LibVLC.LibvlcMediaListPlayerT,System.Int32)">
             <summary>Play media list item at position index</summary>
             <param name="p_mlp">media list player instance</param>
             <param name="i_index">index in media list to play</param>
             <returns>0 upon success -1 if the item wasn't found</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerPlayItem(libvlcsharp.LibvlcMediaListPlayerT,libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerPlayItem(VideoLAN.LibVLC.LibvlcMediaListPlayerT,VideoLAN.LibVLC.Media)">
             <summary>Play the given media item</summary>
             <param name="p_mlp">media list player instance</param>
             <param name="p_md">the media instance</param>
             <returns>0 upon success, -1 if the media is not part of the media list</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerStop(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerStop(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Stop playing media list</summary>
             <param name="p_mlp">media list player instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerNext(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerNext(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Play next item from media list</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>0 upon success -1 if there is no next item</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerPrevious(libvlcsharp.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerPrevious(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Play previous item from media list</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>0 upon success -1 if there is no previous item</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_list_player.LibvlcMediaListPlayerSetPlaybackMode(libvlcsharp.LibvlcMediaListPlayerT,libvlcsharp.PlaybackMode)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerSetPlaybackMode(VideoLAN.LibVLC.LibvlcMediaListPlayerT,VideoLAN.LibVLC.PlaybackMode)">
             <summary>Sets the playback mode for the playlist</summary>
             <param name="p_mlp">media list player instance</param>
             <param name="e_mode">playback mode specification</param>
         </member>
-        <member name="T:libvlcsharp.LibvlcMediaLibraryT">
+        <member name="T:VideoLAN.LibVLC.LibvlcMediaLibraryT">
             <summary>
             <para>@{</para>
             <para></para>
             <para>LibVLC media library external API</para>
             </summary>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_library.LibvlcMediaLibraryNew(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_library.LibvlcMediaLibraryNew(VideoLAN.LibVLC.Instance)">
             <summary>Create an new Media Library object</summary>
             <param name="p_instance">the libvlc instance</param>
             <returns>a new object or NULL on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_library.LibvlcMediaLibraryRelease(libvlcsharp.LibvlcMediaLibraryT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_library.LibvlcMediaLibraryRelease(VideoLAN.LibVLC.LibvlcMediaLibraryT)">
             <summary>
             <para>Release media library object. This functions decrements the</para>
             <para>reference count of the media library object. If it reaches 0,</para>
@@ -2686,7 +2686,7 @@
             </summary>
             <param name="p_mlib">media library object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_library.LibvlcMediaLibraryRetain(libvlcsharp.LibvlcMediaLibraryT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_library.LibvlcMediaLibraryRetain(VideoLAN.LibVLC.LibvlcMediaLibraryT)">
             <summary>
             <para>Retain a reference to a media library object. This function will</para>
             <para>increment the reference counting for this object. Use</para>
@@ -2694,33 +2694,33 @@
             </summary>
             <param name="p_mlib">media library object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_library.LibvlcMediaLibraryLoad(libvlcsharp.LibvlcMediaLibraryT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_library.LibvlcMediaLibraryLoad(VideoLAN.LibVLC.LibvlcMediaLibraryT)">
             <summary>Load media library.</summary>
             <param name="p_mlib">media library object</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_library.LibvlcMediaLibraryMediaList(libvlcsharp.LibvlcMediaLibraryT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_library.LibvlcMediaLibraryMediaList(VideoLAN.LibVLC.LibvlcMediaLibraryT)">
             <summary>Get media library subitems.</summary>
             <param name="p_mlib">media library object</param>
             <returns>media list subitems</returns>
         </member>
-        <member name="T:libvlcsharp.MediaDiscovererCategory">
+        <member name="T:VideoLAN.LibVLC.MediaDiscovererCategory">
             <summary>Category of a media discoverer</summary>
             <remarks>libvlc_media_discoverer_list_get()</remarks>
         </member>
-        <member name="F:libvlcsharp.MediaDiscovererCategory.Devices">
+        <member name="F:VideoLAN.LibVLC.MediaDiscovererCategory.Devices">
             <summary>devices, like portable music player</summary>
         </member>
-        <member name="F:libvlcsharp.MediaDiscovererCategory.Lan">
+        <member name="F:VideoLAN.LibVLC.MediaDiscovererCategory.Lan">
             <summary>LAN/WAN services, like Upnp, SMB, or SAP</summary>
         </member>
-        <member name="F:libvlcsharp.MediaDiscovererCategory.Podcasts">
+        <member name="F:VideoLAN.LibVLC.MediaDiscovererCategory.Podcasts">
             <summary>Podcasts</summary>
         </member>
-        <member name="F:libvlcsharp.MediaDiscovererCategory.Localdirs">
+        <member name="F:VideoLAN.LibVLC.MediaDiscovererCategory.Localdirs">
             <summary>Local directories, like Video, Music or Pictures directories</summary>
         </member>
-        <member name="T:libvlcsharp.MediaDiscoverer">
+        <member name="T:VideoLAN.LibVLC.MediaDiscoverer">
             <summary>
             <para>LibVLC media discovery finds available media via various means.</para>
             <para>This corresponds to the service discovery functionality in VLC media player.</para>
@@ -2732,11 +2732,11 @@
             <para>LibVLC media discovery external API</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.MediaDiscovererDescription">
+        <member name="T:VideoLAN.LibVLC.MediaDiscovererDescription">
             <summary>Media discoverer description</summary>
             <remarks>libvlc_media_discoverer_list_get()</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererNew(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererNew(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Create a media discoverer object by name.</summary>
             <param name="p_inst">libvlc instance</param>
             <param name="psz_name">
@@ -2755,7 +2755,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererStart(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererStart(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Start media discovery.</summary>
             <param name="p_mdis">media discover object</param>
             <returns>-1 in case of error, 0 otherwise</returns>
@@ -2766,7 +2766,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererStop(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererStop(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Stop media discovery.</summary>
             <param name="p_mdis">media discover object</param>
             <remarks>
@@ -2774,24 +2774,24 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererRelease(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererRelease(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>
             <para>Release media discover object. If the reference count reaches 0, then</para>
             <para>the object will be released.</para>
             </summary>
             <param name="p_mdis">media service discover object</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererMediaList(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererMediaList(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Get media service discover media list.</summary>
             <param name="p_mdis">media service discover object</param>
             <returns>list of media items</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererIsRunning(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererIsRunning(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Query if media service discover object is running.</summary>
             <param name="p_mdis">media service discover object</param>
             <returns>true if running, false if not</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererListGet(libvlcsharp.Instance,libvlcsharp.MediaDiscovererCategory,libvlcsharp.MediaDiscovererDescription)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererListGet(VideoLAN.LibVLC.Instance,VideoLAN.LibVLC.MediaDiscovererCategory,VideoLAN.LibVLC.MediaDiscovererDescription)">
             <summary>Get media discoverer services by category</summary>
             <param name="p_inst">libvlc instance</param>
             <param name="i_cat">category of services to fetch</param>
@@ -2803,7 +2803,7 @@
             <returns>the number of media discoverer services (0 on error)</returns>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_media_discoverer.LibvlcMediaDiscovererListRelease(libvlcsharp.MediaDiscovererDescription,System.UInt64)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_discoverer.LibvlcMediaDiscovererListRelease(VideoLAN.LibVLC.MediaDiscovererDescription,System.UInt64)">
             <summary>Release an array of media discoverer services</summary>
             <param name="pp_services">array to release</param>
             <param name="i_count">number of elements in the array</param>
@@ -2812,100 +2812,100 @@
             <para>libvlc_media_discoverer_list_get()</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.EventType">
+        <member name="T:VideoLAN.LibVLC.EventType">
             <summary>Event types</summary>
         </member>
-        <member name="F:libvlcsharp.EventType.MediaDiscovererStarted">
+        <member name="F:VideoLAN.LibVLC.EventType.MediaDiscovererStarted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_start()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.MediaDiscovererEnded">
+        <member name="F:VideoLAN.LibVLC.EventType.MediaDiscovererEnded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.RendererDiscovererItemAdded">
+        <member name="F:VideoLAN.LibVLC.EventType.RendererDiscovererItemAdded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.RendererDiscovererItemDeleted">
+        <member name="F:VideoLAN.LibVLC.EventType.RendererDiscovererItemDeleted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaAdded">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaAdded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaRemoved">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaRemoved">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaChanged">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaChanged">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStarted">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStarted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStopped">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStopped">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusInit">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusInit">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusOpening">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusOpening">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusPlaying">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusPlaying">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusPause">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusPause">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusEnd">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusEnd">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:libvlcsharp.EventType.VlmMediaInstanceStatusError">
+        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusError">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="T:libvlcsharp.Event">
+        <member name="T:VideoLAN.LibVLC.Event">
             <summary>Renderer item</summary>
             <remarks>
             <para>This struct is passed by a</para>
@@ -2916,31 +2916,31 @@
             </remarks>
             <summary>A LibVLC event</summary>
         </member>
-        <member name="T:libvlcsharp.DialogQuestionType">
+        <member name="T:VideoLAN.LibVLC.DialogQuestionType">
             <summary>
             <para>@{</para>
             <para></para>
             <para>LibVLC dialog external API</para>
             </summary>
         </member>
-        <member name="T:libvlcsharp.DialogCallback">
+        <member name="T:VideoLAN.LibVLC.DialogCallback">
             <summary>Dialog callbacks to be implemented</summary>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogSetCallbacks(libvlcsharp.Instance,libvlcsharp.DialogCallback,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogSetCallbacks(VideoLAN.LibVLC.Instance,VideoLAN.LibVLC.DialogCallback,System.IntPtr)">
             <summary>Register callbacks in order to handle VLC dialogs</summary>
             <param name="p_cbs">a pointer to callbacks, or NULL to unregister callbacks.</param>
             <param name="p_data">opaque pointer for the callback</param>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogSetContext(libvlcsharp.DialogId,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogSetContext(VideoLAN.LibVLC.DialogId,System.IntPtr)">
             <summary>Associate an opaque pointer with the dialog id</summary>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogGetContext(libvlcsharp.DialogId)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogGetContext(VideoLAN.LibVLC.DialogId)">
             <summary>Return the opaque pointer associated with the dialog id</summary>
             <remarks>LibVLC 3.0.0 and later.</remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogPostLogin(libvlcsharp.DialogId,System.String,System.String,System.Boolean)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogPostLogin(VideoLAN.LibVLC.DialogId,System.String,System.String,System.Boolean)">
             <summary>Post a login answer</summary>
             <param name="p_id">id of the dialog</param>
             <param name="psz_username">valid and non empty string</param>
@@ -2953,7 +2953,7 @@
             <para>LibVLC 3.0.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogPostAction(libvlcsharp.DialogId,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogPostAction(VideoLAN.LibVLC.DialogId,System.Int32)">
             <summary>Post a question answer</summary>
             <param name="p_id">id of the dialog</param>
             <param name="i_action">1 for action1, 2 for action2</param>
@@ -2964,7 +2964,7 @@
             <para>LibVLC 3.0.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_dialog.LibvlcDialogDismiss(libvlcsharp.DialogId)">
+        <member name="M:VideoLAN.LibVLC.libvlc_dialog.LibvlcDialogDismiss(VideoLAN.LibVLC.DialogId)">
             <summary>Dismiss a dialog</summary>
             <param name="p_id">id of the dialog</param>
             <returns>0 on success, or -1 on error</returns>
@@ -2974,11 +2974,11 @@
             <para>LibVLC 3.0.0 and later.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmRelease(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmRelease(VideoLAN.LibVLC.Instance)">
             <summary>Release the vlm instance related to the given libvlc_instance_t</summary>
             <param name="p_instance">the instance</param>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmAddBroadcast(libvlcsharp.Instance,System.String,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmAddBroadcast(VideoLAN.LibVLC.Instance,System.String,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.Int32)">
             <summary>Add a broadcast, with one input.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the new broadcast</param>
@@ -2990,7 +2990,7 @@
             <param name="b_loop">Should this broadcast be played in loop ?</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmAddVod(libvlcsharp.Instance,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmAddVod(VideoLAN.LibVLC.Instance,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.String)">
             <summary>Add a vod, with one input.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the new vod media</param>
@@ -3001,27 +3001,27 @@
             <param name="psz_mux">the muxer of the vod media</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmDelMedia(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmDelMedia(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Delete a media (VOD or broadcast).</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to delete</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSetEnabled(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSetEnabled(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Enable or disable a media (VOD or broadcast).</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to work on</param>
             <param name="b_enabled">the new status</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSetOutput(libvlcsharp.Instance,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSetOutput(VideoLAN.LibVLC.Instance,System.String,System.String)">
             <summary>Set the output for a media.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to work on</param>
             <param name="psz_output">the output MRL (the parameter to the &quot;sout&quot; variable)</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSetInput(libvlcsharp.Instance,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSetInput(VideoLAN.LibVLC.Instance,System.String,System.String)">
             <summary>
             <para>Set a media's input MRL. This will delete all existing inputs and</para>
             <para>add the specified one.</para>
@@ -3031,28 +3031,28 @@
             <param name="psz_input">the input MRL</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmAddInput(libvlcsharp.Instance,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmAddInput(VideoLAN.LibVLC.Instance,System.String,System.String)">
             <summary>Add a media's input MRL. This will add the specified one.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to work on</param>
             <param name="psz_input">the input MRL</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSetLoop(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSetLoop(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Set a media's loop status.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to work on</param>
             <param name="b_loop">the new status</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSetMux(libvlcsharp.Instance,System.String,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSetMux(VideoLAN.LibVLC.Instance,System.String,System.String)">
             <summary>Set a media's vod muxer.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the media to work on</param>
             <param name="psz_mux">the new muxer</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmChangeMedia(libvlcsharp.Instance,System.String,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmChangeMedia(VideoLAN.LibVLC.Instance,System.String,System.String,System.String,System.Int32,System.SByte**,System.Int32,System.Int32)">
             <summary>
             <para>Edit the parameters of a media. This will delete all existing inputs and</para>
             <para>add the specified one.</para>
@@ -3067,32 +3067,32 @@
             <param name="b_loop">Should this broadcast be played in loop ?</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmPlayMedia(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmPlayMedia(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Play the named broadcast.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the broadcast</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmStopMedia(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmStopMedia(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Stop the named broadcast.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the broadcast</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmPauseMedia(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmPauseMedia(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Pause the named broadcast.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the broadcast</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmSeekMedia(libvlcsharp.Instance,System.String,System.Single)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmSeekMedia(VideoLAN.LibVLC.Instance,System.String,System.Single)">
             <summary>Seek in the named broadcast.</summary>
             <param name="p_instance">the instance</param>
             <param name="psz_name">the name of the broadcast</param>
             <param name="f_percentage">the percentage to seek to</param>
             <returns>0 on success, -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmShowMedia(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmShowMedia(VideoLAN.LibVLC.Instance,System.String)">
             <summary>
             <para>Return information about the named media as a JSON</para>
             <para>string representation.</para>
@@ -3112,35 +3112,35 @@
             <para>vlm_media_t though.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmGetMediaInstancePosition(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetMediaInstancePosition(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Get vlm_media instance position by name or instance id</summary>
             <param name="p_instance">a libvlc instance</param>
             <param name="psz_name">name of vlm media instance</param>
             <param name="i_instance">instance id</param>
             <returns>position as float or -1. on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmGetMediaInstanceTime(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetMediaInstanceTime(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Get vlm_media instance time by name or instance id</summary>
             <param name="p_instance">a libvlc instance</param>
             <param name="psz_name">name of vlm media instance</param>
             <param name="i_instance">instance id</param>
             <returns>time as integer or -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmGetMediaInstanceLength(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetMediaInstanceLength(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Get vlm_media instance length by name or instance id</summary>
             <param name="p_instance">a libvlc instance</param>
             <param name="psz_name">name of vlm media instance</param>
             <param name="i_instance">instance id</param>
             <returns>length of media item or -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmGetMediaInstanceRate(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetMediaInstanceRate(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Get vlm_media instance playback rate by name or instance id</summary>
             <param name="p_instance">a libvlc instance</param>
             <param name="psz_name">name of vlm media instance</param>
             <param name="i_instance">instance id</param>
             <returns>playback rate or -1 on error</returns>
         </member>
-        <member name="M:libvlcsharp.libvlc_vlm.LibvlcVlmGetEventManager(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetEventManager(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Get libvlc_event_manager from a vlm media.</para>
             <para>The p_event_manager is immutable, so you don't have to hold the lock</para>
@@ -3148,10 +3148,10 @@
             <param name="p_instance">a libvlc instance</param>
             <returns>libvlc_event_manager</returns>
         </member>
-        <member name="T:libvlcsharp.LogIterator">
+        <member name="T:VideoLAN.LibVLC.LogIterator">
             <summary>This structure is opaque. It represents a libvlc log iterator</summary>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaPlayerGetFps(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaPlayerGetFps(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get movie fps rate</summary>
             <param name="p_mi">the Media Player</param>
             <returns>frames per second (fps) for this playing movie, or 0 if unspecified</returns>
@@ -3162,28 +3162,28 @@
             <para>Consider using libvlc_media_tracks_get() instead.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaPlayerSetAgl(libvlcsharp.MediaPlayer,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaPlayerSetAgl(VideoLAN.LibVLC.MediaPlayer,System.UInt32)">
             <remarks>Use libvlc_media_player_set_nsobject() instead</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaPlayerGetAgl(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaPlayerGetAgl(VideoLAN.LibVLC.MediaPlayer)">
             <remarks>Use libvlc_media_player_get_nsobject() instead</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcTrackDescriptionRelease(libvlcsharp.TrackDescription)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcTrackDescriptionRelease(VideoLAN.LibVLC.TrackDescription)">
             <remarks>Use libvlc_track_description_list_release() instead</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcVideoGetHeight(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcVideoGetHeight(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current video height.</summary>
             <param name="p_mi">the media player</param>
             <returns>the video pixel height or 0 if not applicable</returns>
             <remarks>Use libvlc_video_get_size() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcVideoGetWidth(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcVideoGetWidth(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get current video width.</summary>
             <param name="p_mi">the media player</param>
             <returns>the video pixel width or 0 if not applicable</returns>
             <remarks>Use libvlc_video_get_size() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcVideoGetTitleDescription(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcVideoGetTitleDescription(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Get the description of available titles.</summary>
             <param name="p_mi">the media player</param>
             <returns>
@@ -3191,7 +3191,7 @@
             <para>It must be freed with libvlc_track_description_list_release()</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcVideoGetChapterDescription(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcVideoGetChapterDescription(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Get the description of available chapters for specific title.</summary>
             <param name="p_mi">the media player</param>
             <param name="i_title">selected title</param>
@@ -3200,41 +3200,41 @@
             <para>It must be freed with libvlc_track_description_list_release()</para>
             </returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcVideoSetSubtitleFile(libvlcsharp.MediaPlayer,System.String)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcVideoSetSubtitleFile(VideoLAN.LibVLC.MediaPlayer,System.String)">
             <summary>Set new video subtitle file.</summary>
             <param name="p_mi">the media player</param>
             <param name="psz_subtitle">new video subtitle file</param>
             <returns>the success status (boolean)</returns>
             <remarks>Use libvlc_media_player_add_slave() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcToggleTeletext(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcToggleTeletext(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Toggle teletext transparent status on video output.</summary>
             <param name="p_mi">the media player</param>
             <remarks>use libvlc_video_set_teletext() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcAudioOutputDeviceCount(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcAudioOutputDeviceCount(VideoLAN.LibVLC.Instance,System.String)">
             <summary>Backward compatibility stub. Do not use in new code.</summary>
             <returns>always 0.</returns>
             <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcAudioOutputDeviceLongname(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcAudioOutputDeviceLongname(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Backward compatibility stub. Do not use in new code.</summary>
             <returns>always NULL.</returns>
             <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcAudioOutputDeviceId(libvlcsharp.Instance,System.String,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcAudioOutputDeviceId(VideoLAN.LibVLC.Instance,System.String,System.Int32)">
             <summary>Backward compatibility stub. Do not use in new code.</summary>
             <returns>always NULL.</returns>
             <remarks>Use libvlc_audio_output_device_list_get() instead.</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcAudioOutputGetDeviceType(libvlcsharp.MediaPlayer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcAudioOutputGetDeviceType(VideoLAN.LibVLC.MediaPlayer)">
             <summary>Stub for backward compatibility.</summary>
             <returns>always -1.</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcAudioOutputSetDeviceType(libvlcsharp.MediaPlayer,System.Int32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcAudioOutputSetDeviceType(VideoLAN.LibVLC.MediaPlayer,System.Int32)">
             <summary>Stub for backward compatibility.</summary>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaParse(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaParse(VideoLAN.LibVLC.Media)">
             <summary>Parse a media.</summary>
             <param name="p_md">media descriptor object</param>
             <remarks>
@@ -3247,7 +3247,7 @@
             <para>libvlc_media_get_tracks_info</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaParseAsync(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaParseAsync(VideoLAN.LibVLC.Media)">
             <summary>Parse a media.</summary>
             <param name="p_md">media descriptor object</param>
             <remarks>
@@ -3265,7 +3265,7 @@
             <para>libvlc_media_get_tracks_info</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaIsParsed(libvlcsharp.Media)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaIsParsed(VideoLAN.LibVLC.Media)">
             <summary>Return true is the media descriptor object is parsed</summary>
             <param name="p_md">media descriptor object</param>
             <returns>true if media object has been parsed otherwise it returns false</returns>
@@ -3275,7 +3275,7 @@
             <para>libvlc_MediaParsedChanged</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaGetTracksInfo(libvlcsharp.Media,libvlcsharp.MediaTrackInfo)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaGetTracksInfo(VideoLAN.LibVLC.Media,VideoLAN.LibVLC.MediaTrackInfo)">
             <summary>Get media descriptor's elementary streams description</summary>
             <param name="p_md">media descriptor object</param>
             <param name="tracks">
@@ -3290,13 +3290,13 @@
             <para>Use libvlc_media_tracks_get() instead</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaListAddFileContent(libvlcsharp.MediaList,System.String)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaListAddFileContent(VideoLAN.LibVLC.MediaList,System.String)">
             <summary>@{</summary>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaDiscovererNewFromName(libvlcsharp.Instance,System.String)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaDiscovererNewFromName(VideoLAN.LibVLC.Instance,System.String)">
             <remarks>Use libvlc_media_discoverer_new() and libvlc_media_discoverer_start().</remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaDiscovererLocalizedName(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaDiscovererLocalizedName(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Get media service discover object its localized name.</summary>
             <param name="p_mdis">media discover object</param>
             <returns>localized name or NULL if the media_discoverer is not started</returns>
@@ -3305,7 +3305,7 @@
             <para>longname of the service discovery.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcMediaDiscovererEventManager(libvlcsharp.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaDiscovererEventManager(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Get event manager from media service discover object.</summary>
             <param name="p_mdis">media service discover object</param>
             <returns>event manager object.</returns>
@@ -3314,7 +3314,7 @@
             <para>libvlc_media_discoverer_start() and libvlc_media_discoverer_stop().</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcWait(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcWait(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Waits until an interface causes the instance to exit.</para>
             <para>You should start at least one interface first, using libvlc_add_intf().</para>
@@ -3325,7 +3325,7 @@
             <para>libvlc_set_exit_handler() should be used instead.</para>
             </remarks>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcGetLogVerbosity(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcGetLogVerbosity(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Always returns minus one.</para>
             <para>This function is only provided for backward compatibility.</para>
@@ -3333,7 +3333,7 @@
             <param name="p_instance">ignored</param>
             <returns>always -1</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcSetLogVerbosity(libvlcsharp.Instance,System.UInt32)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcSetLogVerbosity(VideoLAN.LibVLC.Instance,System.UInt32)">
             <summary>
             <para>This function does nothing.</para>
             <para>It is only provided for backward compatibility.</para>
@@ -3341,7 +3341,7 @@
             <param name="p_instance">ignored</param>
             <param name="level">ignored</param>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogOpen(libvlcsharp.Instance)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogOpen(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>This function does nothing useful.</para>
             <para>It is only provided for backward compatibility.</para>
@@ -3349,11 +3349,11 @@
             <param name="p_instance">libvlc instance</param>
             <returns>an unique pointer or NULL on error</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogClose(libvlcsharp.Log)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogClose(VideoLAN.LibVLC.Log)">
             <summary>Frees memory allocated by libvlc_log_open().</summary>
             <param name="p_log">libvlc log instance or NULL</param>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogCount(libvlcsharp.Log)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogCount(VideoLAN.LibVLC.Log)">
             <summary>
             <para>Always returns zero.</para>
             <para>This function is only provided for backward compatibility.</para>
@@ -3361,14 +3361,14 @@
             <param name="p_log">ignored</param>
             <returns>always zero</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogClear(libvlcsharp.Log)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogClear(VideoLAN.LibVLC.Log)">
             <summary>
             <para>This function does nothing.</para>
             <para>It is only provided for backward compatibility.</para>
             </summary>
             <param name="p_log">ignored</param>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogGetIterator(libvlcsharp.Log)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogGetIterator(VideoLAN.LibVLC.Log)">
             <summary>
             <para>This function does nothing useful.</para>
             <para>It is only provided for backward compatibility.</para>
@@ -3376,11 +3376,11 @@
             <param name="p_log">ignored</param>
             <returns>an unique pointer or NULL on error or if the parameter was NULL</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogIteratorFree(libvlcsharp.LogIterator)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogIteratorFree(VideoLAN.LibVLC.LogIterator)">
             <summary>Frees memory allocated by libvlc_log_get_iterator().</summary>
             <param name="p_iter">libvlc log iterator or NULL</param>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogIteratorHasNext(libvlcsharp.LogIterator)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogIteratorHasNext(VideoLAN.LibVLC.LogIterator)">
             <summary>
             <para>Always returns zero.</para>
             <para>This function is only provided for backward compatibility.</para>
@@ -3388,7 +3388,7 @@
             <param name="p_iter">ignored</param>
             <returns>always zero</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcLogIteratorNext(libvlcsharp.LogIterator,libvlcsharp.LogMessage)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcLogIteratorNext(VideoLAN.LibVLC.LogIterator,VideoLAN.LibVLC.LogMessage)">
             <summary>
             <para>Always returns NULL.</para>
             <para>This function is only provided for backward compatibility.</para>
@@ -3397,7 +3397,7 @@
             <param name="p_buf">ignored</param>
             <returns>always NULL</returns>
         </member>
-        <member name="M:libvlcsharp.deprecated.LibvlcPlaylistPlay(libvlcsharp.Instance,System.Int32,System.Int32,System.SByte**)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcPlaylistPlay(VideoLAN.LibVLC.Instance,System.Int32,System.Int32,System.SByte**)">
             <summary>Start playing (if there is any item in the playlist).</summary>
             <param name="p_instance">the playlist instance</param>
             <param name="i_id">

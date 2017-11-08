@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
 
@@ -76,6 +78,67 @@ namespace Bindings.Tests
                 //Debug.WriteLine(audioOutputDevice.Description);
                 Debug.WriteLine(audioOutputDevice.Device);
             }
+        }
+
+        [Test]
+        public void EqualityTests()
+        {
+            var instance1 = new Instance(0, null);
+            var instance2 = new Instance(0, null);
+            Assert.True(instance1 != instance2);
+        }
+
+        [Test]
+        public void Categories()
+        {
+            var instance = new Instance(0, null);
+            var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
+            var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
+            var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
+        }
+
+        [Test]
+        public void SetExitHandler()
+        {
+            var instance = new Instance(0, null);
+            var called = false;
+
+            var exitCb = new ExitCallback(() =>
+            {
+                called = true;
+            });
+
+            instance.SetExitHandler(exitCb, IntPtr.Zero);
+
+            instance.Dispose();
+
+            Assert.IsTrue(called);
+        }
+
+        [Test]
+        public async Task SetLogCallback()
+        {
+            var instance = new Instance(0, null);
+            var logCallbackCalled = false;
+
+            void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
+
+            instance.Log += LogCallback;
+
+            await Task.Delay(1000);
+
+            instance.Log -= LogCallback;
+
+            Assert.IsTrue(logCallbackCalled);
+        }
+        
+        [Test]
+        public void SetLogFile()
+        {
+            Assert.Inconclusive();
+            var instance = new Instance(0, null);
+            var path = Path.GetTempFileName();
+            instance.SetLogFile(new FileStream(path, FileMode.OpenOrCreate));
         }
     }
 }

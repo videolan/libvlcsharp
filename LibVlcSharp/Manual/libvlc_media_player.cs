@@ -929,7 +929,7 @@ namespace VideoLAN.LibVLC
             __Instance = IntPtr.Zero;
         }
 
-        //public string Name => Marshal.PtrToStringAnsi(((Internal *) __Instance)->psz_name);
+        //public string Name => Marshal.PtrToStringAnsi(((Internal *) NativeReference)->psz_name);
         public string Name => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal *) __Instance)->psz_name);
       
         public string Description => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)__Instance)->psz_description);
