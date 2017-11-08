@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using libvlcsharp;
 using NUnit.Framework;
 
@@ -101,7 +103,7 @@ namespace Bindings.Tests
             var instance = new Instance(0, null);
             var called = false;
 
-            var exitCb = new Instance.ExitCallback(() =>
+            var exitCb = new ExitCallback(() =>
             {
                 called = true;
             });
@@ -111,6 +113,32 @@ namespace Bindings.Tests
             instance.Dispose();
 
             Assert.IsTrue(called);
+        }
+
+        [Test]
+        public async Task SetLogCallback()
+        {
+            var instance = new Instance(0, null);
+            var logCallbackCalled = false;
+
+            void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
+
+            instance.Log += LogCallback;
+
+            await Task.Delay(1000);
+
+            instance.Log -= LogCallback;
+
+            Assert.IsTrue(logCallbackCalled);
+        }
+        
+        [Test]
+        public void SetLogFile()
+        {
+            Assert.Inconclusive();
+            var instance = new Instance(0, null);
+            var path = Path.GetTempFileName();
+            instance.SetLogFile(new FileStream(path, FileMode.OpenOrCreate));
         }
     }
 }

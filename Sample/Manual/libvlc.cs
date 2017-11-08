@@ -330,11 +330,7 @@ namespace libvlcsharp
                 EntryPoint="libvlc_event_type_name")]
             internal static extern global::System.IntPtr LibvlcEventTypeName(int event_type);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_log_get_context")]
-            internal static extern void LibvlcLogGetContext(global::System.IntPtr ctx, sbyte** module, sbyte** file, uint* line);
-
+        
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_log_get_object")]
@@ -488,31 +484,6 @@ namespace libvlcsharp
             return Marshal.PtrToStringAnsi(__ret);
         }
 
-        /// <summary>Gets log message debug infos.</summary>
-        /// <param name="ctx">message context (as passed to the</param>
-        /// <param name="module">module name storage (or NULL) [OUT]</param>
-        /// <param name="file">source code file name storage (or NULL) [OUT]</param>
-        /// <param name="line">source code file line number storage (or NULL) [OUT]</param>
-        /// <remarks>
-        /// <para>This function retrieves self-debug information about a log message:</para>
-        /// <para>- the name of the VLC module emitting the message,</para>
-        /// <para>- the name of the source code module (i.e. file) and</para>
-        /// <para>- the line number within the source code module.</para>
-        /// <para>The returned module name and file name will be NULL if unknown.</para>
-        /// <para>The returned line number will similarly be zero if unknown.</para>
-        /// <para>The returned module name and source code file name, if non-NULL,</para>
-        /// <para>are only valid until the logging callback returns.</para>
-        /// <para>LibVLC 2.1.0 or later</para>
-        /// </remarks>
-        public static void LibvlcLogGetContext(global::libvlcsharp.Log ctx, sbyte** module, sbyte** file, ref uint line)
-        {
-            var __arg0 = ReferenceEquals(ctx, null) ? global::System.IntPtr.Zero : ctx.__Instance;
-            fixed (uint* __refParamPtr3 = &line)
-            {
-                var __arg3 = __refParamPtr3;
-                __Internal.LibvlcLogGetContext(__arg0, module, file, __arg3);
-            }
-        }
 
         /// <summary>Gets log message info.</summary>
         /// <param name="ctx">message context (as passed to the</param>
