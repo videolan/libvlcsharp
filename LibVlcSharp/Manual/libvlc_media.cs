@@ -10,37 +10,6 @@ using System.Security;
 
 namespace VideoLAN.LibVLC
 {
-    /// <summary>Meta data types</summary>
-    public enum MetadataType
-    {
-        Title = 0,
-        Artist = 1,
-        Genre = 2,
-        Copyright = 3,
-        Album = 4,
-        TrackNumber = 5,
-        Description = 6,
-        Rating = 7,
-        Date = 8,
-        Setting = 9,
-        URL = 10,
-        Language = 11,
-        NowPlaying = 12,
-        Publisher = 13,
-        EncodedBy = 14,
-        ArtworkURL = 15,
-        TrackID = 16,
-        TrackTotal = 17,
-        Director = 18,
-        Season = 19,
-        Episode = 20,
-        ShowName = 21,
-        Actors = 22,
-        AlbumArtist = 23,
-        DiscNumber = 24,
-        DiscTotal = 25
-    }
-
     public enum TrackType
     {
         Unknown = -1,
@@ -106,54 +75,10 @@ namespace VideoLAN.LibVLC
         CubemapLayoutStandard = 256
     }
 
-    /// <summary>Media type</summary>
-    /// <remarks>libvlc_media_get_type</remarks>
-    public enum MediaType
-    {
-        Unknown = 0,
-        File = 1,
-        Directory = 2,
-        Disc = 3,
-        Stream = 4,
-        Playlist = 5
-    }
+    
+    
 
-    /// <summary>Parse flags used by libvlc_media_parse_with_options()</summary>
-    /// <remarks>libvlc_media_parse_with_options</remarks>
-    [Flags]
-    public enum MediaParseOptions
-    {
-        /// <summary>Parse media if it's a local file</summary>
-        ParseLocal = 0,
-        /// <summary>Parse media even if it's a network file</summary>
-        ParseNetwork = 1,
-        /// <summary>Fetch meta and covert art using local resources</summary>
-        FetchLocal = 2,
-        /// <summary>Fetch meta and covert art using network resources</summary>
-        FetchNetwork = 4,
-        /// <summary>
-        /// <para>Interact with the user (via libvlc_dialog_cbs) when preparsing this item</para>
-        /// <para>(and not its sub items). Set this flag in order to receive a callback</para>
-        /// <para>when the input is asking for credentials.</para>
-        /// </summary>
-        DoInteract = 8
-    }
-
-    /// <summary>
-    /// <para>Parse status used sent by libvlc_media_parse_with_options() or returned by</para>
-    /// <para>libvlc_media_get_parsed_status()</para>
-    /// </summary>
-    /// <remarks>
-    /// <para>libvlc_media_parse_with_options</para>
-    /// <para>libvlc_media_get_parsed_status</para>
-    /// </remarks>
-    public enum MediaParsedStatus
-    {
-        Skipped = 1,
-        Failed = 2,
-        Timeout = 3,
-        Done = 4
-    }
+   
 
     /// <summary>Type of a media slave: subtitle or audio.</summary>
     public enum MediaSlaveType
@@ -162,109 +87,53 @@ namespace VideoLAN.LibVLC
         Audio = 1
     }
 
-    /// <summary>
-    /// <para>It consists of a media location and various optional meta data.</para>
-    /// <para>@{</para>
-    /// <para></para>
-    /// <para>LibVLC media item/descriptor external API</para>
-    /// </summary>
-    /// <summary>Callback prototype to open a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as passed to libvlc_media_new_callbacks()</param>
-    /// <param name="datap">storage space for a private data pointer [OUT]</param>
-    /// <param name="sizep">byte length of the bitstream or UINT64_MAX if unknown [OUT]</param>
-    /// <returns>
-    /// <para>0 on success, non-zero on error. In case of failure, the other</para>
-    /// <para>callbacks will not be invoked and any value stored in *datap and *sizep is</para>
-    /// <para>discarded.</para>
-    /// </returns>
-    /// <remarks>
-    /// <para>The same media item can be opened multiple times. Each time, this callback</para>
-    /// <para>is invoked. It should allocate and initialize any instance-specific</para>
-    /// <para>resources, then store them in *datap. The instance resources can be freed</para>
-    /// <para>in the</para>
-    /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
-    /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate int LibvlcMediaOpenCb(global::System.IntPtr opaque, void** datap, ulong* sizep);
+    
+    //public unsafe partial class Media
+    //{
+    //    [StructLayout(LayoutKind.Explicit, Size = 0)]
+    //    public partial struct __Internal
+    //    {
+    //    }
 
-    /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <param name="buf">start address of the buffer to read data into</param>
-    /// <param name="len">bytes length of the buffer</param>
-    /// <returns>
-    /// <para>strictly positive number of bytes read, 0 on end-of-stream,</para>
-    /// <para>or -1 on non-recoverable error</para>
-    /// </returns>
-    /// <remarks>
-    /// <para>callback</para>
-    /// <para>If no data is immediately available, then the callback should sleep.</para>
-    /// <para>The application is responsible for avoiding deadlock situations.</para>
-    /// <para>In particular, the callback should return an error if playback is stopped;</para>
-    /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
-    /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate long LibvlcMediaReadCb(global::System.IntPtr opaque, byte* buf, ulong len);
+    //    public global::System.IntPtr __Instance { get; protected set; }
 
-    /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <param name="offset">absolute byte offset to seek to</param>
-    /// <returns>0 on success, -1 on error.</returns>
-    /// <remarks>callback</remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate int LibvlcMediaSeekCb(global::System.IntPtr opaque, ulong offset);
+    //    protected int __PointerAdjustment;
+    //    internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media>();
+    //    protected void*[] __OriginalVTables;
 
-    /// <summary>Callback prototype to close a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <remarks>callback</remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
-    public unsafe delegate void LibvlcMediaCloseCb(global::System.IntPtr opaque);
+    //    protected bool __ownsNativeInstance;
 
-    public unsafe partial class Media
-    {
-        [StructLayout(LayoutKind.Explicit, Size = 0)]
-        public partial struct __Internal
-        {
-        }
+    //    internal static global::VideoLAN.LibVLC.Media __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+    //    {
+    //        return new global::VideoLAN.LibVLC.Media(native.ToPointer(), skipVTables);
+    //    }
 
-        public global::System.IntPtr __Instance { get; protected set; }
+    //    internal static global::VideoLAN.LibVLC.Media __CreateInstance(global::VideoLAN.LibVLC.Media.__Internal native, bool skipVTables = false)
+    //    {
+    //        return new global::VideoLAN.LibVLC.Media(native, skipVTables);
+    //    }
 
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media>();
-        protected void*[] __OriginalVTables;
+    //    private static void* __CopyValue(global::VideoLAN.LibVLC.Media.__Internal native)
+    //    {
+    //        var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.Media.__Internal));
+    //        *(global::VideoLAN.LibVLC.Media.__Internal*) ret = native;
+    //        return ret.ToPointer();
+    //    }
 
-        protected bool __ownsNativeInstance;
+    //    private Media(global::VideoLAN.LibVLC.Media.__Internal native, bool skipVTables = false)
+    //        : this(__CopyValue(native), skipVTables)
+    //    {
+    //        __ownsNativeInstance = true;
+    //        NativeToManagedMap[__Instance] = this;
+    //    }
 
-        internal static global::VideoLAN.LibVLC.Media __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.Media(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.Media __CreateInstance(global::VideoLAN.LibVLC.Media.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.Media(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.Media.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.Media.__Internal));
-            *(global::VideoLAN.LibVLC.Media.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private Media(global::VideoLAN.LibVLC.Media.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected Media(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-    }
+    //    protected Media(void* native, bool skipVTables = false)
+    //    {
+    //        if (native == null)
+    //            return;
+    //        __Instance = new global::System.IntPtr(native);
+    //    }
+    //}
 
     public unsafe partial class MediaList
     {
@@ -311,329 +180,14 @@ namespace VideoLAN.LibVLC
                 return;
             __Instance = new global::System.IntPtr(native);
         }
-    }
 
-    public unsafe partial class MediaStats : IDisposable
-    {
-        [StructLayout(LayoutKind.Explicit, Size = 60)]
-        public partial struct __Internal
+        public MediaList(IntPtr ptr)
         {
-            [FieldOffset(0)]
-            internal int i_read_bytes;
-
-            [FieldOffset(4)]
-            internal float f_input_bitrate;
-
-            [FieldOffset(8)]
-            internal int i_demux_read_bytes;
-
-            [FieldOffset(12)]
-            internal float f_demux_bitrate;
-
-            [FieldOffset(16)]
-            internal int i_demux_corrupted;
-
-            [FieldOffset(20)]
-            internal int i_demux_discontinuity;
-
-            [FieldOffset(24)]
-            internal int i_decoded_video;
-
-            [FieldOffset(28)]
-            internal int i_decoded_audio;
-
-            [FieldOffset(32)]
-            internal int i_displayed_pictures;
-
-            [FieldOffset(36)]
-            internal int i_lost_pictures;
-
-            [FieldOffset(40)]
-            internal int i_played_abuffers;
-
-            [FieldOffset(44)]
-            internal int i_lost_abuffers;
-
-            [FieldOffset(48)]
-            internal int i_sent_packets;
-
-            [FieldOffset(52)]
-            internal int i_sent_bytes;
-
-            [FieldOffset(56)]
-            internal float f_send_bitrate;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_media_stats_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaStats> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaStats>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.MediaStats __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaStats(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.MediaStats __CreateInstance(global::VideoLAN.LibVLC.MediaStats.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaStats(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.MediaStats.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaStats.__Internal));
-            *(global::VideoLAN.LibVLC.MediaStats.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private MediaStats(global::VideoLAN.LibVLC.MediaStats.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected MediaStats(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public MediaStats()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaStats.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public MediaStats(global::VideoLAN.LibVLC.MediaStats _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaStats.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.MediaStats.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.MediaStats __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public int IReadBytes
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_read_bytes;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_read_bytes = value;
-            }
-        }
-
-        public float FInputBitrate
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_input_bitrate;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_input_bitrate = value;
-            }
-        }
-
-        public int IDemuxReadBytes
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_read_bytes;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_read_bytes = value;
-            }
-        }
-
-        public float FDemuxBitrate
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_demux_bitrate;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_demux_bitrate = value;
-            }
-        }
-
-        public int IDemuxCorrupted
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_corrupted;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_corrupted = value;
-            }
-        }
-
-        public int IDemuxDiscontinuity
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_discontinuity;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_demux_discontinuity = value;
-            }
-        }
-
-        public int IDecodedVideo
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_decoded_video;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_decoded_video = value;
-            }
-        }
-
-        public int IDecodedAudio
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_decoded_audio;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_decoded_audio = value;
-            }
-        }
-
-        public int IDisplayedPictures
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_displayed_pictures;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_displayed_pictures = value;
-            }
-        }
-
-        public int ILostPictures
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_lost_pictures;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_lost_pictures = value;
-            }
-        }
-
-        public int IPlayedAbuffers
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_played_abuffers;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_played_abuffers = value;
-            }
-        }
-
-        public int ILostAbuffers
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_lost_abuffers;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_lost_abuffers = value;
-            }
-        }
-
-        public int ISentPackets
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_sent_packets;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_sent_packets = value;
-            }
-        }
-
-        public int ISentBytes
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_sent_bytes;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->i_sent_bytes = value;
-            }
-        }
-
-        public float FSendBitrate
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_send_bitrate;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaStats.__Internal*) __Instance)->f_send_bitrate = value;
-            }
+            __Instance = ptr;
         }
     }
+
+    
 
     public unsafe partial class MediaTrackInfo : IDisposable
     {
@@ -1282,947 +836,46 @@ namespace VideoLAN.LibVLC
             }
         }
     }
-
-    public unsafe partial class MediaTrack : IDisposable
-    {
-        [StructLayout(LayoutKind.Explicit, Size = 56)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal uint i_codec;
-
-            [FieldOffset(4)]
-            internal uint i_original_fourcc;
-
-            [FieldOffset(8)]
-            internal int i_id;
-
-            [FieldOffset(12)]
-            internal global::VideoLAN.LibVLC.TrackType i_type;
-
-            [FieldOffset(16)]
-            internal int i_profile;
-
-            [FieldOffset(20)]
-            internal int i_level;
-
-            [FieldOffset(24)]
-            internal global::VideoLAN.LibVLC.MediaTrack._.__Internal _;
-
-            [FieldOffset(32)]
-            internal uint i_bitrate;
-
-            [FieldOffset(40)]
-            internal global::System.IntPtr psz_language;
-
-            [FieldOffset(48)]
-            internal global::System.IntPtr psz_description;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_media_track_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public unsafe partial struct _
-        {
-            [StructLayout(LayoutKind.Explicit, Size = 8)]
-            public partial struct __Internal
-            {
-                [FieldOffset(0)]
-                internal global::System.IntPtr audio;
-
-                [FieldOffset(0)]
-                internal global::System.IntPtr video;
-
-                [FieldOffset(0)]
-                internal global::System.IntPtr subtitle;
-            }
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaTrack>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.MediaTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaTrack(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.MediaTrack __CreateInstance(global::VideoLAN.LibVLC.MediaTrack.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaTrack(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.MediaTrack.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaTrack.__Internal));
-            *(global::VideoLAN.LibVLC.MediaTrack.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private MediaTrack(global::VideoLAN.LibVLC.MediaTrack.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected MediaTrack(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public MediaTrack()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public MediaTrack(global::VideoLAN.LibVLC.MediaTrack _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.MediaTrack.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.MediaTrack __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public uint ICodec
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_codec;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_codec = value;
-            }
-        }
-
-        public uint IOriginalFourcc
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_original_fourcc;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_original_fourcc = value;
-            }
-        }
-
-        public int IId
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_id;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_id = value;
-            }
-        }
-
-        public global::VideoLAN.LibVLC.TrackType IType
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_type;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_type = value;
-            }
-        }
-
-        public int IProfile
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_profile;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_profile = value;
-            }
-        }
-
-        public int ILevel
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_level;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_level = value;
-            }
-        }
-
-        public uint IBitrate
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_bitrate;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->i_bitrate = value;
-            }
-        }
-
-        public sbyte* PszLanguage
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->psz_language;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->psz_language = (global::System.IntPtr) value;
-            }
-        }
-
-        public sbyte* PszDescription
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->psz_description;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaTrack.__Internal*) __Instance)->psz_description = (global::System.IntPtr) value;
-            }
-        }
-    }
-
+    
     /// <summary>A slave of a libvlc_media_t</summary>
     /// <remarks>libvlc_media_slaves_get</remarks>
-    public unsafe partial class MediaSlave : IDisposable
+    public struct MediaSlave 
     {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal global::System.IntPtr psz_uri;
-
-            [FieldOffset(8)]
-            internal global::VideoLAN.LibVLC.MediaSlaveType i_type;
-
-            [FieldOffset(12)]
-            internal uint i_priority;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_media_slave_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaSlave> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.MediaSlave>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.MediaSlave __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaSlave(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.MediaSlave __CreateInstance(global::VideoLAN.LibVLC.MediaSlave.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.MediaSlave(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.MediaSlave.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaSlave.__Internal));
-            *(global::VideoLAN.LibVLC.MediaSlave.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private MediaSlave(global::VideoLAN.LibVLC.MediaSlave.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected MediaSlave(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public MediaSlave()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaSlave.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public MediaSlave(global::VideoLAN.LibVLC.MediaSlave _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.MediaSlave.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.MediaSlave.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.MediaSlave __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public sbyte* PszUri
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->psz_uri;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->psz_uri = (global::System.IntPtr) value;
-            }
-        }
-
-        public global::VideoLAN.LibVLC.MediaSlaveType IType
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->i_type;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->i_type = value;
-            }
-        }
-
-        public uint IPriority
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->i_priority;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.MediaSlave.__Internal*) __Instance)->i_priority = value;
-            }
-        }
+        public IntPtr Uri;
+        public MediaSlaveType Type;
+        public uint Priority;
     }
-
+    
     public unsafe partial class libvlc_media
     {
         public partial struct __Internal
         {
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_new_location")]
-            internal static extern global::System.IntPtr LibvlcMediaNewLocation(global::System.IntPtr p_instance, [MarshalAs(UnmanagedType.LPStr)] string psz_mrl);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_new_path")]
-            internal static extern global::System.IntPtr LibvlcMediaNewPath(global::System.IntPtr p_instance, [MarshalAs(UnmanagedType.LPStr)] string path);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_new_fd")]
-            internal static extern global::System.IntPtr LibvlcMediaNewFd(global::System.IntPtr p_instance, int fd);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_new_callbacks")]
-            internal static extern global::System.IntPtr LibvlcMediaNewCallbacks(global::System.IntPtr instance, global::System.IntPtr open_cb, global::System.IntPtr read_cb, global::System.IntPtr seek_cb, global::System.IntPtr close_cb, global::System.IntPtr opaque);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_new_as_node")]
-            internal static extern global::System.IntPtr LibvlcMediaNewAsNode(global::System.IntPtr p_instance, [MarshalAs(UnmanagedType.LPStr)] string psz_name);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_add_option")]
-            internal static extern void LibvlcMediaAddOption(global::System.IntPtr p_md, [MarshalAs(UnmanagedType.LPStr)] string psz_options);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_add_option_flag")]
-            internal static extern void LibvlcMediaAddOptionFlag(global::System.IntPtr p_md, [MarshalAs(UnmanagedType.LPStr)] string psz_options, uint i_flags);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_retain")]
-            internal static extern void LibvlcMediaRetain(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_release")]
-            internal static extern void LibvlcMediaRelease(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_mrl")]
-            internal static extern sbyte* LibvlcMediaGetMrl(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_duplicate")]
-            internal static extern global::System.IntPtr LibvlcMediaDuplicate(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_meta")]
-            internal static extern sbyte* LibvlcMediaGetMeta(global::System.IntPtr p_md, global::VideoLAN.LibVLC.MetadataType e_meta);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_set_meta")]
-            internal static extern void LibvlcMediaSetMeta(global::System.IntPtr p_md, global::VideoLAN.LibVLC.MetadataType e_meta, [MarshalAs(UnmanagedType.LPStr)] string psz_value);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_save_meta")]
-            internal static extern int LibvlcMediaSaveMeta(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_state")]
-            internal static extern global::VideoLAN.LibVLC.VLCState LibvlcMediaGetState(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_stats")]
-            internal static extern int LibvlcMediaGetStats(global::System.IntPtr p_md, global::System.IntPtr p_stats);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_subitems")]
-            internal static extern global::System.IntPtr LibvlcMediaSubitems(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_event_manager")]
-            internal static extern global::System.IntPtr LibvlcMediaEventManager(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_duration")]
-            internal static extern long LibvlcMediaGetDuration(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_parse_with_options")]
-            internal static extern int LibvlcMediaParseWithOptions(global::System.IntPtr p_md, global::VideoLAN.LibVLC.MediaParseOptions parse_flag, int timeout);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_parse_stop")]
-            internal static extern void LibvlcMediaParseStop(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_parsed_status")]
-            internal static extern global::VideoLAN.LibVLC.MediaParsedStatus LibvlcMediaGetParsedStatus(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_set_user_data")]
-            internal static extern void LibvlcMediaSetUserData(global::System.IntPtr p_md, global::System.IntPtr p_new_user_data);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_user_data")]
-            internal static extern global::System.IntPtr LibvlcMediaGetUserData(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_tracks_get")]
-            internal static extern uint LibvlcMediaTracksGet(global::System.IntPtr p_md, global::System.IntPtr tracks);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_media_get_codec_description")]
             internal static extern global::System.IntPtr LibvlcMediaGetCodecDescription(global::VideoLAN.LibVLC.TrackType i_type, uint i_codec);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_tracks_release")]
-            internal static extern void LibvlcMediaTracksRelease(global::System.IntPtr p_tracks, uint i_count);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_get_type")]
-            internal static extern global::VideoLAN.LibVLC.MediaType LibvlcMediaGetType(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_slaves_add")]
-            internal static extern int LibvlcMediaSlavesAdd(global::System.IntPtr p_md, global::VideoLAN.LibVLC.MediaSlaveType i_type, uint i_priority, [MarshalAs(UnmanagedType.LPStr)] string psz_uri);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_slaves_clear")]
-            internal static extern void LibvlcMediaSlavesClear(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_slaves_get")]
-            internal static extern uint LibvlcMediaSlavesGet(global::System.IntPtr p_md, global::System.IntPtr ppp_slaves);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_slaves_release")]
-            internal static extern void LibvlcMediaSlavesRelease(global::System.IntPtr pp_slaves, uint i_count);
         }
+        
+       
 
-        /// <summary>
-        /// <para>Create a media with a certain given media resource location,</para>
-        /// <para>for instance a valid URL.</para>
-        /// </summary>
-        /// <param name="p_instance">the instance</param>
-        /// <param name="psz_mrl">the media location</param>
-        /// <returns>the newly created media or NULL on error</returns>
-        /// <remarks>
-        /// <para>To refer to a local file with this function,</para>
-        /// <para>the file://... URI syntaxmustbe used (see IETF RFC3986).</para>
-        /// <para>We recommend using libvlc_media_new_path() instead when dealing with</para>
-        /// <para>local files.</para>
-        /// <para>libvlc_media_release</para>
-        /// </remarks>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaNewLocation(global::VideoLAN.LibVLC.Instance p_instance, string psz_mrl)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcMediaNewLocation(__arg0, psz_mrl);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
+            
 
-        /// <summary>Create a media for a certain file path.</summary>
-        /// <param name="p_instance">the instance</param>
-        /// <param name="path">local filesystem path</param>
-        /// <returns>the newly created media or NULL on error</returns>
-        /// <remarks>libvlc_media_release</remarks>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaNewPath(global::VideoLAN.LibVLC.Instance p_instance, string path)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcMediaNewPath(__arg0, path);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>
-        /// <para>Create a media for an already open file descriptor.</para>
-        /// <para>The file descriptor shall be open for reading (or reading and writing).</para>
-        /// </summary>
-        /// <param name="p_instance">the instance</param>
-        /// <param name="fd">open file descriptor</param>
-        /// <returns>the newly created media or NULL on error</returns>
-        /// <remarks>
-        /// <para>Regular file descriptors, pipe read descriptors and character device</para>
-        /// <para>descriptors (including TTYs) are supported on all platforms.</para>
-        /// <para>Block device descriptors are supported where available.</para>
-        /// <para>Directory descriptors are supported on systems that provide fdopendir().</para>
-        /// <para>Sockets are supported on all platforms where they are file descriptors,</para>
-        /// <para>i.e. all except Windows.</para>
-        /// <para>This library willnotautomatically close the file descriptor</para>
-        /// <para>under any circumstance. Nevertheless, a file descriptor can usually only be</para>
-        /// <para>rendered once in a media player. To render it a second time, the file</para>
-        /// <para>descriptor should probably be rewound to the beginning with lseek().</para>
-        /// <para>libvlc_media_release</para>
-        /// <para>LibVLC 1.1.5 and later.</para>
-        /// </remarks>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaNewFd(global::VideoLAN.LibVLC.Instance p_instance, int fd)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcMediaNewFd(__arg0, fd);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>Create a media with custom callbacks to read the data from.</summary>
-        /// <param name="instance">LibVLC instance</param>
-        /// <param name="open_cb">callback to open the custom bitstream input media</param>
-        /// <param name="read_cb">callback to read data (must not be NULL)</param>
-        /// <param name="seek_cb">callback to seek, or NULL if seeking is not supported</param>
-        /// <param name="close_cb">callback to close the media, or NULL if unnecessary</param>
-        /// <param name="opaque">data pointer for the open callback</param>
-        /// <returns>the newly created media or NULL on error</returns>
-        /// <remarks>
-        /// <para>If open_cb is NULL, the opaque pointer will be passed to read_cb,</para>
-        /// <para>seek_cb and close_cb, and the stream size will be treated as unknown.</para>
-        /// <para>The callbacks may be called asynchronously (from another thread).</para>
-        /// <para>A single stream instance need not be reentrant. However the open_cb needs to</para>
-        /// <para>be reentrant if the media is used by multiple player instances.</para>
-        /// <para>The callbacks may be used until all or any player instances</para>
-        /// <para>that were supplied the media item are stopped.</para>
-        /// <para>libvlc_media_release</para>
-        /// <para>LibVLC 3.0.0 and later.</para>
-        /// </remarks>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaNewCallbacks(global::VideoLAN.LibVLC.Instance instance, global::VideoLAN.LibVLC.LibvlcMediaOpenCb open_cb, global::VideoLAN.LibVLC.LibvlcMediaReadCb read_cb, global::VideoLAN.LibVLC.LibvlcMediaSeekCb seek_cb, global::VideoLAN.LibVLC.LibvlcMediaCloseCb close_cb, global::System.IntPtr opaque)
-        {
-            var __arg0 = ReferenceEquals(instance, null) ? global::System.IntPtr.Zero : instance.NativeReference;
-            var __arg1 = open_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(open_cb);
-            var __arg2 = read_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(read_cb);
-            var __arg3 = seek_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(seek_cb);
-            var __arg4 = close_cb == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(close_cb);
-            var __ret = __Internal.LibvlcMediaNewCallbacks(__arg0, __arg1, __arg2, __arg3, __arg4, opaque);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>Create a media as an empty node with a given name.</summary>
-        /// <param name="p_instance">the instance</param>
-        /// <param name="psz_name">the name of the node</param>
-        /// <returns>the new empty media or NULL on error</returns>
-        /// <remarks>libvlc_media_release</remarks>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaNewAsNode(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcMediaNewAsNode(__arg0, psz_name);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>Add an option to the media.</summary>
-        /// <param name="p_md">the media descriptor</param>
-        /// <param name="psz_options">the options (as a string)</param>
-        /// <remarks>
-        /// <para>This option will be used to determine how the media_player will</para>
-        /// <para>read the media. This allows to use VLC's advanced</para>
-        /// <para>reading/streaming options on a per-media basis.</para>
-        /// <para>The options are listed in 'vlc --long-help' from the command line,</para>
-        /// <para>e.g. &quot;-sout-all&quot;. Keep in mind that available options and their semantics</para>
-        /// <para>vary across LibVLC versions and builds.</para>
-        /// <para>Not all options affects libvlc_media_t objects:</para>
-        /// <para>Specifically, due to architectural issues most audio and video options,</para>
-        /// <para>such as text renderer options, have no effects on an individual media.</para>
-        /// <para>These options must be set through libvlc_new() instead.</para>
-        /// </remarks>
-        public static void LibvlcMediaAddOption(global::VideoLAN.LibVLC.Media p_md, string psz_options)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaAddOption(__arg0, psz_options);
-        }
-
-        /// <summary>Add an option to the media with configurable flags.</summary>
-        /// <param name="p_md">the media descriptor</param>
-        /// <param name="psz_options">the options (as a string)</param>
-        /// <param name="i_flags">the flags for this option</param>
-        /// <remarks>
-        /// <para>This option will be used to determine how the media_player will</para>
-        /// <para>read the media. This allows to use VLC's advanced</para>
-        /// <para>reading/streaming options on a per-media basis.</para>
-        /// <para>The options are detailed in vlc --long-help, for instance</para>
-        /// <para>&quot;--sout-all&quot;. Note that all options are not usable on medias:</para>
-        /// <para>specifically, due to architectural issues, video-related options</para>
-        /// <para>such as text renderer options cannot be set on a single media. They</para>
-        /// <para>must be set on the whole libvlc instance instead.</para>
-        /// </remarks>
-        public static void LibvlcMediaAddOptionFlag(global::VideoLAN.LibVLC.Media p_md, string psz_options, uint i_flags)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaAddOptionFlag(__arg0, psz_options, i_flags);
-        }
-
-        /// <summary>
-        /// <para>Retain a reference to a media descriptor object (libvlc_media_t). Use</para>
-        /// <para>libvlc_media_release() to decrement the reference count of a</para>
-        /// <para>media descriptor object.</para>
-        /// </summary>
-        /// <param name="p_md">the media descriptor</param>
-        public static void LibvlcMediaRetain(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaRetain(__arg0);
-        }
-
-        /// <summary>
-        /// <para>Decrement the reference count of a media descriptor object. If the</para>
-        /// <para>reference count is 0, then libvlc_media_release() will release the</para>
-        /// <para>media descriptor object. It will send out an libvlc_MediaFreed event</para>
-        /// <para>to all listeners. If the media descriptor object has been released it</para>
-        /// <para>should not be used again.</para>
-        /// </summary>
-        /// <param name="p_md">the media descriptor</param>
-        public static void LibvlcMediaRelease(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaRelease(__arg0);
-        }
-
-        /// <summary>Get the media resource locator (mrl) from a media descriptor object</summary>
-        /// <param name="p_md">a media descriptor object</param>
-        /// <returns>string with mrl of media descriptor object</returns>
-        public static sbyte* LibvlcMediaGetMrl(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetMrl(__arg0);
-            return __ret;
-        }
-
-        /// <summary>Duplicate a media descriptor object.</summary>
-        /// <param name="p_md">a media descriptor object.</param>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaDuplicate(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaDuplicate(__arg0);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>Read the meta of the media.</summary>
-        /// <param name="p_md">the media descriptor</param>
-        /// <param name="e_meta">the meta to read</param>
-        /// <returns>the media's meta</returns>
-        /// <remarks>
-        /// <para>If the media has not yet been parsed this will return NULL.</para>
-        /// <para>libvlc_media_parse</para>
-        /// <para>libvlc_media_parse_with_options</para>
-        /// <para>libvlc_MediaMetaChanged</para>
-        /// </remarks>
-        public static sbyte* LibvlcMediaGetMeta(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MetadataType e_meta)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetMeta(__arg0, e_meta);
-            return __ret;
-        }
-
-        /// <summary>
-        /// <para>Set the meta of the media (this function will not save the meta, call</para>
-        /// <para>libvlc_media_save_meta in order to save the meta)</para>
-        /// </summary>
-        /// <param name="p_md">the media descriptor</param>
-        /// <param name="e_meta">the meta to write</param>
-        /// <param name="psz_value">the media's meta</param>
-        public static void LibvlcMediaSetMeta(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MetadataType e_meta, string psz_value)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaSetMeta(__arg0, e_meta, psz_value);
-        }
-
-        /// <summary>Save the meta previously set</summary>
-        /// <param name="p_md">the media desriptor</param>
-        /// <returns>true if the write operation was successful</returns>
-        public static int LibvlcMediaSaveMeta(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaSaveMeta(__arg0);
-            return __ret;
-        }
-
-        /// <summary>
-        /// <para>Get current state of media descriptor object. Possible media states are</para>
-        /// <para>libvlc_NothingSpecial=0, libvlc_Opening, libvlc_Playing, libvlc_Paused,</para>
-        /// <para>libvlc_Stopped, libvlc_Ended, libvlc_Error.</para>
-        /// </summary>
-        /// <param name="p_md">a media descriptor object</param>
-        /// <returns>state of media descriptor object</returns>
-        /// <remarks>libvlc_state_t</remarks>
-        public static global::VideoLAN.LibVLC.VLCState LibvlcMediaGetState(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetState(__arg0);
-            return __ret;
-        }
-
-        /// <summary>Get the current statistics about the media</summary>
-        /// <param name="p_md:">media descriptor object</param>
-        /// <param name="p_stats:">
-        /// <para>structure that contain the statistics about the media</para>
-        /// <para>(this structure must be allocated by the caller)</para>
-        /// </param>
-        /// <returns>true if the statistics are available, false otherwise</returns>
-        public static int LibvlcMediaGetStats(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MediaStats p_stats)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __arg1 = ReferenceEquals(p_stats, null) ? global::System.IntPtr.Zero : p_stats.__Instance;
-            var __ret = __Internal.LibvlcMediaGetStats(__arg0, __arg1);
-            return __ret;
-        }
-
-        /// <summary>
-        /// <para>Get subitems of media descriptor object. This will increment</para>
-        /// <para>the reference count of supplied media descriptor object. Use</para>
-        /// <para>libvlc_media_list_release() to decrement the reference counting.</para>
-        /// </summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <returns>list of media descriptor subitems or NULL</returns>
-        public static global::VideoLAN.LibVLC.MediaList LibvlcMediaSubitems(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaSubitems(__arg0);
-            global::VideoLAN.LibVLC.MediaList __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.MediaList.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.MediaList) global::VideoLAN.LibVLC.MediaList.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.MediaList.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>
-        /// <para>Get event manager from media descriptor object.</para>
-        /// <para>NOTE: this function doesn't increment reference counting.</para>
-        /// </summary>
-        /// <param name="p_md">a media descriptor object</param>
-        /// <returns>event manager object</returns>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcMediaEventManager(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
-
-        /// <summary>Get duration (in ms) of media descriptor object item.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <returns>duration of media item or -1 on error</returns>
-        public static long LibvlcMediaGetDuration(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetDuration(__arg0);
-            return __ret;
-        }
-
-        /// <summary>Parse the media asynchronously with options.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <param name="parse_flag">parse options:</param>
-        /// <param name="timeout">
-        /// <para>maximum time allowed to preparse the media. If -1, the</para>
-        /// <para>default &quot;preparse-timeout&quot; option will be used as a timeout. If 0, it will</para>
-        /// <para>wait indefinitely. If &gt; 0, the timeout will be used (in milliseconds).</para>
-        /// </param>
-        /// <returns>-1 in case of error, 0 otherwise</returns>
-        /// <remarks>
-        /// <para>This fetches (local or network) art, meta data and/or tracks information.</para>
-        /// <para>This method is the extended version of libvlc_media_parse_with_options().</para>
-        /// <para>To track when this is over you can listen to libvlc_MediaParsedChanged</para>
-        /// <para>event. However if this functions returns an error, you will not receive any</para>
-        /// <para>events.</para>
-        /// <para>It uses a flag to specify parse options (see libvlc_media_parse_flag_t). All</para>
-        /// <para>these flags can be combined. By default, media is parsed if it's a local</para>
-        /// <para>file.</para>
-        /// <para>Parsing can be aborted with libvlc_media_parse_stop().</para>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// <para>libvlc_media_get_meta</para>
-        /// <para>libvlc_media_tracks_get</para>
-        /// <para>libvlc_media_get_parsed_status</para>
-        /// <para>libvlc_media_parse_flag_t</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public static int LibvlcMediaParseWithOptions(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MediaParseOptions parse_flag, int timeout)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaParseWithOptions(__arg0, parse_flag, timeout);
-            return __ret;
-        }
-
-        /// <summary>Stop the parsing of the media</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <remarks>
-        /// <para>When the media parsing is stopped, the libvlc_MediaParsedChanged event will</para>
-        /// <para>be sent with the libvlc_media_parsed_status_timeout status.</para>
-        /// <para>libvlc_media_parse_with_options</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public static void LibvlcMediaParseStop(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaParseStop(__arg0);
-        }
-
-        /// <summary>Get Parsed status for media descriptor object.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <returns>a value of the libvlc_media_parsed_status_t enum</returns>
-        /// <remarks>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// <para>libvlc_media_parsed_status_t</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public static global::VideoLAN.LibVLC.MediaParsedStatus LibvlcMediaGetParsedStatus(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetParsedStatus(__arg0);
-            return __ret;
-        }
-
+        ///// <summary>
+        ///// <para>Retain a reference to a media descriptor object (libvlc_media_t). Use</para>
+        ///// <para>libvlc_media_release() to decrement the reference count of a</para>
+        ///// <para>media descriptor object.</para>
+        ///// </summary>
+        ///// <param name="p_md">the media descriptor</param>
+        //public static void LibvlcMediaRetain(global::VideoLAN.LibVLC.Media p_md)
+        //{
+        //    var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
+        //    __Internal.LibvlcMediaRetain(__arg0);
+        //}
+      
+        
+       
+        
+      
         /// <summary>
         /// <para>Sets media descriptor's user_data. user_data is specialized data</para>
         /// <para>accessed by the host application, VLC.framework uses it as a pointer to</para>
@@ -2230,46 +883,26 @@ namespace VideoLAN.LibVLC
         /// </summary>
         /// <param name="p_md">media descriptor object</param>
         /// <param name="p_new_user_data">pointer to user data</param>
-        public static void LibvlcMediaSetUserData(global::VideoLAN.LibVLC.Media p_md, global::System.IntPtr p_new_user_data)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaSetUserData(__arg0, p_new_user_data);
-        }
+        //public static void LibvlcMediaSetUserData(global::VideoLAN.LibVLC.Media p_md, global::System.IntPtr p_new_user_data)
+        //{
+        //    var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
+        //    __Internal.LibvlcMediaSetUserData(__arg0, p_new_user_data);
+        //}
 
-        /// <summary>
-        /// <para>Get media descriptor's user_data. user_data is specialized data</para>
-        /// <para>accessed by the host application, VLC.framework uses it as a pointer to</para>
-        /// <para>an native object that references a libvlc_media_t pointer</para>
-        /// </summary>
-        /// <param name="p_md">media descriptor object</param>
-        public static global::System.IntPtr LibvlcMediaGetUserData(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetUserData(__arg0);
-            return __ret;
-        }
+        ///// <summary>
+        ///// <para>Get media descriptor's user_data. user_data is specialized data</para>
+        ///// <para>accessed by the host application, VLC.framework uses it as a pointer to</para>
+        ///// <para>an native object that references a libvlc_media_t pointer</para>
+        ///// </summary>
+        ///// <param name="p_md">media descriptor object</param>
+        //public static global::System.IntPtr LibvlcMediaGetUserData(global::VideoLAN.LibVLC.Media p_md)
+        //{
+        //    var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
+        //    var __ret = __Internal.LibvlcMediaGetUserData(__arg0);
+        //    return __ret;
+        //}
 
-        /// <summary>Get media descriptor's elementary streams description</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <param name="tracks">
-        /// <para>address to store an allocated array of Elementary Streams</para>
-        /// <para>descriptions (must be freed with libvlc_media_tracks_release</para>
-        /// <para>by the caller) [OUT]</para>
-        /// </param>
-        /// <returns>the number of Elementary Streams (zero on error)</returns>
-        /// <remarks>
-        /// <para>Note, you need to call libvlc_media_parse() or play the media at least once</para>
-        /// <para>before calling this function.</para>
-        /// <para>Not doing this will result in an empty array.</para>
-        /// <para>LibVLC 2.1.0 and later.</para>
-        /// </remarks>
-        public static uint LibvlcMediaTracksGet(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MediaTrack tracks)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __arg1 = ReferenceEquals(tracks, null) ? global::System.IntPtr.Zero : tracks.__Instance;
-            var __ret = __Internal.LibvlcMediaTracksGet(__arg0, __arg1);
-            return __ret;
-        }
+       
 
         /// <summary>Get codec description from media elementary stream</summary>
         /// <param name="i_type">i_type from libvlc_media_track_t</param>
@@ -2284,94 +917,14 @@ namespace VideoLAN.LibVLC
             var __ret = __Internal.LibvlcMediaGetCodecDescription(i_type, i_codec);
             return Marshal.PtrToStringAnsi(__ret);
         }
+        
 
-        /// <summary>Release media descriptor's elementary streams description array</summary>
-        /// <param name="p_tracks">tracks info array to release</param>
-        /// <param name="i_count">number of elements in the array</param>
-        /// <remarks>LibVLC 2.1.0 and later.</remarks>
-        public static void LibvlcMediaTracksRelease(global::VideoLAN.LibVLC.MediaTrack p_tracks, uint i_count)
-        {
-            var __arg0 = ReferenceEquals(p_tracks, null) ? global::System.IntPtr.Zero : p_tracks.__Instance;
-            __Internal.LibvlcMediaTracksRelease(__arg0, i_count);
-        }
+      
 
-        /// <summary>Get the media type of the media descriptor object</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <returns>media type</returns>
-        /// <remarks>
-        /// <para>LibVLC 3.0.0 and later.</para>
-        /// <para>libvlc_media_type_t</para>
-        /// </remarks>
-        public static global::VideoLAN.LibVLC.MediaType LibvlcMediaGetType(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaGetType(__arg0);
-            return __ret;
-        }
+      
 
-        /// <summary>Add a slave to the current media.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <param name="i_type">subtitle or audio</param>
-        /// <param name="i_priority">from 0 (low priority) to 4 (high priority)</param>
-        /// <param name="psz_uri">Uri of the slave (should contain a valid scheme).</param>
-        /// <returns>0 on success, -1 on error.</returns>
-        /// <remarks>
-        /// <para>A slave is an external input source that may contains an additional subtitle</para>
-        /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
-        /// <para>This function must be called before the media is parsed (via</para>
-        /// <para>libvlc_media_parse_with_options()) or before the media is played (via</para>
-        /// <para>libvlc_media_player_play())</para>
-        /// <para>LibVLC 3.0.0 and later.</para>
-        /// </remarks>
-        public static int LibvlcMediaSlavesAdd(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MediaSlaveType i_type, uint i_priority, string psz_uri)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaSlavesAdd(__arg0, i_type, i_priority, psz_uri);
-            return __ret;
-        }
+        
 
-        /// <summary>
-        /// <para>Clear all slaves previously added by libvlc_media_slaves_add() or</para>
-        /// <para>internally.</para>
-        /// </summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcMediaSlavesClear(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaSlavesClear(__arg0);
-        }
-
-        /// <summary>Get a media descriptor's slave list</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <param name="ppp_slaves">
-        /// <para>address to store an allocated array of slaves (must be</para>
-        /// <para>freed with libvlc_media_slaves_release()) [OUT]</para>
-        /// </param>
-        /// <returns>the number of slaves (zero on error)</returns>
-        /// <remarks>
-        /// <para>The list will contain slaves parsed by VLC or previously added by</para>
-        /// <para>libvlc_media_slaves_add(). The typical use case of this function is to save</para>
-        /// <para>a list of slave in a database for a later use.</para>
-        /// <para>LibVLC 3.0.0 and later.</para>
-        /// <para>libvlc_media_slaves_add</para>
-        /// </remarks>
-        public static uint LibvlcMediaSlavesGet(global::VideoLAN.LibVLC.Media p_md, global::VideoLAN.LibVLC.MediaSlave ppp_slaves)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __arg1 = ReferenceEquals(ppp_slaves, null) ? global::System.IntPtr.Zero : ppp_slaves.__Instance;
-            var __ret = __Internal.LibvlcMediaSlavesGet(__arg0, __arg1);
-            return __ret;
-        }
-
-        /// <summary>Release a media descriptor's slave list</summary>
-        /// <param name="pp_slaves">slave array to release</param>
-        /// <param name="i_count">number of elements in the array</param>
-        /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcMediaSlavesRelease(global::VideoLAN.LibVLC.MediaSlave pp_slaves, uint i_count)
-        {
-            var __arg0 = ReferenceEquals(pp_slaves, null) ? global::System.IntPtr.Zero : pp_slaves.__Instance;
-            __Internal.LibvlcMediaSlavesRelease(__arg0, i_count);
-        }
+        
     }
 }

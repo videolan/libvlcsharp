@@ -309,20 +309,7 @@ namespace VideoLAN.LibVLC
                 EntryPoint = "libvlc_audio_output_set_device_type")]
             internal static extern void LibvlcAudioOutputSetDeviceType(global::System.IntPtr p_mp, int device_type);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_parse")]
-            internal static extern void LibvlcMediaParse(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_parse_async")]
-            internal static extern void LibvlcMediaParseAsync(global::System.IntPtr p_md);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_is_parsed")]
-            internal static extern int LibvlcMediaIsParsed(global::System.IntPtr p_md);
+            
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -588,59 +575,7 @@ namespace VideoLAN.LibVLC
             __Internal.LibvlcAudioOutputSetDeviceType(__arg0, device_type);
         }
 
-        /// <summary>Parse a media.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <remarks>
-        /// <para>This fetches (local) art, meta data and tracks information.</para>
-        /// <para>The method is synchronous.</para>
-        /// <para>This function could block indefinitely.</para>
-        /// <para>Use libvlc_media_parse_with_options() instead</para>
-        /// <para>libvlc_media_parse_with_options</para>
-        /// <para>libvlc_media_get_meta</para>
-        /// <para>libvlc_media_get_tracks_info</para>
-        /// </remarks>
-        public static void LibvlcMediaParse(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaParse(__arg0);
-        }
-
-        /// <summary>Parse a media.</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <remarks>
-        /// <para>This fetches (local) art, meta data and tracks information.</para>
-        /// <para>The method is the asynchronous of libvlc_media_parse().</para>
-        /// <para>To track when this is over you can listen to libvlc_MediaParsedChanged</para>
-        /// <para>event. However if the media was already parsed you will not receive this</para>
-        /// <para>event.</para>
-        /// <para>You can't be sure to receive the libvlc_MediaParsedChanged</para>
-        /// <para>event (you can wait indefinitely for this event).</para>
-        /// <para>Use libvlc_media_parse_with_options() instead</para>
-        /// <para>libvlc_media_parse</para>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// <para>libvlc_media_get_meta</para>
-        /// <para>libvlc_media_get_tracks_info</para>
-        /// </remarks>
-        public static void LibvlcMediaParseAsync(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            __Internal.LibvlcMediaParseAsync(__arg0);
-        }
-
-        /// <summary>Return true is the media descriptor object is parsed</summary>
-        /// <param name="p_md">media descriptor object</param>
-        /// <returns>true if media object has been parsed otherwise it returns false</returns>
-        /// <remarks>
-        /// <para>This can return true in case of failure.</para>
-        /// <para>Use libvlc_media_get_parsed_status() instead</para>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// </remarks>
-        public static int LibvlcMediaIsParsed(global::VideoLAN.LibVLC.Media p_md)
-        {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
-            var __ret = __Internal.LibvlcMediaIsParsed(__arg0);
-            return __ret;
-        }
+    
 
         /// <summary>Get media descriptor's elementary streams description</summary>
         /// <param name="p_md">media descriptor object</param>
@@ -658,7 +593,7 @@ namespace VideoLAN.LibVLC
         public static int LibvlcMediaGetTracksInfo(global::VideoLAN.LibVLC.Media p_md,
             global::VideoLAN.LibVLC.MediaTrackInfo tracks)
         {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __arg1 = ReferenceEquals(tracks, null) ? global::System.IntPtr.Zero : tracks.__Instance;
             var __ret = __Internal.LibvlcMediaGetTracksInfo(__arg0, __arg1);
             return __ret;

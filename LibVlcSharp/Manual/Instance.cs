@@ -142,6 +142,14 @@ namespace VideoLAN.LibVLC
                 EntryPoint = "libvlc_media_discoverer_list_release")]
             internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
 
+            /// <summary>Retrieve libvlc version.</summary>
+            /// <returns>a string containing the libvlc version</returns>
+            /// <remarks>Example: &quot;1.1.0-git The Luggage&quot;</remarks>
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_version")]
+            internal static extern IntPtr LibVLCVersion();
+
             /// <summary>
             /// Compute the size required by vsprintf to print the parameters.
             /// </summary>
@@ -217,7 +225,7 @@ namespace VideoLAN.LibVLC
         /// <para>cross-platform compatibility with regards to libvlc_new() arguments.</para>
         /// <para>We recommend that you do not use them, other than when debugging.</para>
         /// </remarks>
-        public Instance(int argc, string[] args)
+        public Instance(int argc = 0, string[] args = null)
         {         
             unsafe
             {
@@ -241,7 +249,17 @@ namespace VideoLAN.LibVLC
 
             __ownsNativeInstance = true;
             NativeToManagedMap[NativeReference] = this;
+
+            var version = Marshal.PtrToStringAnsi(Internal.LibVLCVersion());
+            if (string.IsNullOrEmpty(version)) return;
+
+            if (decimal.TryParse(version.Substring(0, 3), out var versionNumber))
+            {
+                LibVLCVersion = versionNumber;
+            }
         }
+
+        public readonly decimal LibVLCVersion;
 
         /// <para>Decrement the reference count of a libvlc instance, and destroy it</para>
         /// <para>if it reaches zero.</para>

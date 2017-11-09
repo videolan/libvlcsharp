@@ -310,7 +310,7 @@ namespace VideoLAN.LibVLC
         public static int LibvlcMediaListPlayerPlayItem(global::VideoLAN.LibVLC.LibvlcMediaListPlayerT p_mlp, global::VideoLAN.LibVLC.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __ret = __Internal.LibvlcMediaListPlayerPlayItem(__arg0, __arg1);
             return __ret;
         }

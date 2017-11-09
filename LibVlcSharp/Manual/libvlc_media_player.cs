@@ -1906,7 +1906,7 @@ namespace VideoLAN.LibVLC
         /// <returns>a new media player object, or NULL on error.</returns>
         public static global::VideoLAN.LibVLC.MediaPlayer LibvlcMediaPlayerNewFromMedia(global::VideoLAN.LibVLC.Media p_md)
         {
-            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg0 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __ret = __Internal.LibvlcMediaPlayerNewFromMedia(__arg0);
             global::VideoLAN.LibVLC.MediaPlayer __result0;
             if (__ret == IntPtr.Zero) __result0 = null;
@@ -1953,7 +1953,7 @@ namespace VideoLAN.LibVLC
         public static void LibvlcMediaPlayerSetMedia(global::VideoLAN.LibVLC.MediaPlayer p_mi, global::VideoLAN.LibVLC.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             __Internal.LibvlcMediaPlayerSetMedia(__arg0, __arg1);
         }
 
@@ -1963,17 +1963,17 @@ namespace VideoLAN.LibVLC
         /// <para>the media associated with p_mi, or NULL if no</para>
         /// <para>media is associated</para>
         /// </returns>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaPlayerGetMedia(global::VideoLAN.LibVLC.MediaPlayer p_mi)
-        {
-            var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
-            var __ret = __Internal.LibvlcMediaPlayerGetMedia(__arg0);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.Media LibvlcMediaPlayerGetMedia(global::VideoLAN.LibVLC.MediaPlayer p_mi)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
+        //    var __ret = __Internal.LibvlcMediaPlayerGetMedia(__arg0);
+        //    global::VideoLAN.LibVLC.Media __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>Get the Event Manager from which the media player send event.</summary>
         /// <param name="p_mi">the Media Player</param>

@@ -137,7 +137,7 @@ namespace VideoLAN.LibVLC
         public static void LibvlcMediaListSetMedia(global::VideoLAN.LibVLC.MediaList p_ml, global::VideoLAN.LibVLC.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             __Internal.LibvlcMediaListSetMedia(__arg0, __arg1);
         }
 
@@ -148,17 +148,17 @@ namespace VideoLAN.LibVLC
         /// </summary>
         /// <param name="p_ml">a media list instance</param>
         /// <returns>media instance</returns>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaListMedia(global::VideoLAN.LibVLC.MediaList p_ml)
-        {
-            var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __ret = __Internal.LibvlcMediaListMedia(__arg0);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.Media LibvlcMediaListMedia(global::VideoLAN.LibVLC.MediaList p_ml)
+        //{
+            //var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
+            //var __ret = __Internal.LibvlcMediaListMedia(__arg0);
+            //global::VideoLAN.LibVLC.Media __result0;
+            //if (__ret == IntPtr.Zero) __result0 = null;
+            //else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
+            //    __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
+            //else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
+            //return __result0;
+        //}
 
         /// <summary>
         /// <para>Add media instance to media list</para>
@@ -170,7 +170,7 @@ namespace VideoLAN.LibVLC
         public static int LibvlcMediaListAddMedia(global::VideoLAN.LibVLC.MediaList p_ml, global::VideoLAN.LibVLC.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __ret = __Internal.LibvlcMediaListAddMedia(__arg0, __arg1);
             return __ret;
         }
@@ -186,7 +186,7 @@ namespace VideoLAN.LibVLC
         public static int LibvlcMediaListInsertMedia(global::VideoLAN.LibVLC.MediaList p_ml, global::VideoLAN.LibVLC.Media p_md, int i_pos)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __ret = __Internal.LibvlcMediaListInsertMedia(__arg0, __arg1, i_pos);
             return __ret;
         }
@@ -229,17 +229,17 @@ namespace VideoLAN.LibVLC
         /// <para>In case of success, libvlc_media_retain() is called to increase the refcount</para>
         /// <para>on the media.</para>
         /// </returns>
-        public static global::VideoLAN.LibVLC.Media LibvlcMediaListItemAtIndex(global::VideoLAN.LibVLC.MediaList p_ml, int i_pos)
-        {
-            var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __ret = __Internal.LibvlcMediaListItemAtIndex(__arg0, i_pos);
-            global::VideoLAN.LibVLC.Media __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.Media LibvlcMediaListItemAtIndex(global::VideoLAN.LibVLC.MediaList p_ml, int i_pos)
+        //{
+        //    var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
+        //    var __ret = __Internal.LibvlcMediaListItemAtIndex(__arg0, i_pos);
+        //    global::VideoLAN.LibVLC.Media __result0;
+        //    //if (__ret == IntPtr.Zero) __result0 = null;
+        //    //else if (global::VideoLAN.LibVLC.Media.NativeToManagedMap.ContainsKey(__ret))
+        //    //    __result0 = (global::VideoLAN.LibVLC.Media) global::VideoLAN.LibVLC.Media.NativeToManagedMap[__ret];
+        //    //else __result0 = global::VideoLAN.LibVLC.Media.__CreateInstance(__ret);
+        //    //return __result0;
+        //}
 
         /// <summary>
         /// <para>Find index position of List media instance in media list.</para>
@@ -252,7 +252,7 @@ namespace VideoLAN.LibVLC
         public static int LibvlcMediaListIndexOfItem(global::VideoLAN.LibVLC.MediaList p_ml, global::VideoLAN.LibVLC.Media p_md)
         {
             var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
-            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.__Instance;
+            var __arg1 = ReferenceEquals(p_md, null) ? global::System.IntPtr.Zero : p_md.NativeReference;
             var __ret = __Internal.LibvlcMediaListIndexOfItem(__arg0, __arg1);
             return __ret;
         }

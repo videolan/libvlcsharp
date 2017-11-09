@@ -270,7 +270,7 @@ namespace VideoLAN.LibVLC
                 public partial struct __Internal
                 {
                     [FieldOffset(0)]
-                    internal global::VideoLAN.LibVLC.MetadataType meta_type;
+                    internal global::VideoLAN.LibVLC.Media.MetadataType meta_type;
                 }
             }
 
@@ -586,10 +586,10 @@ namespace VideoLAN.LibVLC
         private Event.__Internal __instance;
         internal Event.__Internal __Instance { get { return __instance; } }
 
-        internal static global::VideoLAN.LibVLC.Event __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.Event(native.ToPointer(), skipVTables);
-        }
+        //internal static global::VideoLAN.LibVLC.Event __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
+        //{
+        //    //return new global::VideoLAN.LibVLC.Event(native.ToPointer(), skipVTables);
+        //}
 
         internal static global::VideoLAN.LibVLC.Event __CreateInstance(global::VideoLAN.LibVLC.Event.__Internal native, bool skipVTables = false)
         {
@@ -602,21 +602,21 @@ namespace VideoLAN.LibVLC
             __instance = native;
         }
 
-        private Event(void* native, bool skipVTables = false) : this()
-        {
-            __instance = *(global::VideoLAN.LibVLC.Event.__Internal*) native;
-        }
+        //private Event(void* native, bool skipVTables = false) : this()
+        //{
+        //    __instance = *(global::VideoLAN.LibVLC.Event.__Internal*) native;
+        //}
 
-        public Event(global::VideoLAN.LibVLC.Event _0)
-            : this()
-        {
-            var ____arg0 = _0.__Instance;
-            var __arg0 = new global::System.IntPtr(&____arg0);
-            fixed (__Internal* __instancePtr = &__instance)
-            {
-                __Internal.cctor(new global::System.IntPtr(__instancePtr), __arg0);
-            }
-        }
+        //public Event(global::VideoLAN.LibVLC.Event _0)
+        //    : this()
+        //{
+        //    var ____arg0 = _0.__Instance;
+        //    var __arg0 = new global::System.IntPtr(&____arg0);
+        //    fixed (__Internal* __instancePtr = &__instance)
+        //    {
+        //        __Internal.cctor(new global::System.IntPtr(__instancePtr), __arg0);
+        //    }
+        //}
 
         public int Type
         {

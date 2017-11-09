@@ -80,6 +80,12 @@ namespace VideoLAN.LibVLC
                 return;
             __Instance = new global::System.IntPtr(native);
         }
+
+        public EventManager(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero) return;
+            __Instance = ptr;
+        }
     }
 
     public unsafe partial class Log
@@ -291,11 +297,6 @@ namespace VideoLAN.LibVLC
            
             
           
-          
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_get_version")]
-            internal static extern global::System.IntPtr LibvlcGetVersion();
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
@@ -405,14 +406,6 @@ namespace VideoLAN.LibVLC
        
 
         
-        /// <summary>Retrieve libvlc version.</summary>
-        /// <returns>a string containing the libvlc version</returns>
-        /// <remarks>Example: &quot;1.1.0-git The Luggage&quot;</remarks>
-        public static string LibvlcGetVersion()
-        {
-            var __ret = __Internal.LibvlcGetVersion();
-            return Marshal.PtrToStringAnsi(__ret);
-        }
 
         /// <summary>Retrieve libvlc compiler version.</summary>
         /// <returns>a string containing the libvlc compiler version</returns>
