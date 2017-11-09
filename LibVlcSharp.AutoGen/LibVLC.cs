@@ -140,6 +140,7 @@ namespace libvlcsharp
             options.OutputDir = Path.Combine(rootPath, "..\\LibVlcSharp\\Generated\\");
             options.StripLibPrefix = false;
             options.GenerateSingleCSharpFile = false;
+            options.GenerateSequentialLayout = true;
             //options.CheckSymbols = true;
 
             var module = options.AddModule("VideoLAN.LibVLC.Generated");
