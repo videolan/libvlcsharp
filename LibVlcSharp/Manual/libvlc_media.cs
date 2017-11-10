@@ -393,448 +393,47 @@ namespace VideoLAN.LibVLC
         }
     }
 
-    public unsafe partial class AudioTrack : IDisposable
+    public struct AudioTrack 
     {
-        [StructLayout(LayoutKind.Explicit, Size = 8)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal uint i_channels;
-
-            [FieldOffset(4)]
-            internal uint i_rate;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_audio_track_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.AudioTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.AudioTrack>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.AudioTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.AudioTrack(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.AudioTrack __CreateInstance(global::VideoLAN.LibVLC.AudioTrack.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.AudioTrack(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.AudioTrack.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.AudioTrack.__Internal));
-            *(global::VideoLAN.LibVLC.AudioTrack.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private AudioTrack(global::VideoLAN.LibVLC.AudioTrack.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected AudioTrack(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public AudioTrack()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.AudioTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public AudioTrack(global::VideoLAN.LibVLC.AudioTrack _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.AudioTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.AudioTrack.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.AudioTrack.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.AudioTrack __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public uint IChannels
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.AudioTrack.__Internal*) __Instance)->i_channels;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.AudioTrack.__Internal*) __Instance)->i_channels = value;
-            }
-        }
-
-        public uint IRate
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.AudioTrack.__Internal*) __Instance)->i_rate;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.AudioTrack.__Internal*) __Instance)->i_rate = value;
-            }
-        }
+        public uint Channels;
+        public uint Rate;
     }
 
-    public unsafe partial class VideoTrack : IDisposable
+
+    public struct VideoTrack
     {
-        [StructLayout(LayoutKind.Explicit, Size = 48)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal uint i_height;
+        public uint Height;
 
-            [FieldOffset(4)]
-            internal uint i_width;
+        public uint Width;
 
-            [FieldOffset(8)]
-            internal uint i_sar_num;
+        public uint SarNum;
 
-            [FieldOffset(12)]
-            internal uint i_sar_den;
+        public uint SarDen;
 
-            [FieldOffset(16)]
-            internal uint i_frame_rate_num;
+        public uint FrameRateNum;
 
-            [FieldOffset(20)]
-            internal uint i_frame_rate_den;
+        public uint FrameRateDen;
 
-            [FieldOffset(24)]
-            internal global::VideoLAN.LibVLC.VideoOrientation i_orientation;
+        public VideoOrientation Orientation;
 
-            [FieldOffset(28)]
-            internal global::VideoLAN.LibVLC.VideoProjection i_projection;
+        public VideoProjection Projection;
 
-            [FieldOffset(32)]
-            internal global::VideoLAN.LibVLC.VideoTrack._.__Internal pose;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_video_track_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public unsafe partial class _
-        {
-            [StructLayout(LayoutKind.Explicit, Size = 16)]
-            public partial struct __Internal
-            {
-                [FieldOffset(0)]
-                internal float f_yaw_degrees;
-
-                [FieldOffset(4)]
-                internal float f_pitch_degrees;
-
-                [FieldOffset(8)]
-                internal float f_roll_degrees;
-
-                [FieldOffset(12)]
-                internal float f_fov_degrees;
-            }
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.VideoTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.VideoTrack>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.VideoTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.VideoTrack(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.VideoTrack __CreateInstance(global::VideoLAN.LibVLC.VideoTrack.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.VideoTrack(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.VideoTrack.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoTrack.__Internal));
-            *(global::VideoLAN.LibVLC.VideoTrack.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private VideoTrack(global::VideoLAN.LibVLC.VideoTrack.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected VideoTrack(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public VideoTrack()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public VideoTrack(global::VideoLAN.LibVLC.VideoTrack _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.VideoTrack.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.VideoTrack __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public uint IHeight
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_height;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_height = value;
-            }
-        }
-
-        public uint IWidth
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_width;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_width = value;
-            }
-        }
-
-        public uint ISarNum
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_sar_num;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_sar_num = value;
-            }
-        }
-
-        public uint ISarDen
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_sar_den;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_sar_den = value;
-            }
-        }
-
-        public uint IFrameRateNum
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_frame_rate_num;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_frame_rate_num = value;
-            }
-        }
-
-        public uint IFrameRateDen
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_frame_rate_den;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_frame_rate_den = value;
-            }
-        }
-
-        public global::VideoLAN.LibVLC.VideoOrientation IOrientation
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_orientation;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_orientation = value;
-            }
-        }
-
-        public global::VideoLAN.LibVLC.VideoProjection IProjection
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_projection;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoTrack.__Internal*) __Instance)->i_projection = value;
-            }
-        }
+        public VideoViewpoint Pose;
     }
 
-    public unsafe partial class SubtitleTrack : IDisposable
+    /// <summary>Viewpoint for video outputs</summary>
+    /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
+    public struct VideoViewpoint
     {
-        [StructLayout(LayoutKind.Explicit, Size = 8)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal global::System.IntPtr psz_encoding;
+        public float Yaw;
+        public float Pitch;
+        public float Roll;
+        public float Fov;
+    }
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_subtitle_track_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.SubtitleTrack> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.SubtitleTrack>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.SubtitleTrack __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.SubtitleTrack(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.SubtitleTrack __CreateInstance(global::VideoLAN.LibVLC.SubtitleTrack.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.SubtitleTrack(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.SubtitleTrack.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.SubtitleTrack.__Internal));
-            *(global::VideoLAN.LibVLC.SubtitleTrack.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private SubtitleTrack(global::VideoLAN.LibVLC.SubtitleTrack.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected SubtitleTrack(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public SubtitleTrack()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.SubtitleTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public SubtitleTrack(global::VideoLAN.LibVLC.SubtitleTrack _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.SubtitleTrack.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.SubtitleTrack.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.SubtitleTrack.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.SubtitleTrack __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public sbyte* PszEncoding
-        {
-            get
-            {
-                return (sbyte*) ((global::VideoLAN.LibVLC.SubtitleTrack.__Internal*) __Instance)->psz_encoding;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.SubtitleTrack.__Internal*) __Instance)->psz_encoding = (global::System.IntPtr) value;
-            }
-        }
+    public struct SubtitleTrack 
+    {
+        public IntPtr Encoding;
     }
     
     /// <summary>A slave of a libvlc_media_t</summary>

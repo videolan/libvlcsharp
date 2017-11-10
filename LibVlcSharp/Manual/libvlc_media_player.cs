@@ -1066,155 +1066,7 @@ namespace VideoLAN.LibVLC
 
         public string Description => (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(((Internal*)NativeReference)->psz_description);
     }
-
-    /// <summary>Viewpoint for video outputs</summary>
-    /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
-    public unsafe partial class VideoViewpoint : IDisposable
-    {
-        [StructLayout(LayoutKind.Explicit, Size = 16)]
-        public partial struct __Internal
-        {
-            [FieldOffset(0)]
-            internal float f_yaw;
-
-            [FieldOffset(4)]
-            internal float f_pitch;
-
-            [FieldOffset(8)]
-            internal float f_roll;
-
-            [FieldOffset(12)]
-            internal float f_field_of_view;
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="??0libvlc_video_viewpoint_t@@QEAA@AEBU0@@Z")]
-            internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.VideoViewpoint> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.VideoViewpoint>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.VideoViewpoint __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.VideoViewpoint(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.VideoViewpoint __CreateInstance(global::VideoLAN.LibVLC.VideoViewpoint.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.VideoViewpoint(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.VideoViewpoint.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoViewpoint.__Internal));
-            *(global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private VideoViewpoint(global::VideoLAN.LibVLC.VideoViewpoint.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected VideoViewpoint(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public VideoViewpoint()
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoViewpoint.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        public VideoViewpoint(global::VideoLAN.LibVLC.VideoViewpoint _0)
-        {
-            __Instance = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.VideoViewpoint.__Internal));
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-            *((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance) = *((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) _0.__Instance);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (__Instance == IntPtr.Zero)
-                return;
-            global::VideoLAN.LibVLC.VideoViewpoint __dummy;
-            NativeToManagedMap.TryRemove(__Instance, out __dummy);
-            if (__ownsNativeInstance)
-                Marshal.FreeHGlobal(__Instance);
-            __Instance = IntPtr.Zero;
-        }
-
-        public float FYaw
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_yaw;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_yaw = value;
-            }
-        }
-
-        public float FPitch
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_pitch;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_pitch = value;
-            }
-        }
-
-        public float FRoll
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_roll;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_roll = value;
-            }
-        }
-
-        public float FFieldOfView
-        {
-            get
-            {
-                return ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_field_of_view;
-            }
-
-            set
-            {
-                ((global::VideoLAN.LibVLC.VideoViewpoint.__Internal*) __Instance)->f_field_of_view = value;
-            }
-        }
-    }
-
+    
     public unsafe partial class libvlc_media_player
     {
         public partial struct __Internal
@@ -2832,16 +2684,16 @@ namespace VideoLAN.LibVLC
         /// <para>(the result must be released with free() or libvlc_free()).</para>
         /// </returns>
         /// <remarks>LibVLC 3.0.0 and later</remarks>
-        public static global::VideoLAN.LibVLC.VideoViewpoint LibvlcVideoNewViewpoint()
-        {
-            var __ret = __Internal.LibvlcVideoNewViewpoint();
-            global::VideoLAN.LibVLC.VideoViewpoint __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.VideoViewpoint.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.VideoViewpoint) global::VideoLAN.LibVLC.VideoViewpoint.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.VideoViewpoint.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.VideoViewpoint LibvlcVideoNewViewpoint()
+        //{
+        //    var __ret = __Internal.LibvlcVideoNewViewpoint();
+        //    global::VideoLAN.LibVLC.VideoViewpoint __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.VideoViewpoint.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.VideoViewpoint) global::VideoLAN.LibVLC.VideoViewpoint.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.VideoViewpoint.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>Update the video viewpoint information.</summary>
         /// <param name="p_mi">the media player</param>
@@ -2856,13 +2708,13 @@ namespace VideoLAN.LibVLC
         /// <para>LibVLC 3.0.0 and later</para>
         /// <para>the values are set asynchronously, it will be used by the next frame displayed.</para>
         /// </remarks>
-        public static int LibvlcVideoUpdateViewpoint(global::VideoLAN.LibVLC.MediaPlayer p_mi, global::VideoLAN.LibVLC.VideoViewpoint p_viewpoint, bool b_absolute)
-        {
-            var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
-            var __arg1 = ReferenceEquals(p_viewpoint, null) ? global::System.IntPtr.Zero : p_viewpoint.__Instance;
-            var __ret = __Internal.LibvlcVideoUpdateViewpoint(__arg0, __arg1, b_absolute);
-            return __ret;
-        }
+        //public static int LibvlcVideoUpdateViewpoint(global::VideoLAN.LibVLC.MediaPlayer p_mi, global::VideoLAN.LibVLC.VideoViewpoint p_viewpoint, bool b_absolute)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
+        //    var __arg1 = ReferenceEquals(p_viewpoint, null) ? global::System.IntPtr.Zero : p_viewpoint.__Instance;
+        //    var __ret = __Internal.LibvlcVideoUpdateViewpoint(__arg0, __arg1, b_absolute);
+        //    return __ret;
+        //}
 
         /// <summary>Get current video subtitle.</summary>
         /// <param name="p_mi">the media player</param>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Threading.Tasks;
 
 namespace VideoLAN.LibVLC
 {
@@ -502,7 +503,8 @@ namespace VideoLAN.LibVLC
         /// <returns>true if the write operation was successful</returns>
         public bool SaveMeta()
         {
-            return Internal.LibVLCMediaSaveMeta(NativeReference) != 0;
+            var r = Internal.LibVLCMediaSaveMeta(NativeReference);
+            return r != 0;
         }
 
         /// <summary>
@@ -572,9 +574,10 @@ namespace VideoLAN.LibVLC
         /// libvlc_media_get_tracks_info
         /// </summary>
         /// TODO: return task by checking libvlc_MediaParsedChanged
-        public void ParseAsync()
+        public Task ParseAsync()
         {
-            Internal.LibVLCMediaParseAsync(NativeReference);   
+            Internal.LibVLCMediaParseAsync(NativeReference);
+            return Task.CompletedTask;
         }
 
         /// <summary>Return true is the media descriptor object is parsed</summary>
@@ -633,11 +636,11 @@ namespace VideoLAN.LibVLC
         }
 
         // TODO: Whats userData?
-        public IntPtr UserData
-        {
-            get => Internal.LibVLCMediaGetUserData(NativeReference);
-            set => Internal.LibVLCMediaSetUserData(NativeReference, IntPtr.Zero);
-        }
+        //public IntPtr UserData
+        //{
+        //    get => Internal.LibVLCMediaGetUserData(NativeReference);
+        //    set => Internal.LibVLCMediaSetUserData(NativeReference, IntPtr.Zero);
+        //}
 
         /// <summary>Get media descriptor's elementary streams description</summary>
         /// <para>address to store an allocated array of Elementary Streams</para>
@@ -815,9 +818,9 @@ namespace VideoLAN.LibVLC
 
         public struct MediaTrackData
         {
-            public IntPtr Audio;
-            public IntPtr Video;
-            public IntPtr Subtitle;
+            public AudioTrack Audio;
+            public VideoTrack Video;
+            public SubtitleTrack Subtitle;
         }
 
 
