@@ -1830,17 +1830,17 @@ namespace VideoLAN.LibVLC
         /// <summary>Get the Event Manager from which the media player send event.</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the event manager associated with p_mi</returns>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcMediaPlayerEventManager(global::VideoLAN.LibVLC.MediaPlayer p_mi)
-        {
-            var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
-            var __ret = __Internal.LibvlcMediaPlayerEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.EventManager LibvlcMediaPlayerEventManager(global::VideoLAN.LibVLC.MediaPlayer p_mi)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mi, null) ? global::System.IntPtr.Zero : p_mi.__Instance;
+        //    var __ret = __Internal.LibvlcMediaPlayerEventManager(__arg0);
+        //    global::VideoLAN.LibVLC.EventManager __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>is_playing</summary>
         /// <param name="p_mi">the Media Player</param>

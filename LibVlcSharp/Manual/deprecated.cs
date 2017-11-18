@@ -643,19 +643,19 @@ namespace VideoLAN.LibVLC
         /// <para>Useless, media_discoverer events are only triggered when calling</para>
         /// <para>libvlc_media_discoverer_start() and libvlc_media_discoverer_stop().</para>
         /// </remarks>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcMediaDiscovererEventManager(
-            global::VideoLAN.LibVLC.MediaDiscoverer p_mdis)
-        {
-            var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
-            var __ret = __Internal.LibvlcMediaDiscovererEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 =
-                    (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.EventManager LibvlcMediaDiscovererEventManager(
+        //    global::VideoLAN.LibVLC.MediaDiscoverer p_mdis)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
+        //    var __ret = __Internal.LibvlcMediaDiscovererEventManager(__arg0);
+        //    global::VideoLAN.LibVLC.EventManager __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 =
+        //            (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>
         /// <para>Waits until an interface causes the instance to exit.</para>

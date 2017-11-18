@@ -26,7 +26,7 @@ namespace VideoLAN.LibVLC.Generated
 
     /// <summary>This structure is opaque. It represents a libvlc instance</summary>
     /// <summary>
-    /// <para>Event manager that belongs to a libvlc object, and from whom events can</para>
+    /// <para>LibVLCEvent manager that belongs to a libvlc object, and from whom events can</para>
     /// <para>be received.</para>
     /// </summary>
     /// <summary>Type of a LibVLC event.</summary>

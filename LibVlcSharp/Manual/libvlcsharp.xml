@@ -23,7 +23,7 @@
         <member name="T:VideoLAN.LibVLC.LibvlcCallbackT">
             <summary>This structure is opaque. It represents a libvlc instance</summary>
             <summary>
-            <para>Event manager that belongs to a libvlc object, and from whom events can</para>
+            <para>LibVLCEvent manager that belongs to a libvlc object, and from whom events can</para>
             <para>be received.</para>
             </summary>
             <summary>Type of a LibVLC event.</summary>
@@ -186,7 +186,7 @@
             </summary>
             <param name="ptr">the pointer</param>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventAttach(VideoLAN.LibVLC.EventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLibVLCEventAttach(VideoLAN.LibVLC.LibVLCEventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
             <summary>Register for an event notification.</summary>
             <param name="p_event_manager">
             <para>the event manager to which you want to attach to.</para>
@@ -198,14 +198,14 @@
             <param name="user_data">user provided data to carry with the event</param>
             <returns>0 on success, ENOMEM on error</returns>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventDetach(VideoLAN.LibVLC.EventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLibVLCEventDetach(VideoLAN.LibVLC.LibVLCEventManager,System.Int32,VideoLAN.LibVLC.LibvlcCallbackT,System.IntPtr)">
             <summary>Unregister an event notification.</summary>
             <param name="p_event_manager">the event manager</param>
             <param name="i_event_type">the desired event to which we want to unregister</param>
             <param name="f_callback">the function to call when i_event_type occurs</param>
             <param name="p_user_data">user provided data to carry with the event</param>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcEventTypeName(System.Int32)">
+        <member name="M:VideoLAN.LibVLC.libvlc.LibvlcLibVLCEventTypeName(System.Int32)">
             <summary>Get an event's type name.</summary>
             <param name="event_type">the desired event</param>
         </member>
@@ -406,7 +406,7 @@
             <para>LibVLC 3.0.0 or later</para>
             </remarks>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererEventManager(VideoLAN.LibVLC.RendererDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.libvlc_renderer_discoverer.LibvlcRendererDiscovererLibVLCEventManager(VideoLAN.LibVLC.RendererDiscoverer)">
             <summary>Get the event manager of the renderer discoverer</summary>
             <returns>a valid event manager (can't fail)</returns>
             <remarks>
@@ -768,7 +768,7 @@
             <param name="p_md">media descriptor object</param>
             <returns>list of media descriptor subitems or NULL</returns>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaEventManager(VideoLAN.LibVLC.Media)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media.LibvlcMediaLibVLCEventManager(VideoLAN.LibVLC.Media)">
             <summary>
             <para>Get event manager from media descriptor object.</para>
             <para>NOTE: this function doesn't increment reference counting.</para>
@@ -1267,8 +1267,8 @@
             <para>media is associated</para>
             </returns>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerEventManager(VideoLAN.LibVLC.MediaPlayer)">
-            <summary>Get the Event Manager from which the media player send event.</summary>
+        <member name="M:VideoLAN.LibVLC.libvlc_media_player.LibvlcMediaPlayerLibVLCEventManager(VideoLAN.LibVLC.MediaPlayer)">
+            <summary>Get the LibVLCEvent Manager from which the media player send event.</summary>
             <param name="p_mi">the Media Player</param>
             <returns>the event manager associated with p_mi</returns>
         </member>
@@ -2551,7 +2551,7 @@
             </summary>
             <param name="p_ml">a media list instance</param>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListEventManager(VideoLAN.LibVLC.MediaList)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list.LibvlcMediaListLibVLCEventManager(VideoLAN.LibVLC.MediaList)">
             <summary>
             <para>Get libvlc_event_manager from this media list instance.</para>
             <para>The p_event_manager is immutable, so you don't have to hold the lock</para>
@@ -2596,7 +2596,7 @@
             </summary>
             <param name="p_mlp">media player list object</param>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerEventManager(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
+        <member name="M:VideoLAN.LibVLC.libvlc_media_list_player.LibvlcMediaListPlayerLibVLCEventManager(VideoLAN.LibVLC.LibvlcMediaListPlayerT)">
             <summary>Return the event manager of this media_list_player.</summary>
             <param name="p_mlp">media list player instance</param>
             <returns>the event manager</returns>
@@ -2812,100 +2812,100 @@
             <para>libvlc_media_discoverer_list_get()</para>
             </remarks>
         </member>
-        <member name="T:VideoLAN.LibVLC.EventType">
-            <summary>Event types</summary>
+        <member name="T:VideoLAN.LibVLC.LibVLCEventType">
+            <summary>LibVLCEvent types</summary>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.MediaDiscovererStarted">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.MediaDiscovererStarted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_start()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.MediaDiscovererEnded">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.MediaDiscovererEnded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.RendererDiscovererItemAdded">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.RendererDiscovererItemAdded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.RendererDiscovererItemDeleted">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.RendererDiscovererItemDeleted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaAdded">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaAdded">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaRemoved">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaRemoved">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaChanged">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaChanged">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStarted">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStarted">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStopped">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStopped">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusInit">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusInit">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusOpening">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusOpening">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusPlaying">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusPlaying">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusPause">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusPause">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusEnd">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusEnd">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="F:VideoLAN.LibVLC.EventType.VlmMediaInstanceStatusError">
+        <member name="F:VideoLAN.LibVLC.LibVLCEventType.VlmMediaInstanceStatusError">
             <remarks>
             <para>Useless event, it will be triggered only when calling</para>
             <para>libvlc_media_discoverer_stop()</para>
             </remarks>
         </member>
-        <member name="T:VideoLAN.LibVLC.Event">
+        <member name="T:VideoLAN.LibVLC.LibVLCEvent">
             <summary>Renderer item</summary>
             <remarks>
             <para>This struct is passed by a</para>
@@ -3140,7 +3140,7 @@
             <param name="i_instance">instance id</param>
             <returns>playback rate or -1 on error</returns>
         </member>
-        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetEventManager(VideoLAN.LibVLC.Instance)">
+        <member name="M:VideoLAN.LibVLC.libvlc_vlm.LibvlcVlmGetLibVLCEventManager(VideoLAN.LibVLC.Instance)">
             <summary>
             <para>Get libvlc_event_manager from a vlm media.</para>
             <para>The p_event_manager is immutable, so you don't have to hold the lock</para>
@@ -3305,7 +3305,7 @@
             <para>longname of the service discovery.</para>
             </remarks>
         </member>
-        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaDiscovererEventManager(VideoLAN.LibVLC.MediaDiscoverer)">
+        <member name="M:VideoLAN.LibVLC.deprecated.LibvlcMediaDiscovererLibVLCEventManager(VideoLAN.LibVLC.MediaDiscoverer)">
             <summary>Get event manager from media service discover object.</summary>
             <param name="p_mdis">media service discover object</param>
             <returns>event manager object.</returns>

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace VideoLAN.LibVLC
 {
-    public class Media : IDisposable
+    public partial class Media : IDisposable
     {
-        readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
-        int _streamIndex;
+        static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
+        static int _streamIndex;
 
         internal struct Internal
         {
@@ -57,7 +57,7 @@ namespace VideoLAN.LibVLC
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
-            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr instance, OpenMedia openCb, ReadMedia readCb, SeekMedia seekCb, CloseMedia closeCb, IntPtr opaque);
+            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr instance, IntPtr openCb, IntPtr readCb, IntPtr seekCb, IntPtr closeCb, IntPtr opaque);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -377,7 +377,8 @@ namespace VideoLAN.LibVLC
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="stream"></param>
-        public Media(Instance instance, Stream stream)
+        /// <param name="options"></param>
+        public Media(Instance instance, Stream stream, params string[] options)
         {
             if(instance == null) throw new ArgumentNullException(nameof(instance));
             if (instance.LibVLCVersion < 3) throw new InvalidOperationException("API requires libvlc version 3 or higher");
@@ -389,11 +390,14 @@ namespace VideoLAN.LibVLC
                 throw new InvalidOperationException("Cannot create opaque parameter");
 
             NativeReference = Internal.LibVLCMediaNewCallbacks(instance.NativeReference, 
-                CallbackOpenMedia, 
-                CallbackReadMedia, 
-                CallbackSeekMedia,
-                CallbackCloseMedia,
+                Marshal.GetFunctionPointerForDelegate(new OpenMedia(CallbackOpenMedia)), 
+                Marshal.GetFunctionPointerForDelegate(new ReadMedia(CallbackReadMedia)), 
+                Marshal.GetFunctionPointerForDelegate(new SeekMedia(CallbackSeekMedia)), 
+                Marshal.GetFunctionPointerForDelegate(new CloseMedia(CallbackCloseMedia)),
                 opaque);
+            
+            if(options.Any())
+                Internal.LibVLCMediaAddOption(NativeReference, options.ToString());
 
             if (NativeReference == IntPtr.Zero)
                 throw new ArgumentException($"Failed to construct media with {instance}, {stream}");
@@ -536,7 +540,7 @@ namespace VideoLAN.LibVLC
             {
                 if (_eventManager != null) return _eventManager;
                 var eventManagerPtr = Internal.LibVLCMediaEventManager(NativeReference);
-                _eventManager = new EventManager(eventManagerPtr);
+                //_eventManager = new EventManager(eventManagerPtr);
                 return _eventManager;
             }
         }
@@ -609,7 +613,7 @@ namespace VideoLAN.LibVLC
         /// <para>libvlc_media_parse_flag_t</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public bool ParseWithOptions(MediaParseOptions parseOptions, int timeout)
+        public bool ParseWithOptions(MediaParseOptions parseOptions, int timeout = -1)
         {
             return Internal.LibVLCMediaParseWithOptions(NativeReference, parseOptions, timeout) != 0;
         }
@@ -768,64 +772,6 @@ namespace VideoLAN.LibVLC
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, media.NativeReference);
         }
 
-        #region structs
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MediaStats
-        {
-            /* Input */
-            public int ReadBytes;
-            public float InputBitrate;
-
-            /* Demux */
-            public int DemuxReadBytes;
-            public float DemuxBitrate;
-            public int DemuxCorrupted;
-            public int DemuxDiscontinuity;
-
-            /* Decoders */
-            public int DecodedVideo;
-            public int DecodedAudio;
-
-
-            /* Video Output */
-            public int DisplayedPictures;
-            public int LostPictures;
-
-            /* Audio output */
-            public int PlayedAudioBuffers;
-            public int LostAudioBuffers;
-
-            /* Stream output */
-            public int SentPackets;
-            public int SentBytes;
-            public float SendBitrate;
-        }
-
-        public struct MediaTrack
-        {
-            public uint Codec;
-            public uint OriginalFourcc;
-            public int Id;
-            public TrackType TrackType;
-            public int Profile;
-            public int Level;
-            public MediaTrackData Data;
-            public uint Bitrate;
-            public IntPtr Language;
-            public IntPtr Description;
-        }
-
-        public struct MediaTrackData
-        {
-            public AudioTrack Audio;
-            public VideoTrack Video;
-            public SubtitleTrack Subtitle;
-        }
-
-
-        #endregion
-
         internal class StreamData
         {
             public IntPtr Handle { get; set; }
@@ -835,7 +781,7 @@ namespace VideoLAN.LibVLC
 
         #region private
 
-        int CallbackOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size)
+        static int CallbackOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size)
         {
             data = opaque;
 
@@ -867,7 +813,7 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        int CallbackReadMedia(IntPtr opaque, IntPtr buf, uint len)
+        static int CallbackReadMedia(IntPtr opaque, IntPtr buf, uint len)
         {
             try
             {
@@ -889,7 +835,7 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        int CallbackSeekMedia(IntPtr opaque, UInt64 offset)
+        static int CallbackSeekMedia(IntPtr opaque, UInt64 offset)
         {
             try
             {
@@ -903,7 +849,7 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        void CallbackCloseMedia(IntPtr opaque)
+        static void CallbackCloseMedia(IntPtr opaque)
         {
             try
             {
@@ -915,7 +861,7 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        IntPtr AddStream(Stream stream)
+        static IntPtr AddStream(Stream stream)
         {
             if (stream == null)
             {
@@ -924,25 +870,28 @@ namespace VideoLAN.LibVLC
 
             IntPtr handle;
 
-            _streamIndex++;
-
-            handle = new IntPtr(_streamIndex);
-            DicStreams[handle] = new StreamData
+            lock (DicStreams)
             {
-                Buffer = new byte[0x4000],
-                Handle = handle,
-                Stream = stream
-            };
+                _streamIndex++;
+            
 
+                handle = new IntPtr(_streamIndex);
+                DicStreams[handle] = new StreamData
+                {
+                    Buffer = new byte[0x4000],
+                    Handle = handle,
+                    Stream = stream
+                };
+            }
             return handle;
         }
 
-        StreamData GetStream(IntPtr handle)
+        static StreamData GetStream(IntPtr handle)
         {
             return !DicStreams.TryGetValue(handle, out var result) ? null : result;
         }
 
-        void RemoveStream(IntPtr handle)
+        static void RemoveStream(IntPtr handle)
         { 
             DicStreams.TryRemove(handle, out var result);
         }
@@ -1012,5 +961,4 @@ namespace VideoLAN.LibVLC
     /// <remarks>callback</remarks>
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void CloseMedia(IntPtr opaque);
-
 }

@@ -35,59 +35,6 @@ namespace VideoLAN.LibVLC
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void LibvlcCallbackT(IntPtr libvlcEvent, IntPtr data);
 
-    public unsafe partial class EventManager
-    {
-        [StructLayout(LayoutKind.Explicit, Size = 0)]
-        public partial struct __Internal
-        {
-        }
-
-        public global::System.IntPtr __Instance { get; protected set; }
-
-        protected int __PointerAdjustment;
-        internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.EventManager> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.EventManager>();
-        protected void*[] __OriginalVTables;
-
-        protected bool __ownsNativeInstance;
-
-        internal static global::VideoLAN.LibVLC.EventManager __CreateInstance(global::System.IntPtr native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.EventManager(native.ToPointer(), skipVTables);
-        }
-
-        internal static global::VideoLAN.LibVLC.EventManager __CreateInstance(global::VideoLAN.LibVLC.EventManager.__Internal native, bool skipVTables = false)
-        {
-            return new global::VideoLAN.LibVLC.EventManager(native, skipVTables);
-        }
-
-        private static void* __CopyValue(global::VideoLAN.LibVLC.EventManager.__Internal native)
-        {
-            var ret = Marshal.AllocHGlobal(sizeof(global::VideoLAN.LibVLC.EventManager.__Internal));
-            *(global::VideoLAN.LibVLC.EventManager.__Internal*) ret = native;
-            return ret.ToPointer();
-        }
-
-        private EventManager(global::VideoLAN.LibVLC.EventManager.__Internal native, bool skipVTables = false)
-            : this(__CopyValue(native), skipVTables)
-        {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[__Instance] = this;
-        }
-
-        protected EventManager(void* native, bool skipVTables = false)
-        {
-            if (native == null)
-                return;
-            __Instance = new global::System.IntPtr(native);
-        }
-
-        public EventManager(IntPtr ptr)
-        {
-            if (ptr == IntPtr.Zero) return;
-            __Instance = ptr;
-        }
-    }
-
     public unsafe partial class Log
     {
         [StructLayout(LayoutKind.Explicit, Size = 0)]
@@ -313,17 +260,7 @@ namespace VideoLAN.LibVLC
                 EntryPoint="libvlc_free")]
             internal static extern void LibvlcFree(global::System.IntPtr ptr);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_event_attach")]
-            internal static extern int LibvlcEventAttach(global::System.IntPtr p_event_manager, int i_event_type, global::System.IntPtr f_callback, global::System.IntPtr user_data);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_event_detach")]
-            internal static extern void LibvlcEventDetach(global::System.IntPtr p_event_manager, int i_event_type, global::System.IntPtr f_callback, global::System.IntPtr p_user_data);
-
-            [SuppressUnmanagedCodeSecurity]
+           [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
                 EntryPoint="libvlc_event_type_name")]
             internal static extern global::System.IntPtr LibvlcEventTypeName(int event_type);
@@ -446,25 +383,25 @@ namespace VideoLAN.LibVLC
         /// <param name="f_callback">the function to call when i_event_type occurs</param>
         /// <param name="user_data">user provided data to carry with the event</param>
         /// <returns>0 on success, ENOMEM on error</returns>
-        public static int LibvlcEventAttach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr user_data)
-        {
-            var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
-            var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
-            var __ret = __Internal.LibvlcEventAttach(__arg0, i_event_type, __arg2, user_data);
-            return __ret;
-        }
+        //public static int LibvlcEventAttach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr user_data)
+        //{
+        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
+        //    var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
+        //    var __ret = __Internal.LibvlcEventAttach(__arg0, i_event_type, __arg2, user_data);
+        //    return __ret;
+        //}
 
         /// <summary>Unregister an event notification.</summary>
         /// <param name="p_event_manager">the event manager</param>
         /// <param name="i_event_type">the desired event to which we want to unregister</param>
         /// <param name="f_callback">the function to call when i_event_type occurs</param>
         /// <param name="p_user_data">user provided data to carry with the event</param>
-        public static void LibvlcEventDetach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr p_user_data)
-        {
-            var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
-            var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
-            __Internal.LibvlcEventDetach(__arg0, i_event_type, __arg2, p_user_data);
-        }
+        //public static void LibvlcEventDetach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr p_user_data)
+        //{
+        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
+        //    var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
+        //    __Internal.LibvlcEventDetach(__arg0, i_event_type, __arg2, p_user_data);
+        //}
 
         /// <summary>Get an event's type name.</summary>
         /// <param name="event_type">the desired event</param>

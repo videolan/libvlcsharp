@@ -390,17 +390,17 @@ namespace VideoLAN.LibVLC
         /// <para>The p_event_manager is immutable, so you don't have to hold the lock</para>
         /// </summary>
         /// <param name="p_instance">a libvlc instance</param>
-        /// <returns>libvlc_event_manager</returns>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcVlmGetEventManager(global::VideoLAN.LibVLC.Instance p_instance)
-        {
-            var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
-            var __ret = __Internal.LibvlcVlmGetEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
+        ///// <returns>libvlc_event_manager</returns>
+        //public static global::VideoLAN.LibVLC.EventManager LibvlcVlmGetEventManager(global::VideoLAN.LibVLC.Instance p_instance)
+        //{
+        //    var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
+        //    var __ret = __Internal.LibvlcVlmGetEventManager(__arg0);
+        //    global::VideoLAN.LibVLC.EventManager __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
+        //    return __result0;
+        //}
     }
 }

@@ -10,7 +10,7 @@ using System.Security;
 
 namespace VideoLAN.LibVLC.Generated
 {
-    /// <summary>Event types</summary>
+    /// <summary>LibVLCEvent types</summary>
     public enum EventType
     {
         MediaMetaChanged = 0,

@@ -208,17 +208,17 @@ namespace VideoLAN.LibVLC
         /// <summary>Return the event manager of this media_list_player.</summary>
         /// <param name="p_mlp">media list player instance</param>
         /// <returns>the event manager</returns>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcMediaListPlayerEventManager(global::VideoLAN.LibVLC.LibvlcMediaListPlayerT p_mlp)
-        {
-            var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
-            var __ret = __Internal.LibvlcMediaListPlayerEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.EventManager LibvlcMediaListPlayerEventManager(global::VideoLAN.LibVLC.LibvlcMediaListPlayerT p_mlp)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mlp, null) ? global::System.IntPtr.Zero : p_mlp.__Instance;
+        //    var __ret = __Internal.LibvlcMediaListPlayerEventManager(__arg0);
+        //    global::VideoLAN.LibVLC.EventManager __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>Replace media player in media_list_player with this instance.</summary>
         /// <param name="p_mlp">media list player instance</param>

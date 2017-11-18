@@ -2026,7 +2026,7 @@ namespace VideoLAN.LibVLC.Generated
             return __result0;
         }
 
-        /// <summary>Get the Event Manager from which the media player send event.</summary>
+        /// <summary>Get the LibVLCEvent Manager from which the media player send event.</summary>
         /// <param name="p_mi">the Media Player</param>
         /// <returns>the event manager associated with p_mi</returns>
         public static global::VideoLAN.LibVLC.Generated.EventManager LibvlcMediaPlayerEventManager(global::VideoLAN.LibVLC.Generated.MediaPlayer p_mi)

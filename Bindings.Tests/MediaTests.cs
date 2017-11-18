@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
 
@@ -56,9 +57,11 @@ namespace Bindings.Tests
         {
             var instance = new Instance();
             var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);
+            
             Assert.False(media.IsParsed);
             media.Parse();
-            //media.ParseAsync();
+
+            //await media.ParseAsync();
             Assert.True(media.IsParsed);
             Assert.NotZero(media.Duration);
             Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
@@ -89,7 +92,9 @@ namespace Bindings.Tests
         public void CreateMediaFromFileStream()
         {
             // TODO: fix this.
-            var media = new Media(new Instance(), new FileStream(RealMediaPath, FileMode.OpenOrCreate));
+            var media = new Media(new Instance(), new FileStream(RealMediaPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            media.Parse();
+            Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
         }
 
         [Test]

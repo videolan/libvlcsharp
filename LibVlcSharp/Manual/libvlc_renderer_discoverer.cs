@@ -418,17 +418,17 @@ namespace VideoLAN.LibVLC
         /// <para>libvlc_event_t.u.renderer_discoverer_item_removed.item</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::VideoLAN.LibVLC.EventManager LibvlcRendererDiscovererEventManager(global::VideoLAN.LibVLC.RendererDiscoverer p_rd)
-        {
-            var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
-            var __ret = __Internal.LibvlcRendererDiscovererEventManager(__arg0);
-            global::VideoLAN.LibVLC.EventManager __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.EventManager LibvlcRendererDiscovererEventManager(global::VideoLAN.LibVLC.RendererDiscoverer p_rd)
+        //{
+        //    var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
+        //    var __ret = __Internal.LibvlcRendererDiscovererEventManager(__arg0);
+        //    global::VideoLAN.LibVLC.EventManager __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.EventManager.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 = (global::VideoLAN.LibVLC.EventManager) global::VideoLAN.LibVLC.EventManager.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.EventManager.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
         /// <summary>Get media discoverer services</summary>
         /// <param name="p_inst">libvlc instance</param>
