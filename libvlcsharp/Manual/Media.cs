@@ -528,19 +528,19 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        EventManager _eventManager;
+        MediaEventManager _eventManager;
         /// <summary>
         /// <para>Get event manager from media descriptor object.</para>
         /// <para>NOTE: this function doesn't increment reference counting.</para>
         /// </summary>
         /// <returns>event manager object</returns>
-        public EventManager EventManager
+        public MediaEventManager EventManager
         {
             get
             {
                 if (_eventManager != null) return _eventManager;
                 var eventManagerPtr = Internal.LibVLCMediaEventManager(NativeReference);
-                //_eventManager = new EventManager(eventManagerPtr);
+                _eventManager = new MediaEventManager(eventManagerPtr);
                 return _eventManager;
             }
         }

@@ -21,8 +21,6 @@ namespace VideoLAN.LibVLC
                 EntryPoint = "libvlc_event_detach")]
             internal static extern void LibVLCEventDetach(IntPtr eventManager, EventType eventType, IntPtr callback,
                 IntPtr userData);
-
-
         }
 
         public IntPtr NativeReference;
@@ -36,36 +34,50 @@ namespace VideoLAN.LibVLC
             NativeReference = ptr;
         }
 
-        protected virtual void Unregister(EventHandlerBase eventHandler) {}
+        protected virtual void Unregister(EventHandlerBase eventHandler) { }
+
+        protected EventHandler Handle(EventType eventType, EventCallback eventCallback, LibVLCEvent libVLCEvent)
+        {
+            var eventHandler = new EventHandler(this, eventType, eventCallback, libVLCEvent);
+            Lambdas.Add(eventHandler);
+            return eventHandler;
+        }
+
+        //protected EventHandler Handle(EventType eventType, EventCallback eventCallback)
+        //{
+        //return Handle(eventType, eventCallback, )
+        //}
 
         public abstract class EventHandlerBase
         {
+            public LibVLCEvent LibVLCEvent { get; protected set; }
             protected abstract void Unregister();
         }
 
-        class EventHandler : EventHandlerBase
+        public class EventHandler : EventHandlerBase
         {
-            readonly IntPtr _eventCallback;
+            readonly IntPtr _eventCallbackPtr;
             readonly EventType _eventType;
             readonly EventManager _eventManager;
-            readonly LibVLCEvent _libVLCEvent;
+            readonly IntPtr _eventStructPtr;
 
-            public EventHandler(EventManager eventManager, EventType eventType, IntPtr eventCallback,
-                LibVLCEvent libVLCEvent)
+            public EventHandler(EventManager eventManager, EventType eventType, EventCallback eventCallback, LibVLCEvent libVLCEvent)
             {
-                if (Internal.LibVLCEventAttach(eventManager.NativeReference, eventType, eventCallback, IntPtr.Zero) !=
-                    0)
+                _eventStructPtr = new IntPtr();
+                Marshal.StructureToPtr(libVLCEvent, _eventStructPtr, true);
+                _eventCallbackPtr = Marshal.GetFunctionPointerForDelegate(eventCallback);
+
+                if (Internal.LibVLCEventAttach(eventManager.NativeReference, eventType, _eventStructPtr, _eventCallbackPtr) != 0)
                     throw new VLCException();
 
                 _eventManager = eventManager;
                 _eventType = eventType;
-                _eventCallback = eventCallback;
-                _libVLCEvent = libVLCEvent;
+                LibVLCEvent = libVLCEvent;
             }
 
             ~EventHandler()
             {
-                Internal.LibVLCEventDetach(_eventManager.NativeReference, _eventType, _eventCallback, IntPtr.Zero);
+                Internal.LibVLCEventDetach(_eventManager.NativeReference, _eventType, _eventStructPtr, _eventCallbackPtr);
             }
 
             protected override void Unregister()
@@ -73,20 +85,26 @@ namespace VideoLAN.LibVLC
                 _eventManager.Unregister(this);
             }
         }
-
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate void EventCallback(IntPtr args);
-
-        //[SuppressUnmanagedCodeSecurity]
-        //[DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-        //    EntryPoint = "libvlc_callback_t")]
-        //public static extern void EventCallback(IntPtr args);
     }
 
     public class MediaEventManager : EventManager
     {
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {
+        }
+
+        public EventHandler OnMetaChanged(EventCallback cb)
+        {
+            return Handle(EventType.MediaMetaChanged, cb, new LibVLCEvent
+            {
+                Type = EventType.MediaMetaChanged,
+                //Union = new LibVLCEvent.EventUnion
+                //{
+                //    MediaMetaChanged = new LibVLCEvent.MediaMetaChanged
+                //    {
+                //    }
+                //}
+            });
         }
     }
 
@@ -128,4 +146,8 @@ namespace VideoLAN.LibVLC
     public class VLCException : Exception
     {
     }
+
+    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void EventCallback(IntPtr args);
+
 }

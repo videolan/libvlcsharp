@@ -106,5 +106,12 @@ namespace Bindings.Tests
             Assert.True(media.SaveMeta());
             Assert.AreEqual(test, media.Meta(Media.MetadataType.ShowName));
         }
+
+        [Test]
+        public void EventManager()
+        {
+            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
+            var em = media.EventManager;
+        }
     }
 }
