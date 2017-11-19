@@ -14,7 +14,7 @@ namespace Bindings.Tests
         [Test]
         public void DisposeInstanceNativeRelease()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             instance.Dispose();
             Assert.AreEqual(IntPtr.Zero, instance.NativeReference);
         }
@@ -22,14 +22,14 @@ namespace Bindings.Tests
         [Test]
         public void AddInterface()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             Assert.True(instance.AddInterface(string.Empty));
         }
 
         [Test]
         public void AudioFilters()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var audioFilters = instance.AudioFilters;
             foreach (var filter in audioFilters)
             {
@@ -43,7 +43,7 @@ namespace Bindings.Tests
         [Test]
         public void VideoFilters()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var videoFilters = instance.VideoFilters;
             foreach (var filter in videoFilters)
             {
@@ -56,7 +56,7 @@ namespace Bindings.Tests
         [Test]
         public void AudioOutputs()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var audioOuputs = instance.AudioOutputs;
             foreach (var audioOutput in audioOuputs)
             {
@@ -68,7 +68,7 @@ namespace Bindings.Tests
         [Test]
         public void AudioOutputDevices()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var outputs = instance.AudioOutputs;
             var name = outputs.Last().Name;
             var audioOutputDevices = instance.AudioOutputDevices(name);
@@ -83,15 +83,15 @@ namespace Bindings.Tests
         [Test]
         public void EqualityTests()
         {
-            var instance1 = new Instance(0, null);
-            var instance2 = new Instance(0, null);
+            var instance1 = new Instance();
+            var instance2 = new Instance();
             Assert.True(instance1 != instance2);
         }
 
         [Test]
         public void Categories()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
             var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
@@ -100,7 +100,7 @@ namespace Bindings.Tests
         [Test]
         public void SetExitHandler()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var called = false;
 
             var exitCb = new ExitCallback(() =>
@@ -118,7 +118,7 @@ namespace Bindings.Tests
         [Test]
         public async Task SetLogCallback()
         {
-            var instance = new Instance(0, null);
+            var instance = new Instance();
             var logCallbackCalled = false;
 
             void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;

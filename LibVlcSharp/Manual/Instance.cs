@@ -177,6 +177,7 @@ namespace VideoLAN.LibVLC
         }
     
         public IntPtr NativeReference { get; protected set; }
+        public Version VLCVersion { get; private set; }
 
         internal static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Instance> NativeToManagedMap 
             = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Instance>();
@@ -253,13 +254,9 @@ namespace VideoLAN.LibVLC
             var version = Marshal.PtrToStringAnsi(Internal.LibVLCVersion());
             if (string.IsNullOrEmpty(version)) return;
 
-            if (decimal.TryParse(version.Substring(0, 3), out var versionNumber))
-            {
-                LibVLCVersion = versionNumber;
-            }
+            version = version.Split('-', ' ')[0];
+            VLCVersion = new Version(version);
         }
-
-        public readonly decimal LibVLCVersion;
 
         /// <para>Decrement the reference count of a libvlc instance, and destroy it</para>
         /// <para>if it reaches zero.</para>

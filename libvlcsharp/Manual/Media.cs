@@ -381,7 +381,7 @@ namespace VideoLAN.LibVLC
         public Media(Instance instance, Stream stream, params string[] options)
         {
             if(instance == null) throw new ArgumentNullException(nameof(instance));
-            if (instance.LibVLCVersion < 3) throw new InvalidOperationException("API requires libvlc version 3 or higher");
+            if (instance.VLCVersion.Major < 3) throw new InvalidOperationException("API requires libvlc version 3 or higher");
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
             var opaque = AddStream(stream);
