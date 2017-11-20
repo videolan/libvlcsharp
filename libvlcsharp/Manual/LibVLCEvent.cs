@@ -171,6 +171,7 @@ namespace VideoLAN.LibVLC
 
         public struct EventUnion
         {
+            // media
             public MediaMetaChanged MediaMetaChanged;
             public MediaSubItemAdded MediaSubItemAdded;
             public MediaDurationChanged MediaDurationChanged;
@@ -178,6 +179,8 @@ namespace VideoLAN.LibVLC
             public MediaFreed MediaFreed;
             public MediaStateChanged MediaStateChanged;
             public MediaSubItemTreeAdded MediaSubItemTreeAdded;
+
+            // mediaplayer
             public MediaPlayerBuffering MediaPlayerBuffering;
             public MediaPlayerChapterChanged MediaPlayerChapterChanged;
             public MediaPlayerPositionChanged MediaPlayerPositionChanged;
@@ -186,19 +189,26 @@ namespace VideoLAN.LibVLC
             public MediaPlayerSeekableChanged MediaPlayerSeekableChanged;
             public MediaPlayerPausableChanged MediaPlayerPausableChanged;
             public MediaPlayerScrambledChanged MediaPlayerScrambledChanged;
-            public MediaPlayerVideoOutChanged MediaPlayerVideoOutChanged;
+            public MediaPlayerVoutChanged MediaPlayerVoutChanged;
+            public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
+            public MediaPlayerLengthChanged MediaPlayerLengthChanged;
+            public MediaPlayerMediaChanged MediaPlayerMediaChanged;
+
+            // medialist
             public MediaListItemAdded MediaListItemAdded;
             public MediaListWillAddItem MediaListWillAddItem;
             public MediaListItemDeleted MediaListItemDeleted;
             public MediaListWillDeleteItem MediaListWillDeleteItem;
             public MediaListPlayerNextItemSet MediaListPlayerNextItemSet;
-            public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
-            public MediaPlayerLengthChanged MediaPlayerLengthChanged;
+           
+            // vlm
             public VlmMediaEvent VlmMediaEvent;
-            public MediaPlayerMediaChanged MediaPlayerMediaChanged;
+
             public EsChanged EsChanged;
             public VolumeChanged VolumeChanged;
             public AudioDeviceChanged AudioDeviceChanged;
+
+            // renderer
             public RendererDiscovererItemAdded RendererDiscovererItemAdded;
             public RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
         }
@@ -220,7 +230,7 @@ namespace VideoLAN.LibVLC
 
         public struct MediaParsedChanged
         {
-            public int NewStatus;
+            public Media.MediaParsedStatus NewStatus;
         }
 
         public struct MediaFreed
@@ -278,7 +288,7 @@ namespace VideoLAN.LibVLC
             public int NewScrambled;
         }
 
-        public struct MediaPlayerVideoOutChanged
+        public struct MediaPlayerVoutChanged
         {
             public int NewCount;
         }
@@ -357,6 +367,236 @@ namespace VideoLAN.LibVLC
         public struct RendererDiscovererItemDeleted
         {
             public IntPtr Item;
+        }
+    }
+
+    public class MediaMetaChangedEventArgs : EventArgs
+    {
+        public readonly Media.MetadataType MetadataType;
+
+        public MediaMetaChangedEventArgs(Media.MetadataType metadataType)
+        {
+            MetadataType = metadataType;
+        }
+    }
+
+    public class MediaParsedChangedEventArgs : EventArgs
+    {
+        public readonly Media.MediaParsedStatus ParsedStatus;
+
+        public MediaParsedChangedEventArgs(Media.MediaParsedStatus parsedStatus)
+        {
+            ParsedStatus = parsedStatus;
+        }
+    }
+
+    public class MediaSubItemAddedEventArgs : EventArgs
+    {
+        public readonly Media SubItem;
+
+        public MediaSubItemAddedEventArgs(IntPtr mediaPtr)
+        {
+            SubItem = new Media(mediaPtr);
+        }
+    }
+
+    public class MediaDurationChangedEventArgs : EventArgs
+    {
+        public readonly long Duration;
+
+        public MediaDurationChangedEventArgs(long duration)
+        {
+            Duration = duration;
+        }
+    }
+
+    public class MediaFreedEventArgs : EventArgs
+    {
+        public readonly Media Media;
+
+        public MediaFreedEventArgs(IntPtr mediaPtr)
+        {
+            Media = new Media(mediaPtr);
+        }
+    }
+
+    public class MediaStateChangedEventArgs : EventArgs
+    {
+        public readonly VLCState State;
+
+        public MediaStateChangedEventArgs(VLCState state)
+        {
+            State = state;
+        }
+    }
+
+    public class MediaSubItemTreeAddedEventArgs : EventArgs
+    {
+        public readonly Media SubItem;
+
+        public MediaSubItemTreeAddedEventArgs(IntPtr subItemPtr)
+        {
+            SubItem = new Media(subItemPtr);
+        }
+    }
+
+    public class MediaPlayerMediaChangedEventArgs : EventArgs
+    {
+        public readonly Media Media;
+
+        public MediaPlayerMediaChangedEventArgs(IntPtr mediaPtr)
+        {
+            Media = new Media(mediaPtr);
+        }
+    }
+
+    public class MediaPlayerBufferingEventArgs : EventArgs
+    {
+        public readonly float Cache;
+
+        public MediaPlayerBufferingEventArgs(float cache)
+        {
+            Cache = cache;
+        }
+    }
+
+    public class MediaPlayerTimeChangedEventArgs : EventArgs
+    {
+        public readonly long Time;
+
+        public MediaPlayerTimeChangedEventArgs(long time)
+        {
+            Time = time;
+        }
+    }
+
+    public class MediaPlayerPositionChangedEventArgs : EventArgs
+    {
+        public readonly float Position;
+
+        public MediaPlayerPositionChangedEventArgs(float position)
+        {
+            Position = position;
+        }
+    }
+
+    public class MediaPlayerSeekableChangedEventArgs : EventArgs
+    {
+        public readonly int Seekable;
+
+        public MediaPlayerSeekableChangedEventArgs(int seekable)
+        {
+            Seekable = seekable;
+        }
+    }
+
+    public class MediaPlayerPausableChangedEventArgs : EventArgs
+    {
+        public readonly int Pausable;
+
+        public MediaPlayerPausableChangedEventArgs(int pausable)
+        {
+            Pausable = pausable;
+        }
+    }
+
+    public class MediaPlayerTitleChangedEventArgs : EventArgs
+    {
+        public readonly int Title;
+
+        public MediaPlayerTitleChangedEventArgs(int title)
+        {
+            Title = title;
+        }
+    }
+
+    public class MediaPlayerChapterChangedEventArgs : EventArgs
+    {
+        public readonly int Chapter;
+
+        public MediaPlayerChapterChangedEventArgs(int chapter)
+        {
+            Chapter = chapter;
+        }
+    }
+
+    public class MediaPlayerSnapshotTakenEventArgs : EventArgs
+    {
+        public readonly string Filename;
+
+        public MediaPlayerSnapshotTakenEventArgs(string filename)
+        {
+            Filename = filename;
+        }
+    }
+
+    public class MediaPlayerLengthChangedEventArgs : EventArgs
+    {
+        public readonly long Length;
+
+        public MediaPlayerLengthChangedEventArgs(long length)
+        {
+            Length = length;
+        }
+    }
+
+    public class MediaPlayerVoutEventArgs : EventArgs
+    {
+        public readonly int Count;
+
+        public MediaPlayerVoutEventArgs(int count)
+        {
+            Count = count;
+        }
+    }
+
+    public class MediaPlayerScrambledChangedEventArgs : EventArgs
+    {
+        public readonly int Scrambled;
+
+        public MediaPlayerScrambledChangedEventArgs(int scrambled)
+        {
+            Scrambled = scrambled;
+        }
+    }
+
+    public class MediaPlayerESAddedEventArgs : EventArgs
+    {
+        public readonly int Id;
+
+        public MediaPlayerESAddedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    public class MediaPlayerESDeletedEventArgs : EventArgs
+    {
+        public readonly int Id;
+
+        public MediaPlayerESDeletedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    public class MediaPlayerESSelectedEventArgs : EventArgs
+    {
+        public readonly int Id;
+
+        public MediaPlayerESSelectedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    public class MediaPlayerAudioDeviceEventArgs : EventArgs
+    {
+        public readonly string AudioDevice;
+
+        public MediaPlayerAudioDeviceEventArgs(string audioDevice)
+        {
+            AudioDevice = audioDevice;
         }
     }
 }
