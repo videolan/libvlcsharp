@@ -1219,22 +1219,463 @@ namespace VideoLAN.LibVLC
 
     public class MediaListPlayerEventManager : EventManager
     {
+        readonly object _lock = new object();
+
+        EventHandler<EventArgs> _mediaListPlayerPlayed;
+        EventHandler<MediaListPlayerNextItemSetEventArgs> _mediaListPlayerNextItemSet;
+        EventHandler<EventArgs> _mediaListPlayerStopped;
+
         public MediaListPlayerEventManager(IntPtr ptr) : base(ptr)
         {
+        }
+
+        public event EventHandler<EventArgs> Played
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerPlayed += value;
+                    AttachEvent(EventType.MediaListPlayerPlayed, OnPlayed);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerPlayed -= value;
+                    DetachEvent(EventType.MediaListPlayerPlayed, OnPlayed);
+                }
+            }
+        }
+
+        public event EventHandler<MediaListPlayerNextItemSetEventArgs> NextItemSet
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerNextItemSet += value;
+                    AttachEvent(EventType.MediaListPlayerNextItemSet, OnNextItemSet);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerNextItemSet -= value;
+                    DetachEvent(EventType.MediaListPlayerNextItemSet, OnNextItemSet);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Stopped
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerStopped += value;
+                    AttachEvent(EventType.MediaListPlayerStopped, OnStopped);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListPlayerStopped -= value;
+                    DetachEvent(EventType.MediaListPlayerStopped, OnStopped);
+                }
+            }
+        }
+
+        void OnPlayed(IntPtr ptr)
+        {
+            _mediaListPlayerPlayed?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnNextItemSet(IntPtr ptr)
+        {
+            var mediaPtr = RetrieveEvent(ptr).Union.MediaListPlayerNextItemSet.MediaInstance;
+
+            _mediaListPlayerNextItemSet?.Invoke(this, new MediaListPlayerNextItemSetEventArgs(new Media(mediaPtr)));
+        }
+
+        void OnStopped(IntPtr ptr)
+        {
+            _mediaListPlayerStopped?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public class MediaDiscovererEventManager : EventManager
     {
+        readonly object _lock = new object();
+
+        EventHandler<EventArgs> _mediaDiscovererStarted;
+        EventHandler<EventArgs> _mediaDiscovererStopped;
+
         public MediaDiscovererEventManager(IntPtr ptr) : base(ptr)
         {
+        }
+
+        // v3
+        public event EventHandler<EventArgs> Started
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStarted += value;
+                    AttachEvent(EventType.MediaDiscovererStarted, OnStarted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStarted -= value;
+                    DetachEvent(EventType.MediaDiscovererStarted, OnStarted);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<EventArgs> Stopped
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStopped += value;
+                    AttachEvent(EventType.MediaDiscovererStopped, OnStopped);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStopped -= value;
+                    DetachEvent(EventType.MediaDiscovererStopped, OnStopped);
+                }
+            }
+        }
+
+        void OnStarted(IntPtr ptr)
+        {
+            _mediaDiscovererStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnStopped(IntPtr ptr)
+        {
+            _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public class VLMEventManager : EventManager
     {
+        readonly object _lock = new object();
+
+        EventHandler<VLMMediaEventArgs> _vlmMediaAdded;
+        EventHandler<VLMMediaEventArgs> _vlmMediaRemoved;
+        EventHandler<VLMMediaEventArgs> _vlmMediaChanged;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStarted;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStopped;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusInit;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusOpening;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusPlaying;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusPause;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusEnd;
+        EventHandler<VLMMediaEventArgs> _vlmMediaInstanceStatusError;
+
         public VLMEventManager(IntPtr ptr) : base(ptr)
         {
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaAdded += value;
+                    AttachEvent(EventType.VlmMediaAdded, OnMediaAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaAdded -= value;
+                    DetachEvent(EventType.VlmMediaAdded, OnMediaAdded);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaRemoved
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaRemoved += value;
+                    AttachEvent(EventType.VlmMediaRemoved, OnMediaRemoved);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaRemoved -= value;
+                    DetachEvent(EventType.VlmMediaRemoved, OnMediaRemoved);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaChanged += value;
+                    AttachEvent(EventType.VlmMediaChanged, OnMediaChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaChanged -= value;
+                    DetachEvent(EventType.VlmMediaChanged, OnMediaChanged);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStarted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStarted += value;
+                    AttachEvent(EventType.VlmMediaInstanceStarted, OnMediaInstanceStarted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStarted -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStarted, OnMediaInstanceStarted);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStopped
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStopped += value;
+                    AttachEvent(EventType.VlmMediaInstanceStopped, OnMediaInstanceStopped);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStopped -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStopped, OnMediaInstanceStopped);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusInit
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusInit += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusInit, OnMediaInstanceStatusInit);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusInit -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusInit, OnMediaInstanceStatusInit);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusOpening
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusOpening += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusOpening, OnMediaInstanceStatusOpening);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusOpening -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusOpening, OnMediaInstanceStatusOpening);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusPlaying
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusPlaying += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusPlaying, OnMediaInstanceStatusPlaying);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusPlaying -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusPlaying, OnMediaInstanceStatusPlaying);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusPause
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusPause += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusPause, OnMediaInstanceStatusPause);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusPause -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusPause, OnMediaInstanceStatusPause);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusEnd
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusEnd += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusEnd, OnMediaInstanceStatusEnd);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusEnd -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusEnd, OnMediaInstanceStatusEnd);
+                }
+            }
+        }
+
+        public event EventHandler<VLMMediaEventArgs> MediaInstanceStatusError
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusError += value;
+                    AttachEvent(EventType.VlmMediaInstanceStatusError, OnMediaInstanceStatusError);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _vlmMediaInstanceStatusError -= value;
+                    DetachEvent(EventType.VlmMediaInstanceStatusError, OnMediaInstanceStatusError);
+                }
+            }
+        }
+
+        void OnMediaAdded(IntPtr ptr)
+        {
+            _vlmMediaAdded?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr)));
+        }
+
+        void OnMediaRemoved(IntPtr ptr)
+        {
+            _vlmMediaRemoved?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr)));
+        }
+
+        void OnMediaChanged(IntPtr ptr)
+        {
+            _vlmMediaChanged?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr)));
+        }
+
+        void OnMediaInstanceStarted(IntPtr ptr)
+        {
+            _vlmMediaInstanceStarted?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStopped(IntPtr ptr)
+        {
+            _vlmMediaInstanceStopped?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusInit(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusInit?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusOpening(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusOpening?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusPlaying(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusPlaying?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusPause(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusPause?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusEnd(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusEnd?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        void OnMediaInstanceStatusError(IntPtr ptr)
+        {
+            _vlmMediaInstanceStatusError?.Invoke(this, new VLMMediaEventArgs(MediaName(ptr), InstanceName(ptr)));
+        }
+
+        string MediaName(IntPtr ptr)
+        {
+            var mediaNamePtr = RetrieveEvent(ptr).Union.VlmMediaEvent.MediaName;
+            return (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(mediaNamePtr);
+        }
+
+        string InstanceName(IntPtr ptr)
+        {
+            var instanceNamePtr = RetrieveEvent(ptr).Union.VlmMediaEvent.InstanceName;
+            return (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(instanceNamePtr);
         }
     }
 

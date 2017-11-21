@@ -71,7 +71,7 @@ namespace VideoLAN.LibVLC
         /// <para>Useless event, it will be triggered only when calling</para>
         /// <para>libvlc_media_discoverer_stop()</para>
         /// </remarks>
-        MediaDiscovererEnded = 1281,
+        MediaDiscovererStopped = 1281,
 
         /// <remarks>
         /// <para>Useless event, it will be triggered only when calling</para>
@@ -668,6 +668,36 @@ namespace VideoLAN.LibVLC
     {
         public MediaListWillDeleteItemEventArgs(Media media, int index) : base(media, index)
         {
+        }
+    }
+
+    #endregion
+
+    #region MediaListPlayer events
+
+    public class MediaListPlayerNextItemSetEventArgs : EventArgs
+    {
+        public readonly Media Media;
+
+        public MediaListPlayerNextItemSetEventArgs(Media media)
+        {
+            Media = media;
+        }
+    }
+
+    #endregion
+
+    #region VLM events
+
+    public class VLMMediaEventArgs : EventArgs
+    {
+        public readonly string InstanceName;
+        public readonly string MediaName;
+
+        public VLMMediaEventArgs(string mediaName = "", string instanceName = "")
+        {
+            MediaName = mediaName;
+            InstanceName = instanceName;
         }
     }
 
