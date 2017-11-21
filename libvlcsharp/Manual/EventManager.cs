@@ -280,7 +280,7 @@ namespace VideoLAN.LibVLC
         EventHandler<EventArgs> _mediaPlayerUncorked; // vlc 2.2
         EventHandler<EventArgs> _mediaPlayerMuted; // vlc 2.2
         EventHandler<EventArgs> _mediaPlayerUnmuted; // vlc 2.2
-        EventHandler<EventArgs> _mediaPlayerAudioVolume; // vlc 2.2
+        EventHandler<MediaPlayerVolumeChangedEventArgs> _mediaPlayerVolumeChanged; // vlc 2.2
 
         public MediaPlayerEventManager(IntPtr ptr) : base(ptr)
         {
@@ -626,6 +626,275 @@ namespace VideoLAN.LibVLC
             }
         }
 
+        public event EventHandler<MediaPlayerSnapshotTakenEventArgs> SnapshotTaken
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSnapshotTaken += value;
+                    AttachEvent(EventType.MediaPlayerSnapshotTaken, OnSnapshotTaken);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSnapshotTaken -= value;
+                    DetachEvent(EventType.MediaPlayerSnapshotTaken, OnSnapshotTaken);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerLengthChangedEventArgs> LengthChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerLengthChanged += value;
+                    AttachEvent(EventType.MediaPlayerLengthChanged, OnLengthChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerLengthChanged -= value;
+                    DetachEvent(EventType.MediaPlayerLengthChanged, OnLengthChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerVoutEventArgs> Vout
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVout += value;
+                    AttachEvent(EventType.MediaPlayerVout, OnVout);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVout -= value;
+                    DetachEvent(EventType.MediaPlayerVout, OnVout);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerScrambledChanged += value;
+                    AttachEvent(EventType.MediaPlayerScrambledChanged, OnScrambledChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerScrambledChanged -= value;
+                    DetachEvent(EventType.MediaPlayerScrambledChanged, OnScrambledChanged);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESAdded += value;
+                    AttachEvent(EventType.MediaPlayerESAdded, OnESAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESAdded -= value;
+                    DetachEvent(EventType.MediaPlayerESAdded, OnESAdded);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESDeletedEventArgs> ESDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESDeleted += value;
+                    AttachEvent(EventType.MediaPlayerESDeleted, OnESDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESDeleted -= value;
+                    DetachEvent(EventType.MediaPlayerESDeleted, OnESDeleted);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESSelectedEventArgs> ESSelected
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESSelected += value;
+                    AttachEvent(EventType.MediaPlayerESSelected, OnESSelected);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESSelected -= value;
+                    DetachEvent(EventType.MediaPlayerESSelected, OnESSelected);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerAudioDeviceEventArgs> AudioDevice
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerAudioDevice += value;
+                    AttachEvent(EventType.MediaPlayerAudioDevice, OnAudioDevice);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerAudioDevice -= value;
+                    DetachEvent(EventType.MediaPlayerAudioDevice, OnAudioDevice);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Corked
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerCorked += value;
+                    AttachEvent(EventType.MediaPlayerCorked, OnCorked);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerCorked -= value;
+                    DetachEvent(EventType.MediaPlayerCorked, OnCorked);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Uncorked
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUncorked += value;
+                    AttachEvent(EventType.MediaPlayerUncorked, OnUncorked);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUncorked -= value;
+                    DetachEvent(EventType.MediaPlayerUncorked, OnUncorked);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Muted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMuted += value;
+                    AttachEvent(EventType.MediaPlayerMuted, OnMuted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMuted -= value;
+                    DetachEvent(EventType.MediaPlayerMuted, OnMuted);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Unmuted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUnmuted += value;
+                    AttachEvent(EventType.MediaPlayerUnmuted, OnUnmuted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUnmuted -= value;
+                    DetachEvent(EventType.MediaPlayerUnmuted, OnUnmuted);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVolumeChanged += value;
+                    AttachEvent(EventType.MediaPlayerAudioVolume, OnVolumeChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVolumeChanged -= value;
+                    DetachEvent(EventType.MediaPlayerAudioVolume, OnVolumeChanged);
+                }
+            }
+        }
+
         void OnMediaChanged(IntPtr ptr)
         {
             _mediaPlayerMediaChanged?.Invoke(this, 
@@ -713,18 +982,238 @@ namespace VideoLAN.LibVLC
                 new MediaPlayerTitleChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTitleChanged.NewTitle));
         }
 
-        //TODO: Add libvlc API version check > 3.0
         void OnChapterChanged(IntPtr ptr)
         {
             _mediaPlayerChapterChanged?.Invoke(this,
                 new MediaPlayerChapterChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerChapterChanged.NewChapter));
         }
+
+        void OnSnapshotTaken(IntPtr ptr)
+        {
+            var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
+            var filename = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filenamePtr);
+            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filename));
+        }
+
+        void OnLengthChanged(IntPtr ptr)
+        {
+            _mediaPlayerLengthChanged?.Invoke(this, 
+                new MediaPlayerLengthChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerLengthChanged.NewLength));
+        }
+
+        void OnVout(IntPtr ptr)
+        {
+            _mediaPlayerVout?.Invoke(this, 
+                new MediaPlayerVoutEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVoutChanged.NewCount));
+        }
+
+        void OnScrambledChanged(IntPtr ptr)
+        {
+            _mediaPlayerScrambledChanged?.Invoke(this,
+                new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
+        }
+
+        void OnESAdded(IntPtr ptr)
+        {
+            _mediaPlayerESAdded?.Invoke(this,
+                new MediaPlayerESAddedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnESDeleted(IntPtr ptr)
+        {
+            _mediaPlayerESDeleted?.Invoke(this,
+                new MediaPlayerESDeletedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnESSelected(IntPtr ptr)
+        {
+            _mediaPlayerESSelected?.Invoke(this,
+                new MediaPlayerESSelectedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnAudioDevice(IntPtr ptr)
+        {
+            var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
+            var deviceName = (string) Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(deviceNamePtr);
+            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceName));
+        }
+
+        void OnCorked(IntPtr ptr)
+        {
+            _mediaPlayerCorked?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnUncorked(IntPtr ptr)
+        {
+            _mediaPlayerUncorked?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnMuted(IntPtr ptr)
+        {
+            _mediaPlayerMuted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnUnmuted(IntPtr ptr)
+        {
+            _mediaPlayerUnmuted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnVolumeChanged(IntPtr ptr)
+        {
+            _mediaPlayerVolumeChanged?.Invoke(this, 
+                new MediaPlayerVolumeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVolumeChanged.Volume));
+        }
     }
 
     public class MediaListEventManager : EventManager
     {
+        readonly object _lock = new object();
+
+        EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
+        EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
+        EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
+        EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
+        EventHandler<EventArgs> _mediaListEndReached;
+
         public MediaListEventManager(IntPtr ptr) : base(ptr)
         {
+        }
+
+        public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListItemAdded += value;
+                    AttachEvent(EventType.MediaListItemAdded, OnItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListItemAdded -= value;
+                    DetachEvent(EventType.MediaListItemAdded, OnItemAdded);
+                }
+            }
+        }
+        public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListWillAddItem += value;
+                    AttachEvent(EventType.MediaListWillAddItem, OnWillAddItem);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListWillAddItem -= value;
+                    DetachEvent(EventType.MediaListWillAddItem, OnWillAddItem);
+                }
+            }
+        }
+
+        public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListItemDeleted += value;
+                    AttachEvent(EventType.MediaListItemDeleted, OnItemDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListItemDeleted -= value;
+                    DetachEvent(EventType.MediaListItemDeleted, OnItemDeleted);
+                }
+            }
+        }
+
+        public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListWillDeleteItem += value;
+                    AttachEvent(EventType.MediaListWillDeleteItem, OnWillDeleteItem);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListWillDeleteItem -= value;
+                    DetachEvent(EventType.MediaListWillDeleteItem, OnWillDeleteItem);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<EventArgs> EndReached
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListEndReached += value;
+                    AttachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListEndReached -= value;
+                    DetachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+        }
+
+        void OnItemAdded(IntPtr ptr)
+        {
+            var itemAdded = RetrieveEvent(ptr).Union.MediaListItemAdded;
+
+            _mediaListItemAdded?.Invoke(this,
+                new MediaListItemAddedEventArgs(new Media(itemAdded.MediaInstance), itemAdded.Index ));
+        }
+
+        void OnWillAddItem(IntPtr ptr)
+        {
+            var willAddItem = RetrieveEvent(ptr).Union.MediaListWillAddItem;
+
+            _mediaListWillAddItem?.Invoke(this, 
+                new MediaListWillAddItemEventArgs(new Media(willAddItem.MediaInstance), willAddItem.Index));
+        }
+
+        void OnItemDeleted(IntPtr ptr)
+        {
+            var itemDeleted = RetrieveEvent(ptr).Union.MediaListItemDeleted;
+
+            _mediaListItemDeleted?.Invoke(this,
+                new MediaListItemDeletedEventArgs(new Media(itemDeleted.MediaInstance), itemDeleted.Index));
+        }
+
+        void OnWillDeleteItem(IntPtr ptr)
+        {
+            var willDeleteItem = RetrieveEvent(ptr).Union.MediaListWillDeleteItem;
+
+            _mediaListWillDeleteItem?.Invoke(this,
+                new MediaListWillDeleteItemEventArgs(new Media(willDeleteItem.MediaInstance), willDeleteItem.Index));
+        }
+
+        void OnEndReached(IntPtr ptr)
+        {
+            _mediaListEndReached?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -761,5 +1250,4 @@ namespace VideoLAN.LibVLC
 
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void EventCallback(IntPtr args);
-
 }

@@ -193,6 +193,9 @@ namespace VideoLAN.LibVLC
             public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
             public MediaPlayerLengthChanged MediaPlayerLengthChanged;
             public MediaPlayerMediaChanged MediaPlayerMediaChanged;
+            public EsChanged EsChanged;
+            public VolumeChanged MediaPlayerVolumeChanged;
+            public AudioDeviceChanged AudioDeviceChanged;
 
             // medialist
             public MediaListItemAdded MediaListItemAdded;
@@ -204,15 +207,13 @@ namespace VideoLAN.LibVLC
             // vlm
             public VlmMediaEvent VlmMediaEvent;
 
-            public EsChanged EsChanged;
-            public VolumeChanged VolumeChanged;
-            public AudioDeviceChanged AudioDeviceChanged;
-
             // renderer
             public RendererDiscovererItemAdded RendererDiscovererItemAdded;
             public RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
         }
-        
+
+        #region Media
+
         public struct MediaMetaChanged
         {
             public Media.MetadataType MetaType;
@@ -247,6 +248,10 @@ namespace VideoLAN.LibVLC
         {
             public IntPtr MediaInstance;
         }
+
+        #endregion
+
+        #region MediaPlayer 
 
         public struct MediaPlayerBuffering
         {
@@ -293,6 +298,41 @@ namespace VideoLAN.LibVLC
             public int NewCount;
         }
 
+        public struct MediaPlayerSnapshotTaken
+        {
+            public IntPtr Filename;
+        }
+
+        public struct MediaPlayerLengthChanged
+        {
+            public long NewLength;
+        }
+
+        public struct EsChanged
+        {
+            public TrackType Type;
+            public int Id;
+        }
+
+        public struct AudioDeviceChanged
+        {
+            public IntPtr Device;
+        }
+
+        public struct MediaPlayerMediaChanged
+        {
+            public IntPtr NewMedia;
+        }
+
+        public struct VolumeChanged
+        {
+            public float Volume;
+        }
+
+        #endregion
+
+        #region MediaList
+
         public struct MediaListItemAdded
         {
             public IntPtr MediaInstance;
@@ -322,43 +362,14 @@ namespace VideoLAN.LibVLC
             public IntPtr MediaInstance;
         }
 
-        public struct MediaPlayerSnapshotTaken
-        {
-            public IntPtr Filename;
-        }
-
-        public struct MediaPlayerLengthChanged
-        {
-            public long NewLength;
-        }
+        #endregion MediaList
 
         public struct VlmMediaEvent
         {
             public IntPtr MediaName;
             public IntPtr InstanceName;
         }
-
-        public struct MediaPlayerMediaChanged
-        {
-            public IntPtr NewMedia;
-        }
-
-        public struct EsChanged
-        {
-            public TrackType Type;
-            public int Id;
-        }
-
-        public struct VolumeChanged
-        {
-            public float Volume;
-        }
-
-        public struct AudioDeviceChanged
-        {
-            public IntPtr Device;
-        }
-
+        
         public struct RendererDiscovererItemAdded
         {
             public IntPtr Item;
@@ -369,6 +380,8 @@ namespace VideoLAN.LibVLC
             public IntPtr Item;
         }
     }
+
+    #region Media events
 
     public class MediaMetaChangedEventArgs : EventArgs
     {
@@ -439,6 +452,10 @@ namespace VideoLAN.LibVLC
             SubItem = new Media(subItemPtr);
         }
     }
+
+    #endregion
+
+    #region MediaPlayer events
 
     public class MediaPlayerMediaChangedEventArgs : EventArgs
     {
@@ -599,4 +616,60 @@ namespace VideoLAN.LibVLC
             AudioDevice = audioDevice;
         }
     }
+
+    public class MediaPlayerVolumeChangedEventArgs : EventArgs
+    {
+        public readonly float Volume;
+
+        public MediaPlayerVolumeChangedEventArgs(float volume)
+        {
+            Volume = volume;
+        }
+    }
+
+    #endregion
+
+    #region MediaList events
+
+    public abstract class MediaListBaseEventArgs : EventArgs
+    {
+        public readonly Media Media;
+        public readonly int Index;
+
+        protected MediaListBaseEventArgs(Media media, int index)
+        {
+            Media = media;
+            Index = index;
+        }
+    }
+
+    public class MediaListItemAddedEventArgs : MediaListBaseEventArgs
+    {
+        public MediaListItemAddedEventArgs(Media media, int index) : base(media, index)
+        {
+        }
+    }
+
+    public class MediaListWillAddItemEventArgs : MediaListBaseEventArgs
+    {
+        public MediaListWillAddItemEventArgs(Media media, int index) : base(media, index)
+        {
+        }
+    }
+
+    public class MediaListItemDeletedEventArgs : MediaListBaseEventArgs
+    {
+        public MediaListItemDeletedEventArgs(Media media, int index) : base(media, index)
+        {
+        }
+    }
+
+    public class MediaListWillDeleteItemEventArgs : MediaListBaseEventArgs
+    {
+        public MediaListWillDeleteItemEventArgs(Media media, int index) : base(media, index)
+        {
+        }
+    }
+
+    #endregion
 }
