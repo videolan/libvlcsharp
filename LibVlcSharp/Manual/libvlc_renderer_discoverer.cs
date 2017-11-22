@@ -358,7 +358,7 @@ namespace VideoLAN.LibVLC
         /// <para>libvlc_renderer_discoverer_start()</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::VideoLAN.LibVLC.RendererDiscoverer LibvlcRendererDiscovererNew(global::VideoLAN.LibVLC.Instance p_inst, string psz_name)
+        public static global::VideoLAN.LibVLC.RendererDiscoverer LibvlcRendererDiscovererNew(global::VideoLAN.LibVLC.Manual.Instance p_inst, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
             var __ret = __Internal.LibvlcRendererDiscovererNew(__arg0, psz_name);
@@ -420,7 +420,7 @@ namespace VideoLAN.LibVLC
         /// </remarks>
         //public static global::VideoLAN.LibVLC.EventManager LibvlcRendererDiscovererEventManager(global::VideoLAN.LibVLC.RendererDiscoverer p_rd)
         //{
-        //    var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.__Instance;
+        //    var __arg0 = ReferenceEquals(p_rd, null) ? global::System.IntPtr.Zero : p_rd.NativeReference;
         //    var __ret = __Internal.LibvlcRendererDiscovererEventManager(__arg0);
         //    global::VideoLAN.LibVLC.EventManager __result0;
         //    if (__ret == IntPtr.Zero) __result0 = null;
@@ -442,7 +442,7 @@ namespace VideoLAN.LibVLC
         /// <para>libvlc_renderer_list_release()</para>
         /// <para>LibVLC 3.0.0 and later</para>
         /// </remarks>
-        public static ulong LibvlcRendererDiscovererListGet(global::VideoLAN.LibVLC.Instance p_inst, global::VideoLAN.LibVLC.RendererDiscovererDescription ppp_services)
+        public static ulong LibvlcRendererDiscovererListGet(global::VideoLAN.LibVLC.Manual.Instance p_inst, global::VideoLAN.LibVLC.RendererDiscovererDescription ppp_services)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
             var __arg1 = ReferenceEquals(ppp_services, null) ? global::System.IntPtr.Zero : ppp_services.__Instance;

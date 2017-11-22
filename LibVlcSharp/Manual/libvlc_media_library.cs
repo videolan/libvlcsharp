@@ -95,7 +95,7 @@ namespace VideoLAN.LibVLC
         /// <summary>Create an new Media Library object</summary>
         /// <param name="p_instance">the libvlc instance</param>
         /// <returns>a new object or NULL on error</returns>
-        public static global::VideoLAN.LibVLC.LibvlcMediaLibraryT LibvlcMediaLibraryNew(global::VideoLAN.LibVLC.Instance p_instance)
+        public static global::VideoLAN.LibVLC.LibvlcMediaLibraryT LibvlcMediaLibraryNew(global::VideoLAN.LibVLC.Manual.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcMediaLibraryNew(__arg0);

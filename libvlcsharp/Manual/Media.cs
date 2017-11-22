@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
+using VideoLAN.LibVLC.Manual;
 
 namespace VideoLAN.LibVLC
 {
@@ -642,8 +643,8 @@ namespace VideoLAN.LibVLC
         // TODO: Whats userData?
         //public IntPtr UserData
         //{
-        //    get => Internal.LibVLCMediaGetUserData(NativeReference);
-        //    set => Internal.LibVLCMediaSetUserData(NativeReference, IntPtr.Zero);
+        //    get => Native.LibVLCMediaGetUserData(NativeReference);
+        //    set => Native.LibVLCMediaSetUserData(NativeReference, IntPtr.Zero);
         //}
 
         /// <summary>Get media descriptor's elementary streams description</summary>

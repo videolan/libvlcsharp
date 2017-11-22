@@ -330,7 +330,7 @@ namespace VideoLAN.LibVLC
         /// <para>The initial reference count is 1 after libvlc_new() returns.</para>
         /// </summary>
         /// <param name="p_instance">the instance to reference</param>
-        public static void LibvlcRetain(global::VideoLAN.LibVLC.Instance p_instance)
+        public static void LibvlcRetain(global::VideoLAN.LibVLC.Manual.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             __Internal.LibvlcRetain(__arg0);
@@ -385,7 +385,7 @@ namespace VideoLAN.LibVLC
         /// <returns>0 on success, ENOMEM on error</returns>
         //public static int LibvlcEventAttach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr user_data)
         //{
-        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
+        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.NativeReference;
         //    var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
         //    var __ret = __Internal.LibvlcEventAttach(__arg0, i_event_type, __arg2, user_data);
         //    return __ret;
@@ -398,7 +398,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_user_data">user provided data to carry with the event</param>
         //public static void LibvlcEventDetach(global::VideoLAN.LibVLC.EventManager p_event_manager, int i_event_type, global::VideoLAN.LibVLC.LibvlcCallbackT f_callback, global::System.IntPtr p_user_data)
         //{
-        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.__Instance;
+        //    var __arg0 = ReferenceEquals(p_event_manager, null) ? global::System.IntPtr.Zero : p_event_manager.NativeReference;
         //    var __arg2 = f_callback == null ? global::System.IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(f_callback);
         //    __Internal.LibvlcEventDetach(__arg0, i_event_type, __arg2, p_user_data);
         //}

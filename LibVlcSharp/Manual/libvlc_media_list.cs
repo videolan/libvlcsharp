@@ -99,7 +99,7 @@ namespace VideoLAN.LibVLC
         /// <summary>Create an empty media list.</summary>
         /// <param name="p_instance">libvlc instance</param>
         /// <returns>empty media list, or NULL on error</returns>
-        public static global::VideoLAN.LibVLC.MediaList LibvlcMediaListNew(global::VideoLAN.LibVLC.Instance p_instance)
+        public static global::VideoLAN.LibVLC.MediaList LibvlcMediaListNew(global::VideoLAN.LibVLC.Manual.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcMediaListNew(__arg0);
@@ -150,7 +150,7 @@ namespace VideoLAN.LibVLC
         /// <returns>media instance</returns>
         //public static global::VideoLAN.LibVLC.Media LibvlcMediaListMedia(global::VideoLAN.LibVLC.MediaList p_ml)
         //{
-            //var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
+            //var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.NativeReference;
             //var __ret = __Internal.LibvlcMediaListMedia(__arg0);
             //global::VideoLAN.LibVLC.Media __result0;
             //if (__ret == IntPtr.Zero) __result0 = null;
@@ -231,7 +231,7 @@ namespace VideoLAN.LibVLC
         /// </returns>
         //public static global::VideoLAN.LibVLC.Media LibvlcMediaListItemAtIndex(global::VideoLAN.LibVLC.MediaList p_ml, int i_pos)
         //{
-        //    var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
+        //    var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.NativeReference;
         //    var __ret = __Internal.LibvlcMediaListItemAtIndex(__arg0, i_pos);
         //    global::VideoLAN.LibVLC.Media __result0;
         //    //if (__ret == IntPtr.Zero) __result0 = null;
@@ -294,7 +294,7 @@ namespace VideoLAN.LibVLC
         ///// <returns>libvlc_event_manager</returns>
         //public static global::VideoLAN.LibVLC.EventManager LibvlcMediaListEventManager(global::VideoLAN.LibVLC.MediaList p_ml)
         //{
-        //    var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.__Instance;
+        //    var __arg0 = ReferenceEquals(p_ml, null) ? global::System.IntPtr.Zero : p_ml.NativeReference;
         //    var __ret = __Internal.LibvlcMediaListEventManager(__arg0);
         //    global::VideoLAN.LibVLC.EventManager __result0;
         //    if (__ret == IntPtr.Zero) __result0 = null;

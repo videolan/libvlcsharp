@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
+using VideoLAN.LibVLC.Manual;
 
 namespace Bindings.Tests
 {
@@ -83,9 +84,7 @@ namespace Bindings.Tests
         [Test]
         public void EqualityTests()
         {
-            var instance1 = new Instance();
-            var instance2 = new Instance();
-            Assert.True(instance1 != instance2);
+            Assert.AreNotSame(new Instance(), new Instance());
         }
 
         [Test]

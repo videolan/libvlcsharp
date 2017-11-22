@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,9 +7,9 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VideoLAN.LibVLC
+namespace VideoLAN.LibVLC.Manual
 {
-    public class Instance
+    public class Instance : Internal
     {
         protected bool Equals(Instance other)
         {
@@ -43,7 +42,7 @@ namespace VideoLAN.LibVLC
         }
 
         [StructLayout(LayoutKind.Explicit, Size = 0)]
-        internal struct Internal
+        internal struct Native
         {
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -176,7 +175,6 @@ namespace VideoLAN.LibVLC
                 IntPtr args);
         }
     
-        public IntPtr NativeReference { get; protected set; }
         public Version VLCVersion { get; private set; }
 
         internal static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, Instance> NativeToManagedMap 
@@ -227,14 +225,12 @@ namespace VideoLAN.LibVLC
         /// <para>We recommend that you do not use them, other than when debugging.</para>
         /// </remarks>
         public Instance(int argc = 0, string[] args = null)
-        {         
-            unsafe
+            : base(() =>
             {
-                if (args == null || !args.Any())
-                    NativeReference = Internal.LibVLCNew(argc, null);
-                else
+                unsafe
                 {
-
+                    if (args == null || !args.Any())
+                        return Native.LibVLCNew(argc, null);
                     fixed (byte* arg0 = Encoding.ASCII.GetBytes(args[0]),
                         arg1 = Encoding.ASCII.GetBytes(args[1]),
                         arg2 = Encoding.ASCII.GetBytes(args[2]))
@@ -242,39 +238,34 @@ namespace VideoLAN.LibVLC
                         sbyte*[] arr = { (sbyte*)arg0, (sbyte*)arg1, (sbyte*)arg2 };
                         fixed (sbyte** argv = arr)
                         {
-                            NativeReference = Internal.LibVLCNew(argc, argv);
+                            return Native.LibVLCNew(argc, argv);
                         }
                     }
                 }
-            }
-
+            }, Native.LibVLCRelease)
+        {
             __ownsNativeInstance = true;
             NativeToManagedMap[NativeReference] = this;
 
-            var version = Marshal.PtrToStringAnsi(Internal.LibVLCVersion());
+            var version = Marshal.PtrToStringAnsi(Native.LibVLCVersion());
             if (string.IsNullOrEmpty(version)) return;
 
             version = version.Split('-', ' ')[0];
             VLCVersion = new Version(version);
         }
 
-        /// <para>Decrement the reference count of a libvlc instance, and destroy it</para>
-        /// <para>if it reaches zero.</para>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-        }
+       
 
-        public virtual void Dispose(bool disposing)
-        {
-            if (NativeReference == IntPtr.Zero)
-                return;
+        //public virtual void Dispose(bool disposing)
+        //{
+        //    if (NativeReference == IntPtr.Zero)
+        //        return;
 
-            Internal.LibVLCRelease(NativeReference);
+        //    Native.LibVLCRelease(NativeReference);
             
-            NativeToManagedMap.TryRemove(NativeReference, out var dummy);
-            NativeReference = IntPtr.Zero;
-        }
+        //    NativeToManagedMap.TryRemove(NativeReference, out var dummy);
+        //    NativeReference = IntPtr.Zero;
+        //}
         
         public static bool operator ==(Instance obj1, Instance obj2)
         {
@@ -293,7 +284,7 @@ namespace VideoLAN.LibVLC
         */
         public bool AddInterface(string name)
         {
-            return Internal.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
+            return Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
         }
         
         /// <summary>
@@ -317,7 +308,7 @@ namespace VideoLAN.LibVLC
         public void SetExitHandler(ExitCallback cb, IntPtr opaque)
         {
             var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
-            Internal.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
+            Native.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
         }
         
         /// <summary>
@@ -329,7 +320,7 @@ namespace VideoLAN.LibVLC
         /// <remarks>LibVLC 1.1.1 or later</remarks>
         public void SetUserAgent(string name, string http)
         {
-            Internal.LibVLCSetUserAgent(NativeReference, name, http);
+            Native.LibVLCSetUserAgent(NativeReference, name, http);
         }
 
         /// <summary>
@@ -342,7 +333,7 @@ namespace VideoLAN.LibVLC
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
         public void SetAppId(string id, string version, string icon)
         {
-            Internal.LibVLCSetAppId(NativeReference, id, version, icon);
+            Native.LibVLCSetAppId(NativeReference, id, version, icon);
         }
 
         /// <summary>Unsets the logging callback.</summary>
@@ -356,7 +347,7 @@ namespace VideoLAN.LibVLC
         /// </remarks>
         public void UnsetLog()
         {
-            Internal.LibVLCLogUnset(NativeReference);
+            Native.LibVLCLogUnset(NativeReference);
         }
 
         public void SetLog(LogCallback cb)
@@ -365,7 +356,7 @@ namespace VideoLAN.LibVLC
 
             _logCallback = cb;
 
-            Internal.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
+            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
         }
 
         /// <summary>
@@ -411,7 +402,7 @@ namespace VideoLAN.LibVLC
             if(!fileStream.CanWrite) throw new ArgumentException("cannot write", nameof(fileStream));
 
             //https://stackoverflow.com/questions/34519564/dealing-with-file-handles-using-mono-and-p-invoke
-            Internal.LibVLCLogSetFile(NativeReference, fileStream.SafeFileHandle.DangerousGetHandle());
+            Native.LibVLCLogSetFile(NativeReference, fileStream.SafeFileHandle.DangerousGetHandle());
         }
 
         /// <summary>Returns a list of audio filters that are available.</summary>
@@ -427,10 +418,10 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Internal.LibVLCAudioFilterListGet(NativeReference),
+                return Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
                     Marshal.PtrToStructure<ModuleDescription.Internal>,
                     intern => ModuleDescription.__CreateInstance(intern),
-                    module => module.Next, Internal.LibVLCModuleDescriptionListRelease);
+                    module => module.Next, Native.LibVLCModuleDescriptionListRelease);
             }
         }
 
@@ -447,10 +438,10 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Internal.LibVLCVideoFilterListGet(NativeReference),
+                return Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
                     Marshal.PtrToStructure<ModuleDescription.Internal>,
                     intern => ModuleDescription.__CreateInstance(intern),
-                    module => module.Next, Internal.LibVLCModuleDescriptionListRelease);
+                    module => module.Next, Native.LibVLCModuleDescriptionListRelease);
             }
         }
 
@@ -465,10 +456,10 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Internal.LibVLCAudioOutputListGet(NativeReference),
+                return Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
                     Marshal.PtrToStructure<AudioOutputDescription.Internal>,
                     intern => AudioOutputDescription.__CreateInstance(intern),
-                    module => module.Next, Internal.LibVLCAudioOutputListRelease);
+                    module => module.Next, Native.LibVLCAudioOutputListRelease);
             }
         }
         
@@ -495,10 +486,10 @@ namespace VideoLAN.LibVLC
         public IEnumerable<AudioOutputDevice> AudioOutputDevices(string audioOutputName)
         {
 
-            return Retrieve(() => Internal.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
+            return Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
                 Marshal.PtrToStructure<AudioOutputDevice.Internal>, 
                 s => AudioOutputDevice.__CreateInstance(s),
-                device => device.Next, Internal.LibVLCAudioOutputDeviceListRelease);
+                device => device.Next, Native.LibVLCAudioOutputDeviceListRelease);
         }
 
         /// <summary>Get media discoverer services by category</summary>
@@ -508,7 +499,7 @@ namespace VideoLAN.LibVLC
         public IEnumerable<MediaDiscovererDescription> MediaDiscoverers(MediaDiscovererCategory category)
         {
             var arrayResultPtr = IntPtr.Zero;
-            var count = Internal.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
+            var count = Native.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
 
             if (count == 0) return Enumerable.Empty<MediaDiscovererDescription>();
             
@@ -522,7 +513,7 @@ namespace VideoLAN.LibVLC
                 mediaDiscovererDescription[i] = mdd;
             }
 
-            Internal.LibVLCMediaDiscovererListRelease(arrayResultPtr, count);
+            Native.LibVLCMediaDiscovererListRelease(arrayResultPtr, count);
 
             return mediaDiscovererDescription;
         }
@@ -564,13 +555,13 @@ namespace VideoLAN.LibVLC
             if (_log == null) return;
 
             // Original source for va_list handling: https://stackoverflow.com/a/37629480/2663813
-            var byteLength = Internal._vscprintf(format, args) + 1;
+            var byteLength = Native._vscprintf(format, args) + 1;
             var utf8Buffer = Marshal.AllocHGlobal(byteLength);
 
             string formattedDecodedMessage;
             try
             {
-                Internal.vsprintf(utf8Buffer, format, args);
+                Native.vsprintf(utf8Buffer, format, args);
 
                 formattedDecodedMessage = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(utf8Buffer);
             }
@@ -602,7 +593,7 @@ namespace VideoLAN.LibVLC
         /// <param name="line">The source code file line number storage.</param>
         void GetLogContext(IntPtr logContext, out string module, out string file, out uint? line)
         {
-            Internal.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
+            Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
 
             line = linePtr == UIntPtr.Zero ? null : (uint?)linePtr.ToUInt32();
             module = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(modulePtr) as string;

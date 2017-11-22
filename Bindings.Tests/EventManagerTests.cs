@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
+using VideoLAN.LibVLC.Manual;
 
 namespace Bindings.Tests
 {

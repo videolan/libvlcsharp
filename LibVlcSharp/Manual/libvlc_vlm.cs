@@ -122,7 +122,7 @@ namespace VideoLAN.LibVLC
 
         /// <summary>Release the vlm instance related to the given libvlc_instance_t</summary>
         /// <param name="p_instance">the instance</param>
-        public static void LibvlcVlmRelease(global::VideoLAN.LibVLC.Instance p_instance)
+        public static void LibvlcVlmRelease(global::VideoLAN.LibVLC.Manual.Instance p_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             __Internal.LibvlcVlmRelease(__arg0);
@@ -138,7 +138,7 @@ namespace VideoLAN.LibVLC
         /// <param name="b_enabled">boolean for enabling the new broadcast</param>
         /// <param name="b_loop">Should this broadcast be played in loop ?</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddBroadcast(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
+        public static int LibvlcVlmAddBroadcast(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmAddBroadcast(__arg0, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop);
@@ -154,7 +154,7 @@ namespace VideoLAN.LibVLC
         /// <param name="b_enabled">boolean for enabling the new vod</param>
         /// <param name="psz_mux">the muxer of the vod media</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddVod(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_input, int i_options, sbyte** ppsz_options, int b_enabled, string psz_mux)
+        public static int LibvlcVlmAddVod(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_input, int i_options, sbyte** ppsz_options, int b_enabled, string psz_mux)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmAddVod(__arg0, psz_name, psz_input, i_options, ppsz_options, b_enabled, psz_mux);
@@ -165,7 +165,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the media to delete</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmDelMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
+        public static int LibvlcVlmDelMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmDelMedia(__arg0, psz_name);
@@ -177,7 +177,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="b_enabled">the new status</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetEnabled(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int b_enabled)
+        public static int LibvlcVlmSetEnabled(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int b_enabled)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSetEnabled(__arg0, psz_name, b_enabled);
@@ -189,7 +189,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_output">the output MRL (the parameter to the &quot;sout&quot; variable)</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetOutput(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_output)
+        public static int LibvlcVlmSetOutput(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_output)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSetOutput(__arg0, psz_name, psz_output);
@@ -204,7 +204,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_input">the input MRL</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetInput(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_input)
+        public static int LibvlcVlmSetInput(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_input)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSetInput(__arg0, psz_name, psz_input);
@@ -216,7 +216,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_input">the input MRL</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmAddInput(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_input)
+        public static int LibvlcVlmAddInput(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_input)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmAddInput(__arg0, psz_name, psz_input);
@@ -228,7 +228,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="b_loop">the new status</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetLoop(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int b_loop)
+        public static int LibvlcVlmSetLoop(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSetLoop(__arg0, psz_name, b_loop);
@@ -240,7 +240,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the media to work on</param>
         /// <param name="psz_mux">the new muxer</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSetMux(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_mux)
+        public static int LibvlcVlmSetMux(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_mux)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSetMux(__arg0, psz_name, psz_mux);
@@ -260,7 +260,7 @@ namespace VideoLAN.LibVLC
         /// <param name="b_enabled">boolean for enabling the new broadcast</param>
         /// <param name="b_loop">Should this broadcast be played in loop ?</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmChangeMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
+        public static int LibvlcVlmChangeMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, string psz_input, string psz_output, int i_options, sbyte** ppsz_options, int b_enabled, int b_loop)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmChangeMedia(__arg0, psz_name, psz_input, psz_output, i_options, ppsz_options, b_enabled, b_loop);
@@ -271,7 +271,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmPlayMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
+        public static int LibvlcVlmPlayMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmPlayMedia(__arg0, psz_name);
@@ -282,7 +282,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmStopMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
+        public static int LibvlcVlmStopMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmStopMedia(__arg0, psz_name);
@@ -293,7 +293,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_instance">the instance</param>
         /// <param name="psz_name">the name of the broadcast</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmPauseMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
+        public static int LibvlcVlmPauseMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmPauseMedia(__arg0, psz_name);
@@ -305,7 +305,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">the name of the broadcast</param>
         /// <param name="f_percentage">the percentage to seek to</param>
         /// <returns>0 on success, -1 on error</returns>
-        public static int LibvlcVlmSeekMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, float f_percentage)
+        public static int LibvlcVlmSeekMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, float f_percentage)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmSeekMedia(__arg0, psz_name, f_percentage);
@@ -330,7 +330,7 @@ namespace VideoLAN.LibVLC
         /// <para>Currently there are no such functions available for</para>
         /// <para>vlm_media_t though.</para>
         /// </remarks>
-        public static string LibvlcVlmShowMedia(global::VideoLAN.LibVLC.Instance p_instance, string psz_name)
+        public static string LibvlcVlmShowMedia(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmShowMedia(__arg0, psz_name);
@@ -342,7 +342,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>position as float or -1. on error</returns>
-        public static float LibvlcVlmGetMediaInstancePosition(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int i_instance)
+        public static float LibvlcVlmGetMediaInstancePosition(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmGetMediaInstancePosition(__arg0, psz_name, i_instance);
@@ -354,7 +354,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>time as integer or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceTime(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceTime(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceTime(__arg0, psz_name, i_instance);
@@ -366,7 +366,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>length of media item or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceLength(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceLength(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceLength(__arg0, psz_name, i_instance);
@@ -378,7 +378,7 @@ namespace VideoLAN.LibVLC
         /// <param name="psz_name">name of vlm media instance</param>
         /// <param name="i_instance">instance id</param>
         /// <returns>playback rate or -1 on error</returns>
-        public static int LibvlcVlmGetMediaInstanceRate(global::VideoLAN.LibVLC.Instance p_instance, string psz_name, int i_instance)
+        public static int LibvlcVlmGetMediaInstanceRate(global::VideoLAN.LibVLC.Manual.Instance p_instance, string psz_name, int i_instance)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __ret = __Internal.LibvlcVlmGetMediaInstanceRate(__arg0, psz_name, i_instance);

@@ -227,7 +227,7 @@ namespace VideoLAN.LibVLC
         /// <para>libvlc_media_discoverer_start</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public static global::VideoLAN.LibVLC.MediaDiscoverer LibvlcMediaDiscovererNew(global::VideoLAN.LibVLC.Instance p_inst, string psz_name)
+        public static global::VideoLAN.LibVLC.MediaDiscoverer LibvlcMediaDiscovererNew(global::VideoLAN.LibVLC.Manual.Instance p_inst, string psz_name)
         {
             var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
             var __ret = __Internal.LibvlcMediaDiscovererNew(__arg0, psz_name);

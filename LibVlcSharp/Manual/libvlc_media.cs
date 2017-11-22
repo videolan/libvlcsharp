@@ -95,7 +95,7 @@ namespace VideoLAN.LibVLC
     //    {
     //    }
 
-    //    public global::System.IntPtr __Instance { get; protected set; }
+    //    public global::System.IntPtr NativeReference { get; protected set; }
 
     //    protected int __PointerAdjustment;
     //    internal static readonly global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media> NativeToManagedMap = new global::System.Collections.Concurrent.ConcurrentDictionary<IntPtr, global::VideoLAN.LibVLC.Media>();
@@ -124,14 +124,14 @@ namespace VideoLAN.LibVLC
     //        : this(__CopyValue(native), skipVTables)
     //    {
     //        __ownsNativeInstance = true;
-    //        NativeToManagedMap[__Instance] = this;
+    //        NativeToManagedMap[NativeReference] = this;
     //    }
 
     //    protected Media(void* native, bool skipVTables = false)
     //    {
     //        if (native == null)
     //            return;
-    //        __Instance = new global::System.IntPtr(native);
+    //        NativeReference = new global::System.IntPtr(native);
     //    }
     //}
 
@@ -423,6 +423,7 @@ namespace VideoLAN.LibVLC
 
     /// <summary>Viewpoint for video outputs</summary>
     /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
+    [StructLayout(LayoutKind.Sequential)]
     public struct VideoViewpoint
     {
         public float Yaw;

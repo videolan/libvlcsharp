@@ -1,5 +1,6 @@
 ﻿using System;
 using VideoLAN.LibVLC;
+using VideoLAN.LibVLC.Manual;
 
 namespace Sample
 {
@@ -7,14 +8,10 @@ namespace Sample
     {
         static void Main(string[] args)
         {
-            var instance = new Instance(0, null);
-          
-            //var media = libvlc_media.(instance,
-                //"http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
-
-            //var mediaPlayer = libvlc_media_player.LibvlcMediaPlayerNewFromMedia(media);
-            //libvlc_media_player.LibvlcMediaPlayerPlay(mediaPlayer);
-
+            var instance = new Instance();
+            var media = new Media(instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            var mp = new MediaPlayer(media);
+            mp.Play();
             Console.ReadKey();
         }
     }

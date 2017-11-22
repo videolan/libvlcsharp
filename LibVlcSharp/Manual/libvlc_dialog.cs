@@ -209,7 +209,7 @@ namespace VideoLAN.LibVLC
         /// <param name="p_cbs">a pointer to callbacks, or NULL to unregister callbacks.</param>
         /// <param name="p_data">opaque pointer for the callback</param>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public static void LibvlcDialogSetCallbacks(global::VideoLAN.LibVLC.Instance p_instance, global::VideoLAN.LibVLC.DialogCallback p_cbs, global::System.IntPtr p_data)
+        public static void LibvlcDialogSetCallbacks(global::VideoLAN.LibVLC.Manual.Instance p_instance, global::VideoLAN.LibVLC.DialogCallback p_cbs, global::System.IntPtr p_data)
         {
             var __arg0 = ReferenceEquals(p_instance, null) ? global::System.IntPtr.Zero : p_instance.NativeReference;
             var __arg1 = ReferenceEquals(p_cbs, null) ? global::System.IntPtr.Zero : p_cbs.__Instance;
