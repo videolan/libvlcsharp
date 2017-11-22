@@ -414,7 +414,7 @@ namespace VideoLAN.LibVLC.Manual
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public IEnumerable<ModuleDescription> AudioFilters
+        public ModuleDescription[] AudioFilters
         {
             get
             {
@@ -434,7 +434,7 @@ namespace VideoLAN.LibVLC.Manual
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public IEnumerable<ModuleDescription> VideoFilters
+        public ModuleDescription[] VideoFilters
         {
             get
             {
@@ -452,7 +452,7 @@ namespace VideoLAN.LibVLC.Manual
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public IEnumerable<AudioOutputDescription> AudioOutputs
+        public AudioOutputDescription[] AudioOutputs
         {
             get
             {
@@ -483,7 +483,7 @@ namespace VideoLAN.LibVLC.Manual
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public IEnumerable<AudioOutputDevice> AudioOutputDevices(string audioOutputName)
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
         {
 
             return Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
@@ -496,12 +496,12 @@ namespace VideoLAN.LibVLC.Manual
         /// <param name="category">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public IEnumerable<MediaDiscovererDescription> MediaDiscoverers(MediaDiscovererCategory category)
+        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory category)
         {
             var arrayResultPtr = IntPtr.Zero;
             var count = Native.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
 
-            if (count == 0) return Enumerable.Empty<MediaDiscovererDescription>();
+            if (count == 0) return Array.Empty<MediaDiscovererDescription>();
             
             var mediaDiscovererDescription = new MediaDiscovererDescription[(int)count];
     
@@ -522,11 +522,11 @@ namespace VideoLAN.LibVLC.Manual
         {
         }
 
-        IEnumerable<TU> Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
+        TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
         {
             var nativeRef = getRef();
-            if (nativeRef == IntPtr.Zero) return Enumerable.Empty<TU>();
+            if (nativeRef == IntPtr.Zero) return Array.Empty<TU>();
 
             var structure = retrieve(nativeRef);
 
@@ -539,7 +539,7 @@ namespace VideoLAN.LibVLC.Manual
                 obj = next(obj);
             }
             releaseRef(nativeRef);
-            return resultList;
+            return resultList.ToArray();
         }
 
         /// <summary>
