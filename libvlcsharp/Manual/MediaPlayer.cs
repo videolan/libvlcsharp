@@ -371,7 +371,8 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format_callbacks")]
-            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, IntPtr setup, IntPtr cleanup);
+            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup, 
+                LibVLCVideoCleanupCb cleanup);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -386,12 +387,12 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_size")]
-            internal static extern int LibVLCVideoGetSize(IntPtr mediaPlayer, uint num, ref uint px, ref uint py);
+            internal static extern unsafe int LibVLCVideoGetSize(IntPtr mediaPlayer, uint num, uint* px, uint* py);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_cursor")]
-            internal static extern int LibVLCVideoGetCursor(IntPtr mediaPlayer, uint num, ref int px, ref int py);
+            internal static extern unsafe int LibVLCVideoGetCursor(IntPtr mediaPlayer, uint num, int* px, int* py);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -406,7 +407,7 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_aspect_ratio")]
-            internal static extern IntPtr LibVLCVideoGetAspectRatio(IntPtr mediaPlayer);
+            internal static extern string LibVLCVideoGetAspectRatio(IntPtr mediaPlayer);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
@@ -485,7 +486,7 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_crop_geometry")]
-            internal static extern IntPtr LibVLCVideoGetCropGeometry(IntPtr mediaPlayer);
+            internal static extern string LibVLCVideoGetCropGeometry(IntPtr mediaPlayer);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
@@ -539,59 +540,60 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_int")]
-            internal static extern int LibVLCVideoGetMarqueeInt(IntPtr mediaPlayer, uint option);
+            internal static extern int LibVLCVideoGetMarqueeInt(IntPtr mediaPlayer, VideoMarqueeOption option);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_string")]
-            internal static extern IntPtr LibVLCVideoGetMarqueeString(IntPtr mediaPlayer, uint option);
+            internal static extern string LibVLCVideoGetMarqueeString(IntPtr mediaPlayer, VideoMarqueeOption option);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_marquee_int")]
-            internal static extern void LibVLCVideoSetMarqueeInt(IntPtr mediaPlayer, uint option, int marqueeValue);
+            internal static extern void LibVLCVideoSetMarqueeInt(IntPtr mediaPlayer, VideoMarqueeOption option, int marqueeValue);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_marquee_string")]
-            internal static extern void LibVLCVideoSetMarqueeString(IntPtr mediaPlayer, uint option, [MarshalAs(UnmanagedType.LPStr)] string marqueeValue);
+            internal static extern void LibVLCVideoSetMarqueeString(IntPtr mediaPlayer, VideoMarqueeOption option, [MarshalAs(UnmanagedType.LPStr)] string marqueeValue);
             
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_logo_int")]
-            internal static extern int LibVLCVideoGetLogoInt(IntPtr mediaPlayer, uint option);
+            internal static extern int LibVLCVideoGetLogoInt(IntPtr mediaPlayer, VideoLogoOption option);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_logo_int")]
-            internal static extern void LibVLCVideoSetLogoInt(IntPtr mediaPlayer, uint option, int value);
+            internal static extern void LibVLCVideoSetLogoInt(IntPtr mediaPlayer, VideoLogoOption option, int value);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_logo_string")]
-            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, uint option, [MarshalAs(UnmanagedType.LPStr)] string logoOptionValue);
+            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, VideoLogoOption option, 
+                [MarshalAs(UnmanagedType.LPStr)] string logoOptionValue);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_adjust_int")]
-            internal static extern int LibVLCVideoGetAdjustInt(IntPtr mediaPlayer, uint option);
+            internal static extern int LibVLCVideoGetAdjustInt(IntPtr mediaPlayer, VideoAdjustOption option);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_adjust_int")]
-            internal static extern void LibVLCVideoSetAdjustInt(IntPtr mediaPlayer, uint option, int value);
+            internal static extern void LibVLCVideoSetAdjustInt(IntPtr mediaPlayer, VideoAdjustOption option, int value);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_adjust_float")]
-            internal static extern float LibVLCVideoGetAdjustFloat(IntPtr mediaPlayer, uint option);
+            internal static extern float LibVLCVideoGetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_adjust_float")]
-            internal static extern void LibVLCVideoSetAdjustFloat(IntPtr mediaPlayer, uint option, float value);
+            internal static extern void LibVLCVideoSetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option, float value);
             
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
@@ -609,6 +611,11 @@ namespace VideoLAN.LibVLC.Manual
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_track_description_list_release")]
             internal static extern void LibVLCTrackDescriptionListRelease(IntPtr trackDescription);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_output_device_list_release")]
+            internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
         }
 
         MediaPlayerEventManager _eventManager;
@@ -1065,25 +1072,519 @@ namespace VideoLAN.LibVLC.Manual
         /// <returns>0 if function succeeded, -1 on error</returns>
         public int SetAudioOutput(string name) => Native.LibVLCAudioOutputSet(NativeReference, name);
 
+        // TODO
+        /// <summary>
+        /// Gets a list of potential audio output devices,. 
+        /// </summary>
+        public AudioOutputDescription2[] OutputDeviceEnum
+        {
+            get
+            {
+                return new AudioOutputDescription2[0];
+            }
+        }
 
-        //public AudioOutputDescription[] OutputDeviceEnum
-        //{
-        //    get
-        //    {
-        //        var devices = Native.LibVLCAudioOutputDeviceEnum(NativeReference);
-        //        if (devices == IntPtr.Zero) return Array.Empty<AudioOutputDescription>();
+        public void OutputDeviceSet(string deviceId, string module = null)
+        {
+            Native.LibVLCAudioOutputDeviceSet(NativeReference, module, deviceId);
+        }
 
-        //        return new AudioOutputDescription[0];
-        //    }
-        //}
+        /// <summary>
+        /// Toggle mute status. 
+        /// Warning
+        /// Toggling mute atomically is not always possible: On some platforms, other processes can mute the VLC audio playback 
+        /// stream asynchronously.
+        /// Thus, there is a small race condition where toggling will not work.
+        /// See also the limitations of libvlc_audio_set_mute(). 
+        /// </summary>
+        public void ToggleMute()
+        {
+            Native.LibVLCAudioToggleMute(NativeReference);
+        }
 
-        
+        /// <summary>
+        /// Get current mute status.
+        /// Set mute status.
+        /// Warning
+        /// This function does not always work.
+        /// If there are no active audio playback stream, the mute status might not be available.
+        /// If digital pass-through (S/PDIF, HDMI...) is in use, muting may be unapplicable.
+        /// Also some audio output plugins do not support muting at all.
+        /// Note
+        /// To force silent playback, disable all audio tracks. This is more efficient and reliable than mute. 
+        /// </summary>
+        public bool Mute
+        {
+            get => Native.LibVLCAudioGetMute(NativeReference) == 1;
+            set => Native.LibVLCAudioSetMute(NativeReference, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Get/Set the volume in percents (0 = mute, 100 = 0dB)
+        /// </summary>
+        public int Volume
+        {
+            get => Native.LibVLCAudioGetVolume(NativeReference);
+            set => Native.LibVLCAudioSetVolume(NativeReference, value);
+        }
+
+        /// <summary>
+        /// Get the number of available audio tracks (int), or -1 if unavailable
+        /// </summary>
+        public int AudioTrackCount => Native.LibVLCAudioGetTrackCount(NativeReference);
+
+        public TrackDescription[] AudioTrackDescription
+        {
+            get
+            {
+                var r = Native.LibVLCAudioGetTrackDescription(NativeReference);
+                return GetTrackDescription(r);
+            }
+        }
+
+        TrackDescription[] GetTrackDescription(IntPtr trackPtr)
+        {
+            if (trackPtr == IntPtr.Zero) return Array.Empty<TrackDescription>();
+
+            var trackDescriptions = new List<TrackDescription>();
+            var tracks = Marshal.PtrToStructure<TrackDescription>(trackPtr);
+            while (tracks != null)
+            {
+                trackDescriptions.Add(tracks);
+                tracks = tracks.PNext;
+            }
+            return trackDescriptions.ToArray();
+        }
+
+        /// <summary>
+        /// Get current audio track ID or -1 if no active input.
+        /// </summary>
+        public int AudioTrack => Native.LibVLCAudioGetTrack(NativeReference);
+
+        /// <summary>
+        /// Set current audio track.
+        /// </summary>
+        /// <param name="trackIndex">the track ID (i_id field from track description)</param>
+        /// <returns>0 on success, -1 on error</returns>
+        public bool SetAudioTrack(int trackIndex) => Native.LibVLCAudioSetTrack(NativeReference, trackIndex) == 0;
+
+        /// <summary>
+        /// Get current audio channel.
+        /// </summary>
+        public int Channel => Native.LibVLCAudioGetChannel(NativeReference);
+
+        /// <summary>
+        /// Set current audio channel.
+        /// </summary>
+        /// <param name="channel">the audio channel</param>
+        /// <returns></returns>
+        public bool SetChannel(int channel) => Native.LibVLCAudioSetChannel(NativeReference, channel) == 0;
+
         public override bool Equals(object obj)
         {
             return obj is MediaPlayer player &&
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, player.NativeReference);
         }
 
+        /// <summary>
+        /// Get current audio delay (microseconds).
+        /// </summary>
+        public long AudioDelay => Native.LibVLCAudioGetDelay(NativeReference);
+
+        /// <summary>
+        /// Set current audio delay. The audio delay will be reset to zero each
+        /// time the media changes.
+        /// </summary>
+        /// <param name="delay">the audio delay (microseconds)</param>
+        /// <returns>true on success, false on error </returns>
+        public bool SetAudioDelay(long delay) => Native.LibVLCAudioSetDelay(NativeReference, delay) == 0;
+
+        /// <summary>
+        /// Set callbacks and private data to render decoded video to a custom area in memory.
+        /// Use libvlc_video_set_format() or libvlc_video_set_format_callbacks() to configure the decoded format.
+        /// Warning
+        /// Rendering video into custom memory buffers is considerably less efficient than rendering in a custom window as normal.
+        /// For optimal perfomances, VLC media player renders into a custom window, and does not use this function and associated callbacks. 
+        /// It is highly recommended that other LibVLC-based application do likewise. 
+        /// To embed video in a window, use libvlc_media_player_set_xid() or equivalent depending on the operating system.
+        /// If window embedding does not fit the application use case, then a custom LibVLC video output display plugin is required to maintain optimal video rendering performances.
+        /// The following limitations affect performance:
+        /// Hardware video decoding acceleration will either be disabled completely, or require(relatively slow) copy from video/DSP memory to main memory.
+        /// Sub-pictures(subtitles, on-screen display, etc.) must be blent into the main picture by the CPU instead of the GPU.
+        /// Depending on the video format, pixel format conversion, picture scaling, cropping and/or picture re-orientation,
+        /// must be performed by the CPU instead of the GPU.
+        /// Memory copying is required between LibVLC reference picture buffers and application buffers (between lock and unlock callbacks).
+        /// </summary>
+        /// <param name="lockCb">callback to lock video memory (must not be NULL)</param>
+        /// <param name="unlockCb">callback to unlock video memory (or NULL if not needed)</param>
+        /// <param name="displayCb">callback to display video (or NULL if not needed)</param>
+        public void SetVideoCallbacks(LibVLCVideoLockCb lockCb, LibVLCVideoUnlockCb unlockCb,
+            LibVLCVideoDisplayCb displayCb)
+        {
+            Native.LibVLCVideoSetCallbacks(NativeReference, lockCb, unlockCb, displayCb, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Set decoded video chroma and dimensions. This only works in
+        /// combination with MediaPlayer::setCallbacks() , and is mutually exclusive
+        /// with MediaPlayer::setFormatCallbacks()
+        /// </summary>
+        /// <param name="chroma">a four-characters string identifying the chroma (e.g."RV32" or "YUYV")</param>
+        /// <param name="width">pixel width</param>
+        /// <param name="height">pixel height</param>
+        /// <param name="pitch">line pitch (in bytes)</param>
+        public void SetVideoFormat(string chroma, uint width, uint height, uint pitch)
+        {
+            Native.LibVLCVideoSetFormat(NativeReference, chroma, width, height, pitch);
+        }
+
+        /// <summary>
+        /// Set decoded video chroma and dimensions. 
+        /// This only works in combination with libvlc_video_set_callbacks().
+        /// </summary>
+        /// <param name="formatCb">callback to select the video format (cannot be NULL)</param>
+        /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
+        public void SetVideoFormatCallbacks(LibVLCVideoFormatCb formatCb, LibVLCVideoCleanupCb cleanupCb)
+        {
+            Native.LibVLCVideoSetFormatCallbacks(NativeReference, formatCb, cleanupCb);
+        }
+
+        /// <summary>
+        /// Enable or disable key press events handling, according to the LibVLC hotkeys configuration. 
+        /// By default and for historical reasons, keyboard events are handled by the LibVLC video widget.
+        /// Note
+        /// On X11, there can be only one subscriber for key press and mouse click events per window.
+        /// If your application has subscribed to those events for the X window ID of the video widget, 
+        /// then LibVLC will not be able to handle key presses and mouse clicks in any case.
+        /// Warning
+        /// This function is only implemented for X11 and Win32 at the moment.
+        /// true to handle key press events, false to ignore them. 
+        /// </summary>
+        public bool EnableKeyInput
+        {
+            set => Native.LibVLCVideoSetKeyInput(NativeReference, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Enable or disable mouse click events handling. 
+        /// By default, those events are handled. This is needed for DVD menus to work, as well as a few video filters such as "puzzle".
+        /// Warning
+        /// This function is only implemented for X11 and Win32 at the moment.
+        /// true to handle mouse click events, false to ignore them. 
+        /// </summary>
+        public bool EnableMouseInput
+        {
+            set => Native.LibVLCVideoSetMouseInput(NativeReference, value ? 1 : 0);
+        }
+
+        /// <summary>
+        /// Get the pixel dimensions of a video.
+        /// </summary>
+        /// <param name="num">number of the video (starting from, and most commonly 0)</param>
+        /// <param name="px">pointer to get the pixel width [OUT]</param>
+        /// <param name="py">pointer to get the pixel height [OUT]</param>
+        /// <returns></returns>
+        public bool Size(uint num, ref uint px, ref uint py)
+        {
+            unsafe
+            {
+                fixed (uint* refPx = &px)
+                {
+                    var pxPtr = refPx;
+                    fixed (uint* refPy = &py)
+                    {
+                        var pyPtr = refPy;
+                        return Native.LibVLCVideoGetSize(NativeReference, num, pxPtr, pyPtr) == 0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the mouse pointer coordinates over a video. 
+        /// Coordinates are expressed in terms of the decoded video resolution, not in terms of pixels on the screen/viewport
+        /// (to get the latter, you can query your windowing system directly).
+        /// Either of the coordinates may be negative or larger than the corresponding dimension of the video, 
+        /// if the cursor is outside the rendering area.
+        /// Warning
+        /// The coordinates may be out-of-date if the pointer is not located on the video rendering area.
+        /// LibVLC does not track the pointer if it is outside of the video widget.
+        /// Note
+        /// LibVLC does not support multiple pointers(it does of course support multiple input devices sharing the same pointer) at the moment.
+        /// </summary>
+        /// <param name="num">number of the video (starting from, and most commonly 0)</param>
+        /// <param name="px">pointer to get the abscissa [OUT]</param>
+        /// <param name="py">pointer to get the ordinate [OUT]</param>
+        /// <returns>true on success, false on failure</returns>
+        public bool Cursor(uint num, ref int px, ref int py)
+        {
+            unsafe
+            {
+                fixed (int* refPx = &px)
+                {
+                    var pxPtr = refPx;
+                    fixed (int* refPy = &py)
+                    {
+                        var pyPtr = refPy;
+                        return Native.LibVLCVideoGetCursor(NativeReference, num, pxPtr, pyPtr) == 0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get/Set the current video scaling factor. See also MediaPlayer::setScale() .
+        /// That is the ratio of the number of
+        /// pixels on screen to the number of pixels in the original decoded video
+        /// in each dimension.Zero is a special value; it will adjust the video
+        /// to the output window/drawable(in windowed mode) or the entire screen.
+        /// Note that not all video outputs support scaling.
+        /// </summary>
+        public float Scale
+        {
+            get => Native.LibVLCVideoGetScale(NativeReference);
+            set => Native.LibVLCVideoSetScale(NativeReference, value);
+        }
+
+        /// <summary>
+        /// Get/set current video aspect ratio.
+        /// Set empty string to reset to default
+        /// Invalid aspect ratios are ignored.
+        /// </summary>
+        public string AspectRatio
+        {
+            get => Native.LibVLCVideoGetAspectRatio(NativeReference);
+            set => Native.LibVLCVideoSetAspectRatio(NativeReference, value);
+        }
+
+        public int Spu => Native.LibVLCVideoGetSpu(NativeReference);
+
+        public bool SetSpu(int spu)
+        {
+            return Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
+        } 
+
+        public int SpuCount => Native.LibVLCVideoGetSpuCount(NativeReference);
+
+        public TrackDescription[] SpuDescription
+        {
+            get
+            {
+                var ptr = Native.LibVLCVideoGetSpuDescription(NativeReference);
+                return GetTrackDescription(ptr);
+            }
+        }
+
+        /// <summary>
+        /// Set new video subtitle file.
+        /// TODO: v3
+        /// </summary>
+        /// <param name="subtitle">new video subtitle file</param>
+        /// <returns></returns>
+        public bool SetSubtitleFile(string subtitle)
+        {
+            return Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
+        }
+
+        public long SpuDelay => Native.LibVLCVideoGetSpuDelay(NativeReference);
+
+        public bool SetSpuDelay(long delay) => Native.LibVLCVideoSetSpuDelay(NativeReference, delay) == 0;
+
+        /// <summary>
+        /// Get the description of available titles.
+        /// TODO: v3
+        /// </summary>
+        public TrackDescription[] TitleDescription
+        {
+            get
+            {
+                var ptr = Native.LibVLCVideoGetTitleDescription(NativeReference);
+                return GetTrackDescription(ptr);
+            }
+        }
+
+
+        /// <summary>
+        /// Get the description of available chapters for specific title.
+        /// </summary>
+        /// <param name="titleIndex">selected title</param>
+        /// <returns></returns>
+        public TrackDescription[] ChapterDescription(int titleIndex)
+        {
+            var ptr = Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex);
+            return GetTrackDescription(ptr);
+        }
+
+        /// <summary>
+        /// Get/Set current crop filter geometry.
+        /// Empty string to unset
+        /// </summary>
+        public string CropGeometry
+        {
+            get => Native.LibVLCVideoGetCropGeometry(NativeReference);
+            set => Native.LibVLCVideoSetCropGeometry(NativeReference, value);
+        }
+
+        /// <summary>
+        /// Get current teletext page requested.
+        /// Set new teletext page to retrieve.
+        /// </summary>
+        public int Teletext
+        {
+            get => Native.LibVLCVideoGetTeletext(NativeReference);
+            set => Native.LibVLCVideoSetTeletext(NativeReference, value);
+        }
+
+        /// <summary>
+        /// Get number of available video tracks.
+        /// </summary>
+        public int VideoTrackCount => Native.LibVLCVideoGetTrackCount(NativeReference);
+
+        /// <summary>
+        /// Get the description of available video tracks.
+        /// </summary>
+        public TrackDescription[] VideoTrackDescription
+        {
+            get
+            {
+                var ptr = Native.LibVLCVideoGetTrackDescription(NativeReference);
+                return GetTrackDescription(ptr);
+            }
+        }
+
+        /// <summary>
+        /// Get current video track ID (int) or -1 if no active input.
+        /// </summary>
+        public int VideoTrack => Native.LibVLCVideoGetTrack(NativeReference);
+
+        /// <summary>
+        /// Set video track.
+        /// </summary>
+        /// <param name="trackIndex">the track ID (i_id field from track description)</param>
+        /// <returns>true on sucess, false out of range</returns>
+        public bool SetVideoTrack(int trackIndex) => Native.LibVLCAudioSetTrack(NativeReference, trackIndex) == 0;
+
+        /// <summary>
+        /// Take a snapshot of the current video window.
+        /// If i_width AND i_height is 0, original size is used. If i_width XOR
+        /// i_height is 0, original aspect-ratio is preserved.
+        /// </summary>
+        /// <param name="num">number of video output (typically 0 for the first/only one)</param>
+        /// <param name="filePath">the path where to save the screenshot to</param>
+        /// <param name="width">the snapshot's width</param>
+        /// <param name="height">the snapshot's height</param>
+        /// <returns>true on success</returns>
+        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) => 
+            Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePath, width, height) == 0;
+
+        /// <summary>
+        /// Enable or disable deinterlace filter
+        /// </summary>
+        /// <param name="mode">type of deinterlace filter, empty string to disable</param>
+        public void SetDeinterlace(string mode) => Native.LibVLCVideoSetDeinterlace(NativeReference, mode);
+
+        /// <summary>
+        /// Get an integer marquee option value
+        /// </summary>
+        /// <param name="option">marq option to get</param>
+        /// <returns></returns>
+        public int MarqueeInt(VideoMarqueeOption option) => Native.LibVLCVideoGetMarqueeInt(NativeReference, option);
+
+        /// <summary>
+        /// Get a string marquee option value
+        /// </summary>
+        /// <param name="option">marq option to get</param>
+        /// <returns></returns>
+        public string MarqueeString(VideoMarqueeOption option) => Native.LibVLCVideoGetMarqueeString(NativeReference, option);
+
+        /// <summary>
+        /// Enable, disable or set an integer marquee option
+        /// Setting libvlc_marquee_Enable has the side effect of enabling (arg !0)
+        /// or disabling (arg 0) the marq filter.
+        /// </summary>
+        /// <param name="option">marq option to set</param>
+        /// <param name="value">marq option value</param>
+        public void SetMarqueeInt(VideoMarqueeOption option, int value) =>
+            Native.LibVLCVideoSetMarqueeInt(NativeReference, option, value);
+
+        /// <summary>
+        /// Enable, disable or set an string marquee option
+        /// </summary>
+        /// <param name="option">marq option to set</param>
+        /// <param name="value">marq option value</param>
+        public void SetMarqueeString(VideoMarqueeOption option, string value) =>
+            Native.LibVLCVideoSetMarqueeString(NativeReference, option, value);
+
+        /// <summary>
+        /// Get integer logo option.
+        /// </summary>
+        /// <param name="option">logo option to get, values of libvlc_video_logo_option_t</param>
+        /// <returns></returns>
+        public int LogoInt(VideoLogoOption option) => Native.LibVLCVideoGetLogoInt(NativeReference, option);
+
+        /// <summary>
+        /// Set logo option as integer. Options that take a different type value
+        /// are ignored. Passing libvlc_logo_enable as option value has the side
+        /// effect of starting (arg !0) or stopping (arg 0) the logo filter.
+        /// </summary>
+        /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
+        /// <param name="value">logo option value</param>
+        public void SetLogoInt(VideoLogoOption option, int value) => Native.LibVLCVideoSetLogoInt(NativeReference, option, value);
+
+        /// <summary>
+        /// Set logo option as string. Options that take a different type value are ignored.
+        /// </summary>
+        /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
+        /// <param name="value">logo option value</param>
+        public void SetLogoString(VideoLogoOption option, string value) => Native.LibVLCVideoSetLogoString(NativeReference, option, value);
+
+        /// <summary>
+        /// Get integer adjust option.
+        /// </summary>
+        /// <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
+        /// <returns></returns>
+        public int AdjustInt(VideoAdjustOption option) => Native.LibVLCVideoGetAdjustInt(NativeReference, option);
+
+        /// <summary>
+        /// Set adjust option as integer. Options that take a different type value
+        /// are ignored. Passing libvlc_adjust_enable as option value has the side
+        /// effect of starting (arg !0) or stopping (arg 0) the adjust filter.
+        /// </summary>
+        /// <param name="option">adust option to set, values of libvlc_video_adjust_option_t</param>
+        /// <param name="value">adjust option value</param>
+        public void SetAdjustInt(VideoAdjustOption option, int value) => Native.LibVLCVideoSetAdjustInt(NativeReference, option, value);
+
+        public float AdjustFloat(VideoAdjustOption option) => Native.LibVLCVideoGetAdjustFloat(NativeReference, option);
+
+        /// <summary>
+        /// Set adjust option as float. Options that take a different type value are ignored.
+        /// </summary>
+        /// <param name="option">adust option to set, values of <see cref="VideoAdjustOption"/></param>
+        /// <param name="value">adjust option value</param>
+        public void SetAdjustFloat(VideoAdjustOption option, float value) => Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
+
+        /// <summary>
+        /// TODO: v3
+        /// Add a slave to the current media player.
+        /// note If the player is playing, the slave will be added directly. This call
+        /// will also update the slave list of the attached VLC::Media.
+        /// </summary>
+        /// <param name="type">subtitle or audio</param>
+        /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
+        /// <param name="select">True if this slave should be selected when it's loaded</param>
+        /// <returns></returns>
+        public bool AddSlave(MediaSlaveType type, string uri, bool select) =>
+            Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri, select) == 0;
+
+        /// <summary>
+        /// TODO: v3
+        /// </summary>
+        /// <param name="viewpoint"></param>
+        /// <param name="absolute"></param>
+        /// <returns></returns>
+        public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
+            Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
+        
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
         /// <para>@{</para>
