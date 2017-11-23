@@ -1076,11 +1076,11 @@ namespace VideoLAN.LibVLC.Manual
         /// <summary>
         /// Gets a list of potential audio output devices,. 
         /// </summary>
-        public AudioOutputDescription2[] OutputDeviceEnum
+        public AudioOutputDescription[] OutputDeviceEnum
         {
             get
             {
-                return new AudioOutputDescription2[0];
+                return new AudioOutputDescription[0];
             }
         }
 

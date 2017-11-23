@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
+using VideoLAN.LibVLC.Manual;
 
 namespace Bindings.Tests
 {
@@ -105,13 +104,6 @@ namespace Bindings.Tests
             media.SetMeta(Media.MetadataType.ShowName, test);
             Assert.True(media.SaveMeta());
             Assert.AreEqual(test, media.Meta(Media.MetadataType.ShowName));
-        }
-
-        [Test]
-        public void EventManager()
-        {
-            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
-            var em = media.EventManager;
         }
     }
 }
