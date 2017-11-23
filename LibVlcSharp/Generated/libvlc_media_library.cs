@@ -86,10 +86,7 @@ namespace VideoLAN.LibVLC.Generated
                 EntryPoint="libvlc_media_library_load")]
             internal static extern int LibvlcMediaLibraryLoad(global::System.IntPtr p_mlib);
 
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = global::System.Runtime.InteropServices.CallingConvention.Cdecl,
-                EntryPoint="libvlc_media_library_media_list")]
-            internal static extern global::System.IntPtr LibvlcMediaLibraryMediaList(global::System.IntPtr p_mlib);
+           
         }
 
         /// <summary>Create an new Media Library object</summary>
@@ -139,21 +136,6 @@ namespace VideoLAN.LibVLC.Generated
             var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
             var __ret = __Internal.LibvlcMediaLibraryLoad(__arg0);
             return __ret;
-        }
-
-        /// <summary>Get media library subitems.</summary>
-        /// <param name="p_mlib">media library object</param>
-        /// <returns>media list subitems</returns>
-        public static global::VideoLAN.LibVLC.Generated.MediaList LibvlcMediaLibraryMediaList(global::VideoLAN.LibVLC.Generated.LibvlcMediaLibraryT p_mlib)
-        {
-            var __arg0 = ReferenceEquals(p_mlib, null) ? global::System.IntPtr.Zero : p_mlib.__Instance;
-            var __ret = __Internal.LibvlcMediaLibraryMediaList(__arg0);
-            global::VideoLAN.LibVLC.Generated.MediaList __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.Generated.MediaList.NativeToManagedMap.ContainsKey(__ret))
-                __result0 = (global::VideoLAN.LibVLC.Generated.MediaList) global::VideoLAN.LibVLC.Generated.MediaList.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.Generated.MediaList.__CreateInstance(__ret);
-            return __result0;
         }
     }
 }
