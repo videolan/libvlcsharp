@@ -289,7 +289,13 @@ namespace VideoLAN.LibVLC.Manual
             version = version.Split('-', ' ')[0];
             VLCVersion = new Version(version);
         }
-        
+
+        public override void Dispose()
+        {
+            UnsetLog();
+            base.Dispose();
+        }
+
         public static bool operator ==(Instance obj1, Instance obj2)
         {
             return obj1?.NativeReference == obj2?.NativeReference;

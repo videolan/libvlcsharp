@@ -17,7 +17,7 @@ namespace VideoLAN.LibVLC.Manual
             NativeReference = nativeRef;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Release(NativeReference);
             NativeReference = IntPtr.Zero;
