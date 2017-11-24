@@ -173,6 +173,39 @@ namespace VideoLAN.LibVLC.Manual
                 IntPtr buffer,
                 string format,
                 IntPtr args);
+
+            /// <summary>
+            /// Get FILE * on Windows
+            /// </summary>
+            /// <param name="pFile"></param>
+            /// <param name="filename"></param>
+            /// <param name="mode"></param>
+            /// <returns></returns>
+            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
+            public static extern int _wfopen_s(out IntPtr pFile, string filename, string mode = Write);
+
+            /// <summary>
+            /// Get FILE * on Linux
+            /// </summary>
+            /// <param name="filename"></param>
+            /// <param name="mode"></param>
+            /// <returns></returns>
+            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, SetLastError = true)]
+            public static extern IntPtr fopenLinux(string filename, string mode = Write);
+
+            /// <summary>
+            /// Get FILE * on Mac
+            /// </summary>
+            /// <param name="path"></param>
+            /// <param name="mode"></param>
+            /// <returns></returns>
+            [DllImport(Mac, EntryPoint = "fopen", SetLastError = true)] 
+            public static extern IntPtr fopenMac(string path, string mode = Write); 
+
+            const string Windows = "msvcrt";
+            const string Linux = "libc";
+            const string Mac = "libSystem";
+            const string Write = "w";
         }
     
         public Version VLCVersion { get; private set; }
@@ -253,19 +286,6 @@ namespace VideoLAN.LibVLC.Manual
             version = version.Split('-', ' ')[0];
             VLCVersion = new Version(version);
         }
-
-       
-
-        //public virtual void Dispose(bool disposing)
-        //{
-        //    if (NativeReference == IntPtr.Zero)
-        //        return;
-
-        //    Native.LibVLCRelease(NativeReference);
-            
-        //    NativeToManagedMap.TryRemove(NativeReference, out var dummy);
-        //    NativeReference = IntPtr.Zero;
-        //}
         
         public static bool operator ==(Instance obj1, Instance obj2)
         {
@@ -387,22 +407,41 @@ namespace VideoLAN.LibVLC.Manual
             }
         }
 
-     
-        /// <summary>Sets up logging to a file.</summary>
-        /// <param name="fileStream">
+        /// <summary>Sets up logging to a file.
+        /// Watch out: Overwrite contents if file exists!
+        /// </summary>
         /// <para>FILE pointer opened for writing</para>
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
-        /// </param>
+        /// <param name="filename">open/create file with Write access. If existing, resets content.</param>
         /// <remarks>LibVLC 2.1.0 or later</remarks>
-        public void SetLogFile(FileStream fileStream)
+        public void SetLogFile(string filename)
         {
-            if(fileStream == null) throw new NullReferenceException(nameof(fileStream));
-            if(fileStream.SafeFileHandle == null) throw new NullReferenceException(nameof(fileStream.SafeFileHandle));
-            if(fileStream.SafeFileHandle.IsInvalid) throw new ArgumentException("invalid file handle", nameof(fileStream.SafeFileHandle));
-            if(!fileStream.CanWrite) throw new ArgumentException("cannot write", nameof(fileStream));
+            if (string.IsNullOrEmpty(filename)) throw new NullReferenceException(nameof(filename));
 
-            //https://stackoverflow.com/questions/34519564/dealing-with-file-handles-using-mono-and-p-invoke
-            Native.LibVLCLogSetFile(NativeReference, fileStream.SafeFileHandle.DangerousGetHandle());
+            Native.LibVLCLogSetFile(NativeReference, NativeFilePtr(filename));
+        }
+
+        IntPtr NativeFilePtr(string filename)
+        {
+            var filePtr = IntPtr.Zero;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Native._wfopen_s(out filePtr, filename);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                filePtr = Native.fopenLinux(filename);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                filePtr = Native.fopenMac(filename);
+            }
+
+            if (filePtr == IntPtr.Zero)
+                throw new VLCException("Could not get FILE * for log_set_file");
+
+            return filePtr;
         }
 
         /// <summary>Returns a list of audio filters that are available.</summary>

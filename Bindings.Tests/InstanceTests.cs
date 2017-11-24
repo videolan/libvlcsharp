@@ -134,10 +134,14 @@ namespace Bindings.Tests
         [Test]
         public void SetLogFile()
         {
-            Assert.Inconclusive();
-            var instance = new Instance(0, null);
+            // logging works but test keeps file handle opened so unable to read
+            var instance = new Instance();
             var path = Path.GetTempFileName();
-            instance.SetLogFile(new FileStream(path, FileMode.OpenOrCreate));
+            instance.SetLogFile(path);
+            instance.UnsetLog();
+            instance.Dispose();
+            var logs = File.ReadAllText(path);
+            Assert.True(logs.Contains("VLC"));
         }
     }
 }
