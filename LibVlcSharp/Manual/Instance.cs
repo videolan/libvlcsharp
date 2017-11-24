@@ -35,6 +35,7 @@ namespace VideoLAN.LibVLC.Manual
         /// </summary>
         bool _logAttached = false;
 
+        IntPtr _logFileHandle;
 
         public override int GetHashCode()
         {
@@ -148,14 +149,16 @@ namespace VideoLAN.LibVLC.Manual
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
-
+            
+            #region Windows
+            
             /// <summary>
             /// Compute the size required by vsprintf to print the parameters.
             /// </summary>
             /// <param name="format"></param>
             /// <param name="ptr"></param>
             /// <returns></returns>
-            [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl)]
             public static extern int _vscprintf(string format,IntPtr ptr);
 
             /// <summary>
@@ -168,39 +171,39 @@ namespace VideoLAN.LibVLC.Manual
             /// <param name="format">The message format</param>
             /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
             /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport("msvcrt.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Windows, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf(
                 IntPtr buffer,
                 string format,
                 IntPtr args);
 
-            /// <summary>
-            /// Get FILE * on Windows
-            /// </summary>
-            /// <param name="pFile"></param>
-            /// <param name="filename"></param>
-            /// <param name="mode"></param>
-            /// <returns></returns>
             [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern int _wfopen_s(out IntPtr pFile, string filename, string mode = Write);
 
-            /// <summary>
-            /// Get FILE * on Linux
-            /// </summary>
-            /// <param name="filename"></param>
-            /// <param name="mode"></param>
-            /// <returns></returns>
-            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, SetLastError = true)]
+            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            public static extern int fcloseWindows(IntPtr stream);
+
+            #endregion
+
+            #region Linux
+
+            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
             public static extern IntPtr fopenLinux(string filename, string mode = Write);
 
-            /// <summary>
-            /// Get FILE * on Mac
-            /// </summary>
-            /// <param name="path"></param>
-            /// <param name="mode"></param>
-            /// <returns></returns>
-            [DllImport(Mac, EntryPoint = "fopen", SetLastError = true)] 
-            public static extern IntPtr fopenMac(string path, string mode = Write); 
+            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
+            public static extern int fcloseLinux(IntPtr file);
+
+            #endregion
+
+            #region Mac
+            
+            [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)] 
+            public static extern IntPtr fopenMac(string path, string mode = Write);
+
+            [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            public static extern int fcloseMac(IntPtr file);
+
+            #endregion
 
             const string Windows = "msvcrt";
             const string Linux = "libc";
@@ -368,6 +371,26 @@ namespace VideoLAN.LibVLC.Manual
         public void UnsetLog()
         {
             Native.LibVLCLogUnset(NativeReference);
+            if(!CloseLogFile())
+                throw new VLCException("Could not close log file");
+        }
+
+        /// <summary>
+        /// Native close log file handle
+        /// </summary>
+        /// <returns>true if no file to close or closed successful, false otherwise</returns>
+        bool CloseLogFile()
+        {
+            if (_logFileHandle == IntPtr.Zero) return true;
+
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return Native.fcloseWindows(_logFileHandle) == 0;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return Native.fcloseLinux(_logFileHandle) == 0;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return Native.fcloseMac(_logFileHandle) == 0;
+
+            return false;
         }
 
         public void SetLog(LogCallback cb)
@@ -418,7 +441,9 @@ namespace VideoLAN.LibVLC.Manual
         {
             if (string.IsNullOrEmpty(filename)) throw new NullReferenceException(nameof(filename));
 
-            Native.LibVLCLogSetFile(NativeReference, NativeFilePtr(filename));
+            _logFileHandle = NativeFilePtr(filename);
+
+            Native.LibVLCLogSetFile(NativeReference, _logFileHandle);
         }
 
         IntPtr NativeFilePtr(string filename)

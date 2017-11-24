@@ -139,9 +139,8 @@ namespace Bindings.Tests
             var path = Path.GetTempFileName();
             instance.SetLogFile(path);
             instance.UnsetLog();
-            instance.Dispose();
             var logs = File.ReadAllText(path);
-            Assert.True(logs.Contains("VLC"));
+            Assert.True(logs.StartsWith("VLC media player"));
         }
     }
 }
