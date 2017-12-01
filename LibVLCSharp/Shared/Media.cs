@@ -601,39 +601,53 @@ namespace LibVLCSharp.Shared
         }
 
         TaskCompletionSource<bool> _tcs;
-        Task<bool> ParseAsyncWithOptionsInternal(Func<bool> nativeCall, CancellationToken cancellationToken, int timeout)
+
+        async Task<bool> ParseAsyncWithOptionsInternal(Func<bool> nativeCall, CancellationToken cancellationToken, int timeout)
         {
-            _tcs = new TaskCompletionSource<bool>();
-            var timeoutToken = new CancellationTokenSource(timeout);
-
-            EventManager.ParsedChanged += OnParsedChanged;
-
-            cancellationToken.Register(() =>
-            {
-                Native.LibVLCMediaParseStop(NativeReference);
-                _tcs.SetCanceled();
-            });
-
-            timeoutToken.Token.Register(() =>
-            {
-                Native.LibVLCMediaParseStop(NativeReference);
-                _tcs.SetCanceled();
-            });
-
             try
             {
+                if (cancellationToken.IsCancellationRequested)
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                _tcs = new TaskCompletionSource<bool>();
+                var timeoutToken = new CancellationTokenSource(timeout);
+
+                EventManager.ParsedChanged += OnParsedChanged;
+
+                cancellationToken.Register(() =>
+                {
+                    EventManager.ParsedChanged -= OnParsedChanged;
+                    Native.LibVLCMediaParseStop(NativeReference);
+                    _tcs?.TrySetCanceled();
+                });
+
+                timeoutToken.Token.Register(() =>
+                {
+                    EventManager.ParsedChanged -= OnParsedChanged;
+                    Native.LibVLCMediaParseStop(NativeReference);
+                    _tcs?.TrySetCanceled();
+                });
+
                 var result = nativeCall();
-                // TODO: asynchronously wait until EventManager.ParsedChanged or timeout hits
+            }
+            catch (OperationCanceledException)
+            {
+                _tcs?.TrySetCanceled();
+                return false;
             }
             catch (Exception ex)
             {
-                _tcs.SetException(ex);
+                _tcs?.TrySetException(ex);
+                return false;
             }
             finally
             {
-                
             }
-            return _tcs.Task;
+
+            //EventManager.ParsedChanged -= OnParsedChanged;
+            if (_tcs == null)
+                return false;
+            return await _tcs.Task;
         }
 
         void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
@@ -642,7 +656,8 @@ namespace LibVLCSharp.Shared
                 _tcs?.TrySetResult(true);
             else if (ParsedStatus == MediaParsedStatus.Failed)
                 _tcs?.TrySetException(new VLCException($"parsing of {this} failed"));
-            else _tcs?.SetResult(false);
+            else _tcs?.TrySetResult(false);
+            EventManager.ParsedChanged -= OnParsedChanged;
         }
 
         /// <summary>Get Parsed status for media descriptor object.</summary>
