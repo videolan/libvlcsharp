@@ -641,19 +641,11 @@ namespace VideoLAN.LibVLC.Manual
             : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
         }
-
-        /// <summary>
-        /// Set the media that will be used by the media_player. 
-        /// If any, previous md will be released.
-        /// </summary>
-        /// <param name="media">the Media. Afterwards the p_md can be safely destroyed</param>
-        public void SetMedia(Media media)
-        {
-            Native.LibVLCMediaPlayerSetMedia(NativeReference, media.NativeReference);
-        }
-
+        
         /// <summary>
         /// Get the media used by the media_player.
+        /// Set the media that will be used by the media_player. 
+        /// If any, previous md will be released.
         /// </summary>
         public Media Media
         {
@@ -662,6 +654,7 @@ namespace VideoLAN.LibVLC.Manual
                 var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
                 return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
             }
+            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value.NativeReference);
         }
 
         /// <summary>
@@ -690,10 +683,7 @@ namespace VideoLAN.LibVLC.Manual
         /// If playback was already started, this method has no effect
         /// </summary>
         /// <returns></returns>
-        public bool Play()
-        {
-            return Native.LibVLCMediaPlayerPlay(NativeReference) != 0;
-        }
+        public bool Play() => Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
 
         /// <summary>
         /// Pause or resume (no effect if there is no media).
