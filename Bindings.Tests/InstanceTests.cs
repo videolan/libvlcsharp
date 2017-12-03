@@ -91,9 +91,9 @@ namespace Bindings.Tests
         public void Categories()
         {
             var instance = new Instance();
-            var md1 = instance.MediaDiscoverers(MediaDiscovererCategory.Devices);
-            var md2 = instance.MediaDiscoverers(MediaDiscovererCategory.Lan);
-            var md3 = instance.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
+            var md1 = instance.MediaDiscoverers(MediaDiscoverer.Category.Devices);
+            var md2 = instance.MediaDiscoverers(MediaDiscoverer.Category.Lan);
+            var md3 = instance.MediaDiscoverers(MediaDiscoverer.Category.Localdirs);
         }
 
         [Test]
@@ -134,7 +134,6 @@ namespace Bindings.Tests
         [Test]
         public void SetLogFile()
         {
-            // logging works but test keeps file handle opened so unable to read
             var instance = new Instance();
             var path = Path.GetTempFileName();
             instance.SetLogFile(path);

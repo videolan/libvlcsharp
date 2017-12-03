@@ -105,7 +105,7 @@ namespace VideoLAN.LibVLC.Manual
         /// </summary>
         /// <param name="mediaDiscoverer"></param>
         public MediaList(MediaDiscoverer mediaDiscoverer)
-            : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.__Instance),
+            : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
                 Native.LibVLCMediaListRelease)
         {
         }

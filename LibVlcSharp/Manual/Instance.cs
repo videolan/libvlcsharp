@@ -135,7 +135,7 @@ namespace VideoLAN.LibVLC.Manual
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr instance, MediaDiscovererCategory category, ref IntPtr pppServices);
+            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr instance, MediaDiscoverer.Category category, ref IntPtr pppServices);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -561,33 +561,32 @@ namespace VideoLAN.LibVLC.Manual
                 s => AudioOutputDevice.__CreateInstance(s),
                 device => device.Next, Native.LibVLCAudioOutputDeviceListRelease);
         }
-
+        
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="category">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory category)
+        public MediaDiscoverer.Description[] MediaDiscoverers(MediaDiscoverer.Category category)
         {
             var arrayResultPtr = IntPtr.Zero;
             var count = Native.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
 
-            if (count == 0) return Array.Empty<MediaDiscovererDescription>();
-            
-            var mediaDiscovererDescription = new MediaDiscovererDescription[(int)count];
-    
+            if (count == 0) return Array.Empty<MediaDiscoverer.Description>();
+
+            var mediaDiscovererDescription = new MediaDiscoverer.Description[(int)count];
+
             for (var i = 0; i < (int)count; i++)
             {
                 var ptr = Marshal.ReadIntPtr(arrayResultPtr, i * IntPtr.Size);
-                var managedStruct = (MediaDiscovererDescription.__Internal) Marshal.PtrToStructure(ptr, typeof(MediaDiscovererDescription.__Internal));
-                var mdd = MediaDiscovererDescription.__CreateInstance(managedStruct);
-                mediaDiscovererDescription[i] = mdd;
+                var managedStruct = (MediaDiscoverer.Description)Marshal.PtrToStructure(ptr, typeof(MediaDiscoverer.Description));
+                mediaDiscovererDescription[i] = managedStruct;
             }
 
             Native.LibVLCMediaDiscovererListRelease(arrayResultPtr, count);
 
             return mediaDiscovererDescription;
         }
-        
+
         public void SetDialogHandlers()
         {
         }
