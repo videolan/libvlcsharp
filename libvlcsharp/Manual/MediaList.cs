@@ -7,6 +7,8 @@ namespace VideoLAN.LibVLC.Manual
     public class MediaList : Internal
     {
         MediaListEventManager _eventManager;
+        readonly object _syncLock = new object();
+        bool _nativeLock;
 
         struct Native
         {
@@ -137,15 +139,25 @@ namespace VideoLAN.LibVLC.Manual
         /// MediaList lock should NOT be held upon entering this function.
         /// </summary>
         /// <param name="media">media instance to add</param>
-        public void SetMedia(Media media) => Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
+        public void SetMedia(Media media)
+        {
+            Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
+        } 
 
         /// <summary>
         /// Add media instance to media list The MediaList lock should be held upon entering this function.
         /// </summary>
         /// <param name="media">a media instance</param>
         /// <returns></returns>
-        public bool AddMedia(Media media) =>
-            Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0;
+        public bool AddMedia(Media media)
+        {
+            lock (_syncLock)
+            {
+                if(!_nativeLock)
+                    throw new InvalidOperationException("not locked");
+                return Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0;
+            }
+        }
 
         /// <summary>
         /// Insert media instance in media list on a position The
@@ -154,8 +166,15 @@ namespace VideoLAN.LibVLC.Manual
         /// <param name="media">a media instance</param>
         /// <param name="position">position in array where to insert</param>
         /// <returns></returns>
-        public bool InsertMedia(Media media, int position) =>
-            Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
+        public bool InsertMedia(Media media, int position)
+        {
+            lock (_syncLock)
+            {
+                if(!_nativeLock)
+                    throw new InvalidOperationException("not locked");
+                return Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
+            }
+        }
 
         /// <summary>
         /// Remove media instance from media list on a position The
@@ -164,13 +183,31 @@ namespace VideoLAN.LibVLC.Manual
         /// <param name="positionIndex">position in array where to insert</param>
         /// <returns></returns>
         public bool RemoveIndex(int positionIndex)
-            => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0;
+        {
+            lock (_syncLock)
+            {
+                if (!_nativeLock)
+                    throw new InvalidOperationException("not locked");
+                return Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0;
+            }
+        }
 
         /// <summary>
         /// Get count on media list items The MediaList lock should be
         /// held upon entering this function.
         /// </summary>
-        public int Count => Native.LibVLCMediaListCount(NativeReference);
+        public int Count
+        {
+            get
+            {
+                lock (_syncLock)
+                {
+                    if(!_nativeLock)
+                        throw new InvalidOperationException("not locked");
+                    return Native.LibVLCMediaListCount(NativeReference);
+                }
+            }
+        } 
 
         /// <summary>
         /// List media instance in media list at a position The
@@ -182,8 +219,13 @@ namespace VideoLAN.LibVLC.Manual
         {
             get
             {
-                var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
-                return ptr == IntPtr.Zero ? null : new Media(ptr);
+                lock (_syncLock)
+                {
+                    if(!_nativeLock)
+                        throw new InvalidOperationException("not locked");
+                    var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
+                    return ptr == IntPtr.Zero ? null : new Media(ptr);
+                }
             }
         }
 
@@ -194,7 +236,15 @@ namespace VideoLAN.LibVLC.Manual
         /// </summary>
         /// <param name="media">media instance</param>
         /// <returns>position of media instance or -1 if media not found</returns>
-        public int IndexOf(Media media) => Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference);
+        public int IndexOf(Media media)
+        {
+            lock (_syncLock)
+            {
+                if (!_nativeLock)
+                    throw new InvalidOperationException("not locked");
+                return Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference);
+            }
+        } 
 
         /// <summary>
         /// This indicates if this media list is read-only from a user point of view
@@ -205,12 +255,32 @@ namespace VideoLAN.LibVLC.Manual
         /// <summary>
         /// Get lock on media list items
         /// </summary>
-        public void Lock() => Native.LibVLCMediaListLock(NativeReference);
+        public void Lock()
+        {
+            lock (_syncLock)
+            {
+                if (_nativeLock)
+                    throw new InvalidOperationException("already locked");
+
+                _nativeLock = true;
+                Native.LibVLCMediaListLock(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Release lock on media list items The MediaList lock should be held upon entering this function.
         /// </summary>
-        public void Unlock() => Native.LibVLCMediaListUnlock(NativeReference);
+        public void Unlock()
+        {
+            lock (_syncLock)
+            {
+                if (!_nativeLock)
+                    throw new InvalidOperationException("not locked");
+
+                _nativeLock = false;
+                Native.LibVLCMediaListUnlock(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Get libvlc_event_manager from this media list instance. The

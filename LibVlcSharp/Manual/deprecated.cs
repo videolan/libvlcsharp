@@ -584,33 +584,33 @@ namespace VideoLAN.LibVLC
         }
 
         /// <remarks>Use libvlc_media_discoverer_new() and libvlc_media_discoverer_start().</remarks>
-        public static global::VideoLAN.LibVLC.MediaDiscoverer LibvlcMediaDiscovererNewFromName(
-            global::VideoLAN.LibVLC.Manual.Instance p_inst, string psz_name)
-        {
-            var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
-            var __ret = __Internal.LibvlcMediaDiscovererNewFromName(__arg0, psz_name);
-            global::VideoLAN.LibVLC.MediaDiscoverer __result0;
-            if (__ret == IntPtr.Zero) __result0 = null;
-            else if (global::VideoLAN.LibVLC.MediaDiscoverer.NativeToManagedMap.ContainsKey(__ret))
-                __result0 =
-                    (global::VideoLAN.LibVLC.MediaDiscoverer) global::VideoLAN.LibVLC.MediaDiscoverer.NativeToManagedMap[__ret];
-            else __result0 = global::VideoLAN.LibVLC.MediaDiscoverer.__CreateInstance(__ret);
-            return __result0;
-        }
+        //public static global::VideoLAN.LibVLC.MediaDiscoverer LibvlcMediaDiscovererNewFromName(
+        //    global::VideoLAN.LibVLC.Manual.Instance p_inst, string psz_name)
+        //{
+        //    var __arg0 = ReferenceEquals(p_inst, null) ? global::System.IntPtr.Zero : p_inst.NativeReference;
+        //    var __ret = __Internal.LibvlcMediaDiscovererNewFromName(__arg0, psz_name);
+        //    global::VideoLAN.LibVLC.MediaDiscoverer __result0;
+        //    if (__ret == IntPtr.Zero) __result0 = null;
+        //    else if (global::VideoLAN.LibVLC.MediaDiscoverer.NativeToManagedMap.ContainsKey(__ret))
+        //        __result0 =
+        //            (global::VideoLAN.LibVLC.MediaDiscoverer) global::VideoLAN.LibVLC.MediaDiscoverer.NativeToManagedMap[__ret];
+        //    else __result0 = global::VideoLAN.LibVLC.MediaDiscoverer.__CreateInstance(__ret);
+        //    return __result0;
+        //}
 
-        /// <summary>Get media service discover object its localized name.</summary>
-        /// <param name="p_mdis">media discover object</param>
-        /// <returns>localized name or NULL if the media_discoverer is not started</returns>
-        /// <remarks>
-        /// <para>Useless, use libvlc_media_discoverer_list_get() to get the</para>
-        /// <para>longname of the service discovery.</para>
-        /// </remarks>
-        public static sbyte* LibvlcMediaDiscovererLocalizedName(global::VideoLAN.LibVLC.MediaDiscoverer p_mdis)
-        {
-            var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
-            var __ret = __Internal.LibvlcMediaDiscovererLocalizedName(__arg0);
-            return __ret;
-        }
+        ///// <summary>Get media service discover object its localized name.</summary>
+        ///// <param name="p_mdis">media discover object</param>
+        ///// <returns>localized name or NULL if the media_discoverer is not started</returns>
+        ///// <remarks>
+        ///// <para>Useless, use libvlc_media_discoverer_list_get() to get the</para>
+        ///// <para>longname of the service discovery.</para>
+        ///// </remarks>
+        //public static sbyte* LibvlcMediaDiscovererLocalizedName(global::VideoLAN.LibVLC.MediaDiscoverer p_mdis)
+        //{
+        //    var __arg0 = ReferenceEquals(p_mdis, null) ? global::System.IntPtr.Zero : p_mdis.__Instance;
+        //    var __ret = __Internal.LibvlcMediaDiscovererLocalizedName(__arg0);
+        //    return __ret;
+        //}
 
         /// <summary>Get event manager from media service discover object.</summary>
         /// <param name="p_mdis">media service discover object</param>
