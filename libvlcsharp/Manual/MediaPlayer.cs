@@ -1137,11 +1137,19 @@ namespace VideoLAN.LibVLC.Manual
             if (trackPtr == IntPtr.Zero) return Array.Empty<TrackDescription>();
 
             var trackDescriptions = new List<TrackDescription>();
-            var tracks = Marshal.PtrToStructure<TrackDescription>(trackPtr);
-            while (tracks != null)
-            {
-                trackDescriptions.Add(tracks);
-                tracks = tracks.PNext;
+            var track = Marshal.PtrToStructure<TrackDescription>(trackPtr);
+
+            while (true)
+            {       
+                trackDescriptions.Add(track);
+                if (track.Next != IntPtr.Zero)
+                {
+                    track = Marshal.PtrToStructure<TrackDescription>(track.Next);
+                }
+                else
+                {
+                    break;    
+                }
             }
             return trackDescriptions.ToArray();
         }

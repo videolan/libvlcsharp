@@ -41,16 +41,25 @@ namespace Bindings.Tests
         }
 
         [Test]
-        public void TrackDescription()
+        public async Task TrackDescription()
         {
-            //FIX ME
             var instance = new Instance();
             var mp = new MediaPlayer(instance);
             var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);            
+            var tcs = new TaskCompletionSource<bool>();
+            
             mp.Media = media;
-            var track = mp.AudioTrack;
-            Assert.True(mp.SetAudioTrack(track));
-            Assert.IsNotEmpty(mp.AudioTrackDescription);
+            mp.Play();
+            mp.EventManager.Playing += (sender, args) =>
+            {
+                Assert.Zero(mp.AudioTrack);
+                var description = mp.AudioTrackDescription;
+                Assert.True(mp.SetAudioTrack(description.First().Id));
+                Assert.IsNotEmpty(description);
+                tcs.SetResult(true);
+            };
+            await tcs.Task;
+            Assert.True(tcs.Task.Result);
         }
 
         [Test]

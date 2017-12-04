@@ -411,13 +411,13 @@ namespace VideoLAN.LibVLC
         //}
 
         /// <remarks>Use libvlc_track_description_list_release() instead</remarks>
-        public static void LibvlcTrackDescriptionRelease(global::VideoLAN.LibVLC.TrackDescription p_track_description)
-        {
-            var __arg0 = ReferenceEquals(p_track_description, null)
-                ? global::System.IntPtr.Zero
-                : p_track_description.__Instance;
-            __Internal.LibvlcTrackDescriptionRelease(__arg0);
-        }
+        //public static void LibvlcTrackDescriptionRelease(global::VideoLAN.LibVLC.TrackDescription p_track_description)
+        //{
+        //    var __arg0 = ReferenceEquals(p_track_description, null)
+        //        ? global::System.IntPtr.Zero
+        //        : p_track_description.__Instance;
+        //    __Internal.LibvlcTrackDescriptionRelease(__arg0);
+        //}
 
         /// <summary>Get current video height.</summary>
         /// <param name="p_mi">the media player</param>
