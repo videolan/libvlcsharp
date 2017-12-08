@@ -1584,6 +1584,15 @@ namespace VideoLAN.LibVLC
         /// <returns></returns>
         public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
             Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
+
+        #region Enums
+
+     
+
+
+        #endregion
+
+        #region Callbacks
         
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -1767,5 +1776,160 @@ namespace VideoLAN.LibVLC
         /// <param name="mute">muted flag</param>
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
+
+        #endregion
     }
+
+    /// <summary>Description for titles</summary>
+    public enum Title
+    {
+        Menu = 1,
+        Interactive = 2
+    }
+
+    /// <summary>Marq options definition</summary>
+    public enum VideoMarqueeOption
+    {
+        Enable = 0,
+        Text = 1,
+        /// <summary>string argument</summary>
+        Color = 2,
+        /// <summary>string argument</summary>
+        Opacity = 3,
+        /// <summary>string argument</summary>
+        Position = 4,
+        /// <summary>string argument</summary>
+        Refresh = 5,
+        /// <summary>string argument</summary>
+        Size = 6,
+        /// <summary>string argument</summary>
+        Timeout = 7,
+        /// <summary>string argument</summary>
+        X = 8,
+        /// <summary>string argument</summary>
+        Y = 9
+    }
+
+    /// <summary>Navigation mode</summary>
+    public enum NavigationMode
+    {
+        Activate = 0,
+        Up = 1,
+        Down = 2,
+        Left = 3,
+        Right = 4,
+        Popup = 5
+    }
+
+    /// <summary>Enumeration of values used to set position (e.g. of video title).</summary>
+    public enum Position
+    {
+        Disable = -1,
+        Center = 0,
+        Left = 1,
+        Right = 2,
+        Top = 3,
+        TopLeft = 4,
+        TopRight = 5,
+        Bottom = 6,
+        BottomLeft = 7,
+        BottomRight = 8
+    }
+
+    /// <summary>
+    /// <para>Enumeration of teletext keys than can be passed via</para>
+    /// <para>libvlc_video_set_teletext()</para>
+    /// </summary>
+    public enum TeletextKey
+    {
+        Red = 7471104,
+        Green = 6750208,
+        Yellow = 7929856,
+        Blue = 6422528,
+        Index = 6881280
+    }
+
+    /// <summary>option values for libvlc_video_{get,set}_logo_{int,string}</summary>
+    public enum VideoLogoOption
+    {
+        Enable = 0,
+        /// <summary>string argument, &quot;file,d,t;file,d,t;...&quot;</summary>
+        File = 1,
+        X = 2,
+        Y = 3,
+        Delay = 4,
+        Repeat = 5,
+        Opacity = 6,
+        Position = 7
+    }
+
+    /// <summary>option values for libvlc_video_{get,set}_adjust_{int,float,bool}</summary>
+    public enum VideoAdjustOption
+    {
+        Enable = 0,
+        Contrast = 1,
+        Brightness = 2,
+        Hue = 3,
+        Saturation = 4,
+        Gamma = 5
+    }
+
+    /// <summary>Audio device types</summary>
+    public enum AudioOutputDeviceType
+    {
+        DeviceError = -1,
+        DeviceMono = 1,
+        DeviceStereo = 2,
+        Device2F2R = 4,
+        Device3F2R = 5,
+        Device5_1 = 6,
+        Device6_1 = 7,
+        Device7_1 = 8,
+        DeviceSPDIF = 10
+    }
+
+    /// <summary>Audio channels</summary>
+    public enum AudioOutputChannel
+    {
+        Error = -1,
+        Stereo = 1,
+        RStereo = 2,
+        Left = 3,
+        Right = 4,
+        Dolbys = 5
+    }
+
+    /// <summary>Media player roles.</summary>
+    /// <remarks>
+    /// <para>LibVLC 3.0.0 and later.</para>
+    /// <para>See</para>
+    /// </remarks>
+    public enum MediaPlayerRole
+    {
+        /// <summary>Don't use a media player role</summary>
+        None = 0,
+        /// <summary>Music (or radio) playback</summary>
+        Music = 1,
+        /// <summary>Video playback</summary>
+        Video = 2,
+        /// <summary>Speech, real-time communication</summary>
+        Communication = 3,
+        /// <summary>Video game</summary>
+        Game = 4,
+        /// <summary>User interaction feedback</summary>
+        LiblvcRoleNotification = 5,
+        /// <summary>Embedded animation (e.g. in web page)</summary>
+        Animation = 6,
+        /// <summary>Audio editting/production</summary>
+        Production = 7,
+        /// <summary>Accessibility</summary>
+        Accessibility = 8,
+        Test = 9
+    }
+
+    //TODO: remove onced branch merged.
+    public class Equalizer
+    {
+        public IntPtr NativeReference;
+    } 
 }

@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "Sample\Sample.csproj", "{FA6CFA75-231B-4643-B82A-F88A08F0F3F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Tests", "Bindings.Tests\LibVLCSharp.Tests.csproj", "{1C2511B2-DB4E-4A0E-AA3D-F03657BFB691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Tests", "LibVLCSharp.Tests\LibVLCSharp.Tests.csproj", "{1C2511B2-DB4E-4A0E-AA3D-F03657BFB691}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp", "LibVlcSharp\LibVLCSharp.csproj", "{D1C3B7C4-713B-46B2-B33A-E9298C819921}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp", "LibVLCSharp\LibVLCSharp.csproj", "{D1C3B7C4-713B-46B2-B33A-E9298C819921}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
