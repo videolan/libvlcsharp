@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
-using VideoLAN.LibVLC.Manual;
+using VideoLAN.LibVLC.Events;
 
-namespace Bindings.Tests
+namespace LibVLCSharp.Tests
 {
     [TestFixture]
     public class InstanceTests

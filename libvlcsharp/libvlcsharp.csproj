@@ -4,4 +4,7 @@
     <RootNamespace>VideoLAN.LibVLC</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Cauldron.Interception.Fody" Version="2.0.18" />
+  </ItemGroup>
 </Project>

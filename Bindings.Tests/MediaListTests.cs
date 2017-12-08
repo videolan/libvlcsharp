@@ -2,10 +2,10 @@
 using System.IO;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
-using VideoLAN.LibVLC.Manual;
-using MediaList = VideoLAN.LibVLC.Manual.MediaList;
+using Media = VideoLAN.LibVLC.Media;
+using MediaList = VideoLAN.LibVLC.MediaList;
 
-namespace Bindings.Tests
+namespace LibVLCSharp.Tests
 {
     [TestFixture]
     public class MediaListTests

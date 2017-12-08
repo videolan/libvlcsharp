@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
-using VideoLAN.LibVLC.Manual;
-using MediaPlayer = VideoLAN.LibVLC.Manual.MediaPlayer;
+using Media = VideoLAN.LibVLC.Media;
+using MediaPlayer = VideoLAN.LibVLC.MediaPlayer;
 
-namespace Bindings.Tests
+namespace LibVLCSharp.Tests
 {
     [TestFixture]
     public class MediaPlayerTests
@@ -45,7 +45,7 @@ namespace Bindings.Tests
         {
             var instance = new Instance();
             var mp = new MediaPlayer(instance);
-            var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);            
+            var media = new Media(instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
             
             mp.Media = media;

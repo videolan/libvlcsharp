@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using VideoLAN.LibVLC.Manual;
+using VideoLAN.LibVLC;
 
-namespace Bindings.Tests
+namespace LibVLCSharp.Tests
 {
     [TestFixture]
     public class MediaDiscovererTests

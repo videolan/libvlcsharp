@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
-using VideoLAN.LibVLC.Manual;
+using Media = VideoLAN.LibVLC.Media;
 
-namespace Bindings.Tests
+namespace LibVLCSharp.Tests
 {
     [TestFixture]
     public class MediaTests
@@ -73,9 +73,9 @@ namespace Bindings.Tests
             get
             {
                 var dir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                var binDir = Path.Combine(dir, "..\\..\\..\\");
-                var files = Directory.GetFiles(binDir);
-                return files.First();
+                //var binDir = Path.Combine(dir, "..\\..\\..\\");
+                var files = Directory.GetFiles(dir);
+                return files.First(f => f.Contains("Klang"));
             }
         }
 
