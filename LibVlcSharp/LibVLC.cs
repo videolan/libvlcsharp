@@ -6,8 +6,10 @@ using Cauldron.Interception;
 
 namespace VideoLAN.LibVLC
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor, AllowMultiple = true, Inherited = false)]
-    public class LibVLC : Attribute, IMethodInterceptor
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property, 
+        AllowMultiple = true, 
+        Inherited = false)]
+    public class LibVLC : Attribute, IMethodInterceptor, IPropertyGetterInterceptor
     {
         struct Native
         {
@@ -22,13 +24,17 @@ namespace VideoLAN.LibVLC
 
         readonly Version _requiredVersion;
         Version _dllVersion;
+        readonly bool _minimum;
+        readonly bool _strict;
 
-        public LibVLC(int major, int minor = 0)
+        public LibVLC(int major, int minor = 0, bool min = true, bool strict = false)
         {
             _requiredVersion = new Version(major, minor);
+            _minimum = min;
+            _strict = strict;
         }
 
-        private Version DllVersion
+        Version DllVersion
         {
             get
             {
@@ -43,13 +49,25 @@ namespace VideoLAN.LibVLC
             }
         }
 
-        private bool Check => DllVersion.Major >= _requiredVersion.Major && DllVersion.Minor >= _requiredVersion.Minor;
+        bool Check
+        {
+            get
+            {
+                if(_minimum)
+                {
+                    return _strict
+                        ? DllVersion.Major > _requiredVersion.Major && DllVersion.Minor > _requiredVersion.Minor
+                        : DllVersion.Major >= _requiredVersion.Major && DllVersion.Minor >= _requiredVersion.Minor;
+                }
+                return _strict ? DllVersion.Major < _requiredVersion.Major && DllVersion.Minor < _requiredVersion.Minor
+                    : DllVersion.Major <= _requiredVersion.Major && DllVersion.Minor <= _requiredVersion.Minor;
+            }
+        }
+
 
         public void OnEnter(Type declaringType, object instance, MethodBase methodbase, object[] values)
         {
-            if (!Check)
-                throw new VLCException($"This API requires version {_requiredVersion.Major}.{_requiredVersion.Minor} of libvlc. " +
-                                       $"Currently used dll version is {_dllVersion.Major}.{_dllVersion.Minor}");
+            PerformCheck();
         }
 
         public void OnException(Exception e)
@@ -58,6 +76,18 @@ namespace VideoLAN.LibVLC
 
         public void OnExit()
         {
+        }
+
+        public void OnGet(PropertyInterceptionInfo propertyInterceptionInfo, object value)
+        {
+            PerformCheck();
+        }
+
+        void PerformCheck()
+        {
+            if (!Check)
+                throw new VLCException($"This API requires version {_requiredVersion.Major}.{_requiredVersion.Minor} of libvlc. " +
+                                       $"Currently used dll version is {_dllVersion.Major}.{_dllVersion.Minor}");
         }
     }
 }

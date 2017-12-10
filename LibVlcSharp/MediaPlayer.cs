@@ -894,6 +894,9 @@ namespace VideoLAN.LibVLC
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
         /// TODO: v3 check
+        //[LibVLC(major: 3, minor: 0, min: false, strict: true)]
+        // https://github.com/reflection-emit/Cauldron/blob/ed8bc0d7c06eaabf1f913b286066f35f35867c10/Interception/Cauldron.Interception.Fody/ModuleWeaver.cs#L1186
+        // https://github.com/Capgemini/Cauldron/issues/44
         public float Fps => Native.LibVLCMediaPlayerGetFps(NativeReference);
 
         /// <summary>
@@ -975,8 +978,8 @@ namespace VideoLAN.LibVLC
 
         /// <summary>
         /// Toggle teletext transparent status on video output.
-        /// TODO: v3 check
         /// </summary>
+        [LibVLC(3, 0, false, true)]
         public void ToggleTeletext()
         {
             Native.LibVLCToggleTeletext(NativeReference);
@@ -1377,10 +1380,10 @@ namespace VideoLAN.LibVLC
 
         /// <summary>
         /// Set new video subtitle file.
-        /// TODO: v3
         /// </summary>
         /// <param name="subtitle">new video subtitle file</param>
         /// <returns></returns>
+        [LibVLC(3, 0, false, true)]
         public bool SetSubtitleFile(string subtitle)
         {
             return Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
@@ -1392,8 +1395,8 @@ namespace VideoLAN.LibVLC
 
         /// <summary>
         /// Get the description of available titles.
-        /// TODO: v3
         /// </summary>
+        // [LibVLC(3, 0, false, true)]
         public TrackDescription[] TitleDescription
         {
             get
@@ -1403,12 +1406,12 @@ namespace VideoLAN.LibVLC
             }
         }
 
-
         /// <summary>
         /// Get the description of available chapters for specific title.
         /// </summary>
         /// <param name="titleIndex">selected title</param>
         /// <returns></returns>
+        [LibVLC(3, 0, false, true)]
         public TrackDescription[] ChapterDescription(int titleIndex)
         {
             var ptr = Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex);
@@ -1564,7 +1567,6 @@ namespace VideoLAN.LibVLC
         public void SetAdjustFloat(VideoAdjustOption option, float value) => Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
 
         /// <summary>
-        /// TODO: v3
         /// Add a slave to the current media player.
         /// note If the player is playing, the slave will be added directly. This call
         /// will also update the slave list of the attached VLC::Media.
@@ -1573,15 +1575,16 @@ namespace VideoLAN.LibVLC
         /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
         /// <param name="select">True if this slave should be selected when it's loaded</param>
         /// <returns></returns>
+        [LibVLC(3)]
         public bool AddSlave(MediaSlaveType type, string uri, bool select) =>
             Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri, select) == 0;
 
         /// <summary>
-        /// TODO: v3
         /// </summary>
         /// <param name="viewpoint"></param>
         /// <param name="absolute"></param>
         /// <returns></returns>
+        [LibVLC(3)]
         public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
             Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
 
