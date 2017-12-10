@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
 using Media = VideoLAN.LibVLC.Media;
@@ -29,9 +30,22 @@ namespace LibVLCSharp.Tests
         [Test]
         public void SubItemAdded()
         {
-            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
-            //media.SubItems.
-            //TODO: Implement MediaList to test this.
+            // FIXME
+            var instance = new Instance();
+            var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);
+            var subItem = new Media(instance, Path.GetTempFileName(), Media.FromType.FromPath);
+
+            var eventManager = media.EventManager;
+            var eventHandlerCalled = false;
+            eventManager.SubItemAdded += (sender, args) =>
+            {
+                Assert.AreEqual(subItem, args.SubItem);
+                eventHandlerCalled = true;
+            };
+            media.SubItems.Lock();
+            Assert.True(media.SubItems.AddMedia(subItem));
+            media.SubItems.Unlock();
+            Assert.True(eventHandlerCalled);
         }
 
         string RealMediaPath
@@ -80,14 +94,27 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void StateChanged()
+        public async Task StateChanged()
         {
             var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
-            var called = false;
-            media.EventManager.StateChanged += (sender, args) => called = true;
-            //TODO: implement MediaPlayer.cs
-            //mediaPlayer.SetMedia(media);
-            Assert.True(called);
+            var tcs = new TaskCompletionSource<bool>();
+            var openingCalled = false;
+            media.EventManager.StateChanged += (sender, args) =>
+            {
+                if (media.State == VLCState.Opening)
+                {
+                    openingCalled = true;
+                    return;
+                }
+                Assert.AreEqual(VLCState.Playing, media.State);
+                tcs.SetResult(true);
+            };
+
+            var mp = new MediaPlayer(media);
+            mp.Play();
+            await tcs.Task;
+            Assert.True(tcs.Task.Result);
+            Assert.True(openingCalled);
         }
 
 
