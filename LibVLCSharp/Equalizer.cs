@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace VideoLAN.LibVLC.Manual
+namespace VideoLAN.LibVLC
 {
     public class Equalizer : Internal
     {

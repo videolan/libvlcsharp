@@ -1928,11 +1928,5 @@ namespace VideoLAN.LibVLC
         /// <summary>Accessibility</summary>
         Accessibility = 8,
         Test = 9
-    }
-
-    //TODO: remove onced branch merged.
-    public class Equalizer
-    {
-        public IntPtr NativeReference;
-    } 
+    }    
 }
