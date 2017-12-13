@@ -311,7 +311,7 @@ namespace LibVLCSharp.Shared
         /// <param name="instance">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument. \sa{FromType}</param>
-        public Media(Instance instance, string mrl, FromType type)
+        public Media(Instance instance, string mrl, FromType type = FromType.FromPath)
             : base(() => SelectNativeCtor(instance, mrl, type), Native.LibVLCMediaRelease)
         {
         }
