@@ -86,8 +86,9 @@ namespace VideoLAN.LibVLC
         void PerformCheck()
         {
             if (!Check)
-                throw new VLCException($"This API requires version {_requiredVersion.Major}.{_requiredVersion.Minor} of libvlc. " +
-                                       $"Currently used dll version is {_dllVersion.Major}.{_dllVersion.Minor}");
+                throw new VLCException("This API requires " + (_minimum ? "minimum" : "maximum") 
+                    + $" version {_requiredVersion.Major}.{_requiredVersion.Minor} of libvlc. " 
+                    + $"Currently used dll version is {_dllVersion.Major}.{_dllVersion.Minor}");
         }
     }
 }

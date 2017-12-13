@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using VideoLAN.LibVLC;
 
 namespace LibVLCSharp.Tests
@@ -16,8 +15,13 @@ namespace LibVLCSharp.Tests
         [LibVLC(int.MaxValue)]
         void UnavailableAPIMethod() => Assert.Fail("should not reach here");
 
+        bool _result;
         [LibVLC(major: 0, minor: 0, min: false, strict: true)]
-        public bool UnavailableAPIProperty { get; set; }
+        public bool UnavailableAPIProperty
+        {
+            get { Assert.Fail(); return _result; }
+            
+        }
 
         [Test]
         public void ShouldThrowIfDllVersionTooHigh()

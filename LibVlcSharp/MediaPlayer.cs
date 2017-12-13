@@ -890,15 +890,16 @@ namespace VideoLAN.LibVLC
         /// </summary>
         public VLCState State => Native.LibVLCMediaPlayerGetState(NativeReference);
 
+        float _fps;
         /// <summary>
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
-        /// TODO: v3 check
-        //[LibVLC(major: 3, minor: 0, min: false, strict: true)]
-        // https://github.com/reflection-emit/Cauldron/blob/ed8bc0d7c06eaabf1f913b286066f35f35867c10/Interception/Cauldron.Interception.Fody/ModuleWeaver.cs#L1186
-        // https://github.com/Capgemini/Cauldron/issues/44
-        public float Fps => Native.LibVLCMediaPlayerGetFps(NativeReference);
-
+        [LibVLC(major: 3, minor: 0, min: false, strict: true)]
+        public float Fps
+        {
+            get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
+        } 
+        
         /// <summary>
         /// Get the number of video outputs 
         /// </summary>
