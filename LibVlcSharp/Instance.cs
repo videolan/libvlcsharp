@@ -324,7 +324,7 @@ namespace VideoLAN.LibVLC
             var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
             Native.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
         }
-        
+
         /// <summary>
         /// <para>Sets the application name. LibVLC passes this as the user agent string</para>
         /// <para>when a protocol requires it.</para>
@@ -332,6 +332,7 @@ namespace VideoLAN.LibVLC
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
+        [LibVLC(1, 1)]
         public void SetUserAgent(string name, string http)
         {
             Native.LibVLCSetUserAgent(NativeReference, name, http);
@@ -345,6 +346,7 @@ namespace VideoLAN.LibVLC
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
+        [LibVLC(2, 1)]
         public void SetAppId(string id, string version, string icon)
         {
             Native.LibVLCSetAppId(NativeReference, id, version, icon);
@@ -359,6 +361,7 @@ namespace VideoLAN.LibVLC
         /// <para>complete (causing a deadlock if called from within the callback).</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
+        [LibVLC(2, 1)]
         public void UnsetLog()
         {
             Native.LibVLCLogUnset(NativeReference);
@@ -428,6 +431,7 @@ namespace VideoLAN.LibVLC
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
         /// <param name="filename">open/create file with Write access. If existing, resets content.</param>
         /// <remarks>LibVLC 2.1.0 or later</remarks>
+        [LibVLC(2, 1)]
         public void SetLogFile(string filename)
         {
             if (string.IsNullOrEmpty(filename)) throw new NullReferenceException(nameof(filename));
@@ -517,7 +521,7 @@ namespace VideoLAN.LibVLC
                     module => module.Next, Native.LibVLCAudioOutputListRelease);
             }
         }
-        
+
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
         /// <param name="audioOutputName">
         /// <para>audio output name</para>
@@ -538,6 +542,7 @@ namespace VideoLAN.LibVLC
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
+        [LibVLC(2, 1)]
         public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
         {
 
@@ -546,11 +551,12 @@ namespace VideoLAN.LibVLC
                 s => AudioOutputDevice.__CreateInstance(s),
                 device => device.Next, Native.LibVLCAudioOutputDeviceListRelease);
         }
-        
+
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="category">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
+        [LibVLC(3)]
         public MediaDiscoverer.Description[] MediaDiscoverers(MediaDiscoverer.Category category)
         {
             var arrayResultPtr = IntPtr.Zero;
@@ -576,7 +582,7 @@ namespace VideoLAN.LibVLC
         {
         }
 
-        TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
+        static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
         {
             var nativeRef = getRef();
