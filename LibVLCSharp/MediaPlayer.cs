@@ -622,6 +622,11 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_renderer")]
             internal static extern int LibVLCMediaPlayerSetRenderer(IntPtr mediaplayer, IntPtr renderItem);
+            
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_android_context")]
+            internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
         }
 
         MediaPlayerEventManager _eventManager;
