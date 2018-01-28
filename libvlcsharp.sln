@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp", "LibVLCSharp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Android.Sample", "LibVLCSharp.Android.Sample\LibVLCSharp.Android.Sample.csproj", "{00419085-4455-45D4-84A0-0A80D6174D25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Android", "LibVLCSharp.Android\LibVLCSharp.Android.csproj", "{D549B545-66FE-42DB-A7F3-34B67F626FB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,18 @@ Global
 		{00419085-4455-45D4-84A0-0A80D6174D25}.Release|x86.ActiveCfg = Release|Any CPU
 		{00419085-4455-45D4-84A0-0A80D6174D25}.Release|x86.Build.0 = Release|Any CPU
 		{00419085-4455-45D4-84A0-0A80D6174D25}.Release|x86.Deploy.0 = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|x64.Build.0 = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Debug|x86.Build.0 = Debug|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|x64.ActiveCfg = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|x64.Build.0 = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|x86.ActiveCfg = Release|Any CPU
+		{D549B545-66FE-42DB-A7F3-34B67F626FB6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

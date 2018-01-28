@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
-using Android.App;
+
 using Android.Graphics;
 using Android.OS;
-using Android.Util;
 using Android.Views;
+
+using Java.Interop;
 using Java.Lang;
 using Thread = Java.Lang.Thread;
 
@@ -21,8 +21,8 @@ namespace LibVLCSharp.Android.Sample
 
         class SurfaceHelper
         {
-            AWindow _aWindow;
-            int _id;
+            readonly AWindow _aWindow;
+            readonly int _id;
             readonly SurfaceView _surfaceView;
             readonly TextureView _textureView;
             static ISurfaceHolder _surfaceHolder;
@@ -66,7 +66,7 @@ namespace LibVLCSharp.Android.Sample
                     _aWindow.OnSurfaceCreated();
                 }
             }
-
+            
             void AttachSurfaceView()
             {
                 _surfaceHolder.AddCallback(_surfaceHolderCallback);
@@ -183,18 +183,22 @@ namespace LibVLCSharp.Android.Sample
         static readonly int SURFACE_STATE_ATTACHED = 1;
         static readonly int SURFACE_STATE_READY = 2;
 
-        SurfaceHelper[] _surfaceHelpers;
-        ISurfaceCallback _surfaceCallback;
+        readonly SurfaceHelper[] _surfaceHelpers;
+        readonly ISurfaceCallback _surfaceCallback;
         int _surfaceState = SURFACE_STATE_INIT;
         INewVideoLayoutListener _newVideoLayoutListener;
-        List<ICallback> _voutCallbacks = new List<ICallback>();
+        readonly List<ICallback> _voutCallbacks = new List<ICallback>();
         readonly Handler _handler = new Handler(Looper.MainLooper);
 
-        Surface[] _surfaces;
-        IntPtr _callbackNativeHandle = IntPtr.Zero;
+        static Surface[] _surfaces;
+        long _callbackNativeHandle;
         int _mouseAction, _mouseButton, _mouseX, _mouseY, _windowWidth, _windowHeight = -1;
-        SurfaceTextureThread _surfaceTextureThread = new SurfaceTextureThread();
+        readonly SurfaceTextureThread mSurfaceTextureThread = new SurfaceTextureThread();
         static readonly NativeLock _nativeLock = new NativeLock();
+
+        const int AWINDOW_REGISTER_ERROR = 0;
+        const int AWINDOW_REGISTER_FLAGS_SUCCESS = 0x1;
+        const int AWINDOW__FLAGS_HAS_VIDEO_LAYOUT_LISTENER = 0x2;
 
         public AWindow(ISurfaceCallback surfaceCallback)
         {
@@ -202,8 +206,7 @@ namespace LibVLCSharp.Android.Sample
             _surfaceHelpers = new SurfaceHelper[ID_MAX];
             _surfaces = new Surface[ID_MAX];
         }
-
-
+        
         void EnsureInitState()
         {
             if (_surfaceState != SURFACE_STATE_INIT)
@@ -336,10 +339,9 @@ namespace LibVLCSharp.Android.Sample
             }
             foreach(var cb in _voutCallbacks)
                 cb.OnSurfacesDestroyed(this);
-            if(_surfaceCallback != null)
-                _surfaceCallback.OnSurfacesDestroyed(this);
+            _surfaceCallback?.OnSurfacesDestroyed(this);
             if(Build.VERSION.SdkInt >= BuildVersionCodes.JellyBean)
-                _surfaceTextureThread.Release();
+                mSurfaceTextureThread.Release();
         }
 
         public bool AreViewsAttached => _surfaceState != SURFACE_STATE_INIT;
@@ -378,28 +380,115 @@ namespace LibVLCSharp.Android.Sample
 
         public void AddCallback(ICallback callback)
         {
-            throw new System.NotImplementedException();
+            if (_voutCallbacks.Contains(callback)) return;
+            _voutCallbacks.Add(callback);
         }
 
         public void RemoveCallback(ICallback callback)
         {
-            throw new System.NotImplementedException();
+            _voutCallbacks.Remove(callback);
         }
 
-       
 
+        //(long nativeHandle, int action, int button, int x, int y) signature: "(JIIII)V", connector:
+        //[Register(name: "nativeOnMouseEvent")]
+        //[Export]
+        internal virtual void NativeOnMouseEvent(long nativeHandle, int action, int button, int x, int y)
+        {
+            
+            System.Diagnostics.Debug.WriteLine("NativeOnMouseEvent");
+        }
+
+        //[Export]
+        internal virtual void NativeOnWindowSize(long nativeHandle, int width, int height)
+        {
+            System.Diagnostics.Debug.WriteLine("NativeOnWindowSize");
+        }
+
+        // used by JNI
+        // Get the valid Video surface
+        // return can be null if the surface was destroyed.
+        // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once InconsistentNaming
+        //[Register("getVideoSurface", )]
+        [Export("getVideoSurface")]
+        Surface VideoSurface() => GetNativeSurface(ID_VIDEO);
+
+        // Get the valid Subtitles surface.
+        // return can be null if the surface was destroyed.
+        // ReSharper disable once UnusedMember.Local
+        // ReSharper disable once InconsistentNaming
+        [Export("getSubtitlesSurface")]
+        Surface SubtitlesSurface() => GetNativeSurface(ID_SUBTITLES);
+        
         public void SetWindowSize(int width, int height)
         {
-            throw new System.NotImplementedException();
+            lock (_nativeLock)
+            {
+                if (_callbackNativeHandle != 0 && (_windowHeight != height || _windowWidth != width))
+                { 
+                    NativeOnWindowSize(_callbackNativeHandle, width, height);
+                }
+                _windowHeight = height;
+                _windowWidth = width;
+            }
         }
 
-       
+        [Export("registerNative")]
+        int RegisterNative(long handle)
+        {
+            //if(handle == IntPtr.Zero)
+            if(handle == 0)
+                throw new IllegalArgumentException("handle is null");
+
+            lock (_nativeLock)
+            {
+                if (_callbackNativeHandle != 0)
+                    return AWINDOW_REGISTER_ERROR;
+
+                _callbackNativeHandle = handle;
+
+                if (_mouseAction != -1)
+                {
+                    NativeOnMouseEvent(_callbackNativeHandle, _mouseAction, _mouseButton, _mouseX, _mouseY);
+                }
+
+                if (_windowWidth != -1 && _windowHeight != -1)
+                {
+                    NativeOnWindowSize(_callbackNativeHandle, _windowWidth, _windowHeight);
+                }
+
+                var flags = AWINDOW_REGISTER_FLAGS_SUCCESS;
+
+                if (_newVideoLayoutListener != null)
+                    flags |= AWINDOW__FLAGS_HAS_VIDEO_LAYOUT_LISTENER;
+                return flags;
+            }
+        }
+
+        [Export("unregisterNative")]
+        void UnregisterNative()
+        {
+            lock (_nativeLock)
+            {
+                if(_callbackNativeHandle == 0)
+                    throw new IllegalArgumentException("unregister called when not registered");
+                _callbackNativeHandle = 0;
+            }
+        }
+
+        [Export("setBuffersGeometry")]
+        bool SetBuffersGeometry(Surface surface, int width, int height, int format)
+        {
+            // TODO: add implementation if build <= ICS. Not used on newer versions.
+            return false;
+        }
 
         Surface GetNativeSurface(int id)
         {
             lock (_nativeLock)
             {
-                return _surfaces[id];
+               return _surfaces[id];
             }
         }
 
@@ -411,6 +500,180 @@ namespace LibVLCSharp.Android.Sample
             }
         }
 
+        [Export("setVideoLayout")]
+        void SetVideoLayout(int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen)
+        {
+            _handler.Post(() =>
+            {
+                _newVideoLayoutListener?.OnNewVideoLayout(this, width, height, visibleWidth, visibleHeight, sarNum,
+                    sarDen);
+            });
+        }
+
+        class SurfaceTextureThread : Java.Lang.Object, IRunnable, SurfaceTexture.IOnFrameAvailableListener
+        {
+            SurfaceTexture _surfaceTexture;
+            Surface _surface;
+
+            bool _frameAvailable;
+            Looper _looper;
+            Thread _thread;
+            bool _isAttached;
+            bool _doRelease;
+
+            internal bool AttachToGLContext(int texName)
+            {
+                if (_surfaceTexture == null)
+                {
+                    _thread = new Thread(this);
+                    _thread.Start();
+                    while (_surfaceTexture == null)
+                    {
+                        try
+                        {
+                            _thread.Wait();
+                        }
+                        catch (InterruptedException)
+                        {
+                            return false;
+                        }
+                    }
+                    _surface = new Surface(_surfaceTexture);
+                }
+                _surfaceTexture.AttachToGLContext(texName);
+                _frameAvailable = false;
+                _isAttached = true;
+                return true;
+            }
+            
+            public void OnFrameAvailable(SurfaceTexture surfaceTexture)
+            {
+                if (surfaceTexture == _surfaceTexture)
+                {
+                    if (_frameAvailable)
+                        throw new IllegalStateException("An available frame was not updated");
+                    _frameAvailable = true;
+                    _thread.Notify();
+                }
+            }
+
+            readonly object _locker = new object();
+
+            public void Run()
+            {
+                Looper.Prepare();
+
+                lock (_locker)
+                {
+                    _looper = Looper.MyLooper();
+                    _surfaceTexture = new SurfaceTexture(0);
+                    _surfaceTexture.DetachFromGLContext();
+                    _surfaceTexture.SetOnFrameAvailableListener(this);
+                    _thread.Notify();
+                }
+
+                Looper.Loop();
+            }
+
+            internal void DetachFromGLContext()
+            {
+                if (!_doRelease)
+                {
+                    _surfaceTexture.DetachFromGLContext();
+                    _isAttached = false;
+                    return;
+                }
+
+                _looper.Quit();
+                _looper = null;
+
+                try
+                {
+                    _thread.Join();
+                }
+                catch (InterruptedException) { }
+
+                _thread = null;
+                _surface.Release();
+                _surface = null;
+                _surfaceTexture.Release();
+                _surfaceTexture = null;
+                _doRelease = false;
+                _isAttached = false;
+            }
+
+            internal bool WaitAndUpdateTexImage(float[] transformMatrix)
+            {
+                lock (_locker)
+                {
+                    while (!_frameAvailable)
+                    {
+                        try
+                        {
+                            _thread.Wait(500);
+                            if (!_frameAvailable)
+                                return false;
+                        }
+                        catch (InterruptedException) { }
+                    }
+                    _frameAvailable = false;
+                }
+
+                _surfaceTexture.UpdateTexImage();
+                _surfaceTexture.GetTransformMatrix(transformMatrix);
+                return true;
+            }
+
+            internal Surface Surface => _surface;
+            
+            internal void Release()
+            {
+                if (_surfaceTexture != null)
+                {
+                    if (_isAttached)
+                        _doRelease = true;
+                    else
+                    {
+                        _surface.Release();
+                        _surface = null;
+                        _surfaceTexture.Release();
+                        _surfaceTexture = null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attach the SurfaceTexture to the OpenGL ES context that is current on the calling thread.
+        /// </summary>
+        /// <param name="texName">the OpenGL texture object name (e.g. generated via glGenTextures)</param>
+        /// <returns>true in case of success</returns>
+        [Export]
+        bool SurfaceTexture_attachToGLContext(int texName) =>  /*AndroidUtil.isJellyBeanOrLater &&*/ mSurfaceTextureThread.AttachToGLContext(texName);
+
+        /// <summary>
+        /// Detach the SurfaceTexture from the OpenGL ES context that owns the OpenGL ES texture object.
+        /// </summary>
+        [Export]
+        void SurfaceTexture_detachFromGLContext() => mSurfaceTextureThread.DetachFromGLContext();
+
+        /// <summary>
+        /// Wait for a frame and update the TexImage
+        /// </summary>
+        /// <param name="transformMatrix"></param>
+        /// <returns>true on success, false on error or timeout</returns>
+        //[Export]
+        bool SurfaceTexture_waitAndUpdateTexImage(float[] transformMatrix)
+        {
+            return mSurfaceTextureThread.WaitAndUpdateTexImage(transformMatrix);
+        }
+
+        /// <summary>
+        /// Get a Surface from the SurfaceTexture
+        /// </summary>
+        /// <returns></returns>
+        [Export]
+        Surface SurfaceTexture_getSurface() => mSurfaceTextureThread.Surface;
     }
 
     public interface IVLCVout
@@ -525,147 +788,6 @@ namespace LibVLCSharp.Android.Sample
     {
         void OnSurfacesCreated(AWindow vout);
         void OnSurfacesDestroyed(AWindow vout);
-    }
-
-    class SurfaceTextureThread : Java.Lang.Object, IRunnable, SurfaceTexture.IOnFrameAvailableListener
-    {
-        SurfaceTexture _surfaceTexture;
-        Surface _surface;
-
-        bool _frameAvailable;
-        Looper _looper;
-        Thread _thread;
-        bool _isAttached;
-        bool _doRelease;
-
-        bool AttachToGLContext(int texName)
-        {
-            if (_surfaceTexture == null)
-            {
-                _thread = new Thread(this);
-                _thread.Start();
-                while (_surfaceTexture == null)
-                {
-                    try
-                    {
-                        _thread.Wait();
-                    }
-                    catch (InterruptedException)
-                    {
-                        return false;
-                    }
-                }
-                _surface = new Surface(_surfaceTexture);
-            }
-            _surfaceTexture.AttachToGLContext(texName);
-            _frameAvailable = false;
-            _isAttached = true;
-            return true;
-        }
-
-
-        public void Dispose()
-        {
-            
-        }
-
-        public IntPtr Handle { get; }
-
-        public void OnFrameAvailable(SurfaceTexture surfaceTexture)
-        {
-            if (surfaceTexture == _surfaceTexture)
-            {
-                if(_frameAvailable)
-                    throw new IllegalStateException("An available frame was not updated");
-                _frameAvailable = true;
-                _thread.Notify();
-            }
-        }
-
-        readonly object _locker = new object();
-
-        public void Run()
-        {
-            Looper.Prepare();
-
-            lock (_locker)
-            {
-                _looper = Looper.MyLooper();
-                _surfaceTexture = new SurfaceTexture(0);
-                _surfaceTexture.DetachFromGLContext();
-                _surfaceTexture.SetOnFrameAvailableListener(this);
-                _thread.Notify();
-            }
-
-            Looper.Loop();
-        }
-
-        void DetachFromGLContext()
-        {
-            if (!_doRelease)
-            {
-                _surfaceTexture.DetachFromGLContext();
-                _isAttached = false;
-                return;
-            }
-
-            _looper.Quit();
-            _looper = null;
-
-            try
-            {
-                _thread.Join();
-            }
-            catch (InterruptedException) { }
-
-            _thread = null;
-            _surface.Release();
-            _surface = null;
-            _surfaceTexture.Release();
-            _surfaceTexture = null;
-            _doRelease = false;
-            _isAttached = false;
-        }
-
-        bool WaitAndUpdateTexImage(float[] transformMatrix)
-        {
-            lock (_locker)
-            {
-                while (!_frameAvailable)
-                {
-                    try
-                    {
-                        _thread.Wait(500);
-                        if (!_frameAvailable)
-                            return false;
-                    }
-                    catch (InterruptedException) { }
-                }
-                _frameAvailable = false;
-            }
-
-            _surfaceTexture.UpdateTexImage();
-            _surfaceTexture.GetTransformMatrix(transformMatrix);
-            return true;
-        }
-
-        Surface Surface => _surface;
-
-        internal void Release()
-        {
-            if (_surfaceTexture != null)
-            {
-                if (_isAttached)
-                    _doRelease = true;
-                else
-                {
-                    _surface.Release();
-                    _surface = null;
-                    _surfaceTexture.Release();
-                    _surfaceTexture = null;
-                }
-            }
-        }
     }
 
     class NativeLock

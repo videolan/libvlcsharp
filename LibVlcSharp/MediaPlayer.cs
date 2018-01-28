@@ -1573,6 +1573,12 @@ namespace VideoLAN.LibVLC
         public void SetAdjustFloat(VideoAdjustOption option, float value) => Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
 
         /// <summary>
+        /// Set the android context.
+        /// </summary>
+        /// <param name="aWindow">See LibVLCSharp.Android</param>
+        public void SetAndroidContext(IntPtr aWindow) => Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+
+        /// <summary>
         /// Add a slave to the current media player.
         /// note If the player is playing, the slave will be added directly. This call
         /// will also update the slave list of the attached VLC::Media.
