@@ -696,4 +696,28 @@ namespace VideoLAN.LibVLC.Events
     }
 
     #endregion
+
+    #region RendererDiscoverer events
+
+    public class RendererDiscovererItemAddedEventArgs : EventArgs
+    {
+        public RendererDiscovererItemAddedEventArgs(RendererItem rendererItem)
+        {
+            RendererItem = rendererItem;
+        }
+
+        public RendererItem RendererItem { get; }
+    }
+
+    public class RendererDiscovererItemDeletedEventArgs : EventArgs
+    {
+        public RendererDiscovererItemDeletedEventArgs(RendererItem rendererItem)
+        {
+            RendererItem = rendererItem;
+        }
+
+        public RendererItem RendererItem { get; }
+    }
+
+    #endregion
 }
