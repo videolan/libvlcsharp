@@ -1369,6 +1369,72 @@ namespace VideoLAN.LibVLC
         }
     }
 
+    public class RendererDiscovererEventManager : EventManager
+    {
+        readonly object _lock = new object();
+
+        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+
+        public RendererDiscovererEventManager(IntPtr ptr) : base(ptr)
+        {
+        }
+
+        // v3
+        public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemAdded += value;
+                    AttachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemAdded -= value;
+                    DetachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemDeleted += value;
+                    AttachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemDeleted -= value;
+                    DetachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+        }
+
+        void OnItemDeleted(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemDeleted.Item;
+            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+        }
+
+        void OnItemAdded(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded.Item;
+            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+        }
+    }
+
     public class VLMEventManager : EventManager
     {
         readonly object _lock = new object();
