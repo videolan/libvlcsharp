@@ -104,7 +104,6 @@ namespace VideoLAN.LibVLC
         /// return preamp value (Hz)
         /// LibVLC 2.2.0 or later
         /// </summary>
-        [LibVLC(2, 2)]
         public float Preamp => Native.LibVLCAudioEqualizerGetPreamp(NativeReference);
 
         /// <summary>
@@ -132,7 +131,6 @@ namespace VideoLAN.LibVLC
         /// Get the number of equalizer presets.
         /// LibVLC 2.2.0 or later
         /// </summary>
-        [LibVLC(2, 2)]
         public uint PresetCount => Native.LibVLCAudioEqualizerGetPresetCount();
 
         /// <summary>
@@ -148,7 +146,6 @@ namespace VideoLAN.LibVLC
         /// return number of frequency bands
         /// LibVLC 2.2.0 or later
         /// </summary>
-        [LibVLC(2, 2)]
         public uint BandCount => Native.LibVLCAudioEqualizerGetBandCount();
 
         /// <summary>
