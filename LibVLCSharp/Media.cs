@@ -519,14 +519,7 @@ namespace VideoLAN.LibVLC
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
         /// </summary>
-        public MediaStats Statistics
-        {
-            get
-            {
-                Internal.LibVLCMediaGetStats(NativeReference, out var stats);
-                return stats;
-            }
-        }
+        public MediaStats Statistics => Internal.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 ? default(MediaStats) : mediaStats;
 
         MediaEventManager _eventManager;
         /// <summary>
@@ -963,7 +956,7 @@ namespace VideoLAN.LibVLC
     /// <remarks>callback</remarks>
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void CloseMedia(IntPtr opaque);
-    
+
     #endregion
 
     #region Structs
@@ -984,7 +977,6 @@ namespace VideoLAN.LibVLC
         /* Decoders */
         public int DecodedVideo;
         public int DecodedAudio;
-
 
         /* Video Output */
         public int DisplayedPictures;

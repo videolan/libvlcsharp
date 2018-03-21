@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using VideoLAN.LibVLC;
 using Media = VideoLAN.LibVLC.Media;
@@ -52,32 +53,29 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void CreateRealMedia()
+        public async Task CreateRealMedia()
         {
-            var instance = new Instance();
-            var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);
-            
-            Assert.False(media.IsParsed);
-            media.Parse();
-
-            //await media.ParseAsync();
-            Assert.True(media.IsParsed);
-            Assert.NotZero(media.Duration);
-            Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
-            Assert.AreEqual(Media.MediaParsedStatus.Done, media.ParsedStatus);
-            Assert.AreEqual(Media.MediaType.File, media.Type);
-        }
-
-        string RealMediaPath
-        {
-            get
+            using (var instance = new Instance())
             {
-                var dir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                //var binDir = Path.Combine(dir, "..\\..\\..\\");
-                var files = Directory.GetFiles(dir);
-                return files.First(f => f.Contains("Klang"));
+                using (var media = new Media(instance, RealStreamMediaPath, Media.FromType.FromLocation))
+                {
+                    Assert.False(media.IsParsed);
+                    media.Parse();
+
+                    Assert.True(media.IsParsed);
+                    Assert.NotZero(media.Duration);
+                    using (var mp = new MediaPlayer(media))
+                    {
+                        Assert.True(mp.Play());
+                        await Task.Delay(3000); // have to wait a bit for statistics to populate
+                        Assert.Greater(media.Statistics.DemuxBitrate, 0);
+                        mp.Stop();
+                    }
+                }
             }
         }
+
+        string RealStreamMediaPath => "http://streams.videolan.org/streams/mp3/Owner-MPEG2.5.mp3";
 
         [Test]
         public void Duplicate()
@@ -90,8 +88,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromFileStream()
         {
+            Assert.Fail();
             // TODO: fix this.
-            var media = new Media(new Instance(), new FileStream(RealMediaPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            var media = new Media(new Instance(), new FileStream("realFileUri", FileMode.Open, FileAccess.Read, FileShare.Read));
             media.Parse();
             Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
         }
