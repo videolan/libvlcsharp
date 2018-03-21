@@ -277,7 +277,8 @@ namespace VideoLAN.LibVLC
 
         public override void Dispose()
         {
-            UnsetLog();
+            if(_logCallback != null)
+                UnsetLog();
             base.Dispose();
         }
 
