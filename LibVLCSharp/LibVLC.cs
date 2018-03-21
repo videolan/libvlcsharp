@@ -55,12 +55,13 @@ namespace VideoLAN.LibVLC
             {
                 if(_minimum)
                 {
-                    return _strict
-                        ? DllVersion.Major > _requiredVersion.Major && DllVersion.Minor > _requiredVersion.Minor
-                        : DllVersion.Major >= _requiredVersion.Major && DllVersion.Minor >= _requiredVersion.Minor;
+                    if(_strict)
+                        return DllVersion.CompareTo(_requiredVersion) > 0;
+                    return DllVersion.CompareTo(_requiredVersion) >= 0;
                 }
-                return _strict ? DllVersion.Major < _requiredVersion.Major && DllVersion.Minor < _requiredVersion.Minor
-                    : DllVersion.Major <= _requiredVersion.Major && DllVersion.Minor <= _requiredVersion.Minor;
+                if (_strict)
+                    return DllVersion.CompareTo(_requiredVersion) < 0;
+                return DllVersion.CompareTo(_requiredVersion) <= 0;
             }
         }
 
