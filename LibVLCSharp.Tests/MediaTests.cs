@@ -65,12 +65,9 @@ namespace LibVLCSharp.Tests
                     Assert.True(media.IsParsed);
                     Assert.NotZero(media.Duration);
                     using (var mp = new MediaPlayer(media))
-        /// <summary>
-        /// add media file for tests in \bin\x64\Debug\net47
-        /// </summary>
                     {
                         Assert.True(mp.Play());
-                        await Task.Delay(3000); // have to wait a bit for statistics to populate
+                        await Task.Delay(4000); // have to wait a bit for statistics to populate
                         Assert.Greater(media.Statistics.DemuxBitrate, 0);
                         mp.Stop();
                     }
@@ -78,6 +75,7 @@ namespace LibVLCSharp.Tests
             }
         }
         
+        string RealMediaPath => Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "sample.mp3");
         [Test]
         public void Duplicate()
         {
@@ -89,9 +87,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromFileStream()
         {
-            Assert.Fail();
-            // TODO: fix this.
-            var media = new Media(new Instance(), new FileStream("realFileUri", FileMode.Open, FileAccess.Read, FileShare.Read));
+            var media = new Media(new Instance(), new FileStream(RealMediaPath, FileMode.Open, FileAccess.Read, FileShare.Read));
             media.Parse();
             Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
         }

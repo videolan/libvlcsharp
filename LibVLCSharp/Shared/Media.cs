@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using VideoLAN.LibVLC.Events;
 
 namespace LibVLCSharp.Shared
 {
@@ -199,6 +200,11 @@ namespace LibVLCSharp.Shared
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_retain")]
             internal static extern void LibVLCMediaRetain(IntPtr media);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                            EntryPoint = "libvlc_media_get_codec_description")]
+            internal static extern string LibvlcMediaGetCodecDescription(TrackType type, uint codec);
         }
 
         #region enums
@@ -255,7 +261,8 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// <summary>Parse flags used by libvlc_media_parse_with_options()</summary>
+        /// <summary>Parse flags used by libvlc_media_parse_with_options()
+        /// </summary>
         /// <remarks>libvlc_media_parse_with_options</remarks>
         [Flags]
         public enum MediaParseOptions
@@ -276,6 +283,7 @@ namespace LibVLCSharp.Shared
             DoInteract = 8
         }
 
+        /// <summary>
         /// Parse status used sent by libvlc_media_parse_with_options() or returned by
         /// libvlc_media_get_parsed_status()
         /// </summary>
@@ -358,7 +366,7 @@ namespace LibVLCSharp.Shared
         }
 
         public Media(MediaList mediaList)
-            : base(() => Native.LibVLCMediaListMedia(mediaList.__Instance), Native.LibVLCMediaRelease)
+            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
         {
         }
 
@@ -491,11 +499,7 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Save the meta previously set</summary>
         /// <returns>true if the write operation was successful</returns>
-        public bool SaveMeta()
-        {
-            var r = Native.LibVLCMediaSaveMeta(NativeReference);
-            return r != 0;
-        }
+        public bool SaveMeta() => Native.LibVLCMediaSaveMeta(NativeReference) != 0;
 
         /// <summary>
         /// Get current <see cref="VLCState"/> of media descriptor object.
@@ -505,7 +509,8 @@ namespace LibVLCSharp.Shared
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
         /// </summary>
-        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 ? default(MediaStats) : mediaStats;
+        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
+            ? default(MediaStats) : mediaStats;
 
         MediaEventManager _eventManager;
         /// <summary>
@@ -537,10 +542,7 @@ namespace LibVLCSharp.Shared
         /// libvlc_media_get_meta
         /// libvlc_media_get_tracks_info
         /// </summary>
-        public void Parse()
-        {
-            Native.LibVLCMediaParse(NativeReference);
-        }
+        public void Parse() => Native.LibVLCMediaParse(NativeReference);
 
         /// <summary>Parse a media.
         /// This fetches (local) art, meta data and tracks information.
@@ -676,10 +678,7 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_parse_with_options</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public void ParseStop()
-        {
-            Native.LibVLCMediaParseStop(NativeReference);
-        }
+        public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
 
         // TODO: Whats userData?
         //public IntPtr UserData
@@ -733,7 +732,7 @@ namespace LibVLCSharp.Shared
             get
             {
                 var ptr = Native.LibVLCMediaSubitems(NativeReference);
-                return new MediaList(ptr);
+                return new MediaList(ptr); //should cache MediaList C# object.
             }
         }
 
@@ -752,20 +751,18 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public bool AddSlave(MediaSlaveType type, uint priority, string uri)
-        {
-            return Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
-        }
+        [LibVLC(3)]
+        public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
+            Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
+
 
         /// <summary>
         /// <para>Clear all slaves previously added by libvlc_media_slaves_add() or</para>
         /// <para>internally.</para>
         /// </summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public void ClearSlaves()
-        {
-            Native.LibVLCMediaClearSlaves(NativeReference);    
-        }
+        [LibVLC(3)]
+        public void ClearSlaves() => Native.LibVLCMediaClearSlaves(NativeReference);
 
         /// <summary>Get a media descriptor's slave list</summary>
         /// <para>address to store an allocated array of slaves (must be</para>
@@ -778,6 +775,7 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
+        [LibVLC(3)]
         public IEnumerable<MediaSlave> Slaves
         {
             get

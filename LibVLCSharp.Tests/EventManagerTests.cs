@@ -8,10 +8,12 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class EventManagerTests : BaseSetup
     {
+        string RealMediaPath => Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "sample.mp3");
+
         [Test]
         public void MetaChangedEventSubscribe()
         {
-            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
+            var media = new Media(new Instance(), Path.GetTempFileName());
             var eventManager = media.EventManager;
             var eventHandlerCalled = false;
             const Media.MetadataType description = Media.MetadataType.Description;
@@ -23,29 +25,10 @@ namespace LibVLCSharp.Tests
             media.SetMeta(Media.MetadataType.Description, "test");
             Assert.True(eventHandlerCalled);
         }
-
-        [Test]
-        public void SubItemAdded()
-        {
-            // FIXME
-            var instance = new Instance();
-            var media = new Media(instance, RealMp3Path, Media.FromType.FromPath);
-            var subItem = new Media(instance, Path.GetTempFileName(), Media.FromType.FromPath);
-
-            var eventManager = media.EventManager;
-            var eventHandlerCalled = false;
-            eventManager.SubItemAdded += (sender, args) =>
-            {
-                Assert.AreEqual(subItem, args.SubItem);
-                eventHandlerCalled = true;
-            };
-            media.SubItems.Lock();
-            Assert.True(media.SubItems.AddMedia(subItem));
-            media.SubItems.Unlock();
-            Assert.True(eventHandlerCalled);
-        }
         
         [Test]
+            var media = new Media(instance, RealMp3Path, Media.FromType.FromPath);
+        
         public void DurationChanged()
         {
             var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
@@ -101,15 +84,6 @@ namespace LibVLCSharp.Tests
             await tcs.Task;
             Assert.True(tcs.Task.Result);
             Assert.True(openingCalled);
-        }
-
-
-        [Test]
-        public void SubItemTreeAdded()
-        {
-            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
-            //TODO: Implement MediaList.cs
-            Assert.Fail();
         }
     }
 }
