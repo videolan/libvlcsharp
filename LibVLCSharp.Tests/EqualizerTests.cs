@@ -4,7 +4,7 @@ using VideoLAN.LibVLC;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class EqualizerTests
+    public class EqualizerTests : BaseSetup
     {
         [Test]
         public void BasicNativeCallTest()

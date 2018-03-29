@@ -8,7 +8,7 @@ using MediaList = VideoLAN.LibVLC.MediaList;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class MediaListTests
+    public class MediaListTests : BaseSetup
     {
         [Test]
         public void AddAndRemoveMediaFromMediaList()

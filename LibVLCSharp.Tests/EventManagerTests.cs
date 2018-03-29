@@ -9,7 +9,7 @@ using Media = VideoLAN.LibVLC.Media;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class EventManagerTests
+    public class EventManagerTests : BaseSetup
     {
         [Test]
         public void MetaChangedEventSubscribe()
@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
         {
             // FIXME
             var instance = new Instance();
-            var media = new Media(instance, RealMediaPath, Media.FromType.FromPath);
+            var media = new Media(instance, RealMp3Path, Media.FromType.FromPath);
             var subItem = new Media(instance, Path.GetTempFileName(), Media.FromType.FromPath);
 
             var eventManager = media.EventManager;
@@ -47,22 +47,11 @@ namespace LibVLCSharp.Tests
             media.SubItems.Unlock();
             Assert.True(eventHandlerCalled);
         }
-
-        string RealMediaPath
-        {
-            get
-            {
-                var dir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                //var binDir = Path.Combine(dir, "..\\..\\..\\");
-                var files = Directory.GetFiles(dir);
-                return files.First(f => f.Contains("Klang"));
-            }
-        }
-
+        
         [Test]
         public void DurationChanged()
         {
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
             var called = false;
             long duration = 0;
 
@@ -81,7 +70,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void FreedMedia()
         {
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
             var eventCalled = false;
             media.EventManager.MediaFreed += (sender, args) =>
             {
@@ -96,7 +85,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task StateChanged()
         {
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
             var tcs = new TaskCompletionSource<bool>();
             var openingCalled = false;
             media.EventManager.StateChanged += (sender, args) =>
@@ -121,7 +110,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void SubItemTreeAdded()
         {
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
             //TODO: Implement MediaList.cs
             Assert.Fail();
         }

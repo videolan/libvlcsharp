@@ -5,7 +5,7 @@ using VideoLAN.LibVLC;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class DialogTests
+    public class DialogTests : BaseSetup
     {
         const string UrlRequireAuth = "http://httpbin.org/basic-auth/user/passwd";
         const string Username = "username";

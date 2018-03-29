@@ -4,7 +4,7 @@ using VideoLAN.LibVLC;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class VersionCheckTests
+    public class VersionCheckTests : BaseSetup
     {
         [Test]
         public void ShouldThrowIfDllVersionNotHighEnough()

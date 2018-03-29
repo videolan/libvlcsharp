@@ -51,7 +51,7 @@ namespace VideoLAN.LibVLC
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_new")]
-            internal static extern unsafe IntPtr LibVLCNew(int argc, sbyte** argv);
+            internal static extern IntPtr LibVLCNew(int argc, IntPtr[] argv);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -149,6 +149,16 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_set_callbacks")]
             internal static extern void LibVLCDialogSetCallbacks(IntPtr instance, IntPtr callbacks, IntPtr data);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_renderer_discoverer_list_get")]
+            internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr instance, ref IntPtr discovererList);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_renderer_discoverer_list_release")]
+            internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
 
             #region Windows
 
@@ -258,21 +268,30 @@ namespace VideoLAN.LibVLC
         /// <para>cross-platform compatibility with regards to libvlc_new() arguments.</para>
         /// <para>We recommend that you do not use them, other than when debugging.</para>
         /// </remarks>
-        public Instance(int argc = 0, string[] args = null)
+        public Instance(string[] args = null)
             : base(() =>
             {
-                unsafe
+                var utf8Args = new IntPtr[args?.Length ?? 0];
+                try
                 {
-                    if (args == null || !args.Any())
-                        return Native.LibVLCNew(argc, null);
-                    fixed (byte* arg0 = Encoding.ASCII.GetBytes(args[0]),
-                        arg1 = Encoding.ASCII.GetBytes(args[1]),
-                        arg2 = Encoding.ASCII.GetBytes(args[2]))
+                    for (var i = 0; i < utf8Args.Length; i++)
                     {
-                        sbyte*[] arr = { (sbyte*)arg0, (sbyte*)arg1, (sbyte*)arg2 };
-                        fixed (sbyte** argv = arr)
+                        var bytes = Encoding.UTF8.GetBytes(args[i]);
+                        var buffer = Marshal.AllocHGlobal(bytes.Length + 1);
+                        Marshal.Copy(bytes, 0, buffer, bytes.Length);
+                        Marshal.WriteByte(buffer, bytes.Length, 0);
+                        utf8Args[i] = buffer;
+                    }
+
+                    return Native.LibVLCNew(utf8Args.Length, utf8Args);
+                }
+                finally
+                {
+                    foreach (var arg in utf8Args)
+                    {
+                        if (arg != IntPtr.Zero)
                         {
-                            return Native.LibVLCNew(argc, argv);
+                            Marshal.FreeHGlobal(arg);
                         }
                     }
                 }
@@ -658,6 +677,43 @@ namespace VideoLAN.LibVLC
         }
 
         public bool DialogHandlersSet => _dialogCbsPtr != IntPtr.Zero;
+
+        public RendererDescription[] RendererList
+        {
+            get
+            {
+                // TODO: Move marshalling logic to generic MarshalUtils func
+                var discoverList = IntPtr.Zero;
+                var count = Native.LibVLCRendererDiscovererGetList(NativeReference, ref discoverList);
+
+                if (count == 0) return Array.Empty<RendererDescription>();
+
+                var rendererDiscovererDescription = new RendererDescription[(int)count];
+
+                for (var i = 0; i < (int)count; i++)
+                {
+                    var ptr = Marshal.ReadIntPtr(discoverList, i * IntPtr.Size);
+                    var managedStruct = (RendererDescription)Marshal.PtrToStructure(ptr, typeof(RendererDescription));
+                    rendererDiscovererDescription[i] = managedStruct;
+                }
+
+                Native.LibVLCRendererDiscovererReleaseList(discoverList, count);
+
+                return rendererDiscovererDescription;
+            }
+        }
+
+        public struct RendererDescription
+        {
+            public string Name { get; }
+            public string LongName { get; }
+
+            public RendererDescription(string name, string longName)
+            {
+                Name = name;
+                LongName = longName;
+            }
+        }
 
         /// <summary>
         /// Code taken from Vlc.DotNet

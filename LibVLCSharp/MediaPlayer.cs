@@ -617,6 +617,11 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
             internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_renderer")]
+            internal static extern int LibVLCMediaPlayerSetRenderer(IntPtr mediaplayer, IntPtr renderItem);
         }
 
         MediaPlayerEventManager _eventManager;
@@ -1588,6 +1593,10 @@ namespace VideoLAN.LibVLC
         [LibVLC(3)]
         public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
             Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
+
+        [LibVLC(3)]
+        public bool SetRenderer(RendererItem rendererItem) =>
+            Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
         #region Enums
 

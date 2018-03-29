@@ -5,7 +5,7 @@ using VideoLAN.LibVLC;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class MediaDiscovererTests
+    public class MediaDiscovererTests : BaseSetup
     {
         [Test]
         public void CreateStartAndStopDiscoverer()

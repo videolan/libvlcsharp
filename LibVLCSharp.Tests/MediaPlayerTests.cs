@@ -11,7 +11,7 @@ using MediaPlayer = VideoLAN.LibVLC.MediaPlayer;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class MediaPlayerTests
+    public class MediaPlayerTests : BaseSetup
     {
         [Test]
         public void CreateAndDestroy()

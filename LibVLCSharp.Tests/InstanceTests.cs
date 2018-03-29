@@ -10,7 +10,7 @@ using VideoLAN.LibVLC.Events;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class InstanceTests
+    public class InstanceTests : BaseSetup
     {
         [Test]
         public void DisposeInstanceNativeRelease()

@@ -6,8 +6,6 @@ namespace VideoLAN.LibVLC
 {
     public class RendererDiscoverer : Internal
     {
-        readonly IntPtr _instanceNativeReference;
-
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -34,22 +32,12 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_event_manager")]
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
-
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_discoverer_list_get")]
-            internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr instance, ref IntPtr discovererList);
-            
-            [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_discoverer_list_release")]
-            internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
         }
 
         public RendererDiscoverer(Instance instance, string name) 
-            : base(() => Native.LibVLCRendererDiscovererNew(instance.NativeReference, name), Native.LibVLCRendererDiscovererRelease)
+            : base(() => Native.LibVLCRendererDiscovererNew(instance.NativeReference, name), 
+                  Native.LibVLCRendererDiscovererRelease)
         {
-            _instanceNativeReference = instance.NativeReference;
         }
 
         RendererDiscovererEventManager _eventManager;
@@ -70,42 +58,6 @@ namespace VideoLAN.LibVLC
         public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
 
         public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
-
-        public Description[] List
-        {
-            get
-            {
-                var discoverList = IntPtr.Zero;
-                var count = Native.LibVLCRendererDiscovererGetList(_instanceNativeReference, ref discoverList);
-
-                if (count == 0) return Array.Empty<Description>();
-
-                var rendererDiscovererDescription = new Description[(int)count];
-
-                for (var i = 0; i < (int)count; i++)
-                {
-                    var ptr = Marshal.ReadIntPtr(discoverList, i * IntPtr.Size);
-                    var managedStruct = (Description)Marshal.PtrToStructure(ptr, typeof(Description));
-                    rendererDiscovererDescription[i] = managedStruct;
-                }
-
-                Native.LibVLCRendererDiscovererReleaseList(discoverList, count);
-
-                return rendererDiscovererDescription;
-            }
-        }
-
-        public struct Description
-        {
-            public string Name { get; }
-            public string LongName { get; }
-
-            public Description(string name, string longName)
-            {
-                Name = name;
-                LongName = longName;
-            }
-        }
     }
 
     public class RendererItem : Internal

@@ -9,7 +9,7 @@ using Media = VideoLAN.LibVLC.Media;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class MediaTests
+    public class MediaTests : BaseSetup
     {
         [Test]
         public void CreateMedia()
@@ -74,8 +74,6 @@ namespace LibVLCSharp.Tests
                 }
             }
         }
-
-        string RealStreamMediaPath => "http://streams.videolan.org/streams/mp3/Owner-MPEG2.5.mp3";
 
         [Test]
         public void Duplicate()
