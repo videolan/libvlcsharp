@@ -496,7 +496,7 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
+                return MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
                     Marshal.PtrToStructure<ModuleDescription.Internal>,
                     intern => ModuleDescription.__CreateInstance(intern),
                     module => module.Next, Native.LibVLCModuleDescriptionListRelease);
@@ -516,7 +516,7 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
+                return MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
                     Marshal.PtrToStructure<ModuleDescription.Internal>,
                     intern => ModuleDescription.__CreateInstance(intern),
                     module => module.Next, Native.LibVLCModuleDescriptionListRelease);
@@ -534,7 +534,7 @@ namespace VideoLAN.LibVLC
         {
             get
             {
-                return Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
+                return MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
                     Marshal.PtrToStructure<AudioOutputDescription.Internal>,
                     intern => AudioOutputDescription.__CreateInstance(intern),
                     module => module.Next, Native.LibVLCAudioOutputListRelease);
@@ -565,7 +565,7 @@ namespace VideoLAN.LibVLC
         public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
         {
 
-            return Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
+            return MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
                 Marshal.PtrToStructure<AudioOutputDevice.Internal>, 
                 s => AudioOutputDevice.__CreateInstance(s),
                 device => device.Next, Native.LibVLCAudioOutputDeviceListRelease);
@@ -658,26 +658,6 @@ namespace VideoLAN.LibVLC
         }
 
         public bool DialogHandlersSet => _dialogCbsPtr != IntPtr.Zero;
-
-        static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
-            Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
-        {
-            var nativeRef = getRef();
-            if (nativeRef == IntPtr.Zero) return Array.Empty<TU>();
-
-            var structure = retrieve(nativeRef);
-
-            var obj = create(structure);
-
-            var resultList = new List<TU>();
-            while (obj != null)
-            {
-                resultList.Add(obj);
-                obj = next(obj);
-            }
-            releaseRef(nativeRef);
-            return resultList.ToArray();
-        }
 
         /// <summary>
         /// Code taken from Vlc.DotNet
