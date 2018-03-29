@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using VideoLAN.LibVLC.Events;
 using VideoLAN.LibVLC.Structures;
@@ -34,9 +35,10 @@ namespace VideoLAN.LibVLC
         /// <summary>
         /// A boolean to make sure that we are calling SetLog only once
         /// </summary>
-        bool _logAttached = false;
+        bool _logAttached;
 
         IntPtr _logFileHandle;
+        IntPtr _dialogCbsPtr;
 
         public override int GetHashCode()
         {
@@ -142,9 +144,14 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
             internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
-            
+
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_dialog_set_callbacks")]
+            internal static extern void LibVLCDialogSetCallbacks(IntPtr instance, IntPtr callbacks, IntPtr data);
+
             #region Windows
-            
+
             /// <summary>
             /// Compute the size required by vsprintf to print the parameters.
             /// </summary>
@@ -279,6 +286,7 @@ namespace VideoLAN.LibVLC
         {
             if(_logCallback != null)
                 UnsetLog();
+            UnsetDialogHandlers();
             base.Dispose();
         }
 
@@ -368,6 +376,16 @@ namespace VideoLAN.LibVLC
             Native.LibVLCLogUnset(NativeReference);
             if(!CloseLogFile())
                 throw new VLCException("Could not close log file");
+        }
+
+        public void UnsetDialogHandlers()
+        {
+            if (_dialogCbsPtr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(_dialogCbsPtr);
+                _dialogCbsPtr = IntPtr.Zero;
+            }
+            Native.LibVLCDialogSetCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
         }
 
         /// <summary>
@@ -579,9 +597,67 @@ namespace VideoLAN.LibVLC
             return mediaDiscovererDescription;
         }
 
-        public void SetDialogHandlers()
+        readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
+
+        public void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
+            DisplayProgress displayProgress, UpdateProgress updateProgress)
         {
+            if (error == null) throw new ArgumentNullException(nameof(error));
+            if (login == null) throw new ArgumentNullException(nameof(login));
+            if (question == null) throw new ArgumentNullException(nameof(question));
+            if (displayProgress == null) throw new ArgumentNullException(nameof(displayProgress));
+            if (updateProgress == null) throw new ArgumentNullException(nameof(updateProgress));
+
+            var dialogCbs = new DialogCallbacks
+            {
+                DisplayError = (data, title, text) =>
+                {
+                    // no dialogId ?!
+                    error(title, text);
+                },
+                DisplayLogin = (data, id, title, text, username, store) =>
+                {
+                    var cts = new CancellationTokenSource();
+                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    _cts.Add(id, cts);
+                    login(dlg, title, text, username, store, cts.Token);
+                },
+                DisplayQuestion = (data, id, title, text, type, cancelText, firstActionText, secondActionText) =>
+                {
+                    var cts = new CancellationTokenSource();
+                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    _cts.Add(id, cts);
+                    question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
+
+                },
+                DisplayProgress = (data, id, title, text, indeterminate, position, cancelText) =>
+                {
+                    var cts = new CancellationTokenSource();
+                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    _cts.Add(id, cts);
+                    displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
+                },
+                Cancel = (data, id) =>
+                {
+                    if (_cts.TryGetValue(id, out var token))
+                    {
+                        token.Cancel();
+                        _cts.Remove(id);
+                    }
+                },
+                UpdateProgress = (data, id, position, text) =>
+                {
+                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    updateProgress(dlg, position, text);
+                }
+            };
+
+            _dialogCbsPtr = Marshal.AllocHGlobal(Marshal.SizeOf<DialogCallbacks>());
+            Marshal.StructureToPtr(dialogCbs, _dialogCbsPtr, true);
+            Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbsPtr, IntPtr.Zero);
         }
+
+        public bool DialogHandlersSet => _dialogCbsPtr != IntPtr.Zero;
 
         static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
