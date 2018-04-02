@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 using VideoLAN.LibVLC;
 using Media = VideoLAN.LibVLC.Media;
