@@ -94,7 +94,7 @@ namespace VideoLAN.LibVLC
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_item_icon_uri")]
+                EntryPoint = "libvlc_renderer_item_flags")]
             internal static extern int LibVLCRendererItemFlags(IntPtr rendererItem);
         }
 
