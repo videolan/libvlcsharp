@@ -160,6 +160,7 @@ namespace VideoLAN.LibVLC.Events
         public EventType Type;
 
         public IntPtr Sender;
+        public IntPtr RendererItem;
 
         public EventUnion Union;
 
@@ -200,10 +201,6 @@ namespace VideoLAN.LibVLC.Events
            
             // vlm
             public VlmMediaEvent VlmMediaEvent;
-
-            // renderer
-            public RendererDiscovererItemAdded RendererDiscovererItemAdded;
-            public RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
         }
 
         #region Media
@@ -363,18 +360,8 @@ namespace VideoLAN.LibVLC.Events
             public IntPtr MediaName;
             public IntPtr InstanceName;
         }
-        
-        public struct RendererDiscovererItemAdded
-        {
-            public IntPtr Item;
-        }
-
-        public struct RendererDiscovererItemDeleted
-        {
-            public IntPtr Item;
-        }
     }
-
+    
     #region Media events
 
     public class MediaMetaChangedEventArgs : EventArgs

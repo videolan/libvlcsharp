@@ -64,13 +64,14 @@ namespace VideoLAN.LibVLC
     {
         const int VideoRenderer = 0x0002;
         const int AudioRenderer = 0x0001;
+        readonly ICustomMarshaler _utf8Marshaler = Utf8StringMarshaler.GetInstance();
 
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_name")]
-            internal static extern string LibVLCRendererItemName(IntPtr rendererItem);
+            internal static extern IntPtr LibVLCRendererItemName(IntPtr rendererItem);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -85,12 +86,12 @@ namespace VideoLAN.LibVLC
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_type")]
-            internal static extern string LibVLCRendererItemType(IntPtr rendererItem);
+            internal static extern IntPtr LibVLCRendererItemType(IntPtr rendererItem);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_icon_uri")]
-            internal static extern string LibVLCRendererItemIconUri(IntPtr rendererItem);
+            internal static extern IntPtr LibVLCRendererItemIconUri(IntPtr rendererItem);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -98,16 +99,17 @@ namespace VideoLAN.LibVLC
             internal static extern int LibVLCRendererItemFlags(IntPtr rendererItem);
         }
 
-        public RendererItem(IntPtr reference) : base(() => reference, Native.LibVLCRendererItemRelease)
+        public RendererItem(IntPtr reference) : 
+            base(() => reference, Native.LibVLCRendererItemRelease)
         {
-            Native.LibVLCRendererItemHold(reference); //fail
+            Native.LibVLCRendererItemHold(reference);
         }
 
-        public string Name => Native.LibVLCRendererItemName(NativeReference);
+        public string Name => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemName(NativeReference)) as string;
 
-        public string Type => Native.LibVLCRendererItemType(NativeReference);
+        public string Type => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemType(NativeReference)) as string;
 
-        public string IconUri => Native.LibVLCRendererItemIconUri(NativeReference);
+        public string IconUri => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemIconUri(NativeReference)) as string;
 
         public bool CanRenderVideo => (Native.LibVLCRendererItemFlags(NativeReference) & VideoRenderer) != 0;
 

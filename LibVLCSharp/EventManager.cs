@@ -1424,13 +1424,13 @@ namespace VideoLAN.LibVLC
 
         void OnItemDeleted(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemDeleted.Item;
+            var rendererItem = RetrieveEvent(args).RendererItem;
             _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
         }
 
         void OnItemAdded(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded.Item;
+            var rendererItem = RetrieveEvent(args).RendererItem;           
             _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
         }
     }
