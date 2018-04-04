@@ -5,8 +5,9 @@ using System.Security;
 using Android.App;
 using Android.Graphics;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
-
+using Com.Example.Orgvideolanlibvlc;
 using Java.Interop;
 
 using VideoLAN.LibVLC;
@@ -14,7 +15,7 @@ using VideoLAN.LibVLC;
 namespace LibVLCSharp.Android.Sample
 {
     [Activity(Label = "LibVLCSharp.Android.Sample", MainLauncher = true)]
-    public class MainActivity : Activity, ICallback
+    public class MainActivity : Activity, IVLCVoutCallback
     {
         Instance _instance;
         MediaPlayer _mp;
@@ -27,25 +28,29 @@ namespace LibVLCSharp.Android.Sample
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-            
-            JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
-
-            _instance = new Instance();
-            _mp = new MediaPlayer(_instance);
-
-            _awindow = new AWindow(new SurfaceCallback(_mp));
-            _awindow.AddCallback(this);
-            _surfaceView = FindViewById<SurfaceView>(Resource.Id.surfaceView);
+           
         }
         
         protected override void OnResume()
         {
             base.OnResume();
 
+
+            var r = JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
+
+            _instance = new Instance();
+            _mp = new MediaPlayer(_instance);
+
+
+            _awindow = new AWindow(new SurfaceCallback(_mp));
+            _awindow.AddCallback(this);
+            _surfaceView = FindViewById<SurfaceView>(Resource.Id.surfaceView);
+
+
             _awindow.SetVideoView(_surfaceView);
             _awindow.AttachViews();
             _surfaceView.AddOnLayoutChangeListener(new LayoutChangeListener(_awindow));
-            
+
             _mp.SetAndroidContext(_awindow.Handle);
 
             _mp.Media = new Media(_instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
@@ -76,39 +81,46 @@ namespace LibVLCSharp.Android.Sample
             }
         }
         
-        public void OnSurfaceCreated(IVLCVout vlcVout)
+        //public void OnSurfaceCreated(IVLCVout vlcVout)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("OnSurfaceCreated");
+        //}
+
+        //public void OnSurfacesDestroyed(IVLCVout vlcVout)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("OnSurfacesDestroyed");
+        //}
+
+        //public void OnNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum,
+        //    int sarDen)
+        //{
+        //    _awindow.SetWindowSize(width, height);
+        //}
+
+        //public void SurfaceChanged(ISurfaceHolder holder, Format format, int width, int height)
+        //{
+
+        //}
+
+        //public void SurfaceCreated(ISurfaceHolder holder)
+        //{
+
+        //}
+
+        //public void SurfaceDestroyed(ISurfaceHolder holder)
+        //{
+
+        //}
+        public void OnSurfacesCreated(IVLCVout p0)
         {
-            System.Diagnostics.Debug.WriteLine("OnSurfaceCreated");
         }
 
-        public void OnSurfacesDestroyed(IVLCVout vlcVout)
+        public void OnSurfacesDestroyed(IVLCVout p0)
         {
-            System.Diagnostics.Debug.WriteLine("OnSurfacesDestroyed");
-        }
-
-        public void OnNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum,
-            int sarDen)
-        {
-            _awindow.SetWindowSize(width, height);
-        }
-
-        public void SurfaceChanged(ISurfaceHolder holder, Format format, int width, int height)
-        {
-
-        }
-
-        public void SurfaceCreated(ISurfaceHolder holder)
-        {
-
-        }
-
-        public void SurfaceDestroyed(ISurfaceHolder holder)
-        {
-
         }
     }
 
-    public class SurfaceCallback : Java.Lang.Object, ISurfaceCallback
+    public class SurfaceCallback : Java.Lang.Object, AWindow.ISurfaceCallback
     {
         static readonly object _locker = new object();
         readonly MediaPlayer _mp;
@@ -156,6 +168,13 @@ namespace LibVLCSharp.Android.Sample
                 //_mp.VideoTrackEnabled = false;
             }
         }
+
+        public void Dispose()
+        {
+            
+        }
+
+        public IntPtr Handle { get; }
     }
 
     public class LayoutChangeListener : Java.Lang.Object, View.IOnLayoutChangeListener
