@@ -125,6 +125,8 @@ namespace LibVLCSharp.Android.Sample
         static readonly object _locker = new object();
         readonly MediaPlayer _mp;
 
+        public SurfaceCallback() {}
+
         public SurfaceCallback(MediaPlayer mp)
         {
             _mp = mp;
