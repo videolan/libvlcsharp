@@ -3,13 +3,10 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 using Android.App;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Com.Example.Orgvideolanlibvlc;
 using Java.Interop;
-
+using Org.Videolan.Libvlc;
 using VideoLAN.LibVLC;
 
 namespace LibVLCSharp.Android.Sample
@@ -28,9 +25,9 @@ namespace LibVLCSharp.Android.Sample
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-           
+
         }
-        
+
         protected override void OnResume()
         {
             base.OnResume();

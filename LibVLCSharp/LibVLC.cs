@@ -2,14 +2,14 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using Cauldron.Interception;
+//using Cauldron.Interception;
 
 namespace VideoLAN.LibVLC
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property, 
         AllowMultiple = true, 
         Inherited = false)]
-    public class LibVLC : Attribute, IMethodInterceptor, IPropertyGetterInterceptor
+    public class LibVLC : Attribute//, IMethodInterceptor, IPropertyGetterInterceptor
     {
         struct Native
         {
@@ -79,10 +79,10 @@ namespace VideoLAN.LibVLC
         {
         }
 
-        public void OnGet(PropertyInterceptionInfo propertyInterceptionInfo, object value)
-        {
-            PerformCheck();
-        }
+        //public void OnGet(PropertyInterceptionInfo propertyInterceptionInfo, object value)
+        //{
+        //    PerformCheck();
+        //}
 
         void PerformCheck()
         {
