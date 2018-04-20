@@ -5,9 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Threading;
-using System.Threading.Tasks;
-using VideoLAN.LibVLC.Events;
 
 namespace LibVLCSharp.Shared
 {
@@ -544,123 +541,9 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Parse() => Native.LibVLCMediaParse(NativeReference);
 
-        /// <summary>Parse a media.
-        /// This fetches (local) art, meta data and tracks information.
-        /// The method is the asynchronous of libvlc_media_parse().
-        /// To track when this is over you can listen to libvlc_MediaParsedChanged
-        /// event. However if the media was already parsed you will not receive this
-        /// event.
-        /// You can't be sure to receive the libvlc_MediaParsedChanged
-        /// event (you can wait indefinitely for this event).
-        /// Use libvlc_media_parse_with_options() instead
-        /// libvlc_media_parse
-        /// libvlc_MediaParsedChanged
-        /// libvlc_media_get_meta
-        /// libvlc_media_get_tracks_info
-        /// </summary>
-        /// TODO: return task by checking libvlc_MediaParsedChanged
-        public Task ParseAsync()
-        {
-            Native.LibVLCMediaParseAsync(NativeReference);
-            return Task.CompletedTask;
-        }
-
         /// <summary>Return true is the media descriptor object is parsed</summary>
         /// <returns>true if media object has been parsed otherwise it returns false</returns>
         public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference) != 0;
-
-        /// <summary>Parse the media asynchronously with options.</summary>
-        /// <param name="parseOptions">parse options</param>
-        /// <param name="token">cancellation cancellationToken</param>
-        /// <param name="timeout">
-        /// <para>maximum time allowed to preparse the media. If -1, the</para>
-        /// <para>default &quot;preparse-timeout&quot; option will be used as a timeout. If 0, it will</para>
-        /// <para>wait indefinitely. If &gt; 0, the timeout will be used (in milliseconds).</para>
-        /// </param>
-        /// <returns>-1 in case of error, 0 otherwise</returns>
-        /// <remarks>
-        /// <para>This fetches (local or network) art, meta data and/or tracks information.</para>
-        /// <para>This method is the extended version of libvlc_media_parse_with_options().</para>
-        /// <para>To track when this is over you can listen to libvlc_MediaParsedChanged</para>
-        /// <para>event. However if this functions returns an error, you will not receive any</para>
-        /// <para>events.</para>
-        /// <para>It uses a flag to specify parse options (see libvlc_media_parse_flag_t). All</para>
-        /// <para>these flags can be combined. By default, media is parsed if it's a local</para>
-        /// <para>file.</para>
-        /// <para>Parsing can be aborted with libvlc_media_parse_stop().</para>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// <para>libvlc_media_get_meta</para>
-        /// <para>libvlc_media_tracks_get</para>
-        /// <para>libvlc_media_get_parsed_status</para>
-        /// <para>libvlc_media_parse_flag_t</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public Task<bool> ParseAsyncWithOptions(MediaParseOptions parseOptions = MediaParseOptions.ParseLocal, CancellationToken cancellationToken = default(CancellationToken),
-            int timeout = -1)
-        {
-            return ParseAsyncWithOptionsInternal(() =>
-                Native.LibVLCMediaParseWithOptions(NativeReference, parseOptions, 0) != 0, cancellationToken, timeout);
-        }
-
-        TaskCompletionSource<bool> _tcs;
-
-        async Task<bool> ParseAsyncWithOptionsInternal(Func<bool> nativeCall, CancellationToken cancellationToken, int timeout)
-        {
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                _tcs = new TaskCompletionSource<bool>();
-                var timeoutToken = new CancellationTokenSource(timeout);
-
-                EventManager.ParsedChanged += OnParsedChanged;
-
-                cancellationToken.Register(() =>
-                {
-                    EventManager.ParsedChanged -= OnParsedChanged;
-                    Native.LibVLCMediaParseStop(NativeReference);
-                    _tcs?.TrySetCanceled();
-                });
-
-                timeoutToken.Token.Register(() =>
-                {
-                    EventManager.ParsedChanged -= OnParsedChanged;
-                    Native.LibVLCMediaParseStop(NativeReference);
-                    _tcs?.TrySetCanceled();
-                });
-
-                var result = nativeCall();
-            }
-            catch (OperationCanceledException)
-            {
-                _tcs?.TrySetCanceled();
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _tcs?.TrySetException(ex);
-                return false;
-            }
-            finally
-            {
-            }
-
-            //EventManager.ParsedChanged -= OnParsedChanged;
-            if (_tcs == null)
-                return false;
-            return await _tcs.Task;
-        }
-
-        void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
-        {
-            if (ParsedStatus == MediaParsedStatus.Done)
-                _tcs?.TrySetResult(true);
-            else if (ParsedStatus == MediaParsedStatus.Failed)
-                _tcs?.TrySetException(new VLCException($"parsing of {this} failed"));
-            else _tcs?.TrySetResult(false);
-            EventManager.ParsedChanged -= OnParsedChanged;
-        }
 
         /// <summary>Get Parsed status for media descriptor object.</summary>
         /// <returns>a value of the libvlc_media_parsed_status_t enum</returns>
@@ -679,13 +562,6 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
         public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
-
-        // TODO: Whats userData?
-        //public IntPtr UserData
-        //{
-        //    get => Native.LibVLCMediaGetUserData(NativeReference);
-        //    set => Native.LibVLCMediaSetUserData(NativeReference, IntPtr.Zero);
-        //}
 
         /// <summary>Get media descriptor's elementary streams description</summary>
         /// <para>address to store an allocated array of Elementary Streams</para>
@@ -727,15 +603,8 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_list_release() to decrement the reference counting.</para>
         /// </summary>
         /// <returns>list of media descriptor subitems or NULL</returns>
-        public MediaList SubItems
-        {
-            get
-            {
-                var ptr = Native.LibVLCMediaSubitems(NativeReference);
-                return new MediaList(ptr); //should cache MediaList C# object.
-            }
-        }
-
+        public MediaList SubItems => new MediaList(Native.LibVLCMediaSubitems(NativeReference));
+       
         public MediaType Type => Native.LibVLCMediaGetType(NativeReference);
 
         /// <summary>Add a slave to the current media.</summary>
@@ -1085,7 +954,6 @@ namespace LibVLCSharp.Shared
         public uint Rate;
     }
 
-
     public struct VideoTrack
     {
         public uint Height;
@@ -1135,7 +1003,6 @@ namespace LibVLCSharp.Shared
         Equirectangular = 1,
         CubemapLayoutStandard = 256
     }
-
 
     /// <summary>Viewpoint for video outputs</summary>
     /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>

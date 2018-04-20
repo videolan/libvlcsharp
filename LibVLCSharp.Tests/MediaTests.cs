@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -16,7 +16,7 @@ namespace LibVLCSharp.Tests
         {
             var instance = new Instance();
 
-            var media = new Media(instance, Path.GetTempFileName(), Media.FromType.FromPath);
+            var media = new Media(instance, Path.GetTempFileName());
 
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
@@ -24,14 +24,14 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFail()
         {
-            Assert.Throws<ArgumentNullException>(() => new Media(null, Path.GetTempFileName(), Media.FromType.FromPath));
-            Assert.Throws<ArgumentNullException>(() => new Media(new Instance(), string.Empty, Media.FromType.FromPath));
+            Assert.Throws<ArgumentNullException>(() => new Media(null, Path.GetTempFileName()));
+            Assert.Throws<ArgumentNullException>(() => new Media(new Instance(), string.Empty));
         }
 
         [Test]
         public void ReleaseMedia()
         {
-            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
+            var media = new Media(new Instance(), Path.GetTempFileName());
 
             media.Dispose();
 
@@ -75,7 +75,6 @@ namespace LibVLCSharp.Tests
             }
         }
         
-        string RealMediaPath => Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "sample.mp3");
         [Test]
         public void Duplicate()
         {
@@ -87,7 +86,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromFileStream()
         {
-            var media = new Media(new Instance(), new FileStream(RealMediaPath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            var media = new Media(new Instance(), new FileStream(RealMp3Path, FileMode.Open, FileAccess.Read, FileShare.Read));
             media.Parse();
             Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
         }
@@ -95,7 +94,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void SetMetadata()
         {
-            var media = new Media(new Instance(), Path.GetTempFileName(), Media.FromType.FromPath);
+            var media = new Media(new Instance(), Path.GetTempFileName());
             const string test = "test";
             media.SetMeta(Media.MetadataType.ShowName, test);
             Assert.True(media.SaveMeta());
@@ -103,47 +102,11 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public async Task AsyncParse()
+        public void GetTracks()
         {
-          var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
-            var result = await media.ParseAsyncWithOptions();
-            Assert.True(result);
-        }
-
-        [Test]
-        public async Task AsyncParseTimeoutStop()
-        {
-            //TODO: fix
-            Assert.Inconclusive();
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
-            var called = false;
-
-            media.EventManager.ParsedChanged += (sender, args) =>
-            {
-                Assert.True(args.ParsedStatus == Media.MediaParsedStatus.Timeout);
-                called = true;
-            };
-            var result = await media.ParseAsyncWithOptions(timeout: 1);
-            Assert.False(result);
-            Assert.True(called);
-        }
-
-        [Test]
-        public async Task AsyncParseCancel()
-        {
-            //TODO: fix
-            Assert.Inconclusive();
-            var media = new Media(new Instance(), RealMediaPath, Media.FromType.FromPath);
-            var called = false;
-            media.EventManager.ParsedChanged += (sender, args) =>
-            {
-                Assert.True(args.ParsedStatus == Media.MediaParsedStatus.Failed);
-                called = true;
-            };
-            // current code cancels tasks before the parsing even starts so parseStatus is never set to failed.
-            var result = await media.ParseAsyncWithOptions(cancellationToken: new CancellationToken(canceled: true));
-            Assert.False(result);
-            Assert.True(called);
+            var media = new Media(new Instance(), RealMp3Path);
+            media.Parse();
+            Assert.AreEqual(1, media.Tracks);
         }
     }
 }

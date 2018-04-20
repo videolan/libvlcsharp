@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -8,8 +9,6 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class EventManagerTests : BaseSetup
     {
-        string RealMediaPath => Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "sample.mp3");
-
         [Test]
         public void MetaChangedEventSubscribe()
         {
@@ -26,12 +25,9 @@ namespace LibVLCSharp.Tests
             Assert.True(eventHandlerCalled);
         }
         
-        [Test]
-            var media = new Media(instance, RealMp3Path, Media.FromType.FromPath);
-        
         public void DurationChanged()
         {
-            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path);
             var called = false;
             long duration = 0;
 
@@ -50,7 +46,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void FreedMedia()
         {
-            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path);
             var eventCalled = false;
             media.EventManager.MediaFreed += (sender, args) =>
             {
@@ -65,7 +61,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task StateChanged()
         {
-            var media = new Media(new Instance(), RealMp3Path, Media.FromType.FromPath);
+            var media = new Media(new Instance(), RealMp3Path);
             var tcs = new TaskCompletionSource<bool>();
             var openingCalled = false;
             media.EventManager.StateChanged += (sender, args) =>
