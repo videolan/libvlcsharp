@@ -2,9 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 using NUnit.Framework;
-using VideoLAN.LibVLCSharp;
-using Media = VideoLAN.LibVLCSharp.Media;
 
 namespace LibVLCSharp.Tests
 {
@@ -101,6 +100,15 @@ namespace LibVLCSharp.Tests
             media.SetMeta(Media.MetadataType.ShowName, test);
             Assert.True(media.SaveMeta());
             Assert.AreEqual(test, media.Meta(Media.MetadataType.ShowName));
+        }
+
+        [Test]
+        public void GetTracks()
+        {
+            var media = new Media(new Instance(), RealMp3Path);
+            media.Parse();
+            var tracks = media.Tracks;
+
         }
     }
 }

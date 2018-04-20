@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 using NUnit.Framework;
-using VideoLAN.LibVLCSharp;
-using Media = VideoLAN.LibVLCSharp.Media;
 
 namespace LibVLCSharp.Tests
 {

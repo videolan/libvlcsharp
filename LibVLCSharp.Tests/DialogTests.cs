@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 using NUnit.Framework;
-using VideoLAN.LibVLCSharp;
 
 namespace LibVLCSharp.Tests
 {
