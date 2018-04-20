@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using VideoLAN.LibVLC;
+using VideoLAN.LibVLCSharp;
 
 namespace LibVLCSharp.Tests
 {

@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using VideoLAN.LibVLC;
-using Media = VideoLAN.LibVLC.Media;
+using VideoLAN.LibVLCSharp;
+using Media = VideoLAN.LibVLCSharp.Media;
 
 namespace LibVLCSharp.Tests
 {

@@ -1,0 +1,89 @@
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+#if ANDROID
+using Java.Interop;
+#endif
+
+namespace LibVLCSharp.Shared
+{
+    public static class Core
+    {
+        struct Native
+        {
+#if WINDOWS_UWP
+            [DllImport("kernel32.dll", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
+            internal static extern IntPtr LoadLibrary(string dllToLoad);
+#elif WINDOWS_CLASSIC
+            [DllImport("kernel32.dll", SetLastError = true)]
+            internal static extern IntPtr LoadLibrary(string dllToLoad);
+#elif ANDROID
+            [DllImport("libvlc", EntryPoint = "JNI_OnLoad")]
+            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
+#endif
+        }
+
+        static IntPtr _libvlccoreHandle;
+        static IntPtr _libvlcHandle;
+
+        const string Win64 = "win-x64";
+        const string Win86 = "win-x86";
+        const string Winrt64 = "winrt-x64";
+        const string Winrt86 = "winrt-x86";
+
+        const string Libvlc = "libvlc";
+        const string Libvlccore = "libvlccore";
+
+        public static void Initialize()
+        {
+#if WINDOWS
+            InitializeWindows();
+#elif ANDROID
+            InitializeAndroid();
+#endif
+        }
+
+#if ANDROID
+        static void InitializeAndroid()
+        {
+            var initLibvlc = Native.JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
+            if(initLibvlc == 0)
+                throw new VLCException("failed to initialize libvlc with JniOnLoad " +
+                                       $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
+        }
+#endif
+        //TODO: check if Store app
+        //TODO: Add Unload library func using handles
+#if WINDOWS
+        static void InitializeWindows()
+        {
+            var myPath = new Uri(typeof(Instance).Assembly.CodeBase).LocalPath;
+            var appExecutionDirectory = Path.GetDirectoryName(myPath);
+            if (appExecutionDirectory == null)
+                throw new NullReferenceException(nameof(appExecutionDirectory));
+
+            var arch = Environment.Is64BitProcess ? Win64 : Win86;
+           
+            var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc), Path.Combine(arch, $"{Libvlccore}.dll"));
+            var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc), Path.Combine(arch, $"{Libvlc}.dll"));
+
+            LoadLibvlcLibraries(libvlccorePath, libvlcPath);    
+        }
+
+        static void LoadLibvlcLibraries(string libvlccorePath, string libvlcPath)
+        {
+            if(string.IsNullOrEmpty(libvlccorePath)) throw new NullReferenceException(nameof(libvlccorePath));
+            if(string.IsNullOrEmpty(libvlcPath)) throw new NullReferenceException(nameof(libvlcPath));
+
+            _libvlccoreHandle = Native.LoadLibrary(libvlccorePath);
+            if(_libvlccoreHandle == IntPtr.Zero)
+                throw new InvalidOperationException("failed to load libvlccore with path " + libvlccorePath + ". Aborting...");
+
+            _libvlcHandle = Native.LoadLibrary(libvlcPath);
+            if (_libvlcHandle == IntPtr.Zero)
+                throw new InvalidOperationException("failed to load libvlc with path " + libvlcPath + ". Aborting...");
+        }
+#endif
+
+    }
+}

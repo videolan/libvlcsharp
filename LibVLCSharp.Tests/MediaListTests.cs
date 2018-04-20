@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using VideoLAN.LibVLC;
-using Media = VideoLAN.LibVLC.Media;
-using MediaList = VideoLAN.LibVLC.MediaList;
+using VideoLAN.LibVLCSharp;
+using Media = VideoLAN.LibVLCSharp.Media;
+using MediaList = VideoLAN.LibVLCSharp.MediaList;
 
 namespace LibVLCSharp.Tests
 {
