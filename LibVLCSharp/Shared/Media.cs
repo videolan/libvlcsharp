@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp.Shared
 {
-    public partial class Media : IDisposable
+    public class Media : IDisposable
     {
         static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
         static int _streamIndex;
@@ -1013,5 +1013,123 @@ namespace VideoLAN.LibVLC
         public SubtitleTrack Subtitle;
     }
 
+    /// <summary>Note the order of libvlc_state_t enum must match exactly the order of</summary>
+    /// <remarks>
+    /// <para>mediacontrol_PlayerStatus,</para>
+    /// <para>input_state_e enums,</para>
+    /// <para>and VideoLAN.LibVLCSharp.State (at bindings/cil/src/media.cs).</para>
+    /// <para>Expected states by web plugins are:</para>
+    /// <para>IDLE/CLOSE=0, OPENING=1, PLAYING=3, PAUSED=4,</para>
+    /// <para>STOPPING=5, ENDED=6, ERROR=7</para>
+    /// </remarks>
+    public enum VLCState
+    {
+        NothingSpecial = 0,
+        Opening = 1,
+        Buffering = 2,
+        Playing = 3,
+        Paused = 4,
+        Stopped = 5,
+        Ended = 6,
+        Error = 7
+    }
+
+    public enum TrackType
+    {
+        Unknown = -1,
+        Audio = 0,
+        Video = 1,
+        Text = 2
+    }
+
+    public struct AudioTrack
+    {
+        public uint Channels;
+        public uint Rate;
+    }
+
+
+    public struct VideoTrack
+    {
+        public uint Height;
+
+        public uint Width;
+
+        public uint SarNum;
+
+        public uint SarDen;
+
+        public uint FrameRateNum;
+
+        public uint FrameRateDen;
+
+        public VideoOrientation Orientation;
+
+        public VideoProjection Projection;
+
+        public VideoViewpoint Pose;
+    }
+
+    public enum VideoOrientation
+    {
+        /// <summary>Normal. Top line represents top, left column left.</summary>
+        TopLeft = 0,
+        /// <summary>Flipped horizontally</summary>
+        TopRight = 1,
+        /// <summary>Flipped vertically</summary>
+        BottomLeft = 2,
+        /// <summary>Rotated 180 degrees</summary>
+        BottomRight = 3,
+        /// <summary>Transposed</summary>
+        LeftTop = 4,
+        /// <summary>Rotated 90 degrees clockwise (or 270 anti-clockwise)</summary>
+        LeftBottom = 5,
+        /// <summary>Rotated 90 degrees anti-clockwise</summary>
+        RightTop = 6,
+        /// <summary>Anti-transposed</summary>
+        RightBottom = 7
+    }
+
+    [Flags]
+    public enum VideoProjection
+    {
+        Rectangular = 0,
+        /// <summary>360 spherical</summary>
+        Equirectangular = 1,
+        CubemapLayoutStandard = 256
+    }
+
+
+    /// <summary>Viewpoint for video outputs</summary>
+    /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct VideoViewpoint
+    {
+        public float Yaw;
+        public float Pitch;
+        public float Roll;
+        public float Fov;
+    }
+
+    public struct SubtitleTrack
+    {
+        public IntPtr Encoding;
+    }
+
+    /// <summary>Type of a media slave: subtitle or audio.</summary>
+    public enum MediaSlaveType
+    {
+        Subtitle = 0,
+        Audio = 1
+    }
+
+    /// <summary>A slave of a libvlc_media_t</summary>
+    /// <remarks>libvlc_media_slaves_get</remarks>
+    public struct MediaSlave
+    {
+        public IntPtr Uri;
+        public MediaSlaveType Type;
+        public uint Priority;
+    }
     #endregion
 }

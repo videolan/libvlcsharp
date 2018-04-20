@@ -1,6 +1,7 @@
 ﻿using System;
+using LibVLCSharp.Shared;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp
 {
     public abstract class Internal : IDisposable
     {

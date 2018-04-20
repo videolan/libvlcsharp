@@ -2,9 +2,11 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
+using LibVLCSharp.Shared;
+
 //using Cauldron.Interception;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property, 
         AllowMultiple = true, 

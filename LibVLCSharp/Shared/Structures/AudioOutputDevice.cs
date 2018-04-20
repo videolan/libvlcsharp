@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace VideoLAN.LibVLC.Structures
+namespace LibVLCSharp.Shared.Structures
 {
     /// <summary>Description for audio output device.</summary>
     public unsafe class AudioOutputDevice : IDisposable

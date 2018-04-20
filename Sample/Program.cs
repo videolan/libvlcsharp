@@ -1,7 +1,6 @@
 ﻿using System;
-
-using VideoLAN.LibVLC;
-using Media = VideoLAN.LibVLC.Media;
+using LibVLCSharp;
+using LibVLCSharp.Shared;
 
 namespace Sample
 {

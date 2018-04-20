@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+using LibVLCSharp.Shared;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp
 {
     /// <summary>
     /// libvlc v3 check

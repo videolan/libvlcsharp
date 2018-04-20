@@ -1,9 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using VideoLAN.LibVLC.Events;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp.Shared 
 {
     public abstract class EventManager
     {

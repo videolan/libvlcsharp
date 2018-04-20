@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VideoLAN.LibVLC.Structures
+namespace VideoLAN.LibVLCSharp.Structures
 {
     /// <summary>
     /// <para>Description for video, audio tracks and subtitles. It contains</para>

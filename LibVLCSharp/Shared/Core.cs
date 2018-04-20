@@ -1,18 +1,26 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+#if ANDROID
+using Java.Interop;
+#endif
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp.Shared
 {
     public static class Core
     {
         struct Native
         {
+#if WINDOWS_UWP
+            [DllImport("kernel32.dll", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
+            internal static extern IntPtr LoadLibrary(string dllToLoad);
+#elif WINDOWS_CLASSIC
             [DllImport("kernel32.dll", SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
-
-            [DllImport("kernel32.dll", SetLastError = true)]
-            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
+#elif ANDROID
+            [DllImport("libvlc", EntryPoint = "JNI_OnLoad")]
+            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
+#endif
         }
 
         static IntPtr _libvlccoreHandle;
@@ -28,14 +36,25 @@ namespace VideoLAN.LibVLC
 
         public static void Initialize()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                InitializeWindows();
-            }
+#if WINDOWS
+            InitializeWindows();
+#elif ANDROID
+            InitializeAndroid();
+#endif
         }
 
+#if ANDROID
+        static void InitializeAndroid()
+        {
+            var initLibvlc = Native.JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
+            if(initLibvlc == 0)
+                throw new VLCException("failed to initialize libvlc with JniOnLoad " +
+                                       $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
+        }
+#endif
         //TODO: check if Store app
         //TODO: Add Unload library func using handles
+#if WINDOWS
         static void InitializeWindows()
         {
             var myPath = new Uri(typeof(Instance).Assembly.CodeBase).LocalPath;
@@ -64,5 +83,7 @@ namespace VideoLAN.LibVLC
             if (_libvlcHandle == IntPtr.Zero)
                 throw new InvalidOperationException("failed to load libvlc with path " + libvlcPath + ". Aborting...");
         }
+#endif
+
     }
 }

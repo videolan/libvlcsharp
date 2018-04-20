@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using VideoLAN.LibVLC;
-using VideoLAN.LibVLC.Events;
+using VideoLAN.LibVLCSharp;
+using VideoLAN.LibVLCSharp.Events;
 
 namespace LibVLCSharp.Tests
 {

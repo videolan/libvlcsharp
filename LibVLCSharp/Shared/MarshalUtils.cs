@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp.Shared
 {
     public static class MarshalUtils
     {

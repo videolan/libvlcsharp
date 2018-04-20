@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
-using VideoLAN.LibVLC.Structures;
+using LibVLCSharp.Shared;
+using VideoLAN.LibVLCSharp.Structures;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp
 {
     public class MediaPlayer : Internal
     {
@@ -622,11 +623,13 @@ namespace VideoLAN.LibVLC
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_renderer")]
             internal static extern int LibVLCMediaPlayerSetRenderer(IntPtr mediaplayer, IntPtr renderItem);
-            
+
+#if ANDROID
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
+#endif
         }
 
         MediaPlayerEventManager _eventManager;
@@ -1577,11 +1580,13 @@ namespace VideoLAN.LibVLC
         /// <param name="value">adjust option value</param>
         public void SetAdjustFloat(VideoAdjustOption option, float value) => Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
 
+#if ANDROID
         /// <summary>
         /// Set the android context.
         /// </summary>
         /// <param name="aWindow">See LibVLCSharp.Android</param>
         public void SetAndroidContext(IntPtr aWindow) => Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+#endif
 
         /// <summary>
         /// Add a slave to the current media player.

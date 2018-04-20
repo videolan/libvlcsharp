@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using VideoLAN.LibVLC.Events;
-using VideoLAN.LibVLC.Structures;
+using LibVLCSharp.Shared.Structures;
+using VideoLAN.LibVLCSharp.Structures;
 
-namespace VideoLAN.LibVLC
+namespace LibVLCSharp.Shared
 {
     public class Instance : Internal
     {
@@ -160,7 +159,14 @@ namespace VideoLAN.LibVLC
                 EntryPoint = "libvlc_renderer_discoverer_list_release")]
             internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
 
-            #region Windows
+#if ANDROID
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_android_context")]
+            internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
+#endif
+
+#region Windows
 
             /// <summary>
             /// Compute the size required by vsprintf to print the parameters.
@@ -193,9 +199,9 @@ namespace VideoLAN.LibVLC
             [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseWindows(IntPtr stream);
 
-            #endregion
+#endregion
 
-            #region Linux
+#region Linux
 
             [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
             public static extern IntPtr fopenLinux(string filename, string mode = Write);
@@ -203,9 +209,9 @@ namespace VideoLAN.LibVLC
             [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
             public static extern int fcloseLinux(IntPtr file);
 
-            #endregion
+#endregion
 
-            #region Mac
+#region Mac
             
             [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)] 
             public static extern IntPtr fopenMac(string path, string mode = Write);
@@ -213,7 +219,7 @@ namespace VideoLAN.LibVLC
             [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseMac(IntPtr file);
 
-            #endregion
+#endregion
 
             const string Windows = "msvcrt";
             const string Linux = "libc";
@@ -788,7 +794,7 @@ namespace VideoLAN.LibVLC
         Error = 4
     }
 
-    #region Callbacks
+#region Callbacks
 
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ExitCallback();
@@ -797,5 +803,5 @@ namespace VideoLAN.LibVLC
     public delegate void LogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext,
         [MarshalAs(UnmanagedType.LPStr)] string format, IntPtr args);
 
-    #endregion
+#endregion
 }

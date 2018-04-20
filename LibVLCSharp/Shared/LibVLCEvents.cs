@@ -1,6 +1,7 @@
 ﻿using System;
+using LibVLCSharp.Shared;
 
-namespace VideoLAN.LibVLC.Events
+namespace LibVLCSharp
 {
     /// <summary>LibVLCEvent types</summary>
     public enum EventType
