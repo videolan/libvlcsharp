@@ -8,6 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Tests", "LibVLCSharp.Tests\LibVLCSharp.Tests.csproj", "{1C2511B2-DB4E-4A0E-AA3D-F03657BFB691}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp", "LibVLCSharp\LibVLCSharp.csproj", "{D1C3B7C4-713B-46B2-B33A-E9298C819921}"
+	ProjectSection(ProjectDependencies) = postProject
+		{239A82A5-19A1-4382-8F9B-4A9705648017} = {239A82A5-19A1-4382-8F9B-4A9705648017}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Android.Sample", "LibVLCSharp.Android.Sample\LibVLCSharp.Android.Sample.csproj", "{00419085-4455-45D4-84A0-0A80D6174D25}"
 EndProject
