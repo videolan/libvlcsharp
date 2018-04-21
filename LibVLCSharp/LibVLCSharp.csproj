@@ -4,7 +4,7 @@
     <Summary>.NET bindings for LibVLC</Summary>
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
-    <TargetFrameworks>netstandard2.0;MonoAndroid80;net461;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid80;net461;netcoreapp2.0;</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>$(DefineConstants);</DefineConstants>

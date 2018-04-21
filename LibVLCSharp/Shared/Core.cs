@@ -11,13 +11,12 @@ namespace LibVLCSharp.Shared
     {
         struct Native
         {
-#if WINDOWS_UWP
-            [DllImport("kernel32.dll", EntryPoint = "LoadPackagedLibrary", SetLastError = true)]
-            internal static extern IntPtr LoadLibrary(string dllToLoad);
-#elif WINDOWS_CLASSIC
+            [DllImport("kernel32.dll", SetLastError = true)]
+            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
+
             [DllImport("kernel32.dll", SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
-#elif ANDROID
+#if ANDROID
             [DllImport("libvlc", EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
@@ -40,8 +39,18 @@ namespace LibVLCSharp.Shared
             InitializeWindows();
 #elif ANDROID
             InitializeAndroid();
+#elif NETCORE
+            InitializeNetCore();
 #endif
         }
+
+#if NETCORE
+        static void InitializeNetCore()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                InitializeWindows();
+        }
+#endif
 
 #if ANDROID
         static void InitializeAndroid()
@@ -52,9 +61,7 @@ namespace LibVLCSharp.Shared
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
 #endif
-        //TODO: check if Store app
         //TODO: Add Unload library func using handles
-#if WINDOWS
         static void InitializeWindows()
         {
             var myPath = new Uri(typeof(Instance).Assembly.CodeBase).LocalPath;
@@ -63,27 +70,29 @@ namespace LibVLCSharp.Shared
                 throw new NullReferenceException(nameof(appExecutionDirectory));
 
             var arch = Environment.Is64BitProcess ? Win64 : Win86;
-           
-            var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc), Path.Combine(arch, $"{Libvlccore}.dll"));
-            var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc), Path.Combine(arch, $"{Libvlc}.dll"));
 
-            LoadLibvlcLibraries(libvlccorePath, libvlcPath);    
+            var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
+                Path.Combine(arch, $"{Libvlccore}.dll"));
+            var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
+                Path.Combine(arch, $"{Libvlc}.dll"));
+
+            LoadLibvlcLibraries(libvlccorePath, libvlcPath);
         }
 
+        //TODO: check if Store app
         static void LoadLibvlcLibraries(string libvlccorePath, string libvlcPath)
         {
-            if(string.IsNullOrEmpty(libvlccorePath)) throw new NullReferenceException(nameof(libvlccorePath));
-            if(string.IsNullOrEmpty(libvlcPath)) throw new NullReferenceException(nameof(libvlcPath));
+            if (string.IsNullOrEmpty(libvlccorePath)) throw new NullReferenceException(nameof(libvlccorePath));
+            if (string.IsNullOrEmpty(libvlcPath)) throw new NullReferenceException(nameof(libvlcPath));
 
             _libvlccoreHandle = Native.LoadLibrary(libvlccorePath);
-            if(_libvlccoreHandle == IntPtr.Zero)
-                throw new InvalidOperationException("failed to load libvlccore with path " + libvlccorePath + ". Aborting...");
+            if (_libvlccoreHandle == IntPtr.Zero)
+                throw new InvalidOperationException("failed to load libvlccore with path " + libvlccorePath +
+                                                    ". Aborting...");
 
             _libvlcHandle = Native.LoadLibrary(libvlcPath);
             if (_libvlcHandle == IntPtr.Zero)
                 throw new InvalidOperationException("failed to load libvlc with path " + libvlcPath + ". Aborting...");
         }
-#endif
-
     }
 }
