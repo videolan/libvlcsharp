@@ -420,14 +420,14 @@ namespace LibVLCSharp.Shared
         bool CloseLogFile()
         {
             if (_logFileHandle == IntPtr.Zero) return true;
-
+#if !IOS
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 return Native.fcloseWindows(_logFileHandle) == 0;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return Native.fcloseLinux(_logFileHandle) == 0;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return Native.fcloseMac(_logFileHandle) == 0;
-
+#endif
             return false;
         }
 
@@ -488,7 +488,7 @@ namespace LibVLCSharp.Shared
         IntPtr NativeFilePtr(string filename)
         {
             var filePtr = IntPtr.Zero;
-
+#if !IOS
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Native._wfopen_s(out filePtr, filename);
@@ -501,7 +501,7 @@ namespace LibVLCSharp.Shared
             {
                 filePtr = Native.fopenMac(filename);
             }
-
+#endif
             if (filePtr == IntPtr.Zero)
                 throw new VLCException("Could not get FILE * for log_set_file");
 

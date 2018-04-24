@@ -65,7 +65,7 @@ namespace LibVLCSharp
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
-
+#if COCOA
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
@@ -75,7 +75,7 @@ namespace LibVLCSharp
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_nsobject")]
             internal static extern IntPtr LibVLCMediaPlayerGetNsobject(IntPtr mediaPlayer);
-
+#endif
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_xwindow")]
@@ -699,6 +699,12 @@ namespace LibVLCSharp
         /// <returns></returns>
         public bool Play() => Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
 
+        public bool Play(Media media)
+        {
+            Media = media;
+            return Play();
+        }
+
         /// <summary>
         /// Pause or resume (no effect if there is no media).
         /// version LibVLC 1.1.1 or later
@@ -713,10 +719,7 @@ namespace LibVLCSharp
         /// <summary>
         /// Toggle pause (no effect if there is no media)
         /// </summary>
-        public void Pause()
-        {
-            Native.LibVLCMediaPlayerPause(NativeReference);
-        }
+        public void Pause() => Native.LibVLCMediaPlayerPause(NativeReference);
 
         /// <summary>
         /// Stop the playback (no effect if there is no media)
@@ -724,11 +727,9 @@ namespace LibVLCSharp
         /// This is synchronous, and will block until all VLC threads have been joined.
         /// Calling this from a VLC callback is a bound to cause a deadlock.
         /// </summary>
-        public void Stop()
-        {
-            Native.LibVLCMediaPlayerStop(NativeReference);
-        }
+        public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
+#if COCOA
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
@@ -752,7 +753,7 @@ namespace LibVLCSharp
             get => Native.LibVLCMediaPlayerGetNsobject(NativeReference);
             set => Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
         }
-
+#endif
         /// <summary>
         /// Set an X Window System drawable where the media player should render its video output. 
         /// The call takes effect when the playback starts. If it is already started, it might need to be stopped before changes apply. 
@@ -1614,14 +1615,14 @@ namespace LibVLCSharp
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
-        #region Enums
+#region Enums
 
      
 
 
-        #endregion
+#endregion
 
-        #region Callbacks
+#region Callbacks
         
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -1806,7 +1807,7 @@ namespace LibVLCSharp
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-        #endregion
+#endregion
     }
 
     /// <summary>Description for titles</summary>
