@@ -25,11 +25,11 @@ Heavily inspired from [libvlcpp](https://code.videolan.org/videolan/libvlcpp/tre
 Core public APIs are mostly done but still need a few things to be ironed out. Some tests need to be fixed and more need to be written. Integration with platforms is a work in progress.
 
 #### Currently supported platforms (with working sample):
-- Android
+- Xamarin.Android
+- Xamarin.iOS
 - Windows
 
 #### Roadmap:
-- iOS
 - macOS
 - Linux (GTK)
 - UWP
