@@ -43,5 +43,6 @@ namespace LibVLCSharp.Platforms.Android
         }
 
         public MediaPlayer MediaPlayer => _mediaPlayer;
+        public Instance Instance => _instance;
     }
 }

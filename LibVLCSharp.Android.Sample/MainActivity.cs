@@ -17,18 +17,16 @@ namespace LibVLCSharp.Android.Sample
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
+
+            _surfaceView = FindViewById<SurfaceView>(Resource.Id.surfaceView);
+            AttachSurfaceView(_surfaceView);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
 
-            _surfaceView = FindViewById<SurfaceView>(Resource.Id.surfaceView);
-            AttachSurfaceView(_surfaceView);
-
-            var media = new Media(new Instance(), "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
-            MediaPlayer.Media = media;
-            MediaPlayer.Play();
+            MediaPlayer.Play(new Media(Instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
         }
     }
 }
