@@ -25,6 +25,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "LibVLCSharp.FSharp.Sample",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.iOS.Sample", "LibVLCSharp.iOS.Sample\LibVLCSharp.iOS.Sample.csproj", "{76840EFA-235B-46D8-8274-3240E1BBED5B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{799A84A2-2161-4676-878B-5610E3586137}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -182,6 +184,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00419085-4455-45D4-84A0-0A80D6174D25} = {799A84A2-2161-4676-878B-5610E3586137}
+		{86AF6388-68E1-42A3-A655-0A9799FF46C9} = {799A84A2-2161-4676-878B-5610E3586137}
+		{76840EFA-235B-46D8-8274-3240E1BBED5B} = {799A84A2-2161-4676-878B-5610E3586137}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB1424F9-871B-444A-9278-18227672889C}
