@@ -1,12 +1,14 @@
 ﻿using System;
+
 using LibVLCSharp.Shared;
+
 using UIKit;
 
 namespace LibVLCSharp.Platforms.iOS
 {
-    public abstract class VideoView : UIViewController, IVideoView
+    public class VideoView : UIView, IVideoView
     {
-        protected VideoView()
+        public VideoView()
         {
             Instance = new Instance();
             MediaPlayer = new MediaPlayer(Instance);
@@ -15,19 +17,10 @@ namespace LibVLCSharp.Platforms.iOS
         public MediaPlayer MediaPlayer { get; }
         public Instance Instance { get; }
 
-        public void AttachView(object surface)
-        {
-            if(surface == null) throw new NullReferenceException(nameof(surface));
+        public void Attach(UIView view) => MediaPlayer.NsObject = view.Handle;
 
-            if (surface is UIView uiView)
-            {
-                MediaPlayer.NsObject = uiView.Handle;
-            }
-        }
+        public void Attach() => MediaPlayer.NsObject = Handle;
 
-        public void DetachView()
-        {
-            MediaPlayer.NsObject = IntPtr.Zero;
-        }
+        public void Detach() => MediaPlayer.NsObject = IntPtr.Zero;
     }
 }
