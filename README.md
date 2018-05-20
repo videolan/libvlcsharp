@@ -1,3 +1,7 @@
+<h3 align="center">
+    <img src="Assets/banner.png"/>
+</h3>
+
 # LibVLCSharp
 
 LibVLCSharp are .NET bindings for `libvlc`, the multimedia framework powering the VLC applications.
