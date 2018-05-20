@@ -20,22 +20,23 @@ namespace LibVLCSharp.Platforms.Android
 
         #region ctors
 
-        public VideoView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer) => Init();
+        public VideoView(IntPtr javaReference, JniHandleOwnership transfer, string[] cliOptions = default (string[])) : base(javaReference, transfer) => Init(cliOptions);
 
-        public VideoView(Context context) : base(context) => Init();
+        public VideoView(Context context, string[] cliOptions = default(string[])) : base(context) => Init(cliOptions);
 
-        public VideoView(Context context, IAttributeSet attrs) : base(context, attrs) => Init();
+        public VideoView(Context context, IAttributeSet attrs, string[] cliOptions = default(string[])) : base(context, attrs) => Init(cliOptions);
 
-        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr) => Init();
+        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, string[] cliOptions = default(string[])) : base(context, attrs, defStyleAttr) => Init(cliOptions);
 
-        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes) => Init();
+        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes, string[] cliOptions = default(string[])) 
+            : base(context, attrs, defStyleAttr, defStyleRes) => Init(cliOptions);
 
         #endregion
 
         public MediaPlayer MediaPlayer => _mediaPlayer;
         public Instance Instance => _instance;
 
-        public void Attach()
+        void Attach()
         {
             _awindow = new AWindow(new SurfaceCallback(_mediaPlayer));
             _awindow.AddCallback(this);
@@ -48,7 +49,7 @@ namespace LibVLCSharp.Platforms.Android
             AddOnLayoutChangeListener(_layoutListener);
         }
 
-        public void Detach()
+        void Detach()
         {
             _awindow.RemoveCallback(this);
             _awindow.DetachViews();
@@ -61,7 +62,6 @@ namespace LibVLCSharp.Platforms.Android
 
             _awindow.Dispose();
             _awindow = null;
-
         }
 
         public virtual void OnSurfacesCreated(IVLCVout vout)
@@ -72,12 +72,25 @@ namespace LibVLCSharp.Platforms.Android
         {
         }
 
-        void Init()
+        void Init(string[] cliOptions)
         {
             Core.Initialize();
 
-            _instance = new Instance();
+            _instance = new Instance(cliOptions);
             _mediaPlayer = new MediaPlayer(_instance);
+
+            Attach();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            Detach();
+
+            _mediaPlayer.Media?.Dispose();
+            _mediaPlayer.Dispose();
+            _instance.Dispose();
         }
     }
 }

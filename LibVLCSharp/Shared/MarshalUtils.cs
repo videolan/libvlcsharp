@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace LibVLCSharp.Shared
 {
@@ -23,6 +25,27 @@ namespace LibVLCSharp.Shared
             }
             releaseRef(nativeRef);
             return resultList.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>Array of pointer you need to release when you're done with Marshal.FreeHGlobal</returns>
+        public static IntPtr[] ToUtf8(string[] args)
+        {
+            var utf8Args = new IntPtr[args?.Length ?? 0];
+            
+            for (var i = 0; i < utf8Args.Length; i++)
+            {
+                var bytes = Encoding.UTF8.GetBytes(args[i]);
+                var buffer = Marshal.AllocHGlobal(bytes.Length + 1);
+                Marshal.Copy(bytes, 0, buffer, bytes.Length);
+                Marshal.WriteByte(buffer, bytes.Length, 0);
+                utf8Args[i] = buffer;
+            }
+
+            return utf8Args;
         }
     }
 }

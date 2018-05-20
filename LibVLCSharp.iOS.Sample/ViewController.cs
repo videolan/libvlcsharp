@@ -11,11 +11,12 @@ namespace LibVLCSharp.iOS.Sample
 
         public override void ViewDidLoad()
         {
-            _videoView = new VideoView();
+            base.ViewDidLoad();
+
+            _videoView = new VideoView(View.Bounds);
 
             View = _videoView;
-            
-            _videoView.Attach();
+
             _videoView.MediaPlayer.Play(new Media(_videoView.Instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
         }
     }

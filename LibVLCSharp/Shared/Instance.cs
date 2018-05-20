@@ -277,18 +277,11 @@ namespace LibVLCSharp.Shared
         public Instance(string[] args = null)
             : base(() =>
             {
-                var utf8Args = new IntPtr[args?.Length ?? 0];
+                var utf8Args = default(IntPtr[]);
                 try
                 {
-                    for (var i = 0; i < utf8Args.Length; i++)
-                    {
-                        var bytes = Encoding.UTF8.GetBytes(args[i]);
-                        var buffer = Marshal.AllocHGlobal(bytes.Length + 1);
-                        Marshal.Copy(bytes, 0, buffer, bytes.Length);
-                        Marshal.WriteByte(buffer, bytes.Length, 0);
-                        utf8Args[i] = buffer;
-                    }
 
+                    utf8Args = MarshalUtils.ToUtf8(args);
                     return Native.LibVLCNew(utf8Args.Length, utf8Args);
                 }
                 finally

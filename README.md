@@ -27,6 +27,7 @@ Core public APIs are mostly done but still need a few things to be ironed out. S
 #### Currently supported platforms (with working sample):
 - Xamarin.Android
 - Xamarin.iOS
+- Xamarin.Forms
 - Windows
 
 #### Roadmap:
