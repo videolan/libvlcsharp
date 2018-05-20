@@ -85,7 +85,7 @@ namespace LibVLCSharp
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_xwindow")]
             internal static extern uint LibVLCMediaPlayerGetXwindow(IntPtr mediaPlayer);
-
+#if WINDOWS
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_hwnd")]
@@ -95,7 +95,7 @@ namespace LibVLCSharp
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_hwnd")]
             internal static extern IntPtr LibVLCMediaPlayerGetHwnd(IntPtr mediaPlayer);
-
+#endif
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_length")]
@@ -774,6 +774,7 @@ namespace LibVLCSharp
             set => Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
         }
 
+#if WINDOWS
         /// <summary>
         /// Set a Win32/Win64 API window handle (HWND) where the media player
         /// should render its video output. If LibVLC was built without
@@ -786,7 +787,7 @@ namespace LibVLCSharp
             get => Native.LibVLCMediaPlayerGetHwnd(NativeReference);
             set => Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
         }
-
+#endif
         /// <summary>
         /// The movie length (in ms), or -1 if there is no media.
         /// </summary>
