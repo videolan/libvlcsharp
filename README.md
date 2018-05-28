@@ -25,9 +25,9 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 
 ## Installation
 
-You need to 2 packages to get started.
+You need to install 2 packages to get started.
 
-The first is `libvlc`, which is the actual VLC engine written mostly in C/C++ compiled for your target platform. You can find information about it and how to download it on NuGet [here](https://github.com/mfkl/libvlc-nuget).
+The first is `libvlc`, which is the actual VLC engine written mostly in C/C++ and compiled for your target platform. You can find information about it and how to download it on NuGet [here](https://github.com/mfkl/libvlc-nuget).
 
 The second package you need is LibVLCSharp, the .NET wrapper that consumes `libvlc` and allows you to interact with native code from C#/F#. Get it from NuGet: https://www.nuget.org/packages/LibVLCSharp.
 
