@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LibVLCSharp</id>
+    <title>LibVLCSharp</title>
+    <version>0.0.1</version>
+    <authors>VideoLAN</authors>
+    <owners>VideoLAN</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>.NET bindings for LibVLC</summary>
+    <description>.NET bindings for LibVLC</description>
+    <tags>libvlc vlc videolan native c/c++ video audio</tags>
+    <projectUrl>https://github.com/mfkl/LibVLCSharp</projectUrl>
+    <licenseUrl>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/mfkl/LibVLCSharp/master/Assets/icon.png</iconUrl>
+  </metadata>
+  <files>
+    <file src="LibVLCSharp\bin\Release\monoandroid81\LibVLCSharp.dll" target="lib\MonoAndroid81"/>
+    <file src="LibVLCSharp\bin\Release\monoandroid81\LibVLCSharp.Android.AWindow.dll" target="lib\MonoAndroid81"/>
+    <file src="LibVLCSharp\bin\Release\xamarin.ios10\LibVLCSharp.dll" target="lib\Xamarin.iOS10"/>
+    <file src="LibVLCSharp\bin\Release\netstandard2.0\LibVLCSharp.dll" target="lib\.NETStandard2.0"/>
+  </files>
+</package>
