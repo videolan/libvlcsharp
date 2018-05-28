@@ -13,7 +13,7 @@ namespace LibVLCSharp.iOS.Sample
         {
             base.ViewDidLoad();
 
-            _videoView = new VideoView(View.Bounds);
+            _videoView = new VideoView();
 
             View = _videoView;
 
