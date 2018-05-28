@@ -12,7 +12,7 @@
     <tags>libvlc vlc videolan native c/c++ video audio</tags>
     <projectUrl>https://github.com/mfkl/LibVLCSharp</projectUrl>
     <licenseUrl>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
-    <iconUrl>http://images1.videolan.org/images/vlc64x64.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/mfkl/LibVLCSharp/master/Assets/icon.png</iconUrl>
   </metadata>
   <files>
     <file src="LibVLCSharp\bin\Release\monoandroid81\LibVLCSharp.dll" target="lib\MonoAndroid81"/>
