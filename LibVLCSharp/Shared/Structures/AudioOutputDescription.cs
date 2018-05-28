@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using LibVLCSharp;
-using LibVLCSharp.Shared;
 
-namespace VideoLAN.LibVLCSharp.Structures
+namespace LibVLCSharp.Shared.Structures
 {
     /// <summary>
     /// <para>Description for audio output. It contains</para>

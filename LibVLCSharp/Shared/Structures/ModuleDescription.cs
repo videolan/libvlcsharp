@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace VideoLAN.LibVLCSharp.Structures
+namespace LibVLCSharp.Shared.Structures
 {
     // TODO: cleanup
     public unsafe partial class ModuleDescription : IDisposable

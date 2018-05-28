@@ -3,9 +3,8 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
-using LibVLCSharp.Shared;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Shared
 {
     public class Dialog : IDisposable
     {

@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared.Structures;
-using VideoLAN.LibVLCSharp.Structures;
 
 namespace LibVLCSharp.Shared
 {

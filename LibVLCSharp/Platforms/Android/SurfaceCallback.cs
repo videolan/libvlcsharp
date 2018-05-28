@@ -1,4 +1,5 @@
 ﻿using System;
+using LibVLCSharp.Shared;
 using Org.Videolan.Libvlc;
 
 namespace LibVLCSharp.Platforms.Android

@@ -2,11 +2,10 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
-using LibVLCSharp.Shared;
 
 //using Cauldron.Interception;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Shared
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property, 
         AllowMultiple = true, 

@@ -253,12 +253,12 @@ namespace LibVLCSharp.Shared
             FromLocation,
             /// <summary>
             /// Create a media as an empty node with a given name.
-            /// </summary
+            /// </summary>
             AsNode
         }
 
         /// <summary>
-        /// <summary>Parse flags used by libvlc_media_parse_with_options()
+        /// Parse flags used by libvlc_media_parse_with_options()
         /// </summary>
         /// <remarks>libvlc_media_parse_with_options</remarks>
         [Flags]
