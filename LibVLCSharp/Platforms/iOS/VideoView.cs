@@ -11,12 +11,12 @@ namespace LibVLCSharp.Platforms.iOS
         public VideoView(string[] cliOptions = default(string[]))
         {
             Instance = new Instance(cliOptions);
-            MediaPlayer = new MediaPlayer(Instance);
+            MediaPlayer = new Shared.MediaPlayer(Instance);
             
             Attach();
         }
 
-        public MediaPlayer MediaPlayer { get; }
+        public Shared.MediaPlayer MediaPlayer { get; }
         public Instance Instance { get; }
 
         void Attach() => MediaPlayer.NsObject = Handle;

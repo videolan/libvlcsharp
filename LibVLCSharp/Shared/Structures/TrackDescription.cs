@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VideoLAN.LibVLCSharp.Structures
+namespace LibVLCSharp.Shared.Structures
 {
     /// <summary>
     /// <para>Description for video, audio tracks and subtitles. It contains</para>
@@ -24,6 +24,15 @@ namespace VideoLAN.LibVLCSharp.Structures
             return Id == description.Id &&
                    Name == description.Name &&
                    EqualityComparer<IntPtr>.Default.Equals(Next, description.Next);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -485159682;
+            hashCode = hashCode * -1521134295 + Id.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + EqualityComparer<IntPtr>.Default.GetHashCode(Next);
+            return hashCode;
         }
     }
 }

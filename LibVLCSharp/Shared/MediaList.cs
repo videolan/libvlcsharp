@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using LibVLCSharp.Shared;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Shared
 {
     public class MediaList : Internal
     {
@@ -110,15 +109,6 @@ namespace LibVLCSharp
         public MediaList(MediaDiscoverer mediaDiscoverer)
             : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
                 Native.LibVLCMediaListRelease)
-        {
-        }
-
-        /// <summary>
-        /// Get media library subitems.
-        /// </summary>
-        /// <param name="mediaList"></param>
-        public MediaList(MediaLibrary mediaList) 
-            : base(() => Native.LibVLCMediaLibraryMediaList(mediaList.NativeReference), Native.LibVLCMediaListRelease)
         {
         }
 

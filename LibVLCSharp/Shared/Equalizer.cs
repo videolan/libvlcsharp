@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using LibVLCSharp.Shared;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Shared
 {
     public class Equalizer : Internal
     {
@@ -72,7 +71,7 @@ namespace LibVLCSharp
         /// version LibVLC 2.2.0 or later
         /// </summary>
         [LibVLC(2, 2)]
-        public Equalizer() : base(Native.LibVLCAudioEqualizerNew, Native.LibVLCAudioEqualizerRelease )
+        public Equalizer() : base(Native.LibVLCAudioEqualizerNew, Native.LibVLCAudioEqualizerRelease)
         {
         }
 

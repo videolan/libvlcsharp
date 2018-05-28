@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
-using LibVLCSharp.Shared;
-using VideoLAN.LibVLCSharp.Structures;
+using LibVLCSharp.Shared.Structures;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Shared
 {
     public class MediaPlayer : Internal
     {
@@ -693,12 +692,17 @@ namespace LibVLCSharp
         public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
 
         /// <summary>
-        /// Start playback
+        /// Start playback with Media that is set
         /// If playback was already started, this method has no effect
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if successful</returns>
         public bool Play() => Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
 
+        /// <summary>
+        /// Set media and start playback
+        /// </summary>
+        /// <param name="media"></param>
+        /// <returns>true if successful</returns>
         public bool Play(Media media)
         {
             Media = media;
@@ -711,10 +715,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="pause">play/resume if true, pause if false</param>
         [LibVLC(1, 1)]
-        public void SetPause(bool pause)
-        {
-            Native.LibVLCMediaPlayerSetPause(NativeReference, pause);    
-        }
+        public void SetPause(bool pause) => Native.LibVLCMediaPlayerSetPause(NativeReference, pause);
 
         /// <summary>
         /// Toggle pause (no effect if there is no media)
