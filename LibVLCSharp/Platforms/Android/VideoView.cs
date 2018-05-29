@@ -33,7 +33,7 @@ namespace LibVLCSharp.Platforms.Android
 
         #endregion
 
-        public MediaPlayer MediaPlayer => _mediaPlayer;
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer => _mediaPlayer;
         public Instance Instance => _instance;
 
         void Attach()

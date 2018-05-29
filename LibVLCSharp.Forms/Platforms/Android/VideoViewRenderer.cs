@@ -9,7 +9,7 @@ using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.Android
 {
-    public class VideoViewRenderer : Xamarin.Forms.Platform.Android.AppCompat.ViewRenderer<VideoView, LibVLCSharp.Platforms.Android.VideoView>
+    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Android.VideoView>
     {
         LibVLCSharp.Platforms.Android.VideoView _videoView;
 

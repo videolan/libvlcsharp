@@ -1,5 +1,4 @@
 ﻿using LibVLCSharp.Shared;
-
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
@@ -21,7 +20,7 @@ namespace LibVLCSharp.Forms.Shared
 
         public string[] CliOptions { get; }
 
-        public MediaPlayer MediaPlayer { get; set; }
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get; set; }
         public Instance Instance { get; set; }
     }
 }

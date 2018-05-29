@@ -7,7 +7,7 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.iOS
 {
-    public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.Platforms.iOS.VideoView>
+    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
     {
         LibVLCSharp.Platforms.iOS.VideoView _videoView;
 
@@ -31,6 +31,13 @@ namespace LibVLCSharp.Forms.Platforms.iOS
             if (e.NewElement != null)
             {
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            _videoView.Dispose();
         }
     }
 }
