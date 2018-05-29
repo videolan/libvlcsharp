@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 #if ANDROID
@@ -75,6 +76,9 @@ namespace LibVLCSharp.Shared
                 Path.Combine(arch, $"{Libvlccore}.dll"));
             var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
                 Path.Combine(arch, $"{Libvlc}.dll"));
+
+            Debug.WriteLine(nameof(libvlccorePath) + ": " + libvlccorePath);
+            Debug.WriteLine(nameof(libvlcPath) + ": " + libvlcPath);
 
             LoadLibvlcLibraries(libvlccorePath, libvlcPath);
         }
