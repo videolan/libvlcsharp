@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>LibVLCSharp.Forms</id>
+    <title>LibVLCSharp.Forms</title>
+    <version>0.0.1-alpha</version>
+    <authors>VideoLAN</authors>
+    <owners>VideoLAN</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Xamarin Forms integration for LibVLCSharp</summary>
+    <description>Xamarin Forms integration for LibVLCSharp</description>
+    <tags>libvlc vlc videolan native c/c++ video audio</tags>
+    <projectUrl>https://github.com/mfkl/LibVLCSharp</projectUrl>
+    <licenseUrl>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/mfkl/LibVLCSharp/master/Assets/icon.png</iconUrl>
+    <dependencies>
+      <group targetFramework="MonoAndroid8.1">
+        <dependency id="LibVLCSharp" version="0.0.1-alpha1" exclude="Build,Analyzers" />
+        <dependency id="Xamarin.Forms" version="3.0.0.446417" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="Xamarin.iOS1.0">
+        <dependency id="LibVLCSharp" version="0.0.1-alpha1" exclude="Build,Analyzers" />
+        <dependency id="Xamarin.Forms" version="3.0.0.446417" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="LibVLCSharp" version="0.0.1-alpha1" exclude="Build,Analyzers" />
+        <dependency id="Xamarin.Forms" version="3.0.0.446417" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Java.Interop" targetFramework="MonoAndroid8.1" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="LibVLCSharp.Forms\bin\Release\monoandroid81\LibVLCSharp.Forms.dll" target="lib\MonoAndroid81"/>
+    <file src="LibVLCSharp.Forms\bin\Release\xamarin.ios10\LibVLCSharp.Forms.dll" target="lib\Xamarin.iOS10"/>
+    <file src="LibVLCSharp.Forms\bin\Release\netstandard2.0\LibVLCSharp.Forms.dll" target="lib\.NETStandard2.0"/>
+  </files>
+</package>
