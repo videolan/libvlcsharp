@@ -10,9 +10,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateStartAndStopDiscoverer()
         {
-            var instance = new Instance();
-            var mds = instance.MediaDiscoverers(MediaDiscoverer.Category.Lan);
-            var md = new MediaDiscoverer(instance, mds.First().Name);
+            var libVLC = new LibVLC();
+            var mds = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Lan);
+            var md = new MediaDiscoverer(libVLC, mds.First().Name);
             Assert.True(md.Start());
             Assert.True(md.IsRunning);
             md.Stop();

@@ -3,6 +3,6 @@
     public interface IVideoView
     {
         MediaPlayer MediaPlayer { get; }
-        Instance Instance { get; }
+        LibVLC LibVLC { get; }
     }
 }

@@ -14,10 +14,10 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task PostLogin()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
 
-            instance.SetDialogHandlers((title, text) => Task.CompletedTask,
+            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) =>
                 {
                     // show UI dialog
@@ -30,9 +30,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            var mp = new MediaPlayer(instance)
+            var mp = new MediaPlayer(libVLC)
             {
-                Media = new Media(instance, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
             };
 
             mp.Play();
@@ -44,10 +44,10 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ShouldThrowIfReusingSameDialogAfterLoginCall()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
 
-            instance.SetDialogHandlers((title, text) => Task.CompletedTask,
+            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) =>
                 {
                     dialog.PostLogin(Username, Password, false);
@@ -59,9 +59,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            var mp = new MediaPlayer(instance)
+            var mp = new MediaPlayer(libVLC)
             {
-                Media = new Media(instance, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
             };
 
             mp.Play();
@@ -73,19 +73,19 @@ namespace LibVLCSharp.Tests
         [Test]
         public void ShouldUnsetDialogHandlersWhenInstanceDisposed()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
 
-            instance.SetDialogHandlers((title, text) => Task.CompletedTask,
+            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            Assert.True(instance.DialogHandlersSet);
+            Assert.True(libVLC.DialogHandlersSet);
 
-            instance.Dispose();
+            libVLC.Dispose();
 
-            Assert.False(instance.DialogHandlersSet);
+            Assert.False(libVLC.DialogHandlersSet);
         }
     }
 }

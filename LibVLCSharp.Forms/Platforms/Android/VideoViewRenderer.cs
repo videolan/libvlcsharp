@@ -26,7 +26,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
                 _videoView = new LibVLCSharp.Platforms.Android.VideoView(Context, Element.CliOptions);
                 SetNativeControl(_videoView);
 
-                Element.Instance = Control.Instance;
+                Element.LibVLC = Control.LibVLC;
                 Element.MediaPlayer = Control.MediaPlayer;
             }
 

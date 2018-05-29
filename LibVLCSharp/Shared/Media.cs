@@ -18,22 +18,22 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_location")]
-            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr instance, [MarshalAs(UnmanagedType.LPStr)] string mrl);
+            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string mrl);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_path")]
-            internal static extern IntPtr LibVLCMediaNewPath(IntPtr instance, [MarshalAs(UnmanagedType.LPStr)] string path);
+            internal static extern IntPtr LibVLCMediaNewPath(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string path);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_as_node")]
-            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr instance, [MarshalAs(UnmanagedType.LPStr)] string name);
+            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_fd")]
-            internal static extern IntPtr LibVLCMediaNewFd(IntPtr instance, int fd);
+            internal static extern IntPtr LibVLCMediaNewFd(IntPtr libVLC, int fd);
 
             /// <summary>
             /// <para>Decrement the reference count of a media descriptor object. If the</para>
@@ -56,7 +56,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
-            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr instance, IntPtr openCb, IntPtr readCb, IntPtr seekCb, IntPtr closeCb, IntPtr opaque);
+            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, IntPtr openCb, IntPtr readCb, IntPtr seekCb, IntPtr closeCb, IntPtr opaque);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -313,27 +313,27 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Media Constructs a libvlc Media instance
         /// </summary>
-        /// <param name="instance">A libvlc instance</param>
+        /// <param name="libVLC">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument. \sa{FromType}</param>
-        public Media(Instance instance, string mrl, FromType type = FromType.FromPath)
-            : base(() => SelectNativeCtor(instance, mrl, type), Native.LibVLCMediaRelease)
+        public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
+            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease)
         {
         }
 
-        static IntPtr SelectNativeCtor(Instance instance, string mrl, FromType type)
+        static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
         {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
             if (string.IsNullOrEmpty(mrl)) throw new ArgumentNullException(nameof(mrl));
 
             switch (type)
             {
                 case FromType.FromLocation:
-                    return Native.LibVLCMediaNewLocation(instance.NativeReference, mrl);
+                    return Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrl);
                 case FromType.FromPath:
-                    return Native.LibVLCMediaNewPath(instance.NativeReference, mrl);
+                    return Native.LibVLCMediaNewPath(libVLC.NativeReference, mrl);
                 case FromType.AsNode:
-                    return Native.LibVLCMediaNewAsNode(instance.NativeReference, mrl);
+                    return Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrl);
                 default:
                     return IntPtr.Zero;
             }
@@ -355,10 +355,10 @@ namespace LibVLCSharp.Shared
         /// rendered once in a media player.To render it a second time, the file
         /// descriptor should probably be rewound to the beginning with lseek().
         /// </summary>
-        /// <param name="instance">A libvlc instance</param>
+        /// <param name="libVLC">A libvlc instance</param>
         /// <param name="fd">open file descriptor</param>
-        public Media(Instance instance, int fd)
-            : base(() => Native.LibVLCMediaNewFd(instance.NativeReference, fd), Native.LibVLCMediaRelease)
+        public Media(LibVLC libVLC, int fd)
+            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease)
         {
         }
 
@@ -370,20 +370,20 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// requires libvlc 3.0 or higher
         /// </summary>
-        /// <param name="instance"></param>
+        /// <param name="libVLC"></param>
         /// <param name="stream"></param>
         /// <param name="options"></param>
-        [LibVLC(3)]
-        public Media(Instance instance, Stream stream, params string[] options)
-            : base(() => CtorFromCallbacks(instance, stream), Native.LibVLCMediaRelease)
+        [ApiVersion(3)]
+        public Media(LibVLC libVLC, Stream stream, params string[] options)
+            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
         {          
             if(options.Any())
                 Native.LibVLCMediaAddOption(NativeReference, options.ToString());
         }
 
-        static IntPtr CtorFromCallbacks(Instance instance, Stream stream)
+        static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
         {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
             var opaque = AddStream(stream);
@@ -391,7 +391,7 @@ namespace LibVLCSharp.Shared
             if (opaque == IntPtr.Zero)
                 throw new InvalidOperationException("Cannot create opaque parameter");
 
-            return Native.LibVLCMediaNewCallbacks(instance.NativeReference,
+            return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
                 Marshal.GetFunctionPointerForDelegate(new OpenMedia(CallbackOpenMedia)),
                 Marshal.GetFunctionPointerForDelegate(new ReadMedia(CallbackReadMedia)),
                 Marshal.GetFunctionPointerForDelegate(new SeekMedia(CallbackSeekMedia)),
@@ -620,7 +620,7 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
             Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
 
@@ -630,7 +630,7 @@ namespace LibVLCSharp.Shared
         /// <para>internally.</para>
         /// </summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public void ClearSlaves() => Native.LibVLCMediaClearSlaves(NativeReference);
 
         /// <summary>Get a media descriptor's slave list</summary>
@@ -644,7 +644,7 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public IEnumerable<MediaSlave> Slaves
         {
             get

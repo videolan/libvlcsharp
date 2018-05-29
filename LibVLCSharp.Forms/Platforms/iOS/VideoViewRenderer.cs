@@ -20,7 +20,7 @@ namespace LibVLCSharp.Forms.Platforms.iOS
                 _videoView = new LibVLCSharp.Platforms.iOS.VideoView(Element.CliOptions);
                 SetNativeControl(_videoView);
                 
-                Element.Instance = Control.Instance;
+                Element.LibVLC = Control.LibVLC;
                 Element.MediaPlayer = Control.MediaPlayer;
             }
 

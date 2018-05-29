@@ -10,14 +10,14 @@ namespace LibVLCSharp.Platforms.iOS
     {
         public VideoView(string[] cliOptions = default(string[]))
         {
-            Instance = new Instance(cliOptions);
-            MediaPlayer = new Shared.MediaPlayer(Instance);
+            LibVLC = new LibVLC(cliOptions);
+            MediaPlayer = new Shared.MediaPlayer(LibVLC);
             
             Attach();
         }
 
         public Shared.MediaPlayer MediaPlayer { get; }
-        public Instance Instance { get; }
+        public LibVLC LibVLC { get; }
 
         void Attach() => MediaPlayer.NsObject = Handle;
 
@@ -31,7 +31,7 @@ namespace LibVLCSharp.Platforms.iOS
 
             MediaPlayer.Media?.Dispose();
             MediaPlayer.Dispose();
-            Instance.Dispose();
+            LibVLC.Dispose();
         }
     }
 }

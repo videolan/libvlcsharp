@@ -115,9 +115,9 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Create an empty media list.
         /// </summary>
-        /// <param name="instance"></param>
-        public MediaList(Instance instance)
-            : base(() => Native.LibVLCMediaListNew(instance.NativeReference), Native.LibVLCMediaListRelease)
+        /// <param name="libVLC"></param>
+        public MediaList(LibVLC libVLC)
+            : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease)
         {
         }
         public MediaList(IntPtr mediaListPtr) : base(() => mediaListPtr, Native.LibVLCMediaListRelease)

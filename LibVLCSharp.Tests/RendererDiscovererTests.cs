@@ -19,20 +19,20 @@ namespace LibVLCSharp.Tests
         {
             Core.Initialize();
 
-            var instance = new Instance();
+            var libVLC = new LibVLC();
 
-            var mp = new MediaPlayer(instance)
+            var mp = new MediaPlayer(libVLC)
             {
-                Media = new Media(instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+                Media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
                     Media.FromType.FromLocation)
             };
 
             Assert.True(mp.Play());
 
-            var rendererList = instance.RendererList;
+            var rendererList = libVLC.RendererList;
             Assert.IsNotEmpty(rendererList);
 
-            var rendererDiscoverer = new RendererDiscoverer(instance, rendererList[0].Name);
+            var rendererDiscoverer = new RendererDiscoverer(libVLC, rendererList[0].Name);
             var rendererItems = new List<RendererItem>();
             var tcs = new TaskCompletionSource<bool>();
 

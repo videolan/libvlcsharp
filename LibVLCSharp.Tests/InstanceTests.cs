@@ -14,23 +14,23 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeInstanceNativeRelease()
         {
-            var instance = new Instance();
-            instance.Dispose();
-            Assert.AreEqual(IntPtr.Zero, instance.NativeReference);
+            var libVLC = new LibVLC();
+            libVLC.Dispose();
+            Assert.AreEqual(IntPtr.Zero, libVLC.NativeReference);
         }
 
         [Test]
         public void AddInterface()
         {
-            var instance = new Instance();
-            Assert.True(instance.AddInterface(string.Empty));
+            var libVLC = new LibVLC();
+            Assert.True(libVLC.AddInterface(string.Empty));
         }
 
         [Test]
         public void AudioFilters()
         {
-            var instance = new Instance();
-            var audioFilters = instance.AudioFilters;
+            var libVLC = new LibVLC();
+            var audioFilters = libVLC.AudioFilters;
             foreach (var filter in audioFilters)
             {
                 Debug.WriteLine(filter.Help);
@@ -43,8 +43,8 @@ namespace LibVLCSharp.Tests
         [Test]
         public void VideoFilters()
         {
-            var instance = new Instance();
-            var videoFilters = instance.VideoFilters;
+            var libVLC = new LibVLC();
+            var videoFilters = libVLC.VideoFilters;
             foreach (var filter in videoFilters)
             {
                 Debug.WriteLine(filter.Longname);
@@ -56,8 +56,8 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AudioOutputs()
         {
-            var instance = new Instance();
-            var audioOuputs = instance.AudioOutputs;
+            var libVLC = new LibVLC();
+            var audioOuputs = libVLC.AudioOutputs;
             foreach (var audioOutput in audioOuputs)
             {
                 Debug.WriteLine(audioOutput.Name);
@@ -68,10 +68,10 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AudioOutputDevices()
         {
-            var instance = new Instance();
-            var outputs = instance.AudioOutputs;
+            var libVLC = new LibVLC();
+            var outputs = libVLC.AudioOutputs;
             var name = outputs.Last().Name;
-            var audioOutputDevices = instance.AudioOutputDevices(name);
+            var audioOutputDevices = libVLC.AudioOutputDevices(name);
 
             foreach (var audioOutputDevice in audioOutputDevices)
             {
@@ -83,22 +83,22 @@ namespace LibVLCSharp.Tests
         [Test]
         public void EqualityTests()
         {
-            Assert.AreNotSame(new Instance(), new Instance());
+            Assert.AreNotSame(new LibVLC(), new LibVLC());
         }
 
         [Test]
         public void Categories()
         {
-            var instance = new Instance();
-            var md1 = instance.MediaDiscoverers(MediaDiscoverer.Category.Devices);
-            var md2 = instance.MediaDiscoverers(MediaDiscoverer.Category.Lan);
-            var md3 = instance.MediaDiscoverers(MediaDiscoverer.Category.Localdirs);
+            var libVLC = new LibVLC();
+            var md1 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Devices);
+            var md2 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Lan);
+            var md3 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Localdirs);
         }
 
         [Test]
         public void SetExitHandler()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
             var called = false;
 
             var exitCb = new ExitCallback(() =>
@@ -106,9 +106,9 @@ namespace LibVLCSharp.Tests
                 called = true;
             });
 
-            instance.SetExitHandler(exitCb, IntPtr.Zero);
+            libVLC.SetExitHandler(exitCb, IntPtr.Zero);
 
-            instance.Dispose();
+            libVLC.Dispose();
 
             Assert.IsTrue(called);
         }
@@ -116,16 +116,16 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task SetLogCallback()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
             var logCallbackCalled = false;
 
             void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
 
-            instance.Log += LogCallback;
+            libVLC.Log += LogCallback;
 
             await Task.Delay(1000);
 
-            instance.Log -= LogCallback;
+            libVLC.Log -= LogCallback;
 
             Assert.IsTrue(logCallbackCalled);
         }
@@ -133,10 +133,10 @@ namespace LibVLCSharp.Tests
         [Test]
         public void SetLogFile()
         {
-            var instance = new Instance();
+            var libVLC = new LibVLC();
             var path = Path.GetTempFileName();
-            instance.SetLogFile(path);
-            instance.UnsetLog();
+            libVLC.SetLogFile(path);
+            libVLC.UnsetLog();
             var logs = File.ReadAllText(path);
             Assert.True(logs.StartsWith("VLC media player"));
         }

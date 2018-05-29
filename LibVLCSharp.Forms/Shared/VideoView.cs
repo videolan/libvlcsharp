@@ -21,6 +21,6 @@ namespace LibVLCSharp.Forms.Shared
         public string[] CliOptions { get; }
 
         public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get; set; }
-        public Instance Instance { get; set; }
+        public LibVLC LibVLC { get; set; }
     }
 }

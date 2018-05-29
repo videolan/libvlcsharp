@@ -17,7 +17,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_new")]
-            internal static extern IntPtr LibVLCMediaDiscovererNew(IntPtr instance, [MarshalAs(UnmanagedType.LPStr)] string name);
+            internal static extern IntPtr LibVLCMediaDiscovererNew(IntPtr libvlc, [MarshalAs(UnmanagedType.LPStr)] string name);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -83,9 +83,9 @@ namespace LibVLCSharp.Shared
             public Category Category { get; }
         }
 
-        public MediaDiscoverer(Instance instance, string name) 
+        public MediaDiscoverer(LibVLC libVLC, string name) 
             //v3 check. differen ctors
-            : base(() => Native.LibVLCMediaDiscovererNew(instance.NativeReference, name), Native.LibVLCMediaDiscovererRelease)
+            : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease)
         {
         }
 

@@ -14,7 +14,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateAndDestroy()
         {
-            var mp = new MediaPlayer(new Instance());
+            var mp = new MediaPlayer(new LibVLC());
             mp.Dispose();
             Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
         }
@@ -22,7 +22,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void OutputDeviceEnum()
         {
-            var mp = new MediaPlayer(new Instance());
+            var mp = new MediaPlayer(new LibVLC());
             var t = mp.OutputDeviceEnum;
             Debug.WriteLine(t);
         }
@@ -41,9 +41,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task TrackDescription()
         {
-            var instance = new Instance();
-            var mp = new MediaPlayer(instance);
-            var media = new Media(instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            var libVLC = new LibVLC();
+            var mp = new MediaPlayer(libVLC);
+            var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
             
             mp.Media = media;
@@ -63,8 +63,8 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task Play()
         {
-            var instance = new Instance();
-            var media = new Media(instance, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            var libVLC = new LibVLC();
+            var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var mp = new MediaPlayer(media);
             var called = false;
             mp.EventManager.Playing += (sender, args) =>

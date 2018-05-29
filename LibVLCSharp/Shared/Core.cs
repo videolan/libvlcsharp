@@ -65,7 +65,7 @@ namespace LibVLCSharp.Shared
         //TODO: Add Unload library func using handles
         static void InitializeWindows()
         {
-            var myPath = new Uri(typeof(Instance).Assembly.CodeBase).LocalPath;
+            var myPath = new Uri(typeof(LibVLC).Assembly.CodeBase).LocalPath;
             var appExecutionDirectory = Path.GetDirectoryName(myPath);
             if (appExecutionDirectory == null)
                 throw new NullReferenceException(nameof(appExecutionDirectory));

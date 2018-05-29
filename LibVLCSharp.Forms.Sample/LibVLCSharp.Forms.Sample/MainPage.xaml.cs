@@ -14,7 +14,7 @@ namespace LibVLCSharp.Forms.Sample
         {
             base.OnAppearing();
 
-            videoView.MediaPlayer.Play(new Media(videoView.Instance,
+            videoView.MediaPlayer.Play(new Media(videoView.LibVLC,
                 "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
         }
     }

@@ -13,7 +13,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new")]
-            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr instance);
+            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -634,13 +634,13 @@ namespace LibVLCSharp.Shared
         MediaPlayerEventManager _eventManager;
 
         /// <summary>Create an empty Media Player object</summary>
-        /// <param name="instance">
+        /// <param name="libVLC">
         /// <para>the libvlc instance in which the Media Player</para>
         /// <para>should be created.</para>
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public MediaPlayer(Instance instance) 
-            : base(() => Native.LibVLCMediaPlayerNew(instance.NativeReference), Native.LibVLCMediaPlayerRelease)
+        public MediaPlayer(LibVLC libVLC) 
+            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
         }
 
@@ -714,7 +714,7 @@ namespace LibVLCSharp.Shared
         /// version LibVLC 1.1.1 or later
         /// </summary>
         /// <param name="pause">play/resume if true, pause if false</param>
-        [LibVLC(1, 1)]
+        [ApiVersion(1, 1)]
         public void SetPause(bool pause) => Native.LibVLCMediaPlayerSetPause(NativeReference, pause);
 
         /// <summary>
@@ -910,7 +910,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
-        [LibVLC(major: 3, minor: 0, min: false, strict: true)]
+        [ApiVersion(major: 3, minor: 0, min: false, strict: true)]
         public float Fps
         {
             get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
@@ -996,7 +996,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Toggle teletext transparent status on video output.
         /// </summary>
-        [LibVLC(3, 0, false, true)]
+        [ApiVersion(3, 0, false, true)]
         public void ToggleTeletext()
         {
             Native.LibVLCToggleTeletext(NativeReference);
@@ -1400,7 +1400,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="subtitle">new video subtitle file</param>
         /// <returns></returns>
-        [LibVLC(3, 0, false, true)]
+        [ApiVersion(3, 0, false, true)]
         public bool SetSubtitleFile(string subtitle)
         {
             return Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
@@ -1413,7 +1413,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get the description of available titles.
         /// </summary>
-        // [LibVLC(3, 0, false, true)]
+        // [ApiVersion(3, 0, false, true)]
         public TrackDescription[] TitleDescription
         {
             get
@@ -1428,7 +1428,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="titleIndex">selected title</param>
         /// <returns></returns>
-        [LibVLC(3, 0, false, true)]
+        [ApiVersion(3, 0, false, true)]
         public TrackDescription[] ChapterDescription(int titleIndex)
         {
             var ptr = Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex);
@@ -1600,7 +1600,7 @@ namespace LibVLCSharp.Shared
         /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
         /// <param name="select">True if this slave should be selected when it's loaded</param>
         /// <returns></returns>
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public bool AddSlave(MediaSlaveType type, string uri, bool select) =>
             Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri, select) == 0;
 
@@ -1609,11 +1609,11 @@ namespace LibVLCSharp.Shared
         /// <param name="viewpoint"></param>
         /// <param name="absolute"></param>
         /// <returns></returns>
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
             Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
 
-        [LibVLC(3)]
+        [ApiVersion(3)]
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 

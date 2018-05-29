@@ -11,7 +11,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_new")]
-            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr instance, string name);
+            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, string name);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
@@ -34,8 +34,8 @@ namespace LibVLCSharp.Shared
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
 
-        public RendererDiscoverer(Instance instance, string name) 
-            : base(() => Native.LibVLCRendererDiscovererNew(instance.NativeReference, name), 
+        public RendererDiscoverer(LibVLC libVLC, string name) 
+            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), 
                   Native.LibVLCRendererDiscovererRelease)
         {
         }

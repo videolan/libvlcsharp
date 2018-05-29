@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using VideoLAN.LibVLCSharp;
+﻿using LibVLCSharp.Shared;
+using NUnit.Framework;
 
 namespace LibVLCSharp.Tests
 {

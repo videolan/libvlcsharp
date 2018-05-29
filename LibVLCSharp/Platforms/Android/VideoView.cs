@@ -14,7 +14,7 @@ namespace LibVLCSharp.Platforms.Android
     public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView
     {
         MediaPlayer _mediaPlayer;
-        Instance _instance;
+        LibVLC _libVLC;
         AWindow _awindow;
         LayoutChangeListener _layoutListener;
 
@@ -34,7 +34,7 @@ namespace LibVLCSharp.Platforms.Android
         #endregion
 
         public LibVLCSharp.Shared.MediaPlayer MediaPlayer => _mediaPlayer;
-        public Instance Instance => _instance;
+        public LibVLC LibVLC => _libVLC;
 
         void Attach()
         {
@@ -76,8 +76,8 @@ namespace LibVLCSharp.Platforms.Android
         {
             Core.Initialize();
 
-            _instance = new Instance(cliOptions);
-            _mediaPlayer = new MediaPlayer(_instance);
+            _libVLC = new LibVLC(cliOptions);
+            _mediaPlayer = new MediaPlayer(_libVLC);
 
             Attach();
         }
@@ -90,7 +90,7 @@ namespace LibVLCSharp.Platforms.Android
 
             _mediaPlayer.Media?.Dispose();
             _mediaPlayer.Dispose();
-            _instance.Dispose();
+            _libVLC.Dispose();
         }
     }
 }

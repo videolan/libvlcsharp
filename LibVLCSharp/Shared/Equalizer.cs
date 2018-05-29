@@ -70,7 +70,7 @@ namespace LibVLCSharp.Shared
         /// libvlc_media_player_set_equalizer().
         /// version LibVLC 2.2.0 or later
         /// </summary>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public Equalizer() : base(Native.LibVLCAudioEqualizerNew, Native.LibVLCAudioEqualizerRelease)
         {
         }
@@ -82,7 +82,7 @@ namespace LibVLCSharp.Shared
         /// version LibVLC 2.2.0 or later
         /// </summary>
         /// <param name="index">index of the preset, counting from zero</param>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public Equalizer(uint index) : base(() => Native.LibVLCAudioEqualizerNewFromPreset(index), Native.LibVLCAudioEqualizerRelease)
         {
         }
@@ -96,7 +96,7 @@ namespace LibVLCSharp.Shared
         /// <param name="preamp">preamp value (-20.0 to 20.0 Hz)</param>
         ///  LibVLC 2.2.0 or later
         /// <returns>true on success, false otherwise</returns>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public bool SetPreamp(float preamp) => Native.LibVLCAudioEqualizerSetPreamp(NativeReference, preamp) == 0;
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="amp">amplification value (-20.0 to 20.0 Hz)</param>
         /// <param name="band">index, counting from zero, of the frequency band to set</param>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public bool SetAmp(float amp, uint band) =>
             Native.LibVLCAudioEqualizerSetAmpAtIndex(NativeReference, amp, band) == 0;
 
@@ -124,7 +124,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="band">index, counting from zero, of the frequency band to get</param>
         /// <returns>amplification value (Hz); NaN if there is no such frequency band</returns>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public float Amp(uint band) => Native.LibVLCAudioEqualizerGetAmpAtIndex(NativeReference, band);
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="index">index index of the band, counting from zero</param>
         /// <returns>equalizer band frequency (Hz), or -1 if there is no such band</returns>
-        [LibVLC(2, 2)]
+        [ApiVersion(2, 2)]
         public float BandFrequency(uint index) => Native.LibVLCAudioEqualizerGetBandFrequency(index);
     }
 }
