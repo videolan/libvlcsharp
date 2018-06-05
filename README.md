@@ -47,24 +47,24 @@ https://www.nuget.org/packages/LibVLCSharp.Forms/
 
 ## Getting started
 
-Feel free to check out the native sample projects for [iOS](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp.iOS.Sample/ViewController.cs) and [Android](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp.Android.Sample/MainActivity.cs) to get started. 
+Feel free to check out the native sample projects for [iOS](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp.iOS.Sample/ViewController.cs) and [Android](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp.Android.Sample/MainActivity.cs) to get started. 
 
 Basically, you need to instantiate a `VideoView` and add it to your View. It handles the required `libvlc` initialization for you on each platform, and offers a `MediaPlayer` .NET object on which you can call `Play`, `Pause`, set a new media or listen for `libvlc` events.
 
 For usage of the API, you should check out the `libvlc` [C API documentation](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html) which this wrapper follows closely.
 
-Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/mfkl/LibVLCSharp/tree/master/LibVLCSharp.Forms.Sample) to get started.
+Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/LibVLCSharp.Forms.Sample) to get started.
 Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called.
 
 ### Quick overview
 
 - `VideoView.cs`: Custom view which holds a `LibVLC` object and a `MediaPlayer` object.
-- [`LibVLC.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code. Accessible from `VideoView`.
-- [`MediaPlayer.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView`.
-- [`MediaDiscoverer.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/MediaDiscoverer.cs): This object should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
-- [`RendererDiscoverer.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
-- [`Media.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
-- [`Dialog.cs`](https://github.com/mfkl/LibVLCSharp/blob/master/LibVLCSharp/Shared/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
+- [`LibVLC.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code. Accessible from `VideoView`.
+- [`MediaPlayer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView`.
+- [`MediaDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaDiscoverer.cs): This object should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
+- [`RendererDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
+- [`Media.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
+- [`Dialog.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
 #### Currently supported platforms (with working sample):
 - Xamarin.Android
