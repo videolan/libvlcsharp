@@ -6,6 +6,10 @@
 
 LibVLCSharp are .NET bindings for `libvlc`, the multimedia framework powering the VLC applications.
 
+This is the official mirror repository of LibVLCSharp.
+
+_You can find the official repository [here](https://code.videolan.org/videolan/LibVLCSharp)._
+
 ## Features
 
 Check out [libvlc-nuget](https://github.com/mfkl/libvlc-nuget) to get a basic understanding of how `libvlc` works, what it can offer and how to install it with NuGet. 
