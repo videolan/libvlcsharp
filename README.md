@@ -6,12 +6,11 @@
 
 LibVLCSharp are .NET/Mono bindings for `libvlc`, the multimedia framework powering the VLC applications.
 
-This is the official mirror repository of LibVLCSharp.
-
-_You can find the official repository [here](https://code.videolan.org/videolan/LibVLCSharp)._
+_The official repository URL for this repo is https://code.videolan.org/videolan/LibVLCSharp._
 
 - [Goal](#goal)
 - [Features](#features)
+- [Supported platforms](#supported-platforms)
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Quick API overview](#quick-api-overview)
@@ -25,6 +24,10 @@ _You can find the official repository [here](https://code.videolan.org/videolan/
 - [License](#license)
 
 ## Goal
+
+LibVLCSharp's goal is to support all .NET runtimes (Xamarin/Mono, .NET Core and .NET Framework) on most operating systems by targeting .NET Standard 2.0.
+
+We also aim to provide you with a custom video control integrated with the OS native UI toolkit. That means integration with UWP, Cocoa (Xamarin.Mac), GTK# and game engines with Mono support (Unity, Unreal, Godot). For a current status, see [Supported platforms](#supported-platforms) and [Roadmap](#roadmap).
 
 `libvlc` is a complete, opensource and crossplatform multimedia framework written in C. On the other hand, Xamarin allows true crossplatform .NET code on all platforms and provides an efficient way to build crossplatform UIs with Xamarin.Forms.
 
@@ -49,7 +52,8 @@ Some of the features include:
 
 Most things you can achieve with the regular VLC desktop app, you can also achieve using `libvlc`.
 
-## Currently supported platforms by LibVLCSharp:
+## Supported platforms
+
 - Xamarin.Android
 - Xamarin.iOS
 - Xamarin.Forms
@@ -98,11 +102,15 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 - [`Dialog.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
 ## Roadmap
+
 - macOS (using Xamarin.Mac)
 - Linux (using GTK#)
 - Windows 10 (using UWP)
-- Tizen
 - Game engines (Unity, Unreal, Godot)
+
+We are discussing WPF support, please contact us if that is something you would like to see.
+
+If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
 ## Contribute
 
