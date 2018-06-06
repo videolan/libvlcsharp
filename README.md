@@ -4,11 +4,33 @@
 
 # LibVLCSharp
 
-LibVLCSharp are .NET bindings for `libvlc`, the multimedia framework powering the VLC applications.
+LibVLCSharp are .NET/Mono bindings for `libvlc`, the multimedia framework powering the VLC applications.
 
 This is the official mirror repository of LibVLCSharp.
 
 _You can find the official repository [here](https://code.videolan.org/videolan/LibVLCSharp)._
+
+- [Goal](#goal)
+- [Features](#features)
+- [Installation](#installation)
+- [Getting started](#getting-started)
+- [Quick API overview](#quick-api-overview)
+- [Roadmap](#roadmap)
+- [Contribute](#contribute)
+- [Communication](#communication)
+    - [Forum](#forum)
+    - [Issues](#issues)
+    - [IRC](#irc)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+
+## Goal
+
+`libvlc` is a complete, opensource and crossplatform multimedia framework written in C. On the other hand, Xamarin allows true crossplatform .NET code on all platforms and provides an efficient way to build crossplatform UIs with Xamarin.Forms.
+
+LibVLCSharp is designed to be the connecting layer in between `libvlc` and Xamarin.
+
+Using LibVLCSharp means you can take advantage of all `libvlc` features from shared managed code (C#/F#), in a true crossplatform way. You may use the features described below on all supported platforms by LibVLCSharp (Android, iOS, XForms for now, more coming soon).
 
 ## Features
 
@@ -26,6 +48,11 @@ Some of the features include:
 - DVD playback and menu navigation.
 
 Most things you can achieve with the regular VLC desktop app, you can also achieve using `libvlc`.
+
+## Currently supported platforms by LibVLCSharp:
+- Xamarin.Android
+- Xamarin.iOS
+- Xamarin.Forms
 
 ## Installation
 
@@ -60,7 +87,7 @@ For usage of the API, you should check out the `libvlc` [C API documentation](ht
 Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/LibVLCSharp.Forms.Sample) to get started.
 Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called.
 
-### Quick overview
+## Quick API overview
 
 - `VideoView.cs`: Custom view which holds a `LibVLC` object and a `MediaPlayer` object.
 - [`LibVLC.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code. Accessible from `VideoView`.
@@ -70,16 +97,49 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 - [`Media.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
 - [`Dialog.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
-#### Currently supported platforms (with working sample):
-- Xamarin.Android
-- Xamarin.iOS
-- Xamarin.Forms
-
-#### Roadmap:
-- macOS
-- Linux (GTK)
-- UWP
+## Roadmap
+- macOS (using Xamarin.Mac)
+- Linux (using GTK#)
+- Windows 10 (using UWP)
 - Tizen
 - Game engines (Unity, Unreal, Godot)
 
-All contributions are welcome.
+## Contribute
+
+### Pull request
+
+Pull requests are more than welcome! If you do submit one, please make sure to use a descriptive title and description.
+
+### Gitlab issues
+
+You can look through issues we currently have on the [VideoLAN Gitlab](https://code.videolan.org/videolan/LibVLCSharp).
+
+## Communication
+
+### Forum
+
+If you have any question or if you're not sure it's actually an issue, please visit our [forum](https://forum.videolan.org/).
+
+### Issues
+
+You have encountered an issue and wish to report it to the VLC dev team?
+
+You can create one on our [Gitlab](https://code.videolan.org/videolan/LibVLCSharp/issues) or on our [bug tracker](https://trac.videolan.org/vlc/).
+
+Before creating an issue or ticket, please double check for duplicates!
+
+### IRC
+
+Want to quickly get in touch with us for a question, or even just to talk?
+
+You will always find someone from the VLC team on IRC, __#videolan__ channel on the freenode network.
+
+If you don't have an IRC client, you can always use the [freenode webchat](https://webchat.freenode.net/).
+
+## Code of Conduct
+
+Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Conduct/) license.
+
+## License
+
+LibVLCSharp is under the LGPLv2.1.
