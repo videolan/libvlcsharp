@@ -5,7 +5,7 @@
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOSUnixLike())">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>$(DefineConstants);</DefineConstants>
@@ -21,7 +21,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- MSBuild.Sdk.Extras is only required for Xamarin, and fails the build under linux -->
-    <PackageReference Condition="!$([MSBuild]::IsOSUnixLike())" Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
+    <PackageReference Condition="!$([MSBuild]::IsOsPlatform('Linux'))" Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <Compile Include="Shared\**\*.cs" />
   </ItemGroup>
