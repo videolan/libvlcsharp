@@ -23,7 +23,7 @@
         /// <remarks>Linux X11 only</remarks>
         /// <param name="gdkWindow">The pointer to the GdkWindow object</param>
         /// <returns>The window's XID</returns>
-        [DllImport("libgdk-x11-2.0.so", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("libgdk-x11-2.0.so.0", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint gdk_x11_drawable_get_xid(IntPtr gdkWindow);
     }
 }

@@ -8,15 +8,29 @@
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
 
+  <!-- References when building on Windows -->
   <ItemGroup>
-    <Reference Include="gdk-sharp">
+    <Reference Include="gdk-sharp" Condition="!$([MSBuild]::IsOSUnixLike())">
       <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="glib-sharp">
+    <Reference Include="glib-sharp" Condition="!$([MSBuild]::IsOSUnixLike())">
       <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gtk-sharp">
+    <Reference Include="gtk-sharp" Condition="!$([MSBuild]::IsOSUnixLike())">
       <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- References when building on Linux -->
+  <ItemGroup>
+    <Reference Include="gdk-sharp" Condition="$([MSBuild]::IsOSUnixLike())">
+      <HintPath>/usr/lib/cli/gdk-sharp-2.0/gdk-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="glib-sharp" Condition="$([MSBuild]::IsOSUnixLike())">
+      <HintPath>/usr/lib/cli/glib-sharp-2.0/glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp" Condition="$([MSBuild]::IsOSUnixLike())">
+      <HintPath>/usr/lib/cli/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
