@@ -433,10 +433,7 @@ namespace LibVLCSharp.Shared
         {
             if (mediaConfiguration == null) throw new ArgumentNullException(nameof(mediaConfiguration));
 
-            var options = mediaConfiguration.Build();
-            if (string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
-
-            Native.LibVLCMediaAddOption(NativeReference, options);
+            AddOption(mediaConfiguration.Build());
         }
 
         /// <summary>Add an option to the media with configurable flags.</summary>
