@@ -425,6 +425,20 @@ namespace LibVLCSharp.Shared
             Native.LibVLCMediaAddOption(NativeReference, options);
         }
 
+        /// <summary>
+        /// Convenience method for crossplatform media configuration
+        /// </summary>
+        /// <param name="mediaConfiguration">mediaConfiguration translate to strings parsed by the vlc engine, some are platform specific</param>
+        public void AddOption(MediaConfiguration mediaConfiguration)
+        {
+            if (mediaConfiguration == null) throw new ArgumentNullException(nameof(mediaConfiguration));
+
+            var options = mediaConfiguration.Build();
+            if (string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
+
+            Native.LibVLCMediaAddOption(NativeReference, options);
+        }
+
         /// <summary>Add an option to the media with configurable flags.</summary>
         /// <param name="options">the options (as a string)</param>
         /// <param name="flags">the flags for this option</param>
@@ -1036,4 +1050,19 @@ namespace LibVLCSharp.Shared
         public uint Priority;
     }
     #endregion
+
+    public class MediaConfiguration
+    {
+        HashSet<string> _options = new HashSet<string>();
+
+        public MediaConfiguration EnableHardwareDecoding()
+        {
+#if ANDROID
+            _options.Add(":codec=mediacodec_ndk");
+#endif
+            return this;
+        }
+
+        public string Build() => string.Join(",", _options);
+    }
 }

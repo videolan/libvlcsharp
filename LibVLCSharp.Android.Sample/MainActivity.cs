@@ -26,7 +26,11 @@ namespace LibVLCSharp.Android.Sample
 
             _videoView = new VideoView(this);
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            _videoView.MediaPlayer.Play(new Media(_videoView.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            var media = new Media(_videoView.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            var configuration = new MediaConfiguration();
+            configuration.EnableHardwareDecoding();
+            media.AddOption(configuration);
+            _videoView.MediaPlayer.Play(media);
         }
 
         protected override void OnPause()
