@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -20,6 +21,7 @@ namespace LibVLCSharp.Shared
         }
 
         public IntPtr NativeReference;
+        readonly List<EventCallback> _callbacks = new List<EventCallback>();
 
         protected EventManager(IntPtr ptr)
         {
@@ -31,12 +33,18 @@ namespace LibVLCSharp.Shared
 
         protected void AttachEvent(EventType eventType, EventCallback eventCallback)
         {
-            if(Internal.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
+            _callbacks.Add(eventCallback);
+            if (Internal.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
+            {
+                _callbacks.Remove(eventCallback);
                 throw new VLCException($"Could not attach event {eventType}");
+            }
         }
 
         protected void DetachEvent(EventType eventType, EventCallback eventCallback)
         {
+            _callbacks.Remove(eventCallback);
+
             Internal.LibVLCEventDetach(NativeReference, eventType, eventCallback, IntPtr.Zero);
         }
 
