@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibVLCSharp.Wpf.Sample.Properties {
+namespace LibVLCSharp.WPF.Sample.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace LibVLCSharp.Wpf.Sample.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LibVLCSharp.Wpf.Sample.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LibVLCSharp.WPF.Sample.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

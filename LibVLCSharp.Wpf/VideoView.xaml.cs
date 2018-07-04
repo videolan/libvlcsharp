@@ -13,16 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LibVLCSharp.Wpf
+namespace LibVLCSharp.WPF
 {
-    public partial class VLCViewControl : UserControl, LibVLCSharp.Shared.IVideoView
+    public partial class VideoView : UserControl, LibVLCSharp.Shared.IVideoView, IDisposable
     {
         private LibVLCSharp.Shared.MediaPlayer mediaPlayer;
         private LibVLCSharp.Shared.LibVLC libVLC;
         private double controlWidth;
         private double controlHeight;
 
-        public VLCViewControl()
+        public VideoView()
         {
             Shared.Core.Initialize();
             libVLC = new Shared.LibVLC();
@@ -64,6 +64,12 @@ namespace LibVLCSharp.Wpf
             {
                 VLCResize();
             }
+        }
+
+        public void Dispose()
+        {
+            mediaPlayer.Dispose();
+            libVLC.Dispose();
         }
 
         public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get => mediaPlayer; }

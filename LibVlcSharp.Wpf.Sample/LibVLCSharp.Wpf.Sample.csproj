@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{01CCB934-B77F-4681-86C5-AE4FEE648238}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>LibVLCSharp.Wpf.Sample</RootNamespace>
-    <AssemblyName>LibVLCSharp.Wpf.Sample</AssemblyName>
+    <RootNamespace>LibVLCSharp.WPF.Sample</RootNamespace>
+    <AssemblyName>LibVLCSharp.WPF.Sample</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -93,9 +93,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp.Wpf\LibVLCSharp.Wpf.csproj">
+    <ProjectReference Include="..\LibVLCSharp.Wpf\LibVLCSharp.WPF.csproj">
       <Project>{da7a2677-0944-481f-a59b-9128fc54fd5f}</Project>
-      <Name>LibVLCSharp.Wpf</Name>
+      <Name>LibVLCSharp.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>

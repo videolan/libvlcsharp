@@ -7,8 +7,8 @@
     <ProjectGuid>{DA7A2677-0944-481F-A59B-9128FC54FD5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibVLCSharp.Wpf</RootNamespace>
-    <AssemblyName>LibVLCSharp.Wpf</AssemblyName>
+    <RootNamespace>LibVLCSharp.WPF</RootNamespace>
+    <AssemblyName>LibVLCSharp.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,8 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VLCViewControl.xaml.cs">
-      <DependentUpon>VLCViewControl.xaml</DependentUpon>
+    <Compile Include="VideoView.xaml.cs">
+      <DependentUpon>VideoView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="VLCViewControl.xaml">
+    <Page Include="VideoView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

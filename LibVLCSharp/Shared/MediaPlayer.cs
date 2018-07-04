@@ -631,6 +631,11 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
+        public void SetVideoFormatCallbacks()
+        {
+            throw new NotImplementedException();
+        }
+
         MediaPlayerEventManager _eventManager;
 
         /// <summary>Create an empty Media Player object</summary>

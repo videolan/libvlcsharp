@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LibVLCSharp.Wpf.Sample.Properties {
+namespace LibVLCSharp.WPF.Sample.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

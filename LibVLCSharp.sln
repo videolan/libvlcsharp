@@ -35,9 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.iO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.Sample", "LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample.csproj", "{C6E79ABC-C203-4892-848A-FF99CCE53F8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Wpf.Sample", "LibVlcSharp.Wpf.Sample\LibVLCSharp.Wpf.Sample.csproj", "{01CCB934-B77F-4681-86C5-AE4FEE648238}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.WPF.Sample", "LibVlcSharp.Wpf.Sample\LibVLCSharp.WPF.Sample.csproj", "{01CCB934-B77F-4681-86C5-AE4FEE648238}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Wpf", "LibVLCSharp.Wpf\LibVLCSharp.Wpf.csproj", "{DA7A2677-0944-481F-A59B-9128FC54FD5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.WPF", "LibVLCSharp.Wpf\LibVLCSharp.WPF.csproj", "{DA7A2677-0944-481F-A59B-9128FC54FD5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

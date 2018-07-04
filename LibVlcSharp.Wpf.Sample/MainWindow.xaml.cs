@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LibVLCSharp.Shared;
 
-namespace LibVLCSharp.Wpf.Sample
+namespace LibVLCSharp.WPF.Sample
 {
     public partial class MainWindow : Window
     {
@@ -24,9 +24,6 @@ namespace LibVLCSharp.Wpf.Sample
         {
             InitializeComponent();
 
-            Player.MediaPlayer.Play(new Media(Player.LibVLC,
-                "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
-
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
             dispatcherTimer.Start();
@@ -34,9 +31,17 @@ namespace LibVLCSharp.Wpf.Sample
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            this.Width = 900;
-            this.Height = 750;
-            dispatcherTimer.Stop();
+            if (!Player.MediaPlayer.IsPlaying)
+            {
+                Player.MediaPlayer.Play(new Media(Player.LibVLC,
+                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            }
+            else
+            {
+                this.Width = 900;
+                this.Height = 750;
+                dispatcherTimer.Stop();
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿<Application x:Class="LibVlcSharp.Wpf.Sample.App"
+﻿<Application x:Class="LibVLCSharp.WPF.Sample.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:LibVlcSharp.Wpf.Sample"
+             xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

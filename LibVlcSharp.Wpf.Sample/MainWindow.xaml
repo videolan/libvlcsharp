@@ -1,13 +1,13 @@
-﻿<Window x:Class="LibVLCSharp.Wpf.Sample.MainWindow"
+﻿<Window x:Class="LibVLCSharp.WPF.Sample.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LibVLCSharp.Wpf.Sample"
-        xmlns:uc="clr-namespace:LibVLCSharp.Wpf;assembly=LibVLCSharp.Wpf"
+        xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
+        xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
-        Title="LibVLCSharp.Wpf.Sample" Height="450" Width="800">
-    <Grid>
-        <uc:VLCViewControl x:Name="Player"></uc:VLCViewControl>
+        Title="LibVLCSharp.WPF.Sample" Height="450" Width="800">
+    <Grid>        
+        <uc:VideoView x:Name="Player" Panel.ZIndex="1"></uc:VideoView>
     </Grid>
 </Window>
