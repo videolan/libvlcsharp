@@ -18,7 +18,7 @@ namespace LibVLCSharp.Shared
             [DllImport("kernel32.dll", SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 #if ANDROID
-            [DllImport("libvlc", EntryPoint = "JNI_OnLoad")]
+            [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
         }
@@ -98,5 +98,14 @@ namespace LibVLCSharp.Shared
             if (_libvlcHandle == IntPtr.Zero)
                 throw new InvalidOperationException("failed to load libvlc with path " + libvlcPath + ". Aborting...");
         }
+    }
+
+    static class Constants
+    {
+#if IOS
+        internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
+#else
+        internal const string LibraryName = "libvlc";    
+#endif
     }
 }
