@@ -46,120 +46,120 @@ namespace LibVLCSharp.Shared
         internal struct Native
         {
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_new")]
             internal static extern IntPtr LibVLCNew(int argc, IntPtr[] argv);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_release")]
             internal static extern void LibVLCRelease(IntPtr libVLC);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_add_intf")]
             internal static extern int LibVLCAddInterface(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_exit_handler")]
             internal static extern void LibVLCSetExitHandler(IntPtr libVLC, IntPtr cb, IntPtr opaque);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_user_agent")]
             internal static extern void LibVLCSetUserAgent(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name, 
                 [MarshalAs(UnmanagedType.LPStr)] string http);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_app_id")]
             internal static extern void LibVLCSetAppId(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string id, 
                 [MarshalAs(UnmanagedType.LPStr)] string version, [MarshalAs(UnmanagedType.LPStr)] string icon);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_unset")]
             internal static extern void LibVLCLogUnset(IntPtr libVLC);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_set_file")]
             internal static extern void LibVLCLogSetFile(IntPtr libVLC, IntPtr stream);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 CharSet = CharSet.Ansi, EntryPoint = "libvlc_log_get_context")]
             internal static extern void LibVLCLogGetContext(IntPtr ctx, out IntPtr module, out IntPtr file, out UIntPtr line);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_set")]
             internal static extern void LibVLCLogSet(IntPtr libVLC, LogCallback cb, IntPtr data);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_module_description_list_release")]
             internal static extern void LibVLCModuleDescriptionListRelease(IntPtr moduleDescriptionList);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_filter_list_get")]
             internal static extern IntPtr LibVLCAudioFilterListGet(IntPtr libVLC);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_filter_list_get")]
             internal static extern IntPtr LibVLCVideoFilterListGet(IntPtr libVLC);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_list_get")]
             internal static extern IntPtr LibVLCAudioOutputListGet(IntPtr libVLC);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_list_release")]
             internal static extern void LibVLCAudioOutputListRelease(IntPtr list);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_get")]
             internal static extern IntPtr LibVLCAudioOutputDeviceListGet(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string aout);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
             internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
             internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscoverer.Category category, ref IntPtr pppServices);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
             internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_set_callbacks")]
             internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, IntPtr callbacks, IntPtr data);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
             internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr libVLC, ref IntPtr discovererList);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_release")]
             internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
 
 #if ANDROID
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif

@@ -9,57 +9,57 @@ namespace LibVLCSharp.Shared
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_new")]
             internal static extern IntPtr LibVLCAudioEqualizerNew();
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_release")]
             internal static extern void LibVLCAudioEqualizerRelease(IntPtr equalizer);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_new_from_preset")]
             internal static extern IntPtr LibVLCAudioEqualizerNewFromPreset(uint index);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_set_preamp")]
             internal static extern int LibVLCAudioEqualizerSetPreamp(IntPtr equalizer, float preamp);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_preamp")]
             internal static extern float LibVLCAudioEqualizerGetPreamp(IntPtr equalizer);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_set_amp_at_index")]
             internal static extern int LibVLCAudioEqualizerSetAmpAtIndex(IntPtr equalizer, float amp, uint band);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_amp_at_index")]
             internal static extern float LibVLCAudioEqualizerGetAmpAtIndex(IntPtr equalizer, uint band);
             
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_preset_count")]
             internal static extern uint LibVLCAudioEqualizerGetPresetCount();
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_preset_name")]
             internal static extern IntPtr LibVLCAudioEqualizerGetPresetName(uint index);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_band_count")]
             internal static extern uint LibVLCAudioEqualizerGetBandCount();
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_band_frequency")]
             internal static extern float LibVLCAudioEqualizerGetBandFrequency(uint index);
         }

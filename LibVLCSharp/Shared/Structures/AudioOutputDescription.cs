@@ -20,7 +20,7 @@ namespace LibVLCSharp.Shared.Structures
             internal IntPtr p_next;
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "??0libvlc_audio_output_t@@QEAA@AEBU0@@Z")]
             internal static extern global::System.IntPtr cctor(global::System.IntPtr instance, global::System.IntPtr _0);
 
