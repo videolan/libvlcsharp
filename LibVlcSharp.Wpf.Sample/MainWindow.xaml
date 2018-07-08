@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
-        xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
         Title="LibVLCSharp.WPF.Sample" Height="450" Width="800">
-    <Grid>        
-        <uc:VideoView x:Name="Player" Panel.ZIndex="1"></uc:VideoView>
-    </Grid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Content="Example 1" Width="100" Height="50" Margin="15" x:Name="Example1Btn" />
+        <Button Content="Example 2" Width="100" Height="50" Margin="15" x:Name="Example2Btn" />
+    </StackPanel>
 </Window>

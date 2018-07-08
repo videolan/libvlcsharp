@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -21,20 +22,37 @@ namespace LibVLCSharp.WPF
         private LibVLCSharp.Shared.LibVLC libVLC;
         private double controlWidth;
         private double controlHeight;
+        private ForegroundWindow foreground;
 
         public VideoView()
         {
+            ResourceDictionary res = Application.LoadComponent(new Uri("/LibVLCSharp.WPF;component/Styles/VideoView.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary;
+            this.Style = res["VideoViewStyle"] as Style;
+
+            foreground = new ForegroundWindow(this);
+
             Shared.Core.Initialize();
             libVLC = new Shared.LibVLC();
             mediaPlayer = new Shared.MediaPlayer(libVLC);
 
-            InitializeComponent();
             this.SizeChanged += OnSizeChanged;
 
             controlHeight = this.Height;
             controlWidth = this.Width;
 
-            mediaPlayer.Hwnd = PlayerView.Handle;
+            this.Loaded += VideoView_Loaded;
+        }
+
+        private void VideoView_Loaded(object sender, RoutedEventArgs e)
+        {
+            mediaPlayer.Hwnd = ((System.Windows.Forms.Panel)this.Template.FindName("PART_PlayerView", this)).Handle;
+
+            if (this.Content != null)
+            {
+                object content = Content;
+                Content = null;
+                foreground.Content = (UIElement)content;
+            }
         }
 
         private void VLCResize()
@@ -68,6 +86,9 @@ namespace LibVLCSharp.WPF
 
         public void Dispose()
         {
+            if (mediaPlayer.IsPlaying)
+                mediaPlayer.Stop();
+
             mediaPlayer.Dispose();
             libVLC.Dispose();
         }

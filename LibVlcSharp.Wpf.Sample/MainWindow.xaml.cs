@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,36 +12,29 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.WPF.Sample
 {
     public partial class MainWindow : Window
     {
-        private System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-
         public MainWindow()
         {
             InitializeComponent();
 
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
-            dispatcherTimer.Start();
+            Example1Btn.Click += Example1Btn_Click;
+            Example2Btn.Click += Example2Btn_Click;
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        private void Example1Btn_Click(object sender, RoutedEventArgs e)
         {
-            if (!Player.MediaPlayer.IsPlaying)
-            {
-                Player.MediaPlayer.Play(new Media(Player.LibVLC,
-                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
-            }
-            else
-            {
-                this.Width = 900;
-                this.Height = 750;
-                dispatcherTimer.Stop();
-            }
+            Example1 window = new Example1();
+            window.Show();
+        }
+
+        private void Example2Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Example2 window = new Example2();
+            window.Show();
         }
     }
 }
