@@ -18,40 +18,40 @@ namespace LibVLCSharp.WPF
 {
     public partial class VideoView : UserControl, LibVLCSharp.Shared.IVideoView, IDisposable
     {
-        private LibVLCSharp.Shared.MediaPlayer mediaPlayer;
-        private LibVLCSharp.Shared.LibVLC libVLC;
-        private double controlWidth;
-        private double controlHeight;
-        private ForegroundWindow foreground;
+        private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
+        private LibVLCSharp.Shared.LibVLC _libVLC;
+        private double _controlWidth;
+        private double _controlHeight;
+        private ForegroundWindow _foreground;
 
         public VideoView()
         {
             ResourceDictionary res = Application.LoadComponent(new Uri("/LibVLCSharp.WPF;component/Styles/VideoView.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary;
             this.Style = res["VideoViewStyle"] as Style;
 
-            foreground = new ForegroundWindow(this);
+            _foreground = new ForegroundWindow(this);
 
             Shared.Core.Initialize();
-            libVLC = new Shared.LibVLC();
-            mediaPlayer = new Shared.MediaPlayer(libVLC);
+            _libVLC = new Shared.LibVLC();
+            _mediaPlayer = new Shared.MediaPlayer(_libVLC);
 
             this.SizeChanged += OnSizeChanged;
 
-            controlHeight = this.Height;
-            controlWidth = this.Width;
+            _controlHeight = this.Height;
+            _controlWidth = this.Width;
 
             this.Loaded += VideoView_Loaded;
         }
 
         private void VideoView_Loaded(object sender, RoutedEventArgs e)
         {
-            mediaPlayer.Hwnd = ((System.Windows.Forms.Panel)this.Template.FindName("PART_PlayerView", this)).Handle;
+            _mediaPlayer.Hwnd = ((System.Windows.Forms.Panel)this.Template.FindName("PART_PlayerView", this)).Handle;
 
             if (this.Content != null)
             {
                 object content = Content;
                 Content = null;
-                foreground.Content = (UIElement)content;
+                _foreground.Content = (UIElement)content;
             }
         }
 
@@ -60,25 +60,25 @@ namespace LibVLCSharp.WPF
             uint h = 0, w = 0;
             float scale = 1, scalew = 1, scaleh = 1;
 
-            if (mediaPlayer.Size(0, ref w, ref h))
+            if (_mediaPlayer.Size(0, ref w, ref h))
             {
-                scalew = (float)controlWidth / (float)w;
-                w = (uint)controlWidth;
+                scalew = (float)_controlWidth / (float)w;
+                w = (uint)_controlWidth;
 
-                scaleh = (float)controlHeight / (float)h;
-                h = (uint)controlHeight;
+                scaleh = (float)_controlHeight / (float)h;
+                h = (uint)_controlHeight;
 
                 scale = scalew < scaleh ? scalew : scaleh;
-                mediaPlayer.Scale = scale;
+                _mediaPlayer.Scale = scale;
             }
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            controlWidth = e.NewSize.Width;
-            controlHeight = e.NewSize.Height;
+            _controlWidth = e.NewSize.Width;
+            _controlHeight = e.NewSize.Height;
 
-            if (mediaPlayer.IsPlaying)
+            if (_mediaPlayer.IsPlaying)
             {
                 VLCResize();
             }
@@ -86,14 +86,18 @@ namespace LibVLCSharp.WPF
 
         public void Dispose()
         {
-            if (mediaPlayer.IsPlaying)
-                mediaPlayer.Stop();
+            if (_mediaPlayer.IsPlaying)
+                _mediaPlayer.Stop();
 
-            mediaPlayer.Dispose();
-            libVLC.Dispose();
+            this.SizeChanged -= OnSizeChanged;
+            this.Loaded -= VideoView_Loaded;
+
+            _mediaPlayer.Hwnd = IntPtr.Zero;
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
         }
 
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get => mediaPlayer; }
-        public LibVLCSharp.Shared.LibVLC LibVLC { get => libVLC; }
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get => _mediaPlayer; }
+        public LibVLCSharp.Shared.LibVLC LibVLC { get => _libVLC; }
     }
 }

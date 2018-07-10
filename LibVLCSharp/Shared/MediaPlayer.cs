@@ -630,12 +630,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
         }
-
-        public void SetVideoFormatCallbacks()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         MediaPlayerEventManager _eventManager;
 
         /// <summary>Create an empty Media Player object</summary>
