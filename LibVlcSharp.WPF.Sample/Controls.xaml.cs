@@ -26,30 +26,26 @@ namespace LibVLCSharp.WPF.Sample
             parent = Parent;
 
             InitializeComponent();
-            
+
             PlayButton.Click += PlayButton_Click;
             StopButton.Click += StopButton_Click;
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            parent.Dispatcher.Invoke(() => {
-                if (parent.Player.MediaPlayer.IsPlaying)
-                {
-                    parent.Player.MediaPlayer.Stop();
-                }
-            });
+            if (parent.Player.MediaPlayer.IsPlaying)
+            {
+                parent.Player.MediaPlayer.Stop();
+            }
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            parent.Dispatcher.Invoke(() => {
-                if (!parent.Player.MediaPlayer.IsPlaying)
-                {
-                    parent.Player.MediaPlayer.Play(new Media(parent.Player.LibVLC,
-                        "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
-                }
-            });
-        }        
+            if (!parent.Player.MediaPlayer.IsPlaying)
+            {
+                parent.Player.MediaPlayer.Play(new Media(parent.Player.LibVLC,
+                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            }
+        }
     }
 }
