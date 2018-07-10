@@ -23,7 +23,7 @@ namespace LibVLCSharp.WPF.Sample
             InitializeComponent();
 
             controls = new Controls(this);
-            Player.Content = controls;            
+            Player.Content = controls;
         }
     }
 }

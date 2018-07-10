@@ -41,6 +41,12 @@ namespace LibVLCSharp.WPF
             _controlWidth = this.Width;
 
             this.Loaded += VideoView_Loaded;
+            this.Unloaded += VideoView_Unloaded;
+        }
+
+        private void VideoView_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Dispose();
         }
 
         private void VideoView_Loaded(object sender, RoutedEventArgs e)
@@ -91,6 +97,7 @@ namespace LibVLCSharp.WPF
 
             this.SizeChanged -= OnSizeChanged;
             this.Loaded -= VideoView_Loaded;
+            this.Unloaded -= VideoView_Unloaded;
 
             _mediaPlayer.Hwnd = IntPtr.Zero;
             _mediaPlayer.Dispose();

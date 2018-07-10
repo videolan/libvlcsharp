@@ -20,7 +20,6 @@ namespace LibVLCSharp.WPF.Sample
         public MainWindow()
         {
             InitializeComponent();
-
             Example1Btn.Click += Example1Btn_Click;
             Example2Btn.Click += Example2Btn_Click;
         }
