@@ -1,30 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.WPF
 {
     internal partial class ForegroundWindow : Window
     {
-        private Window _wndhost;
-        private ContentControl _bckgnd;
-        private UIElement _content;
-        private readonly Point _zeroPoint = new Point(0, 0);
+        Window _wndhost;
+        readonly ContentControl _bckgnd;
+        UIElement _content;
+        readonly Point _zeroPoint = new Point(0, 0);
 
         internal new UIElement Content
         {
-            get { return _content; }
+            get => _content;
             set
             {
                 _content = value;
@@ -36,73 +28,79 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        internal ForegroundWindow(ContentControl Background)
+        internal ForegroundWindow(ContentControl background)
         {
             InitializeComponent();
-            _bckgnd = Background;
-            _bckgnd.Loaded += Bckgnd_Loaded;
-            _bckgnd.Unloaded += Bckgnd_Unloaded;
+
+            _bckgnd = background;
+            _bckgnd.Loaded += Background_Loaded;
+            _bckgnd.Unloaded += Background_Unloaded;
         }
 
-        private void Bckgnd_Unloaded(object sender, RoutedEventArgs e)
+        void Background_Unloaded(object sender, RoutedEventArgs e)
         {
             _wndhost.Closing -= Wndhost_Closing;
             _wndhost.SizeChanged -= Wndhost_SizeChanged;
             _wndhost.LocationChanged -= Wndhost_LocationChanged;
-            this.Hide();
+
+            Hide();
         }
 
-        private void Bckgnd_Loaded(object sender, RoutedEventArgs e)
+        void Background_Loaded(object sender, RoutedEventArgs e)
         {
-            _wndhost = Window.GetWindow(_bckgnd);
-            this.Owner = _wndhost;
+            _wndhost = GetWindow(_bckgnd);
+            Trace.Assert(_wndhost != null);
+
+            Owner = _wndhost;
+
             _wndhost.Closing += Wndhost_Closing;
             _wndhost.SizeChanged += Wndhost_SizeChanged;
             _wndhost.LocationChanged += Wndhost_LocationChanged;
+
             try
             {
-                Point locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-                PresentationSource source = PresentationSource.FromVisual(_wndhost);
-                System.Windows.Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-                this.Left = targetPoints.X;
-                this.Top = targetPoints.Y;
-                Vector size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
-                this.Height = size.Y;
-                this.Width = size.X;
-                this.Show();
+                var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
+                var source = PresentationSource.FromVisual(_wndhost);
+                var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+                Left = targetPoints.X;
+                Top = targetPoints.Y;
+                var size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
+                Height = size.Y;
+                Width = size.X;
+                Show();
                 _wndhost.Focus();
             }
             catch
             {
-                this.Hide();
-                throw new LibVLCSharp.Shared.VLCException("Unable to create WPF Window in VideoView.");
+                Hide();
+                throw new VLCException("Unable to create WPF Window in VideoView.");
             }
         }
 
-        private void Wndhost_LocationChanged(object sender, EventArgs e)
+        void Wndhost_LocationChanged(object sender, EventArgs e)
         {
-            Point locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-            PresentationSource source = PresentationSource.FromVisual(_wndhost);
-            System.Windows.Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-            this.Left = targetPoints.X;
-            this.Top = targetPoints.Y;
+            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
+            var source = PresentationSource.FromVisual(_wndhost);
+            var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+            Left = targetPoints.X;
+            Top = targetPoints.Y;
         }
 
-        private void Wndhost_SizeChanged(object sender, SizeChangedEventArgs e)
+        void Wndhost_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Point locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-            PresentationSource source = PresentationSource.FromVisual(_wndhost);
-            System.Windows.Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-            this.Left = targetPoints.X;
-            this.Top = targetPoints.Y;
-            Vector size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
-            this.Height = size.Y;
-            this.Width = size.X;
+            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
+            var source = PresentationSource.FromVisual(_wndhost);
+            var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+            Left = targetPoints.X;
+            Top = targetPoints.Y;
+            var size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
+            Height = size.Y;
+            Width = size.X;
         }
 
-        private void Wndhost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void Wndhost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

@@ -114,7 +114,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp.Wpf\LibVLCSharp.WPF.csproj">
+    <ProjectReference Include="..\LibVLCSharp.WPF\LibVLCSharp.WPF.csproj">
       <Project>{da7a2677-0944-481f-a59b-9128fc54fd5f}</Project>
       <Name>LibVLCSharp.WPF</Name>
     </ProjectReference>

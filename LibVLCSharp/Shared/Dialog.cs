@@ -14,17 +14,17 @@ namespace LibVLCSharp.Shared
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_login")]
             internal static extern int LibVLCDialogPostLogin(IntPtr dialogId, string username, string password, bool store);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_action")]
             internal static extern int LibVLCDialogPostAction(IntPtr dialogId, int actionIndex);
 
             [SuppressUnmanagedCodeSecurity]
-            [DllImport("libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_dismiss")]
             internal static extern int LibVLCDialogDismiss(IntPtr dialogId);
         }

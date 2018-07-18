@@ -1,90 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.WPF
 {
-    public partial class VideoView : UserControl, LibVLCSharp.Shared.IVideoView, IDisposable
+    public class VideoView : UserControl, IVideoView, IDisposable
     {
-        private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
-        private LibVLCSharp.Shared.LibVLC _libVLC;
-        private double _controlWidth;
-        private double _controlHeight;
-        private ForegroundWindow _foreground;
+        double _controlWidth;
+        double _controlHeight;
+        readonly ForegroundWindow _foreground;
 
         public VideoView()
         {
-            ResourceDictionary res = Application.LoadComponent(new Uri("/LibVLCSharp.WPF;component/Styles/VideoView.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary;
-            this.Style = res["VideoViewStyle"] as Style;
+            var res = Application.LoadComponent(new Uri("/LibVLCSharp.WPF;component/Styles/VideoView.xaml", UriKind.RelativeOrAbsolute)) as ResourceDictionary;
+            Style = res["VideoViewStyle"] as Style;
 
             _foreground = new ForegroundWindow(this);
 
-            Shared.Core.Initialize();
-            _libVLC = new Shared.LibVLC();
-            _mediaPlayer = new Shared.MediaPlayer(_libVLC);
+            Core.Initialize();
 
-            this.SizeChanged += OnSizeChanged;
+            LibVLC = new LibVLC();
+            MediaPlayer = new MediaPlayer(LibVLC);
 
-            _controlHeight = this.Height;
-            _controlWidth = this.Width;
+            SizeChanged += OnSizeChanged;
 
-            this.Loaded += VideoView_Loaded;
-            this.Unloaded += VideoView_Unloaded;
+            _controlHeight = Height;
+            _controlWidth = Width;
+
+            Loaded += VideoView_Loaded;
+            Unloaded += VideoView_Unloaded;
         }
 
-        private void VideoView_Unloaded(object sender, RoutedEventArgs e)
+        void VideoView_Unloaded(object sender, RoutedEventArgs e)
         {
             Dispose();
         }
 
-        private void VideoView_Loaded(object sender, RoutedEventArgs e)
+        void VideoView_Loaded(object sender, RoutedEventArgs e)
         {
-            _mediaPlayer.Hwnd = ((System.Windows.Forms.Panel)this.Template.FindName("PART_PlayerView", this)).Handle;
+            MediaPlayer.Hwnd = ((System.Windows.Forms.Panel)Template.FindName("PART_PlayerView", this)).Handle;
 
-            if (this.Content != null)
+            if (Content != null)
             {
-                object content = Content;
+                var content = Content;
                 Content = null;
                 _foreground.Content = (UIElement)content;
             }
         }
 
-        private void VLCResize()
+        void VLCResize()
         {
             uint h = 0, w = 0;
-            float scale = 1, scalew = 1, scaleh = 1;
 
-            if (_mediaPlayer.Size(0, ref w, ref h))
+            if (MediaPlayer.Size(0, ref w, ref h))
             {
-                scalew = (float)_controlWidth / (float)w;
-                w = (uint)_controlWidth;
+                var scalew = (float)_controlWidth / w;
 
-                scaleh = (float)_controlHeight / (float)h;
-                h = (uint)_controlHeight;
+                var scaleh = (float)_controlHeight / h;
 
-                scale = scalew < scaleh ? scalew : scaleh;
-                _mediaPlayer.Scale = scale;
+                var scale = scalew < scaleh ? scalew : scaleh;
+                MediaPlayer.Scale = scale;
             }
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             _controlWidth = e.NewSize.Width;
             _controlHeight = e.NewSize.Height;
 
-            if (_mediaPlayer.IsPlaying)
+            if (MediaPlayer.IsPlaying)
             {
                 VLCResize();
             }
@@ -92,19 +78,19 @@ namespace LibVLCSharp.WPF
 
         public void Dispose()
         {
-            if (_mediaPlayer.IsPlaying)
-                _mediaPlayer.Stop();
+            if (MediaPlayer.IsPlaying)
+                MediaPlayer.Stop();
 
-            this.SizeChanged -= OnSizeChanged;
-            this.Loaded -= VideoView_Loaded;
-            this.Unloaded -= VideoView_Unloaded;
+            SizeChanged -= OnSizeChanged;
+            Loaded -= VideoView_Loaded;
+            Unloaded -= VideoView_Unloaded;
 
-            _mediaPlayer.Hwnd = IntPtr.Zero;
-            _mediaPlayer.Dispose();
-            _libVLC.Dispose();
+            MediaPlayer.Hwnd = IntPtr.Zero;
+            MediaPlayer.Dispose();
+            LibVLC.Dispose();
         }
 
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get => _mediaPlayer; }
-        public LibVLCSharp.Shared.LibVLC LibVLC { get => _libVLC; }
+        public MediaPlayer MediaPlayer { get; }
+        public LibVLC LibVLC { get; }
     }
 }

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:LibVLCSharp.WPF"
              x:ClassModifier="internal"
              mc:Ignorable="d" 
              Title="LibVLCSharp.WPF" Height="300" Width="300" WindowStyle="None" Background="Transparent" ResizeMode="NoResize" AllowsTransparency="True" ShowInTaskbar="False">
