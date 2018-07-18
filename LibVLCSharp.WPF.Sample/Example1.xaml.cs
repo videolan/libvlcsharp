@@ -1,29 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace LibVLCSharp.WPF.Sample
 {
     public partial class Example1 : Window
     {
-        private Controls controls;
+        readonly Controls _controls;
 
         public Example1()
         {
             InitializeComponent();
 
-            controls = new Controls(this);
-            Player.Content = controls;
+            _controls = new Controls(this);
+            Player.Content = _controls;
         }
     }
 }

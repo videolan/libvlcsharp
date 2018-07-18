@@ -1,17 +1,8 @@
 ﻿using LibVLCSharp.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace LibVLCSharp.WPF.Sample
 {
@@ -21,15 +12,17 @@ namespace LibVLCSharp.WPF.Sample
         {
             InitializeComponent();
 
-            Label label = new Label();
-            label.Content = "TEST";
-            label.HorizontalAlignment = HorizontalAlignment.Right;
-            label.VerticalAlignment = VerticalAlignment.Bottom;
-            label.Foreground = new SolidColorBrush(Colors.Red);
+            var label = new Label
+            {
+                Content = "TEST",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Foreground = new SolidColorBrush(Colors.Red)
+            };
             test.Children.Add(label);
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
+        void StopButton_Click(object sender, RoutedEventArgs e)
         {
             if (Player.MediaPlayer.IsPlaying)
             {
@@ -37,7 +30,7 @@ namespace LibVLCSharp.WPF.Sample
             }
         }
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             if (!Player.MediaPlayer.IsPlaying)
             {

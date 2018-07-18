@@ -1,25 +1,13 @@
 ﻿using LibVLCSharp.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace LibVLCSharp.WPF.Sample
 {
     public partial class Controls : UserControl
     {
-        Example1 parent;
+        readonly Example1 parent;
 
         public Controls(Example1 Parent)
         {
@@ -31,7 +19,7 @@ namespace LibVLCSharp.WPF.Sample
             StopButton.Click += StopButton_Click;
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
+        void StopButton_Click(object sender, RoutedEventArgs e)
         {
             if (parent.Player.MediaPlayer.IsPlaying)
             {
@@ -39,7 +27,7 @@ namespace LibVLCSharp.WPF.Sample
             }
         }
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             if (!parent.Player.MediaPlayer.IsPlaying)
             {
