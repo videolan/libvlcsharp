@@ -50,21 +50,18 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        private void VLCResize()
+        void VLCResize()
         {
             uint h = 0, w = 0;
-            float scale = 1, scalew = 1, scaleh = 1;
 
-            if (_mediaPlayer.Size(0, ref w, ref h))
+            if (MediaPlayer.Size(0, ref w, ref h))
             {
-                scalew = (float)_controlWidth / (float)w;
-                w = (uint)_controlWidth;
+                var scalew = (float)_controlWidth / w;
 
-                scaleh = (float)_controlHeight / (float)h;
-                h = (uint)_controlHeight;
+                var scaleh = (float)_controlHeight / h;
 
-                scale = scalew < scaleh ? scalew : scaleh;
-                _mediaPlayer.Scale = scale;
+                var scale = scalew < scaleh ? scalew : scaleh;
+                MediaPlayer.Scale = scale;
             }
         }
 
