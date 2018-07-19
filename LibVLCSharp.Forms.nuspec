@@ -11,7 +11,7 @@
     <description>Xamarin Forms integration for LibVLCSharp</description>
     <tags>libvlc vlc videolan native c/c++ video audio forms</tags>
     <projectUrl>https://github.com/mfkl/LibVLCSharp</projectUrl>
-    <licenseUrl>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
+    <licenseUrl>https://github.com/videolan/libvlcsharp/blob/master/LICENSE</licenseUrl>
     <iconUrl>https://raw.githubusercontent.com/mfkl/LibVLCSharp/master/Assets/icon.png</iconUrl>
     <dependencies>
       <group targetFramework="monoandroid8.1">
