@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LibVLCSharp.WPF</id>
+    <title>LibVLCSharp.WPF</title>
+    <version>0.0.1-alpha</version>
+    <authors>VideoLAN</authors>
+    <owners>VideoLAN</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>WPF integration for LibVLCSharp</summary>
+    <description>WPF integration for LibVLCSharp</description>
+    <tags>libvlc vlc videolan native c/c++ video audio</tags>
+    <projectUrl>https://github.com/videolan/LibVLCSharp</projectUrl>
+    <licenseUrl>https://github.com/videolan/libvlcsharp/blob/master/LICENSE</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/videolan/libvlcsharp/master/Assets/icon.png</iconUrl>
+     <dependencies>
+      <group targetFramework=".NETFramework4.6.1">
+        <dependency id="LibVLCSharp" version="0.0.1-alpha4" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="WindowsFormsIntegration" targetFramework=".NETFramework4.6.1" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.6.1" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="LibVLCSharp.WPF\bin\Release\LibVLCSharp.WPF.dll" target="lib\net461"/>
+  </files>
+</package>
