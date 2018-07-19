@@ -10,9 +10,9 @@
     <summary>.NET bindings for LibVLC</summary>
     <description>.NET bindings for LibVLC</description>
     <tags>libvlc vlc videolan native c/c++ video audio</tags>
-    <projectUrl>https://github.com/mfkl/LibVLCSharp</projectUrl>
+    <projectUrl>https://github.com/videolan/libvlcsharp</projectUrl>
     <licenseUrl>https://github.com/videolan/libvlcsharp/blob/master/LICENSE</licenseUrl>
-    <iconUrl>https://raw.githubusercontent.com/mfkl/LibVLCSharp/master/Assets/icon.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/videolan/libvlcsharp/master/Assets/icon.png</iconUrl>
   </metadata>
   <files>
     <file src="LibVLCSharp\bin\Release\monoandroid81\LibVLCSharp.dll" target="lib\MonoAndroid81"/>
