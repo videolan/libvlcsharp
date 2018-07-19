@@ -33,7 +33,7 @@ We also aim to provide you with a custom video control integrated with the OS na
 
 LibVLCSharp is designed to be the connecting layer in between `libvlc` and Xamarin.
 
-Using LibVLCSharp means you can take advantage of all `libvlc` features from shared managed code (C#/F#), in a true crossplatform way. You may use the features described below on all supported platforms by LibVLCSharp (Android, iOS, XForms for now, more coming soon).
+Using LibVLCSharp means you can take advantage of all `libvlc` features from shared managed code (C#/F#), in a true crossplatform way. You may use the features described below on all supported platforms by LibVLCSharp (Android, iOS, WPF, XForms for now, more coming soon).
 
 ## Features
 
@@ -57,6 +57,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 - Xamarin.Android
 - Xamarin.iOS
 - Xamarin.Forms
+- Windows (WPF)
 
 ## Installation
 
@@ -103,12 +104,10 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 
 ## Roadmap
 
-- macOS (using Xamarin.Mac)
-- Linux (using GTK#)
-- Windows 10 (using UWP)
+- macOS (using Cocoa with Xamarin.Mac, GTK)
+- Linux (using GTK)
+- Windows 10 (using UWP, GTK)
 - Game engines (Unity, Unreal, Godot)
-
-We are discussing WPF support, please contact us if that is something you would like to see.
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
