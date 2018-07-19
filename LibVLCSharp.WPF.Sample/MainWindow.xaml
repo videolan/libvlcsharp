@@ -1,0 +1,13 @@
+﻿<Window x:Class="LibVLCSharp.WPF.Sample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
+        mc:Ignorable="d"
+        Title="LibVLCSharp.WPF.Sample" Height="450" Width="800">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Content="Example 1" Width="100" Height="50" Margin="15" x:Name="Example1Btn" />
+        <Button Content="Example 2" Width="100" Height="50" Margin="15" x:Name="Example2Btn" />
+    </StackPanel>
+</Window>

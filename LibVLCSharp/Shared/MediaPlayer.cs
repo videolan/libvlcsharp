@@ -630,7 +630,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
         }
-
+        
         MediaPlayerEventManager _eventManager;
 
         /// <summary>Create an empty Media Player object</summary>
