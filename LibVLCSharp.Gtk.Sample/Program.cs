@@ -11,12 +11,6 @@ namespace LibVLCSharp.Gtk.Sample
     {
         public static void Main()
         {
-            // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                NativeReferences.XInitThreads();
-            }
-
             // Initializes the GTK# app
             Application.Init();
             

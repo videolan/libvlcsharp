@@ -21,6 +21,14 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
+
+            /// <summary>
+            /// Initializes the X threading system
+            /// </summary>
+            /// <remarks>Linux X11 only</remarks>
+            /// <returns>non-zero on success, zero on failure</returns>
+            [DllImport("libX11", CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int XInitThreads();
         }
 
         static IntPtr _libvlccoreHandle;
@@ -43,6 +51,11 @@ namespace LibVLCSharp.Shared
 #elif NETCORE
             InitializeNetCore();
 #endif
+            // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Native.XInitThreads();
+            }
         }
 
 #if NETCORE
