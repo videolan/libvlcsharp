@@ -11,6 +11,8 @@ namespace LibVLCSharp.Gtk.Sample
     {
         public static void Main()
         {
+            Core.Initialize();
+            
             // Initializes the GTK# app
             Application.Init();
             

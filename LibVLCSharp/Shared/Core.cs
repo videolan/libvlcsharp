@@ -45,7 +45,10 @@ namespace LibVLCSharp.Shared
         public static void Initialize()
         {
 #if WINDOWS
-            InitializeWindows();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                InitializeWindows();
+            }
 #elif ANDROID
             InitializeAndroid();
 #elif NETCORE
@@ -76,7 +79,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
         //TODO: Add Unload library func using handles
-        static void InitializeWindows()
+        private static void InitializeWindows()
         {
             var myPath = new Uri(typeof(LibVLC).Assembly.CodeBase).LocalPath;
             var appExecutionDirectory = Path.GetDirectoryName(myPath);
