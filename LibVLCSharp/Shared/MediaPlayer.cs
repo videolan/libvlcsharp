@@ -1206,6 +1206,11 @@ namespace LibVLCSharp.Shared
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, player.NativeReference);
         }
 
+        public override int GetHashCode()
+        {
+            return this.NativeReference.GetHashCode();
+        }
+
         /// <summary>
         /// Get current audio delay (microseconds).
         /// </summary>
