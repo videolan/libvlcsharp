@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="Example1" Height="450" Width="800">
     <Grid>
-        <uc:VideoView x:Name="Player" Panel.ZIndex="1" />
+       <uc:VideoView x:Name="Player" />
     </Grid>
 </Window>

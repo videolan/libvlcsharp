@@ -1,16 +1,14 @@
-﻿using System;
+﻿using LibVLCSharp.Shared;
+using System;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-
-using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.WPF
 {
     internal partial class ForegroundWindow : Window
     {
         Window _wndhost;
-        readonly ContentControl _bckgnd;
+        readonly FrameworkElement _bckgnd;
         UIElement _content;
         readonly Point _zeroPoint = new Point(0, 0);
 
@@ -20,15 +18,15 @@ namespace LibVLCSharp.WPF
             set
             {
                 _content = value;
+                PART_Content.Children.Clear();
                 if (_content != null)
                 {
-                    PART_Content.Children.Clear();
                     PART_Content.Children.Add(_content);
                 }
             }
         }
 
-        internal ForegroundWindow(ContentControl background)
+        internal ForegroundWindow(FrameworkElement background)
         {
             InitializeComponent();
 

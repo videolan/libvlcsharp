@@ -12,4 +12,7 @@
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Themes\Generic.xaml" />
+  </ItemGroup>
 </Project>
