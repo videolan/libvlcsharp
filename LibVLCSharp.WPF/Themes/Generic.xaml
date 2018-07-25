@@ -4,16 +4,21 @@
     xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:local="clr-namespace:LibVLCSharp.WPF">
 
-    <Style x:Key="VideoViewStyle" TargetType="{x:Type local:VideoView}">
+    <Style TargetType="{x:Type local:VideoView}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:VideoView}">
-                    <Grid>
-                        <WindowsFormsHost>
-                            <wf:Panel x:Name="PART_PlayerView" />
-                        </WindowsFormsHost>
-                        <ContentPresenter Content="{TemplateBinding Content}" />
-                    </Grid>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <WindowsFormsHost x:Name="PART_PlayerHost">
+                                <wf:Panel x:Name="PART_PlayerView" />
+                            </WindowsFormsHost>
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

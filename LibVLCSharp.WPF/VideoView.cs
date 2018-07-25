@@ -3,28 +3,23 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 
 namespace LibVLCSharp.WPF
 {
+    [TemplatePart(Name = PART_PlayerHost, Type = typeof(WindowsFormsHost))]
     [TemplatePart(Name = PART_PlayerView, Type = typeof(System.Windows.Forms.Panel))]
     public class VideoView : ContentControl, IVideoView, IDisposable
     {
+        private const string PART_PlayerHost = "PART_PlayerHost";
         private const string PART_PlayerView = "PART_PlayerView";
-
-        static VideoView()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(VideoView), new FrameworkPropertyMetadata(typeof(VideoView)));
-        }
 
         public VideoView()
         {
-            var res = (ResourceDictionary)Application.LoadComponent(new Uri("/LibVLCSharp.WPF;component/Styles/VideoView.xaml", UriKind.RelativeOrAbsolute));
-            Style = res["VideoViewStyle"] as Style;
+            DefaultStyleKey = typeof(VideoView);
 
             if (!IsDesignMode)
             {
-                ForegroundWindow = new ForegroundWindow(this);
-
                 Core.Initialize();
 
                 LibVLC = new LibVLC();
@@ -40,8 +35,9 @@ namespace LibVLCSharp.WPF
         }
 
         private bool IsDesignMode => (bool)DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue;
-        private ForegroundWindow ForegroundWindow { get; }
-        private bool IsContentUpdating { get; set; }
+        private ForegroundWindow ForegroundWindow { get; set; }
+        private bool IsUpdatingContent { get; set; }
+        private UIElement ViewContent { get; set; }
 
         public MediaPlayer MediaPlayer { get; private set; }
         public LibVLC LibVLC { get; private set; }
@@ -57,6 +53,13 @@ namespace LibVLCSharp.WPF
 
             if (!IsDesignMode)
             {
+                var windowsFormsHost = Template.FindName(PART_PlayerHost, this) as FrameworkElement;
+                if (windowsFormsHost != null)
+                {
+                    ForegroundWindow = new ForegroundWindow(windowsFormsHost);
+                    ForegroundWindow.Content = ViewContent;
+                }
+
                 var hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle;
                 if (hwnd != null)
                 {
@@ -67,26 +70,28 @@ namespace LibVLCSharp.WPF
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            if (!IsDesignMode)
-            {
-                if (IsContentUpdating)
-                {
-                    return;
-                }
+            base.OnContentChanged(oldContent, newContent);
 
-                IsContentUpdating = true;
-                try
-                {
-                    Content = null;
-                }
-                finally
-                {
-                    IsContentUpdating = false;
-                }
-                ForegroundWindow.Content = newContent as UIElement;
+            if (IsDesignMode || IsUpdatingContent)
+            {
+                return;
             }
 
-            base.OnContentChanged(oldContent, newContent);
+            IsUpdatingContent = true;
+            try
+            {
+                Content = null;
+            }
+            finally
+            {
+                IsUpdatingContent = false;
+            }
+
+            ViewContent = newContent as UIElement;
+            if (ForegroundWindow != null)
+            {
+                ForegroundWindow.Content = ViewContent;
+            }
         }
 
         public void Dispose()
