@@ -8,13 +8,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:VideoView}">
-                    <Grid >
-                        <DockPanel LastChildFill="true">
-                            <WindowsFormsHost HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="PART_PlayerHost">
-                                <wf:Panel Dock="Fill" x:Name="PART_PlayerView" />
-                            </WindowsFormsHost>
-                        </DockPanel>
-                        <ContentControl Content="{TemplateBinding Content}" />
+                    <Grid>
+                        <WindowsFormsHost>
+                            <wf:Panel x:Name="PART_PlayerView" />
+                        </WindowsFormsHost>
+                        <ContentPresenter Content="{TemplateBinding Content}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
