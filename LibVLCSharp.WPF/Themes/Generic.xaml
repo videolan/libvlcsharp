@@ -11,7 +11,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
+                            Margin="{TemplateBinding Padding}">
                         <Grid>
                             <WindowsFormsHost x:Name="PART_PlayerHost">
                                 <wf:Panel x:Name="PART_PlayerView" />

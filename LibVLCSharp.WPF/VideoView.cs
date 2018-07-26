@@ -98,20 +98,18 @@ namespace LibVLCSharp.WPF
         {
             Unloaded -= VideoView_Unloaded;
 
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer != null)
+            if (MediaPlayer != null)
             {
-                if (mediaPlayer.IsPlaying)
-                    mediaPlayer.Stop();
-                mediaPlayer.Hwnd = IntPtr.Zero;
-                mediaPlayer.Dispose();
+                if (MediaPlayer.IsPlaying)
+                    MediaPlayer.Stop();
+                MediaPlayer.Hwnd = IntPtr.Zero;
+                MediaPlayer.Dispose();
                 MediaPlayer = null;
             }
 
-            var libVLC = LibVLC;
-            if (libVLC != null)
+            if (LibVLC != null)
             {
-                libVLC.Dispose();
+                LibVLC.Dispose();
                 LibVLC = null;
             }
         }
