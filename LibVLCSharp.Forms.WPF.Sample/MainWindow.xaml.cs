@@ -11,16 +11,18 @@ namespace LibVLCSharp.Forms.WPF.Sample
         public MainWindow()
         {
             InitializeComponent();
+            InitDependencies();
+            Xamarin.Forms.Forms.Init();
+            LoadApplication(new Forms.Sample.App());
+        }
 
-            var test = new List<Assembly>
+        void InitDependencies()
+        {
+            var init = new List<Assembly>
             {
                 typeof(VideoView).Assembly,
                 typeof(VideoViewRenderer).Assembly
             };
-
-            Xamarin.Forms.Forms.Init();
-
-            LoadApplication(new Forms.Sample.App());
         }
     }
 }
