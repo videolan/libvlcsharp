@@ -1,0 +1,7 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">  
+        <Copy 
+            SourceFiles="$(TargetDir)$(ProjectName).dll"  
+            DestinationFolder="$(ProjectDir)..\LibVLCSharp\bin\$(ConfigurationName)\monoandroid81" />  
+    </Target>
+</Project>
