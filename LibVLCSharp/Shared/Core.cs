@@ -104,6 +104,8 @@ namespace LibVLCSharp.Shared
     {
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
+#elif MAC
+        internal const string LibraryName = "@rpath/VLCKit.framework/VLCKit";
 #else
         internal const string LibraryName = "libvlc";    
 #endif
