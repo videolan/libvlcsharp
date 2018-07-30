@@ -4,7 +4,7 @@
     <Summary>.NET bindings for LibVLC</Summary>
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;net461;netcoreapp2.0;Xamarin.iOS10</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid81;net461;netcoreapp2.0;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>$(DefineConstants);</DefineConstants>
@@ -38,8 +38,8 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.WatchOS10' ">
     <Compile Include="Platforms\WatchOS\**\*.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.Mac20' ">
-    <Compile Include="Platforms\macOS\**\*.cs" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
+    <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

@@ -14,7 +14,7 @@
     <DefineConstants>$(DefineConstants);MONO;IOS;COCOA</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.Mac20'">
-    <DefineConstants>$(DefineConstants);MONO;COCOA</DefineConstants>
+    <DefineConstants>$(DefineConstants);MONO;MAC;COCOA</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.TVOS10'">
     <DefineConstants>$(DefineConstants);MONO;COCOA</DefineConstants>
