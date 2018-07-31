@@ -36,22 +36,12 @@ namespace LibVLCSharp.Shared
 
         public static void Initialize()
         {
-#if WINDOWS
-            InitializeWindows();
+#if DESKTOP
+            InitializeDesktop();
 #elif ANDROID
             InitializeAndroid();
-#elif NETCORE
-            InitializeNetCore();
 #endif
         }
-
-#if NETCORE
-        static void InitializeNetCore()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                InitializeWindows();
-        }
-#endif
 
 #if ANDROID
         static void InitializeAndroid()
@@ -63,24 +53,28 @@ namespace LibVLCSharp.Shared
         }
 #endif
         //TODO: Add Unload library func using handles
-        static void InitializeWindows()
+        static void InitializeDesktop()
         {
-            var myPath = new Uri(typeof(LibVLC).Assembly.CodeBase).LocalPath;
+            var myPath = typeof(LibVLC).Assembly.Location;
             var appExecutionDirectory = Path.GetDirectoryName(myPath);
             if (appExecutionDirectory == null)
                 throw new NullReferenceException(nameof(appExecutionDirectory));
 
-            var arch = Environment.Is64BitProcess ? Win64 : Win86;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
 
-            var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
-                Path.Combine(arch, $"{Libvlccore}.dll"));
-            var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
-                Path.Combine(arch, $"{Libvlc}.dll"));
+                var arch = Environment.Is64BitProcess ? Win64 : Win86;
 
-            Debug.WriteLine(nameof(libvlccorePath) + ": " + libvlccorePath);
-            Debug.WriteLine(nameof(libvlcPath) + ": " + libvlcPath);
+                var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
+                    Path.Combine(arch, $"{Libvlccore}.dll"));
+                var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
+                    Path.Combine(arch, $"{Libvlc}.dll"));
 
-            LoadLibvlcLibraries(libvlccorePath, libvlcPath);
+                Debug.WriteLine(nameof(libvlccorePath) + ": " + libvlccorePath);
+                Debug.WriteLine(nameof(libvlcPath) + ": " + libvlcPath);
+
+                LoadLibvlcLibraries(libvlccorePath, libvlcPath);
+            }
         }
 
         //TODO: check if Store app

@@ -6,7 +6,7 @@
     <RuntimeIdentifiers>win7-x64;win7-x86</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.0-alpha1" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.0-alpha3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
