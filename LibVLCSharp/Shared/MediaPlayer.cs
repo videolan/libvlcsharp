@@ -84,7 +84,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_xwindow")]
             internal static extern uint LibVLCMediaPlayerGetXwindow(IntPtr mediaPlayer);
-#if WINDOWS
+#if DESKTOP
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_hwnd")]
@@ -388,12 +388,12 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_size")]
-            internal static extern unsafe int LibVLCVideoGetSize(IntPtr mediaPlayer, uint num, uint* px, uint* py);
+            internal static extern int LibVLCVideoGetSize(IntPtr mediaPlayer, uint num, ref uint px, ref uint py);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_cursor")]
-            internal static extern unsafe int LibVLCVideoGetCursor(IntPtr mediaPlayer, uint num, int* px, int* py);
+            internal static extern int LibVLCVideoGetCursor(IntPtr mediaPlayer, uint num, ref int px, ref int py);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -775,7 +775,7 @@ namespace LibVLCSharp.Shared
             set => Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
         }
 
-#if WINDOWS
+#if DESKTOP
         /// <summary>
         /// Set a Win32/Win64 API window handle (HWND) where the media player
         /// should render its video output. If LibVLC was built without
@@ -1311,18 +1311,7 @@ namespace LibVLCSharp.Shared
         /// <returns></returns>
         public bool Size(uint num, ref uint px, ref uint py)
         {
-            unsafe
-            {
-                fixed (uint* refPx = &px)
-                {
-                    var pxPtr = refPx;
-                    fixed (uint* refPy = &py)
-                    {
-                        var pyPtr = refPy;
-                        return Native.LibVLCVideoGetSize(NativeReference, num, pxPtr, pyPtr) == 0;
-                    }
-                }
-            }
+            return Native.LibVLCVideoGetSize(NativeReference, num, ref px, ref py) == 0;
         }
 
         /// <summary>
@@ -1343,18 +1332,7 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success, false on failure</returns>
         public bool Cursor(uint num, ref int px, ref int py)
         {
-            unsafe
-            {
-                fixed (int* refPx = &px)
-                {
-                    var pxPtr = refPx;
-                    fixed (int* refPy = &py)
-                    {
-                        var pyPtr = refPy;
-                        return Native.LibVLCVideoGetCursor(NativeReference, num, pxPtr, pyPtr) == 0;
-                    }
-                }
-            }
+            return Native.LibVLCVideoGetCursor(NativeReference, num, ref px, ref py) == 0;
         }
 
         /// <summary>

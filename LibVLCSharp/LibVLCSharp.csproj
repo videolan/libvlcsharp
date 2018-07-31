@@ -1,13 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
   <PropertyGroup>
     <Title>LibVLCSharp</Title>
     <Summary>.NET bindings for LibVLC</Summary>
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;net461;netcoreapp2.0;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>$(DefineConstants);</DefineConstants>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
@@ -19,11 +18,8 @@
     <PackageProjectUrl>https://github.com/mfkl/LibVLCSharp</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <Compile Include="Shared\**\*.cs" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Compile Include="Platforms\Android\**\*.cs" />
@@ -41,5 +37,4 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
     <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>
