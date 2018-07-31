@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
         mc:Ignorable="d"
         Title="LibVLCSharp.WPF.Sample" Height="450" Width="800">
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Content="Example 1" Width="100" Height="50" Margin="15" x:Name="Example1Btn" />
-        <Button Content="Example 2" Width="100" Height="50" Margin="15" x:Name="Example2Btn" />
+    <StackPanel Orientation="Vertical" Width="130" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button Content="Example 1" Height="50" Margin="15" Click="ExampleBtn_Click" Tag="{x:Type local:Example1}" />
+        <Button Content="Example 2" Height="50" Margin="15" Click="ExampleBtn_Click" Tag="{x:Type local:Example2}" />
+        <Button Content="Example 3" Height="50" Margin="15" Click="ExampleBtn_Click" Tag="{x:Type local:Example3}" />
     </StackPanel>
 </Window>

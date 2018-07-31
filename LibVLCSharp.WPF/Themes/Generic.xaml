@@ -16,7 +16,7 @@
                             <WindowsFormsHost x:Name="PART_PlayerHost">
                                 <wf:Panel x:Name="PART_PlayerView" />
                             </WindowsFormsHost>
-                            <ContentPresenter Content="{TemplateBinding Content}" />
+                            <ContentPresenter x:Name="PART_Content" Content="{TemplateBinding Content}" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

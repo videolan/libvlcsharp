@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
         xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
         Title="Example1" Height="450" Width="800">
     <Grid>
-       <uc:VideoView x:Name="Player" />
+        <uc:VideoView x:Name="Player" />
     </Grid>
 </Window>

@@ -1,5 +1,4 @@
 ﻿using LibVLCSharp.Shared;
-
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,32 +6,34 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Controls : UserControl
     {
-        readonly Example1 parent;
-
-        public Controls(Example1 Parent)
+        public Controls()
         {
-            parent = Parent;
-
             InitializeComponent();
-
-            PlayButton.Click += PlayButton_Click;
-            StopButton.Click += StopButton_Click;
         }
 
-        void StopButton_Click(object sender, RoutedEventArgs e)
+        public static DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(VideoView), typeof(Controls));
+        public VideoView VideoView
         {
-            if (parent.Player.MediaPlayer.IsPlaying)
+            get => GetValue(VideoViewProperty) as VideoView;
+            set => SetValue(VideoViewProperty, value);
+        }
+
+        private LibVLC LibVLC => VideoView.LibVLC;
+        private MediaPlayer MediaPlayer => VideoView.MediaPlayer;
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!MediaPlayer.IsPlaying)
             {
-                parent.Player.MediaPlayer.Stop();
+                MediaPlayer.Play(new Media(LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
             }
         }
 
-        void PlayButton_Click(object sender, RoutedEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!parent.Player.MediaPlayer.IsPlaying)
+            if (MediaPlayer.IsPlaying)
             {
-                parent.Player.MediaPlayer.Play(new Media(parent.Player.LibVLC,
-                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+                MediaPlayer.Stop();
             }
         }
     }
