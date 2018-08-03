@@ -51,9 +51,6 @@ namespace LibVLCSharp.Shared
         MediaListViewWillAddItem = 769,
         MediaListViewItemDeleted = 770,
         MediaListViewWillDeleteItem = 771,
-        MediaListPlayerPlayed = 1024,
-        MediaListPlayerNextItemSet = 1025,
-        MediaListPlayerStopped = 1026,
 
         /// <remarks>
         /// <para>Useless event, it will be triggered only when calling</para>

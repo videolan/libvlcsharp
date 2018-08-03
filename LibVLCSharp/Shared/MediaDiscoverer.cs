@@ -9,7 +9,6 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class MediaDiscoverer : Internal
     {
-        MediaDiscovererEventManager _eventManager;
         MediaList _mediaList;
 
         struct Native
@@ -38,7 +37,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_localized_name")]
             internal static extern IntPtr LibVLCMediaDiscovererLocalizedName(IntPtr mediaDiscoverer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_event_manager")]
@@ -83,9 +82,10 @@ namespace LibVLCSharp.Shared
             public Category Category { get; }
         }
 
-        public MediaDiscoverer(LibVLC libVLC, string name) 
+        public MediaDiscoverer(LibVLC libVLC, string name)
             //v3 check. differen ctors
-            : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease)
+            : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease,
+                   Native.LibVLCMediaDiscovererEventManager)
         {
         }
 
@@ -105,26 +105,8 @@ namespace LibVLCSharp.Shared
         /// Get media service discover object its localized name.
         /// under v3 only
         /// </summary>
-        public string LocalizedName => (string) Utf8StringMarshaler.GetInstance()
+        public string LocalizedName => (string)Utf8StringMarshaler.GetInstance()
             .MarshalNativeToManaged(Native.LibVLCMediaDiscovererLocalizedName(NativeReference));
-
-        /// <summary>
-        /// Get event manager from media service discover object.
-        /// under v3 only
-        /// </summary>
-        public MediaDiscovererEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var ptr = Native.LibVLCMediaDiscovererEventManager(NativeReference);
-                    if (ptr == IntPtr.Zero) return null;
-                    _eventManager = new MediaDiscovererEventManager(ptr);
-                }
-                return _eventManager;
-            }
-        }
 
         /// <summary>
         /// Query if media service discover object is running.
@@ -144,5 +126,66 @@ namespace LibVLCSharp.Shared
                 return _mediaList;
             }
         }
+
+        #region Events
+
+        readonly object _lock = new object();
+
+        EventHandler<EventArgs> _mediaDiscovererStarted;
+        EventHandler<EventArgs> _mediaDiscovererStopped;
+
+        // v3
+        public event EventHandler<EventArgs> Started
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStarted += value;
+                    AttachEvent(EventType.MediaDiscovererStarted, OnStarted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStarted -= value;
+                    DetachEvent(EventType.MediaDiscovererStarted, OnStarted);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<EventArgs> Stopped
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStopped += value;
+                    AttachEvent(EventType.MediaDiscovererStopped, OnStopped);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDiscovererStopped -= value;
+                    DetachEvent(EventType.MediaDiscovererStopped, OnStopped);
+                }
+            }
+        }
+
+        void OnStarted(IntPtr ptr)
+        {
+            _mediaDiscovererStarted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnStopped(IntPtr ptr)
+        {
+            _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
     }
 }

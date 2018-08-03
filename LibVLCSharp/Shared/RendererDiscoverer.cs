@@ -34,30 +34,78 @@ namespace LibVLCSharp.Shared
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
 
-        public RendererDiscoverer(LibVLC libVLC, string name) 
-            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), 
-                  Native.LibVLCRendererDiscovererRelease)
+        public RendererDiscoverer(LibVLC libVLC, string name)
+            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name),
+                   Native.LibVLCRendererDiscovererRelease, Native.LibVLCRendererDiscovererEventManager)
         {
-        }
-
-        RendererDiscovererEventManager _eventManager;
-
-        public RendererDiscovererEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCRendererDiscovererEventManager(NativeReference);
-                    _eventManager = new RendererDiscovererEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
         }
 
         public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
 
         public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
+
+        #region Events
+
+        readonly object _lock = new object();
+
+        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+
+        // v3
+        public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemAdded += value;
+                    AttachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemAdded -= value;
+                    DetachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemDeleted += value;
+                    AttachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemDeleted -= value;
+                    DetachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+        }
+
+        void OnItemDeleted(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+        }
+
+        void OnItemAdded(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+        }
+
+        #endregion
     }
 
     public class RendererItem : Internal

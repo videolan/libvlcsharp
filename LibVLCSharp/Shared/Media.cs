@@ -317,7 +317,7 @@ namespace LibVLCSharp.Shared
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument. \sa{FromType}</param>
         public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
-            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease)
+            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
         }
 
@@ -358,12 +358,14 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="fd">open file descriptor</param>
         public Media(LibVLC libVLC, int fd)
-            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease)
+            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease, 
+                   Native.LibVLCMediaEventManager)
         {
         }
 
         public Media(MediaList mediaList)
-            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
+            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease,
+                   Native.LibVLCMediaEventManager)
         {
         }
 
@@ -375,7 +377,7 @@ namespace LibVLCSharp.Shared
         /// <param name="options"></param>
         [ApiVersion(3)]
         public Media(LibVLC libVLC, Stream stream, params string[] options)
-            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
+            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {          
             if(options.Any())
                 Native.LibVLCMediaAddOption(NativeReference, options.ToString());
@@ -400,7 +402,7 @@ namespace LibVLCSharp.Shared
         }
 
         public Media(IntPtr mediaPtr)
-            : base(() => mediaPtr, Native.LibVLCMediaRelease)
+            : base(() => mediaPtr, Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
         }
 
@@ -519,23 +521,6 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
             ? default(MediaStats) : mediaStats;
-
-        MediaEventManager _eventManager;
-        /// <summary>
-        /// <para>Get event manager from media descriptor object.</para>
-        /// <para>NOTE: this function doesn't increment reference counting.</para>
-        /// </summary>
-        /// <returns>event manager object</returns>
-        public MediaEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager != null) return _eventManager;
-                var eventManagerPtr = Native.LibVLCMediaEventManager(NativeReference);
-                _eventManager = new MediaEventManager(eventManagerPtr);
-                return _eventManager;
-            }
-        }
 
         /// <summary>Get duration (in ms) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
@@ -810,6 +795,201 @@ namespace LibVLCSharp.Shared
         {
             if(NativeReference != IntPtr.Zero)
                 Native.LibVLCMediaRetain(NativeReference);
+        }
+
+        #endregion
+
+        #region Events
+
+        readonly object _lock = new object();
+
+        EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
+        EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
+        EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
+        EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
+        EventHandler<MediaFreedEventArgs> _mediaFreed;
+        EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
+        EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
+
+        public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaMetaChanged += value;
+                    AttachEvent(EventType.MediaMetaChanged, OnMetaChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaMetaChanged -= value;
+                    DetachEvent(EventType.MediaMetaChanged, OnMetaChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaParsedChanged += value;
+                    AttachEvent(EventType.MediaParsedChanged, OnParsedChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaParsedChanged -= value;
+                    DetachEvent(EventType.MediaParsedChanged, OnParsedChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaSubItemAddedEventArgs> SubItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemAdded += value;
+                    AttachEvent(EventType.MediaSubItemAdded, OnSubItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemAdded -= value;
+                    DetachEvent(EventType.MediaSubItemAdded, OnSubItemAdded);
+                }
+            }
+        }
+
+        public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDurationChanged += value;
+                    AttachEvent(EventType.MediaDurationChanged, OnDurationChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDurationChanged -= value;
+                    DetachEvent(EventType.MediaDurationChanged, OnDurationChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaFreedEventArgs> MediaFreed
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaFreed += value;
+                    AttachEvent(EventType.MediaFreed, OnMediaFreed);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaFreed -= value;
+                    DetachEvent(EventType.MediaFreed, OnMediaFreed);
+                }
+            }
+        }
+
+        public event EventHandler<MediaStateChangedEventArgs> StateChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaStateChanged += value;
+                    AttachEvent(EventType.MediaStateChanged, OnMediaStateChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaStateChanged -= value;
+                    DetachEvent(EventType.MediaStateChanged, OnMediaStateChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaSubItemTreeAddedEventArgs> SubItemTreeAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemTreeAdded += value;
+                    AttachEvent(EventType.MediaSubItemTreeAdded, OnSubItemTreeAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemTreeAdded -= value;
+                    DetachEvent(EventType.MediaSubItemTreeAdded, OnSubItemTreeAdded);
+                }
+            }
+        }
+
+        void OnSubItemTreeAdded(IntPtr ptr)
+        {
+            _mediaSubItemTreeAdded?.Invoke(this,
+                new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
+        }
+
+        void OnMediaStateChanged(IntPtr ptr)
+        {
+            _mediaStateChanged?.Invoke(this,
+                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
+        }
+
+        void OnMediaFreed(IntPtr ptr)
+        {
+            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
+        }
+
+        void OnDurationChanged(IntPtr ptr)
+        {
+            _mediaDurationChanged?.Invoke(this,
+                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
+        }
+
+        void OnSubItemAdded(IntPtr ptr)
+        {
+            _mediaSubItemAdded?.Invoke(this,
+                new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
+        }
+
+        void OnParsedChanged(IntPtr ptr)
+        {
+            _mediaParsedChanged?.Invoke(this,
+                new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
+        }
+
+        void OnMetaChanged(IntPtr ptr)
+        {
+            _mediaMetaChanged?.Invoke(this,
+                new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
         }
 
         #endregion

@@ -6,7 +6,6 @@ namespace LibVLCSharp.Shared
 {
     public class MediaList : Internal
     {
-        MediaListEventManager _eventManager;
         readonly object _syncLock = new object();
         bool _nativeLock;
 
@@ -81,7 +80,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_lock")]
             internal static extern void LibVLCMediaListLock(IntPtr mediaList);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_unlock")]
@@ -98,7 +97,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="media"></param>
         public MediaList(Media media)
-            : base(() => Native.LibVLCMediaSubitems(media.NativeReference), Native.LibVLCMediaListRelease)
+            : base(() => Native.LibVLCMediaSubitems(media.NativeReference), Native.LibVLCMediaListRelease,
+                   Native.LibVLCMediaListEventManager)
         {
         }
 
@@ -108,7 +108,7 @@ namespace LibVLCSharp.Shared
         /// <param name="mediaDiscoverer"></param>
         public MediaList(MediaDiscoverer mediaDiscoverer)
             : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
-                Native.LibVLCMediaListRelease)
+                   Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
         }
 
@@ -117,10 +117,14 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="libVLC"></param>
         public MediaList(LibVLC libVLC)
-            : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease)
+            : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease,
+                   Native.LibVLCMediaListEventManager)
+
         {
         }
-        public MediaList(IntPtr mediaListPtr) : base(() => mediaListPtr, Native.LibVLCMediaListRelease)
+
+        public MediaList(IntPtr mediaListPtr) 
+            : base(() => mediaListPtr, Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
         }
 
@@ -133,7 +137,7 @@ namespace LibVLCSharp.Shared
         public void SetMedia(Media media)
         {
             Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
-        } 
+        }
 
         /// <summary>
         /// Add media instance to media list The MediaList lock should be held upon entering this function.
@@ -144,7 +148,7 @@ namespace LibVLCSharp.Shared
         {
             lock (_syncLock)
             {
-                if(!_nativeLock)
+                if (!_nativeLock)
                     throw new InvalidOperationException("not locked");
                 return Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0;
             }
@@ -161,7 +165,7 @@ namespace LibVLCSharp.Shared
         {
             lock (_syncLock)
             {
-                if(!_nativeLock)
+                if (!_nativeLock)
                     throw new InvalidOperationException("not locked");
                 return Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
             }
@@ -193,12 +197,12 @@ namespace LibVLCSharp.Shared
             {
                 lock (_syncLock)
                 {
-                    if(!_nativeLock)
+                    if (!_nativeLock)
                         throw new InvalidOperationException("not locked");
                     return Native.LibVLCMediaListCount(NativeReference);
                 }
             }
-        } 
+        }
 
         /// <summary>
         /// List media instance in media list at a position The
@@ -212,7 +216,7 @@ namespace LibVLCSharp.Shared
             {
                 lock (_syncLock)
                 {
-                    if(!_nativeLock)
+                    if (!_nativeLock)
                         throw new InvalidOperationException("not locked");
                     var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
                     return ptr == IntPtr.Zero ? null : new Media(ptr);
@@ -235,7 +239,7 @@ namespace LibVLCSharp.Shared
                     throw new InvalidOperationException("not locked");
                 return Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference);
             }
-        } 
+        }
 
         /// <summary>
         /// This indicates if this media list is read-only from a user point of view
@@ -273,19 +277,153 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        /// <summary>
-        /// Get libvlc_event_manager from this media list instance. The
-        /// p_event_manager is immutable, so you don't have to hold the lock
-        /// </summary>
-        public MediaListEventManager EventManager
+        #region Events
+
+        readonly object _lock = new object();
+
+        EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
+        EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
+        EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
+        EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
+        EventHandler<EventArgs> _mediaListEndReached;
+
+        public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
         {
-            get
+            add
             {
-                if (_eventManager != null) return _eventManager;
-                var ptr = Native.LibVLCMediaListEventManager(NativeReference);
-                _eventManager = new MediaListEventManager(ptr);
-                return _eventManager;
+                lock (_lock)
+                {
+                    _mediaListItemAdded += value;
+                    AttachEvent(EventType.MediaListItemAdded, OnItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListItemAdded -= value;
+                    DetachEvent(EventType.MediaListItemAdded, OnItemAdded);
+                }
             }
         }
+        public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListWillAddItem += value;
+                    AttachEvent(EventType.MediaListWillAddItem, OnWillAddItem);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListWillAddItem -= value;
+                    DetachEvent(EventType.MediaListWillAddItem, OnWillAddItem);
+                }
+            }
+        }
+
+        public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListItemDeleted += value;
+                    AttachEvent(EventType.MediaListItemDeleted, OnItemDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListItemDeleted -= value;
+                    DetachEvent(EventType.MediaListItemDeleted, OnItemDeleted);
+                }
+            }
+        }
+
+        public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListWillDeleteItem += value;
+                    AttachEvent(EventType.MediaListWillDeleteItem, OnWillDeleteItem);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListWillDeleteItem -= value;
+                    DetachEvent(EventType.MediaListWillDeleteItem, OnWillDeleteItem);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<EventArgs> EndReached
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaListEndReached += value;
+                    AttachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaListEndReached -= value;
+                    DetachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+        }
+
+        void OnItemAdded(IntPtr ptr)
+        {
+            var itemAdded = RetrieveEvent(ptr).Union.MediaListItemAdded;
+
+            _mediaListItemAdded?.Invoke(this,
+                new MediaListItemAddedEventArgs(new Media(itemAdded.MediaInstance), itemAdded.Index));
+        }
+
+        void OnWillAddItem(IntPtr ptr)
+        {
+            var willAddItem = RetrieveEvent(ptr).Union.MediaListWillAddItem;
+
+            _mediaListWillAddItem?.Invoke(this,
+                new MediaListWillAddItemEventArgs(new Media(willAddItem.MediaInstance), willAddItem.Index));
+        }
+
+        void OnItemDeleted(IntPtr ptr)
+        {
+            var itemDeleted = RetrieveEvent(ptr).Union.MediaListItemDeleted;
+
+            _mediaListItemDeleted?.Invoke(this,
+                new MediaListItemDeletedEventArgs(new Media(itemDeleted.MediaInstance), itemDeleted.Index));
+        }
+
+        void OnWillDeleteItem(IntPtr ptr)
+        {
+            var willDeleteItem = RetrieveEvent(ptr).Union.MediaListWillDeleteItem;
+
+            _mediaListWillDeleteItem?.Invoke(this,
+                new MediaListWillDeleteItemEventArgs(new Media(willDeleteItem.MediaInstance), willDeleteItem.Index));
+        }
+
+        void OnEndReached(IntPtr ptr)
+        {
+            _mediaListEndReached?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
     }
 }
