@@ -1,26 +1,29 @@
 ﻿using LibVLCSharp.Shared;
+using System;
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
 {
     public class VideoView : View
     {
-        /// <summary>
-        /// Constructor with extra configuration
-        /// </summary>
-        /// <param name="cliOptions">https://wiki.videolan.org/VLC_command-line_help/</param>
-        public VideoView(string[] cliOptions)
-        {
-            CliOptions = cliOptions;
-        }
+        public event EventHandler<SourceChangedEventArgs> SourceChanged;
 
         public VideoView()
         {
         }
 
-        public string[] CliOptions { get; }
+        public static readonly BindableProperty MediaSourceProperty = BindableProperty.Create(nameof(Source), typeof(ISource), typeof(VideoView),
+            propertyChanged: OnSourceChanged);
+        public ISource Source
+        {
+            get { return GetValue(MediaSourceProperty) as ISource; }
+            set { SetValue(MediaSourceProperty, value); }
+        }
 
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get; set; }
-        public LibVLC LibVLC { get; set; }
+        private static void OnSourceChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var videoView = (VideoView)bindable;
+            videoView.SourceChanged?.Invoke(videoView, new SourceChangedEventArgs(oldValue as ISource, newValue as ISource));
+        }
     }
 }

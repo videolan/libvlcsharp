@@ -10,12 +10,23 @@ namespace LibVLCSharp.Forms.Sample
             InitializeComponent();
         }
 
+        private IMediaSource MediaSource { get; set; }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            videoView.MediaPlayer.Play(new Media(videoView.LibVLC,
-                "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            var mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            MediaSource = mediaSource;
+            videoView.Source = mediaSource;
+            mediaSource.MediaPlayer.Play();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            MediaSource.Dispose();
         }
     }
 }

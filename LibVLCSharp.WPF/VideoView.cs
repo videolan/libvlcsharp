@@ -9,7 +9,7 @@ namespace LibVLCSharp.WPF
 {
     [TemplatePart(Name = PART_PlayerHost, Type = typeof(WindowsFormsHost))]
     [TemplatePart(Name = PART_PlayerView, Type = typeof(System.Windows.Forms.Panel))]
-    public class VideoView : ContentControl, IVideoView, IDisposable
+    public class VideoView : ContentControl
     {
         private const string PART_PlayerHost = "PART_PlayerHost";
         private const string PART_PlayerView = "PART_PlayerView";
@@ -17,34 +17,32 @@ namespace LibVLCSharp.WPF
         public VideoView()
         {
             DefaultStyleKey = typeof(VideoView);
-
-            if (!IsDesignMode)
-            {
-                Core.Initialize();
-
-                LibVLC = new LibVLC();
-                MediaPlayer = new MediaPlayer(LibVLC);
-
-                Unloaded += VideoView_Unloaded;
-            }
-        }
-
-        ~VideoView()
-        {
-            Dispose();
         }
 
         private bool IsDesignMode => (bool)DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue;
         private ForegroundWindow ForegroundWindow { get; set; }
+        private IntPtr Hwnd { get; set; }
         private bool IsUpdatingContent { get; set; }
         private UIElement ViewContent { get; set; }
 
-        public MediaPlayer MediaPlayer { get; private set; }
-        public LibVLC LibVLC { get; private set; }
-
-        private void VideoView_Unloaded(object sender, RoutedEventArgs e)
+        public static DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(ISource), typeof(VideoView),
+            new PropertyMetadata(null, OnSourceChanged));
+        public ISource Source
         {
-            Dispose();
+            get { return GetValue(SourceProperty) as ISource; }
+            set { SetValue(SourceProperty, value); }
+        }
+
+        private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is ISource oldSource)
+            {
+                oldSource.SetWindowHandle(IntPtr.Zero);
+            }
+            if (e.NewValue is ISource newSource)
+            {
+                newSource.SetWindowHandle(((VideoView)d).Hwnd);
+            }
         }
 
         public override void OnApplyTemplate()
@@ -60,11 +58,8 @@ namespace LibVLCSharp.WPF
                     ForegroundWindow.Content = ViewContent;
                 }
 
-                var hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle;
-                if (hwnd != null)
-                {
-                    MediaPlayer.Hwnd = (IntPtr)hwnd;
-                }
+                Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
+                Source?.SetWindowHandle(Hwnd);
             }
         }
 
@@ -91,26 +86,6 @@ namespace LibVLCSharp.WPF
             if (ForegroundWindow != null)
             {
                 ForegroundWindow.Content = ViewContent;
-            }
-        }
-
-        public void Dispose()
-        {
-            Unloaded -= VideoView_Unloaded;
-
-            if (MediaPlayer != null)
-            {
-                if (MediaPlayer.IsPlaying)
-                    MediaPlayer.Stop();
-                MediaPlayer.Hwnd = IntPtr.Zero;
-                MediaPlayer.Dispose();
-                MediaPlayer = null;
-            }
-
-            if (LibVLC != null)
-            {
-                LibVLC.Dispose();
-                LibVLC = null;
             }
         }
     }

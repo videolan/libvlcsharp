@@ -11,13 +11,14 @@ namespace LibVLCSharp.Android.Sample
     public class MainActivity : Activity
     {
         VideoView _videoView;
+        IMediaSource _mediaSource;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Main);            
+            SetContentView(Resource.Layout.Main);
         }
 
         protected override void OnResume()
@@ -26,18 +27,20 @@ namespace LibVLCSharp.Android.Sample
 
             _videoView = new VideoView(this);
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            var media = new Media(_videoView.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            _mediaSource = new MediaSource();
+            _videoView.Source = _mediaSource;
+            var media = new Media(_mediaSource.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var configuration = new MediaConfiguration();
             configuration.EnableHardwareDecoding();
             media.AddOption(configuration);
-            _videoView.MediaPlayer.Play(media);
+            _mediaSource.MediaPlayer.Play(media);
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-            _videoView.MediaPlayer.Stop();
+            _mediaSource.Dispose();
             _videoView.Dispose();
         }
     }

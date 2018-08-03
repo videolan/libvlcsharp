@@ -41,5 +41,13 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
     <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Shared\CustomMediaSource.cs" />
+    <None Remove="Shared\ICustomMediaSource.cs" />
+    <None Remove="Shared\IMediaSource.cs" />
+    <None Remove="Shared\ISource.cs" />
+    <None Remove="Shared\MediaSource.cs" />
+    <None Remove="Shared\SourceChangedEventArgs.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

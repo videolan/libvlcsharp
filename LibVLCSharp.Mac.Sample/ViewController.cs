@@ -1,10 +1,8 @@
-﻿using System;
-
-using AppKit;
+﻿using AppKit;
 using Foundation;
-
 using LibVLCSharp.Platforms.Mac;
 using LibVLCSharp.Shared;
+using System;
 
 namespace LibVLCSharp.Mac.Sample
 {
@@ -24,9 +22,9 @@ namespace LibVLCSharp.Mac.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(
-                _videoView.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
-                Media.FromType.FromLocation));
+            var mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            _videoView.Source = mediaSource;
+            mediaSource.MediaPlayer.Play();
         }
 
         public override NSObject RepresentedObject
@@ -41,5 +39,5 @@ namespace LibVLCSharp.Mac.Sample
                 // Update the view, if already loaded.
             }
         }
-   }
+    }
 }

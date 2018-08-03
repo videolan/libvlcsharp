@@ -6,32 +6,29 @@ using UIKit;
 
 namespace LibVLCSharp.Platforms.iOS
 {
-    public class VideoView : UIView, IVideoView
+    public class VideoView : UIView
     {
-        public VideoView(string[] cliOptions = default(string[]))
+        public VideoView()
         {
-            LibVLC = new LibVLC(cliOptions);
-            MediaPlayer = new Shared.MediaPlayer(LibVLC);
-            
-            Attach();
         }
 
-        public Shared.MediaPlayer MediaPlayer { get; }
-        public LibVLC LibVLC { get; }
-
-        void Attach() => MediaPlayer.NsObject = Handle;
-
-        void Detach() => MediaPlayer.NsObject = IntPtr.Zero;
-
-        protected override void Dispose(bool disposing)
+        private ISource _source;
+        public ISource Source
         {
-            base.Dispose(disposing);
-
-            Detach();
-
-            MediaPlayer.Media?.Dispose();
-            MediaPlayer.Dispose();
-            LibVLC.Dispose();
+            get => _source;
+            set
+            {
+                if (_source != value)
+                {
+                    Detach();
+                    _source = value;
+                    Attach();
+                }
+            }
         }
+
+        void Attach() => Source?.SetWindowHandle(Handle);
+
+        void Detach() => Source?.SetWindowHandle(IntPtr.Zero);
     }
 }

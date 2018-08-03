@@ -1,5 +1,5 @@
 ﻿using LibVLCSharp.Shared;
-
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,6 +8,8 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Example2 : Window
     {
+        readonly IMediaSource _mediaSource;
+
         public Example2()
         {
             InitializeComponent();
@@ -20,23 +22,30 @@ namespace LibVLCSharp.WPF.Sample
                 Foreground = new SolidColorBrush(Colors.Red)
             };
             test.Children.Add(label);
+            _mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            Player.Source = _mediaSource;
         }
 
         void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Player.MediaPlayer.IsPlaying)
+            if (_mediaSource.MediaPlayer.IsPlaying)
             {
-                Player.MediaPlayer.Stop();
+                _mediaSource.MediaPlayer.Stop();
             }
         }
 
         void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Player.MediaPlayer.IsPlaying)
+            if (!_mediaSource.MediaPlayer.IsPlaying)
             {
-                Player.MediaPlayer.Play(new Media(Player.LibVLC,
-                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+                _mediaSource.MediaPlayer.Play();
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            _mediaSource.Dispose();
         }
     }
 }
