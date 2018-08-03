@@ -1614,8 +1614,8 @@ namespace LibVLCSharp.Shared
         EventHandler<EventArgs> _mediaPlayerBackward;
         EventHandler<EventArgs> _mediaPlayerEndReached;
         EventHandler<EventArgs> _mediaPlayerEncounteredError;
-        static EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
         EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
+        EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
         EventHandler<MediaPlayerSeekableChangedEventArgs> _mediaPlayerSeekableChanged;
         EventHandler<MediaPlayerPausableChangedEventArgs> _mediaPlayerPausableChanged;
         EventHandler<MediaPlayerTitleChangedEventArgs> _mediaPlayerTitleChanged;
