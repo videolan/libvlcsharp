@@ -28,7 +28,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// The pointer to the native code representation of the event manager of this object
         /// </summary>
-        protected IntPtr NativeEventManagerReference { get; private set; }
+        private IntPtr NativeEventManagerReference { get; set; }
 
         /// <summary>
         /// Release native resources by calling this C function

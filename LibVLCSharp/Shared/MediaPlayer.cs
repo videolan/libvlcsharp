@@ -2300,7 +2300,7 @@ namespace LibVLCSharp.Shared
             _mediaPlayerEncounteredError?.Invoke(this, EventArgs.Empty);
         }
 
-        static void OnTimeChanged(IntPtr ptr)
+        void OnTimeChanged(IntPtr ptr)
         {
             _mediaPlayerTimeChanged?.Invoke(null,
                 new MediaPlayerTimeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTimeChanged.NewTime));
