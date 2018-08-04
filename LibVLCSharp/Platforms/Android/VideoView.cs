@@ -56,7 +56,7 @@ namespace LibVLCSharp.Platforms.Android
                 _awindow.SetVideoView(this);
                 _awindow.AttachViews();
 
-                Source.SetWindowHandle(_awindow.Handle);
+                Source.SetAndroidContext(_awindow.Handle);
 
                 _layoutListener = new LayoutChangeListener(_awindow);
                 AddOnLayoutChangeListener(_layoutListener);
@@ -70,7 +70,7 @@ namespace LibVLCSharp.Platforms.Android
                 _awindow.RemoveCallback(this);
                 _awindow.DetachViews();
 
-                Source.SetWindowHandle(IntPtr.Zero);
+                Source.SetAndroidContext(IntPtr.Zero);
 
                 RemoveOnLayoutChangeListener(_layoutListener);
                 _layoutListener.Dispose();

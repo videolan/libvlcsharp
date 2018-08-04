@@ -788,27 +788,7 @@ namespace LibVLCSharp.Shared
             get => Native.LibVLCMediaPlayerGetHwnd(NativeReference);
             set => Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
         }
-#endif
-
-        /// <summary>
-        /// Sets the window handle
-        /// </summary>
-        /// <param name="handle">window handle</param>
-        public void SetWindowHandle(IntPtr handle)
-        {
-            if (NativeReference == IntPtr.Zero)
-            {
-                // MediaPlayer is disposed
-                return;
-            }
-#if WINDOWS
-            Hwnd = handle;
-#elif ANDROID
-            SetAndroidContext(handle);
-#elif COCOA
-            NsObject = handle;
-#endif
-        }
+#endif        
 
         /// <summary>
         /// The movie length (in ms), or -1 if there is no media.

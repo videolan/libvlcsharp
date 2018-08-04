@@ -37,11 +37,11 @@ namespace LibVLCSharp.WPF
         {
             if (e.OldValue is ISource oldSource)
             {
-                oldSource.SetWindowHandle(IntPtr.Zero);
+                oldSource.Hwnd = IntPtr.Zero;
             }
             if (e.NewValue is ISource newSource)
             {
-                newSource.SetWindowHandle(((VideoView)d).Hwnd);
+                newSource.Hwnd = ((VideoView)d).Hwnd;
             }
         }
 
@@ -59,7 +59,10 @@ namespace LibVLCSharp.WPF
                 }
 
                 Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
-                Source?.SetWindowHandle(Hwnd);
+                if (Source != null)
+                {
+                    Source.Hwnd = Hwnd;
+                }
             }
         }
 

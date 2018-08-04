@@ -2,7 +2,7 @@
 
 namespace LibVLCSharp.Shared
 {
-    public class CustomMediaSource : ICustomMediaSource
+    public class CustomMediaSource : ISource
     {
         public CustomMediaSource(MediaPlayer mediaPlayer)
         {
@@ -11,9 +11,21 @@ namespace LibVLCSharp.Shared
 
         public MediaPlayer MediaPlayer { get; protected set; }
 
-        public void SetWindowHandle(IntPtr handle)
-        {
-            MediaPlayer.SetWindowHandle(handle);
+#if WINDOWS
+        public IntPtr Hwnd
+        { 
+            set { MediaPlayer.Hwnd = value; }
         }
+#elif ANDROID
+        public void SetAndroidContext(IntPtr handle)
+        {
+            MediaPlayer.SetAndroidContext(handle);
+        }
+#elif COCOA
+        public IntPtr NsObject 
+        { 
+            set { MediaPlayer.NsObject = value; }
+        }
+#endif
     }
 }

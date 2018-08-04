@@ -25,8 +25,20 @@ namespace LibVLCSharp.Platforms.Mac
             }
         }
 
-        void Attach() => Source?.SetWindowHandle(Handle);
+        void Attach()
+        {
+            if (Source != null)
+            {
+                Source.NsObject = Handle;
+            }
+        }
 
-        void Detach() => Source?.SetWindowHandle(IntPtr.Zero);
+        void Detach()
+        {
+            if (Source != null)
+            {
+                Source.NsObject = IntPtr.Zero;
+            }
+        }
     }
 }
