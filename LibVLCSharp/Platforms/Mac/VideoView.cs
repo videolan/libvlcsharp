@@ -10,8 +10,8 @@ namespace LibVLCSharp.Platforms.Mac
         {
         }
 
-        private ISource _source;
-        public ISource Source
+        private IMediaSource _source;
+        public IMediaSource Source
         {
             get => _source;
             set

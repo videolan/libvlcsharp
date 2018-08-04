@@ -22,7 +22,7 @@ namespace LibVLCSharp.Mac.Sample
 
             View = _videoView;
 
-            var mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            var mediaSource = MediaSource.CreateFromUri("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
             _videoView.Source = mediaSource;
             mediaSource.MediaPlayer.Play();
         }

@@ -2,9 +2,14 @@
 
 namespace LibVLCSharp.Shared
 {
-    public interface IMediaSource : ISource, IDisposable
+    public interface IMediaSource
     {
-        LibVLC LibVLC { get; }
-        MediaPlayer MediaPlayer { get; }
+#if WINDOWS
+            IntPtr Hwnd { set; }
+#elif ANDROID
+        void SetAndroidContext(IntPtr handle);
+#elif COCOA
+            IntPtr NsObject { set; }
+#endif
     }
 }

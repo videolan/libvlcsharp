@@ -32,8 +32,8 @@ namespace LibVLCSharp.Platforms.Android
 
         #endregion
 
-        private ISource _source;
-        public ISource Source
+        private IMediaSource _source;
+        public IMediaSource Source
         {
             get => _source;
             set
