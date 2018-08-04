@@ -37,7 +37,10 @@ namespace LibVLCSharp.Shared
                 MediaPlayer.Media?.Dispose();
             }
             MediaPlayer.Dispose();
-            LibVLC.Dispose();
+            if (LibVLC.NativeReference != IntPtr.Zero)
+            {
+                LibVLC.Dispose();
+            }
         }
     }
 }

@@ -14,17 +14,32 @@ namespace LibVLCSharp.Shared
 #if WINDOWS
         public IntPtr Hwnd
         { 
-            set { MediaPlayer.Hwnd = value; }
+            set 
+            { 
+                if (MediaPlayer.NativeReference != IntPtr.Zero)
+                {        
+                    MediaPlayer.Hwnd = value; 
+                }
+            }
         }
 #elif ANDROID
         public void SetAndroidContext(IntPtr handle)
         {
-            MediaPlayer.SetAndroidContext(handle);
+            if (MediaPlayer.NativeReference != IntPtr.Zero)
+            { 
+                MediaPlayer.SetAndroidContext(handle);
+            }
         }
 #elif COCOA
         public IntPtr NsObject 
         { 
-            set { MediaPlayer.NsObject = value; }
+            set 
+            {
+                if (MediaPlayer.NativeReference != IntPtr.Zero)
+                { 
+                    MediaPlayer.NsObject = value; }
+                }
+            }
         }
 #endif
     }
