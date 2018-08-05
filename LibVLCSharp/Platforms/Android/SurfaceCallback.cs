@@ -54,12 +54,5 @@ namespace LibVLCSharp.Platforms.Android
                 //_mp.VideoTrackEnabled = false;
             }
         }
-
-        public void Dispose()
-        {
-
-        }
-
-        public IntPtr Handle { get; }
     }
 }

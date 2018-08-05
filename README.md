@@ -56,6 +56,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 
 - Xamarin.Android
 - Xamarin.iOS
+- Xamarin.Mac
 - Xamarin.Forms
 - Windows (WPF)
 
@@ -68,7 +69,7 @@ The first is `libvlc`, which is the actual VLC engine written mostly in C/C++ an
 The second package you need is LibVLCSharp, the .NET wrapper that consumes `libvlc` and allows you to interact with native code from C#/F#. 
 
 ```cmd
-dotnet add package LibVLCSharp --version 0.0.1-alpha2 
+dotnet add package LibVLCSharp
 ```
 
 https://www.nuget.org/packages/LibVLCSharp
@@ -76,7 +77,7 @@ https://www.nuget.org/packages/LibVLCSharp
 If you plan to use LibVLCSharp with Xamarin.Forms, you need to install LibVLCSharp.Forms instead (which references LibVLCSharp).
 
 ```cmd
-dotnet add package LibVLCSharp.Forms --version 0.0.1-alpha
+dotnet add package LibVLCSharp.Forms
 ```
 
 https://www.nuget.org/packages/LibVLCSharp.Forms/
@@ -104,7 +105,7 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 
 ## Roadmap
 
-- macOS (using Cocoa with Xamarin.Mac, GTK)
+- macOS (using GTK)
 - Linux (using GTK)
 - Windows 10 (using UWP, GTK)
 - Game engines (Unity, Unreal, Godot)

@@ -682,6 +682,11 @@ namespace LibVLCSharp.Shared
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, media.NativeReference);
         }
 
+        public override int GetHashCode()
+        {
+            return this.NativeReference.GetHashCode();
+        }
+
         internal class StreamData
         {
             public IntPtr Handle { get; set; }

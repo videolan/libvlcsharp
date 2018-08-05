@@ -88,7 +88,7 @@
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample.csproj">
-      <Project>{D054AF3C-A320-4E44-A417-33111EF116C3}</Project>
+      <Project>{C6E79ABC-C203-4892-848A-FF99CCE53F8A}</Project>
       <Name>LibVLCSharp.Forms.Sample</Name>
     </ProjectReference>
   </ItemGroup>
