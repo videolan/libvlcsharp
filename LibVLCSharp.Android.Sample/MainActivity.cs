@@ -27,7 +27,7 @@ namespace LibVLCSharp.Android.Sample
 
             _videoView = new VideoView(this);
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            _mediaSource = new MediaSource();
+            _mediaSource = MediaSource.Create();
             _videoView.Source = _mediaSource;
             var media = new Media(_mediaSource.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var configuration = new MediaConfiguration();

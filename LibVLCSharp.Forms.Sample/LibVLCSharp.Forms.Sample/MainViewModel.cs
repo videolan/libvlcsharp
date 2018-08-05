@@ -33,9 +33,9 @@ namespace LibVLCSharp.Forms.Sample
             }
         }
 
-        private void Appearing()
+        private async void Appearing()
         {
-            MediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            MediaSource = await LibVLCSharp.Shared.MediaSource.CreateFromUriAsync("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
             MediaSource.MediaPlayer.Play();
         }
 
