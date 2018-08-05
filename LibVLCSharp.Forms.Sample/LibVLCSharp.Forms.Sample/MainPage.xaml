@@ -2,6 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shared="clr-namespace:LibVLCSharp.Forms.Shared;assembly=LibVLCSharp.Forms"
+             xmlns:local="clr-namespace:LibVLCSharp.Forms.Sample"
              x:Class="LibVLCSharp.Forms.Sample.MainPage">
-    <shared:VideoView x:Name="videoView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+    <ContentPage.BindingContext>
+        <local:MainViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Behaviors>
+        <local:EventToCommandBehavior EventName="Appearing" Command="{Binding AppearingCommand}" />
+        <local:EventToCommandBehavior EventName="Disappearing" Command="{Binding DisappearingCommand}" />
+    </ContentPage.Behaviors>
+
+    <shared:VideoView Source="{Binding MediaSource}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
 </ContentPage>

@@ -6,7 +6,7 @@ using System.Security;
 
 namespace LibVLCSharp.Shared
 {
-    public class MediaPlayer : Internal
+    public class MediaPlayer : Internal, ISource
     {
         struct Native
         {
@@ -752,7 +752,13 @@ namespace LibVLCSharp.Shared
         public IntPtr NsObject
         {
             get => Native.LibVLCMediaPlayerGetNsobject(NativeReference);
-            set => Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
+            set
+            {
+                if (!(NativeReference == IntPtr.Zero && value == IntPtr.Zero))
+                {
+                    Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
+                }
+            }
         }
 #endif
         /// <summary>
@@ -786,7 +792,13 @@ namespace LibVLCSharp.Shared
         public IntPtr Hwnd
         {
             get => Native.LibVLCMediaPlayerGetHwnd(NativeReference);
-            set => Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
+            set
+            {
+                if (!(NativeReference == IntPtr.Zero && value == IntPtr.Zero))
+                {
+                    Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
+                }
+            }
         }
 #endif        
 
@@ -1594,7 +1606,13 @@ namespace LibVLCSharp.Shared
         /// Set the android context.
         /// </summary>
         /// <param name="aWindow">See LibVLCSharp.Android</param>
-        public void SetAndroidContext(IntPtr aWindow) => Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+        public void SetAndroidContext(IntPtr aWindow)
+        {
+            if (!(NativeReference == IntPtr.Zero && aWindow == IntPtr.Zero))
+            {
+                Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+            }
+        }
 #endif
 
         /// <summary>

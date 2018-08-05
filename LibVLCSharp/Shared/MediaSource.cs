@@ -4,58 +4,62 @@ namespace LibVLCSharp.Shared
 {
     public class MediaSource : IMediaSource
     {
-        protected internal MediaSource(MediaPlayer mediaPlayer)
+        static MediaSource()
         {
-            MediaPlayer = mediaPlayer;
+            Core.Initialize();
         }
 
-        public MediaPlayer MediaPlayer { get; protected set; }
+        public MediaSource(params string[] cliOptions) : this(new LibVLC(cliOptions))
+        {
+        }
+
+        public MediaSource(string uri) : this(new LibVLC())
+        {
+            MediaPlayer.Media = new Media(LibVLC, uri, Media.FromType.FromLocation);
+        }
+
+        private MediaSource(LibVLC libVLC)
+        {
+            LibVLC = libVLC;
+            MediaPlayer = new MediaPlayer(libVLC);
+        }
+
+        ~MediaSource()
+        {
+            Dispose();
+        }
+
+        public MediaPlayer MediaPlayer { get; }
+        public LibVLC LibVLC { get; }
 
 #if WINDOWS
         public IntPtr Hwnd
         {
-            set
-            {
-                if (MediaPlayer.NativeReference != IntPtr.Zero)
-                {
-                    MediaPlayer.Hwnd = value;
-                }
-            }
+            set { MediaPlayer.Hwnd = value; }
         }
 #elif ANDROID
-        public void SetAndroidContext(IntPtr handle)
+        public void SetAndroidContext(IntPtr aWindow)
         {
-            if (MediaPlayer.NativeReference != IntPtr.Zero)
-            { 
-                MediaPlayer.SetAndroidContext(handle);
-            }
+            MediaPlayer.SetAndroidContext(aWindow);
         }
 #elif COCOA
-        public IntPtr NsObject 
-        { 
-            set 
-            {
-                if (MediaPlayer.NativeReference != IntPtr.Zero)
-                { 
-                    MediaPlayer.NsObject = value; }
-                }
-            }
+        public IntPtr NsObject
+        {
+            set { MediaPlayer.NsObject = value; }
         }
 #endif
 
-        public static ILibVLCMediaSource CreateFromUri(string uri)
+        public void Dispose()
         {
-            return new LibVLCMediaSource(uri);
-        }
-
-        public static ILibVLCMediaSource Create(params string[] cliOptions)
-        {
-            return new LibVLCMediaSource(cliOptions);
-        }
-
-        public static IMediaSource CreateFromMediaPlayer(MediaPlayer mediaPlayer)
-        {
-            return new MediaSource(mediaPlayer);
+            if (MediaPlayer.NativeReference != IntPtr.Zero)
+            {
+                MediaPlayer.Media?.Dispose();
+            }
+            MediaPlayer.Dispose();
+            if (LibVLC.NativeReference != IntPtr.Zero)
+            {
+                LibVLC.Dispose();
+            }
         }
     }
 }

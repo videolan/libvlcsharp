@@ -43,9 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Shared\CustomMediaSource.cs" />
-    <None Remove="Shared\ILibVLCMediaSource.cs" />
     <None Remove="Shared\IMediaSource.cs" />
-    <None Remove="Shared\LibVLCMediaSource.cs" />
+    <None Remove="Shared\ISource.cs" />
+    <None Remove="Shared\MediaSource.cs" />
     <None Remove="Shared\SourceChangedEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />

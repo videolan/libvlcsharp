@@ -12,18 +12,18 @@ namespace LibVLCSharp.Forms.Shared
         {
         }
 
-        public static readonly BindableProperty MediaSourceProperty = BindableProperty.Create(nameof(Source), typeof(IMediaSource), typeof(VideoView),
+        public static readonly BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(ISource), typeof(VideoView),
             propertyChanged: OnSourceChanged);
-        public IMediaSource Source
+        public ISource Source
         {
-            get { return GetValue(MediaSourceProperty) as IMediaSource; }
-            set { SetValue(MediaSourceProperty, value); }
+            get { return GetValue(SourceProperty) as ISource; }
+            set { SetValue(SourceProperty, value); }
         }
 
         private static void OnSourceChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var videoView = (VideoView)bindable;
-            videoView.SourceChanged?.Invoke(videoView, new SourceChangedEventArgs(oldValue as IMediaSource, newValue as IMediaSource));
+            videoView.SourceChanged?.Invoke(videoView, new SourceChangedEventArgs(oldValue as ISource, newValue as ISource));
         }
     }
 }

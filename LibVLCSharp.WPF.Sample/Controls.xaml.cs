@@ -7,7 +7,7 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Controls : UserControl
     {
-        readonly ILibVLCMediaSource _mediaSource;
+        readonly IMediaSource _mediaSource;
 
         public Controls(Example1 Parent)
         {
@@ -16,7 +16,7 @@ namespace LibVLCSharp.WPF.Sample
             PlayButton.Click += PlayButton_Click;
             StopButton.Click += StopButton_Click;
 
-            _mediaSource = MediaSource.CreateFromUri("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            _mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
             Parent.Player.Source = _mediaSource;
         }
 

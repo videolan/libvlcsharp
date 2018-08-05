@@ -1,5 +1,4 @@
-﻿using LibVLCSharp.Shared;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Sample
 {
@@ -8,25 +7,6 @@ namespace LibVLCSharp.Forms.Sample
         public MainPage()
         {
             InitializeComponent();
-        }
-
-        private ILibVLCMediaSource Source { get; set; }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            var mediaSource = MediaSource.CreateFromUri("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
-            Source = mediaSource;
-            videoView.Source = mediaSource;
-            mediaSource.MediaPlayer.Play();
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            Source.Dispose();
         }
     }
 }

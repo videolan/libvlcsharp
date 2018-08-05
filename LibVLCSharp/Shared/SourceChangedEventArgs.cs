@@ -4,13 +4,13 @@ namespace LibVLCSharp.Shared
 {
     public class SourceChangedEventArgs : EventArgs
     {
-        public SourceChangedEventArgs(IMediaSource oldSource, IMediaSource newSource)
+        public SourceChangedEventArgs(ISource oldSource, ISource newSource)
         {
             OldSource = oldSource;
             NewSource = newSource;
         }
 
-        public IMediaSource OldSource { get; }
-        public IMediaSource NewSource { get; }
+        public ISource OldSource { get; }
+        public ISource NewSource { get; }
     }
 }

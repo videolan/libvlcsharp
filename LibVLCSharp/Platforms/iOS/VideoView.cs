@@ -12,8 +12,8 @@ namespace LibVLCSharp.Platforms.iOS
         {
         }
 
-        private IMediaSource _source;
-        public IMediaSource Source
+        private ISource _source;
+        public ISource Source
         {
             get => _source;
             set

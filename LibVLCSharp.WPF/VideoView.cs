@@ -25,21 +25,21 @@ namespace LibVLCSharp.WPF
         private bool IsUpdatingContent { get; set; }
         private UIElement ViewContent { get; set; }
 
-        public static DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(IMediaSource), typeof(VideoView),
+        public static DependencyProperty SourceProperty = DependencyProperty.Register(nameof(Source), typeof(ISource), typeof(VideoView),
             new PropertyMetadata(null, OnSourceChanged));
-        public IMediaSource Source
+        public ISource Source
         {
-            get { return GetValue(SourceProperty) as IMediaSource; }
+            get { return GetValue(SourceProperty) as ISource; }
             set { SetValue(SourceProperty, value); }
         }
 
         private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue is IMediaSource oldSource)
+            if (e.OldValue is ISource oldSource)
             {
                 oldSource.Hwnd = IntPtr.Zero;
             }
-            if (e.NewValue is IMediaSource newSource)
+            if (e.NewValue is ISource newSource)
             {
                 newSource.Hwnd = ((VideoView)d).Hwnd;
             }

@@ -8,7 +8,7 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Example2 : Window
     {
-        readonly ILibVLCMediaSource _mediaSource;
+        readonly IMediaSource _mediaSource;
 
         public Example2()
         {
@@ -22,7 +22,7 @@ namespace LibVLCSharp.WPF.Sample
                 Foreground = new SolidColorBrush(Colors.Red)
             };
             test.Children.Add(label);
-            _mediaSource = MediaSource.CreateFromUri("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            _mediaSource = new MediaSource("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
             Player.Source = _mediaSource;
         }
 
