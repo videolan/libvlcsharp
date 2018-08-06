@@ -633,8 +633,9 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
         }
-
+#if IOS
         static MediaPlayer _mp;
+#endif
 
         /// <summary>Create an empty Media Player object</summary>
         /// <param name="libVLC">
@@ -645,7 +646,9 @@ namespace LibVLCSharp.Shared
         public MediaPlayer(LibVLC libVLC)
             : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease, Native.LibVLCMediaPlayerEventManager)
         {
+#if IOS
             _mp = this;
+#endif
         }
 
         /// <summary>Create a Media Player object from a Media</summary>

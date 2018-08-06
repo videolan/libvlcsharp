@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if IOS
+using ObjCRuntime;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -33,11 +36,16 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_renderer_discoverer_event_manager")]
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
-
+#if IOS
+        static RendererDiscoverer _rd;
+#endif
         public RendererDiscoverer(LibVLC libVLC, string name)
             : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name),
                    Native.LibVLCRendererDiscovererRelease, Native.LibVLCRendererDiscovererEventManager)
         {
+#if IOS
+            _rd = this;
+#endif
         }
 
         public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
@@ -48,9 +56,13 @@ namespace LibVLCSharp.Shared
 
         readonly object _lock = new object();
 
+#if IOS
         EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
         EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
-
+#else
+        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+#endif
         // v3
         public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
         {
@@ -105,7 +117,7 @@ namespace LibVLCSharp.Shared
             _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
         }
 
-        #endregion
+#endregion
     }
 
     public class RendererItem : Internal

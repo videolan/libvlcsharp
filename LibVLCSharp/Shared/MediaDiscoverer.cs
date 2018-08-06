@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if IOS
+using ObjCRuntime;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -10,7 +13,9 @@ namespace LibVLCSharp.Shared
     public class MediaDiscoverer : Internal
     {
         MediaList _mediaList;
-
+#if IOS
+        MediaDiscoverer _md;
+#endif
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -87,6 +92,9 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease,
                    Native.LibVLCMediaDiscovererEventManager)
         {
+#if IOS
+            _md = this;
+#endif
         }
 
         /// <summary>
@@ -130,10 +138,13 @@ namespace LibVLCSharp.Shared
         #region Events
 
         readonly object _lock = new object();
-
+#if IOS
+        static EventHandler<EventArgs> _mediaDiscovererStarted;
+        static EventHandler<EventArgs> _mediaDiscovererStopped;
+#else
         EventHandler<EventArgs> _mediaDiscovererStarted;
         EventHandler<EventArgs> _mediaDiscovererStopped;
-
+#endif
         // v3
         public event EventHandler<EventArgs> Started
         {
@@ -176,6 +187,18 @@ namespace LibVLCSharp.Shared
             }
         }
 
+#if IOS
+        [MonoPInvokeCallback(typeof(EventCallback)))]
+        static void OnStarted(IntPtr ptr)
+        {
+            _mediaDiscovererStarted?.Invoke(_md, EventArgs.Empty);
+        }
+
+        void OnStopped(IntPtr ptr)
+        {
+            _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
+        }
+#else
         void OnStarted(IntPtr ptr)
         {
             _mediaDiscovererStarted?.Invoke(this, EventArgs.Empty);
@@ -185,7 +208,7 @@ namespace LibVLCSharp.Shared
         {
             _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
         }
-
-        #endregion
+#endif
+#endregion
     }
 }

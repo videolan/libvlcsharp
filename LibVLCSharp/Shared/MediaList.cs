@@ -11,7 +11,9 @@ namespace LibVLCSharp.Shared
     {
         readonly object _syncLock = new object();
         bool _nativeLock;
+#if IOS
         static MediaList _mediaList;
+#endif
 
         struct Native
         {
@@ -104,7 +106,9 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaSubitems(media.NativeReference), Native.LibVLCMediaListRelease,
                    Native.LibVLCMediaListEventManager)
         {
+#if IOS
             _mediaList = this;
+#endif
         }
 
         /// <summary>
@@ -115,7 +119,9 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
                    Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
+#if IOS
             _mediaList = this;
+#endif
         }
 
         /// <summary>
