@@ -7,7 +7,7 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Controls : UserControl
     {
-        readonly IMediaSource _mediaSource;
+        readonly MediaSource _mediaSource;
 
         public Controls(Example1 Parent)
         {

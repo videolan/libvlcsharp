@@ -17,8 +17,8 @@ namespace LibVLCSharp.Forms.Sample
         public ICommand AppearingCommand { get; }
         public ICommand DisappearingCommand { get; }
 
-        private IMediaSource _mediaSource;
-        public IMediaSource MediaSource
+        private MediaSource _mediaSource;
+        public MediaSource MediaSource
         {
             get => _mediaSource;
             private set => Set(nameof(MediaSource), ref _mediaSource, value);

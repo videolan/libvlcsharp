@@ -3,30 +3,56 @@ using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared
 {
-    public class MediaSource : IMediaSource
+    /// <summary>
+    /// Source for VideoView that encapsulates the <see cref="LibVLC"/> and <see cref="MediaPlayer"/> instances />
+    /// </summary>
+    public class MediaSource : ISource
     {
-        static MediaSource()
-        {
-            Core.Initialize();
-        }
-
+        /// <summary>
+        /// Initializes a new instance of <see cref="MediaSource"/> class
+        /// </summary>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
         protected MediaSource(params string[] cliOptions)
         {
-            LibVLC = new LibVLC(cliOptions);
-            MediaPlayer = new MediaPlayer(LibVLC);
+            if (CoreInitialized.Value)
+            {
+                LibVLC = new LibVLC(cliOptions);
+                MediaPlayer = new MediaPlayer(LibVLC);
+            }
         }
 
-        protected MediaSource(string uri) : this()
+        /// <summary>
+        /// Initializes a new instance of <see cref="MediaSource"/> class
+        /// </summary>
+        /// <param name="uri">URI of the media to play</param>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
+        protected MediaSource(string uri, params string[] cliOptions) : this(cliOptions)
         {
             MediaPlayer.Media = new Media(LibVLC, uri, Media.FromType.FromLocation);
         }
 
+        /// <summary>
+        /// Finalizer
+        /// </summary>
         ~MediaSource()
         {
             Dispose();
         }
 
+        private static Lazy<bool> CoreInitialized { get; } = new Lazy<bool>(() =>
+        {
+            Core.Initialize();
+            return true;
+        });
+
+        /// <summary>
+        /// Gets the <see cref="MediaPlayer"/> object
+        /// </summary>
         public MediaPlayer MediaPlayer { get; }
+
+        /// <summary>
+        /// Gets the <see cref="LibVLC"/> object
+        /// </summary>
         public LibVLC LibVLC { get; }
 
 #if WINDOWS
@@ -44,28 +70,57 @@ namespace LibVLCSharp.Shared
         {
             set { MediaPlayer.NsObject = value; }
         }
-#endif
+#endif       
 
+        /// <summary>
+        /// Creates a new <see cref="MediaSource"/> instance
+        /// </summary>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
+        /// <returns>the task representing the asynchronous operation, containing the <see cref="MediaSource"/> of the operation</returns>
         public static Task<MediaSource> CreateAsync(params string[] cliOptions)
         {
             return Task.Run(() => new MediaSource(cliOptions));
         }
 
-        public static Task<MediaSource> CreateFromUriAsync(string uri)
+        /// <summary>
+        /// Creates a new <see cref="MediaSource"/> instance from an URI
+        /// </summary>
+        /// <param name="uri">URI of the media to play</param>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
+        /// <returns>the task representing the asynchronous operation, containing the <see cref="MediaSource"/> of the operation</returns>
+        public static Task<MediaSource> CreateFromUriAsync(string uri, params string[] cliOptions)
         {
-            return Task.Run(() => new MediaSource(uri));
+            return Task.Run(() => new MediaSource(uri, cliOptions));
         }
 
+        /// <summary>
+        /// Creates a new <see cref="MediaSource"/> instance
+        /// </summary>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
+        /// <returns>a new <see cref="MediaSource"/> instance</returns>
+        /// <remarks>As the instanciation of a MediaSource can be longer than expected (modules loading and native calls when initializing <see cref="LibVLC"/>), 
+        /// we recommand to use the asynchronous version of this method (<see cref="CreateAsync(string[])"/>)</remarks>
         public static MediaSource Create(params string[] cliOptions)
         {
             return new MediaSource(cliOptions);
         }
 
-        public static MediaSource CreateFromUri(string uri)
+        /// <summary>
+        /// Creates a new <see cref="MediaSource"/> instance from an URI
+        /// </summary>
+        /// <param name="uri">URI of the media to play</param>
+        /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
+        /// <returns>a new <see cref="MediaSource"/> instance</returns>
+        /// <remarks>As the instanciation of a MediaSource can be longer than expected (modules loading and native calls when initializing <see cref="LibVLC"/>), 
+        /// we recommand to use the asynchronous version of this method (<see cref="CreateFromUriAsync(string, string[])"/>)</remarks>
+        public static MediaSource CreateFromUri(string uri, params string[] cliOptions)
         {
-            return new MediaSource(uri);
+            return new MediaSource(uri, cliOptions);
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources
+        /// </summary>
         public void Dispose()
         {
             if (MediaPlayer.NativeReference != IntPtr.Zero)

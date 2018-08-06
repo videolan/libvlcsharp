@@ -11,7 +11,7 @@ namespace LibVLCSharp.Android.Sample
     public class MainActivity : Activity
     {
         VideoView _videoView;
-        IMediaSource _mediaSource;
+        MediaSource _mediaSource;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {

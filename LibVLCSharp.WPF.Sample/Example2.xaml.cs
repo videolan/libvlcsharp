@@ -8,7 +8,7 @@ namespace LibVLCSharp.WPF.Sample
 {
     public partial class Example2 : Window
     {
-        readonly IMediaSource _mediaSource;
+        readonly MediaSource _mediaSource;
 
         public Example2()
         {

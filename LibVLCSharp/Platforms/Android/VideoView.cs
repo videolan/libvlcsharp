@@ -8,11 +8,10 @@ using Android.Views;
 using LibVLCSharp.Shared;
 
 using Org.Videolan.Libvlc;
-using static Org.Videolan.Libvlc.AWindow;
 
 namespace LibVLCSharp.Platforms.Android
 {
-    public class VideoView : SurfaceView, IVLCVoutCallback, ISurfaceCallback
+    public class VideoView : SurfaceView, IVLCVoutCallback, AWindow.ISurfaceCallback
     {
         AWindow _awindow;
         LayoutChangeListener _layoutListener;
@@ -96,11 +95,11 @@ namespace LibVLCSharp.Platforms.Android
             Detach();
         }
 
-        void ISurfaceCallback.OnSurfacesCreated(AWindow aWindow)
+        void AWindow.ISurfaceCallback.OnSurfacesCreated(AWindow aWindow)
         {
         }
 
-        void ISurfaceCallback.OnSurfacesDestroyed(AWindow aWindow)
+        void AWindow.ISurfaceCallback.OnSurfacesDestroyed(AWindow aWindow)
         {
         }
     }
