@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 using LibVLCSharp.Shared.Structures;
+#if IOS
+using ObjCRuntime;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -39,7 +42,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_event_manager")]
             internal static extern IntPtr LibVLCMediaPlayerEventManager(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_playing")]
@@ -134,7 +137,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_chapter_count")]
             internal static extern int LibVLCMediaPlayerGetChapterCount(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_will_play")]
@@ -229,7 +232,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_toggle_fullscreen")]
             internal static extern void LibVLCToggleFullscreen(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_fullscreen")]
@@ -253,7 +256,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_set_callbacks")]
-            internal static extern void LibVLCAudioSetCallbacks(IntPtr mediaPlayer, LibVLCAudioPlayCb play, LibVLCAudioPauseCb pause, 
+            internal static extern void LibVLCAudioSetCallbacks(IntPtr mediaPlayer, LibVLCAudioPlayCb play, LibVLCAudioPauseCb pause,
                 LibVLCAudioResumeCb resume, LibVLCAudioFlushCb flush, LibVLCAudioDrainCb drain, IntPtr opaque);
 
             [SuppressUnmanagedCodeSecurity]
@@ -269,8 +272,8 @@ namespace LibVLCSharp.Shared
             // TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_set_format")] 
-            internal static extern void LibVLCAudioSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string format, 
+                EntryPoint = "libvlc_audio_set_format")]
+            internal static extern void LibVLCAudioSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string format,
                 uint rate, uint channels);
 
             [SuppressUnmanagedCodeSecurity]
@@ -282,7 +285,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_set")]
-            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string module, 
+            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string module,
                 [MarshalAs(UnmanagedType.LPStr)] string deviceId);
 
             // TODO: UTF8
@@ -359,20 +362,20 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_callbacks")]
-            internal static extern void LibVLCVideoSetCallbacks(IntPtr mediaPlayer, LibVLCVideoLockCb lockCallback, 
+            internal static extern void LibVLCVideoSetCallbacks(IntPtr mediaPlayer, LibVLCVideoLockCb lockCallback,
                 LibVLCVideoUnlockCb unlock, LibVLCVideoDisplayCb display, IntPtr opaque);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format")]
-            internal static extern void LibVLCVideoSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string chroma, 
+            internal static extern void LibVLCVideoSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string chroma,
                 uint width, uint height, uint pitch);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format_callbacks")]
-            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup, 
+            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup,
                 LibVLCVideoCleanupCb cleanup);
 
             [SuppressUnmanagedCodeSecurity]
@@ -415,7 +418,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_aspect_ratio")]
             internal static extern void LibVLCVideoSetAspectRatio(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string aspect);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu")]
@@ -462,7 +465,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_full_title_descriptions")]
             internal static extern int LibVLCMediaPlayerGetFullTitleDescriptions(IntPtr mediaPlayer, IntPtr titles);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_chapter_description")]
@@ -483,7 +486,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_chapter_descriptions_release")]
             internal static extern void LibVLCChapterDescriptionsRelease(IntPtr chapters, uint count);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_crop_geometry")]
@@ -494,7 +497,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_crop_geometry")]
             internal static extern void LibVLCVideoSetCropGeometry(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string geometry);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_teletext")]
@@ -524,12 +527,12 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_track")]
             internal static extern int LibVLCVideoSetTrack(IntPtr mediaPlayer, int track);
-            
+
             // TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_take_snapshot")]
-            internal static extern int LibVLCVideoTakeSnapshot(IntPtr mediaPlayer, uint num, 
+            internal static extern int LibVLCVideoTakeSnapshot(IntPtr mediaPlayer, uint num,
                 [MarshalAs(UnmanagedType.LPStr)] string filepath, uint width, uint height);
 
             // TODO: UTF8
@@ -558,7 +561,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_marquee_string")]
             internal static extern void LibVLCVideoSetMarqueeString(IntPtr mediaPlayer, VideoMarqueeOption option, [MarshalAs(UnmanagedType.LPStr)] string marqueeValue);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_logo_int")]
@@ -573,7 +576,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_logo_string")]
-            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, VideoLogoOption option, 
+            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, VideoLogoOption option,
                 [MarshalAs(UnmanagedType.LPStr)] string logoOptionValue);
 
             [SuppressUnmanagedCodeSecurity]
@@ -595,19 +598,19 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_adjust_float")]
             internal static extern void LibVLCVideoSetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option, float value);
-            
+
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_add_slave")]
-            internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType, 
+            internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType,
                 [MarshalAs(UnmanagedType.LPStr)] string uri, bool selectWhenloaded);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_update_viewpoint")]
             internal static extern int LibVLCVideoUpdateViewpoint(IntPtr mediaPlayer, VideoViewpoint viewpoint, bool absolute);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_track_description_list_release")]
@@ -630,8 +633,9 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
         }
-        
-        MediaPlayerEventManager _eventManager;
+#if IOS
+        static MediaPlayer _mp;
+#endif
 
         /// <summary>Create an empty Media Player object</summary>
         /// <param name="libVLC">
@@ -639,9 +643,12 @@ namespace LibVLCSharp.Shared
         /// <para>should be created.</para>
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public MediaPlayer(LibVLC libVLC) 
-            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
+        public MediaPlayer(LibVLC libVLC)
+            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease, Native.LibVLCMediaPlayerEventManager)
         {
+#if IOS
+            _mp = this;
+#endif
         }
 
         /// <summary>Create a Media Player object from a Media</summary>
@@ -651,10 +658,13 @@ namespace LibVLCSharp.Shared
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
         public MediaPlayer(Media media)
-            : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
+            : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease, Native.LibVLCMediaPlayerEventManager)
         {
+#if IOS
+            _mp = this;
+#endif
         }
-        
+
         /// <summary>
         /// Get the media used by the media_player.
         /// Set the media that will be used by the media_player. 
@@ -668,22 +678,6 @@ namespace LibVLCSharp.Shared
                 return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
             }
             set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value.NativeReference);
-        }
-
-        /// <summary>
-        /// Get the Event Manager from which the media player send event.
-        /// </summary>
-        public MediaPlayerEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCMediaPlayerEventManager(NativeReference);
-                    _eventManager = new MediaPlayerEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
         }
 
         /// <summary>
@@ -868,7 +862,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void PreviousChapter()
         {
-            Native.LibVLCMediaPlayerPreviousChapter(NativeReference);    
+            Native.LibVLCMediaPlayerPreviousChapter(NativeReference);
         }
 
         /// <summary>
@@ -914,8 +908,8 @@ namespace LibVLCSharp.Shared
         public float Fps
         {
             get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
-        } 
-        
+        }
+
         /// <summary>
         /// Get the number of video outputs 
         /// </summary>
@@ -1072,7 +1066,7 @@ namespace LibVLCSharp.Shared
         /// <param name="channels">channels count</param>
         public void SetAudioFormat(string format, uint rate, uint channels)
         {
-            Native.LibVLCAudioSetFormat(NativeReference, format, rate, channels);    
+            Native.LibVLCAudioSetFormat(NativeReference, format, rate, channels);
         }
 
         /// <summary>
@@ -1162,7 +1156,7 @@ namespace LibVLCSharp.Shared
             var track = Marshal.PtrToStructure<TrackDescription>(trackPtr);
 
             while (true)
-            {       
+            {
                 trackDescriptions.Add(track);
                 if (track.Next != IntPtr.Zero)
                 {
@@ -1170,7 +1164,7 @@ namespace LibVLCSharp.Shared
                 }
                 else
                 {
-                    break;    
+                    break;
                 }
             }
             return trackDescriptions.ToArray();
@@ -1387,7 +1381,7 @@ namespace LibVLCSharp.Shared
         public bool SetSpu(int spu)
         {
             return Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
-        } 
+        }
 
         public int SpuCount => Native.LibVLCVideoGetSpuCount(NativeReference);
 
@@ -1499,7 +1493,7 @@ namespace LibVLCSharp.Shared
         /// <param name="width">the snapshot's width</param>
         /// <param name="height">the snapshot's height</param>
         /// <returns>true on success</returns>
-        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) => 
+        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) =>
             Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePath, width, height) == 0;
 
         /// <summary>
@@ -1622,15 +1616,1056 @@ namespace LibVLCSharp.Shared
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
-#region Enums
-
-     
+        #region EventHandlers
 
 
-#endregion
+        readonly object _lock = new object();
+#if IOS
+        static EventHandler<MediaPlayerMediaChangedEventArgs> _mediaPlayerMediaChanged;
+        static EventHandler<EventArgs> _mediaPlayerNothingSpecial;
+        static EventHandler<EventArgs> _mediaPlayerOpening;
+        static EventHandler<MediaPlayerBufferingEventArgs> _mediaPlayerBuffering;
+        static EventHandler<EventArgs> _mediaPlayerPlaying;
+        static EventHandler<EventArgs> _mediaPlayerPaused;
+        static EventHandler<EventArgs> _mediaPlayerStopped;
+        static EventHandler<EventArgs> _mediaPlayerForward;
+        static EventHandler<EventArgs> _mediaPlayerBackward;
+        static EventHandler<EventArgs> _mediaPlayerEndReached;
+        static EventHandler<EventArgs> _mediaPlayerEncounteredError;
+        static EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
+        static EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
+        static EventHandler<MediaPlayerSeekableChangedEventArgs> _mediaPlayerSeekableChanged;
+        static EventHandler<MediaPlayerPausableChangedEventArgs> _mediaPlayerPausableChanged;
+        static EventHandler<MediaPlayerTitleChangedEventArgs> _mediaPlayerTitleChanged;
+        static EventHandler<MediaPlayerChapterChangedEventArgs> _mediaPlayerChapterChanged; //vlc 3
+        static EventHandler<MediaPlayerSnapshotTakenEventArgs> _mediaPlayerSnapshotTaken;
+        static EventHandler<MediaPlayerLengthChangedEventArgs> _mediaPlayerLengthChanged;
+        static EventHandler<MediaPlayerVoutEventArgs> _mediaPlayerVout;
+        static EventHandler<MediaPlayerScrambledChangedEventArgs> _mediaPlayerScrambledChanged;
+        static EventHandler<MediaPlayerESAddedEventArgs> _mediaPlayerESAdded; // vlc 3
+        static EventHandler<MediaPlayerESDeletedEventArgs> _mediaPlayerESDeleted; // vlc 3
+        static EventHandler<MediaPlayerESSelectedEventArgs> _mediaPlayerESSelected; // vlc 3
+        static EventHandler<MediaPlayerAudioDeviceEventArgs> _mediaPlayerAudioDevice; // vlc 3
+        static EventHandler<EventArgs> _mediaPlayerCorked; // vlc 2.2
+        static EventHandler<EventArgs> _mediaPlayerUncorked; // vlc 2.2
+        static EventHandler<EventArgs> _mediaPlayerMuted; // vlc 2.2
+        static EventHandler<EventArgs> _mediaPlayerUnmuted; // vlc 2.2
+        static EventHandler<MediaPlayerVolumeChangedEventArgs> _mediaPlayerVolumeChanged; // vlc 2.2
+#else
+        EventHandler<MediaPlayerMediaChangedEventArgs> _mediaPlayerMediaChanged;
+        EventHandler<EventArgs> _mediaPlayerNothingSpecial;
+        EventHandler<EventArgs> _mediaPlayerOpening;
+        EventHandler<MediaPlayerBufferingEventArgs> _mediaPlayerBuffering;
+        EventHandler<EventArgs> _mediaPlayerPlaying;
+        EventHandler<EventArgs> _mediaPlayerPaused;
+        EventHandler<EventArgs> _mediaPlayerStopped;
+        EventHandler<EventArgs> _mediaPlayerForward;
+        EventHandler<EventArgs> _mediaPlayerBackward;
+        EventHandler<EventArgs> _mediaPlayerEndReached;
+        EventHandler<EventArgs> _mediaPlayerEncounteredError;
+        EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
+        EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
+        EventHandler<MediaPlayerSeekableChangedEventArgs> _mediaPlayerSeekableChanged;
+        EventHandler<MediaPlayerPausableChangedEventArgs> _mediaPlayerPausableChanged;
+        EventHandler<MediaPlayerTitleChangedEventArgs> _mediaPlayerTitleChanged;
+        EventHandler<MediaPlayerChapterChangedEventArgs> _mediaPlayerChapterChanged; //vlc 3
+        EventHandler<MediaPlayerSnapshotTakenEventArgs> _mediaPlayerSnapshotTaken;
+        EventHandler<MediaPlayerLengthChangedEventArgs> _mediaPlayerLengthChanged;
+        EventHandler<MediaPlayerVoutEventArgs> _mediaPlayerVout;
+        EventHandler<MediaPlayerScrambledChangedEventArgs> _mediaPlayerScrambledChanged;
+        EventHandler<MediaPlayerESAddedEventArgs> _mediaPlayerESAdded; // vlc 3
+        EventHandler<MediaPlayerESDeletedEventArgs> _mediaPlayerESDeleted; // vlc 3
+        EventHandler<MediaPlayerESSelectedEventArgs> _mediaPlayerESSelected; // vlc 3
+        EventHandler<MediaPlayerAudioDeviceEventArgs> _mediaPlayerAudioDevice; // vlc 3
+        EventHandler<EventArgs> _mediaPlayerCorked; // vlc 2.2
+        EventHandler<EventArgs> _mediaPlayerUncorked; // vlc 2.2
+        EventHandler<EventArgs> _mediaPlayerMuted; // vlc 2.2
+        EventHandler<EventArgs> _mediaPlayerUnmuted; // vlc 2.2
+        EventHandler<MediaPlayerVolumeChangedEventArgs> _mediaPlayerVolumeChanged; // vlc 2.2
+#endif
+        public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMediaChanged += value;
+                    AttachEvent(EventType.MediaPlayerMediaChanged, OnMediaChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMediaChanged -= value;
+                    DetachEvent(EventType.MediaPlayerMediaChanged, OnMediaChanged);
+                }
+            }
+        }
 
-#region Callbacks
-        
+        public event EventHandler<EventArgs> NothingSpecial
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerNothingSpecial += value;
+                    AttachEvent(EventType.MediaPlayerNothingSpecial, OnNothingSpecial);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerNothingSpecial -= value;
+                    DetachEvent(EventType.MediaPlayerNothingSpecial, OnNothingSpecial);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Opening
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerOpening += value;
+                    AttachEvent(EventType.MediaPlayerOpening, OnOpening);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerOpening -= value;
+                    DetachEvent(EventType.MediaPlayerOpening, OnOpening);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerBufferingEventArgs> Buffering
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerBuffering += value;
+                    AttachEvent(EventType.MediaPlayerBuffering, OnBuffering);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerBuffering -= value;
+                    DetachEvent(EventType.MediaPlayerBuffering, OnBuffering);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Playing
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPlaying += value;
+                    AttachEvent(EventType.MediaPlayerPlaying, OnPlaying);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPlaying -= value;
+                    DetachEvent(EventType.MediaPlayerPlaying, OnPlaying);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Paused
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPaused += value;
+                    AttachEvent(EventType.MediaPlayerPaused, OnPaused);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPaused -= value;
+                    DetachEvent(EventType.MediaPlayerPaused, OnPaused);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Stopped
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerStopped += value;
+                    AttachEvent(EventType.MediaPlayerStopped, OnStopped);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerStopped -= value;
+                    DetachEvent(EventType.MediaPlayerStopped, OnStopped);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Forward
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerForward += value;
+                    AttachEvent(EventType.MediaPlayerForward, OnForward);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerForward -= value;
+                    DetachEvent(EventType.MediaPlayerForward, OnForward);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> Backward
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerBackward += value;
+                    AttachEvent(EventType.MediaPlayerBackward, OnBackward);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerBackward -= value;
+                    DetachEvent(EventType.MediaPlayerBackward, OnBackward);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> EndReached
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerEndReached += value;
+                    AttachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerEndReached -= value;
+                    DetachEvent(EventType.MediaPlayerEndReached, OnEndReached);
+                }
+            }
+        }
+
+        public event EventHandler<EventArgs> EncounteredError
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerEncounteredError += value;
+                    AttachEvent(EventType.MediaPlayerEncounteredError, OnEncounteredError);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerEncounteredError -= value;
+                    DetachEvent(EventType.MediaPlayerEncounteredError, OnEncounteredError);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerTimeChangedEventArgs> TimeChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerTimeChanged += value;
+                    AttachEvent(EventType.MediaPlayerTimeChanged, OnTimeChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerTimeChanged -= value;
+                    DetachEvent(EventType.MediaPlayerTimeChanged, OnTimeChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerPositionChangedEventArgs> PositionChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPositionChanged += value;
+                    AttachEvent(EventType.MediaPlayerPositionChanged, OnPositionChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPositionChanged -= value;
+                    DetachEvent(EventType.MediaPlayerPositionChanged, OnPositionChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerSeekableChangedEventArgs> SeekableChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSeekableChanged += value;
+                    AttachEvent(EventType.MediaPlayerSeekableChanged, OnSeekableChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSeekableChanged -= value;
+                    DetachEvent(EventType.MediaPlayerSeekableChanged, OnSeekableChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerPausableChangedEventArgs> PausableChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPausableChanged += value;
+                    AttachEvent(EventType.MediaPlayerPausableChanged, OnPausableChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerPausableChanged -= value;
+                    DetachEvent(EventType.MediaPlayerPausableChanged, OnPausableChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerTitleChangedEventArgs> TitleChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerTitleChanged += value;
+                    AttachEvent(EventType.MediaPlayerTitleChanged, OnTitleChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerTitleChanged -= value;
+                    DetachEvent(EventType.MediaPlayerTitleChanged, OnTitleChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerChapterChangedEventArgs> ChapterChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerChapterChanged += value;
+                    AttachEvent(EventType.MediaPlayerChapterChanged, OnChapterChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerChapterChanged -= value;
+                    DetachEvent(EventType.MediaPlayerChapterChanged, OnChapterChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerSnapshotTakenEventArgs> SnapshotTaken
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSnapshotTaken += value;
+                    AttachEvent(EventType.MediaPlayerSnapshotTaken, OnSnapshotTaken);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerSnapshotTaken -= value;
+                    DetachEvent(EventType.MediaPlayerSnapshotTaken, OnSnapshotTaken);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerLengthChangedEventArgs> LengthChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerLengthChanged += value;
+                    AttachEvent(EventType.MediaPlayerLengthChanged, OnLengthChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerLengthChanged -= value;
+                    DetachEvent(EventType.MediaPlayerLengthChanged, OnLengthChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerVoutEventArgs> Vout
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVout += value;
+                    AttachEvent(EventType.MediaPlayerVout, OnVout);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVout -= value;
+                    DetachEvent(EventType.MediaPlayerVout, OnVout);
+                }
+            }
+        }
+
+        public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerScrambledChanged += value;
+                    AttachEvent(EventType.MediaPlayerScrambledChanged, OnScrambledChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerScrambledChanged -= value;
+                    DetachEvent(EventType.MediaPlayerScrambledChanged, OnScrambledChanged);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESAdded += value;
+                    AttachEvent(EventType.MediaPlayerESAdded, OnESAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESAdded -= value;
+                    DetachEvent(EventType.MediaPlayerESAdded, OnESAdded);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESDeletedEventArgs> ESDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESDeleted += value;
+                    AttachEvent(EventType.MediaPlayerESDeleted, OnESDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESDeleted -= value;
+                    DetachEvent(EventType.MediaPlayerESDeleted, OnESDeleted);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerESSelectedEventArgs> ESSelected
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESSelected += value;
+                    AttachEvent(EventType.MediaPlayerESSelected, OnESSelected);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerESSelected -= value;
+                    DetachEvent(EventType.MediaPlayerESSelected, OnESSelected);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<MediaPlayerAudioDeviceEventArgs> AudioDevice
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerAudioDevice += value;
+                    AttachEvent(EventType.MediaPlayerAudioDevice, OnAudioDevice);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerAudioDevice -= value;
+                    DetachEvent(EventType.MediaPlayerAudioDevice, OnAudioDevice);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Corked
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerCorked += value;
+                    AttachEvent(EventType.MediaPlayerCorked, OnCorked);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerCorked -= value;
+                    DetachEvent(EventType.MediaPlayerCorked, OnCorked);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Uncorked
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUncorked += value;
+                    AttachEvent(EventType.MediaPlayerUncorked, OnUncorked);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUncorked -= value;
+                    DetachEvent(EventType.MediaPlayerUncorked, OnUncorked);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Muted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMuted += value;
+                    AttachEvent(EventType.MediaPlayerMuted, OnMuted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerMuted -= value;
+                    DetachEvent(EventType.MediaPlayerMuted, OnMuted);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<EventArgs> Unmuted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUnmuted += value;
+                    AttachEvent(EventType.MediaPlayerUnmuted, OnUnmuted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerUnmuted -= value;
+                    DetachEvent(EventType.MediaPlayerUnmuted, OnUnmuted);
+                }
+            }
+        }
+
+        // v2.2
+        public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVolumeChanged += value;
+                    AttachEvent(EventType.MediaPlayerAudioVolume, OnVolumeChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaPlayerVolumeChanged -= value;
+                    DetachEvent(EventType.MediaPlayerAudioVolume, OnVolumeChanged);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Callbacks
+
+#if IOS
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnMediaChanged(IntPtr ptr)
+        {
+            _mediaPlayerMediaChanged?.Invoke(_mp,
+                new MediaPlayerMediaChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerMediaChanged.NewMedia));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnNothingSpecial(IntPtr ptr)
+        {
+            _mediaPlayerNothingSpecial?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnOpening(IntPtr ptr)
+        {
+            _mediaPlayerOpening?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnBuffering(IntPtr ptr)
+        {
+            _mediaPlayerBuffering?.Invoke(_mp,
+                new MediaPlayerBufferingEventArgs(RetrieveEvent(ptr).Union.MediaPlayerBuffering.NewCache));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnPlaying(IntPtr ptr)
+        {
+            _mediaPlayerPlaying?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnPaused(IntPtr ptr)
+        {
+            _mediaPlayerPaused?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnStopped(IntPtr ptr)
+        {
+            _mediaPlayerStopped?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnForward(IntPtr ptr)
+        {
+            _mediaPlayerForward?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnBackward(IntPtr ptr)
+        {
+            _mediaPlayerBackward?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnEndReached(IntPtr ptr)
+        {
+            _mediaPlayerEndReached?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnEncounteredError(IntPtr ptr)
+        {
+            _mediaPlayerEncounteredError?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnTimeChanged(IntPtr ptr)
+        {
+            _mediaPlayerTimeChanged?.Invoke(_mp,
+                new MediaPlayerTimeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTimeChanged.NewTime));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnPositionChanged(IntPtr ptr)
+        {
+            _mediaPlayerPositionChanged?.Invoke(_mp,
+                new MediaPlayerPositionChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPositionChanged.NewPosition));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnSeekableChanged(IntPtr ptr)
+        {
+            _mediaPlayerSeekableChanged?.Invoke(_mp,
+                new MediaPlayerSeekableChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerSeekableChanged.NewSeekable));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnPausableChanged(IntPtr ptr)
+        {
+            _mediaPlayerPausableChanged?.Invoke(_mp,
+                new MediaPlayerPausableChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPausableChanged.NewPausable));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnTitleChanged(IntPtr ptr)
+        {
+            _mediaPlayerTitleChanged?.Invoke(null,
+                new MediaPlayerTitleChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTitleChanged.NewTitle));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnChapterChanged(IntPtr ptr)
+        {
+            _mediaPlayerChapterChanged?.Invoke(_mp,
+                new MediaPlayerChapterChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerChapterChanged.NewChapter));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnSnapshotTaken(IntPtr ptr)
+        {
+            var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
+            var filename = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filenamePtr);
+            _mediaPlayerSnapshotTaken?.Invoke(_mp, new MediaPlayerSnapshotTakenEventArgs(filename));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnLengthChanged(IntPtr ptr)
+        {
+            _mediaPlayerLengthChanged?.Invoke(_mp,
+                new MediaPlayerLengthChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerLengthChanged.NewLength));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnVout(IntPtr ptr)
+        {
+            _mediaPlayerVout?.Invoke(_mp,
+                new MediaPlayerVoutEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVoutChanged.NewCount));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnScrambledChanged(IntPtr ptr)
+        {
+            _mediaPlayerScrambledChanged?.Invoke(_mp,
+                new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnESAdded(IntPtr ptr)
+        {
+            _mediaPlayerESAdded?.Invoke(_mp,
+                new MediaPlayerESAddedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnESDeleted(IntPtr ptr)
+        {
+            _mediaPlayerESDeleted?.Invoke(_mp,
+                new MediaPlayerESDeletedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnESSelected(IntPtr ptr)
+        {
+            _mediaPlayerESSelected?.Invoke(_mp,
+                new MediaPlayerESSelectedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnAudioDevice(IntPtr ptr)
+        {
+            var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
+            var deviceName = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(deviceNamePtr);
+            _mediaPlayerAudioDevice?.Invoke(_mp, new MediaPlayerAudioDeviceEventArgs(deviceName));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnCorked(IntPtr ptr)
+        {
+            _mediaPlayerCorked?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnUncorked(IntPtr ptr)
+        {
+            _mediaPlayerUncorked?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnMuted(IntPtr ptr)
+        {
+            _mediaPlayerMuted?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnUnmuted(IntPtr ptr)
+        {
+            _mediaPlayerUnmuted?.Invoke(_mp, EventArgs.Empty);
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnVolumeChanged(IntPtr ptr)
+        {
+            _mediaPlayerVolumeChanged?.Invoke(_mp,
+                new MediaPlayerVolumeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVolumeChanged.Volume));
+        }
+#else
+        void OnMediaChanged(IntPtr ptr)
+        {
+            _mediaPlayerMediaChanged?.Invoke(this,
+                new MediaPlayerMediaChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerMediaChanged.NewMedia));
+        }
+
+        void OnNothingSpecial(IntPtr ptr)
+        {
+            _mediaPlayerNothingSpecial?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnOpening(IntPtr ptr)
+        {
+            _mediaPlayerOpening?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnBuffering(IntPtr ptr)
+        {
+            _mediaPlayerBuffering?.Invoke(this,
+                new MediaPlayerBufferingEventArgs(RetrieveEvent(ptr).Union.MediaPlayerBuffering.NewCache));
+        }
+
+        void OnPlaying(IntPtr ptr)
+        {
+            _mediaPlayerPlaying?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnPaused(IntPtr ptr)
+        {
+            _mediaPlayerPaused?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnStopped(IntPtr ptr)
+        {
+            _mediaPlayerStopped?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnForward(IntPtr ptr)
+        {
+            _mediaPlayerForward?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnBackward(IntPtr ptr)
+        {
+            _mediaPlayerBackward?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnEndReached(IntPtr ptr)
+        {
+            _mediaPlayerEndReached?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnEncounteredError(IntPtr ptr)
+        {
+            _mediaPlayerEncounteredError?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnTimeChanged(IntPtr ptr)
+        {
+            _mediaPlayerTimeChanged?.Invoke(this,
+                new MediaPlayerTimeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTimeChanged.NewTime));
+        }
+
+        void OnPositionChanged(IntPtr ptr)
+        {
+            _mediaPlayerPositionChanged?.Invoke(this,
+                new MediaPlayerPositionChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPositionChanged.NewPosition));
+        }
+
+        void OnSeekableChanged(IntPtr ptr)
+        {
+            _mediaPlayerSeekableChanged?.Invoke(this,
+                new MediaPlayerSeekableChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerSeekableChanged.NewSeekable));
+        }
+
+        void OnPausableChanged(IntPtr ptr)
+        {
+            _mediaPlayerPausableChanged?.Invoke(this,
+                new MediaPlayerPausableChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPausableChanged.NewPausable));
+        }
+
+        void OnTitleChanged(IntPtr ptr)
+        {
+            _mediaPlayerTitleChanged?.Invoke(this,
+                new MediaPlayerTitleChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTitleChanged.NewTitle));
+        }
+
+        void OnChapterChanged(IntPtr ptr)
+        {
+            _mediaPlayerChapterChanged?.Invoke(this,
+                new MediaPlayerChapterChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerChapterChanged.NewChapter));
+        }
+
+        void OnSnapshotTaken(IntPtr ptr)
+        {
+            var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
+            var filename = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filenamePtr);
+            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filename));
+        }
+
+        void OnLengthChanged(IntPtr ptr)
+        {
+            _mediaPlayerLengthChanged?.Invoke(this,
+                new MediaPlayerLengthChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerLengthChanged.NewLength));
+        }
+
+        void OnVout(IntPtr ptr)
+        {
+            _mediaPlayerVout?.Invoke(this,
+                new MediaPlayerVoutEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVoutChanged.NewCount));
+        }
+
+        void OnScrambledChanged(IntPtr ptr)
+        {
+            _mediaPlayerScrambledChanged?.Invoke(this,
+                new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
+        }
+
+        void OnESAdded(IntPtr ptr)
+        {
+            _mediaPlayerESAdded?.Invoke(this,
+                new MediaPlayerESAddedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnESDeleted(IntPtr ptr)
+        {
+            _mediaPlayerESDeleted?.Invoke(this,
+                new MediaPlayerESDeletedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnESSelected(IntPtr ptr)
+        {
+            _mediaPlayerESSelected?.Invoke(this,
+                new MediaPlayerESSelectedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+        }
+
+        void OnAudioDevice(IntPtr ptr)
+        {
+            var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
+            var deviceName = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(deviceNamePtr);
+            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceName));
+        }
+
+        void OnCorked(IntPtr ptr)
+        {
+            _mediaPlayerCorked?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnUncorked(IntPtr ptr)
+        {
+            _mediaPlayerUncorked?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnMuted(IntPtr ptr)
+        {
+            _mediaPlayerMuted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnUnmuted(IntPtr ptr)
+        {
+            _mediaPlayerUnmuted?.Invoke(this, EventArgs.Empty);
+        }
+
+        void OnVolumeChanged(IntPtr ptr)
+        {
+            _mediaPlayerVolumeChanged?.Invoke(this,
+                new MediaPlayerVolumeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVolumeChanged.Volume));
+        }
+#endif
+
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
         /// <para>@{</para>

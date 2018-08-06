@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
+#if IOS
+using ObjCRuntime;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -33,31 +36,103 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_renderer_discoverer_event_manager")]
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
-
-        public RendererDiscoverer(LibVLC libVLC, string name) 
-            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), 
-                  Native.LibVLCRendererDiscovererRelease)
+#if IOS
+        static RendererDiscoverer _rd;
+#endif
+        public RendererDiscoverer(LibVLC libVLC, string name)
+            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name),
+                   Native.LibVLCRendererDiscovererRelease, Native.LibVLCRendererDiscovererEventManager)
         {
-        }
-
-        RendererDiscovererEventManager _eventManager;
-
-        public RendererDiscovererEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCRendererDiscovererEventManager(NativeReference);
-                    _eventManager = new RendererDiscovererEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
+#if IOS
+            _rd = this;
+#endif
         }
 
         public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
 
         public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
+
+        #region Events
+
+        readonly object _lock = new object();
+
+#if IOS
+        static EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
+        static EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+#else
+        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+#endif
+        // v3
+        public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemAdded += value;
+                    AttachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemAdded -= value;
+                    DetachEvent(EventType.RendererDiscovererItemAdded, OnItemAdded);
+                }
+            }
+        }
+
+        // v3
+        public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _itemDeleted += value;
+                    AttachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _itemDeleted -= value;
+                    DetachEvent(EventType.RendererDiscovererItemDeleted, OnItemDeleted);
+                }
+            }
+        }
+#if IOS
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnItemDeleted(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemDeleted?.Invoke(_rd, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnItemAdded(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemAdded?.Invoke(_rd, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+        }
+
+#else
+        void OnItemDeleted(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+        }
+
+        void OnItemAdded(IntPtr args)
+        {
+            var rendererItem = RetrieveEvent(args).RendererItem;
+            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+        }
+#endif
+        #endregion
     }
 
     public class RendererItem : Internal

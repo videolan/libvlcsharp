@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
+#if IOS
+using ObjCRuntime;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -12,7 +15,9 @@ namespace LibVLCSharp.Shared
     {
         static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
         static int _streamIndex;
-
+#if IOS
+        static Media _media;
+#endif
         internal struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -67,7 +72,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option_flag")]
             internal static extern void LibVLCMediaAddOptionFlag(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options, uint flags);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_mrl")]
@@ -162,12 +167,12 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_release")]
             internal static extern void LibVLCMediaTracksRelease(IntPtr tracks, uint count);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_subitems")]
             internal static extern IntPtr LibVLCMediaSubitems(IntPtr media);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_type")]
@@ -317,8 +322,11 @@ namespace LibVLCSharp.Shared
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument. \sa{FromType}</param>
         public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
-            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease)
+            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
+#if IOS
+            _media = this;
+#endif
         }
 
         static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
@@ -358,13 +366,21 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="fd">open file descriptor</param>
         public Media(LibVLC libVLC, int fd)
-            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease)
+            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease,
+                   Native.LibVLCMediaEventManager)
         {
+#if IOS
+            _media = this;
+#endif
         }
 
         public Media(MediaList mediaList)
-            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
+            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease,
+                   Native.LibVLCMediaEventManager)
         {
+#if IOS
+            _media = this;
+#endif
         }
 
         /// <summary>
@@ -375,10 +391,13 @@ namespace LibVLCSharp.Shared
         /// <param name="options"></param>
         [ApiVersion(3)]
         public Media(LibVLC libVLC, Stream stream, params string[] options)
-            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
-        {          
-            if(options.Any())
+            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
+        {
+            if (options.Any())
                 Native.LibVLCMediaAddOption(NativeReference, options.ToString());
+#if IOS
+            _media = this;
+#endif        
         }
 
         static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
@@ -400,8 +419,11 @@ namespace LibVLCSharp.Shared
         }
 
         public Media(IntPtr mediaPtr)
-            : base(() => mediaPtr, Native.LibVLCMediaRelease)
+            : base(() => mediaPtr, Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
+#if IOS
+            _media = this;
+#endif   
         }
 
         /// <summary>Add an option to the media.</summary>
@@ -420,7 +442,7 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void AddOption(string options)
         {
-            if(string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
+            if (string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
 
             Native.LibVLCMediaAddOption(NativeReference, options);
         }
@@ -475,7 +497,7 @@ namespace LibVLCSharp.Shared
         public Media Duplicate()
         {
             var duplicatePtr = Native.LibVLCMediaDuplicate(NativeReference);
-            if(duplicatePtr == IntPtr.Zero) throw new Exception("Failure to duplicate");
+            if (duplicatePtr == IntPtr.Zero) throw new Exception("Failure to duplicate");
             return new Media(duplicatePtr);
         }
 
@@ -500,7 +522,7 @@ namespace LibVLCSharp.Shared
         /// <param name="value">the media's meta</param>
         public void SetMeta(MetadataType metadataType, string value)
         {
-            if(string.IsNullOrEmpty(value)) throw new ArgumentNullException(value);
+            if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(value);
 
             Native.LibVLCMediaSetMeta(NativeReference, metadataType, value);
         }
@@ -517,25 +539,8 @@ namespace LibVLCSharp.Shared
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
         /// </summary>
-        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
+        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0
             ? default(MediaStats) : mediaStats;
-
-        MediaEventManager _eventManager;
-        /// <summary>
-        /// <para>Get event manager from media descriptor object.</para>
-        /// <para>NOTE: this function doesn't increment reference counting.</para>
-        /// </summary>
-        /// <returns>event manager object</returns>
-        public MediaEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager != null) return _eventManager;
-                var eventManagerPtr = Native.LibVLCMediaEventManager(NativeReference);
-                _eventManager = new MediaEventManager(eventManagerPtr);
-                return _eventManager;
-            }
-        }
 
         /// <summary>Get duration (in ms) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
@@ -615,7 +620,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <returns>list of media descriptor subitems or NULL</returns>
         public MediaList SubItems => new MediaList(Native.LibVLCMediaSubitems(NativeReference));
-       
+
         public MediaType Type => Native.LibVLCMediaGetType(NativeReference);
 
         /// <summary>Add a slave to the current media.</summary>
@@ -632,7 +637,7 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
         [ApiVersion(3)]
-        public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
+        public bool AddSlave(MediaSlaveType type, uint priority, string uri) =>
             Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
 
 
@@ -788,7 +793,7 @@ namespace LibVLCSharp.Shared
             lock (DicStreams)
             {
                 _streamIndex++;
-            
+
 
                 handle = new IntPtr(_streamIndex);
                 DicStreams[handle] = new StreamData
@@ -807,20 +812,273 @@ namespace LibVLCSharp.Shared
         }
 
         static void RemoveStream(IntPtr handle)
-        { 
+        {
             DicStreams.TryRemove(handle, out var result);
         }
 
         void Retain()
         {
-            if(NativeReference != IntPtr.Zero)
+            if (NativeReference != IntPtr.Zero)
                 Native.LibVLCMediaRetain(NativeReference);
         }
 
         #endregion
+
+        #region Events
+
+        readonly object _lock = new object();
+
+#if IOS
+        static EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
+        static EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
+        static EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
+        static EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
+        static EventHandler<MediaFreedEventArgs> _mediaFreed;
+        static EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
+        static EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
+#else
+        EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
+        EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
+        EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
+        EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
+        EventHandler<MediaFreedEventArgs> _mediaFreed;
+        EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
+        EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
+#endif
+        public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaMetaChanged += value;
+                    AttachEvent(EventType.MediaMetaChanged, OnMetaChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaMetaChanged -= value;
+                    DetachEvent(EventType.MediaMetaChanged, OnMetaChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaParsedChanged += value;
+                    AttachEvent(EventType.MediaParsedChanged, OnParsedChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaParsedChanged -= value;
+                    DetachEvent(EventType.MediaParsedChanged, OnParsedChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaSubItemAddedEventArgs> SubItemAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemAdded += value;
+                    AttachEvent(EventType.MediaSubItemAdded, OnSubItemAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemAdded -= value;
+                    DetachEvent(EventType.MediaSubItemAdded, OnSubItemAdded);
+                }
+            }
+        }
+
+        public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaDurationChanged += value;
+                    AttachEvent(EventType.MediaDurationChanged, OnDurationChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaDurationChanged -= value;
+                    DetachEvent(EventType.MediaDurationChanged, OnDurationChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaFreedEventArgs> MediaFreed
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaFreed += value;
+                    AttachEvent(EventType.MediaFreed, OnMediaFreed);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaFreed -= value;
+                    DetachEvent(EventType.MediaFreed, OnMediaFreed);
+                }
+            }
+        }
+
+        public event EventHandler<MediaStateChangedEventArgs> StateChanged
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaStateChanged += value;
+                    AttachEvent(EventType.MediaStateChanged, OnMediaStateChanged);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaStateChanged -= value;
+                    DetachEvent(EventType.MediaStateChanged, OnMediaStateChanged);
+                }
+            }
+        }
+
+        public event EventHandler<MediaSubItemTreeAddedEventArgs> SubItemTreeAdded
+        {
+            add
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemTreeAdded += value;
+                    AttachEvent(EventType.MediaSubItemTreeAdded, OnSubItemTreeAdded);
+                }
+            }
+            remove
+            {
+                lock (_lock)
+                {
+                    _mediaSubItemTreeAdded -= value;
+                    DetachEvent(EventType.MediaSubItemTreeAdded, OnSubItemTreeAdded);
+                }
+            }
+        }
+
+#if IOS
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnSubItemTreeAdded(IntPtr ptr)
+        {
+            _mediaSubItemTreeAdded?.Invoke(_media,
+                new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnMediaStateChanged(IntPtr ptr)
+        {
+            _mediaStateChanged?.Invoke(_media,
+                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnMediaFreed(IntPtr ptr)
+        {
+            _mediaFreed?.Invoke(_media, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnDurationChanged(IntPtr ptr)
+        {
+            _mediaDurationChanged?.Invoke(_media,
+                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnSubItemAdded(IntPtr ptr)
+        {
+            _mediaSubItemAdded?.Invoke(_media,
+                new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnParsedChanged(IntPtr ptr)
+        {
+            _mediaParsedChanged?.Invoke(_media,
+                new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
+        }
+
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnMetaChanged(IntPtr ptr)
+        {
+            _mediaMetaChanged?.Invoke(_media,
+                new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
+        }
+#else
+        void OnSubItemTreeAdded(IntPtr ptr)
+        {
+            _mediaSubItemTreeAdded?.Invoke(this,
+                new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
+        }
+
+        void OnMediaStateChanged(IntPtr ptr)
+        {
+            _mediaStateChanged?.Invoke(this,
+                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
+        }
+
+        void OnMediaFreed(IntPtr ptr)
+        {
+            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
+        }
+
+        void OnDurationChanged(IntPtr ptr)
+        {
+            _mediaDurationChanged?.Invoke(this,
+                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
+        }
+
+        void OnSubItemAdded(IntPtr ptr)
+        {
+            _mediaSubItemAdded?.Invoke(this,
+                new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
+        }
+
+        void OnParsedChanged(IntPtr ptr)
+        {
+            _mediaParsedChanged?.Invoke(this,
+                new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
+        }
+
+        void OnMetaChanged(IntPtr ptr)
+        {
+            _mediaMetaChanged?.Invoke(this,
+                new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
+        }
+#endif 
+#endregion
     }
 
-    #region Callbacks
+#region Callbacks
 
     /// <summary>
     /// <para>It consists of a media location and various optional meta data.</para>
@@ -879,9 +1137,9 @@ namespace LibVLCSharp.Shared
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void CloseMedia(IntPtr opaque);
 
-    #endregion
+#endregion
 
-    #region Structs
+#region Structs
 
     [StructLayout(LayoutKind.Sequential)]
     public struct MediaStats
@@ -1051,7 +1309,7 @@ namespace LibVLCSharp.Shared
         public MediaSlaveType Type;
         public uint Priority;
     }
-    #endregion
+#endregion
 
     public class MediaConfiguration
     {
