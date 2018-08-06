@@ -660,6 +660,9 @@ namespace LibVLCSharp.Shared
         public MediaPlayer(Media media)
             : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease, Native.LibVLCMediaPlayerEventManager)
         {
+#if IOS
+            _mp = this;
+#endif
         }
 
         /// <summary>

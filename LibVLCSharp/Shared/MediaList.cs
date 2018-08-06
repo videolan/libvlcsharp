@@ -133,13 +133,17 @@ namespace LibVLCSharp.Shared
                    Native.LibVLCMediaListEventManager)
 
         {
+#if IOS
             _mediaList = this;
+#endif        
         }
 
         public MediaList(IntPtr mediaListPtr)
             : base(() => mediaListPtr, Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
+#if IOS
             _mediaList = this;
+#endif
         }
 
         /// <summary>

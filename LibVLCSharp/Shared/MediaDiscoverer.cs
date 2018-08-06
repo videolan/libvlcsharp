@@ -14,7 +14,7 @@ namespace LibVLCSharp.Shared
     {
         MediaList _mediaList;
 #if IOS
-        MediaDiscoverer _md;
+        static MediaDiscoverer _md;
 #endif
         struct Native
         {
@@ -188,15 +188,16 @@ namespace LibVLCSharp.Shared
         }
 
 #if IOS
-        [MonoPInvokeCallback(typeof(EventCallback)))]
+        [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnStarted(IntPtr ptr)
         {
             _mediaDiscovererStarted?.Invoke(_md, EventArgs.Empty);
         }
 
-        void OnStopped(IntPtr ptr)
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static void OnStopped(IntPtr ptr)
         {
-            _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
+            _mediaDiscovererStopped?.Invoke(_md, EventArgs.Empty);
         }
 #else
         void OnStarted(IntPtr ptr)
