@@ -14,11 +14,9 @@ namespace LibVLCSharp.Shared
         /// <param name="cliOptions">command line options (https://wiki.videolan.org/VLC_command-line_help/)</param>
         protected MediaSource(params string[] cliOptions)
         {
-            if (CoreInitialized.Value)
-            {
-                LibVLC = new LibVLC(cliOptions);
-                MediaPlayer = new MediaPlayer(LibVLC);
-            }
+            Core.Initialize();
+            LibVLC = new LibVLC(cliOptions);
+            MediaPlayer = new MediaPlayer(LibVLC);
         }
 
         /// <summary>
@@ -39,12 +37,6 @@ namespace LibVLCSharp.Shared
             Dispose();
         }
 
-        private static Lazy<bool> CoreInitialized { get; } = new Lazy<bool>(() =>
-        {
-            Core.Initialize();
-            return true;
-        });
-
         /// <summary>
         /// Gets the <see cref="MediaPlayer"/> object
         /// </summary>
@@ -56,17 +48,17 @@ namespace LibVLCSharp.Shared
         public LibVLC LibVLC { get; }
 
 #if WINDOWS
-        public IntPtr Hwnd
+        IntPtr ISource.Hwnd
         {
             set { MediaPlayer.Hwnd = value; }
         }
 #elif ANDROID
-        public void SetAndroidContext(IntPtr aWindow)
+        void ISource.SetAndroidContext(IntPtr aWindow)
         {
             MediaPlayer.SetAndroidContext(aWindow);
         }
 #elif COCOA
-        public IntPtr NsObject
+        IntPtr ISource.NsObject
         {
             set { MediaPlayer.NsObject = value; }
         }

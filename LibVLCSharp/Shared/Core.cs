@@ -34,7 +34,7 @@ namespace LibVLCSharp.Shared
         const string Libvlc = "libvlc";
         const string Libvlccore = "libvlccore";
 
-        public static void Initialize()
+        static Core()
         {
 #if WINDOWS
             InitializeWindows();
@@ -43,6 +43,11 @@ namespace LibVLCSharp.Shared
 #elif NETCORE
             InitializeNetCore();
 #endif
+        }
+
+        public static void Initialize()
+        {
+            // To call the static constructor
         }
 
 #if NETCORE
@@ -107,7 +112,7 @@ namespace LibVLCSharp.Shared
 #elif MAC
         internal const string LibraryName = "@rpath/VLCKit.framework/VLCKit";
 #else
-        internal const string LibraryName = "libvlc";    
+        internal const string LibraryName = "libvlc";
 #endif
     }
 }
