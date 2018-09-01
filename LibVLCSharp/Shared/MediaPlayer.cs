@@ -629,6 +629,14 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_set_android_context")]
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
+            [SuppressUnmanagedCodeSecurity]
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_opengl_callbacks")]
+            internal static extern void LibVLCSetOpenGLCallbacks(IntPtr mediaplayer, OpenGLEngine GlEngine,
+                                                                LibVLCGLSetupCb setupCb, LibVLCGLCleanupCb cleanupCb,
+                                                                LibVLCGLResizeCb resizeCb, LibVLCGLSwapCb swapCb,
+                                                                LibVLCGLMakeCurrentCb makeCurrentCb, LibVLCGLGetProcAddressCb getProcCb,
+                                                                IntPtr opaque);
         }
         
         MediaPlayerEventManager _eventManager;
@@ -1600,12 +1608,29 @@ namespace LibVLCSharp.Shared
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
-#region Enums
-
-     
-
-
-#endregion
+        /// <summary>
+        /// Set callbacks and data to render decoded video to a custom OpenGL texture
+        /// warning: VLC will perform video rendering in its own thread and at its own rate,
+        /// You need to provide your own synchronisation mechanism.
+        /// OpenGL context need to be created before playing a media.
+        /// </summary>
+        /// <param name="engine">the OpenGL engine to use.</param>
+        /// <param name="setupCb">callback called to initialize user data.</param>
+        /// <param name="cleanupCb">callback called to clean up user data.</param>
+        /// <param name="resizeCb">callback called to get the size of the video.</param>
+        /// <param name="swapCb">callback called after rendering a video frame (cannot be NULL).</param>
+        /// <param name="makeCurrentCb">callback called to enter/leave the opengl context (cannot be NULL).</param>
+        /// <param name="getProcCb">opengl function loading callback (cannot be NULL).</param>
+        /// <param name="opaque">opaque private pointer passed to callbacks</param>
+        /// version LibVLC 4.0.0 or later
+        public void SetOpenGLCallbacks(OpenGLEngine engine, LibVLCGLSetupCb setupCb, LibVLCGLCleanupCb cleanupCb,
+                                        LibVLCGLResizeCb resizeCb, LibVLCGLSwapCb swapCb, 
+                                       LibVLCGLMakeCurrentCb makeCurrentCb, LibVLCGLGetProcAddressCb getProcCb, 
+                                       IntPtr opaque = default)
+        {
+            Native.LibVLCSetOpenGLCallbacks(NativeReference, engine, setupCb, cleanupCb, resizeCb,
+                                            swapCb, makeCurrentCb, getProcCb, opaque);
+        }
 
 #region Callbacks
         
@@ -1792,7 +1817,72 @@ namespace LibVLCSharp.Shared
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-#endregion
+        /// <summary>
+        /// Callback prototype called to initialize user data.
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// <returns>true on success</returns>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool LibVLCGLSetupCb(IntPtr opaque);
+
+        /// <summary>
+        /// Callback prototype called to release user data.
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LibVLCGLCleanupCb(IntPtr opaque);
+
+        /// <summary>
+        /// Callback prototype called on video size changes
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// <param name="width">video width in pixel [IN]</param>
+        /// <param name="height">video height in pixel [IN]</param>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LibVLCGLResizeCb(IntPtr opaque, uint width, uint height);
+
+        /// <summary>
+        /// Callback prototype called after performing drawing calls.
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LibVLCGLSwapCb(IntPtr opaque);
+
+        /// <summary>
+        /// Callback prototype to set up the OpenGL context for rendering
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// <param name="enter">true to set the context as current, false to unset it [IN]</param>
+        /// <returns>true on success</returns>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool LibVLCGLMakeCurrentCb(IntPtr opaque, bool enter);
+
+        /// <summary>
+        /// Callback prototype to load opengl functions
+        /// </summary>
+        /// <param name="opaque">opaque private pointer passed to the @a libvlc_video_set_opengl_callbacks() [IN]]</param>
+        /// <param name="functionName">name of the opengl function to load</param>
+        /// <returns>a pointer to the named OpenGL function, NULL otherwise</returns>
+        /// version LibVLC 4.0.0 or later
+        [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr LibVLCGLGetProcAddressCb(IntPtr opaque, string functionName);
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Enumeration of the OpenGL engine to be used
+    /// can be passed to @a libvlc_video_set_opengl_callbacks
+    /// </summary>
+    public enum OpenGLEngine
+    {
+        OpenGL = 0,
+        GLES2 = 1
     }
 
     /// <summary>Description for titles</summary>
