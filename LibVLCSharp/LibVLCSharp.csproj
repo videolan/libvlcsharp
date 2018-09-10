@@ -30,6 +30,7 @@
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
+    <PackageReference Include="Fody" Version="3.2.1" />
     <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.TVOS10' ">
