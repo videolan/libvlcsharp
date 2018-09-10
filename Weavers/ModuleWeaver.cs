@@ -13,14 +13,14 @@ namespace Weavers
             {
                 foreach (var f in type.Fields.Where(IsEventHandler))
                 {
-                    System.Diagnostics.Debug.WriteLine(f.FullName + " is now `static`");
                     f.IsStatic = true;
+                    LogInfo(f.FullName + " is now `static`");
                 }
 
                 foreach (var m in type.Methods.Where(NeedStaticKeyword))
                 {
-                    System.Diagnostics.Debug.WriteLine(m.FullName + " is now `static`");
                     m.IsStatic = true;
+                    LogInfo(m.FullName + " is now `static`");
                 }
 
                 //TODO: replace this to null in IL

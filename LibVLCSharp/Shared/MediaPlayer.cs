@@ -2314,7 +2314,7 @@ namespace LibVLCSharp.Shared
         [MonoPInvokeCallback(typeof(EventCallback))]
         void OnPositionChanged(IntPtr ptr)
         {
-            _mediaPlayerPositionChanged?.Invoke(this,
+            _mediaPlayerPositionChanged?.Invoke(null,
                 new MediaPlayerPositionChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPositionChanged.NewPosition));
         }
 
