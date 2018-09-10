@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
   <PropertyGroup>
     <Title>LibVLCSharp.Forms</Title>
     <Summary>Xamarin.Forms integration for LibVLCSharp</Summary>
@@ -7,12 +7,10 @@
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <DefineConstants>$(DefineConstants);</DefineConstants>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Version>0.0.1-alpha</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.2.0" PrivateAssets="All" />
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
   </ItemGroup>
   <ItemGroup>
@@ -27,5 +25,4 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
 </Project>

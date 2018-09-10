@@ -26,22 +26,12 @@ namespace LibVLCSharp.Shared
         static IntPtr _libvlccoreHandle;
         static IntPtr _libvlcHandle;
 
-        const string Win64 = "win-x64";
-        const string Win86 = "win-x86";
-        const string Winrt64 = "winrt-x64";
-        const string Winrt86 = "winrt-x86";
-
-        const string Libvlc = "libvlc";
-        const string Libvlccore = "libvlccore";
-
         static Core()
         {
-#if WINDOWS
-            InitializeWindows();
+#if DESKTOP
+            InitializeDesktop();
 #elif ANDROID
             InitializeAndroid();
-#elif NETCORE
-            InitializeNetCore();
 #endif
         }
 
@@ -49,14 +39,6 @@ namespace LibVLCSharp.Shared
         {
             // To call the static constructor
         }
-
-#if NETCORE
-        static void InitializeNetCore()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                InitializeWindows();
-        }
-#endif
 
 #if ANDROID
         static void InitializeAndroid()
@@ -68,44 +50,51 @@ namespace LibVLCSharp.Shared
         }
 #endif
         //TODO: Add Unload library func using handles
-        static void InitializeWindows()
+        static void InitializeDesktop()
         {
-            var myPath = new Uri(typeof(LibVLC).Assembly.CodeBase).LocalPath;
+            var myPath = typeof(LibVLC).Assembly.Location;
             var appExecutionDirectory = Path.GetDirectoryName(myPath);
             if (appExecutionDirectory == null)
                 throw new NullReferenceException(nameof(appExecutionDirectory));
 
-            var arch = Environment.Is64BitProcess ? Win64 : Win86;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var arch = Environment.Is64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
 
-            var libvlccorePath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
-                Path.Combine(arch, $"{Libvlccore}.dll"));
-            var libvlcPath = Path.Combine(Path.Combine(appExecutionDirectory, Libvlc),
-                Path.Combine(arch, $"{Libvlc}.dll"));
+                var librariesFolder = Path.Combine(appExecutionDirectory, Constants.LibrariesRepositoryFolderName, arch);
 
-            Debug.WriteLine(nameof(libvlccorePath) + ": " + libvlccorePath);
-            Debug.WriteLine(nameof(libvlcPath) + ": " + libvlcPath);
+                _libvlccoreHandle = PreloadNativeLibrary(librariesFolder, $"{Constants.CoreLibraryName}.dll");
 
-            LoadLibvlcLibraries(libvlccorePath, libvlcPath);
+                if (_libvlccoreHandle == IntPtr.Zero)
+                {
+                    throw new VLCException($"Failed to load required native library {Constants.CoreLibraryName}.dll");
+                }
+
+                _libvlcHandle = PreloadNativeLibrary(librariesFolder, $"{Constants.LibraryName}.dll");
+
+                if (_libvlcHandle == IntPtr.Zero)
+                {
+                    throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dll");
+                }
+            }
         }
 
         //TODO: check if Store app
-        static void LoadLibvlcLibraries(string libvlccorePath, string libvlcPath)
+        static IntPtr PreloadNativeLibrary(string nativeLibrariesPath, string libraryName)
         {
-            if (string.IsNullOrEmpty(libvlccorePath)) throw new NullReferenceException(nameof(libvlccorePath));
-            if (string.IsNullOrEmpty(libvlcPath)) throw new NullReferenceException(nameof(libvlcPath));
+            Debug.WriteLine($"Loading {libraryName}");
+            var libraryPath = Path.Combine(nativeLibrariesPath, libraryName);
+            if (!File.Exists(libraryPath))
+            {
+                Debug.WriteLine($"Cannot find {libraryPath}");
+                return IntPtr.Zero;
+            }
 
-            _libvlccoreHandle = Native.LoadLibrary(libvlccorePath);
-            if (_libvlccoreHandle == IntPtr.Zero)
-                throw new InvalidOperationException("failed to load libvlccore with path " + libvlccorePath +
-                                                    ". Aborting...");
-
-            _libvlcHandle = Native.LoadLibrary(libvlcPath);
-            if (_libvlcHandle == IntPtr.Zero)
-                throw new InvalidOperationException("failed to load libvlc with path " + libvlcPath + ". Aborting...");
+            return Native.LoadLibrary(libraryPath);// TODO: cross-platform load
         }
     }
 
-    static class Constants
+    internal static class Constants
     {
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
@@ -114,5 +103,25 @@ namespace LibVLCSharp.Shared
 #else
         internal const string LibraryName = "libvlc";
 #endif
+
+        internal const string CoreLibraryName = "libvlccore";
+
+        /// <summary>
+        /// The name of the folder that contains the per-architecture folders
+        /// </summary>
+        internal const string LibrariesRepositoryFolderName = "libvlc";
+    }
+
+    internal static class ArchitectureNames
+    {
+        internal const string Win64 = "win-x64";
+        internal const string Win86 = "win-x86";
+        internal const string Winrt64 = "winrt-x64";
+        internal const string Winrt86 = "winrt-x86";
+
+        internal const string Lin64 = "linux-x64";
+        internal const string LinArm = "linux-arm";
+
+        internal const string MacOS64 = "osx-x64";
     }
 }

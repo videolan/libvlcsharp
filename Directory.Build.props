@@ -1,9 +1,9 @@
 ﻿<Project>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);PORTABLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);PORTABLE;DESKTOP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <DefineConstants>$(DefineConstants);XAML;WINDOWS_CLASSIC;WINDOWS</DefineConstants>
+    <DefineConstants>$(DefineConstants);XAML;DESKTOP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0.16299'">
     <DefineConstants>$(DefineConstants);NETFX_CORE;XAML;WINDOWS_UWP;WINDOWS</DefineConstants>
@@ -26,6 +26,6 @@
     <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCORE;DESKTOP</DefineConstants>
   </PropertyGroup>
 </Project>
