@@ -3,11 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:LibVLCSharp.WPF.Sample"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Orientation="Horizontal">
-        <Button Content="PLAY" x:Name="PlayButton" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left"></Button>
-        <Button Content="STOP" x:Name="StopButton" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left"></Button>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="25">
+        <Button Content="PLAY" Click="PlayButton_Click" Width="50"></Button>
+        <Button Content="STOP" Click="StopButton_Click" Width="50"></Button>
     </StackPanel>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace LibVLCSharp.WPF.Sample
 {
@@ -7,20 +8,11 @@ namespace LibVLCSharp.WPF.Sample
         public MainWindow()
         {
             InitializeComponent();
-            Example1Btn.Click += Example1Btn_Click;
-            Example2Btn.Click += Example2Btn_Click;
         }
 
-        void Example1Btn_Click(object sender, RoutedEventArgs e)
+        private void ExampleBtn_Click(object sender, RoutedEventArgs e)
         {
-            var window = new Example1();
-            window.Show();
-        }
-
-        void Example2Btn_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new Example2();
-            window.Show();
+            ((Window)Activator.CreateInstance((Type)((FrameworkElement)sender).Tag)).Show();
         }
     }
 }
