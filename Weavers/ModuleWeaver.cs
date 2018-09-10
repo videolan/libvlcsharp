@@ -27,17 +27,17 @@ namespace Weavers
             }
         }
 
-        TypeDefinition PInvokeAttribute => ModuleDefinition.Types.First(t => t.Name.Equals("MonoPInvokeCallbackAttribute"));
-        TypeDefinition AOTAttribute => ModuleDefinition.Types.First(t => t.Name.Equals("AOT"));
+        TypeDefinition PInvokeAttribute => ModuleDefinition.Types.FirstOrDefault(t => t.Name.Equals("MonoPInvokeCallbackAttribute"));
+        TypeDefinition AOTAttribute => ModuleDefinition.Types.FirstOrDefault(t => t.Name.Equals("AOT"));
 
         bool NeedStaticKeyword(MethodDefinition methodDefinition)
             => HasPInvokeAttribute(methodDefinition);// || HasAOTAttribute(methodDefinition);
 
         bool HasPInvokeAttribute(MethodDefinition methodDefinition)
-            => methodDefinition.CustomAttributes.Any(a => a.AttributeType.Name.Equals(PInvokeAttribute.Name));
+            => methodDefinition.CustomAttributes.Any(a => a != null && a.AttributeType.Name.Equals(PInvokeAttribute?.Name));
 
         bool HasAOTAttribute(MethodDefinition methodDefinition) 
-            => methodDefinition.CustomAttributes.Any(a => a.AttributeType.Name.Equals(AOTAttribute.Name));
+            => methodDefinition.CustomAttributes.Any(a => a != null && a.AttributeType.Name.Equals(AOTAttribute?.Name));
         
         bool IsEventHandler(FieldDefinition fieldDefinition)
             => fieldDefinition.FieldType.GetElementType().FullName.Equals("System.EventHandler`1");
