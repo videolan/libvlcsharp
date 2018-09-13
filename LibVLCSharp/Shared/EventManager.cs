@@ -1750,16 +1750,6 @@ namespace LibVLCSharp.Shared
         }
     }
 
-    public class VLCException : Exception
-    {
-        public readonly string Reason;
-
-        public VLCException(string reason = "")
-        {
-            Reason = reason;
-        }
-    }
-
     [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void EventCallback(IntPtr args);
 }
