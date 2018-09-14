@@ -5,9 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
-#if IOS
-using ObjCRuntime;
-#endif
+
 
 namespace LibVLCSharp.Shared
 {
@@ -15,9 +13,7 @@ namespace LibVLCSharp.Shared
     {
         static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
         static int _streamIndex;
-#if IOS
-        static Media _media;
-#endif
+
         internal struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -324,9 +320,6 @@ namespace LibVLCSharp.Shared
         public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
             : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
-#if IOS
-            _media = this;
-#endif
         }
 
         static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
@@ -369,18 +362,12 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease,
                    Native.LibVLCMediaEventManager)
         {
-#if IOS
-            _media = this;
-#endif
         }
 
         public Media(MediaList mediaList)
             : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease,
                    Native.LibVLCMediaEventManager)
         {
-#if IOS
-            _media = this;
-#endif
         }
 
         /// <summary>
@@ -394,10 +381,7 @@ namespace LibVLCSharp.Shared
             : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
         {
             if (options.Any())
-                Native.LibVLCMediaAddOption(NativeReference, options.ToString());
-#if IOS
-            _media = this;
-#endif        
+                Native.LibVLCMediaAddOption(NativeReference, options.ToString());      
         }
 
         static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
@@ -420,10 +404,7 @@ namespace LibVLCSharp.Shared
 
         public Media(IntPtr mediaPtr)
             : base(() => mediaPtr, Native.LibVLCMediaRelease, Native.LibVLCMediaEventManager)
-        {
-#if IOS
-            _media = this;
-#endif   
+        {  
         }
 
         /// <summary>Add an option to the media.</summary>
@@ -980,97 +961,55 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnSubItemTreeAdded(IntPtr ptr)
-        {
-            _mediaSubItemTreeAdded?.Invoke(_media,
-                new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnMediaStateChanged(IntPtr ptr)
-        {
-            _mediaStateChanged?.Invoke(_media,
-                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnMediaFreed(IntPtr ptr)
-        {
-            _mediaFreed?.Invoke(_media, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnDurationChanged(IntPtr ptr)
-        {
-            _mediaDurationChanged?.Invoke(_media,
-                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnSubItemAdded(IntPtr ptr)
-        {
-            _mediaSubItemAdded?.Invoke(_media,
-                new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnParsedChanged(IntPtr ptr)
-        {
-            _mediaParsedChanged?.Invoke(_media,
-                new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnMetaChanged(IntPtr ptr)
-        {
-            _mediaMetaChanged?.Invoke(_media,
-                new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
-        }
-#else
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnSubItemTreeAdded(IntPtr ptr)
         {
-            _mediaSubItemTreeAdded?.Invoke(this,
+            _mediaSubItemTreeAdded?.Invoke(null,
                 new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnMediaStateChanged(IntPtr ptr)
         {
-            _mediaStateChanged?.Invoke(this,
+            _mediaStateChanged?.Invoke(null,
                 new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnMediaFreed(IntPtr ptr)
         {
-            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
+            _mediaFreed?.Invoke(null, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnDurationChanged(IntPtr ptr)
         {
-            _mediaDurationChanged?.Invoke(this,
+            _mediaDurationChanged?.Invoke(null,
                 new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnSubItemAdded(IntPtr ptr)
         {
-            _mediaSubItemAdded?.Invoke(this,
+            _mediaSubItemAdded?.Invoke(null,
                 new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnParsedChanged(IntPtr ptr)
         {
-            _mediaParsedChanged?.Invoke(this,
+            _mediaParsedChanged?.Invoke(null,
                 new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnMetaChanged(IntPtr ptr)
         {
-            _mediaMetaChanged?.Invoke(this,
+            _mediaMetaChanged?.Invoke(null,
                 new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
         }
-#endif 
-#endregion
+
+        #endregion
     }
 
 #region Callbacks

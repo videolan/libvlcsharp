@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-#if IOS
-using ObjCRuntime;
-#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -13,9 +10,7 @@ namespace LibVLCSharp.Shared
     public class MediaDiscoverer : Internal
     {
         MediaList _mediaList;
-#if IOS
-        static MediaDiscoverer _md;
-#endif
+
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -92,9 +87,6 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease,
                    Native.LibVLCMediaDiscovererEventManager)
         {
-#if IOS
-            _md = this;
-#endif
         }
 
         /// <summary>
@@ -138,13 +130,10 @@ namespace LibVLCSharp.Shared
         #region Events
 
         readonly object _lock = new object();
-#if IOS
-        static EventHandler<EventArgs> _mediaDiscovererStarted;
-        static EventHandler<EventArgs> _mediaDiscovererStopped;
-#else
+
         EventHandler<EventArgs> _mediaDiscovererStarted;
         EventHandler<EventArgs> _mediaDiscovererStopped;
-#endif
+
         // v3
         public event EventHandler<EventArgs> Started
         {
@@ -187,29 +176,17 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnStarted(IntPtr ptr)
-        {
-            _mediaDiscovererStarted?.Invoke(_md, EventArgs.Empty);
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnStopped(IntPtr ptr)
-        {
-            _mediaDiscovererStopped?.Invoke(_md, EventArgs.Empty);
-        }
-#else
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnStarted(IntPtr ptr)
         {
-            _mediaDiscovererStarted?.Invoke(this, EventArgs.Empty);
+            _mediaDiscovererStarted?.Invoke(null, EventArgs.Empty);
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnStopped(IntPtr ptr)
         {
-            _mediaDiscovererStopped?.Invoke(this, EventArgs.Empty);
+            _mediaDiscovererStopped?.Invoke(null, EventArgs.Empty);
         }
-#endif
-#endregion
+        #endregion
     }
 }

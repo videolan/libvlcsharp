@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-#if IOS
-using ObjCRuntime;
-#endif
+
 
 namespace LibVLCSharp.Shared
 {
@@ -11,9 +9,6 @@ namespace LibVLCSharp.Shared
     {
         readonly object _syncLock = new object();
         bool _nativeLock;
-#if IOS
-        static MediaList _mediaList;
-#endif
 
         struct Native
         {
@@ -106,9 +101,6 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaSubitems(media.NativeReference), Native.LibVLCMediaListRelease,
                    Native.LibVLCMediaListEventManager)
         {
-#if IOS
-            _mediaList = this;
-#endif
         }
 
         /// <summary>
@@ -119,9 +111,6 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
                    Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
-#if IOS
-            _mediaList = this;
-#endif
         }
 
         /// <summary>
@@ -132,18 +121,12 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease,
                    Native.LibVLCMediaListEventManager)
 
-        {
-#if IOS
-            _mediaList = this;
-#endif        
+        {    
         }
 
         public MediaList(IntPtr mediaListPtr)
             : base(() => mediaListPtr, Native.LibVLCMediaListRelease, Native.LibVLCMediaListEventManager)
         {
-#if IOS
-            _mediaList = this;
-#endif
         }
 
         /// <summary>
@@ -299,19 +282,11 @@ namespace LibVLCSharp.Shared
 
         readonly object _lock = new object();
 
-#if IOS
-        static EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
-        static EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
-        static EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
-        static EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
-        static EventHandler<EventArgs> _mediaListEndReached;
-#else
         EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
         EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
         EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
         EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
         EventHandler<EventArgs> _mediaListEndReached;
-#endif
 
         public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
         {
@@ -412,86 +387,48 @@ namespace LibVLCSharp.Shared
                 }
             }
         }
-#if IOS
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnItemAdded(IntPtr ptr)
-        {
-            var itemAdded = RetrieveEvent(ptr).Union.MediaListItemAdded;
 
-            _mediaListItemAdded?.Invoke(_mediaList,
-                new MediaListItemAddedEventArgs(new Media(itemAdded.MediaInstance), itemAdded.Index));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnWillAddItem(IntPtr ptr)
-        {
-            var willAddItem = RetrieveEvent(ptr).Union.MediaListWillAddItem;
-
-            _mediaListWillAddItem?.Invoke(_mediaList,
-                new MediaListWillAddItemEventArgs(new Media(willAddItem.MediaInstance), willAddItem.Index));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnItemDeleted(IntPtr ptr)
-        {
-            var itemDeleted = RetrieveEvent(ptr).Union.MediaListItemDeleted;
-
-            _mediaListItemDeleted?.Invoke(_mediaList,
-                new MediaListItemDeletedEventArgs(new Media(itemDeleted.MediaInstance), itemDeleted.Index));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnWillDeleteItem(IntPtr ptr)
-        {
-            var willDeleteItem = RetrieveEvent(ptr).Union.MediaListWillDeleteItem;
-
-            _mediaListWillDeleteItem?.Invoke(_mediaList,
-                new MediaListWillDeleteItemEventArgs(new Media(willDeleteItem.MediaInstance), willDeleteItem.Index));
-        }
-
-        [MonoPInvokeCallback(typeof(EventCallback))]
-        static void OnEndReached(IntPtr ptr)
-        {
-            _mediaListEndReached?.Invoke(_mediaList, EventArgs.Empty);
-        }
-#else
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnItemAdded(IntPtr ptr)
         {
             var itemAdded = RetrieveEvent(ptr).Union.MediaListItemAdded;
 
-            _mediaListItemAdded?.Invoke(this,
+            _mediaListItemAdded?.Invoke(null,
                 new MediaListItemAddedEventArgs(new Media(itemAdded.MediaInstance), itemAdded.Index));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnWillAddItem(IntPtr ptr)
         {
             var willAddItem = RetrieveEvent(ptr).Union.MediaListWillAddItem;
 
-            _mediaListWillAddItem?.Invoke(this,
+            _mediaListWillAddItem?.Invoke(null,
                 new MediaListWillAddItemEventArgs(new Media(willAddItem.MediaInstance), willAddItem.Index));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnItemDeleted(IntPtr ptr)
         {
             var itemDeleted = RetrieveEvent(ptr).Union.MediaListItemDeleted;
 
-            _mediaListItemDeleted?.Invoke(this,
+            _mediaListItemDeleted?.Invoke(null,
                 new MediaListItemDeletedEventArgs(new Media(itemDeleted.MediaInstance), itemDeleted.Index));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnWillDeleteItem(IntPtr ptr)
         {
             var willDeleteItem = RetrieveEvent(ptr).Union.MediaListWillDeleteItem;
 
-            _mediaListWillDeleteItem?.Invoke(this,
+            _mediaListWillDeleteItem?.Invoke(null,
                 new MediaListWillDeleteItemEventArgs(new Media(willDeleteItem.MediaInstance), willDeleteItem.Index));
         }
 
+        //[MonoPInvokeCallback(typeof(EventCallback))]
         void OnEndReached(IntPtr ptr)
         {
-            _mediaListEndReached?.Invoke(this, EventArgs.Empty);
+            _mediaListEndReached?.Invoke(null, EventArgs.Empty);
         }
-#endif
 
         #endregion
     }

@@ -49,14 +49,14 @@ namespace LibVLCSharp.Shared
         }
     }
 
-    [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class MonoPInvokeCallbackAttribute : Attribute
-    {
-        public MonoPInvokeCallbackAttribute(Type type)
+        [AttributeUsage(AttributeTargets.Method)]
+        internal sealed class MonoPInvokeCallbackAttribute : Attribute
         {
-            Type = type;
-        }
+            public MonoPInvokeCallbackAttribute(Type type)
+            {
+                Type = type;
+            }
 
-        public Type Type { get; private set; }
-    }
+            public Type Type { get; private set; }
+        }
 }
