@@ -20,6 +20,7 @@ namespace Weavers
                 foreach (var m in type.Methods.Where(NeedStaticKeyword))
                 {
                     m.IsStatic = true;
+                    m.HasThis = false;
                     LogInfo("Method: " + m.Name + " is now `static`");
                 }
 
