@@ -13,17 +13,14 @@ namespace LibVLCSharp.Shared
 
         struct Native
         {
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_login")]
             internal static extern int LibVLCDialogPostLogin(IntPtr dialogId, string username, string password, bool store);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_action")]
             internal static extern int LibVLCDialogPostAction(IntPtr dialogId, int actionIndex);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_dismiss")]
             internal static extern int LibVLCDialogDismiss(IntPtr dialogId);
@@ -132,25 +129,25 @@ namespace LibVLCSharp.Shared
 
     public delegate Task UpdateProgress(Dialog dialog, float position, string text);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void DisplayErrorCallback(IntPtr data, string title, string text);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void DisplayLoginCallback(IntPtr data, IntPtr dialogId, string title, string text,
         string defaultUsername, bool askStore);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void DisplayQuestionCallback(IntPtr data, IntPtr dialogId, string title, string text,
         DialogQuestionType type, string cancelText, string firstActionText, string secondActionText);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void DisplayProgressCallback(IntPtr data, IntPtr dialogId, string title, string text,
         bool indeterminate, float position, string cancelText);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void CancelCallback(IntPtr data, IntPtr dialogId);
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void UpdateProgressCallback(IntPtr data, IntPtr dialogId, float position, string text);
 
     /// <summary>Dialog callbacks to be implemented</summary>

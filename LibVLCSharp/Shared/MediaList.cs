@@ -12,82 +12,82 @@ namespace LibVLCSharp.Shared
 
         struct Native
         {
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_subitems")]
             internal static extern IntPtr LibVLCMediaSubitems(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_new")]
             internal static extern IntPtr LibVLCMediaListNew(IntPtr instance);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_release")]
             internal static extern void LibVLCMediaListRelease(IntPtr mediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_media_list")]
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_library_media_list")]
             internal static extern IntPtr LibVLCMediaLibraryMediaList(IntPtr libraryMediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_set_media")]
             internal static extern void LibVLCMediaListSetMedia(IntPtr mediaList, IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_add_media")]
             internal static extern int LibVLCMediaListAddMedia(IntPtr mediaList, IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_insert_media")]
             internal static extern int LibVLCMediaListInsertMedia(IntPtr mediaList, IntPtr media, int positionIndex);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_remove_index")]
             internal static extern int LibVLCMediaListRemoveIndex(IntPtr mediaList, int positionIndex);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_count")]
             internal static extern int LibVLCMediaListCount(IntPtr mediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_item_at_index")]
             internal static extern IntPtr LibVLCMediaListItemAtIndex(IntPtr mediaList, int positionIndex);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_index_of_item")]
             internal static extern int LibVLCMediaListIndexOfItem(IntPtr mediaList, IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_is_readonly")]
             internal static extern int LibVLCMediaListIsReadonly(IntPtr mediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_lock")]
             internal static extern void LibVLCMediaListLock(IntPtr mediaList);
             
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_unlock")]
             internal static extern void LibVLCMediaListUnlock(IntPtr mediaList);
 
-            [SuppressUnmanagedCodeSecurity]
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_event_manager")]
             internal static extern IntPtr LibVLCMediaListEventManager(IntPtr mediaList);

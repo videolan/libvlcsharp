@@ -9,10 +9,11 @@ namespace LibVLCSharp.Shared
     /// <summary>
     /// Marshal unicode string param to utf-8 string,usage:[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]
     /// </summary>
+#if !NETSTANDARD1_1
     public class Utf8StringMarshaler : ICustomMarshaler
     {
         private static readonly Utf8StringMarshaler _instance = new Utf8StringMarshaler();
-        
+
         public IntPtr MarshalManagedToNative(object ManagedObj)
         {
             if (ManagedObj == null)
@@ -64,4 +65,5 @@ namespace LibVLCSharp.Shared
             return _instance;
         }
     }
+#endif
 }

@@ -11,8 +11,14 @@ namespace LibVLCSharp.Shared
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
         {
             var nativeRef = getRef();
-            if (nativeRef == IntPtr.Zero) return Array.Empty<TU>();
-
+            if (nativeRef == IntPtr.Zero)
+            {
+#if NETSTANDARD1_1
+                return new TU[0];
+#else
+                return Array.Empty<TU>();
+#endif
+            }
             var structure = retrieve(nativeRef);
 
             var obj = create(structure);
@@ -28,7 +34,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// 
+        /// Turns an array of UTF16 C# strings to an array of pointer to UTF8 strings
         /// </summary>
         /// <param name="args"></param>
         /// <returns>Array of pointer you need to release when you're done with Marshal.FreeHGlobal</returns>
@@ -46,6 +52,15 @@ namespace LibVLCSharp.Shared
             }
 
             return utf8Args;
+        }
+
+        public static T PtrToStructure<T>(IntPtr ptr)
+        {
+#if NETSTANDARD1_1
+            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+#else
+            return Marshal.PtrToStructure<T>(ptr);
+#endif
         }
     }
 

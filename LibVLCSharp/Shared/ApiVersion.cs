@@ -17,7 +17,6 @@ namespace LibVLCSharp.Shared
             /// <summary>Retrieve libvlc version.</summary>
             /// <returns>a string containing the libvlc version</returns>
             /// <remarks>Example: &quot;1.1.0-git The Luggage&quot;</remarks>
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();

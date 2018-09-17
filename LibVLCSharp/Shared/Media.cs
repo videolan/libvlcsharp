@@ -15,22 +15,18 @@ namespace LibVLCSharp.Shared
 
         internal struct Native
         {
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_location")]
             internal static extern IntPtr LibVLCMediaNewLocation(IntPtr libVLC, IntPtr mrl);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_path")]
             internal static extern IntPtr LibVLCMediaNewPath(IntPtr libVLC, IntPtr path);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_as_node")]
             internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr libVLC, IntPtr name);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_fd")]
             internal static extern IntPtr LibVLCMediaNewFd(IntPtr libVLC, int fd);
@@ -43,162 +39,130 @@ namespace LibVLCSharp.Shared
             /// <para>should not be used again.</para>
             /// </summary>
             /// <param name="media">the media descriptor</param>
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_release")]
             internal static extern void LibVLCMediaRelease(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_media")]
             internal static extern IntPtr LibVLCMediaListMedia(IntPtr mediaList);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
             internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, IntPtr openCb, IntPtr readCb, IntPtr seekCb, IntPtr closeCb, IntPtr opaque);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option")]
             internal static extern void LibVLCMediaAddOption(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option_flag")]
             internal static extern void LibVLCMediaAddOptionFlag(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options, uint flags);
             
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_mrl")]
             internal static extern IntPtr LibVLCMediaGetMrl(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_duplicate")]
             internal static extern IntPtr LibVLCMediaDuplicate(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_meta")]
             internal static extern IntPtr LibVLCMediaGetMeta(IntPtr media, MetadataType metadataType);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_set_meta")]
             internal static extern void LibVLCMediaSetMeta(IntPtr media, MetadataType metadataType, [MarshalAs(UnmanagedType.LPStr)] string value);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_save_meta")]
             internal static extern int LibVLCMediaSaveMeta(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_state")]
             internal static extern VLCState LibVLCMediaGetState(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_event_manager")]
             internal static extern IntPtr LibVLCMediaEventManager(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_stats")]
             internal static extern int LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_duration")]
             internal static extern long LibVLCMediaGetDuration(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse")]
             internal static extern void LibVLCMediaParse(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse_async")]
             internal static extern void LibVLCMediaParseAsync(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_is_parsed")]
             internal static extern int LibVLCMediaIsParsed(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse_with_options")]
             internal static extern int LibVLCMediaParseWithOptions(IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_parsed_status")]
             internal static extern MediaParsedStatus LibVLCMediaGetParsedStatus(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse_stop")]
             internal static extern void LibVLCMediaParseStop(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_set_user_data")]
             internal static extern void LibVLCMediaSetUserData(IntPtr media, IntPtr userData);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_user_data")]
             internal static extern IntPtr LibVLCMediaGetUserData(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_get")]
             internal static extern uint LibVLCMediaTracksGet(IntPtr media, ref IntPtr tracksPtr);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_release")]
             internal static extern void LibVLCMediaTracksRelease(IntPtr tracks, uint count);
             
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_subitems")]
             internal static extern IntPtr LibVLCMediaSubitems(IntPtr media);
             
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_type")]
             internal static extern MediaType LibVLCMediaGetType(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_add")]
             internal static extern int LibVLCMediaAddSlaves(IntPtr media, MediaSlaveType slaveType, uint priority, [MarshalAs(UnmanagedType.LPStr)] string uri);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_clear")]
             internal static extern void LibVLCMediaClearSlaves(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_get")]
             internal static extern uint LibVLCMediaGetSlaves(IntPtr media, ref IntPtr slaves);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_release")]
             internal static extern void LibVLCMediaReleaseSlaves(IntPtr slaves, uint count);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_retain")]
             internal static extern void LibVLCMediaRetain(IntPtr media);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_get_codec_description")]
             internal static extern string LibvlcMediaGetCodecDescription(TrackType type, uint codec);
@@ -601,7 +565,7 @@ namespace LibVLCSharp.Shared
                 for (var i = 0; i < count; i++)
                 {
                     var ptr = Marshal.ReadIntPtr(arrayResultPtr, i * IntPtr.Size);
-                    var managedStruct = Marshal.PtrToStructure<MediaTrack>(ptr);
+                    var managedStruct = MarshalUtils.PtrToStructure<MediaTrack>(ptr);
                     tracks.Add(managedStruct);
 
                 }
@@ -672,7 +636,7 @@ namespace LibVLCSharp.Shared
                 for (var i = 0; i < count; i++)
                 {
                     var ptr = Marshal.ReadIntPtr(slaveArrayPtr, i * IntPtr.Size);
-                    var managedStruct = Marshal.PtrToStructure<MediaSlave>(ptr);
+                    var managedStruct = MarshalUtils.PtrToStructure<MediaSlave>(ptr);
                     slaves.Add(managedStruct);
                 }
                 Native.LibVLCMediaReleaseSlaves(slaveArrayPtr, count);
@@ -894,7 +858,7 @@ namespace LibVLCSharp.Shared
     /// <para>in the</para>
     /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int OpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
 
     /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
@@ -912,7 +876,7 @@ namespace LibVLCSharp.Shared
     /// <para>In particular, the callback should return an error if playback is stopped;</para>
     /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
     /// </remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int ReadMedia(IntPtr opaque, IntPtr buf, uint len);
 
     /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
@@ -920,13 +884,13 @@ namespace LibVLCSharp.Shared
     /// <param name="offset">absolute byte offset to seek to</param>
     /// <returns>0 on success, -1 on error.</returns>
     /// <remarks>callback</remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int SeekMedia(IntPtr opaque, ulong offset);
 
     /// <summary>Callback prototype to close a custom bitstream input media.</summary>
     /// <param name="opaque">private pointer as set by the</param>
     /// <remarks>callback</remarks>
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void CloseMedia(IntPtr opaque);
 
     #endregion

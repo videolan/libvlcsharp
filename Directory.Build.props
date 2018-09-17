@@ -2,6 +2,9 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <DefineConstants>$(DefineConstants);PORTABLE;DESKTOP</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
+    <DefineConstants>$(DefineConstants);NETSTANDARD1_1</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <DefineConstants>$(DefineConstants);XAML;DESKTOP</DefineConstants>
   </PropertyGroup>

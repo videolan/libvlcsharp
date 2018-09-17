@@ -4,7 +4,7 @@
     <Summary>.NET bindings for LibVLC</Summary>
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.1;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
