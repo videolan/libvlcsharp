@@ -43,7 +43,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
-#endif
+#elif DESKTOP
         //TODO: Add Unload library func using handles
         static void InitializeDesktop()
         {
@@ -87,6 +87,7 @@ namespace LibVLCSharp.Shared
 
             return Native.LoadLibrary(libraryPath);// TODO: cross-platform load
         }
+#endif
     }
 
     internal static class Constants

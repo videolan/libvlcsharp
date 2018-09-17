@@ -411,7 +411,7 @@ namespace LibVLCSharp.Shared
         bool CloseLogFile()
         {
             if (_logFileHandle == IntPtr.Zero) return true;
-#if !IOS
+#if DESKTOP
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 return Native.fcloseWindows(_logFileHandle) == 0;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -479,7 +479,7 @@ namespace LibVLCSharp.Shared
         IntPtr NativeFilePtr(string filename)
         {
             var filePtr = IntPtr.Zero;
-#if !IOS
+#if DESKTOP
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Native._wfopen_s(out filePtr, filename);
