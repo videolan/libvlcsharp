@@ -61,26 +61,14 @@ namespace LibVLCSharp.Shared
 
         public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
         {
-            add
-            {
-                EventManager.AttachEvent(EventType.RendererDiscovererItemAdded, value);
-            }
-            remove
-            {
-                EventManager.DetachEvent(EventType.RendererDiscovererItemAdded, value);
-            }
+            add => EventManager.AttachEvent(EventType.RendererDiscovererItemAdded, value);
+            remove => EventManager.DetachEvent(EventType.RendererDiscovererItemAdded, value);
         }
 
         public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
         {
-            add
-            {
-                EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
-            }
-            remove
-            {
-                EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
-            }
+            add => EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
+            remove => EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
         }
     }
 

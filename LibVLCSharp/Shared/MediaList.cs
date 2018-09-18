@@ -287,5 +287,39 @@ namespace LibVLCSharp.Shared
                 return _eventManager;
             }
         }
+
+        #region Events
+
+        public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
+        {
+            add => EventManager.AttachEvent(EventType.MediaListItemAdded, value);
+            remove => EventManager.DetachEvent(EventType.MediaListItemAdded, value);
+        }
+
+        public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
+        {
+            add => EventManager.AttachEvent(EventType.MediaListWillAddItem, value);
+            remove => EventManager.DetachEvent(EventType.MediaListWillAddItem, value);
+        }
+
+        public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
+        {
+            add => EventManager.AttachEvent(EventType.MediaListItemDeleted, value);
+            remove => EventManager.DetachEvent(EventType.MediaListItemDeleted, value);
+        }
+
+        public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
+        {
+            add => EventManager.AttachEvent(EventType.MediaListWillDeleteItem, value);
+            remove => EventManager.DetachEvent(EventType.MediaListWillDeleteItem, value);
+        }
+
+        public event EventHandler<EventArgs> EndReached
+        {
+            add => EventManager.AttachEvent(EventType.MediaListEndReached, value);
+            remove => EventManager.DetachEvent(EventType.MediaListEndReached, value);
+        }
+
+        #endregion 
     }
 }

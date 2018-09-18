@@ -31,7 +31,7 @@ namespace LibVLCSharp.Shared
             NativeReference = ptr;
         }
 
-        internal protected void AttachNativeEvent(EventType eventType, EventCallback eventCallback)
+        protected void AttachNativeEvent(EventType eventType, EventCallback eventCallback)
         {
             _callbacks.Add(eventCallback);
             if (Internal.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
@@ -41,7 +41,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        internal protected void DetachNativeEvent(EventType eventType, EventCallback eventCallback)
+        protected void DetachNativeEvent(EventType eventType, EventCallback eventCallback)
         {
             _callbacks.Remove(eventCallback);
 
@@ -55,10 +55,8 @@ namespace LibVLCSharp.Shared
 #endif
 
         internal protected void OnEventUnhandled(object sender, EventType eventType)
-        {
-            throw new InvalidOperationException($"eventType {nameof(eventType)} unhandled by type {sender.GetType().Name}");
-        }
-
+            => throw new InvalidOperationException($"eventType {nameof(eventType)} unhandled by type {sender.GetType().Name}");
+        
         internal protected abstract void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
         internal protected abstract void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
     }

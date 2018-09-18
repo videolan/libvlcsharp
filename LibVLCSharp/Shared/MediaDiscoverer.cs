@@ -131,6 +131,9 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public bool IsRunning => Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0;
 
+        /// <summary>
+        /// The MediaList attached to this MediaDiscoverer
+        /// </summary>
         public MediaList MediaList
         {
             get
@@ -144,5 +147,21 @@ namespace LibVLCSharp.Shared
                 return _mediaList;
             }
         }
+
+        #region Events
+
+        public event EventHandler<EventArgs> Started
+        {
+            add => EventManager.AttachEvent(EventType.MediaDiscovererStarted, value);
+            remove => EventManager.DetachEvent(EventType.MediaDiscovererStarted, value);
+        }
+
+        public event EventHandler<EventArgs> Stopped
+        {
+            add => EventManager.AttachEvent(EventType.MediaDiscovererStopped, value);
+            remove => EventManager.DetachEvent(EventType.MediaDiscovererStopped, value);
+        }
+
+        #endregion
     }
 }

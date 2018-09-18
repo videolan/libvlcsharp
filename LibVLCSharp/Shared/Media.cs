@@ -818,6 +818,52 @@ namespace LibVLCSharp.Shared
         }
 
         #endregion
+
+        #region Events
+
+        public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaMetaChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaMetaChanged, value);
+        }
+
+        public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaParsedChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaParsedChanged, value);
+        }
+
+        public event EventHandler<MediaParsedChangedEventArgs> SubItemAdded
+        {
+            add => EventManager.AttachEvent(EventType.MediaSubItemAdded, value);
+            remove => EventManager.DetachEvent(EventType.MediaSubItemAdded, value);
+        }
+
+        public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaDurationChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaDurationChanged, value);
+        }
+
+        public event EventHandler<MediaFreedEventArgs> MediaFreed
+        {
+            add => EventManager.AttachEvent(EventType.MediaFreed, value);
+            remove => EventManager.DetachEvent(EventType.MediaFreed, value);
+        }
+
+        public event EventHandler<MediaFreedEventArgs> StateChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaStateChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaStateChanged, value);
+        }
+
+        public event EventHandler<MediaFreedEventArgs> SubItemTreeAdded
+        {
+            add => EventManager.AttachEvent(EventType.MediaSubItemTreeAdded, value);
+            remove => EventManager.DetachEvent(EventType.MediaSubItemTreeAdded, value);
+        }
+        
+        #endregion
     }
 
     #region Callbacks

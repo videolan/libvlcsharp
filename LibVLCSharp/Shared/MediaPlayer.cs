@@ -39,7 +39,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_event_manager")]
             internal static extern IntPtr LibVLCMediaPlayerEventManager(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_playing")]
@@ -134,7 +134,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_chapter_count")]
             internal static extern int LibVLCMediaPlayerGetChapterCount(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_will_play")]
@@ -229,7 +229,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_toggle_fullscreen")]
             internal static extern void LibVLCToggleFullscreen(IntPtr mediaPlayer);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_fullscreen")]
@@ -253,7 +253,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_set_callbacks")]
-            internal static extern void LibVLCAudioSetCallbacks(IntPtr mediaPlayer, LibVLCAudioPlayCb play, LibVLCAudioPauseCb pause, 
+            internal static extern void LibVLCAudioSetCallbacks(IntPtr mediaPlayer, LibVLCAudioPlayCb play, LibVLCAudioPauseCb pause,
                 LibVLCAudioResumeCb resume, LibVLCAudioFlushCb flush, LibVLCAudioDrainCb drain, IntPtr opaque);
 
             [SuppressUnmanagedCodeSecurity]
@@ -269,8 +269,8 @@ namespace LibVLCSharp.Shared
             // TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_set_format")] 
-            internal static extern void LibVLCAudioSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string format, 
+                EntryPoint = "libvlc_audio_set_format")]
+            internal static extern void LibVLCAudioSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string format,
                 uint rate, uint channels);
 
             [SuppressUnmanagedCodeSecurity]
@@ -282,7 +282,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_set")]
-            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string module, 
+            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string module,
                 [MarshalAs(UnmanagedType.LPStr)] string deviceId);
 
             // TODO: UTF8
@@ -359,20 +359,20 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_callbacks")]
-            internal static extern void LibVLCVideoSetCallbacks(IntPtr mediaPlayer, LibVLCVideoLockCb lockCallback, 
+            internal static extern void LibVLCVideoSetCallbacks(IntPtr mediaPlayer, LibVLCVideoLockCb lockCallback,
                 LibVLCVideoUnlockCb unlock, LibVLCVideoDisplayCb display, IntPtr opaque);
 
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format")]
-            internal static extern void LibVLCVideoSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string chroma, 
+            internal static extern void LibVLCVideoSetFormat(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string chroma,
                 uint width, uint height, uint pitch);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format_callbacks")]
-            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup, 
+            internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup,
                 LibVLCVideoCleanupCb cleanup);
 
             [SuppressUnmanagedCodeSecurity]
@@ -415,7 +415,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_aspect_ratio")]
             internal static extern void LibVLCVideoSetAspectRatio(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string aspect);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu")]
@@ -462,7 +462,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_full_title_descriptions")]
             internal static extern int LibVLCMediaPlayerGetFullTitleDescriptions(IntPtr mediaPlayer, IntPtr titles);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_chapter_description")]
@@ -483,7 +483,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_chapter_descriptions_release")]
             internal static extern void LibVLCChapterDescriptionsRelease(IntPtr chapters, uint count);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_crop_geometry")]
@@ -494,7 +494,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_crop_geometry")]
             internal static extern void LibVLCVideoSetCropGeometry(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string geometry);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_teletext")]
@@ -524,12 +524,12 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_track")]
             internal static extern int LibVLCVideoSetTrack(IntPtr mediaPlayer, int track);
-            
+
             // TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_take_snapshot")]
-            internal static extern int LibVLCVideoTakeSnapshot(IntPtr mediaPlayer, uint num, 
+            internal static extern int LibVLCVideoTakeSnapshot(IntPtr mediaPlayer, uint num,
                 [MarshalAs(UnmanagedType.LPStr)] string filepath, uint width, uint height);
 
             // TODO: UTF8
@@ -558,7 +558,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_marquee_string")]
             internal static extern void LibVLCVideoSetMarqueeString(IntPtr mediaPlayer, VideoMarqueeOption option, [MarshalAs(UnmanagedType.LPStr)] string marqueeValue);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_logo_int")]
@@ -573,7 +573,7 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_logo_string")]
-            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, VideoLogoOption option, 
+            internal static extern void LibVLCVideoSetLogoString(IntPtr mediaPlayer, VideoLogoOption option,
                 [MarshalAs(UnmanagedType.LPStr)] string logoOptionValue);
 
             [SuppressUnmanagedCodeSecurity]
@@ -595,19 +595,19 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_adjust_float")]
             internal static extern void LibVLCVideoSetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option, float value);
-            
+
             //TODO: UTF8
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_add_slave")]
-            internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType, 
+            internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType,
                 [MarshalAs(UnmanagedType.LPStr)] string uri, bool selectWhenloaded);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_update_viewpoint")]
             internal static extern int LibVLCVideoUpdateViewpoint(IntPtr mediaPlayer, VideoViewpoint viewpoint, bool absolute);
-            
+
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_track_description_list_release")]
@@ -630,7 +630,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
         }
-        
+
         MediaPlayerEventManager _eventManager;
 
         /// <summary>Create an empty Media Player object</summary>
@@ -639,7 +639,7 @@ namespace LibVLCSharp.Shared
         /// <para>should be created.</para>
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public MediaPlayer(LibVLC libVLC) 
+        public MediaPlayer(LibVLC libVLC)
             : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
         }
@@ -654,7 +654,7 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
         }
-        
+
         /// <summary>
         /// Get the media used by the media_player.
         /// Set the media that will be used by the media_player. 
@@ -852,7 +852,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void PreviousChapter()
         {
-            Native.LibVLCMediaPlayerPreviousChapter(NativeReference);    
+            Native.LibVLCMediaPlayerPreviousChapter(NativeReference);
         }
 
         /// <summary>
@@ -898,8 +898,8 @@ namespace LibVLCSharp.Shared
         public float Fps
         {
             get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
-        } 
-        
+        }
+
         /// <summary>
         /// Get the number of video outputs 
         /// </summary>
@@ -1056,7 +1056,7 @@ namespace LibVLCSharp.Shared
         /// <param name="channels">channels count</param>
         public void SetAudioFormat(string format, uint rate, uint channels)
         {
-            Native.LibVLCAudioSetFormat(NativeReference, format, rate, channels);    
+            Native.LibVLCAudioSetFormat(NativeReference, format, rate, channels);
         }
 
         /// <summary>
@@ -1146,7 +1146,7 @@ namespace LibVLCSharp.Shared
             var track = Marshal.PtrToStructure<TrackDescription>(trackPtr);
 
             while (true)
-            {       
+            {
                 trackDescriptions.Add(track);
                 if (track.Next != IntPtr.Zero)
                 {
@@ -1154,7 +1154,7 @@ namespace LibVLCSharp.Shared
                 }
                 else
                 {
-                    break;    
+                    break;
                 }
             }
             return trackDescriptions.ToArray();
@@ -1349,7 +1349,7 @@ namespace LibVLCSharp.Shared
         public bool SetSpu(int spu)
         {
             return Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
-        } 
+        }
 
         public int SpuCount => Native.LibVLCVideoGetSpuCount(NativeReference);
 
@@ -1461,7 +1461,7 @@ namespace LibVLCSharp.Shared
         /// <param name="width">the snapshot's width</param>
         /// <param name="height">the snapshot's height</param>
         /// <returns>true on success</returns>
-        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) => 
+        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) =>
             Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePath, width, height) == 0;
 
         /// <summary>
@@ -1584,15 +1584,15 @@ namespace LibVLCSharp.Shared
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
-#region Enums
-
-     
+        #region Enums
 
 
-#endregion
 
-#region Callbacks
-        
+
+        #endregion
+
+        #region Callbacks
+
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
         /// <para>@{</para>
@@ -1677,7 +1677,7 @@ namespace LibVLCSharp.Shared
         /// <para>in the video decoders, video filters and/or video converters.</para>
         /// </remarks>
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate uint LibVLCVideoFormatCb(ref IntPtr userData, IntPtr chroma, ref uint width, 
+        public delegate uint LibVLCVideoFormatCb(ref IntPtr userData, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
@@ -1776,9 +1776,8 @@ namespace LibVLCSharp.Shared
         [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-#endregion
-        #region events
-
+        #endregion
+        
         /// <summary>
         /// Get the Event Manager from which the media player send event.
         /// </summary>
@@ -1795,17 +1794,188 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        #region events
+
+        public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerMediaChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerMediaChanged, value);
+        }
+
+        public event EventHandler<EventArgs> NothingSpecial
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerNothingSpecial, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerNothingSpecial, value);
+        }
+
+        public event EventHandler<EventArgs> Opening
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerOpening, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerOpening, value);
+        }
+
+        public event EventHandler<MediaPlayerBufferingEventArgs> Buffering
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerBuffering, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerBuffering, value);
+        }
+
+        public event EventHandler<EventArgs> Playing
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerPlaying, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerPlaying, value);
+        }
+
+        public event EventHandler<EventArgs> Paused
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerPaused, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerPaused, value);
+        }
+
+        public event EventHandler<EventArgs> Stopped
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerStopped, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerStopped, value);
+        }
+
+        public event EventHandler<EventArgs> Forward
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerForward, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerForward, value);
+        }
+
+        public event EventHandler<EventArgs> Backward
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerBackward, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerBackward, value);
+        }
+
+        public event EventHandler<EventArgs> EndReached
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerEndReached, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerEndReached, value);
+        }
+
+        public event EventHandler<EventArgs> EncounteredError
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerEncounteredError, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerEncounteredError, value);
+        }
+
+        public event EventHandler<MediaPlayerTimeChangedEventArgs> TimeChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerTimeChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerTimeChanged, value);
+        }
+
         public event EventHandler<MediaPlayerPositionChangedEventArgs> PositionChanged
         {
-            add
-            {
-                EventManager.AttachEvent(EventType.MediaPlayerPositionChanged, value);
-            }
-            remove
-            {
-                EventManager.DetachEvent(EventType.MediaPlayerPositionChanged, value);
-            }
+            add => EventManager.AttachEvent(EventType.MediaPlayerPositionChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerPositionChanged, value);
         }
+
+        public event EventHandler<MediaPlayerSeekableChangedEventArgs> SeekableChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerSeekableChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerSeekableChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerPausableChangedEventArgs> PausableChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerPausableChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerPausableChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerTitleChangedEventArgs> TitleChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerTitleChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerTitleChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerChapterChangedEventArgs> ChapterChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerChapterChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerChapterChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerSnapshotTakenEventArgs> SnapshotTaken
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerSnapshotTaken, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerSnapshotTaken, value);
+        }
+
+        public event EventHandler<MediaPlayerLengthChangedEventArgs> LengthChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerLengthChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerLengthChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerVoutEventArgs> Vout
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerVout, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerVout, value);
+        }
+        
+        public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerScrambledChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerScrambledChanged, value);
+        }
+
+        public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerESAdded, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerESAdded, value);
+        }
+
+        public event EventHandler<MediaPlayerESDeletedEventArgs> ESDeleted
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerESDeleted, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerESDeleted, value);
+        }
+
+        public event EventHandler<MediaPlayerESSelectedEventArgs> ESSelected
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerESSelected, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerESSelected, value);
+        }
+
+        public event EventHandler<MediaPlayerAudioDeviceEventArgs> AudioDevice
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerAudioDevice, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerAudioDevice, value);
+        }
+
+        public event EventHandler<EventArgs> Corked
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerCorked, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerCorked, value);
+        }
+
+        public event EventHandler<EventArgs> Uncorked
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerUncorked, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerUncorked, value);
+        }
+
+        public event EventHandler<EventArgs> Muted
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerMuted, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerMuted, value);
+        }
+
+        public event EventHandler<EventArgs> Unmuted
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerUnmuted, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerUnmuted, value);
+        }
+
+        public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerAudioVolume, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerAudioVolume, value);
+        }
+
         #endregion
     }
 
