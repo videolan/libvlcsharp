@@ -6,6 +6,8 @@ namespace LibVLCSharp.Shared
 {
     public class RendererDiscoverer : Internal
     {
+        RendererDiscovererEventManager _eventManager;
+
         struct Native
         {
             [SuppressUnmanagedCodeSecurity]
@@ -40,9 +42,7 @@ namespace LibVLCSharp.Shared
         {
         }
 
-        RendererDiscovererEventManager _eventManager;
-
-        public RendererDiscovererEventManager EventManager
+        private RendererDiscovererEventManager EventManager
         {
             get
             {
@@ -58,6 +58,30 @@ namespace LibVLCSharp.Shared
         public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
 
         public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
+
+        public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
+        {
+            add
+            {
+                EventManager.AttachEvent(EventType.RendererDiscovererItemAdded, value);
+            }
+            remove
+            {
+                EventManager.DetachEvent(EventType.RendererDiscovererItemAdded, value);
+            }
+        }
+
+        public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
+        {
+            add
+            {
+                EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
+            }
+            remove
+            {
+                EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
+            }
+        }
     }
 
     public class RendererItem : Internal

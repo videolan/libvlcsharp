@@ -112,7 +112,7 @@ namespace LibVLCSharp.Shared
         /// Get event manager from media service discover object.
         /// under v3 only
         /// </summary>
-        public MediaDiscovererEventManager EventManager
+        MediaDiscovererEventManager EventManager
         {
             get
             {

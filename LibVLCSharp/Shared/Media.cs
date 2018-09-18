@@ -526,7 +526,7 @@ namespace LibVLCSharp.Shared
         /// <para>NOTE: this function doesn't increment reference counting.</para>
         /// </summary>
         /// <returns>event manager object</returns>
-        public MediaEventManager EventManager
+        MediaEventManager EventManager
         {
             get
             {

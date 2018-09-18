@@ -671,22 +671,6 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Get the Event Manager from which the media player send event.
-        /// </summary>
-        public MediaPlayerEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCMediaPlayerEventManager(NativeReference);
-                    _eventManager = new MediaPlayerEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
-        }
-
-        /// <summary>
         /// return true if the media player is playing, false otherwise
         /// </summary>
         public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
@@ -1793,6 +1777,36 @@ namespace LibVLCSharp.Shared
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
 #endregion
+        #region events
+
+        /// <summary>
+        /// Get the Event Manager from which the media player send event.
+        /// </summary>
+        MediaPlayerEventManager EventManager
+        {
+            get
+            {
+                if (_eventManager == null)
+                {
+                    var eventManagerPtr = Native.LibVLCMediaPlayerEventManager(NativeReference);
+                    _eventManager = new MediaPlayerEventManager(eventManagerPtr);
+                }
+                return _eventManager;
+            }
+        }
+
+        public event EventHandler<MediaPlayerPositionChangedEventArgs> PositionChanged
+        {
+            add
+            {
+                EventManager.AttachEvent(EventType.MediaPlayerPositionChanged, value);
+            }
+            remove
+            {
+                EventManager.DetachEvent(EventType.MediaPlayerPositionChanged, value);
+            }
+        }
+        #endregion
     }
 
     /// <summary>Description for titles</summary>

@@ -277,7 +277,7 @@ namespace LibVLCSharp.Shared
         /// Get libvlc_event_manager from this media list instance. The
         /// p_event_manager is immutable, so you don't have to hold the lock
         /// </summary>
-        public MediaListEventManager EventManager
+        MediaListEventManager EventManager
         {
             get
             {
