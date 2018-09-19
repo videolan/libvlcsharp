@@ -36,7 +36,7 @@ namespace LibVLCSharp.Tests
             var rendererItems = new List<RendererItem>();
             var tcs = new TaskCompletionSource<bool>();
 
-            rendererDiscoverer.EventManager.ItemAdded += (sender, args) =>
+            rendererDiscoverer.ItemAdded += (sender, args) =>
             {
                 WriteLine($"New item discovered: {args.RendererItem.Name} of type {args.RendererItem.Type}");
                 if (args.RendererItem.CanRenderVideo)

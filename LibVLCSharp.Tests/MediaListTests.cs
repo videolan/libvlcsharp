@@ -16,8 +16,8 @@ namespace LibVLCSharp.Tests
             var media = new Media(libVLC, Path.GetTempFileName());
             var itemAdded = false;
             var itemDeleted = false;
-            mediaList.EventManager.ItemAdded += (sender, args) => itemAdded = true;
-            mediaList.EventManager.ItemDeleted += (sender, args) => itemDeleted = true;
+            mediaList.ItemAdded += (sender, args) => itemAdded = true;
+            mediaList.ItemDeleted += (sender, args) => itemDeleted = true;
             mediaList.Lock();
             mediaList.AddMedia(media);
             Assert.AreEqual(media, mediaList[0]);

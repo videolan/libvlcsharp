@@ -48,7 +48,7 @@ namespace LibVLCSharp.Tests
             
             mp.Media = media;
             mp.Play();
-            mp.EventManager.Playing += (sender, args) =>
+            mp.Playing += (sender, args) =>
             {
                 Assert.Zero(mp.AudioTrack);
                 var description = mp.AudioTrackDescription;
@@ -67,7 +67,7 @@ namespace LibVLCSharp.Tests
             var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var mp = new MediaPlayer(media);
             var called = false;
-            mp.EventManager.Playing += (sender, args) =>
+            mp.Playing += (sender, args) =>
             {
                 called = true;
             };
