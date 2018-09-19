@@ -11,6 +11,9 @@ namespace LibVLCSharp.Shared
     /// </summary>
 #if !NETSTANDARD1_1
     public class Utf8StringMarshaler : ICustomMarshaler
+#else
+    public class Utf8StringMarshaler
+#endif
     {
         private static readonly Utf8StringMarshaler _instance = new Utf8StringMarshaler();
 
@@ -59,11 +62,13 @@ namespace LibVLCSharp.Shared
         {
             return -1;
         }
-
+#if !NETSTANDARD1_1
         public static ICustomMarshaler GetInstance(string cookie = null)
+#else
+        public static Utf8StringMarshaler GetInstance()
+#endif
         {
             return _instance;
         }
     }
-#endif
 }

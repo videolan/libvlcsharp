@@ -9,12 +9,10 @@ namespace LibVLCSharp.Shared
     {
         internal struct Internal
         {
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_attach")]
             internal static extern int LibVLCEventAttach(IntPtr eventManager, EventType eventType, EventCallback eventCallback,
                 IntPtr userData);
 
-            [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_detach")]
             internal static extern void LibVLCEventDetach(IntPtr eventManager, EventType eventType, EventCallback eventCallback,
                 IntPtr userData);
@@ -49,9 +47,9 @@ namespace LibVLCSharp.Shared
         }
 
 #if IOS
-        internal protected static LibVLCEvent RetrieveEvent(IntPtr eventPtr) => Marshal.PtrToStructure<LibVLCEvent>(eventPtr);
+        internal protected static LibVLCEvent RetrieveEvent(IntPtr eventPtr) => MarshalUtils.PtrToStructure<LibVLCEvent>(eventPtr);
 #else
-        internal protected LibVLCEvent RetrieveEvent(IntPtr eventPtr) => Marshal.PtrToStructure<LibVLCEvent>(eventPtr);
+        internal protected LibVLCEvent RetrieveEvent(IntPtr eventPtr) => MarshalUtils.PtrToStructure<LibVLCEvent>(eventPtr);
 #endif
 
         internal protected void OnEventUnhandled(object sender, EventType eventType)
@@ -61,6 +59,6 @@ namespace LibVLCSharp.Shared
         internal protected abstract void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
     }
 
-    [SuppressUnmanagedCodeSecurity, UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void EventCallback(IntPtr args);
 }

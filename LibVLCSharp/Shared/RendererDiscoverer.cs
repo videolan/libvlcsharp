@@ -76,7 +76,11 @@ namespace LibVLCSharp.Shared
     {
         const int VideoRenderer = 0x0002;
         const int AudioRenderer = 0x0001;
+#if NETSTANDARD1_1
+        readonly Utf8StringMarshaler _utf8Marshaler = Utf8StringMarshaler.GetInstance();
+#else
         readonly ICustomMarshaler _utf8Marshaler = Utf8StringMarshaler.GetInstance();
+#endif
 
         struct Native
         {
