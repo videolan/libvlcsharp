@@ -1158,8 +1158,12 @@ namespace LibVLCSharp.Shared
 
         TrackDescription[] GetTrackDescription(IntPtr trackPtr)
         {
-            if (trackPtr == IntPtr.Zero) return new TrackDescription[0];
-
+            if (trackPtr == IntPtr.Zero)
+#if NETSTANDARD1_1 || NET40
+                return new TrackDescription[0];
+#else
+                return Array.Empty<TrackDescription>();
+#endif
             var trackDescriptions = new List<TrackDescription>();
             var track = MarshalUtils.PtrToStructure<TrackDescription>(trackPtr);
 

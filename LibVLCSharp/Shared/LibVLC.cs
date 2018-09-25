@@ -662,7 +662,12 @@ namespace LibVLCSharp.Shared
                 var discoverList = IntPtr.Zero;
                 var count = Native.LibVLCRendererDiscovererGetList(NativeReference, ref discoverList);
 
-                if (count == 0) return new RendererDescription[0];
+                if (count == 0)
+#if NETSTANDARD1_1 || NET40
+                    return new RendererDescription[0];
+#else
+                    return Array.Empty<RendererDescription>();
+#endif
 
                 var rendererDiscovererDescription = new RendererDescription[(int)count];
 
