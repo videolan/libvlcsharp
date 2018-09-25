@@ -84,31 +84,25 @@ namespace LibVLCSharp.Shared
 
         struct Native
         {
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_name")]
             internal static extern IntPtr LibVLCRendererItemName(IntPtr rendererItem);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_release")]
             internal static extern void LibVLCRendererItemRelease(IntPtr rendererItem);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_hold")]
             internal static extern IntPtr LibVLCRendererItemHold(IntPtr rendererItem);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_type")]
             internal static extern IntPtr LibVLCRendererItemType(IntPtr rendererItem);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_icon_uri")]
             internal static extern IntPtr LibVLCRendererItemIconUri(IntPtr rendererItem);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_flags")]
