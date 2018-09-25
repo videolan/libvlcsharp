@@ -13,7 +13,7 @@ namespace LibVLCSharp.Shared
             var nativeRef = getRef();
             if (nativeRef == IntPtr.Zero)
             {
-#if NETSTANDARD1_1
+#if NETSTANDARD1_1 || NET40
                 return new TU[0];
 #else
                 return Array.Empty<TU>();
@@ -56,7 +56,7 @@ namespace LibVLCSharp.Shared
 
         public static T PtrToStructure<T>(IntPtr ptr)
         {
-#if NETSTANDARD1_1
+#if NETSTANDARD1_1 || NET40
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
 #else
             return Marshal.PtrToStructure<T>(ptr);

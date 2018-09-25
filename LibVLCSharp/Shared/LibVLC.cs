@@ -573,7 +573,7 @@ namespace LibVLCSharp.Shared
         {
             var arrayResultPtr = IntPtr.Zero;
             var count = Native.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
-#if NETSTANDARD1_1
+#if NETSTANDARD1_1 || NET40
             if (count == 0) return new MediaDiscoverer.Description[0];
 #else
             if (count == 0) return Array.Empty<MediaDiscoverer.Description>();
@@ -646,7 +646,7 @@ namespace LibVLCSharp.Shared
                     updateProgress(dlg, position, text);
                 }
             };
-            
+
             _dialogCbsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DialogCallbacks)));
             Marshal.StructureToPtr(dialogCbs, _dialogCbsPtr, true);
             Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbsPtr, IntPtr.Zero);
@@ -722,7 +722,11 @@ namespace LibVLCSharp.Shared
             GetLogContext(ctx, out var module, out var file, out var line);
 
             // Do the notification on another thread, so that VLC is not interrupted by the logging
+#if NET40
+            Task.Factory.StartNew(() => _log?.Invoke(NativeReference, new LogEventArgs(level, formattedDecodedMessage, module, file, line)));
+#else
             Task.Run(() => _log?.Invoke(NativeReference, new LogEventArgs(level, formattedDecodedMessage, module, file, line)));
+#endif
         }
 
         /// <summary>
