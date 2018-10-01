@@ -17,5 +17,8 @@ namespace LibVLCSharp.Tests
 
         protected string RealMp3Path =>
             Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "sample.mp3");
+
+        protected string RealMp3PathSpecialCharacter =>
+            Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "motörhead.mp3");
     }
 }

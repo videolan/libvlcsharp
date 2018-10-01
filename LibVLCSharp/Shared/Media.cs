@@ -18,17 +18,17 @@ namespace LibVLCSharp.Shared
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_location")]
-            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string mrl);
+            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr libVLC, IntPtr mrl);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_path")]
-            internal static extern IntPtr LibVLCMediaNewPath(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string path);
+            internal static extern IntPtr LibVLCMediaNewPath(IntPtr libVLC, IntPtr path);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_as_node")]
-            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name);
+            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr libVLC, IntPtr name);
 
             [SuppressUnmanagedCodeSecurity]
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -326,14 +326,18 @@ namespace LibVLCSharp.Shared
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
             if (string.IsNullOrEmpty(mrl)) throw new ArgumentNullException(nameof(mrl));
 
+            var mrlPtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(mrl);
+            if (mrlPtr == IntPtr.Zero)
+                throw new ArgumentException($"error marshalling {mrl} to UTF-8 for native interop");
+
             switch (type)
             {
                 case FromType.FromLocation:
-                    return Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrl);
+                    return Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrlPtr);
                 case FromType.FromPath:
-                    return Native.LibVLCMediaNewPath(libVLC.NativeReference, mrl);
+                    return Native.LibVLCMediaNewPath(libVLC.NativeReference, mrlPtr);
                 case FromType.AsNode:
-                    return Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrl);
+                    return Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrlPtr);
                 default:
                     return IntPtr.Zero;
             }

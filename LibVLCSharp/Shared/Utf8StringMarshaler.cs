@@ -59,7 +59,7 @@ namespace LibVLCSharp.Shared
             return -1;
         }
 
-        public static ICustomMarshaler GetInstance()
+        public static ICustomMarshaler GetInstance(string cookie = null)
         {
             return _instance;
         }

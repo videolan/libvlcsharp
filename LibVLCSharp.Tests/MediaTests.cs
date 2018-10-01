@@ -63,6 +63,7 @@ namespace LibVLCSharp.Tests
                     media.Parse();
 
                     Assert.True(media.IsParsed);
+                    Assert.AreEqual(Media.MediaParsedStatus.Done, media.ParsedStatus);
                     Assert.NotZero(media.Duration);
                     using (var mp = new MediaPlayer(media))
                     {
@@ -107,6 +108,36 @@ namespace LibVLCSharp.Tests
             var media = new Media(new LibVLC(), RealMp3Path);
             media.Parse();
             Assert.AreEqual(1, media.Tracks);
+        }
+
+        [Test]
+        public async Task CreateRealMediaSpecialCharacters()
+        {
+            using (var libVLC = new LibVLC())
+            {
+                libVLC.Log += LibVLC_Log;
+                using (var media = new Media(libVLC, RealMp3PathSpecialCharacter, Media.FromType.FromPath))
+                {
+                    Assert.False(media.IsParsed);
+                    
+                    media.Parse();
+                    await Task.Delay(5000);
+                    Assert.True(media.IsParsed);
+                    Assert.AreEqual(Media.MediaParsedStatus.Done, media.ParsedStatus);
+                    using (var mp = new MediaPlayer(media))
+                    {
+                        Assert.True(mp.Play());
+                        await Task.Delay(10000); 
+                        mp.Stop();
+                    }
+                }
+                libVLC.Log -= LibVLC_Log;
+            }
+        }
+
+        private void LibVLC_Log(object sender, LogEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.Message);
         }
     }
 }
