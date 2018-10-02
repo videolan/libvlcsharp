@@ -126,8 +126,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
-      <Project>{656D01BE-FBEA-491A-AB2C-4B6B375B52A9}</Project>
+    <ProjectReference Include="..\..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
+      <Project>{06814458-c8b4-4d50-86e2-904e6a9e3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample.csproj">

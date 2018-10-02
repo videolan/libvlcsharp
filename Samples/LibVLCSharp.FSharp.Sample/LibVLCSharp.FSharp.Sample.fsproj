@@ -1,14 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net47</TargetFrameworks>
-    <Platforms>AnyCPU;x64;x86</Platforms>
-    <RuntimeIdentifiers>win7-x64;win7-x86</RuntimeIdentifiers>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.0-alpha3" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
+
 </Project>

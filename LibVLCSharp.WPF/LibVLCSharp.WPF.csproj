@@ -4,15 +4,13 @@
     <TargetFramework>net461</TargetFramework>
     <RootNamespace>LibVLCSharp.WPF</RootNamespace>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <AssemblyName>LibVLCSharp.WPF</AssemblyName>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\Generic.xaml" />
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
 </Project>

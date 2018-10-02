@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj" />
+    <ProjectReference Include="..\..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj" />
   </ItemGroup>
 
   <ItemGroup>
