@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LibVLCSharp.Forms.WPF</id>
+    <title>LibVLCSharp.Forms.WPF</title>
+    <version>0.0.1-alpha</version>
+    <authors>VideoLAN</authors>
+    <owners>VideoLAN</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>WPF integration for LibVLCSharp.Forms</summary>
+    <description>WPF integration for LibVLCSharp.Forms</description>
+    <tags>libvlc vlc videolan native c/c++ video audio wpf</tags>
+    <projectUrl>https://github.com/videolan/LibVLCSharp</projectUrl>
+    <licenseUrl>https://github.com/videolan/libvlcsharp/blob/master/LICENSE</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/videolan/libvlcsharp/master/Assets/icon.png</iconUrl>
+     <dependencies>
+      <group targetFramework=".NETFramework4.7">
+        <dependency id="LibVLCSharp.Forms" version="0.0.1-alpha1" exclude="Build,Analyzers" />
+        <dependency id="LibVLCSharp.WPF" version="0.0.1-alpha1" exclude="Build,Analyzers" />
+        <dependency id="Xamarin.Forms" version="3.2.0.839982"/>
+        <dependency id="Xamarin.Forms.Platform.WPF" version="3.2.0.839982"/>
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="LibVLCSharp.Forms.Platforms.WPF\bin\Release\LibVLCSharp.Forms.Platforms.WPF.dll" target="lib\net47"/>    
+  </files>
+</package>
