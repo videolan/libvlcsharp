@@ -65,11 +65,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 #if COCOA
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_nsobject")]
@@ -80,16 +78,14 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_set_xwindow")]
             internal static extern void LibVLCMediaPlayerSetXwindow(IntPtr mediaPlayer, uint drawable);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_xwindow")]
             internal static extern uint LibVLCMediaPlayerGetXwindow(IntPtr mediaPlayer);
-#if DESKTOP
 
+#if MODERN_DESKTOP || NET40
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_hwnd")]
             internal static extern void LibVLCMediaPlayerSetHwnd(IntPtr mediaPlayer, IntPtr drawable);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_hwnd")]
@@ -777,7 +773,7 @@ namespace LibVLCSharp.Shared
             set => Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
         }
 
-#if DESKTOP
+#if MODERN_DESKTOP || NET40
         /// <summary>
         /// Set a Win32/Win64 API window handle (HWND) where the media player
         /// should render its video output. If LibVLC was built without

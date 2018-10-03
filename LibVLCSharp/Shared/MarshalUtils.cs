@@ -7,6 +7,42 @@ namespace LibVLCSharp.Shared
 {
     public static class MarshalUtils
     {
+        internal struct Native
+        { 
+            #region Windows
+
+            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
+            public static extern int _wfopen_s(out IntPtr pFile, string filename, string mode = Write);
+
+            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            public static extern int fcloseWindows(IntPtr stream);
+
+            #endregion
+
+            #region Linux
+
+            [DllImport(Constants.Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
+            public static extern IntPtr fopenLinux(string filename, string mode = Write);
+
+            [DllImport(Constants.Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
+            public static extern int fcloseLinux(IntPtr file);
+
+            #endregion
+
+            #region Mac
+
+            [DllImport(Constants.Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
+            public static extern IntPtr fopenMac(string path, string mode = Write);
+
+            [DllImport(Constants.Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            public static extern int fcloseMac(IntPtr file);
+
+            #endregion
+
+            
+            const string Write = "w";
+        }
+
         public static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
         {
@@ -60,6 +96,75 @@ namespace LibVLCSharp.Shared
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
 #else
             return Marshal.PtrToStructure<T>(ptr);
+#endif
+        }
+
+        /// <summary>
+        /// Crossplatform dlopen
+        /// </summary>
+        /// <returns>true if successful</returns>
+        public static bool Open(string filename, out IntPtr fileHandle)
+        {
+            fileHandle = IntPtr.Zero;
+#if NET40
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.MacOSX:
+                    fileHandle = Native.fopenMac(filename);
+                    return fileHandle != IntPtr.Zero;
+                case PlatformID.Unix:
+                    fileHandle = Native.fopenLinux(filename);
+                    return fileHandle != IntPtr.Zero;
+                default:
+                    return Native._wfopen_s(out fileHandle, filename) == 0;
+            }
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if(Native._wfopen_s(out fileHandle, filename) != 0) return false;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                fileHandle = Native.fopenLinux(filename);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                fileHandle = Native.fopenMac(filename);
+            }
+#endif
+            return fileHandle != IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Crossplatform fclose
+        /// </summary>
+        /// <param name="file handle"></param>
+        /// <returns>true if successful</returns>
+        public static bool Close(IntPtr fileHandle)
+        {
+#if NET40
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.MacOSX:
+                    return Native.fcloseMac(fileHandle) == 0;
+                case PlatformID.Unix:
+                    return Native.fcloseLinux(fileHandle) == 0;
+                default:
+                    return Native.fcloseWindows(fileHandle) == 0;
+            }
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Native.fcloseMac(fileHandle) == 0;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Native.fcloseLinux(fileHandle) == 0;
+            }
+            else
+            {
+                return Native.fcloseWindows(fileHandle) == 0;
+            }
 #endif
         }
     }

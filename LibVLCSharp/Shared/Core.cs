@@ -28,7 +28,7 @@ namespace LibVLCSharp.Shared
 
         public static void Initialize()
         {
-#if DESKTOP
+#if MODERN_DESKTOP
             InitializeDesktop();
 #elif ANDROID
             InitializeAndroid();
@@ -43,7 +43,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
-#elif DESKTOP
+#elif MODERN_DESKTOP
         //TODO: Add Unload library func using handles
         static void InitializeDesktop()
         {
@@ -111,6 +111,10 @@ namespace LibVLCSharp.Shared
         /// The name of the folder that contains the per-architecture folders
         /// </summary>
         internal const string LibrariesRepositoryFolderName = "libvlc";
+
+        internal const string Windows = "msvcrt";
+        internal const string Linux = "libc";
+        internal const string Mac = "libSystem";
     }
 
     internal static class ArchitectureNames

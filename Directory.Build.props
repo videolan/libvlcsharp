@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);PORTABLE;DESKTOP</DefineConstants>
+    <DefineConstants>$(DefineConstants);PORTABLE;MODERN_DESKTOP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
     <DefineConstants>$(DefineConstants);NETSTANDARD1_1</DefineConstants>
@@ -29,6 +29,6 @@
     <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE;DESKTOP</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCORE;MODERN_DESKTOP</DefineConstants>
   </PropertyGroup>
 </Project>

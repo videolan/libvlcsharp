@@ -141,16 +141,14 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
 
-#region Windows
-
             /// <summary>
             /// Compute the size required by vsprintf to print the parameters.
             /// </summary>
             /// <param name="format"></param>
             /// <param name="ptr"></param>
             /// <returns></returns>
-            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int _vscprintf(string format,IntPtr ptr);
+            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl)]
+            public static extern int _vscprintf(string format, IntPtr ptr);
 
             /// <summary>
             /// Format a string using printf style markers
@@ -162,44 +160,11 @@ namespace LibVLCSharp.Shared
             /// <param name="format">The message format</param>
             /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
             /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport(Windows, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.Windows, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf(
                 IntPtr buffer,
                 string format,
                 IntPtr args);
-
-            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
-            public static extern int _wfopen_s(out IntPtr pFile, string filename, string mode = Write);
-
-            [DllImport(Windows, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
-            public static extern int fcloseWindows(IntPtr stream);
-
-#endregion
-
-#region Linux
-
-            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
-            public static extern IntPtr fopenLinux(string filename, string mode = Write);
-
-            [DllImport(Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
-            public static extern int fcloseLinux(IntPtr file);
-
-#endregion
-
-#region Mac
-            
-            [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)] 
-            public static extern IntPtr fopenMac(string path, string mode = Write);
-
-            [DllImport(Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
-            public static extern int fcloseMac(IntPtr file);
-
-#endregion
-
-            const string Windows = "msvcrt";
-            const string Linux = "libc";
-            const string Mac = "libSystem";
-            const string Write = "w";
         }
     
         internal static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, LibVLC> NativeToManagedMap 
@@ -384,19 +349,12 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Native close log file handle
         /// </summary>
-        /// <returns>true if no file to close or closed successful, false otherwise</returns>
+        /// <returns>true if no file to close or close operation successful, false otherwise</returns>
         bool CloseLogFile()
         {
             if (_logFileHandle == IntPtr.Zero) return true;
-#if DESKTOP
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return Native.fcloseWindows(_logFileHandle) == 0;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return Native.fcloseLinux(_logFileHandle) == 0;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                return Native.fcloseMac(_logFileHandle) == 0;
-#endif
-            return false;
+
+            return MarshalUtils.Close(_logFileHandle);
         }
 
         public void SetLog(LogCallback cb)
@@ -438,6 +396,7 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Sets up logging to a file.
         /// Watch out: Overwrite contents if file exists!
+        /// Potentially throws a VLCException if FILE * cannot be obtained
         /// </summary>
         /// <para>FILE pointer opened for writing</para>
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
@@ -455,25 +414,10 @@ namespace LibVLCSharp.Shared
 
         IntPtr NativeFilePtr(string filename)
         {
-            var filePtr = IntPtr.Zero;
-#if DESKTOP
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Native._wfopen_s(out filePtr, filename);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                filePtr = Native.fopenLinux(filename);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                filePtr = Native.fopenMac(filename);
-            }
-#endif
-            if (filePtr == IntPtr.Zero)
+            var result = MarshalUtils.Open(filename, out var filePtr);
+            if (!result)
                 throw new VLCException("Could not get FILE * for log_set_file");
-
-            return filePtr;
+            return IntPtr.Zero;
         }
 
         /// <summary>Returns a list of audio filters that are available.</summary>
