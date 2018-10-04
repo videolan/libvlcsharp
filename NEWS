@@ -1,6 +1,11 @@
+LibVLCSharp version 0.0.2
+=========================
+
+* Fix media mrl UTF-8 marshaling #30
+
 LibVLCSharp version 0.0.1
 =========================
 
 * API changes: EventManagers are now encapsulated. Subscribe directly on the objects (Media, MediaPlayer, etc.)
 * Clarify error message when libvlc.dll is not found or cannot be loaded.
-* Fix iOS native reverse callbacks
+* Fix iOS native reverse callbacks #15
