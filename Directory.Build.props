@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);PORTABLE;MODERN_DESKTOP</DefineConstants>
+    <DefineConstants>$(DefineConstants);PORTABLE;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
     <DefineConstants>$(DefineConstants);NETSTANDARD1_1</DefineConstants>
@@ -22,13 +22,7 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.TVOS10'">
     <DefineConstants>$(DefineConstants);MONO;COCOA</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'Xamarin.WatchOS10'">
-    <DefineConstants>$(DefineConstants);MONO;COCOA</DefineConstants>
-  </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE;MODERN_DESKTOP</DefineConstants>
   </PropertyGroup>
 </Project>

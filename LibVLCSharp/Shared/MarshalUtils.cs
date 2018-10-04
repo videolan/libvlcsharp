@@ -131,8 +131,8 @@ namespace LibVLCSharp.Shared
             {
                 fileHandle = Native.fopenMac(filename);
             }
-#endif
             return fileHandle != IntPtr.Zero;
+#endif
         }
 
         /// <summary>

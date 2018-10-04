@@ -64,7 +64,8 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
-#if COCOA
+
+#if COCOA || NET40
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
@@ -82,7 +83,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_get_xwindow")]
             internal static extern uint LibVLCMediaPlayerGetXwindow(IntPtr mediaPlayer);
 
-#if MODERN_DESKTOP || NET40
+#if NETSTANDARD2_0 || NET40
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_hwnd")]
             internal static extern void LibVLCMediaPlayerSetHwnd(IntPtr mediaPlayer, IntPtr drawable);
@@ -728,7 +729,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
-#if COCOA
+#if COCOA || NET40
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
@@ -753,6 +754,8 @@ namespace LibVLCSharp.Shared
             set => Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
         }
 #endif
+
+#if NETSTANDARD2_0 || NET40
         /// <summary>
         /// Set an X Window System drawable where the media player should render its video output. 
         /// The call takes effect when the playback starts. If it is already started, it might need to be stopped before changes apply. 
@@ -773,7 +776,6 @@ namespace LibVLCSharp.Shared
             set => Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
         }
 
-#if MODERN_DESKTOP || NET40
         /// <summary>
         /// Set a Win32/Win64 API window handle (HWND) where the media player
         /// should render its video output. If LibVLC was built without

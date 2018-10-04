@@ -28,10 +28,10 @@ namespace LibVLCSharp.Shared
 
         public static void Initialize()
         {
-#if MODERN_DESKTOP
-            InitializeDesktop();
-#elif ANDROID
+#if ANDROID
             InitializeAndroid();
+#else
+            InitializeDesktop();
 #endif
         }
 
@@ -43,7 +43,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
-#elif MODERN_DESKTOP
+#endif
         //TODO: Add Unload library func using handles
         static void InitializeDesktop()
         {
@@ -52,9 +52,9 @@ namespace LibVLCSharp.Shared
             if (appExecutionDirectory == null)
                 throw new NullReferenceException(nameof(appExecutionDirectory));
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (IsWindows)
             {
-                var arch = Environment.Is64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
+                var arch = IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
 
                 var librariesFolder = Path.Combine(appExecutionDirectory, Constants.LibrariesRepositoryFolderName, arch);
 
@@ -87,7 +87,31 @@ namespace LibVLCSharp.Shared
 
             return Native.LoadLibrary(libraryPath);// TODO: cross-platform load
         }
+
+        static bool IsWindows
+        {
+            get
+            {
+#if NET40
+            return Environment.OSVersion.Platform != PlatformID.MacOSX 
+                && Environment.OSVersion.Platform != PlatformID.Unix;
+#else
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 #endif
+            }            
+        }
+
+        static bool IsX64BitProcess
+        {
+            get
+            {
+#if NET40
+                return Environment.Is64BitProcess;
+#else
+                return RuntimeInformation.OSArchitecture == Architecture.X64;
+#endif
+            }
+        }
     }
 
     internal static class Constants
