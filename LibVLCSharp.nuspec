@@ -19,6 +19,8 @@
     <file src="LibVLCSharp\bin\Release\monoandroid81\LibVLCSharp.Android.AWindow.dll" target="lib\MonoAndroid81"/>
     <file src="LibVLCSharp\bin\Release\xamarin.ios10\LibVLCSharp.dll" target="lib\Xamarin.iOS10"/>
     <file src="LibVLCSharp\bin\Release\netstandard2.0\LibVLCSharp.dll" target="lib\.NETStandard2.0"/>
+    <file src="LibVLCSharp\bin\Release\netstandard1.1\LibVLCSharp.dll" target="lib\.NETStandard1.1"/>
     <file src="LibVLCSharp\bin\Release\xamarin.mac20\LibVLCSharp.dll" target="lib\xamarinmac20"/>
+    <file src="LibVLCSharp\bin\Release\net40\LibVLCSharp.dll" target="lib\net40"/>
   </files>
 </package>
