@@ -26,12 +26,18 @@ namespace LibVLCSharp.Shared
         static IntPtr _libvlccoreHandle;
         static IntPtr _libvlcHandle;
 
-        public static void Initialize()
+        /// <summary>
+        /// Load the native libvlc library (if necessary depending on platform)
+        /// </summary>
+        /// <param name="appExecutionDirectory">The path to the app execution directory. 
+        /// No need to specify unless running netstandard 1.1, or using custom location for libvlc
+        /// </param>
+        public static void Initialize(string appExecutionDirectory = null)
         {
 #if ANDROID
             InitializeAndroid();
 #else
-            InitializeDesktop();
+            InitializeDesktop(appExecutionDirectory);
 #endif
         }
 
@@ -45,12 +51,19 @@ namespace LibVLCSharp.Shared
         }
 #endif
         //TODO: Add Unload library func using handles
-        static void InitializeDesktop()
+        static void InitializeDesktop(string appExecutionDirectory = null)
         {
-            var myPath = typeof(LibVLC).Assembly.Location;
-            var appExecutionDirectory = Path.GetDirectoryName(myPath);
-            if (appExecutionDirectory == null)
-                throw new NullReferenceException(nameof(appExecutionDirectory));
+            if(appExecutionDirectory == null)
+            {
+#if NETSTANDARD1_1
+                throw new ArgumentNullException($"{nameof(appExecutionDirectory)} cannot be null for netstandard1.1 target. Please provide a path to Initialize.");
+#else
+                var myPath = typeof(LibVLC).Assembly.Location;
+                appExecutionDirectory = Path.GetDirectoryName(myPath);
+                if (appExecutionDirectory == null)
+                    throw new NullReferenceException(nameof(appExecutionDirectory));
+#endif
+            }
 
             if (IsWindows)
             {
@@ -79,12 +92,14 @@ namespace LibVLCSharp.Shared
         {
             Debug.WriteLine($"Loading {libraryName}");
             var libraryPath = Path.Combine(nativeLibrariesPath, libraryName);
-            if(!File.Exists(libraryPath))
+
+#if !NETSTANDARD1_1
+            if (!File.Exists(libraryPath))
             {
                 Debug.WriteLine($"Cannot find {libraryPath}");
                 return IntPtr.Zero;
             }
-
+#endif
             return Native.LoadLibrary(libraryPath);// TODO: cross-platform load
         }
 
