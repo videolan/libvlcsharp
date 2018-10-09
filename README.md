@@ -33,7 +33,7 @@ We also aim to provide you with a custom video control integrated with the OS na
 
 LibVLCSharp is designed to be the connecting layer in between `libvlc` and Xamarin.
 
-Using LibVLCSharp means you can take advantage of all `libvlc` features from shared managed code (C#/F#), in a true crossplatform way. You may use the features described below on all supported platforms by LibVLCSharp (Android, iOS, WPF, XForms for now, more coming soon).
+Using LibVLCSharp means you can take advantage of all `libvlc` features from shared managed code (C#/F#), in a true crossplatform way. You may use the features described below on all [supported platforms](#supported-platforms) by LibVLCSharp.
 
 ## Features
 
@@ -57,8 +57,13 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 - Xamarin.Android
 - Xamarin.iOS
 - Xamarin.Mac
+- Windows (WPF/WinForms)
 - Xamarin.Forms
-- Windows (WPF)
+    - iOS
+    - Android
+    - WPF
+- Unity
+    - Android
 
 ## Installation
 
@@ -84,13 +89,13 @@ https://www.nuget.org/packages/LibVLCSharp.Forms/
 
 ## Getting started
 
-Feel free to check out the native sample projects for [iOS](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp.iOS.Sample/ViewController.cs) and [Android](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp.Android.Sample/MainActivity.cs) to get started. 
+Feel free to check out the native sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started. 
 
 Basically, you need to instantiate a `VideoView` and add it to your View. It handles the required `libvlc` initialization for you on each platform, and offers a `MediaPlayer` .NET object on which you can call `Play`, `Pause`, set a new media or listen for `libvlc` events.
 
 For usage of the API, you should check out the `libvlc` [C API documentation](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html) which this wrapper follows closely.
 
-Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/LibVLCSharp.Forms.Sample) to get started.
+Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/Samples/Forms) to get started.
 Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called.
 
 ## Quick API overview
@@ -106,8 +111,13 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 ## Roadmap
 
 - macOS (using GTK)
+- tvOS
 - Linux (using GTK)
 - Windows 10 (using UWP, GTK)
+- Xamarin.Forms
+    - macOS
+    - GTK
+    - UWP
 - Game engines (Unity, Unreal, Godot)
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
