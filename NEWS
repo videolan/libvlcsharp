@@ -1,3 +1,11 @@
+LibVLCSharp version 0.0.3
+=========================
+* Support for net40 target
+* Support for netstandard1.1 target
+* Removed [SuppressUnmanagedCodeSecurity] which allowed to remove dependency on System.Runtime.InteropServices.RuntimeInformation
+* Custom libvlc library path support
+* Added build script folder with powershell script to build and package libvlcsharp
+
 LibVLCSharp version 0.0.2
 =========================
 
