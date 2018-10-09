@@ -56,7 +56,8 @@ namespace LibVLCSharp.Shared
             if(appExecutionDirectory == null)
             {
 #if NETSTANDARD1_1
-                throw new ArgumentNullException($"{nameof(appExecutionDirectory)} cannot be null for netstandard1.1 target. Please provide a path to Initialize.");
+                throw new ArgumentNullException(nameof(appExecutionDirectory),
+                    $"{nameof(appExecutionDirectory)} cannot be null for netstandard1.1 target. Please provide a path to Initialize.");
 #else
                 var myPath = typeof(LibVLC).Assembly.Location;
                 appExecutionDirectory = Path.GetDirectoryName(myPath);
@@ -105,27 +106,20 @@ namespace LibVLCSharp.Shared
 
         static bool IsWindows
         {
-            get
-            {
 #if NET40
-            return Environment.OSVersion.Platform != PlatformID.MacOSX 
-                && Environment.OSVersion.Platform != PlatformID.Unix;
+            get => Environment.OSVersion.Platform == PlatformID.Win32NT;
 #else
-                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 #endif
-            }            
         }
 
         static bool IsX64BitProcess
         {
-            get
-            {
 #if NET40
-                return Environment.Is64BitProcess;
+            get => Environment.Is64BitProcess;
 #else
-                return RuntimeInformation.OSArchitecture == Architecture.X64;
+            get => RuntimeInformation.OSArchitecture == Architecture.X64;
 #endif
-            }
         }
     }
 
@@ -151,9 +145,9 @@ namespace LibVLCSharp.Shared
         /// </summary>
         internal const string LibrariesRepositoryFolderName = "libvlc";
 
-        internal const string Windows = "msvcrt";
-        internal const string Linux = "libc";
-        internal const string Mac = "libSystem";
+        internal const string Msvcrt = "msvcrt";
+        internal const string Libc = "libc";
+        internal const string libSystem = "libSystem";
     }
 
     internal static class ArchitectureNames

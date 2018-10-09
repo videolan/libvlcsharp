@@ -62,11 +62,8 @@ namespace LibVLCSharp.Shared
         {
             return -1;
         }
-#if !NETSTANDARD1_1
-        public static ICustomMarshaler GetInstance(string cookie = null)
-#else
+
         public static Utf8StringMarshaler GetInstance()
-#endif
         {
             return _instance;
         }

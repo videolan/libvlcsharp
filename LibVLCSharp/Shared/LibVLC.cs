@@ -147,7 +147,7 @@ namespace LibVLCSharp.Shared
             /// <param name="format"></param>
             /// <param name="ptr"></param>
             /// <returns></returns>
-            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl)]
             public static extern int _vscprintf(string format, IntPtr ptr);
 
             /// <summary>
@@ -160,7 +160,7 @@ namespace LibVLCSharp.Shared
             /// <param name="format">The message format</param>
             /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
             /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport(Constants.Windows, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.Msvcrt, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf(
                 IntPtr buffer,
                 string format,

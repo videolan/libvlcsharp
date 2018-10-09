@@ -11,30 +11,30 @@ namespace LibVLCSharp.Shared
         { 
             #region Windows
 
-            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
+            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern int _wfopen_s(out IntPtr pFile, string filename, string mode = Write);
 
-            [DllImport(Constants.Windows, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseWindows(IntPtr stream);
 
             #endregion
 
             #region Linux
 
-            [DllImport(Constants.Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
+            [DllImport(Constants.Libc, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", CharSet = CharSet.Ansi, SetLastError = true)]
             public static extern IntPtr fopenLinux(string filename, string mode = Write);
 
-            [DllImport(Constants.Linux, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
+            [DllImport(Constants.Libc, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", CharSet = CharSet.Ansi, SetLastError = true)]
             public static extern int fcloseLinux(IntPtr file);
 
             #endregion
 
             #region Mac
 
-            [DllImport(Constants.Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
+            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
             public static extern IntPtr fopenMac(string path, string mode = Write);
 
-            [DllImport(Constants.Mac, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseMac(IntPtr file);
 
             #endregion

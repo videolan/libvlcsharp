@@ -22,9 +22,6 @@
     <DefineConstants>$(DefineConstants);UNITY_ANDROID</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' != 'net40'"
-                      Include="System.Runtime.InteropServices.RuntimeInformation" 
-                      Version="4.3.0" />
     <Compile Include="Shared\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
