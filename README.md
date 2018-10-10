@@ -62,6 +62,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 - Xamarin.Forms
     - iOS
     - Android
+    - Mac
     - WPF
 - Unity
     - Android
@@ -125,7 +126,6 @@ Feel free to suggest and contribute new samples.
 - Linux (using GTK)
 - Windows 10 (using UWP, GTK)
 - Xamarin.Forms
-    - macOS
     - GTK
     - UWP
 - Game engines (Unity, Unreal, Godot)
