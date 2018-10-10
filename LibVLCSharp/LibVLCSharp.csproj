@@ -7,7 +7,6 @@
     <TargetFrameworks>netstandard2.0;netstandard1.1;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;net40</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>default</LangVersion>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -22,7 +21,8 @@
     <DefineConstants>$(DefineConstants);UNITY_ANDROID</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Shared\**\*.cs" />
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Compile Include="Platforms\Android\**\*.cs" />

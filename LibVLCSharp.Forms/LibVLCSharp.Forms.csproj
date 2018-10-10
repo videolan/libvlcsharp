@@ -6,7 +6,6 @@
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer forms</PackageTags>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Version>0.0.1-alpha</Version>
   </PropertyGroup>
@@ -17,7 +16,8 @@
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Shared\**\*.cs" />
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Platforms\Android\**\*.cs" />
