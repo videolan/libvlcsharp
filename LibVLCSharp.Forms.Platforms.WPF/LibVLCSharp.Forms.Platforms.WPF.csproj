@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard2.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard2.0\Xamarin.Forms.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
-      <Project>{656d01be-fbea-491a-ab2c-4b6b375b52a9}</Project>
+      <Project>{06814458-C8B4-4D50-86E2-904E6A9E3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibVLCSharp.WPF\LibVLCSharp.WPF.csproj">

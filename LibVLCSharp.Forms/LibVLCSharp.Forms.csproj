@@ -4,7 +4,7 @@
     <Summary>Xamarin.Forms integration for LibVLCSharp</Summary>
     <Description>Xamarin.Forms integration for LibVLCSharp</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer forms</PackageTags>
-    <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Version>0.0.1-alpha</Version>
@@ -24,5 +24,8 @@
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <Compile Include="Platforms\iOS\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
+    <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
 </Project>
