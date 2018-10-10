@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Security;
 using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared
@@ -713,7 +712,6 @@ namespace LibVLCSharp.Shared
         /// version LibVLC 1.1.1 or later
         /// </summary>
         /// <param name="pause">play/resume if true, pause if false</param>
-        [ApiVersion(1, 1)]
         public void SetPause(bool pause) => Native.LibVLCMediaPlayerSetPause(NativeReference, pause);
 
         /// <summary>
@@ -910,7 +908,6 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
-        [ApiVersion(major: 3, minor: 0, min: false, strict: true)]
         public float Fps
         {
             get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
@@ -996,11 +993,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Toggle teletext transparent status on video output.
         /// </summary>
-        [ApiVersion(3, 0, false, true)]
-        public void ToggleTeletext()
-        {
-            Native.LibVLCToggleTeletext(NativeReference);
-        }
+        public void ToggleTeletext() => Native.LibVLCToggleTeletext(NativeReference);
 
         /// <summary>
         /// Apply new equalizer settings to a media player.
@@ -1387,11 +1380,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="subtitle">new video subtitle file</param>
         /// <returns></returns>
-        [ApiVersion(3, 0, false, true)]
-        public bool SetSubtitleFile(string subtitle)
-        {
-            return Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
-        }
+        public bool SetSubtitleFile(string subtitle) => Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
 
         public long SpuDelay => Native.LibVLCVideoGetSpuDelay(NativeReference);
 
@@ -1400,7 +1389,6 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get the description of available titles.
         /// </summary>
-        // [ApiVersion(3, 0, false, true)]
         public TrackDescription[] TitleDescription
         {
             get
@@ -1415,7 +1403,6 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="titleIndex">selected title</param>
         /// <returns></returns>
-        [ApiVersion(3, 0, false, true)]
         public TrackDescription[] ChapterDescription(int titleIndex)
         {
             var ptr = Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex);
@@ -1587,7 +1574,6 @@ namespace LibVLCSharp.Shared
         /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
         /// <param name="select">True if this slave should be selected when it's loaded</param>
         /// <returns></returns>
-        [ApiVersion(3)]
         public bool AddSlave(MediaSlaveType type, string uri, bool select) =>
             Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri, select) == 0;
 
@@ -1596,11 +1582,9 @@ namespace LibVLCSharp.Shared
         /// <param name="viewpoint"></param>
         /// <param name="absolute"></param>
         /// <returns></returns>
-        [ApiVersion(3)]
         public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
             Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
 
-        [ApiVersion(3)]
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 

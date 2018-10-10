@@ -299,7 +299,6 @@ namespace LibVLCSharp.Shared
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        [ApiVersion(1, 1)]
         public void SetUserAgent(string name, string http)
         {
             Native.LibVLCSetUserAgent(NativeReference, name, http);
@@ -313,7 +312,6 @@ namespace LibVLCSharp.Shared
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        [ApiVersion(2, 1)]
         public void SetAppId(string id, string version, string icon)
         {
             Native.LibVLCSetAppId(NativeReference, id, version, icon);
@@ -328,7 +326,6 @@ namespace LibVLCSharp.Shared
         /// <para>complete (causing a deadlock if called from within the callback).</para>
         /// <para>LibVLC 2.1.0 or later</para>
         /// </remarks>
-        [ApiVersion(2, 1)]
         public void UnsetLog()
         {
             Native.LibVLCLogUnset(NativeReference);
@@ -402,7 +399,6 @@ namespace LibVLCSharp.Shared
         /// <para>(the FILE pointer must remain valid until libvlc_log_unset())</para>
         /// <param name="filename">open/create file with Write access. If existing, resets content.</param>
         /// <remarks>LibVLC 2.1.0 or later</remarks>
-        [ApiVersion(2, 1)]
         public void SetLogFile(string filename)
         {
             if (string.IsNullOrEmpty(filename)) throw new NullReferenceException(nameof(filename));
@@ -498,7 +494,6 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        [ApiVersion(2, 1)]
         public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
         {
 
@@ -512,7 +507,6 @@ namespace LibVLCSharp.Shared
         /// <param name="category">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        [ApiVersion(3)]
         public MediaDiscoverer.Description[] MediaDiscoverers(MediaDiscoverer.Category category)
         {
             var arrayResultPtr = IntPtr.Zero;

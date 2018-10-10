@@ -341,7 +341,6 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC"></param>
         /// <param name="stream"></param>
         /// <param name="options"></param>
-        [ApiVersion(3)]
         public Media(LibVLC libVLC, Stream stream, params string[] options)
             : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
         {          
@@ -599,7 +598,6 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        [ApiVersion(3)]
         public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
             Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
 
@@ -609,7 +607,6 @@ namespace LibVLCSharp.Shared
         /// <para>internally.</para>
         /// </summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        [ApiVersion(3)]
         public void ClearSlaves() => Native.LibVLCMediaClearSlaves(NativeReference);
 
         /// <summary>Get a media descriptor's slave list</summary>
@@ -623,7 +620,6 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        [ApiVersion(3)]
         public IEnumerable<MediaSlave> Slaves
         {
             get
