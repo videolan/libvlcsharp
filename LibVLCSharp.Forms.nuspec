@@ -16,19 +16,19 @@
     <dependencies>
       <group targetFramework="monoandroid8.1">
         <dependency id="LibVLCSharp" version="0.0.3"/>
-        <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
+        <dependency id="Xamarin.Forms" version="3.2.0.871581"/>
       </group>
       <group targetFramework="xamarinios10">
         <dependency id="LibVLCSharp" version="0.0.3"/>
-        <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
+        <dependency id="Xamarin.Forms" version="3.2.0.871581"/>
       </group>
       <group targetFramework="xamarinmac20">
         <dependency id="LibVLCSharp" version="0.0.3"/>
-        <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
+        <dependency id="Xamarin.Forms" version="3.2.0.871581"/>
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="LibVLCSharp" version="0.0.3"/>
-        <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
+        <dependency id="Xamarin.Forms" version="3.2.0.871581"/>
       </group>
     </dependencies>
     <frameworkAssemblies>
