@@ -26,6 +26,7 @@
     <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
+    <Reference Include="netstandard" />
     <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
 </Project>

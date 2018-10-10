@@ -3,27 +3,31 @@
   <metadata>
     <id>LibVLCSharp.Forms</id>
     <title>LibVLCSharp.Forms</title>
-    <version>0.0.1-alpha1</version>
+    <version>0.0.1</version>
     <authors>VideoLAN</authors>
     <owners>VideoLAN</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Xamarin Forms integration for LibVLCSharp</summary>
     <description>Xamarin Forms integration for LibVLCSharp</description>
-    <tags>libvlc vlc videolan native c/c++ video audio forms</tags>
+    <tags>libvlc vlc videolan native c/c++ video audio forms xamarin</tags>
     <projectUrl>https://github.com/videolan/libvlcsharp</projectUrl>
     <licenseUrl>https://github.com/videolan/libvlcsharp/blob/master/LICENSE</licenseUrl>
     <iconUrl>https://raw.githubusercontent.com/videolan/libvlcsharp/master/Assets/icon.png</iconUrl>
     <dependencies>
       <group targetFramework="monoandroid8.1">
-        <dependency id="LibVLCSharp" version="0.0.1-alpha2"/>
+        <dependency id="LibVLCSharp" version="0.0.3"/>
         <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
       </group>
       <group targetFramework="xamarinios10">
-        <dependency id="LibVLCSharp" version="0.0.1-alpha2"/>
+        <dependency id="LibVLCSharp" version="0.0.3"/>
+        <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
+      </group>
+      <group targetFramework="xamarinmac20">
+        <dependency id="LibVLCSharp" version="0.0.3"/>
         <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="LibVLCSharp" version="0.0.1-alpha2"/>
+        <dependency id="LibVLCSharp" version="0.0.3"/>
         <dependency id="Xamarin.Forms" version="3.0.0.446417"/>
       </group>
     </dependencies>
@@ -34,6 +38,7 @@
   <files>
     <file src="LibVLCSharp.Forms\bin\Release\monoandroid81\LibVLCSharp.Forms.dll" target="lib\MonoAndroid81"/>
     <file src="LibVLCSharp.Forms\bin\Release\xamarin.ios10\LibVLCSharp.Forms.dll" target="lib\Xamarin.iOS10"/>
+    <file src="LibVLCSharp.Forms\bin\Release\xamarin.mac20\LibVLCSharp.Forms.dll" target="lib\Xamarin.Mac20"/>
     <file src="LibVLCSharp.Forms\bin\Release\netstandard2.0\LibVLCSharp.Forms.dll" target="lib\.NETStandard2.0"/>
   </files>
 </package>
