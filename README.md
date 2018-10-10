@@ -13,6 +13,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Supported platforms](#supported-platforms)
 - [Installation](#installation)
 - [Getting started](#getting-started)
+- [Samples](#samples)
 - [Quick API overview](#quick-api-overview)
 - [Roadmap](#roadmap)
 - [Contribute](#contribute)
@@ -89,7 +90,7 @@ https://www.nuget.org/packages/LibVLCSharp.Forms/
 
 ## Getting started
 
-Feel free to check out the native sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started. 
+Feel free to check out the simple sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started. 
 
 Basically, you need to instantiate a `VideoView` and add it to your View. It handles the required `libvlc` initialization for you on each platform, and offers a `MediaPlayer` .NET object on which you can call `Play`, `Pause`, set a new media or listen for `libvlc` events.
 
@@ -97,6 +98,15 @@ For usage of the API, you should check out the `libvlc` [C API documentation](ht
 
 Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/Samples/Forms) to get started.
 Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called.
+
+## Samples
+
+For more advanced samples, have a look at [libvlcsharp-samples](https://code.videolan.org/mfkl/libvlcsharp-samples). It currently includes:
+
+- Chromecast sample: Discover chromecasts on your local network and select one for playback in 100% shared code (Xamarin.Forms, iOS/Android).
+- Record HLS sample: Simple .NET Core CLI app which shows how to record an HLS stream to the filesystem.
+
+Feel free to suggest and contribute new samples.
 
 ## Quick API overview
 
