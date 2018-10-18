@@ -1,7 +1,6 @@
 # Versioning
 
-_This strategy applies to all LibVLCSharp packages (Forms, etc.)._
-
+_This strategy applies to all LibVLCSharp [nuget packages](https://www.nuget.org/profiles/videolan) (Forms, etc.)._
 
 ## Versioning strategy
 
@@ -9,6 +8,7 @@ _This strategy applies to all LibVLCSharp packages (Forms, etc.)._
 
 ### We will follow its major version (i.e. libvlc 3.x -> LibVLCSharp 3.x and so on)
 This makes it easier for people to understand and use the wrapper with libvlc, on all platforms.
+Initial LibVLCSharp releases were 0.x versions and target libvlc 3.
 
 ## Long Term Support (LTS)
 
