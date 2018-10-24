@@ -11,7 +11,7 @@ namespace LibVLCSharp.WPF.Sample
             InitializeComponent();
 
             _controls = new Controls(this);
-            Player.Content = _controls;
+            VideoView.Content = _controls;
         }
     }
 }

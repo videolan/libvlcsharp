@@ -11,6 +11,8 @@ namespace LibVLCSharp.Android.Sample
     public class MainActivity : Activity
     {
         VideoView _videoView;
+        LibVLC _libVLC;
+        MediaPlayer _mediaPlayer;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -24,9 +26,14 @@ namespace LibVLCSharp.Android.Sample
         {
             base.OnResume();
 
-            _videoView = new VideoView(this);
+            Core.Initialize();
+
+            _libVLC = new LibVLC();
+            _mediaPlayer = new MediaPlayer(_libVLC);
+
+            _videoView = new VideoView(this) { MediaPlayer = _mediaPlayer };
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            var media = new Media(_videoView.LibVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
             var configuration = new MediaConfiguration();
             configuration.EnableHardwareDecoding();
             media.AddOption(configuration);
