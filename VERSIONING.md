@@ -8,7 +8,10 @@ _This strategy applies to all LibVLCSharp [nuget packages](https://www.nuget.org
 
 ### We will follow its major version (i.e. libvlc 3.x -> LibVLCSharp 3.x and so on)
 This makes it easier for people to understand and use the wrapper with libvlc, on all platforms.
-Initial LibVLCSharp releases were 0.x versions and target libvlc 3.
+
+#### 0.x versions
+
+Initial LibVLCSharp releases were 0.x versions and target libvlc 3. It's getting stable now, though some APIs might still change (notably `VideoView` public API). When we consider it ready, we will move the LibVLCSharp package version to 3.x and 4.x.
 
 ## Long Term Support (LTS)
 
