@@ -14,30 +14,60 @@ namespace LibVLCSharp.Platforms.Android
     public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView
     {
         MediaPlayer _mediaPlayer;
-        LibVLC _libVLC;
         AWindow _awindow;
         LayoutChangeListener _layoutListener;
 
         #region ctors
 
-        public VideoView(IntPtr javaReference, JniHandleOwnership transfer, string[] cliOptions = default (string[])) : base(javaReference, transfer) => Init(cliOptions);
+        public VideoView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+        }
 
-        public VideoView(Context context, string[] cliOptions = default(string[])) : base(context) => Init(cliOptions);
+        public VideoView(Context context) : base(context)
+        {
+        }
 
-        public VideoView(Context context, IAttributeSet attrs, string[] cliOptions = default(string[])) : base(context, attrs) => Init(cliOptions);
+        public VideoView(Context context, IAttributeSet attrs) : base(context, attrs)
+        {
+        }
 
-        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, string[] cliOptions = default(string[])) : base(context, attrs, defStyleAttr) => Init(cliOptions);
+        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
+        {
+        }
 
-        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes, string[] cliOptions = default(string[])) 
-            : base(context, attrs, defStyleAttr, defStyleRes) => Init(cliOptions);
+        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) 
+            : base(context, attrs, defStyleAttr, defStyleRes)
+        {
+        }
 
         #endregion
 
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer => _mediaPlayer;
-        public LibVLC LibVLC => _libVLC;
+        /// <summary>
+        /// The MediaPlayer object attached to this VideoView. Use this to manage playback and more
+        /// </summary>
+        public MediaPlayer MediaPlayer
+        {
+            get => _mediaPlayer;
+            set
+            {
+                if (_mediaPlayer != value)
+                {
+                    Detach();
+                    _mediaPlayer = value;
+
+                    if (_mediaPlayer != null)
+                    {
+                        Attach();
+                    }
+                }
+            }
+        }
 
         void Attach()
         {
+            if (_mediaPlayer == null)
+                throw new NullReferenceException(nameof(_mediaPlayer));
+
             _awindow = new AWindow(new SurfaceCallback(_mediaPlayer));
             _awindow.AddCallback(this);
             _awindow.SetVideoView(this);
@@ -51,16 +81,18 @@ namespace LibVLCSharp.Platforms.Android
 
         void Detach()
         {
-            _awindow.RemoveCallback(this);
-            _awindow.DetachViews();
+            _awindow?.RemoveCallback(this);
+            _awindow?.DetachViews();
 
-            _mediaPlayer.SetAndroidContext(IntPtr.Zero);
+            _mediaPlayer?.SetAndroidContext(IntPtr.Zero);
 
-            RemoveOnLayoutChangeListener(_layoutListener);
-            _layoutListener.Dispose();
+            if (_layoutListener != null)
+                RemoveOnLayoutChangeListener(_layoutListener);
+
+            _layoutListener?.Dispose();
             _layoutListener = null;
 
-            _awindow.Dispose();
+            _awindow?.Dispose();
             _awindow = null;
         }
 
@@ -72,25 +104,15 @@ namespace LibVLCSharp.Platforms.Android
         {
         }
 
-        void Init(string[] cliOptions)
-        {
-            Core.Initialize();
-
-            _libVLC = new LibVLC(cliOptions);
-            _mediaPlayer = new MediaPlayer(_libVLC);
-
-            Attach();
-        }
-
+        /// <summary>
+        /// Detach the mediaplayer from the view and dispose the view
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
             Detach();
-
-            _mediaPlayer.Media?.Dispose();
-            _mediaPlayer.Dispose();
-            _libVLC.Dispose();
         }
     }
 }

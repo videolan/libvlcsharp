@@ -1,6 +1,7 @@
 ﻿using LibVLCSharp.Shared;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
@@ -17,21 +18,38 @@ namespace LibVLCSharp.WPF
         public VideoView()
         {
             DefaultStyleKey = typeof(VideoView);
+        }
 
+        private void Attach()
+        {
             if (!IsDesignMode)
             {
-                Core.Initialize();
+                if (MediaPlayer == null)
+                {
+                    Trace.Write("No MediaPlayer is set, aborting...");
+                    return;
+                }
 
-                LibVLC = new LibVLC();
-                MediaPlayer = new MediaPlayer(LibVLC);
+                var hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle;
+                if (hwnd == null)
+                {
+                    Trace.WriteLine("HWND is NULL, aborting...");
+                    return;
+                }
 
-                Unloaded += VideoView_Unloaded;
+                MediaPlayer.Hwnd = (IntPtr)hwnd;
             }
         }
 
-        ~VideoView()
+        private void Detach()
         {
-            Dispose();
+            if (!IsDesignMode)
+            {
+                if (MediaPlayer != null)
+                {
+                    MediaPlayer.Hwnd = IntPtr.Zero;
+                }
+            }
         }
 
         private bool IsDesignMode => (bool)DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue;
@@ -39,12 +57,23 @@ namespace LibVLCSharp.WPF
         private bool IsUpdatingContent { get; set; }
         private UIElement ViewContent { get; set; }
 
-        public MediaPlayer MediaPlayer { get; private set; }
-        public LibVLC LibVLC { get; private set; }
-
-        private void VideoView_Unloaded(object sender, RoutedEventArgs e)
+        private MediaPlayer _mediaPlayer;
+        public MediaPlayer MediaPlayer
         {
-            Dispose();
+            get => _mediaPlayer;
+            set
+            {
+                if (_mediaPlayer != value)
+                {
+                    Detach();
+                    _mediaPlayer = value;
+
+                    if (_mediaPlayer != null)
+                    {
+                        Attach();
+                    }
+                }
+            }
         }
 
         public override void OnApplyTemplate()
@@ -56,14 +85,10 @@ namespace LibVLCSharp.WPF
                 var windowsFormsHost = Template.FindName(PART_PlayerHost, this) as FrameworkElement;
                 if (windowsFormsHost != null)
                 {
-                    ForegroundWindow = new ForegroundWindow(windowsFormsHost);
-                    ForegroundWindow.Content = ViewContent;
-                }
-
-                var hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle;
-                if (hwnd != null)
-                {
-                    MediaPlayer.Hwnd = (IntPtr)hwnd;
+                    ForegroundWindow = new ForegroundWindow(windowsFormsHost)
+                    {
+                        Content = ViewContent
+                    };
                 }
             }
         }
@@ -94,24 +119,29 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        public void Dispose()
+        #region IDisposable Support
+
+        bool disposedValue;
+        protected virtual void Dispose(bool disposing)
         {
-            Unloaded -= VideoView_Unloaded;
-
-            if (MediaPlayer != null)
+            if (!disposedValue)
             {
-                if (MediaPlayer.IsPlaying)
-                    MediaPlayer.Stop();
-                MediaPlayer.Hwnd = IntPtr.Zero;
-                MediaPlayer.Dispose();
-                MediaPlayer = null;
-            }
+                if (disposing)
+                {
+                    Detach();
+                }
 
-            if (LibVLC != null)
-            {
-                LibVLC.Dispose();
-                LibVLC = null;
+                ViewContent = null;
+                ForegroundWindow = null;
+
+                disposedValue = true;
             }
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }
