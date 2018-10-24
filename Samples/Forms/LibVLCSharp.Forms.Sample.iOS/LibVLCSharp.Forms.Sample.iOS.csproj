@@ -122,7 +122,7 @@
     <PackageReference Include="VideoLAN.LibVLC.iOS">
       <Version>3.0.0-alpha2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
+    <PackageReference Include="Xamarin.Forms" Version="3.2.0.871581" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
