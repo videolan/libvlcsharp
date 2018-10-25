@@ -1,4 +1,5 @@
-﻿using LibVLCSharp.Shared;
+﻿using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
@@ -6,21 +7,26 @@ namespace LibVLCSharp.Forms.Shared
     public class VideoView : View
     {
         /// <summary>
-        /// Constructor with extra configuration
+        /// Raised when a new MediaPlayer is set and attached to the view
         /// </summary>
-        /// <param name="cliOptions">https://wiki.videolan.org/VLC_command-line_help/</param>
-        public VideoView(string[] cliOptions)
+        public event EventHandler<MediaPlayerChangedEventArgs> MediaPlayerChanged;
+
+        public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer), 
+                typeof(LibVLCSharp.Shared.MediaPlayer), 
+                typeof(VideoView),
+                propertyChanged: OnMediaPlayerChanged);
+
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
-            CliOptions = cliOptions;
+            get { return GetValue(MediaPlayerProperty) as LibVLCSharp.Shared.MediaPlayer; }
+            set { SetValue(MediaPlayerProperty, value); }
         }
 
-        public VideoView()
+        private static void OnMediaPlayerChanged(BindableObject bindable, object oldValue, object newValue)
         {
+            var videoView = (VideoView)bindable;
+            Trace.WriteLine("OnMediaPlayerChanged");
+            videoView.MediaPlayerChanged?.Invoke(videoView, new MediaPlayerChangedEventArgs(oldValue as LibVLCSharp.Shared.MediaPlayer, newValue as LibVLCSharp.Shared.MediaPlayer));
         }
-
-        public string[] CliOptions { get; }
-
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer { get; set; }
-        public LibVLC LibVLC { get; set; }
     }
 }

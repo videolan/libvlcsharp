@@ -9,35 +9,29 @@ namespace LibVLCSharp.Forms.Platforms.iOS
 {
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
     {
-        LibVLCSharp.Platforms.iOS.VideoView _videoView;
-
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);
 
             if(Control == null)
             {
-                _videoView = new LibVLCSharp.Platforms.iOS.VideoView(Element.CliOptions);
-                SetNativeControl(_videoView);
-                
-                Element.LibVLC = Control.LibVLC;
-                Element.MediaPlayer = Control.MediaPlayer;
+                SetNativeControl(new LibVLCSharp.Platforms.iOS.VideoView());
             }
 
             if (e.OldElement != null)
             {
+                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
             }
 
             if (e.NewElement != null)
             {
-            }
+                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
+            }    
         }
 
-        protected override void Dispose(bool disposing)
+        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
-            base.Dispose(disposing);
-
-            _videoView.Dispose();
+            Control.MediaPlayer = e.NewMediaPlayer;
         }
     }
 }

@@ -11,8 +11,6 @@ namespace LibVLCSharp.Forms.Platforms.Android
 {
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Android.VideoView>
     {
-        LibVLCSharp.Platforms.Android.VideoView _videoView;
-
         public VideoViewRenderer(Context context) : base(context)
         {
         }
@@ -23,27 +21,23 @@ namespace LibVLCSharp.Forms.Platforms.Android
 
             if (Control == null)
             {
-                _videoView = new LibVLCSharp.Platforms.Android.VideoView(Context, Element.CliOptions);
-                SetNativeControl(_videoView);
-
-                Element.LibVLC = Control.LibVLC;
-                Element.MediaPlayer = Control.MediaPlayer;
+                SetNativeControl(new LibVLCSharp.Platforms.Android.VideoView(Context));
             }
 
             if (e.OldElement != null)
             {
+                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
             }
 
             if (e.NewElement != null)
             {
+                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
             }
         }
-        
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
 
-            _videoView.Dispose();
+        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
+        {
+            Control.MediaPlayer = e.NewMediaPlayer;
         }
     }
 }

@@ -7,37 +7,29 @@ namespace LibVLCSharp.Forms.Platforms.WPF
 {
     public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.WPF.VideoView>
     {
-        LibVLCSharp.WPF.VideoView _videoView;
-
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
+            base.OnElementChanged(e);
+
             if (Control == null)
             {
-                _videoView = new LibVLCSharp.WPF.VideoView();
-                SetNativeControl(_videoView);
+                SetNativeControl(new LibVLCSharp.WPF.VideoView());
             }
 
             if (e.OldElement != null)
             {
+                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
             }
 
             if (e.NewElement != null)
             {
-                UpdateMediaPlayer();
-                UpdateLibVLC();
+                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
             }
-
-            base.OnElementChanged(e);
         }
 
-        void UpdateMediaPlayer()
+        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
-            Element.MediaPlayer = Control.MediaPlayer;
-        }
-
-        void UpdateLibVLC()
-        {
-            Element.LibVLC = Control.LibVLC;
+            Control.MediaPlayer = e.NewMediaPlayer;
         }
     }
 }
