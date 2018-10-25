@@ -16,7 +16,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Samples](#samples)
 - [Quick API overview](#quick-api-overview)
 - [Roadmap](#roadmap)
-- [Versioning](versioning.md)
+- [Versioning](VERSIONING.md)
 - [Contribute](#contribute)
 - [Communication](#communication)
     - [Forum](#forum)
