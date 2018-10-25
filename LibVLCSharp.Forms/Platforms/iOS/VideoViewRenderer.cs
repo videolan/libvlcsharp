@@ -1,4 +1,6 @@
-﻿using LibVLCSharp.Forms.Platforms.iOS;
+﻿using LibVLCSharp.Shared;
+
+using LibVLCSharp.Forms.Platforms.iOS;
 using LibVLCSharp.Forms.Shared;
 
 using Xamarin.Forms;

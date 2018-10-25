@@ -24,8 +24,6 @@ namespace LibVLCSharp.WPF.Sample
 
         private void Controls_Loaded(object sender, RoutedEventArgs e)
         {
-            Core.Initialize();
-
             _libVLC = new LibVLC();
             _mediaPlayer = new MediaPlayer(_libVLC);
 

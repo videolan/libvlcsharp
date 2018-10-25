@@ -1,5 +1,6 @@
 ﻿using Android.Content;
 
+using LibVLCSharp.Shared;
 using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Shared;
 

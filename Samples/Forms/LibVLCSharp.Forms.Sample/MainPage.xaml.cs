@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using LibVLCSharp.Shared;
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Sample
@@ -29,7 +30,7 @@ namespace LibVLCSharp.Forms.Sample
                 Trace.WriteLine("MediaPlayer change raised from ViewModel.Propertychanged");
         }
 
-        private void VideoView_MediaPlayerChanged(object sender, Shared.MediaPlayerChangedEventArgs e)
+        private void VideoView_MediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
             Trace.WriteLine("VideoView_MediaPlayerChanged");
         }

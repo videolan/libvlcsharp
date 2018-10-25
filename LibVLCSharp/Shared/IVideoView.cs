@@ -1,4 +1,6 @@
-﻿namespace LibVLCSharp.Shared
+﻿using System;
+
+namespace LibVLCSharp.Shared
 {
     public interface IVideoView
     {

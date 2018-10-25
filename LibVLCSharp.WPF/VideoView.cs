@@ -19,36 +19,27 @@ namespace LibVLCSharp.WPF
         {
             DefaultStyleKey = typeof(VideoView);
         }
+        
+        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer),
+                typeof(MediaPlayer),
+                typeof(VideoView),
+                new PropertyMetadata(null, OnMediaPlayerChanged));
 
-        private void Attach()
+        public MediaPlayer MediaPlayer
         {
-            if (!IsDesignMode)
-            {
-                if (MediaPlayer == null)
-                {
-                    Trace.Write("No MediaPlayer is set, aborting...");
-                    return;
-                }
-
-                var hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle;
-                if (hwnd == null)
-                {
-                    Trace.WriteLine("HWND is NULL, aborting...");
-                    return;
-                }
-
-                MediaPlayer.Hwnd = (IntPtr)hwnd;
-            }
+            get { return GetValue(MediaPlayerProperty) as MediaPlayer; }
+            set { SetValue(MediaPlayerProperty, value); }
         }
 
-        private void Detach()
+        private static void OnMediaPlayerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!IsDesignMode)
+            if (e.OldValue is MediaPlayer oldMediaPlayer)
             {
-                if (MediaPlayer != null)
-                {
-                    MediaPlayer.Hwnd = IntPtr.Zero;
-                }
+                oldMediaPlayer.Hwnd = IntPtr.Zero;
+            }
+            if (e.NewValue is MediaPlayer newMediaPlayer)
+            {
+                newMediaPlayer.Hwnd = ((VideoView)d).Hwnd;
             }
         }
 
@@ -56,25 +47,7 @@ namespace LibVLCSharp.WPF
         private ForegroundWindow ForegroundWindow { get; set; }
         private bool IsUpdatingContent { get; set; }
         private UIElement ViewContent { get; set; }
-
-        private MediaPlayer _mediaPlayer;
-        public MediaPlayer MediaPlayer
-        {
-            get => _mediaPlayer;
-            set
-            {
-                if (_mediaPlayer != value)
-                {
-                    Detach();
-                    _mediaPlayer = value;
-
-                    if (_mediaPlayer != null)
-                    {
-                        Attach();
-                    }
-                }
-            }
-        }
+        private IntPtr Hwnd { get; set; }
 
         public override void OnApplyTemplate()
         {
@@ -90,6 +63,21 @@ namespace LibVLCSharp.WPF
                         Content = ViewContent
                     };
                 }
+                
+                Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
+                if (Hwnd == null)
+                {
+                    Trace.WriteLine("HWND is NULL, aborting...");
+                    return;
+                }
+
+                if (MediaPlayer == null)
+                {
+                    Trace.Write("No MediaPlayer is set, aborting...");
+                    return;
+                }
+
+                MediaPlayer.Hwnd = Hwnd;
             }
         }
 
@@ -128,7 +116,10 @@ namespace LibVLCSharp.WPF
             {
                 if (disposing)
                 {
-                    Detach();
+                    if(MediaPlayer != null)
+                    { 
+                        MediaPlayer.Hwnd = IntPtr.Zero;
+                    }
                 }
 
                 ViewContent = null;
@@ -142,6 +133,7 @@ namespace LibVLCSharp.WPF
         {
             Dispose(true);
         }
+
         #endregion
     }
 }

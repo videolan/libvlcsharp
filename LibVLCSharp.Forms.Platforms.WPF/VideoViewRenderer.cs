@@ -1,4 +1,5 @@
-﻿using LibVLCSharp.Forms.Platforms.WPF;
+﻿using LibVLCSharp.Shared;
+using LibVLCSharp.Forms.Platforms.WPF;
 using LibVLCSharp.Forms.Shared;
 using Xamarin.Forms.Platform.WPF;
 

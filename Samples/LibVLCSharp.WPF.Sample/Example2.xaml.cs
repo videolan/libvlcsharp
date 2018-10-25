@@ -25,19 +25,12 @@ namespace LibVLCSharp.WPF.Sample
             };
             test.Children.Add(label);
 
-            Loaded += Controls_Loaded;
-        }
-
-        private void Controls_Loaded(object sender, RoutedEventArgs e)
-        {
-            Core.Initialize();
-
             _libVLC = new LibVLC();
             _mediaPlayer = new MediaPlayer(_libVLC);
 
             VideoView.MediaPlayer = _mediaPlayer;
         }
-
+        
         void StopButton_Click(object sender, RoutedEventArgs e)
         {
             if (VideoView.MediaPlayer.IsPlaying)
