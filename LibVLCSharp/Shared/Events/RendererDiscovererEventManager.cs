@@ -62,27 +62,27 @@ namespace LibVLCSharp.Shared
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnItemDeleted(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).RendererItem;
-            _itemDeleted?.Invoke(null, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemDeleted;
+            _itemDeleted?.Invoke(null, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem.item)));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnItemAdded(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).RendererItem;           
-            _itemAdded?.Invoke(null, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;           
+            _itemAdded?.Invoke(null, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem.item)));
         }
 #else
         void OnItemDeleted(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).RendererItem;
-            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem)));
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemDeleted;
+            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem.item)));
         }
 
         void OnItemAdded(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).RendererItem;           
-            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem)));
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;           
+            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem.item)));
         }
 #endif
     }

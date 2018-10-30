@@ -156,12 +156,12 @@ namespace LibVLCSharp.Shared
     /// <para>libvlc_renderer_discoverer_event_manager()</para>
     /// </remarks>
     /// <summary>A LibVLC event</summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct LibVLCEvent
     {
         public EventType Type;
 
         public IntPtr Sender;
-        public IntPtr RendererItem;
 
         public EventUnion Union;
 
@@ -203,18 +203,6 @@ namespace LibVLCSharp.Shared
             public MediaPlayerScrambledChanged MediaPlayerScrambledChanged;
             [FieldOffset(0)]
             public MediaPlayerVoutChanged MediaPlayerVoutChanged;
-            [FieldOffset(0)]
-            public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
-            [FieldOffset(0)]
-            public MediaPlayerLengthChanged MediaPlayerLengthChanged;
-            [FieldOffset(0)]
-            public MediaPlayerMediaChanged MediaPlayerMediaChanged;
-            [FieldOffset(0)]
-            public EsChanged EsChanged;
-            [FieldOffset(0)]
-            public VolumeChanged MediaPlayerVolumeChanged;
-            [FieldOffset(0)]
-            public AudioDeviceChanged AudioDeviceChanged;
 
             // medialist
             [FieldOffset(0)]
@@ -228,9 +216,27 @@ namespace LibVLCSharp.Shared
             [FieldOffset(0)]
             public MediaListPlayerNextItemSet MediaListPlayerNextItemSet;
 
-            // vlm
+            // mediaplayer
+            [FieldOffset(0)]
+            public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
+            [FieldOffset(0)]
+            public MediaPlayerLengthChanged MediaPlayerLengthChanged;
             [FieldOffset(0)]
             public VlmMediaEvent VlmMediaEvent;
+            [FieldOffset(0)]
+            public MediaPlayerMediaChanged MediaPlayerMediaChanged;
+            [FieldOffset(0)]
+            public EsChanged EsChanged;
+            [FieldOffset(0)]
+            public VolumeChanged MediaPlayerVolumeChanged;
+            [FieldOffset(0)]
+            public AudioDeviceChanged AudioDeviceChanged;
+
+            // renderer discoverer
+            [FieldOffset(0)]
+            public RendererDiscovererItemAdded RendererDiscovererItemAdded;
+            [FieldOffset(0)]
+            public RendererDiscovererItemDeleted RendererDiscovererItemDeleted; 
         }
 
         #region Media
@@ -416,6 +422,18 @@ namespace LibVLCSharp.Shared
         {
             public IntPtr MediaName;
             public IntPtr InstanceName;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RendererDiscovererItemAdded
+        {
+            public IntPtr item;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RendererDiscovererItemDeleted
+        {
+            public IntPtr item;
         }
     }
 
