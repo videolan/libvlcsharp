@@ -815,13 +815,13 @@ namespace LibVLCSharp.Shared
             remove => EventManager.DetachEvent(EventType.MediaFreed, value);
         }
 
-        public event EventHandler<MediaFreedEventArgs> StateChanged
+        public event EventHandler<MediaStateChangedEventArgs> StateChanged
         {
             add => EventManager.AttachEvent(EventType.MediaStateChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaStateChanged, value);
         }
 
-        public event EventHandler<MediaFreedEventArgs> SubItemTreeAdded
+        public event EventHandler<MediaSubItemAddedEventArgs> SubItemTreeAdded
         {
             add => EventManager.AttachEvent(EventType.MediaSubItemTreeAdded, value);
             remove => EventManager.DetachEvent(EventType.MediaSubItemTreeAdded, value);
