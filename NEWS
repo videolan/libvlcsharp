@@ -1,3 +1,10 @@
+LibVLCSharp version 0.0.4
+=========================
+* Remove API version checks https://github.com/videolan/libvlcsharp/commit/335866b0c2b355c0622e65fa690bad665c78c57e
+* Add versioning document https://github.com/videolan/libvlcsharp/commit/8566221ee0f0654b63b176c2892d98b455e32c20
+* Fix event interop struct layout https://github.com/videolan/libvlcsharp/commit/426bc0dcbe9d2bc7ae1a2a11833765093a8e20d1
+* Fix wrong event type https://github.com/videolan/libvlcsharp/commit/2e8b978cea02b83945de564332e81ca65ddf4c99
+
 LibVLCSharp version 0.0.3
 =========================
 * Support for net40 target
