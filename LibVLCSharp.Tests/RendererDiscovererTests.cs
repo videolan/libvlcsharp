@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
             var rendererList = libVLC.RendererList;
             Assert.IsNotEmpty(rendererList);
 
-            var rendererDiscoverer = new RendererDiscoverer(libVLC, rendererList[0].Name);
+            var rendererDiscoverer = new RendererDiscoverer(libVLC);
             var rendererItems = new List<RendererItem>();
             var tcs = new TaskCompletionSource<bool>();
 

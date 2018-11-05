@@ -36,9 +36,8 @@ namespace LibVLCSharp.Shared
             internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
 
-        public RendererDiscoverer(LibVLC libVLC, string name) 
-            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), 
-                  Native.LibVLCRendererDiscovererRelease)
+        public RendererDiscoverer(LibVLC libVLC, string name = Constants.ServiceDiscoveryProtocol)
+            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), Native.LibVLCRendererDiscovererRelease)
         {
         }
 
