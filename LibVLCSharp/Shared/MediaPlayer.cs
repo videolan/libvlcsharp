@@ -673,6 +673,7 @@ namespace LibVLCSharp.Shared
         /// Get the media used by the media_player.
         /// Set the media that will be used by the media_player. 
         /// If any, previous md will be released.
+        /// Note: It is safe to release the Media on the C# side after it's been set on the MediaPlayer successfully
         /// </summary>
         public Media Media
         {
@@ -681,7 +682,7 @@ namespace LibVLCSharp.Shared
                 var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
                 return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
             }
-            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value.NativeReference);
+            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
         }
 
         /// <summary>
