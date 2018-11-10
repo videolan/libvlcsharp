@@ -25,8 +25,10 @@ Features:
 - Hardware decoding and display on all platforms.
 - DVD playback and menu navigation.
     </Description>
-    <TargetFrameworks>netstandard2.0;netstandard1.1;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;net40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.1;net40;net471</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
+
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>7.3</LangVersion>

@@ -6,7 +6,10 @@
     <DefineConstants>$(DefineConstants);NETSTANDARD1_1;NETSTANDARD</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <DefineConstants>$(DefineConstants);NET40</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET40;NET</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net471'">
+    <DefineConstants>$(DefineConstants);NET471;NET</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <DefineConstants>$(DefineConstants);MONO;IOS;COCOA</DefineConstants>

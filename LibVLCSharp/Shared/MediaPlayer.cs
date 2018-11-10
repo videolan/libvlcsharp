@@ -60,12 +60,11 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_pause")]
             internal static extern void LibVLCMediaPlayerPause(IntPtr mediaPlayer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
-#if COCOA || NET40
+#if COCOA || NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
@@ -74,7 +73,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_get_nsobject")]
             internal static extern IntPtr LibVLCMediaPlayerGetNsobject(IntPtr mediaPlayer);
 #endif
-
+#if NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_xwindow")]
             internal static extern void LibVLCMediaPlayerSetXwindow(IntPtr mediaPlayer, uint drawable);
@@ -83,7 +82,6 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_get_xwindow")]
             internal static extern uint LibVLCMediaPlayerGetXwindow(IntPtr mediaPlayer);
 
-#if NETSTANDARD || NET40
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_hwnd")]
             internal static extern void LibVLCMediaPlayerSetHwnd(IntPtr mediaPlayer, IntPtr drawable);
@@ -92,11 +90,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_get_hwnd")]
             internal static extern IntPtr LibVLCMediaPlayerGetHwnd(IntPtr mediaPlayer);
 #endif
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_length")]
             internal static extern long LibVLCMediaPlayerGetLength(IntPtr mediaPlayer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_time")]
@@ -729,7 +725,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
-#if COCOA || NET40
+#if COCOA || NET || NETSTANDARD
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
@@ -755,7 +751,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
 
-#if NETSTANDARD || NET40
+#if NET || NETSTANDARD
         /// <summary>
         /// Set an X Window System drawable where the media player should render its video output. 
         /// The call takes effect when the playback starts. If it is already started, it might need to be stopped before changes apply. 
@@ -1779,7 +1775,7 @@ namespace LibVLCSharp.Shared
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-        #endregion
+#endregion
         
         /// <summary>
         /// Get the Event Manager from which the media player send event.
@@ -1797,7 +1793,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        #region events
+#region events
 
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {
@@ -1979,7 +1975,7 @@ namespace LibVLCSharp.Shared
             remove => EventManager.DetachEvent(EventType.MediaPlayerAudioVolume, value);
         }
 
-        #endregion
+#endregion
 
         protected override void Dispose(bool disposing)
         {

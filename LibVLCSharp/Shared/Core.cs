@@ -24,6 +24,14 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
+
+            /// <summary>
+            /// Initializes the X threading system
+            /// </summary>
+            /// <remarks>Linux X11 only</remarks>
+            /// <returns>non-zero on success, zero on failure</returns>
+            [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int XInitThreads();
         }
 
         static IntPtr _libvlccoreHandle;
@@ -69,9 +77,9 @@ namespace LibVLCSharp.Shared
 #endif
             }
 
-            if (IsWindows)
+            if (PlatformHelper.IsWindows)
             {
-                var arch = IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
+                var arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
 
                 var librariesFolder = Path.Combine(appExecutionDirectory, Constants.LibrariesRepositoryFolderName, arch);
 
@@ -89,12 +97,22 @@ namespace LibVLCSharp.Shared
                     throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dll");
                 }
             }
-            else if (IsMac)
+            else if (PlatformHelper.IsMac)
             {
                 _libvlcHandle = PreloadNativeLibrary(appExecutionDirectory, $"{Constants.LibraryName}.dylib");
                 if (_libvlcHandle == IntPtr.Zero)
                 {
                     throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dylib");
+                }
+            }
+            else if (PlatformHelper.IsLinux)
+            {
+                // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
+                if (Native.XInitThreads() == 0)
+                {
+#if !NETSTANDARD1_1
+                    Trace.WriteLine("XInitThreads failed");
+#endif
                 }
             }
         }
@@ -112,28 +130,8 @@ namespace LibVLCSharp.Shared
                 return IntPtr.Zero;
             }
 #endif
-            return IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
+            return PlatformHelper.IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
         }
-
-        static bool IsWindows
-        {
-#if NET40
-            get => Environment.OSVersion.Platform == PlatformID.Win32NT;
-#else
-            get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-#endif
-        }
-
-        static bool IsMac
-        {
-#if NET40
-            get => (int)Environment.OSVersion.Platform == 6;
-#else
-            get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-#endif
-        }
-
-        static bool IsX64BitProcess => IntPtr.Size == 8;
     }
 
     internal static class Constants
@@ -160,6 +158,7 @@ namespace LibVLCSharp.Shared
         internal const string Libc = "libc";
         internal const string libSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
+        internal const string libX11 = "libX11";
     }
 
     internal static class ArchitectureNames
