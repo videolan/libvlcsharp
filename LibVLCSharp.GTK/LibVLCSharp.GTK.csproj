@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="gdk-sharp">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/gdk-sharp-2.0/gdk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/gdk-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="glib-sharp">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/glib-sharp-2.0/glib-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/glib-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-sharp">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
+    </Reference>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+  </ItemGroup>
+  
+</Project>
