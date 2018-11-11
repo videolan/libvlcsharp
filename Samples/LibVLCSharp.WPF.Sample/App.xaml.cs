@@ -1,8 +1,13 @@
 ﻿using System.Windows;
+using LibVLCSharp.Shared;
 
-namespace LibVlcSharp.Wpf.Sample
+namespace LibVLCSharp.WPF.Sample
 {
-    public class App : Application
+    public partial class App : Application
     {
+        public App()
+        {
+            Core.Initialize();
+        }
     }
 }

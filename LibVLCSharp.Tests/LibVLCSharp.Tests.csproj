@@ -10,7 +10,7 @@
     <PackageReference Include="Moq" Version="4.7.142" />
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.0-alpha3" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.4" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
