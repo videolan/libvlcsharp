@@ -18,10 +18,16 @@ namespace LibVLCSharp.Forms.Sample
             base.OnAppearing();
 
             videoView.MediaPlayerChanged += VideoView_MediaPlayerChanged;
+            videoView.Loaded += VideoView_Loaded;
 
             _vm = BindingContext as MainViewModel;
             _vm.PropertyChanged += Vm_PropertyChanged;
             _vm.Initialize();
+        }
+
+        private void VideoView_Loaded(object sender, System.EventArgs e)
+        {
+            _vm.MediaPlayer.Play();
         }
 
         private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

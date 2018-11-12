@@ -35,8 +35,6 @@ namespace LibVLCSharp.Forms.Sample
                 "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", 
                 Media.FromType.FromLocation)
             };
-
-            MediaPlayer.Play();
         }
     }
 }
