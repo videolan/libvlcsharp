@@ -11,7 +11,7 @@ using Org.Videolan.Libvlc;
 
 namespace LibVLCSharp.Platforms.Android
 {
-    public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView
+    public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView, AWindow.ISurfaceCallback
     {
         MediaPlayer _mediaPlayer;
         AWindow _awindow;
@@ -68,7 +68,7 @@ namespace LibVLCSharp.Platforms.Android
             if (_mediaPlayer == null)
                 throw new NullReferenceException(nameof(_mediaPlayer));
 
-            _awindow = new AWindow(new SurfaceCallback(_mediaPlayer));
+            _awindow = new AWindow(this);
             _awindow.AddCallback(this);
             _awindow.SetVideoView(this);
             _awindow.AttachViews();
@@ -96,6 +96,11 @@ namespace LibVLCSharp.Platforms.Android
             _awindow = null;
         }
 
+        /// <summary>
+        /// This is to workaround the first layout change not being raised when VideoView is behind a Xamarin.Forms custom renderer on Android.
+        /// </summary>
+        public void TriggerLayoutChangeListener() => _awindow?.SetWindowSize(Width, Height);
+        
         public virtual void OnSurfacesCreated(IVLCVout vout)
         {
         }
@@ -113,6 +118,14 @@ namespace LibVLCSharp.Platforms.Android
             base.Dispose(disposing);
 
             Detach();
+        }
+
+        void AWindow.ISurfaceCallback.OnSurfacesCreated(AWindow aWindow)
+        {
+        }
+
+        void AWindow.ISurfaceCallback.OnSurfacesDestroyed(AWindow aWindow)
+        {
         }
     }
 }

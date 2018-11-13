@@ -39,6 +39,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
         private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
             Control.MediaPlayer = e.NewMediaPlayer;
+            Control.TriggerLayoutChangeListener();
         }
     }
 }
