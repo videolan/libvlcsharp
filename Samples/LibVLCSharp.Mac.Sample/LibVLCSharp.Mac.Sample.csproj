@@ -99,5 +99,5 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Import Project="..\..\packages\VideoLAN.LibVLC.Mac.3.1.2-alpha\build\VideoLAN.LibVLC.Mac.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.Mac.3.1.2-alpha\build\VideoLAN.LibVLC.Mac.targets')" />
+  <Import Project="..\..\packages\VideoLAN.LibVLC.Mac.3.1.2\build\VideoLAN.LibVLC.Mac.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.Mac.3.1.2\build\VideoLAN.LibVLC.Mac.targets')" />
 </Project>

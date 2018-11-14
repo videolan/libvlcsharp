@@ -1,7 +1,7 @@
 ﻿using System;
 using LibVLCSharp.Shared;
 
-namespace LibVLCSharp.Windows.Sample
+namespace LibVLCSharp.NetCore.Sample
 {
     class Program
     {

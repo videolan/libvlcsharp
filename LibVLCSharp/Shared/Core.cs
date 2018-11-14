@@ -12,11 +12,14 @@ namespace LibVLCSharp.Shared
     {
         struct Native
         {
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
+            [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
+
+            [DllImport(Constants.libSystem)]
+            internal static extern IntPtr dlopen(string libraryPath, int mode = 1);
 #if ANDROID
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
@@ -86,9 +89,17 @@ namespace LibVLCSharp.Shared
                     throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dll");
                 }
             }
+            else if (IsMac)
+            {
+                _libvlcHandle = PreloadNativeLibrary(appExecutionDirectory, $"{Constants.LibraryName}.dylib");
+                if (_libvlcHandle == IntPtr.Zero)
+                {
+                    throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dylib");
+                }
+            }
         }
 
-        //TODO: check if Store app
+        //TODO: Add dlopen for UWP, Linux
         static IntPtr PreloadNativeLibrary(string nativeLibrariesPath, string libraryName)
         {
             Debug.WriteLine($"Loading {libraryName}");
@@ -101,7 +112,7 @@ namespace LibVLCSharp.Shared
                 return IntPtr.Zero;
             }
 #endif
-            return Native.LoadLibrary(libraryPath);// TODO: cross-platform load
+            return IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
         }
 
         static bool IsWindows
@@ -113,22 +124,22 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-        static bool IsX64BitProcess
+        static bool IsMac
         {
 #if NET40
-            get => Environment.Is64BitProcess;
+            get => (int)Environment.OSVersion.Platform == 6;
 #else
-            get => RuntimeInformation.OSArchitecture == Architecture.X64;
+            get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 #endif
         }
+
+        static bool IsX64BitProcess => IntPtr.Size == 8;
     }
 
     internal static class Constants
     {
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
-#elif MAC
-        internal const string LibraryName = "@rpath/VLCKit.framework/VLCKit";
 #elif UNITY_ANDROID
         /// <summary>
         /// The vlc-unity C++ plugin which handles rendering (opengl/d3d) libvlc callbacks
@@ -153,6 +164,7 @@ namespace LibVLCSharp.Shared
         internal const string Msvcrt = "msvcrt";
         internal const string Libc = "libc";
         internal const string libSystem = "libSystem";
+        internal const string Kernel32 = "kernel32";
     }
 
     internal static class ArchitectureNames

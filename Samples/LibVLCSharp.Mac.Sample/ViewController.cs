@@ -22,6 +22,8 @@ namespace LibVLCSharp.Mac.Sample
         {
             base.ViewDidLoad();
 
+            Core.Initialize();
+
             _libVLC = new LibVLC();
             _mediaPlayer = new Shared.MediaPlayer(_libVLC);
 

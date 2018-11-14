@@ -3,10 +3,11 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net47</TargetFrameworks>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <RuntimeIdentifiers>win7-x64;win7-x86</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win7-x64;win7-x86;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.4" />
+    <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj" />
