@@ -3,7 +3,7 @@
   <metadata>
     <id>LibVLCSharp.WPF</id>
     <title>LibVLCSharp.WPF</title>
-    <version>0.0.1-alpha2</version>
+    <version>0.0.1</version>
     <authors>VideoLAN</authors>
     <owners>VideoLAN</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -15,7 +15,7 @@
     <iconUrl>https://raw.githubusercontent.com/videolan/libvlcsharp/master/Assets/icon.png</iconUrl>
      <dependencies>
       <group targetFramework=".NETFramework4.6.1">
-        <dependency id="LibVLCSharp" version="0.0.3" exclude="Build,Analyzers" />
+        <dependency id="LibVLCSharp" version="0.1.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
     <frameworkAssemblies>
