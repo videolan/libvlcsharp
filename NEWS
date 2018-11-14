@@ -1,3 +1,10 @@
+LibVLCSharp version 0.1.0
+=========================
+Public API change: VideoView https://github.com/videolan/libvlcsharp/pull/18
+* VideoView supports crossplatform MediaPlayer databinding
+* Background playback support: VideoView can be disposed of and the music/video will keep playing.
+* Renderer API is simplified: The default service discovery protocol is now inferred https://github.com/videolan/libvlcsharp/commit/10d1c4160e3bda2b156d7385d2be42f410780a20
+
 LibVLCSharp version 0.0.4
 =========================
 * Remove API version checks https://github.com/videolan/libvlcsharp/commit/335866b0c2b355c0622e65fa690bad665c78c57e
