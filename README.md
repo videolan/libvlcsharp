@@ -92,9 +92,9 @@ https://www.nuget.org/packages/LibVLCSharp.Forms/
 
 ## Getting started
 
-Feel free to check out the simple sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started. 
+Feel free to check out the simple sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started.
 
-Basically, you need to instantiate a `VideoView` and add it to your View. It handles the required `libvlc` initialization for you on each platform, and offers a `MediaPlayer` .NET object on which you can call `Play`, `Pause`, set a new media or listen for `libvlc` events.
+Basically, you need to instantiate a `VideoView` and add it to your View. You may need to call `Core.Initialize()` to load the `libvlc` native libraries, depending on your host platform. The `VideoView` offers a `MediaPlayer` object with data-binding support. The `MediaPlayer` allows you to control playback with APIs such as `Play`, `Pause`, set a new media or listen for `libvlc` events.
 
 For usage of the API, you should check out the `libvlc` [C API documentation](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html) which this wrapper follows closely.
 
@@ -105,16 +105,16 @@ Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform sp
 
 For more advanced samples, have a look at [libvlcsharp-samples](https://code.videolan.org/mfkl/libvlcsharp-samples). It currently includes:
 
-- Chromecast sample: Discover chromecasts on your local network and select one for playback in 100% shared code (Xamarin.Forms, iOS/Android).
-- Record HLS sample: Simple .NET Core CLI app which shows how to record an HLS stream to the filesystem.
+- [Chromecast sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/Chromecast): Discover chromecasts on your local network and select one for playback in 100% shared code (Xamarin.Forms, iOS/Android).
+- [Record HLS sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/RecordHLS): Simple .NET Core CLI app which shows how to record an HLS stream to the filesystem.
 
 Feel free to suggest and contribute new samples.
 
 ## Quick API overview
 
-- `VideoView.cs`: Custom view which holds a `LibVLC` object and a `MediaPlayer` object.
-- [`LibVLC.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code. Accessible from `VideoView`.
-- [`MediaPlayer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView`.
+- `VideoView.cs`: Custom view which holds a `MediaPlayer` object.
+- [`LibVLC.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code.
+- [`MediaPlayer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView` with data-binding support.
 - [`MediaDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaDiscoverer.cs): This object should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
 - [`RendererDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
 - [`Media.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
