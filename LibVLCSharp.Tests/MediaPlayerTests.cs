@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -75,6 +76,85 @@ namespace LibVLCSharp.Tests
             await Task.Delay(5000);
             Assert.True(called);
             Assert.True(mp.IsPlaying);
+        }
+
+        int callCountRegisterOne = 0;
+        int callCountRegisterTwo = 0;
+
+        [Test]
+        public async Task EventFireOnceForeachRegistration()
+        {
+            try
+            { 
+                var libVLC = new LibVLC();
+                var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+                var mp = new MediaPlayer(media);
+                
+
+                mp.Playing += Mp_Playing;
+
+                mp.Playing += Mp_Playing1;
+
+                Debug.WriteLine("first play");
+
+                mp.Play();
+                await Task.Delay(2000);
+                Assert.AreEqual(callCountRegisterOne, 1);
+                Assert.AreEqual(callCountRegisterTwo, 1);
+            
+                callCountRegisterOne = 0;
+                callCountRegisterTwo = 0;
+
+                mp.Stop();
+
+                mp.Playing -= Mp_Playing;
+
+            
+                Debug.WriteLine("second play");
+
+                mp.Play();
+                await Task.Delay(2000);
+
+                Assert.AreEqual(callCountRegisterOne, 0);
+                Assert.AreEqual(callCountRegisterTwo, 1);
+
+              //  mp.Stop();
+
+                mp.Playing -= Mp_Playing1; // native crash in detach?
+
+
+
+                callCountRegisterOne = 0;
+                callCountRegisterTwo = 0;
+
+
+                Debug.WriteLine("third play");
+
+                mp.Play();
+                await Task.Delay(500);
+
+                Assert.AreEqual(callCountRegisterOne, 0);
+                Assert.AreEqual(callCountRegisterTwo, 0);
+
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        void Mp_Playing1(object sender, EventArgs e)
+        {
+            callCountRegisterTwo++;
+            Debug.WriteLine($"Mp_Playing1 called with {callCountRegisterTwo}");
+
+        }
+
+        void Mp_Playing(object sender, EventArgs e)
+        {
+            callCountRegisterOne++;
+            Debug.WriteLine($"Mp_Playing called with {callCountRegisterOne}");
         }
     }
 }

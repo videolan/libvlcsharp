@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -29,7 +30,7 @@ namespace LibVLCSharp.Shared
             NativeReference = ptr;
         }
 
-        protected void AttachNativeEvent(EventType eventType, EventCallback eventCallback)
+        private void AttachNativeEvent(EventType eventType, EventCallback eventCallback)
         {
             _callbacks.Add(eventCallback);
             if (Internal.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
@@ -39,11 +40,37 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        protected void DetachNativeEvent(EventType eventType, EventCallback eventCallback)
+        private void DetachNativeEvent(EventType eventType, EventCallback eventCallback)
         {
             _callbacks.Remove(eventCallback);
 
             Internal.LibVLCEventDetach(NativeReference, eventType, eventCallback, IntPtr.Zero);
+        }
+
+        protected void Attach(EventType eventType, ref int registrationCount, Action managedSubscribe, Func<EventCallback> setCallback)
+        {
+            managedSubscribe();
+
+            if (registrationCount == 0)
+            {
+                AttachNativeEvent(eventType, setCallback());
+            }
+            registrationCount++;
+        }
+
+        protected void Detach(EventType eventType, ref int registrationCount, Action managedUnsubscribe, ref EventCallback eventCallback)
+        {
+            if (registrationCount == 0) return;
+            registrationCount--;
+
+            managedUnsubscribe();
+
+            if (registrationCount == 0)
+            {
+                Debug.Assert(eventCallback != null);
+                DetachNativeEvent(eventType, eventCallback);
+                eventCallback = null;
+            }
         }
 
 #if IOS

@@ -37,6 +37,7 @@ namespace LibVLCSharp.Shared
         static EventHandler<EventArgs> _mediaPlayerUnmuted; // vlc 2.2
         static EventHandler<MediaPlayerVolumeChangedEventArgs> _mediaPlayerVolumeChanged; // vlc 2.2
 #else
+        EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
         EventHandler<MediaPlayerMediaChangedEventArgs> _mediaPlayerMediaChanged;
         EventHandler<EventArgs> _mediaPlayerNothingSpecial;
         EventHandler<EventArgs> _mediaPlayerOpening;
@@ -49,7 +50,6 @@ namespace LibVLCSharp.Shared
         EventHandler<EventArgs> _mediaPlayerEndReached;
         EventHandler<EventArgs> _mediaPlayerEncounteredError;
         EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
-        EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
         EventHandler<MediaPlayerSeekableChangedEventArgs> _mediaPlayerSeekableChanged;
         EventHandler<MediaPlayerPausableChangedEventArgs> _mediaPlayerPausableChanged;
         EventHandler<MediaPlayerTitleChangedEventArgs> _mediaPlayerTitleChanged;
@@ -72,6 +72,68 @@ namespace LibVLCSharp.Shared
         {
         }
 
+        int _positionChangedRegistrationCount;
+        int _mediaChangedRegistrationCount;
+        int _nothingSpecialRegistrationCount;
+        int _openingRegistrationCount;
+        int _bufferingRegistrationCount;
+        int _playingRegistrationCount;
+        int _pausedRegistrationCount;
+        int _stoppedRegistrationCount;
+        int _forwardRegistrationCount;
+        int _backwardRegistrationCount;
+        int _endReachedRegistrationCount;
+        int _encounteredErrorRegistrationCount;
+        int _timeChangedRegistrationCount;
+        int _seekableChangedRegistrationCount;
+        int _pausableChangedRegistrationCount;
+        int _titleChangedChangedRegistrationCount;
+        int _chapterChangedRegistrationCount;
+        int _snapshotTakenRegistrationCount;
+        int _lengthChangedRegistrationCount;
+        int _voutRegistrationCount;
+        int _scrambledChangedRegistrationCount;
+        int _eSAddedRegistrationCount;
+        int _eSDeletedRegistrationCount;
+        int _eSSelectedRegistrationCount;
+        int _audioDeviceRegistrationCount;
+        int _corkedRegistrationCount;
+        int _uncorkedRegistrationCount;
+        int _mutedRegistrationCount;
+        int _unmutedRegistrationCount;
+        int _volumeChangedRegistrationCount;
+        
+        EventCallback _positionChangedCallback;
+        EventCallback _mediaChangedCallback;
+        EventCallback _nothingSpecialCallback;
+        EventCallback _openingCallback;
+        EventCallback _bufferingCallback;
+        EventCallback _playingCallback;
+        EventCallback _pausedCallback;
+        EventCallback _stoppedCallback;
+        EventCallback _forwardCallback;
+        EventCallback _backwardCallback;
+        EventCallback _endReachedCallback;
+        EventCallback _encounteredErrorCallback;
+        EventCallback _timeChangedCallback;
+        EventCallback _seekableChangedCallback;
+        EventCallback _pausableChangedCallback;
+        EventCallback _titleChangedCallback;
+        EventCallback _chapterChangedCallback;
+        EventCallback _snapshotTakenCallback;
+        EventCallback _lengthChangedCallback;
+        EventCallback _voutCallback;
+        EventCallback _scrambledChangedCallback;
+        EventCallback _eSAddedCallback;
+        EventCallback _eSDeletedCallback;
+        EventCallback _eSSelectedCallback;
+        EventCallback _audioDeviceCallback;
+        EventCallback _corkedCallback;
+        EventCallback _uncorkedCallback;
+        EventCallback _mutedCallback;
+        EventCallback _unmutedCallback;
+        EventCallback _volumeChangedCallback;
+
         protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
         {
             lock(_lock)
@@ -79,125 +141,185 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaPlayerPositionChanged:
-                        _mediaPlayerPositionChanged += eventHandler as EventHandler<MediaPlayerPositionChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnPositionChanged);
+                        Attach(eventType,
+                            ref _positionChangedRegistrationCount,
+                            () => _mediaPlayerPositionChanged += eventHandler as EventHandler<MediaPlayerPositionChangedEventArgs>,
+                            () => _positionChangedCallback = OnPositionChanged);
                         break;
                     case EventType.MediaPlayerMediaChanged:
-                        _mediaPlayerMediaChanged += eventHandler as EventHandler<MediaPlayerMediaChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnMediaChanged);
+                        Attach(eventType,
+                            ref _mediaChangedRegistrationCount,
+                            () => _mediaPlayerMediaChanged += eventHandler as EventHandler<MediaPlayerMediaChangedEventArgs>,
+                            () => _mediaChangedCallback = OnMediaChanged);
                         break;
                     case EventType.MediaPlayerNothingSpecial:
-                        _mediaPlayerNothingSpecial += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnNothingSpecial);
+                        Attach(eventType,
+                            ref _nothingSpecialRegistrationCount,
+                            () => _mediaPlayerNothingSpecial += eventHandler as EventHandler<EventArgs>,
+                            () => _nothingSpecialCallback = OnNothingSpecial);
                         break;
                     case EventType.MediaPlayerOpening:
-                        _mediaPlayerOpening += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnOpening);
+                        Attach(eventType,
+                            ref _openingRegistrationCount,
+                            () => _mediaPlayerOpening += eventHandler as EventHandler<EventArgs>,
+                            () => _openingCallback = OnOpening);
                         break;
                     case EventType.MediaPlayerBuffering:
-                        _mediaPlayerBuffering += eventHandler as EventHandler<MediaPlayerBufferingEventArgs>;
-                        AttachNativeEvent(eventType, OnBuffering);
+                        Attach(eventType,
+                           ref _bufferingRegistrationCount,
+                           () => _mediaPlayerBuffering += eventHandler as EventHandler<MediaPlayerBufferingEventArgs>,
+                           () => _bufferingCallback = OnBuffering);
                         break;
                     case EventType.MediaPlayerPlaying:
-                        _mediaPlayerPlaying += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnPlaying);
+                        Attach(eventType,
+                            ref _playingRegistrationCount,
+                            () => _mediaPlayerPlaying += eventHandler as EventHandler<EventArgs>,
+                            () => _playingCallback = OnPlaying);
                         break;
                     case EventType.MediaPlayerPaused:
-                        _mediaPlayerPaused += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnPaused);
+                        Attach(eventType,
+                            ref _pausedRegistrationCount,
+                            () => _mediaPlayerPaused += eventHandler as EventHandler<EventArgs>,
+                            () => _pausedCallback = OnPaused);
                         break;
                     case EventType.MediaPlayerStopped:
-                        _mediaPlayerStopped += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnStopped);
+                        Attach(eventType,
+                            ref _stoppedRegistrationCount,
+                            () => _mediaPlayerStopped += eventHandler as EventHandler<EventArgs>,
+                            () => _stoppedCallback = OnStopped);
                         break;
                     case EventType.MediaPlayerForward:
-                        _mediaPlayerForward += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnForward);
+                        Attach(eventType,
+                            ref _forwardRegistrationCount,
+                            () => _mediaPlayerForward += eventHandler as EventHandler<EventArgs>,
+                            () => _forwardCallback = OnForward);
                         break;
                     case EventType.MediaPlayerBackward:
-                        _mediaPlayerBackward += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnBackward);
+                        Attach(eventType,
+                            ref _backwardRegistrationCount,
+                            () => _mediaPlayerBackward += eventHandler as EventHandler<EventArgs>,
+                            () => _backwardCallback = OnBackward);
                         break;
                     case EventType.MediaPlayerEndReached:
-                        _mediaPlayerEndReached += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnEndReached);
+                        Attach(eventType,
+                           ref _endReachedRegistrationCount,
+                           () => _mediaPlayerEndReached += eventHandler as EventHandler<EventArgs>,
+                           () => _endReachedCallback = OnEndReached);
                         break;
                     case EventType.MediaPlayerEncounteredError:
-                        _mediaPlayerEncounteredError += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnEncounteredError);
+                        Attach(eventType,
+                           ref _encounteredErrorRegistrationCount,
+                           () => _mediaPlayerEncounteredError += eventHandler as EventHandler<EventArgs>,
+                           () => _encounteredErrorCallback = OnEncounteredError);
                         break;
                     case EventType.MediaPlayerTimeChanged:
-                        _mediaPlayerTimeChanged += eventHandler as EventHandler<MediaPlayerTimeChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnTimeChanged);
+                        Attach(eventType,
+                           ref _timeChangedRegistrationCount,
+                           () => _mediaPlayerTimeChanged += eventHandler as EventHandler<MediaPlayerTimeChangedEventArgs>,
+                           () => _timeChangedCallback = OnTimeChanged);
                         break;
                     case EventType.MediaPlayerSeekableChanged:
-                        _mediaPlayerSeekableChanged += eventHandler as EventHandler<MediaPlayerSeekableChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnSeekableChanged);
+                        Attach(eventType,
+                          ref _seekableChangedRegistrationCount,
+                          () => _mediaPlayerSeekableChanged += eventHandler as EventHandler<MediaPlayerSeekableChangedEventArgs>,
+                          () => _seekableChangedCallback = OnSeekableChanged);
                         break;
                     case EventType.MediaPlayerPausableChanged:
-                        _mediaPlayerPausableChanged += eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnPausableChanged);
+                        Attach(eventType,
+                          ref _pausableChangedRegistrationCount,
+                          () => _mediaPlayerPausableChanged += eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>,
+                          () => _pausableChangedCallback = OnPausableChanged);
                         break;
                     case EventType.MediaPlayerTitleChanged:
-                        _mediaPlayerTitleChanged += eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnTitleChanged);
+                        Attach(eventType,
+                          ref _titleChangedChangedRegistrationCount,
+                          () => _mediaPlayerTitleChanged += eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>,
+                          () => _titleChangedCallback = OnTitleChanged);
                         break;
                     case EventType.MediaPlayerChapterChanged:
-                        _mediaPlayerChapterChanged += eventHandler as EventHandler<MediaPlayerChapterChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnChapterChanged);
+                        Attach(eventType,
+                          ref _chapterChangedRegistrationCount,
+                          () => _mediaPlayerChapterChanged += eventHandler as EventHandler<MediaPlayerChapterChangedEventArgs>,
+                          () => _chapterChangedCallback = OnChapterChanged);
                         break;
                     case EventType.MediaPlayerSnapshotTaken:
-                        _mediaPlayerSnapshotTaken += eventHandler as EventHandler<MediaPlayerSnapshotTakenEventArgs>;
-                        AttachNativeEvent(eventType, OnSnapshotTaken);
+                        Attach(eventType,
+                          ref _snapshotTakenRegistrationCount,
+                          () => _mediaPlayerSnapshotTaken += eventHandler as EventHandler<MediaPlayerSnapshotTakenEventArgs>,
+                          () => _snapshotTakenCallback = OnSnapshotTaken);
                         break;
                     case EventType.MediaPlayerLengthChanged:
-                        _mediaPlayerLengthChanged += eventHandler as EventHandler<MediaPlayerLengthChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnLengthChanged);
+                        Attach(eventType,
+                          ref _lengthChangedRegistrationCount,
+                          () => _mediaPlayerLengthChanged += eventHandler as EventHandler<MediaPlayerLengthChangedEventArgs>,
+                          () => _lengthChangedCallback = OnLengthChanged);
                         break;
                     case EventType.MediaPlayerVout:
-                        _mediaPlayerVout += eventHandler as EventHandler<MediaPlayerVoutEventArgs>;
-                        AttachNativeEvent(eventType, OnVout);
+                        Attach(eventType,
+                          ref _voutRegistrationCount,
+                          () => _mediaPlayerVout += eventHandler as EventHandler<MediaPlayerVoutEventArgs>,
+                          () => _voutCallback = OnVout);
                         break;
                     case EventType.MediaPlayerScrambledChanged:
-                        _mediaPlayerScrambledChanged += eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnScrambledChanged);
+                        Attach(eventType,
+                          ref _scrambledChangedRegistrationCount,
+                          () => _mediaPlayerScrambledChanged += eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>,
+                          () => _scrambledChangedCallback = OnScrambledChanged);
                         break;
                     case EventType.MediaPlayerESAdded:
-                        _mediaPlayerESAdded += eventHandler as EventHandler<MediaPlayerESAddedEventArgs>;
-                        AttachNativeEvent(eventType, OnESAdded);
+                        Attach(eventType,
+                         ref _eSAddedRegistrationCount,
+                         () => _mediaPlayerESAdded += eventHandler as EventHandler<MediaPlayerESAddedEventArgs>,
+                         () => _eSAddedCallback = OnESAdded);
                         break;
                     case EventType.MediaPlayerESDeleted:
-                        _mediaPlayerESDeleted += eventHandler as EventHandler<MediaPlayerESDeletedEventArgs>;
-                        AttachNativeEvent(eventType, OnESDeleted);
+                        Attach(eventType,
+                         ref _eSDeletedRegistrationCount,
+                         () => _mediaPlayerESDeleted += eventHandler as EventHandler<MediaPlayerESDeletedEventArgs>,
+                         () => _eSDeletedCallback = OnESDeleted);
                         break;
                     case EventType.MediaPlayerESSelected:
-                        _mediaPlayerESSelected += eventHandler as EventHandler<MediaPlayerESSelectedEventArgs>;
-                        AttachNativeEvent(eventType, OnESSelected);
-                        break;
+                        Attach(eventType,
+                        ref _eSSelectedRegistrationCount,
+                        () => _mediaPlayerESSelected += eventHandler as EventHandler<MediaPlayerESSelectedEventArgs>,
+                        () => _eSSelectedCallback = OnESSelected);
+                       break;
                     case EventType.MediaPlayerAudioDevice:
-                        _mediaPlayerAudioDevice += eventHandler as EventHandler<MediaPlayerAudioDeviceEventArgs>;
-                        AttachNativeEvent(eventType, OnAudioDevice);
-                        break;
+                        Attach(eventType,
+                        ref _audioDeviceRegistrationCount,
+                        () => _mediaPlayerAudioDevice += eventHandler as EventHandler<MediaPlayerAudioDeviceEventArgs>,
+                        () => _audioDeviceCallback = OnAudioDevice);
+                       break;
                     case EventType.MediaPlayerCorked:
-                        _mediaPlayerCorked += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnCorked);
-                        break;
+                        Attach(eventType,
+                        ref _corkedRegistrationCount,
+                        () => _mediaPlayerCorked += eventHandler as EventHandler<EventArgs>,
+                        () => _corkedCallback = OnCorked);
+                       break;
                     case EventType.MediaPlayerUncorked:
-                        _mediaPlayerUncorked += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnUncorked);
-                        break;
+                        Attach(eventType,
+                        ref _uncorkedRegistrationCount,
+                        () => _mediaPlayerUncorked += eventHandler as EventHandler<EventArgs>,
+                        () => _uncorkedCallback = OnUncorked);
+                       break;
                     case EventType.MediaPlayerMuted:
-                        _mediaPlayerMuted += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnMuted);
-                        break;
+                        Attach(eventType,
+                        ref _mutedRegistrationCount,
+                        () => _mediaPlayerMuted += eventHandler as EventHandler<EventArgs>,
+                        () => _mutedCallback = OnMuted);
+                       break;
                     case EventType.MediaPlayerUnmuted:
-                        _mediaPlayerUnmuted += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnUnmuted);
-                        break;
+                        Attach(eventType,
+                        ref _unmutedRegistrationCount,
+                        () => _mediaPlayerUnmuted += eventHandler as EventHandler<EventArgs>,
+                        () => _unmutedCallback = OnUnmuted);
+                       break;
                     case EventType.MediaPlayerAudioVolume:
-                        _mediaPlayerVolumeChanged += eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnVolumeChanged);
-                        break;
+                        Attach(eventType,
+                        ref _volumeChangedRegistrationCount,
+                        () => _mediaPlayerVolumeChanged += eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>,
+                        () => _volumeChangedCallback = OnVolumeChanged);
+                       break;
                     default:
                         OnEventUnhandled(this, eventType);
                         break;
@@ -212,124 +334,184 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaPlayerPositionChanged:
-                        _mediaPlayerPositionChanged -= eventHandler as EventHandler<MediaPlayerPositionChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnPositionChanged);
+                        Detach(eventType,
+                            ref _positionChangedRegistrationCount,
+                            () => _mediaPlayerPositionChanged -= eventHandler as EventHandler<MediaPlayerPositionChangedEventArgs>,
+                            ref _positionChangedCallback);
                         break;
                     case EventType.MediaPlayerMediaChanged:
-                        _mediaPlayerMediaChanged -= eventHandler as EventHandler<MediaPlayerMediaChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnMediaChanged);
+                        Detach(eventType,
+                            ref _mediaChangedRegistrationCount,
+                            () => _mediaPlayerMediaChanged -= eventHandler as EventHandler<MediaPlayerMediaChangedEventArgs>,
+                            ref _mediaChangedCallback);
                         break;
                     case EventType.MediaPlayerNothingSpecial:
-                        _mediaPlayerNothingSpecial -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnNothingSpecial);
+                        Detach(eventType,
+                            ref _nothingSpecialRegistrationCount,
+                            () => _mediaPlayerNothingSpecial -= eventHandler as EventHandler<EventArgs>,
+                            ref _nothingSpecialCallback);
                         break;
                     case EventType.MediaPlayerOpening:
-                        _mediaPlayerOpening -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnOpening);
+                        Detach(eventType,
+                           ref _openingRegistrationCount,
+                           () => _mediaPlayerOpening -= eventHandler as EventHandler<EventArgs>,
+                           ref _openingCallback);
                         break;
                     case EventType.MediaPlayerBuffering:
-                        _mediaPlayerBuffering -= eventHandler as EventHandler<MediaPlayerBufferingEventArgs>;
-                        DetachNativeEvent(eventType, OnBuffering);
+                        Detach(eventType,
+                           ref _bufferingRegistrationCount,
+                           () => _mediaPlayerBuffering -= eventHandler as EventHandler<MediaPlayerBufferingEventArgs>,
+                           ref _bufferingCallback);
                         break;
                     case EventType.MediaPlayerPlaying:
-                        _mediaPlayerPlaying -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnPlaying);
+                        Detach(eventType,
+                            ref _playingRegistrationCount,
+                            () => _mediaPlayerPlaying -= eventHandler as EventHandler<EventArgs>,
+                            ref _playingCallback);
                         break;
                     case EventType.MediaPlayerPaused:
-                        _mediaPlayerPaused -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnPaused);
+                        Detach(eventType,
+                           ref _pausedRegistrationCount,
+                           () => _mediaPlayerPaused -= eventHandler as EventHandler<EventArgs>,
+                           ref _pausedCallback);
                         break;
                     case EventType.MediaPlayerStopped:
-                        _mediaPlayerStopped -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnStopped);
+                        Detach(eventType,
+                           ref _stoppedRegistrationCount,
+                           () => _mediaPlayerStopped -= eventHandler as EventHandler<EventArgs>,
+                           ref _stoppedCallback);
                         break;
                     case EventType.MediaPlayerForward:
-                        _mediaPlayerForward -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnForward);
+                        Detach(eventType,
+                           ref _forwardRegistrationCount,
+                           () => _mediaPlayerForward -= eventHandler as EventHandler<EventArgs>,
+                           ref _forwardCallback);
                         break;
                     case EventType.MediaPlayerBackward:
-                        _mediaPlayerBackward -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnBackward);
+                        Detach(eventType,
+                           ref _backwardRegistrationCount,
+                           () => _mediaPlayerBackward -= eventHandler as EventHandler<EventArgs>,
+                           ref _backwardCallback);
                         break;
                     case EventType.MediaPlayerEndReached:
-                        _mediaPlayerEndReached -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnEndReached);
+                        Detach(eventType,
+                           ref _endReachedRegistrationCount,
+                           () => _mediaPlayerEndReached -= eventHandler as EventHandler<EventArgs>,
+                           ref _endReachedCallback);
                         break;
                     case EventType.MediaPlayerEncounteredError:
-                        _mediaPlayerEncounteredError -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnEncounteredError);
+                        Detach(eventType,
+                          ref _encounteredErrorRegistrationCount,
+                          () => _mediaPlayerEncounteredError -= eventHandler as EventHandler<EventArgs>,
+                          ref _encounteredErrorCallback);
                         break;
                     case EventType.MediaPlayerTimeChanged:
-                        _mediaPlayerTimeChanged -= eventHandler as EventHandler<MediaPlayerTimeChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnTimeChanged);
+                        Detach(eventType,
+                          ref _timeChangedRegistrationCount,
+                          () => _mediaPlayerTimeChanged -= eventHandler as EventHandler<MediaPlayerTimeChangedEventArgs>,
+                          ref _timeChangedCallback);
                         break;
                     case EventType.MediaPlayerSeekableChanged:
-                        _mediaPlayerSeekableChanged -= eventHandler as EventHandler<MediaPlayerSeekableChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnSeekableChanged);
+                        Detach(eventType,
+                          ref _seekableChangedRegistrationCount,
+                          () => _mediaPlayerSeekableChanged -= eventHandler as EventHandler<MediaPlayerSeekableChangedEventArgs>,
+                          ref _seekableChangedCallback);
                         break;
                     case EventType.MediaPlayerPausableChanged:
-                        _mediaPlayerPausableChanged -= eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnPausableChanged);
+                        Detach(eventType,
+                          ref _pausableChangedRegistrationCount,
+                          () => _mediaPlayerPausableChanged -= eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>,
+                          ref _pausableChangedCallback);
                         break;
                     case EventType.MediaPlayerTitleChanged:
-                        _mediaPlayerTitleChanged -= eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnTitleChanged);
+                        Detach(eventType,
+                          ref _titleChangedChangedRegistrationCount,
+                          () => _mediaPlayerTitleChanged -= eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>,
+                          ref _titleChangedCallback);
                         break;
                     case EventType.MediaPlayerChapterChanged:
-                        _mediaPlayerChapterChanged -= eventHandler as EventHandler<MediaPlayerChapterChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnChapterChanged);
+                        Detach(eventType,
+                          ref _chapterChangedRegistrationCount,
+                          () => _mediaPlayerChapterChanged -= eventHandler as EventHandler<MediaPlayerChapterChangedEventArgs>,
+                          ref _chapterChangedCallback);
                         break;
                     case EventType.MediaPlayerSnapshotTaken:
-                        _mediaPlayerSnapshotTaken -= eventHandler as EventHandler<MediaPlayerSnapshotTakenEventArgs>;
-                        DetachNativeEvent(eventType, OnSnapshotTaken);
+                        Detach(eventType,
+                          ref _snapshotTakenRegistrationCount,
+                          () => _mediaPlayerSnapshotTaken -= eventHandler as EventHandler<MediaPlayerSnapshotTakenEventArgs>,
+                          ref _snapshotTakenCallback);
                         break;
                     case EventType.MediaPlayerLengthChanged:
-                        _mediaPlayerLengthChanged -= eventHandler as EventHandler<MediaPlayerLengthChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnLengthChanged);
+                        Detach(eventType,
+                          ref _lengthChangedRegistrationCount,
+                          () => _mediaPlayerLengthChanged -= eventHandler as EventHandler<MediaPlayerLengthChangedEventArgs>,
+                          ref _lengthChangedCallback);
                         break;
                     case EventType.MediaPlayerVout:
-                        _mediaPlayerVout -= eventHandler as EventHandler<MediaPlayerVoutEventArgs>;
-                        DetachNativeEvent(eventType, OnVout);
+                        Detach(eventType,
+                          ref _voutRegistrationCount,
+                          () => _mediaPlayerVout -= eventHandler as EventHandler<MediaPlayerVoutEventArgs>,
+                          ref _voutCallback);
                         break;
                     case EventType.MediaPlayerScrambledChanged:
-                        _mediaPlayerScrambledChanged -= eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnScrambledChanged);
+                        Detach(eventType,
+                          ref _scrambledChangedRegistrationCount,
+                          () => _mediaPlayerScrambledChanged -= eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>,
+                          ref _scrambledChangedCallback);
                         break;
                     case EventType.MediaPlayerESAdded:
-                        _mediaPlayerESAdded -= eventHandler as EventHandler<MediaPlayerESAddedEventArgs>;
-                        DetachNativeEvent(eventType, OnESAdded);
+                        Detach(eventType,
+                          ref _eSAddedRegistrationCount,
+                          () => _mediaPlayerESAdded -= eventHandler as EventHandler<MediaPlayerESAddedEventArgs>,
+                          ref _eSAddedCallback);
                         break;
                     case EventType.MediaPlayerESDeleted:
-                        _mediaPlayerESDeleted -= eventHandler as EventHandler<MediaPlayerESDeletedEventArgs>;
-                        DetachNativeEvent(eventType, OnESDeleted);
+                        Detach(eventType,
+                          ref _eSDeletedRegistrationCount,
+                          () => _mediaPlayerESDeleted -= eventHandler as EventHandler<MediaPlayerESDeletedEventArgs>,
+                          ref _eSDeletedCallback);
                         break;
                     case EventType.MediaPlayerESSelected:
-                        _mediaPlayerESSelected -= eventHandler as EventHandler<MediaPlayerESSelectedEventArgs>;
-                        DetachNativeEvent(eventType, OnESSelected);
+                        Detach(eventType,
+                          ref _eSSelectedRegistrationCount,
+                          () => _mediaPlayerESSelected -= eventHandler as EventHandler<MediaPlayerESSelectedEventArgs>,
+                          ref _eSSelectedCallback);
                         break;
                     case EventType.MediaPlayerAudioDevice:
-                        _mediaPlayerAudioDevice -= eventHandler as EventHandler<MediaPlayerAudioDeviceEventArgs>;
-                        DetachNativeEvent(eventType, OnAudioDevice);
+                        Detach(eventType,
+                          ref _audioDeviceRegistrationCount,
+                          () => _mediaPlayerAudioDevice -= eventHandler as EventHandler<MediaPlayerAudioDeviceEventArgs>,
+                          ref _audioDeviceCallback);
                         break;
                     case EventType.MediaPlayerCorked:
-                        _mediaPlayerCorked -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnCorked);
+                        Detach(eventType,
+                          ref _corkedRegistrationCount,
+                          () => _mediaPlayerCorked -= eventHandler as EventHandler<EventArgs>,
+                          ref _corkedCallback);
                         break;
                     case EventType.MediaPlayerUncorked:
-                        _mediaPlayerUncorked -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnUncorked);
+                        Detach(eventType,
+                         ref _uncorkedRegistrationCount,
+                         () => _mediaPlayerUncorked -= eventHandler as EventHandler<EventArgs>,
+                         ref _uncorkedCallback);
                         break;
                     case EventType.MediaPlayerMuted:
-                        _mediaPlayerMuted -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnMuted);
+                        Detach(eventType,
+                         ref _mutedRegistrationCount,
+                         () => _mediaPlayerMuted -= eventHandler as EventHandler<EventArgs>,
+                         ref _mutedCallback);
                         break;
                     case EventType.MediaPlayerUnmuted:
-                        _mediaPlayerUnmuted -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnUnmuted);
+                        Detach(eventType,
+                         ref _unmutedRegistrationCount,
+                         () => _mediaPlayerUnmuted -= eventHandler as EventHandler<EventArgs>,
+                         ref _unmutedCallback);
                         break;
                     case EventType.MediaPlayerAudioVolume:
-                        _mediaPlayerVolumeChanged -= eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnVolumeChanged);
+                        Detach(eventType,
+                         ref _volumeChangedRegistrationCount,
+                         () => _mediaPlayerVolumeChanged -= eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>,
+                         ref _volumeChangedCallback);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
