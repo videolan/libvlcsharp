@@ -12,6 +12,13 @@ namespace LibVLCSharp.Shared
         EventHandler<EventArgs> _mediaDiscovererStarted;
         EventHandler<EventArgs> _mediaDiscovererStopped;
 #endif
+
+        int _discovererStartedRegistrationCount;
+        int _discovererStoppedRegistrationCount;
+
+        EventCallback _discovererStartedCallback;
+        EventCallback _discovererStoppedCallback;
+
         public MediaDiscovererEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -23,12 +30,16 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaDiscovererStarted:
-                        _mediaDiscovererStarted += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnStarted);
+                        Attach(eventType,
+                            ref _discovererStartedRegistrationCount,
+                            () => _mediaDiscovererStarted += eventHandler as EventHandler<EventArgs>,
+                            () => _discovererStartedCallback = OnStarted);
                         break;
                     case EventType.MediaDiscovererStopped:
-                        _mediaDiscovererStopped += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnStopped);
+                        Attach(eventType,
+                            ref _discovererStoppedRegistrationCount,
+                            () => _mediaDiscovererStopped += eventHandler as EventHandler<EventArgs>,
+                            () => _discovererStoppedCallback = OnStopped);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
@@ -44,12 +55,16 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaDiscovererStarted:
-                        _mediaDiscovererStarted -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnStarted);
+                        Detach(eventType,
+                            ref _discovererStartedRegistrationCount,
+                            () => _mediaDiscovererStarted -= eventHandler as EventHandler<EventArgs>,
+                            ref _discovererStartedCallback);
                         break;
                     case EventType.MediaDiscovererStopped:
-                        _mediaDiscovererStopped -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnStopped);
+                        Detach(eventType,
+                            ref _discovererStoppedRegistrationCount,
+                            () => _mediaDiscovererStopped -= eventHandler as EventHandler<EventArgs>,
+                            ref _discovererStoppedCallback);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
