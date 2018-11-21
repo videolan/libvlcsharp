@@ -19,6 +19,19 @@ namespace LibVLCSharp.Shared
         EventHandler<EventArgs> _mediaListEndReached;
 
 #endif
+
+        int _mediaListItemAddedRegistrationCount;
+        int _mediaListWillAddItemdRegistrationCount;
+        int _mediaListItemDeletedRegistrationCount;
+        int _mediaListWillDeleteItemRegistrationCount;
+        int _mediaListEndReachedRegistrationCount;
+
+        EventCallback _mediaListItemAddedCallback;
+        EventCallback _mediaListWillAddItemdCallback;
+        EventCallback _mediaListItemDeletedCallback;
+        EventCallback _mediaListWillDeleteItemCallback;
+        EventCallback _mediaListEndReachedCallback;
+
         public MediaListEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -30,24 +43,34 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaListItemAdded:
-                        _mediaListItemAdded += eventHandler as EventHandler<MediaListItemAddedEventArgs>;
-                        AttachNativeEvent(eventType, OnItemAdded);
+                        Attach(eventType,
+                            ref _mediaListItemAddedRegistrationCount,
+                            () => _mediaListItemAdded += eventHandler as EventHandler<MediaListItemAddedEventArgs>,
+                            () => _mediaListItemAddedCallback = OnItemAdded);
                         break;
                     case EventType.MediaListWillAddItem:
-                        _mediaListWillAddItem += eventHandler as EventHandler<MediaListWillAddItemEventArgs>;
-                        AttachNativeEvent(eventType, OnWillAddItem);
+                        Attach(eventType,
+                            ref _mediaListWillAddItemdRegistrationCount,
+                            () => _mediaListWillAddItem += eventHandler as EventHandler<MediaListWillAddItemEventArgs>,
+                            () => _mediaListWillAddItemdCallback = OnWillAddItem);
                         break;
                     case EventType.MediaListItemDeleted:
-                        _mediaListItemDeleted += eventHandler as EventHandler<MediaListItemDeletedEventArgs>;
-                        AttachNativeEvent(eventType, OnItemDeleted);
+                        Attach(eventType,
+                            ref _mediaListItemDeletedRegistrationCount,
+                            () => _mediaListItemDeleted += eventHandler as EventHandler<MediaListItemDeletedEventArgs>,
+                            () => _mediaListItemDeletedCallback = OnItemDeleted);
                         break;
                     case EventType.MediaListViewWillDeleteItem:
-                        _mediaListWillDeleteItem += eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>;
-                        AttachNativeEvent(eventType, OnWillDeleteItem);
+                        Attach(eventType,
+                            ref _mediaListWillDeleteItemRegistrationCount,
+                            () => _mediaListWillDeleteItem += eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>,
+                            () => _mediaListWillDeleteItemCallback = OnWillDeleteItem);
                         break;
                     case EventType.MediaListEndReached:
-                        _mediaListEndReached += eventHandler as EventHandler<EventArgs>;
-                        AttachNativeEvent(eventType, OnEndReached);
+                        Attach(eventType,
+                            ref _mediaListEndReachedRegistrationCount,
+                            () => _mediaListEndReached += eventHandler as EventHandler<EventArgs>,
+                            () => _mediaListEndReachedCallback = OnEndReached);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
@@ -63,24 +86,34 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaListItemAdded:
-                        _mediaListItemAdded -= eventHandler as EventHandler<MediaListItemAddedEventArgs>;
-                        DetachNativeEvent(eventType, OnItemAdded);
+                        Detach(eventType,
+                            ref _mediaListItemAddedRegistrationCount,
+                            () => _mediaListItemAdded -= eventHandler as EventHandler<MediaListItemAddedEventArgs>,
+                            ref _mediaListItemAddedCallback);
                         break;
                     case EventType.MediaListWillAddItem:
-                        _mediaListWillAddItem -= eventHandler as EventHandler<MediaListWillAddItemEventArgs>;
-                        DetachNativeEvent(eventType, OnWillAddItem);
+                        Detach(eventType,
+                            ref _mediaListWillAddItemdRegistrationCount,
+                            () => _mediaListWillAddItem -= eventHandler as EventHandler<MediaListWillAddItemEventArgs>,
+                            ref _mediaListWillAddItemdCallback);
                         break;
                     case EventType.MediaListItemDeleted:
-                        _mediaListItemDeleted -= eventHandler as EventHandler<MediaListItemDeletedEventArgs>;
-                        DetachNativeEvent(eventType, OnItemDeleted);
+                        Detach(eventType,
+                            ref _mediaListItemDeletedRegistrationCount,
+                            () => _mediaListItemDeleted -= eventHandler as EventHandler<MediaListItemDeletedEventArgs>,
+                            ref _mediaListItemDeletedCallback);
                         break;
                     case EventType.MediaListViewWillDeleteItem:
-                        _mediaListWillDeleteItem -= eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>;
-                        DetachNativeEvent(eventType, OnWillDeleteItem);
+                        Detach(eventType,
+                            ref _mediaListWillDeleteItemRegistrationCount,
+                            () => _mediaListWillDeleteItem -= eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>,
+                            ref _mediaListWillDeleteItemCallback);
                         break;
                     case EventType.MediaListEndReached:
-                        _mediaListEndReached -= eventHandler as EventHandler<EventArgs>;
-                        DetachNativeEvent(eventType, OnEndReached);
+                        Detach(eventType,
+                            ref _mediaListEndReachedRegistrationCount,
+                            () => _mediaListEndReached -= eventHandler as EventHandler<EventArgs>,
+                            ref _mediaListEndReachedCallback);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
