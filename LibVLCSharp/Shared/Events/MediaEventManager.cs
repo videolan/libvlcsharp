@@ -22,6 +22,23 @@ namespace LibVLCSharp.Shared
         EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
         EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
 #endif
+
+        int _mediaMetaChangedRegistrationCount;
+        int _mediaParsedChangedRegistrationCount;
+        int _mediaSubItemChangedRegistrationCount;
+        int _mediaDurationChangedRegistrationCount;
+        int _mediaFreedRegistrationCount;
+        int _mediaStateChangedRegistrationCount;
+        int _mediaSubitemTreeAddedRegistrationCount;
+
+        EventCallback _mediaMetaChangedCallback;
+        EventCallback _mediaParsedChangedCallback;
+        EventCallback _mediaSubItemChangedCallback;
+        EventCallback _mediaDurationChangedCallback;
+        EventCallback _mediaFreedCallback;
+        EventCallback _mediaStateChangedCallback;
+        EventCallback _mediaSubitemTreeAddedCallback;
+
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -33,32 +50,46 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaMetaChanged:
-                        _mediaMetaChanged += eventHandler as EventHandler<MediaMetaChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnMetaChanged);
+                        Attach(eventType,
+                            ref _mediaMetaChangedRegistrationCount,
+                            () => _mediaMetaChanged += eventHandler as EventHandler<MediaMetaChangedEventArgs>,
+                            () => _mediaMetaChangedCallback = OnMetaChanged);
                         break;
                     case EventType.MediaParsedChanged:
-                        _mediaParsedChanged += eventHandler as EventHandler<MediaParsedChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnParsedChanged);
+                        Attach(eventType,
+                            ref _mediaParsedChangedRegistrationCount,
+                            () => _mediaParsedChanged += eventHandler as EventHandler<MediaParsedChangedEventArgs>,
+                            () => _mediaParsedChangedCallback = OnParsedChanged);
                         break;
                     case EventType.MediaSubItemAdded:
-                        _mediaSubItemAdded += eventHandler as EventHandler<MediaSubItemAddedEventArgs>;
-                        AttachNativeEvent(eventType, OnSubItemAdded);
+                        Attach(eventType,
+                            ref _mediaSubItemChangedRegistrationCount,
+                            () => _mediaSubItemAdded += eventHandler as EventHandler<MediaSubItemAddedEventArgs>,
+                            () => _mediaSubItemChangedCallback = OnSubItemAdded);
                         break;
                     case EventType.MediaDurationChanged:
-                        _mediaDurationChanged += eventHandler as EventHandler<MediaDurationChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnDurationChanged);
+                        Attach(eventType,
+                           ref _mediaDurationChangedRegistrationCount,
+                           () => _mediaDurationChanged += eventHandler as EventHandler<MediaDurationChangedEventArgs>,
+                           () => _mediaDurationChangedCallback = OnDurationChanged);
                         break;
                     case EventType.MediaFreed:
-                        _mediaFreed += eventHandler as EventHandler<MediaFreedEventArgs>;
-                        AttachNativeEvent(eventType, OnMediaFreed);
+                        Attach(eventType,
+                           ref _mediaFreedRegistrationCount,
+                           () => _mediaFreed += eventHandler as EventHandler<MediaFreedEventArgs>,
+                           () => _mediaFreedCallback = OnMediaFreed);
                         break;
                     case EventType.MediaStateChanged:
-                        _mediaStateChanged += eventHandler as EventHandler<MediaStateChangedEventArgs>;
-                        AttachNativeEvent(eventType, OnMediaStateChanged);
+                        Attach(eventType,
+                           ref _mediaStateChangedRegistrationCount,
+                           () => _mediaStateChanged += eventHandler as EventHandler<MediaStateChangedEventArgs>,
+                           () => _mediaStateChangedCallback = OnMediaStateChanged);
                         break;
                     case EventType.MediaSubItemTreeAdded:
-                        _mediaSubItemTreeAdded += eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
-                        AttachNativeEvent(eventType, OnSubItemTreeAdded);
+                        Attach(eventType,
+                           ref _mediaSubitemTreeAddedRegistrationCount,
+                           () => _mediaSubItemTreeAdded += eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>,
+                           () => _mediaSubitemTreeAddedCallback = OnSubItemTreeAdded);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
@@ -74,32 +105,46 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.MediaMetaChanged:
-                        _mediaMetaChanged -= eventHandler as EventHandler<MediaMetaChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnMetaChanged);
+                        Detach(eventType,
+                            ref _mediaMetaChangedRegistrationCount,
+                            () => _mediaMetaChanged -= eventHandler as EventHandler<MediaMetaChangedEventArgs>,
+                            ref _mediaMetaChangedCallback);
                         break;
                     case EventType.MediaParsedChanged:
-                        _mediaParsedChanged -= eventHandler as EventHandler<MediaParsedChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnParsedChanged);
+                        Detach(eventType,
+                            ref _mediaParsedChangedRegistrationCount,
+                            () => _mediaParsedChanged -= eventHandler as EventHandler<MediaParsedChangedEventArgs>,
+                            ref _mediaParsedChangedCallback);
                         break;
                     case EventType.MediaSubItemAdded:
-                        _mediaSubItemAdded -= eventHandler as EventHandler<MediaSubItemAddedEventArgs>;
-                        DetachNativeEvent(eventType, OnSubItemAdded);
+                        Detach(eventType,
+                            ref _mediaSubItemChangedRegistrationCount,
+                            () => _mediaSubItemAdded -= eventHandler as EventHandler<MediaSubItemAddedEventArgs>,
+                            ref _mediaSubItemChangedCallback);
                         break;
                     case EventType.MediaDurationChanged:
-                        _mediaDurationChanged -= eventHandler as EventHandler<MediaDurationChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnDurationChanged);
+                        Detach(eventType,
+                            ref _mediaDurationChangedRegistrationCount,
+                            () => _mediaDurationChanged -= eventHandler as EventHandler<MediaDurationChangedEventArgs>,
+                            ref _mediaDurationChangedCallback);
                         break;
                     case EventType.MediaFreed:
-                        _mediaFreed -= eventHandler as EventHandler<MediaFreedEventArgs>;
-                        DetachNativeEvent(eventType, OnMediaFreed);
+                        Detach(eventType,
+                            ref _mediaFreedRegistrationCount,
+                            () => _mediaFreed -= eventHandler as EventHandler<MediaFreedEventArgs>,
+                            ref _mediaFreedCallback);
                         break;
                     case EventType.MediaStateChanged:
-                        _mediaStateChanged -= eventHandler as EventHandler<MediaStateChangedEventArgs>;
-                        DetachNativeEvent(eventType, OnMediaStateChanged);
+                        Detach(eventType,
+                            ref _mediaStateChangedRegistrationCount,
+                            () => _mediaStateChanged -= eventHandler as EventHandler<MediaStateChangedEventArgs>,
+                            ref _mediaStateChangedCallback);
                         break;
                     case EventType.MediaSubItemTreeAdded:
-                        _mediaSubItemTreeAdded -= eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
-                        DetachNativeEvent(eventType, OnSubItemTreeAdded);
+                        Detach(eventType,
+                            ref _mediaSubitemTreeAddedRegistrationCount,
+                            () => _mediaSubItemTreeAdded -= eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>,
+                            ref _mediaSubitemTreeAddedCallback);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
