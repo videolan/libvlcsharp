@@ -12,6 +12,13 @@ namespace LibVLCSharp.Shared
         EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
         EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
 #endif
+
+        int _itemAddedRegistrationCount;
+        int _itemDeletedRegistrationCount;
+
+        EventCallback _itemAddedCallback;
+        EventCallback _itemDeletedCallback;
+
         internal RendererDiscovererEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -23,12 +30,16 @@ namespace LibVLCSharp.Shared
                 switch(eventType)
                 {
                     case EventType.RendererDiscovererItemAdded:
-                        _itemAdded += eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>;
-                        AttachNativeEvent(eventType, OnItemAdded);
+                        Attach(eventType,
+                            ref _itemAddedRegistrationCount,
+                            () => _itemAdded += eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>,
+                            () => _itemAddedCallback = OnItemAdded);
                         break;
                     case EventType.RendererDiscovererItemDeleted:
-                        _itemDeleted += eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>;
-                        AttachNativeEvent(eventType, OnItemDeleted);
+                        Attach(eventType,
+                            ref _itemDeletedRegistrationCount,
+                            () => _itemDeleted += eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>,
+                            () => _itemDeletedCallback = OnItemDeleted);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
@@ -44,12 +55,16 @@ namespace LibVLCSharp.Shared
                 switch (eventType)
                 {
                     case EventType.RendererDiscovererItemAdded:
-                        _itemAdded -= eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>;
-                        DetachNativeEvent(eventType, OnItemAdded);
+                        Detach(eventType,
+                            ref _itemAddedRegistrationCount,
+                            () => _itemAdded -= eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>,
+                            ref _itemAddedCallback);
                         break;
                     case EventType.RendererDiscovererItemDeleted:
-                        _itemDeleted -= eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>;
-                        DetachNativeEvent(eventType, OnItemDeleted);
+                        Detach(eventType,
+                            ref _itemDeletedRegistrationCount,
+                            () => _itemDeleted -= eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>,
+                            ref _itemDeletedCallback);
                         break;
                     default:
                         OnEventUnhandled(this, eventType);
