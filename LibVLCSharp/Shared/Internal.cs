@@ -14,6 +14,11 @@ namespace LibVLCSharp.Shared
         /// </summary>
         protected readonly Action<IntPtr> Release;
 
+        /// <summary>
+        /// Indicates whether this object has already been disposed
+        /// </summary>
+        protected bool IsDisposed;
+
         protected Internal(Func<IntPtr> create, Action<IntPtr> release)
         {
             Release = release;
@@ -24,12 +29,26 @@ namespace LibVLCSharp.Shared
             NativeReference = nativeRef;
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
-            if (NativeReference == IntPtr.Zero) return;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            // dispose unmanaged resources
             Release(NativeReference);
             NativeReference = IntPtr.Zero;
+            IsDisposed = true;
+        }
+
+        ~Internal()
+        {
+            Dispose(false);
         }
     }
 }
