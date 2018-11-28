@@ -1,3 +1,8 @@
+LibVLCSharp version 0.1.2
+=========================
+* Fix SetVideoTrack wrong interop https://code.videolan.org/videolan/LibVLCSharp/issues/62
+* Fix event interop triggering multiple handlers https://code.videolan.org/videolan/LibVLCSharp/issues/44
+
 LibVLCSharp version 0.1.1
 =========================
 * Add .NET Core macOS and net40 macOS support
