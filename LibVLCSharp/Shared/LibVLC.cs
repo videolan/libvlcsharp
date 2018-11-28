@@ -240,14 +240,25 @@ namespace LibVLCSharp.Shared
             NativeToManagedMap[NativeReference] = this;
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if(_logCallback != null)
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            if (disposing)
+            {
                 UnsetLog();
-            UnsetDialogHandlers();
-            base.Dispose();
+                UnsetDialogHandlers();
+            }
+
+            base.Dispose(disposing);
         }
 
+        ~LibVLC()
+        {
+            Dispose(false);
+        }
+        
         public static bool operator ==(LibVLC obj1, LibVLC obj2)
         {
             return obj1?.NativeReference == obj2?.NativeReference;
@@ -328,9 +339,13 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void UnsetLog()
         {
+            if (_logCallback == null) return;
+
             Native.LibVLCLogUnset(NativeReference);
             if(!CloseLogFile())
                 throw new VLCException("Could not close log file");
+
+            _logCallback = null;
         }
 
         public void UnsetDialogHandlers()

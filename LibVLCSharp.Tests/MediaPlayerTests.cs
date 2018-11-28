@@ -156,5 +156,20 @@ namespace LibVLCSharp.Tests
             callCountRegisterOne++;
             Debug.WriteLine($"Mp_Playing called with {callCountRegisterOne}");
         }
+
+        [Test]
+        public async Task DisposeMediaPlayer()
+        {
+            var libvlc = new LibVLC();
+            var mp = new MediaPlayer(libvlc);
+
+            mp.Play(new Media(libvlc, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+
+            await Task.Delay(1000);
+
+            mp.Dispose();
+
+            Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+        }
     }
 }

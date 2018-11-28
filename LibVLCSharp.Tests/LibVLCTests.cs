@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 namespace LibVLCSharp.Tests
 {
     [TestFixture]
-    public class InstanceTests : BaseSetup
+    public class LibVLCTests : BaseSetup
     {
         [Test]
         public void DisposeInstanceNativeRelease()
@@ -139,6 +140,26 @@ namespace LibVLCSharp.Tests
             libVLC.UnsetLog();
             var logs = File.ReadAllText(path);
             Assert.True(logs.StartsWith("VLC media player"));
+        }
+
+        [Test]
+        public void DisposeLibVLC()
+        {
+            var libvlc = new LibVLC();
+
+            libvlc.SetLog((data, logLevel, logContext, format, args) => { });
+            libvlc.SetDialogHandlers((title, text) => Task.CompletedTask,
+                (dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
+                (dialog, title, text, type, cancelText, firstActionText, secondActonText, token) => Task.CompletedTask,
+                (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
+                (dialog, position, text) => Task.CompletedTask);
+
+            Assert.IsTrue(libvlc.DialogHandlersSet);
+
+            libvlc.Dispose();
+
+            Assert.AreEqual(IntPtr.Zero, libvlc.NativeReference);
+            Assert.IsFalse(libvlc.DialogHandlersSet);
         }
     }
 }

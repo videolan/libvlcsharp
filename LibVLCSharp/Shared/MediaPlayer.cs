@@ -1995,6 +1995,32 @@ namespace LibVLCSharp.Shared
         }
 
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            if(disposing)
+            {
+                if(IsPlaying)
+                {
+                    Stop();
+                }
+
+                if(Media != null)
+                {
+                    Media.Dispose();
+                }
+            }
+            
+            base.Dispose(disposing);
+        }
+
+        ~MediaPlayer()
+        {
+            Dispose(false);
+        }
     }
 
     /// <summary>Description for titles</summary>
