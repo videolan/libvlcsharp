@@ -3,7 +3,7 @@
   <metadata>
     <id>LibVLCSharp</id>
     <title>LibVLCSharp</title>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <authors>VideoLAN</authors>
     <owners>VideoLAN</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
