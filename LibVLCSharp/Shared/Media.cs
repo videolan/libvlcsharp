@@ -826,8 +826,21 @@ namespace LibVLCSharp.Shared
             add => EventManager.AttachEvent(EventType.MediaSubItemTreeAdded, value);
             remove => EventManager.DetachEvent(EventType.MediaSubItemTreeAdded, value);
         }
-        
+
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            base.Dispose(disposing);
+        }
+
+        ~Media()
+        {
+            Dispose(false);
+        }
     }
 
     #region Callbacks
