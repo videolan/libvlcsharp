@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// Equalizer settings can be applied to a media player using this type
+    /// </summary>
     public class Equalizer : Internal
     {
         struct Native
@@ -139,5 +142,18 @@ namespace LibVLCSharp.Shared
         /// <param name="index">index index of the band, counting from zero</param>
         /// <returns>equalizer band frequency (Hz), or -1 if there is no such band</returns>
         public float BandFrequency(uint index) => Native.LibVLCAudioEqualizerGetBandFrequency(index);
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            base.Dispose(disposing);
+        }
+
+        ~Equalizer()
+        {
+            Dispose(false);
+        }
     }
 }
