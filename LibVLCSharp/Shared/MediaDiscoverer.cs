@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace LibVLCSharp.Shared
 {
@@ -129,7 +128,9 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Query if media service discover object is running.
         /// </summary>
-        public bool IsRunning => Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0;
+        public bool IsRunning => NativeReference != IntPtr.Zero ? 
+            Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0 
+            : false;
 
         /// <summary>
         /// The MediaList attached to this MediaDiscoverer
@@ -140,6 +141,8 @@ namespace LibVLCSharp.Shared
             {
                 if (_mediaList == null)
                 {
+                    if (IsDisposed || NativeReference == IntPtr.Zero) return null;
+
                     var ptr = Native.LibVLCMediaDiscovererMediaList(NativeReference);
                     if (ptr == IntPtr.Zero) return null;
                     _mediaList = new MediaList(ptr);
@@ -163,5 +166,32 @@ namespace LibVLCSharp.Shared
         }
 
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            if(disposing)
+            {
+                if(_mediaList != null)
+                {
+                    _mediaList.Dispose();
+                    _mediaList = null;
+                }
+
+                if(IsRunning)
+                {
+                    Stop();
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+        ~MediaDiscoverer()
+        {
+            Dispose(false);
+        }
     }
 }
