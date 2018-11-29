@@ -46,5 +46,13 @@ namespace LibVLCSharp.Tests
             mediaList.Unlock();
             Assert.Throws<InvalidOperationException>(() => mediaList.Unlock(), "not locked");
         }
+
+        [Test]
+        public void DisposeMediaList()
+        {
+            var mediaList = new MediaList(new LibVLC());
+            mediaList.Dispose();
+            Assert.AreEqual(IntPtr.Zero, mediaList.NativeReference);
+        }
     }
 }

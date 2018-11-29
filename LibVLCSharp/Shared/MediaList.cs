@@ -321,5 +321,18 @@ namespace LibVLCSharp.Shared
         }
 
         #endregion 
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            base.Dispose(disposing);
+        }
+
+        ~MediaList()
+        {
+            Dispose(false);
+        }
     }
 }
