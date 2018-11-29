@@ -69,6 +69,24 @@ namespace LibVLCSharp.Shared
             add => EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
             remove => EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            if(disposing)
+            {
+                Stop();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        ~RendererDiscoverer()
+        {
+            Dispose(false);
+        }
     }
 
     public class RendererItem : Internal
@@ -120,5 +138,18 @@ namespace LibVLCSharp.Shared
         public bool CanRenderVideo => (Native.LibVLCRendererItemFlags(NativeReference) & VideoRenderer) != 0;
 
         public bool CanRenderAudio => (Native.LibVLCRendererItemFlags(NativeReference) & AudioRenderer) != 0;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
+            base.Dispose(disposing);
+        }
+
+        ~RendererItem()
+        {
+            Dispose(false);
+        }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// This base class is used for the main libvlc types
+    /// </summary>
     public abstract class Internal : IDisposable
     {
         /// <summary>
@@ -29,6 +32,9 @@ namespace LibVLCSharp.Shared
             NativeReference = nativeRef;
         }
 
+        /// <summary>
+        /// Dispose of this instance
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

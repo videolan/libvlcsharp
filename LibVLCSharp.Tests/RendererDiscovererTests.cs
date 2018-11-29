@@ -59,5 +59,14 @@ namespace LibVLCSharp.Tests
 
             await Task.Delay(10000);
         }
+
+        [Test]
+        public void DisposeRendererDiscoverer()
+        {
+            var rendererDiscoverer = new RendererDiscoverer(new LibVLC());
+            rendererDiscoverer.Start();
+            rendererDiscoverer.Dispose();
+            Assert.AreEqual(IntPtr.Zero, rendererDiscoverer.NativeReference);
+        }
     }
 }
