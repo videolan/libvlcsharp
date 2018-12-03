@@ -552,14 +552,14 @@ namespace LibVLCSharp.Shared
                 {
                     var cts = new CancellationTokenSource();
                     var dlg = new Dialog(new DialogId { NativeReference = id });
-                    _cts.Add(id, cts);
+                    _cts[id] = cts;
                     login(dlg, title, text, username, store, cts.Token);
                 },
                 DisplayQuestion = (data, id, title, text, type, cancelText, firstActionText, secondActionText) =>
                 {
                     var cts = new CancellationTokenSource();
                     var dlg = new Dialog(new DialogId { NativeReference = id });
-                    _cts.Add(id, cts);
+                    _cts[id] = cts;
                     question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
 
                 },
@@ -567,7 +567,7 @@ namespace LibVLCSharp.Shared
                 {
                     var cts = new CancellationTokenSource();
                     var dlg = new Dialog(new DialogId { NativeReference = id });
-                    _cts.Add(id, cts);
+                    _cts[id] = cts;
                     displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
                 },
                 Cancel = (data, id) =>
