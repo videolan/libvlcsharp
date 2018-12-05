@@ -39,7 +39,7 @@ namespace LibVLCSharp.Shared
         {
 #if ANDROID
             InitializeAndroid();
-#else
+#elif !IOS
             InitializeDesktop(appExecutionDirectory);
 #endif
         }
