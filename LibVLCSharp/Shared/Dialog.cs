@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared
 {
-    public class Dialog : IDisposable
+    /// <summary>
+    /// Dialogs can be raised by libvlc for network actions and logins.
+    /// You may only call once PostLogin or PostAction or Dismiss after which this instance will be invalid.
+    /// </summary>
+    public class Dialog
     {
         IntPtr _id;
-        bool _disposed;
 
         struct Native
         {
@@ -33,22 +35,8 @@ namespace LibVLCSharp.Shared
             _id = id;
         }
 
-        public Dialog(DialogId id) : this(id.NativeReference)
+        internal Dialog(DialogId id) : this(id.NativeReference)
         {
-        }
-        
-        public void Dispose()
-        {
-            if (_disposed)
-                return;
-
-            _disposed = true;
-            Dismiss();
-        }
-
-        ~Dialog()
-        {
-            Dispose();
         }
 
         /// <summary>
@@ -93,22 +81,21 @@ namespace LibVLCSharp.Shared
         /// Dismiss a dialog.
         /// After this call, this instance won't be valid anymore
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if properly dismissed, false otherwise</returns>
         public bool Dismiss()
         {
-            if (_id == IntPtr.Zero)
-                throw new VLCException("Calling method on dismissed Dialog instance");
+            if (_id == IntPtr.Zero) return false;
+
             var result = Native.LibVLCDialogDismiss(_id) == 0;
-            Marshal.FreeHGlobal(_id);
             _id = IntPtr.Zero;
 
             return result;
         }
     }
 
-    public struct DialogId
+    internal struct DialogId
     {
-        public IntPtr NativeReference { get; set; }
+        internal IntPtr NativeReference { get; set; }
     }
 
     public enum DialogQuestionType
@@ -130,28 +117,28 @@ namespace LibVLCSharp.Shared
     public delegate Task UpdateProgress(Dialog dialog, float position, string text);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void DisplayErrorCallback(IntPtr data, string title, string text);
+    internal delegate void DisplayErrorCallback(IntPtr data, string title, string text);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void DisplayLoginCallback(IntPtr data, IntPtr dialogId, string title, string text,
+    internal delegate void DisplayLoginCallback(IntPtr data, IntPtr dialogId, string title, string text,
         string defaultUsername, bool askStore);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void DisplayQuestionCallback(IntPtr data, IntPtr dialogId, string title, string text,
+    internal delegate void DisplayQuestionCallback(IntPtr data, IntPtr dialogId, string title, string text,
         DialogQuestionType type, string cancelText, string firstActionText, string secondActionText);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void DisplayProgressCallback(IntPtr data, IntPtr dialogId, string title, string text,
+    internal delegate void DisplayProgressCallback(IntPtr data, IntPtr dialogId, string title, string text,
         bool indeterminate, float position, string cancelText);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void CancelCallback(IntPtr data, IntPtr dialogId);
+    internal delegate void CancelCallback(IntPtr data, IntPtr dialogId);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void UpdateProgressCallback(IntPtr data, IntPtr dialogId, float position, string text);
+    internal delegate void UpdateProgressCallback(IntPtr data, IntPtr dialogId, float position, string text);
 
     /// <summary>Dialog callbacks to be implemented</summary>
-    public struct DialogCallbacks
+    internal struct DialogCallbacks
     {
         public DisplayErrorCallback DisplayError;
 

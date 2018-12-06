@@ -42,7 +42,7 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public async Task ShouldThrowIfReusingSameDialogAfterLoginCall()
+        public async Task ShouldThrowIfPostLoginsTwice()
         {
             var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
@@ -52,6 +52,38 @@ namespace LibVLCSharp.Tests
                 {
                     dialog.PostLogin(Username, Password, false);
                     Assert.Throws<VLCException>(() => dialog.PostLogin(Username, Password, false), "Calling method on dismissed Dialog instance");
+                    tcs.SetResult(true);
+                    return Task.CompletedTask;
+                },
+                (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,
+                (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
+                (dialog, position, text) => Task.CompletedTask);
+
+            var mp = new MediaPlayer(libVLC)
+            {
+                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+            };
+
+            mp.Play();
+
+            await tcs.Task;
+            Assert.True(tcs.Task.Result);
+        }
+
+
+        [Test]
+        public async Task ShouldNotThrowAndReturnFalseIfDimissingTwice()
+        {
+            var libVLC = new LibVLC();
+            var tcs = new TaskCompletionSource<bool>();
+
+            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
+                (dialog, title, text, username, store, token) =>
+                {
+                    var result = dialog.Dismiss();
+                    Assert.IsTrue(result);
+                    result = dialog.Dismiss();
+                    Assert.IsFalse(result);
                     tcs.SetResult(true);
                     return Task.CompletedTask;
                 },
