@@ -473,16 +473,17 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public AudioOutputDescription[] AudioOutputs
+        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference), 
+            ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
+            s => CreateAudioOutputDescription(s), 
+            s => s.NextAudioOutputDescription, 
+            Native.LibVLCAudioOutputListRelease);
+            
+        AudioOutputDescription CreateAudioOutputDescription(AudioOutputDescriptionStructure s) => new AudioOutputDescription
         {
-            get
-            {
-                return MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
-                    MarshalUtils.PtrToStructure<AudioOutputDescription.Internal>,
-                    intern => AudioOutputDescription.__CreateInstance(intern),
-                    module => module.Next, Native.LibVLCAudioOutputListRelease);
-            }
-        }
+            Name = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
+            Description = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string,
+        };
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
         /// <param name="audioOutputName">

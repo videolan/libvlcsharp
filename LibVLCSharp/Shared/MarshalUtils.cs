@@ -69,6 +69,35 @@ namespace LibVLCSharp.Shared
             return resultList.ToArray();
         }
 
+        internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
+            Func<T, TU> create, Func<T, IntPtr> next, Action<IntPtr> releaseRef)
+        {
+            var nativeRef = getRef();
+            if (nativeRef == IntPtr.Zero)
+            {
+#if NETSTANDARD1_1 || NET40
+                return new TU[0];
+#else
+                return Array.Empty<TU>();
+#endif
+            }
+
+            var resultList = new List<TU>();
+            IntPtr nextRef = nativeRef;
+            T structure;
+            TU obj;
+
+            while (nextRef != IntPtr.Zero)
+            {
+                structure = retrieve(nextRef);
+                obj = create(structure);
+                resultList.Add(obj);
+                nextRef = next(structure);
+            }
+            releaseRef(nativeRef);
+            return resultList.ToArray();
+        }
+
         /// <summary>
         /// Turns an array of UTF16 C# strings to an array of pointer to UTF8 strings
         /// </summary>
@@ -90,6 +119,12 @@ namespace LibVLCSharp.Shared
             return utf8Args;
         }
 
+        /// <summary>
+        /// Helper with netstandard1.1 and net40 support
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ptr"></param>
+        /// <returns></returns>
         public static T PtrToStructure<T>(IntPtr ptr)
         {
 #if NETSTANDARD1_1 || NET40
