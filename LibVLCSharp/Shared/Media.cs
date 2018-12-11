@@ -738,7 +738,8 @@ namespace LibVLCSharp.Shared
         {
             try
             {
-                _streamData.Stream.Seek(0, SeekOrigin.Begin);
+                if(_streamData.Stream.CanSeek)
+                    _streamData.Stream.Seek(0, SeekOrigin.Begin);
             }
             catch (Exception)
             {
