@@ -75,7 +75,7 @@ namespace LibVLCSharp.Tests
                 }
             }
         }
-        
+
         [Test]
         public void Duplicate()
         {
@@ -119,7 +119,7 @@ namespace LibVLCSharp.Tests
                 using (var media = new Media(libVLC, RealMp3PathSpecialCharacter, Media.FromType.FromPath))
                 {
                     Assert.False(media.IsParsed);
-                    
+
                     media.Parse();
                     await Task.Delay(5000);
                     Assert.True(media.IsParsed);
@@ -127,12 +127,42 @@ namespace LibVLCSharp.Tests
                     using (var mp = new MediaPlayer(media))
                     {
                         Assert.True(mp.Play());
-                        await Task.Delay(10000); 
+                        await Task.Delay(10000);
                         mp.Stop();
                     }
                 }
                 libVLC.Log -= LibVLC_Log;
             }
+        }
+
+        [Test]
+        public async Task CreateMediaFromStreamMultiplePlay()
+        {
+            using (var libVLC = new LibVLC())
+            using(var mp = new MediaPlayer(libVLC))
+            {
+                var media = new Media(libVLC, GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"));
+                mp.Play(media);
+
+                await Task.Delay(1000);
+
+                mp.Time = 60000;
+
+                await Task.Delay(10000); // end reached, rewind stream
+
+                mp.Play(media);
+            }
+        }
+
+
+        private Stream GetStreamFromUrl(string url)
+        {
+            byte[] imageData = null;
+
+            using (var wc = new System.Net.WebClient())
+                imageData = wc.DownloadData(url);
+
+            return new MemoryStream(imageData);
         }
 
         private void LibVLC_Log(object sender, LogEventArgs e)
