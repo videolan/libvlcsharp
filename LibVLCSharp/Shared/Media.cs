@@ -810,7 +810,6 @@ namespace LibVLCSharp.Shared
             if (IsDisposed || NativeReference == IntPtr.Zero)
                 return;
 
-            _streamData?.Stream?.Dispose();
 
             _openMedia = null;
             _readMedia = null;
