@@ -329,10 +329,5 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-
-        ~MediaList()
-        {
-            Dispose(false);
-        }
     }
 }

@@ -2016,11 +2016,6 @@ namespace LibVLCSharp.Shared
             
             base.Dispose(disposing);
         }
-
-        ~MediaPlayer()
-        {
-            Dispose(false);
-        }
     }
 
     /// <summary>Description for titles</summary>

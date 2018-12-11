@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace LibVLCSharp.Shared
 {
@@ -835,11 +834,6 @@ namespace LibVLCSharp.Shared
                 return;
 
             base.Dispose(disposing);
-        }
-
-        ~Media()
-        {
-            Dispose(false);
         }
     }
 

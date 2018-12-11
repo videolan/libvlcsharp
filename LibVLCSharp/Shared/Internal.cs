@@ -38,7 +38,6 @@ namespace LibVLCSharp.Shared
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -50,11 +49,6 @@ namespace LibVLCSharp.Shared
             Release(NativeReference);
             NativeReference = IntPtr.Zero;
             IsDisposed = true;
-        }
-
-        ~Internal()
-        {
-            Dispose(false);
         }
     }
 }

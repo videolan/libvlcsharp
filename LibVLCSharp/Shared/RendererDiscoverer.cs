@@ -82,11 +82,6 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-
-        ~RendererDiscoverer()
-        {
-            Dispose(false);
-        }
     }
 
     public class RendererItem : Internal
@@ -145,11 +140,6 @@ namespace LibVLCSharp.Shared
                 return;
 
             base.Dispose(disposing);
-        }
-
-        ~RendererItem()
-        {
-            Dispose(false);
         }
     }
 }

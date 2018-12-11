@@ -188,10 +188,5 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-
-        ~MediaDiscoverer()
-        {
-            Dispose(false);
-        }
     }
 }

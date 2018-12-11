@@ -253,11 +253,6 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-
-        ~LibVLC()
-        {
-            Dispose(false);
-        }
         
         public static bool operator ==(LibVLC obj1, LibVLC obj2)
         {
