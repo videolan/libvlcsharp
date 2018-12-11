@@ -59,11 +59,6 @@ namespace LibVLCSharp.Tests
             {
                 using (var media = new Media(libVLC, RealStreamMediaPath, Media.FromType.FromLocation))
                 {
-                    Assert.False(media.IsParsed);
-                    media.Parse();
-
-                    Assert.True(media.IsParsed);
-                    Assert.AreEqual(Media.MediaParsedStatus.Done, media.ParsedStatus);
                     Assert.NotZero(media.Duration);
                     using (var mp = new MediaPlayer(media))
                     {
@@ -88,8 +83,7 @@ namespace LibVLCSharp.Tests
         public void CreateMediaFromFileStream()
         {
             var media = new Media(new LibVLC(), new FileStream(RealMp3Path, FileMode.Open, FileAccess.Read, FileShare.Read));
-            media.Parse();
-            Assert.NotZero(media.Tracks.First().Data.Audio.Channels);
+            Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
         [Test]
@@ -153,7 +147,22 @@ namespace LibVLCSharp.Tests
                 mp.Play(media);
             }
         }
-        
+
+        [Test]
+        public async Task CreateMultipleMediaFromStreamPlay()
+        {
+            var libVLC1 = new LibVLC(new[] { "--no-audio" });
+            var libVLC2 = new LibVLC(new[] { "--no-sout-display" });
+
+            var mp1 = new MediaPlayer(libVLC1);
+            var mp2 = new MediaPlayer(libVLC2);
+
+            mp1.Play(new Media(libVLC1, await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4")));
+            mp2.Play(new Media(libVLC2, await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3")));
+
+            await Task.Delay(10000);
+        }
+
         private async Task<Stream> GetStreamFromUrl(string url)
         {
             byte[] imageData = null;
