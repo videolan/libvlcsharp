@@ -141,7 +141,7 @@ namespace LibVLCSharp.Tests
             using (var libVLC = new LibVLC())
             using(var mp = new MediaPlayer(libVLC))
             {
-                var media = new Media(libVLC, GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"));
+                var media = new Media(libVLC, await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"));
                 mp.Play(media);
 
                 await Task.Delay(1000);
@@ -153,14 +153,13 @@ namespace LibVLCSharp.Tests
                 mp.Play(media);
             }
         }
-
-
-        private Stream GetStreamFromUrl(string url)
+        
+        private async Task<Stream> GetStreamFromUrl(string url)
         {
             byte[] imageData = null;
 
-            using (var wc = new System.Net.WebClient())
-                imageData = wc.DownloadData(url);
+            using (var client = new System.Net.Http.HttpClient())
+                imageData = await client.GetByteArrayAsync(url);
 
             return new MemoryStream(imageData);
         }
