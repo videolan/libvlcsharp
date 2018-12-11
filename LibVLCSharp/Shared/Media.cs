@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,9 +8,6 @@ namespace LibVLCSharp.Shared
 {
     public class Media : Internal
     {
-        static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
-        static int _streamIndex;
-
         internal struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -57,7 +53,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option_flag")]
             internal static extern void LibVLCMediaAddOptionFlag(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options, uint flags);
-            
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_mrl")]
             internal static extern IntPtr LibVLCMediaGetMrl(IntPtr media);
@@ -133,11 +129,11 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_release")]
             internal static extern void LibVLCMediaTracksRelease(IntPtr tracks, uint count);
-            
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_subitems")]
             internal static extern IntPtr LibVLCMediaSubitems(IntPtr media);
-            
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_type")]
             internal static extern MediaType LibVLCMediaGetType(IntPtr media);
@@ -342,27 +338,39 @@ namespace LibVLCSharp.Shared
         /// <param name="options"></param>
         public Media(LibVLC libVLC, Stream stream, params string[] options)
             : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
-        {          
-            if(options.Any())
+        {
+            if (options.Any())
                 Native.LibVLCMediaAddOption(NativeReference, options.ToString());
         }
+
+        static OpenMedia _openMedia;
+        static ReadMedia _readMedia;
+        static SeekMedia _seekMedia;
+        static CloseMedia _closeMedia;
+        static StreamData _streamData;
 
         static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
         {
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            var opaque = AddStream(stream);
+            _streamData = new StreamData
+            {
+                Stream = stream,
+                Buffer = new byte[0x4000]
+            };
 
-            if (opaque == IntPtr.Zero)
-                throw new InvalidOperationException("Cannot create opaque parameter");
+            _openMedia = new OpenMedia(CallbackOpenMedia);
+            _readMedia = new ReadMedia(CallbackReadMedia);
+            _seekMedia = new SeekMedia(CallbackSeekMedia);
+            _closeMedia = new CloseMedia(CallbackCloseMedia);
 
             return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
-                Marshal.GetFunctionPointerForDelegate(new OpenMedia(CallbackOpenMedia)),
-                Marshal.GetFunctionPointerForDelegate(new ReadMedia(CallbackReadMedia)),
-                Marshal.GetFunctionPointerForDelegate(new SeekMedia(CallbackSeekMedia)),
-                Marshal.GetFunctionPointerForDelegate(new CloseMedia(CallbackCloseMedia)),
-                opaque);
+                Marshal.GetFunctionPointerForDelegate(_openMedia),
+                Marshal.GetFunctionPointerForDelegate(_readMedia),
+                Marshal.GetFunctionPointerForDelegate(_seekMedia),
+                Marshal.GetFunctionPointerForDelegate(_closeMedia),
+                IntPtr.Zero);
         }
 
         public Media(IntPtr mediaPtr)
@@ -652,24 +660,22 @@ namespace LibVLCSharp.Shared
 
         internal class StreamData
         {
-            public IntPtr Handle { get; set; }
             public Stream Stream { get; set; }
             public byte[] Buffer { get; set; }
         }
 
         #region private
 
+        [MonoPInvokeCallback(typeof(OpenMedia))]
         static int CallbackOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size)
         {
             data = opaque;
 
             try
             {
-                var streamData = GetStream(opaque);
-
                 try
                 {
-                    size = (ulong)streamData.Stream.Length;
+                    size = (ulong)_streamData.Stream.Length;
                 }
                 catch (Exception)
                 {
@@ -677,9 +683,9 @@ namespace LibVLCSharp.Shared
                     size = ulong.MaxValue;
                 }
 
-                if (streamData.Stream.CanSeek)
+                if (_streamData.Stream.CanSeek)
                 {
-                    streamData.Stream.Seek(0L, SeekOrigin.Begin);
+                    _streamData.Stream.Seek(0L, SeekOrigin.Begin);
                 }
 
                 return 0;
@@ -691,18 +697,18 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        [MonoPInvokeCallback(typeof(ReadMedia))]
         static int CallbackReadMedia(IntPtr opaque, IntPtr buf, uint len)
         {
             try
             {
-                var streamData = GetStream(opaque);
                 int read;
 
-                lock (streamData)
+                lock (_streamData)
                 {
-                    var canRead = Math.Min((int)len, streamData.Buffer.Length);
-                    read = streamData.Stream.Read(streamData.Buffer, 0, canRead);
-                    Marshal.Copy(streamData.Buffer, 0, buf, read);
+                    var canRead = Math.Min((int)len, _streamData.Buffer.Length);
+                    read = _streamData.Stream.Read(_streamData.Buffer, 0, canRead);
+                    Marshal.Copy(_streamData.Buffer, 0, buf, read);
                 }
 
                 return read;
@@ -713,12 +719,12 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        static int CallbackSeekMedia(IntPtr opaque, UInt64 offset)
+        [MonoPInvokeCallback(typeof(SeekMedia))]
+        static int CallbackSeekMedia(IntPtr opaque, ulong offset)
         {
             try
             {
-                var streamData = GetStream(opaque);
-                streamData.Stream.Seek((long)offset, SeekOrigin.Begin);
+                _streamData.Stream.Seek((long)offset, SeekOrigin.Begin);
                 return 0;
             }
             catch (Exception)
@@ -727,11 +733,12 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        [MonoPInvokeCallback(typeof(CloseMedia))]
         static void CallbackCloseMedia(IntPtr opaque)
         {
             try
             {
-                RemoveStream(opaque);
+                _streamData.Stream.Seek(0, SeekOrigin.Begin);
             }
             catch (Exception)
             {
@@ -739,44 +746,9 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        static IntPtr AddStream(Stream stream)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            IntPtr handle;
-
-            lock (DicStreams)
-            {
-                _streamIndex++;
-            
-
-                handle = new IntPtr(_streamIndex);
-                DicStreams[handle] = new StreamData
-                {
-                    Buffer = new byte[0x4000],
-                    Handle = handle,
-                    Stream = stream
-                };
-            }
-            return handle;
-        }
-
-        static StreamData GetStream(IntPtr handle)
-        {
-            return !DicStreams.TryGetValue(handle, out var result) ? null : result;
-        }
-
-        static void RemoveStream(IntPtr handle)
-        { 
-            DicStreams.TryRemove(handle, out var result);
-        }
-
         void Retain()
         {
-            if(NativeReference != IntPtr.Zero)
+            if (NativeReference != IntPtr.Zero)
                 Native.LibVLCMediaRetain(NativeReference);
         }
 
@@ -828,10 +800,21 @@ namespace LibVLCSharp.Shared
 
         #endregion
 
+        /// <summary>
+        /// Dispose of this media
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
                 return;
+
+            _streamData?.Stream?.Dispose();
+
+            _openMedia = null;
+            _readMedia = null;
+            _seekMedia = null;
+            _closeMedia = null;
 
             base.Dispose(disposing);
         }
