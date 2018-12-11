@@ -862,7 +862,7 @@ namespace LibVLCSharp.Shared
     /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
     /// </remarks>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int OpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
+    internal delegate int OpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
 
     /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
     /// <param name="opaque">private pointer as set by the</param>
@@ -880,7 +880,7 @@ namespace LibVLCSharp.Shared
     /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
     /// </remarks>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int ReadMedia(IntPtr opaque, IntPtr buf, uint len);
+    internal delegate int ReadMedia(IntPtr opaque, IntPtr buf, uint len);
 
     /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
     /// <param name="opaque">private pointer as set by the</param>
@@ -888,13 +888,13 @@ namespace LibVLCSharp.Shared
     /// <returns>0 on success, -1 on error.</returns>
     /// <remarks>callback</remarks>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int SeekMedia(IntPtr opaque, ulong offset);
+    internal delegate int SeekMedia(IntPtr opaque, ulong offset);
 
     /// <summary>Callback prototype to close a custom bitstream input media.</summary>
     /// <param name="opaque">private pointer as set by the</param>
     /// <remarks>callback</remarks>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void CloseMedia(IntPtr opaque);
+    internal delegate void CloseMedia(IntPtr opaque);
 
     #endregion
 
