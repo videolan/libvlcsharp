@@ -3,7 +3,7 @@
   <metadata>
     <id>LibVLCSharp.Forms.WPF</id>
     <title>LibVLCSharp.Forms.WPF</title>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <authors>VideoLAN</authors>
     <owners>VideoLAN</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -15,8 +15,8 @@
     <iconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</iconUrl>
      <dependencies>
       <group targetFramework=".NETFramework4.7">
-        <dependency id="LibVLCSharp.Forms" version="0.1.1" exclude="Build,Analyzers" />
-        <dependency id="LibVLCSharp.WPF" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="LibVLCSharp.Forms" version="0.1.3" exclude="Build,Analyzers" />
+        <dependency id="LibVLCSharp.WPF" version="0.0.2" exclude="Build,Analyzers" />
         <dependency id="Xamarin.Forms" version="3.2.0.839982"/>
         <dependency id="Xamarin.Forms.Platform.WPF" version="3.2.0.839982"/>
       </group>
