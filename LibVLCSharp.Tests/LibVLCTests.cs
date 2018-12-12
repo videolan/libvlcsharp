@@ -35,9 +35,9 @@ namespace LibVLCSharp.Tests
             foreach (var filter in audioFilters)
             {
                 Debug.WriteLine(filter.Help);
-                Debug.WriteLine(filter.Longname);
+                Debug.WriteLine(filter.LongName);
                 Debug.WriteLine(filter.Name);
-                Debug.WriteLine(filter.Shortname);
+                Debug.WriteLine(filter.ShortName);
             }
         }
 
@@ -48,9 +48,9 @@ namespace LibVLCSharp.Tests
             var videoFilters = libVLC.VideoFilters;
             foreach (var filter in videoFilters)
             {
-                Debug.WriteLine(filter.Longname);
+                Debug.WriteLine(filter.LongName);
                 Debug.WriteLine(filter.Name);
-                Debug.WriteLine(filter.Shortname);
+                Debug.WriteLine(filter.ShortName);
             }
         }
 

@@ -25,5 +25,18 @@ namespace LibVLCSharp.Shared.Helpers
             DeviceIdentifier = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.DeviceIdentifier) as string,
             Description = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string,
         };
+
+        /// <summary>
+        /// Helper method that creates a managed type from the internal interop structure.
+        /// </summary>
+        /// <param name="s">ModuleDescriptionStructure from interop</param>
+        /// <returns>public ModuleDescription to be consumed by the user</returns>
+        internal static ModuleDescription Build(this ModuleDescriptionStructure s) => new ModuleDescription
+        {
+            Name = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
+            ShortName = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.ShortName) as string,
+            LongName = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.LongName) as string,
+            Help = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Help) as string
+        };
     }
 }

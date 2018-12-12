@@ -435,16 +435,11 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public ModuleDescription[] AudioFilters
-        {
-            get
-            {
-                return MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
-                    MarshalUtils.PtrToStructure<ModuleDescription.Internal>,
-                    intern => ModuleDescription.__CreateInstance(intern),
-                    module => module.Next, Native.LibVLCModuleDescriptionListRelease);
-            }
-        }
+        public ModuleDescription[] AudioFilters => MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
+            MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
+            s => s.Build(),
+            module => module.Next, 
+            Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Returns a list of video filters that are available.</summary>
         /// <returns>
@@ -456,9 +451,10 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
         public ModuleDescription[] VideoFilters => MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
-                    MarshalUtils.PtrToStructure<ModuleDescription.Internal>,
-                    intern => ModuleDescription.__CreateInstance(intern),
-                    module => module.Next, Native.LibVLCModuleDescriptionListRelease);
+            MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
+            s => s.Build(),
+            module => module.Next, 
+            Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Gets the list of available audio output modules.</summary>
         /// <returns>list of available audio outputs. It must be freed with</returns>

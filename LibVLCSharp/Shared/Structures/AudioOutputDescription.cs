@@ -3,10 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared.Structures
 {
-    /// <summary>
-    /// <para>Description for audio output. It contains</para>
-    /// <para>name, description and pointer to next record.</para>
-    /// </summary>
+    
     [StructLayout(LayoutKind.Sequential)]
     internal struct AudioOutputDescriptionStructure
     {
@@ -15,6 +12,9 @@ namespace LibVLCSharp.Shared.Structures
         public IntPtr NextAudioOutputDescription;
     }
 
+    /// <summary>
+    /// Description for audio output.
+    /// </summary>
     public class AudioOutputDescription
     {
         public string Name;
