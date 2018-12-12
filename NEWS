@@ -1,3 +1,9 @@
+LibVLCSharp version 0.1.4
+=========================
+* Dialog.Dismiss should be able to be called safely multiple times https://code.videolan.org/videolan/LibVLCSharp/issues/65
+* Remove finalizers introduced in 0.1.3, they become a problem when the GC is under pressure https://code.videolan.org/videolan/LibVLCSharp/issues/73
+* Rework media callbacks, keep delegate ref and enable iOS support (amongst other things) https://code.videolan.org/videolan/LibVLCSharp/issues/72
+
 LibVLCSharp version 0.1.3
 =========================
 * Dialog: Replace cancellation token for existing dialog id https://code.videolan.org/videolan/LibVLCSharp/issues/64
