@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace LibVLCSharp.Shared
+namespace LibVLCSharp.Shared.Helpers
 {
     public static class MarshalUtils
     {

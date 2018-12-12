@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibVLCSharp.Shared.Helpers;
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 

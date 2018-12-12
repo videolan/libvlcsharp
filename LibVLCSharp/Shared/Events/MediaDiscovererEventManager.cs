@@ -1,4 +1,5 @@
 ﻿using System;
+using LibVLCSharp.Shared.Helpers;
 
 namespace LibVLCSharp.Shared
 {

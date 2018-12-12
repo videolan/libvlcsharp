@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 // taken from https://github.com/nikki-nn4/NimDemo
-namespace LibVLCSharp.Shared
+namespace LibVLCSharp.Shared.Helpers
 {
     /// <summary>
     /// Marshal unicode string param to utf-8 string,usage:[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(Utf8StringMarshaler))]

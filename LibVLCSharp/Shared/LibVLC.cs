@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using LibVLCSharp.Shared.Helpers;
 using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared
@@ -109,7 +109,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_get")]
-            internal static extern IntPtr LibVLCAudioOutputDeviceListGet(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string aout);
+            internal static extern IntPtr LibVLCAudioOutputDeviceListGet(IntPtr libVLC, IntPtr aout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
@@ -455,16 +455,10 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public ModuleDescription[] VideoFilters
-        {
-            get
-            {
-                return MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
+        public ModuleDescription[] VideoFilters => MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
                     MarshalUtils.PtrToStructure<ModuleDescription.Internal>,
                     intern => ModuleDescription.__CreateInstance(intern),
                     module => module.Next, Native.LibVLCModuleDescriptionListRelease);
-            }
-        }
 
         /// <summary>Gets the list of available audio output modules.</summary>
         /// <returns>list of available audio outputs. It must be freed with</returns>
@@ -475,15 +469,9 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference), 
             ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
-            s => CreateAudioOutputDescription(s), 
+            s => s.Build(), 
             s => s.NextAudioOutputDescription, 
             Native.LibVLCAudioOutputListRelease);
-            
-        AudioOutputDescription CreateAudioOutputDescription(AudioOutputDescriptionStructure s) => new AudioOutputDescription
-        {
-            Name = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
-            Description = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string,
-        };
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
         /// <param name="audioOutputName">
@@ -505,14 +493,11 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
-        {
-
-            return MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputName), 
-                MarshalUtils.PtrToStructure<AudioOutputDevice.Internal>, 
-                s => AudioOutputDevice.__CreateInstance(s),
-                device => device.Next, Native.LibVLCAudioOutputDeviceListRelease);
-        }
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(audioOutputName)), 
+            MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
+            s => s.Build(), 
+            device => device.Next, 
+            Native.LibVLCAudioOutputDeviceListRelease);
 
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="category">category of services to fetch</param>

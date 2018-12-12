@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using LibVLCSharp.Shared.Helpers;
 using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared

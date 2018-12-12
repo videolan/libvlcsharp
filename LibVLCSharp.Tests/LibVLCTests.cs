@@ -76,8 +76,8 @@ namespace LibVLCSharp.Tests
 
             foreach (var audioOutputDevice in audioOutputDevices)
             {
-                //Debug.WriteLine(audioOutputDevice.Description);
-                Debug.WriteLine(audioOutputDevice.Device);
+                Debug.WriteLine(audioOutputDevice.Description);
+                Debug.WriteLine(audioOutputDevice.DeviceIdentifier);
             }
         }
 
