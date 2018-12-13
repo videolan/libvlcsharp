@@ -5,15 +5,22 @@
     <Description>.NET bindings for LibVLC</Description>
     <PackageTags>libvlc native xamarin .net video audio media mediaplayer</PackageTags>
     <TargetFrameworks>netstandard2.0;netstandard1.1;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;net40</TargetFrameworks>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>7.3</LangVersion>
+    <PackageVersion>0.1.4</PackageVersion>
+    <PackageId>LibVLCSharp</PackageId>
+    <Authors>VideoLAN</Authors>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <PackageLicenseUrl>https://github.com/mfkl/LibVLCSharp/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/mfkl/LibVLCSharp</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/mfkl/LibVLCSharp</PackageProjectUrl>
+    <PackageLicenseUrl>https://code.videolan.org/videolan/LibVLCSharp/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
+    <PackageProjectUrl>https://code.videolan.org/videolan/LibVLCSharp</PackageProjectUrl>
+    <PackageIconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</PackageIconUrl>
+    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
+    <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="$(UNITY_ANDROID)=='true'">
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -36,4 +43,10 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
     <Compile Include="Platforms\Mac\**\*.cs" />
   </ItemGroup>
+
+  <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
+    </ItemGroup>
+  </Target>
 </Project>
