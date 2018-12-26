@@ -4,6 +4,8 @@
 
 # LibVLCSharp
 
+[![Build Status](https://videolan.visualstudio.com/LibVLCSharp/_apis/build/status/LibVLCSharp-GitLab?branchName=master)](https://videolan.visualstudio.com/LibVLCSharp/_build/latest?definitionId=10?branchName=master)
+
 LibVLCSharp are .NET/Mono bindings for `libvlc`, the multimedia framework powering the VLC applications.
 
 _The official repository URL for this repo is https://code.videolan.org/videolan/LibVLCSharp._
@@ -19,9 +21,9 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Versioning](VERSIONING.md)
 - [Contribute](#contribute)
 - [Communication](#communication)
-    - [Forum](#forum)
-    - [Issues](#issues)
-    - [IRC](#irc)
+  - [Forum](#forum)
+  - [Issues](#issues)
+  - [IRC](#irc)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 
