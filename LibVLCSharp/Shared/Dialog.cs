@@ -17,7 +17,7 @@ namespace LibVLCSharp.Shared
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_login")]
-            internal static extern int LibVLCDialogPostLogin(IntPtr dialogId, string username, string password, bool store);
+            internal static extern int LibVLCDialogPostLogin(IntPtr dialogId, IntPtr username, IntPtr password, bool store);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_post_action")]
@@ -52,7 +52,15 @@ namespace LibVLCSharp.Shared
             if (_id == IntPtr.Zero)
                 throw new VLCException("Calling method on dismissed Dialog instance");
 
-            var result = Native.LibVLCDialogPostLogin(_id, username, password, store) == 0;
+            if (username == null)
+                username = string.Empty;
+            if (password == null)
+                password = string.Empty;
+
+            var usernamePtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(username);
+            var passwordPtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(password);
+
+            var result = Native.LibVLCDialogPostLogin(_id, usernamePtr, passwordPtr, store) == 0;
 
             _id = IntPtr.Zero;
 
