@@ -5,6 +5,8 @@
 # LibVLCSharp
 
 [![Build Status](https://videolan.visualstudio.com/LibVLCSharp/_apis/build/status/LibVLCSharp-GitLab?branchName=master)](https://videolan.visualstudio.com/LibVLCSharp/_build/latest?definitionId=10?branchName=master)
+[![Join the chat at https://gitter.im/libvlcsharp/Lobby](https://badges.gitter.im/libvlcsharp/Lobby.svg)](https://gitter.im/libvlcsharp/Lobby)
+
 
 LibVLCSharp are .NET/Mono bindings for `libvlc`, the multimedia framework powering the VLC applications.
 
