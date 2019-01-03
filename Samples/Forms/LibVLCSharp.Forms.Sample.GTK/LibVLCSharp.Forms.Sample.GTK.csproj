@@ -51,52 +51,45 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="gdk-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/gdk-sharp-2.0/gdk-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/gdk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/gdk-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="glib-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/glib-sharp-2.0/glib-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/glib-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/glib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="gtk-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/gtk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="atk-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\atk-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/atk-sharp-2.0/atk-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/atk-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/atk-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="glade-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glade-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/glade-sharp-2.0/glade-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/glade-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/glade-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="gtk-dotnet">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-dotnet.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/gtk-dotnet-2.0/gtk-dotnet.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/gtk-dotnet.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/gtk-dotnet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="pango-sharp">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Windows'))">C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
       <HintPath Condition="$([MSBuild]::IsOsPlatform('Linux'))">/usr/lib/cli/pango-sharp-2.0/pango-sharp.dll</HintPath>
-      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework//Versions/5.12.0/lib/mono/gtk-sharp-2.0/pango-sharp.dll</HintPath>
+      <HintPath Condition="$([MSBuild]::IsOsPlatform('OSX'))">/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/gtk-sharp-2.0/pango-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
