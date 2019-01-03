@@ -35,8 +35,7 @@ Features:
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <license type="expression">LGPL-2.1-or-later</license>
-    <repository type="git" url="https://code.videolan.org/videolan/LibVLCSharp"/>
+    <PackageLicenseUrl>https://code.videolan.org/videolan/LibVLCSharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://code.videolan.org/videolan/LibVLCSharp</PackageProjectUrl>
     <PackageIconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</PackageIconUrl>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
