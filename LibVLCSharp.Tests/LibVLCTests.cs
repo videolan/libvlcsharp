@@ -71,7 +71,7 @@ namespace LibVLCSharp.Tests
         {
             var libVLC = new LibVLC();
             var outputs = libVLC.AudioOutputs;
-            var name = outputs.Last().Name;
+            var name = outputs.First(output => output.Name.Equals("mmdevice")).Name;
             var audioOutputDevices = libVLC.AudioOutputDevices(name);
 
             foreach (var audioOutputDevice in audioOutputDevices)
