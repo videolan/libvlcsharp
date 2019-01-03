@@ -489,7 +489,8 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(audioOutputName)), 
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => 
+            MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(audioOutputName)), 
             MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
             s => s.Build(), 
             device => device.Next, 

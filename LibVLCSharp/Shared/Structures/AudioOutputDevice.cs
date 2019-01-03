@@ -4,26 +4,37 @@ using System.Runtime.InteropServices;
 namespace LibVLCSharp.Shared.Structures
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct AudioOutputDeviceStructure
+    internal readonly struct AudioOutputDeviceStructure
     {
-        public IntPtr Next;
-        public IntPtr DeviceIdentifier;
-        public IntPtr Description;
+        public readonly IntPtr Next;
+        public readonly IntPtr DeviceIdentifier;
+        public readonly IntPtr Description;
     }
 
     /// <summary>
     /// Description for audio output device
     /// </summary>
-    public class AudioOutputDevice
+    public readonly struct AudioOutputDevice
     {
+        /// <summary>
+        /// AudioOutputDevice default constructor
+        /// </summary>
+        /// <param name="deviceIdentifier">Device identifier string</param>
+        /// <param name="description">User-friendly device description</param>
+        internal AudioOutputDevice(string deviceIdentifier, string description)
+        {
+            DeviceIdentifier = deviceIdentifier;
+            Description = description;
+        }
+
         /// <summary>
         /// Device identifier string.
         /// </summary>
-        public string DeviceIdentifier;
+        public readonly string DeviceIdentifier;
         
         /// <summary>
         /// User-friendly device description.
         /// </summary>
-        public string Description;
+        public readonly string Description;
     }
 }

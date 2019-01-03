@@ -2,22 +2,39 @@
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared.Structures
-{
-    
+{   
     [StructLayout(LayoutKind.Sequential)]
-    internal struct AudioOutputDescriptionStructure
+    internal readonly struct AudioOutputDescriptionStructure
     {
-        public IntPtr Name;
-        public IntPtr Description;
-        public IntPtr NextAudioOutputDescription;
+        public readonly IntPtr Name;
+        public readonly IntPtr Description;
+        public readonly IntPtr NextAudioOutputDescription;
     }
 
     /// <summary>
     /// Description for audio output.
     /// </summary>
-    public class AudioOutputDescription
+    public readonly struct AudioOutputDescription
     {
-        public string Name;
-        public string Description;
+        /// <summary>
+        /// AudioOutputDescription default constructor
+        /// </summary>
+        /// <param name="name">Audio output name</param>
+        /// <param name="description">Audio output description</param>
+        internal AudioOutputDescription(string name, string description)
+        {
+            Name = name;
+            Description = description;
+        }
+
+        /// <summary>
+        /// Audio output name
+        /// </summary>
+        public readonly string Name;
+
+        /// <summary>
+        /// Audio output description
+        /// </summary>
+        public readonly string Description;
     }
 }

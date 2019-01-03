@@ -7,7 +7,7 @@
     <TargetFrameworks>netstandard2.0;netstandard1.1;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;net40</TargetFrameworks>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
-    <LangVersion>default</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
