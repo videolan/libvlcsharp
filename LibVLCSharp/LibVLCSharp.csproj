@@ -1,9 +1,10 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
   <PropertyGroup>
     <Title>LibVLCSharp</Title>
-    <Summary>LibVLCSharp is a crossplatform multimedia framework for all .NET languages</Summary>
+    <Summary>LibVLCSharp is a crossplatform multimedia framework for all .NET languages and runtimes</Summary>
     <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
-It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio.
+It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. 
+Mono, .NET Framework and .NET Core runtimes are supported.
 
 Supported platforms:
 - Xamarin.Android
@@ -13,6 +14,8 @@ Supported platforms:
 - Xamarin.Forms
 - Unity
     - Android
+- .NET Standard 1.1 and up
+- .NET Core
 
 Features:
 - Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
@@ -35,8 +38,9 @@ Features:
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <PackageLicenseUrl>https://code.videolan.org/videolan/LibVLCSharp/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://code.videolan.org/videolan/LibVLCSharp</PackageProjectUrl>
+    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
     <PackageIconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</PackageIconUrl>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
