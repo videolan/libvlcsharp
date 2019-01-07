@@ -3,8 +3,8 @@
     <Title>LibVLCSharp.Forms</Title>
     <Summary>Xamarin.Forms integration for LibVLCSharp</Summary>
     <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
-It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio.
-Mono, .NET Framework and .NET Core runtimes are supported.
+    
+It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
 
 Supported platforms:
 - Xamarin.Android
