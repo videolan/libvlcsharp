@@ -1,3 +1,12 @@
+LibVLCSharp version 0.1.5
+=========================
+* Handle null login/password dialog marshaling https://code.videolan.org/videolan/LibVLCSharp/issues/75
+* Build: Add a way to build all netstandard targets from CLI 
+* remove allow unsafe blocks https://code.videolan.org/videolan/LibVLCSharp/merge_requests/6
+* remove nuspec and update csproj https://code.videolan.org/videolan/LibVLCSharp/merge_requests/7
+- docs: fixes VS Intellisense
+- add better description on nuget.org
+
 LibVLCSharp version 0.1.4
 =========================
 * Dialog.Dismiss should be able to be called safely multiple times https://code.videolan.org/videolan/LibVLCSharp/issues/65
