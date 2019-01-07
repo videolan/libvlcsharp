@@ -33,6 +33,7 @@ Features:
     <PackageVersion>0.1.4</PackageVersion>
     <PackageId>LibVLCSharp</PackageId>
     <Authors>VideoLAN</Authors>
+    <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>

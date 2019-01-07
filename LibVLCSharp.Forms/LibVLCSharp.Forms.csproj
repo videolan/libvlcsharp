@@ -32,6 +32,7 @@ Features:
     <Version>0.1.3</Version>
     <PackageId>LibVLCSharp.Forms</PackageId>
     <Authors>VideoLAN</Authors>
+    <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>

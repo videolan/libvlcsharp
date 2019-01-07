@@ -30,6 +30,7 @@ Features:
     <PackageVersion>0.0.3</PackageVersion>
     <PackageId>LibVLCSharp.Forms.Platforms.WPF</PackageId>
     <Authors>VideoLAN</Authors>
+    <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
