@@ -12,9 +12,7 @@ Supported platforms:
 - Xamarin.Mac
 - Windows (WPF/WinForms)
 - Xamarin.Forms
-- Unity
-    - Android
-- .NET Standard 1.1 and up
+- .NET Standard 1.1
 - .NET Core
 
 Features:
