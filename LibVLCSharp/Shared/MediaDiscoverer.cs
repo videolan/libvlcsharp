@@ -12,7 +12,7 @@ namespace LibVLCSharp.Shared
         MediaDiscovererEventManager _eventManager;
         MediaList _mediaList;
 
-        struct Native
+        readonly struct Native
         {
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -69,9 +69,9 @@ namespace LibVLCSharp.Shared
             Localdirs = 3
         }
 
-        public struct Description
+        public readonly struct Description
         {
-            public Description(string name, string longName, Category category)
+            internal Description(string name, string longName, Category category)
             {
                 Name = name;
                 LongName = longName;

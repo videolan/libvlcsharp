@@ -10,7 +10,7 @@ namespace LibVLCSharp.Shared
         readonly object _syncLock = new object();
         bool _nativeLock;
 
-        struct Native
+        readonly struct Native
         {
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,

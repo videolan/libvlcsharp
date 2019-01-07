@@ -8,7 +8,7 @@ namespace LibVLCSharp.Shared
 {
     public class MediaPlayer : Internal
     {
-        struct Native
+        readonly struct Native
         {
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,

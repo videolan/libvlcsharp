@@ -40,5 +40,13 @@ namespace LibVLCSharp.Shared.Helpers
         /// <returns>public TrackDescription to be consumed by the user</returns>
         internal static TrackDescription Build(this TrackDescriptionStructure s) =>
             new TrackDescription(s.Id, Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string);
+
+        /// <summary>
+        /// Helper method that creates a managed type from the internal interop structure.
+        /// </summary>
+        /// <param name="s">TrackDescriptionStructure from interop</param>
+        /// <returns>public TrackDescription to be consumed by the user</returns>
+        internal static MediaSlave Build(this MediaSlaveStructure s) =>
+            new MediaSlave(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Uri) as string, s.Type, s.Priority);
     }
 }

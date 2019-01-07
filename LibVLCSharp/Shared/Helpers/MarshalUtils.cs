@@ -98,6 +98,38 @@ namespace LibVLCSharp.Shared.Helpers
             return resultList.ToArray();
         }
 
+        // ulong or uint?
+        internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, Func<IntPtr, IntPtr, uint> getRef, Func<IntPtr, T> retrieve,
+            Func<T, TU> create, Action<IntPtr, uint> releaseRef)
+        {
+            var arrayPtr = IntPtr.Zero;
+            var count = getRef(nativeRef, arrayPtr);
+            if(count == 0)
+            {
+#if NETSTANDARD1_1 || NET40
+                return new TU[0];
+#else
+                return Array.Empty<TU>();
+#endif
+            }
+
+            var resultList = new List<TU>();
+            T structure;
+
+            for (var i = 0; i < count; i++)
+            {
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                structure = retrieve(ptr);
+                var managedStruct = create(structure);
+                resultList.Add(managedStruct);
+            }
+
+            releaseRef(arrayPtr, count);
+            arrayPtr = IntPtr.Zero;
+
+            return resultList.ToArray();
+        }
+
         /// <summary>
         /// Turns an array of UTF16 C# strings to an array of pointer to UTF8 strings
         /// </summary>

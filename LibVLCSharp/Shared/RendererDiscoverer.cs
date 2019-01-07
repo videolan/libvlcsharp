@@ -9,7 +9,7 @@ namespace LibVLCSharp.Shared
     {
         RendererDiscovererEventManager _eventManager;
 
-        struct Native
+        readonly struct Native
         {
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -92,7 +92,7 @@ namespace LibVLCSharp.Shared
 
         readonly Utf8StringMarshaler _utf8Marshaler = Utf8StringMarshaler.GetInstance();
 
-        struct Native
+        readonly struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_name")]

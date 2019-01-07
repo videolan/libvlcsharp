@@ -628,25 +628,10 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public IEnumerable<MediaSlave> Slaves
-        {
-            get
-            {
-                var slaveArrayPtr = IntPtr.Zero;
-                var count = Native.LibVLCMediaGetSlaves(NativeReference, ref slaveArrayPtr);
-                if (count == 0) return Enumerable.Empty<MediaSlave>();
-
-                var slaves = new List<MediaSlave>();
-                for (var i = 0; i < count; i++)
-                {
-                    var ptr = Marshal.ReadIntPtr(slaveArrayPtr, i * IntPtr.Size);
-                    var managedStruct = MarshalUtils.PtrToStructure<MediaSlave>(ptr);
-                    slaves.Add(managedStruct);
-                }
-                Native.LibVLCMediaReleaseSlaves(slaveArrayPtr, count);
-                return slaves;
-            }
-        }
+        public IEnumerable<MediaSlave> Slaves => MarshalUtils.Retrieve(NativeReference, (nativeRef,  arrayPtr) => Native.LibVLCMediaGetSlaves(nativeRef, ref arrayPtr),
+                MarshalUtils.PtrToStructure<MediaSlaveStructure>,
+                s => s.Build(),
+                Native.LibVLCMediaReleaseSlaves);
 
         public override bool Equals(object obj)
         {
@@ -924,59 +909,7 @@ namespace LibVLCSharp.Shared
 
     #endregion
 
-    #region Structs
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MediaStats
-    {
-        /* Input */
-        public int ReadBytes;
-        public float InputBitrate;
-
-        /* Demux */
-        public int DemuxReadBytes;
-        public float DemuxBitrate;
-        public int DemuxCorrupted;
-        public int DemuxDiscontinuity;
-
-        /* Decoders */
-        public int DecodedVideo;
-        public int DecodedAudio;
-
-        /* Video Output */
-        public int DisplayedPictures;
-        public int LostPictures;
-
-        /* Audio output */
-        public int PlayedAudioBuffers;
-        public int LostAudioBuffers;
-
-        /* Stream output */
-        public int SentPackets;
-        public int SentBytes;
-        public float SendBitrate;
-    }
-
-    public struct MediaTrack
-    {
-        public uint Codec;
-        public uint OriginalFourcc;
-        public int Id;
-        public TrackType TrackType;
-        public int Profile;
-        public int Level;
-        public MediaTrackData Data;
-        public uint Bitrate;
-        public IntPtr Language;
-        public IntPtr Description;
-    }
-
-    public struct MediaTrackData
-    {
-        public AudioTrack Audio;
-        public VideoTrack Video;
-        public SubtitleTrack Subtitle;
-    }
+    #region enums
 
     /// <summary>Note the order of libvlc_state_t enum must match exactly the order of</summary>
     /// <remarks>
@@ -1005,33 +938,6 @@ namespace LibVLCSharp.Shared
         Audio = 0,
         Video = 1,
         Text = 2
-    }
-
-    public struct AudioTrack
-    {
-        public uint Channels;
-        public uint Rate;
-    }
-
-    public struct VideoTrack
-    {
-        public uint Height;
-
-        public uint Width;
-
-        public uint SarNum;
-
-        public uint SarDen;
-
-        public uint FrameRateNum;
-
-        public uint FrameRateDen;
-
-        public VideoOrientation Orientation;
-
-        public VideoProjection Projection;
-
-        public VideoViewpoint Pose;
     }
 
     public enum VideoOrientation
@@ -1063,36 +969,18 @@ namespace LibVLCSharp.Shared
         CubemapLayoutStandard = 256
     }
 
-    /// <summary>Viewpoint for video outputs</summary>
-    /// <remarks>allocate using libvlc_video_new_viewpoint()</remarks>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct VideoViewpoint
-    {
-        public float Yaw;
-        public float Pitch;
-        public float Roll;
-        public float Fov;
-    }
-
-    public struct SubtitleTrack
-    {
-        public IntPtr Encoding;
-    }
-
     /// <summary>Type of a media slave: subtitle or audio.</summary>
     public enum MediaSlaveType
     {
+        /// <summary>
+        /// Subtitle
+        /// </summary>
         Subtitle = 0,
+        
+        /// <summary>
+        /// Audio
+        /// </summary>
         Audio = 1
-    }
-
-    /// <summary>A slave of a libvlc_media_t</summary>
-    /// <remarks>libvlc_media_slaves_get</remarks>
-    public struct MediaSlave
-    {
-        public IntPtr Uri;
-        public MediaSlaveType Type;
-        public uint Priority;
     }
     #endregion
 
