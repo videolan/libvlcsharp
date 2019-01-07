@@ -466,7 +466,7 @@ namespace LibVLCSharp.Shared
         public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference), 
             ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
             s => s.Build(), 
-            s => s.NextAudioOutputDescription, 
+            s => s.Next, 
             Native.LibVLCAudioOutputListRelease);
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>

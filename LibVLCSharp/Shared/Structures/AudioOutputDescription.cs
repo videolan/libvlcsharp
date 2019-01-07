@@ -6,9 +6,9 @@ namespace LibVLCSharp.Shared.Structures
     [StructLayout(LayoutKind.Sequential)]
     internal readonly struct AudioOutputDescriptionStructure
     {
-        public readonly IntPtr Name;
-        public readonly IntPtr Description;
-        public readonly IntPtr NextAudioOutputDescription;
+        internal readonly IntPtr Name;
+        internal readonly IntPtr Description;
+        internal readonly IntPtr Next;
     }
 
     /// <summary>

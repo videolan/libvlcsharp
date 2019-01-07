@@ -5,9 +5,9 @@ using System.Text;
 
 namespace LibVLCSharp.Shared.Helpers
 {
-    public static class MarshalUtils
+    internal static class MarshalUtils
     {
-        internal struct Native
+        internal readonly struct Native
         { 
             #region Windows
 
@@ -43,7 +43,7 @@ namespace LibVLCSharp.Shared.Helpers
             const string Write = "w";
         }
 
-        public static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
+        internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
         {
             var nativeRef = getRef();
@@ -103,7 +103,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="args"></param>
         /// <returns>Array of pointer you need to release when you're done with Marshal.FreeHGlobal</returns>
-        public static IntPtr[] ToUtf8(string[] args)
+        internal static IntPtr[] ToUtf8(string[] args)
         {
             var utf8Args = new IntPtr[args?.Length ?? 0];
             
@@ -125,7 +125,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <typeparam name="T"></typeparam>
         /// <param name="ptr"></param>
         /// <returns></returns>
-        public static T PtrToStructure<T>(IntPtr ptr)
+        internal static T PtrToStructure<T>(IntPtr ptr)
         {
 #if NETSTANDARD1_1 || NET40
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
@@ -138,7 +138,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// Crossplatform dlopen
         /// </summary>
         /// <returns>true if successful</returns>
-        public static bool Open(string filename, out IntPtr fileHandle)
+        internal static bool Open(string filename, out IntPtr fileHandle)
         {
             fileHandle = IntPtr.Zero;
 #if NET40
@@ -175,7 +175,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="file handle"></param>
         /// <returns>true if successful</returns>
-        public static bool Close(IntPtr fileHandle)
+        internal static bool Close(IntPtr fileHandle)
         {
 #if NET40
             switch (Environment.OSVersion.Platform)

@@ -1140,40 +1140,14 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public int AudioTrackCount => Native.LibVLCAudioGetTrackCount(NativeReference);
 
-        public TrackDescription[] AudioTrackDescription
-        {
-            get
-            {
-                var r = Native.LibVLCAudioGetTrackDescription(NativeReference);
-                return GetTrackDescription(r);
-            }
-        }
-
-        TrackDescription[] GetTrackDescription(IntPtr trackPtr)
-        {
-            if (trackPtr == IntPtr.Zero)
-#if NETSTANDARD1_1 || NET40
-                return new TrackDescription[0];
-#else
-                return Array.Empty<TrackDescription>();
-#endif
-            var trackDescriptions = new List<TrackDescription>();
-            var track = MarshalUtils.PtrToStructure<TrackDescription>(trackPtr);
-
-            while (true)
-            {
-                trackDescriptions.Add(track);
-                if (track.Next != IntPtr.Zero)
-                {
-                    track = MarshalUtils.PtrToStructure<TrackDescription>(track.Next);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return trackDescriptions.ToArray();
-        }
+        /// <summary>
+        /// Retrive the audio track description
+        /// </summary>
+        public TrackDescription[] AudioTrackDescription => MarshalUtils.Retrieve(() => Native.LibVLCAudioGetTrackDescription(NativeReference),
+            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+            t => t.Build(),
+            t => t.Next,
+            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Get current audio track ID or -1 if no active input.
@@ -1361,21 +1335,26 @@ namespace LibVLCSharp.Shared
 
         public int Spu => Native.LibVLCVideoGetSpu(NativeReference);
 
-        public bool SetSpu(int spu)
-        {
-            return Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
-        }
+        /// <summary>
+        /// Set Spu (subtitle)
+        /// </summary>
+        /// <param name="spu">ideo subtitle track to select (id from track description)</param>
+        /// <returns>true on success, false otherwise</returns>
+        public bool SetSpu(int spu) => Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
 
+        /// <summary>
+        /// Get the number of available video subtitles.
+        /// </summary>
         public int SpuCount => Native.LibVLCVideoGetSpuCount(NativeReference);
 
-        public TrackDescription[] SpuDescription
-        {
-            get
-            {
-                var ptr = Native.LibVLCVideoGetSpuDescription(NativeReference);
-                return GetTrackDescription(ptr);
-            }
-        }
+        /// <summary>
+        /// Retrieve SpuDescription in a TrackDescription struct
+        /// </summary>
+        public TrackDescription[] SpuDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetSpuDescription(NativeReference),
+            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+            t => t.Build(),
+            t => t.Next,
+            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Set new video subtitle file.
@@ -1384,32 +1363,40 @@ namespace LibVLCSharp.Shared
         /// <returns></returns>
         public bool SetSubtitleFile(string subtitle) => Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
 
+        /// <summary>
+        /// Get the current subtitle delay. 
+        /// </summary>
         public long SpuDelay => Native.LibVLCVideoGetSpuDelay(NativeReference);
 
+        /// <summary>
+        /// Set the subtitle delay. 
+        /// This affects the timing of when the subtitle will be displayed. 
+        /// Positive values result in subtitles being displayed later, while negative values will result in subtitles being displayed earlier.
+        /// The subtitle delay will be reset to zero each time the media changes.
+        /// </summary>
+        /// <param name="delay">time (in microseconds) the display of subtitles should be delayed</param>
+        /// <returns>true if successful, false otherwise</returns>
         public bool SetSpuDelay(long delay) => Native.LibVLCVideoSetSpuDelay(NativeReference, delay) == 0;
 
         /// <summary>
         /// Get the description of available titles.
         /// </summary>
-        public TrackDescription[] TitleDescription
-        {
-            get
-            {
-                var ptr = Native.LibVLCVideoGetTitleDescription(NativeReference);
-                return GetTrackDescription(ptr);
-            }
-        }
+        public TrackDescription[] TitleDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTitleDescription(NativeReference),
+            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+            t => t.Build(),
+            t => t.Next,
+            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Get the description of available chapters for specific title.
         /// </summary>
         /// <param name="titleIndex">selected title</param>
-        /// <returns></returns>
-        public TrackDescription[] ChapterDescription(int titleIndex)
-        {
-            var ptr = Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex);
-            return GetTrackDescription(ptr);
-        }
+        /// <returns>chapter descriptions</returns>
+        public TrackDescription[] ChapterDescription(int titleIndex) => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex),
+            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+            t => t.Build(),
+            t => t.Next,
+            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Get/Set current crop filter geometry.
@@ -1439,14 +1426,11 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get the description of available video tracks.
         /// </summary>
-        public TrackDescription[] VideoTrackDescription
-        {
-            get
-            {
-                var ptr = Native.LibVLCVideoGetTrackDescription(NativeReference);
-                return GetTrackDescription(ptr);
-            }
-        }
+        public TrackDescription[] VideoTrackDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTrackDescription(NativeReference),
+            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+            t => t.Build(),
+            t => t.Next,
+            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Get current video track ID (int) or -1 if no active input.

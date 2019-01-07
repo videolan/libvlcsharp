@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace LibVLCSharp.Shared
 {
     internal abstract class EventManager
     {
-        internal struct Internal
+        internal readonly struct Internal
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_attach")]
             internal static extern int LibVLCEventAttach(IntPtr eventManager, EventType eventType, EventCallback eventCallback,
