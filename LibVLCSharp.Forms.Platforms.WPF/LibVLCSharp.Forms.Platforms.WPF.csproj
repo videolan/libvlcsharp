@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <Title>LibVLCSharp.Forms.Platforms.WPF</Title>
+    <Title>LibVLCSharp.Forms.WPF</Title>
     <Summary>WPF integration for LibVLCSharp.Forms</Summary>
     <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
     
@@ -26,9 +26,9 @@ Features:
 - DVD playback and menu navigation.
     </Description>    
     <TargetFramework>net47</TargetFramework>
-    <RootNamespace>LibVLCSharp.Forms.Platforms.WPF</RootNamespace>
     <PackageVersion>0.0.4</PackageVersion>
-    <PackageId>LibVLCSharp.Forms.Platforms.WPF</PackageId>
+    <RootNamespace>LibVLCSharp.Forms.WPF</RootNamespace>
+    <PackageId>LibVLCSharp.Forms.WPF</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
