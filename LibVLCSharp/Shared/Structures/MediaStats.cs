@@ -2,38 +2,37 @@
 
 namespace LibVLCSharp.Shared
 {
-    #endregion
-
-    #region Structs
-
+    /// <summary>
+    /// Statistics of a Media
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct MediaStats
+    public readonly struct MediaStats
     {
         /* Input */
-        public int ReadBytes;
-        public float InputBitrate;
+        public readonly int ReadBytes;
+        public readonly float InputBitrate;
 
         /* Demux */
-        public int DemuxReadBytes;
-        public float DemuxBitrate;
-        public int DemuxCorrupted;
-        public int DemuxDiscontinuity;
+        public readonly int DemuxReadBytes;
+        public readonly float DemuxBitrate;
+        public readonly int DemuxCorrupted;
+        public readonly int DemuxDiscontinuity;
 
         /* Decoders */
-        public int DecodedVideo;
-        public int DecodedAudio;
+        public readonly int DecodedVideo;
+        public readonly int DecodedAudio;
 
         /* Video Output */
-        public int DisplayedPictures;
-        public int LostPictures;
+        public readonly int DisplayedPictures;
+        public readonly int LostPictures;
 
         /* Audio output */
-        public int PlayedAudioBuffers;
-        public int LostAudioBuffers;
+        public readonly int PlayedAudioBuffers;
+        public readonly int LostAudioBuffers;
 
         /* Stream output */
-        public int SentPackets;
-        public int SentBytes;
-        public float SendBitrate;
+        public readonly int SentPackets;
+        public readonly int SentBytes;
+        public readonly float SendBitrate;
     }
 }

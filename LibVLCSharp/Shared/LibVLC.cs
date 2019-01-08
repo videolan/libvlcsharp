@@ -534,36 +534,30 @@ namespace LibVLCSharp.Shared
             if (displayProgress == null) throw new ArgumentNullException(nameof(displayProgress));
             if (updateProgress == null) throw new ArgumentNullException(nameof(updateProgress));
 
-            var dialogCbs = new DialogCallbacks
-            {
-                DisplayError = (data, title, text) =>
-                {
-                    // no dialogId ?!
-                    error(title, text);
-                },
-                DisplayLogin = (data, id, title, text, username, store) =>
+            var dialogCbs = new DialogCallbacks(
+                displayError: (data, title, text) => error(title, text),
+                displayLogin: (data, id, title, text, username, store) =>
                 {
                     var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    var dlg = new Dialog(new DialogId(id));
                     _cts[id] = cts;
                     login(dlg, title, text, username, store, cts.Token);
                 },
-                DisplayQuestion = (data, id, title, text, type, cancelText, firstActionText, secondActionText) =>
+                displayQuestion: (data, id, title, text, type, cancelText, firstActionText, secondActionText) =>
                 {
                     var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    var dlg = new Dialog(new DialogId(id));
                     _cts[id] = cts;
                     question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
-
                 },
-                DisplayProgress = (data, id, title, text, indeterminate, position, cancelText) =>
+                displayProgress: (data, id, title, text, indeterminate, position, cancelText) =>
                 {
                     var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    var dlg = new Dialog(new DialogId(id));
                     _cts[id] = cts;
                     displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
                 },
-                Cancel = (data, id) =>
+                cancel: (data, id) =>
                 {
                     if (_cts.TryGetValue(id, out var token))
                     {
@@ -571,12 +565,11 @@ namespace LibVLCSharp.Shared
                         _cts.Remove(id);
                     }
                 },
-                UpdateProgress = (data, id, position, text) =>
+                updateProgress: (data, id, position, text) =>
                 {
-                    var dlg = new Dialog(new DialogId { NativeReference = id });
+                    var dlg = new Dialog(new DialogId(id));
                     updateProgress(dlg, position, text);
-                }
-            };
+                });
 
             _dialogCbsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DialogCallbacks)));
             Marshal.StructureToPtr(dialogCbs, _dialogCbsPtr, true);
@@ -615,7 +608,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        public struct RendererDescription
+        public readonly struct RendererDescription
         {
             public string Name { get; }
             public string LongName { get; }

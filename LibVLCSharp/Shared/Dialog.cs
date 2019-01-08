@@ -102,9 +102,13 @@ namespace LibVLCSharp.Shared
         }
     }
 
-    internal struct DialogId
+    internal readonly struct DialogId
     {
-        internal IntPtr NativeReference { get; set; }
+        internal DialogId(IntPtr nativeReference)
+        {
+            NativeReference = nativeReference;
+        }
+        internal IntPtr NativeReference { get; }
     }
 
     public enum DialogQuestionType
@@ -147,18 +151,29 @@ namespace LibVLCSharp.Shared
     internal delegate void UpdateProgressCallback(IntPtr data, IntPtr dialogId, float position, string text);
 
     /// <summary>Dialog callbacks to be implemented</summary>
-    internal struct DialogCallbacks
+    internal readonly struct DialogCallbacks
     {
-        public DisplayErrorCallback DisplayError;
+        internal DialogCallbacks(DisplayErrorCallback displayError, DisplayLoginCallback displayLogin, DisplayQuestionCallback displayQuestion,
+            DisplayProgressCallback displayProgress, CancelCallback cancel, UpdateProgressCallback updateProgress)
+        {
+            DisplayError = displayError;
+            DisplayLogin = displayLogin;
+            DisplayQuestion = displayQuestion;
+            DisplayProgress = displayProgress;
+            Cancel = cancel;
+            UpdateProgress = updateProgress;
+        }
 
-        public DisplayLoginCallback DisplayLogin;
+        internal readonly DisplayErrorCallback DisplayError;
 
-        public DisplayQuestionCallback DisplayQuestion;
+        internal readonly DisplayLoginCallback DisplayLogin;
 
-        public DisplayProgressCallback DisplayProgress;
+        internal readonly DisplayQuestionCallback DisplayQuestion;
 
-        public CancelCallback Cancel;
+        internal readonly DisplayProgressCallback DisplayProgress;
 
-        public UpdateProgressCallback UpdateProgress;
+        internal readonly CancelCallback Cancel;
+
+        internal readonly UpdateProgressCallback UpdateProgress;
     }
 }

@@ -1,12 +1,23 @@
 ﻿namespace LibVLCSharp.Shared
 {
-    #endregion
-    #region Structs
-
-    public struct MediaTrackData
+    /// <summary>
+    /// Media track data struct, containing info about audio, video and subtitles track
+    /// </summary>
+    public readonly struct MediaTrackData
     {
-        public AudioTrack Audio;
-        public VideoTrack Video;
-        public SubtitleTrack Subtitle;
+        /// <summary>
+        /// Audio track
+        /// </summary>
+        public readonly AudioTrack Audio;
+
+        /// <summary>
+        /// Video track
+        /// </summary>
+        public readonly VideoTrack Video;
+
+        /// <summary>
+        /// Subtitle track
+        /// </summary>
+        public readonly SubtitleTrack Subtitle;
     }
 }

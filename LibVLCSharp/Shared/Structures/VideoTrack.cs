@@ -18,6 +18,6 @@
 
         public readonly VideoProjection Projection;
 
-        public VideoViewpoint Pose;
+        public readonly VideoViewpoint Pose;
     }
 }

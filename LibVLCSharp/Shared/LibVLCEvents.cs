@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace LibVLCSharp.Shared
 {
     /// <summary>LibVLCEvent types</summary>
-    public enum EventType
+    internal enum EventType
     {
         MediaMetaChanged = 0,
         MediaSubItemAdded = 1,
@@ -157,129 +157,129 @@ namespace LibVLCSharp.Shared
     /// </remarks>
     /// <summary>A LibVLC event</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct LibVLCEvent
+    internal readonly struct LibVLCEvent
     {
-        public EventType Type;
+        internal readonly EventType Type;
 
-        public IntPtr Sender;
+        internal readonly IntPtr Sender;
 
-        public EventUnion Union;
+        internal readonly EventUnion Union;
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct EventUnion
+        internal readonly struct EventUnion
         {
             // media
             [FieldOffset(0)]
-            public MediaMetaChanged MediaMetaChanged;
+            internal readonly MediaMetaChanged MediaMetaChanged;
             [FieldOffset(0)]
-            public MediaSubItemAdded MediaSubItemAdded;
+            internal readonly MediaSubItemAdded MediaSubItemAdded;
             [FieldOffset(0)]
-            public MediaDurationChanged MediaDurationChanged;
+            internal readonly MediaDurationChanged MediaDurationChanged;
             [FieldOffset(0)]
-            public MediaParsedChanged MediaParsedChanged;
+            internal readonly MediaParsedChanged MediaParsedChanged;
             [FieldOffset(0)]
-            public MediaFreed MediaFreed;
+            internal readonly MediaFreed MediaFreed;
             [FieldOffset(0)]
-            public MediaStateChanged MediaStateChanged;
+            internal readonly MediaStateChanged MediaStateChanged;
             [FieldOffset(0)]
-            public MediaSubItemTreeAdded MediaSubItemTreeAdded;
+            internal readonly MediaSubItemTreeAdded MediaSubItemTreeAdded;
 
             // mediaplayer
             [FieldOffset(0)]
-            public MediaPlayerBuffering MediaPlayerBuffering;
+            internal readonly MediaPlayerBuffering MediaPlayerBuffering;
             [FieldOffset(0)]
-            public MediaPlayerChapterChanged MediaPlayerChapterChanged;
+            internal readonly MediaPlayerChapterChanged MediaPlayerChapterChanged;
             [FieldOffset(0)]
-            public MediaPlayerPositionChanged MediaPlayerPositionChanged;
+            internal readonly MediaPlayerPositionChanged MediaPlayerPositionChanged;
             [FieldOffset(0)]
-            public MediaPlayerTimeChanged MediaPlayerTimeChanged;
+            internal readonly MediaPlayerTimeChanged MediaPlayerTimeChanged;
             [FieldOffset(0)]
-            public MediaPlayerTitleChanged MediaPlayerTitleChanged;
+            internal readonly MediaPlayerTitleChanged MediaPlayerTitleChanged;
             [FieldOffset(0)]
-            public MediaPlayerSeekableChanged MediaPlayerSeekableChanged;
+            internal readonly MediaPlayerSeekableChanged MediaPlayerSeekableChanged;
             [FieldOffset(0)]
-            public MediaPlayerPausableChanged MediaPlayerPausableChanged;
+            internal readonly MediaPlayerPausableChanged MediaPlayerPausableChanged;
             [FieldOffset(0)]
-            public MediaPlayerScrambledChanged MediaPlayerScrambledChanged;
+            internal readonly MediaPlayerScrambledChanged MediaPlayerScrambledChanged;
             [FieldOffset(0)]
-            public MediaPlayerVoutChanged MediaPlayerVoutChanged;
+            internal readonly MediaPlayerVoutChanged MediaPlayerVoutChanged;
 
             // medialist
             [FieldOffset(0)]
-            public MediaListItemAdded MediaListItemAdded;
+            internal readonly MediaListItemAdded MediaListItemAdded;
             [FieldOffset(0)]
-            public MediaListWillAddItem MediaListWillAddItem;
+            internal readonly MediaListWillAddItem MediaListWillAddItem;
             [FieldOffset(0)]
-            public MediaListItemDeleted MediaListItemDeleted;
+            internal readonly MediaListItemDeleted MediaListItemDeleted;
             [FieldOffset(0)]
-            public MediaListWillDeleteItem MediaListWillDeleteItem;
+            internal readonly MediaListWillDeleteItem MediaListWillDeleteItem;
             [FieldOffset(0)]
-            public MediaListPlayerNextItemSet MediaListPlayerNextItemSet;
+            internal readonly MediaListPlayerNextItemSet MediaListPlayerNextItemSet;
 
             // mediaplayer
             [FieldOffset(0)]
-            public MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
+            internal readonly MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
             [FieldOffset(0)]
-            public MediaPlayerLengthChanged MediaPlayerLengthChanged;
+            internal readonly MediaPlayerLengthChanged MediaPlayerLengthChanged;
             [FieldOffset(0)]
-            public VlmMediaEvent VlmMediaEvent;
+            internal readonly VlmMediaEvent VlmMediaEvent;
             [FieldOffset(0)]
-            public MediaPlayerMediaChanged MediaPlayerMediaChanged;
+            internal readonly MediaPlayerMediaChanged MediaPlayerMediaChanged;
             [FieldOffset(0)]
-            public EsChanged EsChanged;
+            internal readonly EsChanged EsChanged;
             [FieldOffset(0)]
-            public VolumeChanged MediaPlayerVolumeChanged;
+            internal readonly VolumeChanged MediaPlayerVolumeChanged;
             [FieldOffset(0)]
-            public AudioDeviceChanged AudioDeviceChanged;
+            internal readonly AudioDeviceChanged AudioDeviceChanged;
 
             // renderer discoverer
             [FieldOffset(0)]
-            public RendererDiscovererItemAdded RendererDiscovererItemAdded;
+            internal readonly RendererDiscovererItemAdded RendererDiscovererItemAdded;
             [FieldOffset(0)]
-            public RendererDiscovererItemDeleted RendererDiscovererItemDeleted; 
+            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted; 
         }
 
         #region Media
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaMetaChanged
+        internal readonly struct MediaMetaChanged
         {
-            public Media.MetadataType MetaType;
+            internal readonly Media.MetadataType MetaType;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaSubItemAdded
+        internal readonly struct MediaSubItemAdded
         {
-            public IntPtr NewChild;
+            internal readonly IntPtr NewChild;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaDurationChanged
+        internal readonly struct MediaDurationChanged
         {
-            public long NewDuration;
+            internal readonly long NewDuration;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaParsedChanged
+        internal readonly struct MediaParsedChanged
         {
-            public Media.MediaParsedStatus NewStatus;
+            internal readonly Media.MediaParsedStatus NewStatus;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaFreed
+        internal readonly struct MediaFreed
         {
-            public IntPtr MediaInstance;
+            internal readonly IntPtr MediaInstance;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaStateChanged
+        internal readonly struct MediaStateChanged
         {
-            public VLCState NewState;
+            internal readonly VLCState NewState;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaSubItemTreeAdded
+        internal readonly struct MediaSubItemTreeAdded
         {
-            public IntPtr MediaInstance;
+            internal readonly IntPtr MediaInstance;
         }
 
         #endregion
@@ -287,94 +287,94 @@ namespace LibVLCSharp.Shared
         #region MediaPlayer 
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerBuffering
+        internal readonly struct MediaPlayerBuffering
         {
-            public float NewCache;
+            internal readonly float NewCache;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerChapterChanged
+        internal readonly struct MediaPlayerChapterChanged
         {
-            public int NewChapter;
+            internal readonly int NewChapter;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerPositionChanged
+        internal readonly struct MediaPlayerPositionChanged
         {
-            public float NewPosition;
+            internal readonly float NewPosition;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerTimeChanged
+        internal readonly struct MediaPlayerTimeChanged
         {
-            public long NewTime;
+            internal readonly long NewTime;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerTitleChanged
+        internal readonly struct MediaPlayerTitleChanged
         {
-            public int NewTitle;
+            internal readonly int NewTitle;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerSeekableChanged
+        internal readonly struct MediaPlayerSeekableChanged
         {
-            public int NewSeekable;
+            internal readonly int NewSeekable;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerPausableChanged
+        internal readonly struct MediaPlayerPausableChanged
         {
-            public int NewPausable;
+            internal readonly int NewPausable;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerScrambledChanged
+        internal readonly struct MediaPlayerScrambledChanged
         {
-            public int NewScrambled;
+            internal readonly int NewScrambled;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerVoutChanged
+        internal readonly struct MediaPlayerVoutChanged
         {
-            public int NewCount;
+            internal readonly int NewCount;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerSnapshotTaken
+        internal readonly struct MediaPlayerSnapshotTaken
         {
-            public IntPtr Filename;
+            internal readonly IntPtr Filename;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerLengthChanged
+        internal readonly struct MediaPlayerLengthChanged
         {
-            public long NewLength;
+            internal readonly long NewLength;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct EsChanged
+        internal readonly struct EsChanged
         {
-            public TrackType Type;
-            public int Id;
+            internal readonly TrackType Type;
+            internal readonly int Id;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct AudioDeviceChanged
+        internal readonly struct AudioDeviceChanged
         {
-            public IntPtr Device;
+            internal readonly IntPtr Device;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaPlayerMediaChanged
+        internal readonly struct MediaPlayerMediaChanged
         {
-            public IntPtr NewMedia;
+            internal readonly IntPtr NewMedia;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct VolumeChanged
+        internal readonly struct VolumeChanged
         {
-            public float Volume;
+            internal readonly float Volume;
         }
 
         #endregion
@@ -382,58 +382,58 @@ namespace LibVLCSharp.Shared
         #region MediaList
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaListItemAdded
+        internal readonly struct MediaListItemAdded
         {
-            public IntPtr MediaInstance;
-            public int Index;
+            internal readonly IntPtr MediaInstance;
+            internal readonly int Index;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaListWillAddItem
+        internal readonly struct MediaListWillAddItem
         {
-            public IntPtr MediaInstance;
-            public int Index;
+            internal readonly IntPtr MediaInstance;
+            internal readonly int Index;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaListItemDeleted
+        internal readonly struct MediaListItemDeleted
         {
-            public IntPtr MediaInstance;
-            public int Index;
+            internal readonly IntPtr MediaInstance;
+            internal readonly int Index;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaListWillDeleteItem
+        internal readonly struct MediaListWillDeleteItem
         {
-            public IntPtr MediaInstance;
-            public int Index;
+            internal readonly IntPtr MediaInstance;
+            internal readonly int Index;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MediaListPlayerNextItemSet
+        internal readonly struct MediaListPlayerNextItemSet
         {
-            public IntPtr MediaInstance;
+            internal readonly IntPtr MediaInstance;
         }
 
         #endregion MediaList
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct VlmMediaEvent
+        internal readonly struct VlmMediaEvent
         {
-            public IntPtr MediaName;
-            public IntPtr InstanceName;
+            internal readonly IntPtr MediaName;
+            internal readonly IntPtr InstanceName;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RendererDiscovererItemAdded
+        internal readonly struct RendererDiscovererItemAdded
         {
-            public IntPtr item;
+            internal readonly IntPtr item;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RendererDiscovererItemDeleted
+        internal readonly struct RendererDiscovererItemDeleted
         {
-            public IntPtr item;
+            internal readonly IntPtr item;
         }
     }
 
@@ -443,7 +443,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media.MetadataType MetadataType;
 
-        public MediaMetaChangedEventArgs(Media.MetadataType metadataType)
+        internal MediaMetaChangedEventArgs(Media.MetadataType metadataType)
         {
             MetadataType = metadataType;
         }
@@ -453,7 +453,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media.MediaParsedStatus ParsedStatus;
 
-        public MediaParsedChangedEventArgs(Media.MediaParsedStatus parsedStatus)
+        internal MediaParsedChangedEventArgs(Media.MediaParsedStatus parsedStatus)
         {
             ParsedStatus = parsedStatus;
         }
@@ -463,7 +463,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media SubItem;
 
-        public MediaSubItemAddedEventArgs(IntPtr mediaPtr)
+        internal MediaSubItemAddedEventArgs(IntPtr mediaPtr)
         {
             SubItem = new Media(mediaPtr);
         }
@@ -473,7 +473,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly long Duration;
 
-        public MediaDurationChangedEventArgs(long duration)
+        internal MediaDurationChangedEventArgs(long duration)
         {
             Duration = duration;
         }
@@ -483,7 +483,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media Media;
 
-        public MediaFreedEventArgs(IntPtr mediaPtr)
+        internal MediaFreedEventArgs(IntPtr mediaPtr)
         {
             Media = new Media(mediaPtr);
         }
@@ -493,7 +493,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly VLCState State;
 
-        public MediaStateChangedEventArgs(VLCState state)
+        internal MediaStateChangedEventArgs(VLCState state)
         {
             State = state;
         }
@@ -503,7 +503,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media SubItem;
 
-        public MediaSubItemTreeAddedEventArgs(IntPtr subItemPtr)
+        internal MediaSubItemTreeAddedEventArgs(IntPtr subItemPtr)
         {
             SubItem = new Media(subItemPtr);
         }
@@ -517,7 +517,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media Media;
 
-        public MediaPlayerMediaChangedEventArgs(IntPtr mediaPtr)
+        internal MediaPlayerMediaChangedEventArgs(IntPtr mediaPtr)
         {
             Media = new Media(mediaPtr);
         }
@@ -527,7 +527,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly float Cache;
 
-        public MediaPlayerBufferingEventArgs(float cache)
+        internal MediaPlayerBufferingEventArgs(float cache)
         {
             Cache = cache;
         }
@@ -537,7 +537,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly long Time;
 
-        public MediaPlayerTimeChangedEventArgs(long time)
+        internal MediaPlayerTimeChangedEventArgs(long time)
         {
             Time = time;
         }
@@ -547,7 +547,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly float Position;
 
-        public MediaPlayerPositionChangedEventArgs(float position)
+        internal MediaPlayerPositionChangedEventArgs(float position)
         {
             Position = position;
         }
@@ -557,7 +557,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Seekable;
 
-        public MediaPlayerSeekableChangedEventArgs(int seekable)
+        internal MediaPlayerSeekableChangedEventArgs(int seekable)
         {
             Seekable = seekable;
         }
@@ -567,7 +567,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Pausable;
 
-        public MediaPlayerPausableChangedEventArgs(int pausable)
+        internal MediaPlayerPausableChangedEventArgs(int pausable)
         {
             Pausable = pausable;
         }
@@ -577,7 +577,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Title;
 
-        public MediaPlayerTitleChangedEventArgs(int title)
+        internal MediaPlayerTitleChangedEventArgs(int title)
         {
             Title = title;
         }
@@ -587,7 +587,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Chapter;
 
-        public MediaPlayerChapterChangedEventArgs(int chapter)
+        internal MediaPlayerChapterChangedEventArgs(int chapter)
         {
             Chapter = chapter;
         }
@@ -597,7 +597,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly string Filename;
 
-        public MediaPlayerSnapshotTakenEventArgs(string filename)
+        internal MediaPlayerSnapshotTakenEventArgs(string filename)
         {
             Filename = filename;
         }
@@ -607,7 +607,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly long Length;
 
-        public MediaPlayerLengthChangedEventArgs(long length)
+        internal MediaPlayerLengthChangedEventArgs(long length)
         {
             Length = length;
         }
@@ -617,7 +617,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Count;
 
-        public MediaPlayerVoutEventArgs(int count)
+        internal MediaPlayerVoutEventArgs(int count)
         {
             Count = count;
         }
@@ -627,7 +627,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Scrambled;
 
-        public MediaPlayerScrambledChangedEventArgs(int scrambled)
+        internal MediaPlayerScrambledChangedEventArgs(int scrambled)
         {
             Scrambled = scrambled;
         }
@@ -637,7 +637,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Id;
 
-        public MediaPlayerESAddedEventArgs(int id)
+        internal MediaPlayerESAddedEventArgs(int id)
         {
             Id = id;
         }
@@ -647,7 +647,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Id;
 
-        public MediaPlayerESDeletedEventArgs(int id)
+        internal MediaPlayerESDeletedEventArgs(int id)
         {
             Id = id;
         }
@@ -657,7 +657,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly int Id;
 
-        public MediaPlayerESSelectedEventArgs(int id)
+        internal MediaPlayerESSelectedEventArgs(int id)
         {
             Id = id;
         }
@@ -667,7 +667,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly string AudioDevice;
 
-        public MediaPlayerAudioDeviceEventArgs(string audioDevice)
+        internal MediaPlayerAudioDeviceEventArgs(string audioDevice)
         {
             AudioDevice = audioDevice;
         }
@@ -677,7 +677,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly float Volume;
 
-        public MediaPlayerVolumeChangedEventArgs(float volume)
+        internal MediaPlayerVolumeChangedEventArgs(float volume)
         {
             Volume = volume;
         }
@@ -692,7 +692,7 @@ namespace LibVLCSharp.Shared
         public readonly Media Media;
         public readonly int Index;
 
-        protected MediaListBaseEventArgs(Media media, int index)
+        internal protected MediaListBaseEventArgs(Media media, int index)
         {
             Media = media;
             Index = index;
@@ -701,28 +701,28 @@ namespace LibVLCSharp.Shared
 
     public class MediaListItemAddedEventArgs : MediaListBaseEventArgs
     {
-        public MediaListItemAddedEventArgs(Media media, int index) : base(media, index)
+        internal MediaListItemAddedEventArgs(Media media, int index) : base(media, index)
         {
         }
     }
 
     public class MediaListWillAddItemEventArgs : MediaListBaseEventArgs
     {
-        public MediaListWillAddItemEventArgs(Media media, int index) : base(media, index)
+        internal MediaListWillAddItemEventArgs(Media media, int index) : base(media, index)
         {
         }
     }
 
     public class MediaListItemDeletedEventArgs : MediaListBaseEventArgs
     {
-        public MediaListItemDeletedEventArgs(Media media, int index) : base(media, index)
+        internal MediaListItemDeletedEventArgs(Media media, int index) : base(media, index)
         {
         }
     }
 
     public class MediaListWillDeleteItemEventArgs : MediaListBaseEventArgs
     {
-        public MediaListWillDeleteItemEventArgs(Media media, int index) : base(media, index)
+        internal MediaListWillDeleteItemEventArgs(Media media, int index) : base(media, index)
         {
         }
     }
@@ -735,7 +735,7 @@ namespace LibVLCSharp.Shared
     {
         public readonly Media Media;
 
-        public MediaListPlayerNextItemSetEventArgs(Media media)
+        internal MediaListPlayerNextItemSetEventArgs(Media media)
         {
             Media = media;
         }
@@ -750,7 +750,7 @@ namespace LibVLCSharp.Shared
         public readonly string InstanceName;
         public readonly string MediaName;
 
-        public VLMMediaEventArgs(string mediaName = "", string instanceName = "")
+        internal VLMMediaEventArgs(string mediaName = "", string instanceName = "")
         {
             MediaName = mediaName;
             InstanceName = instanceName;
@@ -763,7 +763,7 @@ namespace LibVLCSharp.Shared
 
     public class RendererDiscovererItemAddedEventArgs : EventArgs
     {
-        public RendererDiscovererItemAddedEventArgs(RendererItem rendererItem)
+        internal RendererDiscovererItemAddedEventArgs(RendererItem rendererItem)
         {
             RendererItem = rendererItem;
         }
@@ -773,7 +773,7 @@ namespace LibVLCSharp.Shared
 
     public class RendererDiscovererItemDeletedEventArgs : EventArgs
     {
-        public RendererDiscovererItemDeletedEventArgs(RendererItem rendererItem)
+        internal RendererDiscovererItemDeletedEventArgs(RendererItem rendererItem)
         {
             RendererItem = rendererItem;
         }
@@ -784,7 +784,7 @@ namespace LibVLCSharp.Shared
     #endregion
     public sealed class LogEventArgs : EventArgs
     {
-        public LogEventArgs(LogLevel level, string message, string module, string sourceFile, uint? sourceLine)
+        internal LogEventArgs(LogLevel level, string message, string module, string sourceFile, uint? sourceLine)
         {
             Level = level;
             Message = message;
