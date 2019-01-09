@@ -129,7 +129,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
-            internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr libVLC, ref IntPtr discovererList);
+            internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr libVLC, out IntPtr discovererList);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_release")]
@@ -579,10 +579,11 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// List of available renderers used to create RendererDiscoverer objects
         /// </summary>       
-        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, (nativeRef, arrayPtr) => Native.LibVLCRendererDiscovererGetList(nativeRef, ref arrayPtr),
-           MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
-           m => m.Build(),
-           Native.LibVLCRendererDiscovererReleaseList);
+        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, 
+            (IntPtr nativeRef, out IntPtr array) => Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
+            MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
+            m => m.Build(),
+            Native.LibVLCRendererDiscovererReleaseList);
 
         /// <summary>
         /// Code taken from Vlc.DotNet
