@@ -117,7 +117,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, ref IntPtr pppServices);
+            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, out IntPtr pppServices);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
@@ -500,9 +500,9 @@ namespace LibVLCSharp.Shared
         /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) => 
+        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) =>
             MarshalUtils.Retrieve(NativeReference, discovererCategory, 
-                (nativeRef, category, arrayPtr) => Native.LibVLCMediaDiscovererListGet(nativeRef, category, ref arrayPtr),
+                (IntPtr nativeRef, MediaDiscovererCategory enumType, out IntPtr array) => Native.LibVLCMediaDiscovererListGet(nativeRef, enumType, out array),
             MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
             m => m.Build(),
             Native.LibVLCMediaDiscovererListRelease);
