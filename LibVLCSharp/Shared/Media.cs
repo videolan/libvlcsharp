@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// Media is an abstract representation of a playable media. It can be a network stream or a local video/audio file.
+    /// </summary>
     public class Media : Internal
     {
         static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
@@ -31,14 +34,6 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_new_fd")]
             internal static extern IntPtr LibVLCMediaNewFd(IntPtr libVLC, int fd);
 
-            /// <summary>
-            /// <para>Decrement the reference count of a media descriptor object. If the</para>
-            /// <para>reference count is 0, then libvlc_media_release() will release the</para>
-            /// <para>media descriptor object. It will send out an libvlc_MediaFreed event</para>
-            /// <para>to all listeners. If the media descriptor object has been released it</para>
-            /// <para>should not be used again.</para>
-            /// </summary>
-            /// <param name="media">the media descriptor</param>
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_release")]
             internal static extern void LibVLCMediaRelease(IntPtr media);
@@ -330,6 +325,10 @@ namespace LibVLCSharp.Shared
         {
         }
 
+        /// <summary>
+        /// Create a media from a media list
+        /// </summary>
+        /// <param name="mediaList">media list to create media from</param>
         public Media(MediaList mediaList)
             : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
         {
@@ -374,7 +373,7 @@ namespace LibVLCSharp.Shared
                 opaque);
         }
 
-        public Media(IntPtr mediaPtr)
+        internal Media(IntPtr mediaPtr)
             : base(() => mediaPtr, Native.LibVLCMediaRelease)
         {
         }
@@ -560,28 +559,10 @@ namespace LibVLCSharp.Shared
         /// <para>Not doing this will result in an empty array.</para>
         /// <para>LibVLC 2.1.0 and later.</para>
         /// </remarks>
-        public IEnumerable<MediaTrack> Tracks
-        {
-            get
-            {
-                var arrayResultPtr = IntPtr.Zero;
-                var count = Native.LibVLCMediaTracksGet(NativeReference, ref arrayResultPtr);
-                if (count == 0 || arrayResultPtr == IntPtr.Zero) return Enumerable.Empty<MediaTrack>();
-
-                var tracks = new List<MediaTrack>();
-                for (var i = 0; i < count; i++)
-                {
-                    var ptr = Marshal.ReadIntPtr(arrayResultPtr, i * IntPtr.Size);
-                    var managedStruct = MarshalUtils.PtrToStructure<MediaTrack>(ptr);
-                    tracks.Add(managedStruct);
-
-                }
-
-                Native.LibVLCMediaTracksRelease(arrayResultPtr, count);
-
-                return tracks;
-            }
-        }
+        public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (nativeRef, arrayPtr) => Native.LibVLCMediaTracksGet(nativeRef, ref arrayPtr),
+            MarshalUtils.PtrToStructure<MediaTrackStructure>,
+            m => m.Build(),
+            Native.LibVLCMediaTracksRelease);
 
         /// <summary>
         /// <para>Get subitems of media descriptor object. This will increment</para>
@@ -628,7 +609,7 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public IEnumerable<MediaSlave> Slaves => MarshalUtils.Retrieve(NativeReference, (nativeRef,  arrayPtr) => Native.LibVLCMediaGetSlaves(nativeRef, ref arrayPtr),
+        public MediaSlave[] Slaves => MarshalUtils.Retrieve(NativeReference, (nativeRef,  arrayPtr) => Native.LibVLCMediaGetSlaves(nativeRef, ref arrayPtr),
                 MarshalUtils.PtrToStructure<MediaSlaveStructure>,
                 s => s.Build(),
                 Native.LibVLCMediaReleaseSlaves);
@@ -922,24 +903,76 @@ namespace LibVLCSharp.Shared
     /// </remarks>
     public enum VLCState
     {
+        /// <summary>
+        /// Nothing special happening
+        /// </summary>
         NothingSpecial = 0,
+
+        /// <summary>
+        /// Opening media
+        /// </summary>
         Opening = 1,
+
+        /// <summary>
+        /// Buffering media
+        /// </summary>
         Buffering = 2,
+
+        /// <summary>
+        /// Playing media
+        /// </summary>
         Playing = 3,
+
+        /// <summary>
+        /// Paused media
+        /// </summary>
         Paused = 4,
+
+        /// <summary>
+        /// Stopped media
+        /// </summary>
         Stopped = 5,
+
+        /// <summary>
+        /// Ended media
+        /// </summary>
         Ended = 6,
+
+        /// <summary>
+        /// Error media
+        /// </summary>
         Error = 7
     }
 
+    /// <summary>
+    /// Media track type such as Audio, Video or Text
+    /// </summary>
     public enum TrackType
     {
+        /// <summary>
+        /// Unknown track
+        /// </summary>
         Unknown = -1,
+
+        /// <summary>
+        /// Audio track
+        /// </summary>
         Audio = 0,
+
+        /// <summary>
+        /// Video track
+        /// </summary>
         Video = 1,
+
+        /// <summary>
+        /// Text track
+        /// </summary>
         Text = 2
     }
 
+    /// <summary>
+    /// Video orientation
+    /// </summary>
     public enum VideoOrientation
     {
         /// <summary>Normal. Top line represents top, left column left.</summary>
@@ -960,12 +993,22 @@ namespace LibVLCSharp.Shared
         RightBottom = 7
     }
 
+    /// <summary>
+    /// Video projection
+    /// </summary>
     [Flags]
     public enum VideoProjection
     {
+        /// <summary>
+        /// Rectangular
+        /// </summary>
         Rectangular = 0,
         /// <summary>360 spherical</summary>
         Equirectangular = 1,
+
+        /// <summary>
+        /// Cubemap layout standard
+        /// </summary>
         CubemapLayoutStandard = 256
     }
 
@@ -984,6 +1027,9 @@ namespace LibVLCSharp.Shared
     }
     #endregion
 
+    /// <summary>
+    /// Small configuration helper
+    /// </summary>
     public class MediaConfiguration
     {
         HashSet<string> _options = new HashSet<string>();
