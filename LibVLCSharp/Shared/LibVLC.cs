@@ -214,7 +214,7 @@ namespace LibVLCSharp.Shared
         /// <para>cross-platform compatibility with regards to libvlc_new() arguments.</para>
         /// <para>We recommend that you do not use them, other than when debugging.</para>
         /// </remarks>
-        public LibVLC(string[] args = null)
+        public LibVLC(params string[] args)
             : base(() =>
             {
                 var utf8Args = default(IntPtr[]);
