@@ -91,9 +91,9 @@ namespace LibVLCSharp.Tests
         public void Categories()
         {
             var libVLC = new LibVLC();
-            var md1 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Devices);
-            var md2 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Lan);
-            var md3 = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Localdirs);
+            var md1 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Devices);
+            var md2 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
+            var md3 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
         }
 
         [Test]

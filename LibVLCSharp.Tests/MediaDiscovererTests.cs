@@ -12,7 +12,7 @@ namespace LibVLCSharp.Tests
         public void CreateStartAndStopDiscoverer()
         {
             var libVLC = new LibVLC();
-            var mds = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Lan);
+            var mds = libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(libVLC, mds.First().Name);
             Assert.True(md.Start());
             Assert.True(md.IsRunning);
@@ -24,7 +24,7 @@ namespace LibVLCSharp.Tests
         public void DisposeMediaDiscoverer()
         {
             var libVLC = new LibVLC();
-            var mds = libVLC.MediaDiscoverers(MediaDiscoverer.Category.Lan);
+            var mds = libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(libVLC, mds.First().Name);
             Assert.True(md.Start());
             Assert.True(md.IsRunning);

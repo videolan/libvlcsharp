@@ -5,7 +5,7 @@ namespace LibVLCSharp.Shared.Helpers
     internal static class MarshalExtensions
     {
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">AudioOutputDescriptionStructure from interop</param>
         /// <returns>public AudioOutputDescription to be consumed by the user</returns>
@@ -14,7 +14,7 @@ namespace LibVLCSharp.Shared.Helpers
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string);
 
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">AudioOutputDeviceStructure from interop</param>
         /// <returns>public AudioOutputDevice to be consumed by the user</returns>
@@ -23,7 +23,7 @@ namespace LibVLCSharp.Shared.Helpers
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string);
 
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">ModuleDescriptionStructure from interop</param>
         /// <returns>public ModuleDescription to be consumed by the user</returns>
@@ -34,7 +34,7 @@ namespace LibVLCSharp.Shared.Helpers
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Help) as string);
 
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">TrackDescriptionStructure from interop</param>
         /// <returns>public TrackDescription to be consumed by the user</returns>
@@ -42,7 +42,7 @@ namespace LibVLCSharp.Shared.Helpers
             new TrackDescription(s.Id, Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string);
 
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">MediaSlaveStructure from interop</param>
         /// <returns>public MediaSlave to be consumed by the user</returns>
@@ -50,7 +50,7 @@ namespace LibVLCSharp.Shared.Helpers
             new MediaSlave(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Uri) as string, s.Type, s.Priority);
 
         /// <summary>
-        /// Helper method that creates a managed type from the internal interop structure.
+        /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
         /// <param name="s">TrackDescriptionStructure from interop</param>
         /// <returns>public TrackDescription to be consumed by the user</returns>
@@ -58,5 +58,24 @@ namespace LibVLCSharp.Shared.Helpers
             new MediaTrack(s.Codec, s.OriginalFourcc, s.Id, s.TrackType, s.Profile, s.Level, s.Data, s.Bitrate,
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Language) as string,
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string);
+
+        /// <summary>
+        /// Helper method that creates a user friendly type from the internal interop structure.
+        /// </summary>
+        /// <param name="s">MediaDiscovererDescriptionStructure from interop</param>
+        /// <returns>public MediaDiscovererDescription to be consumed by the user</returns>
+        internal static MediaDiscovererDescription Build(this MediaDiscovererDescriptionStructure s) =>
+            new MediaDiscovererDescription(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
+                Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.LongName) as string,
+                s.Category);
+
+        /// <summary>
+        /// Helper method that creates a user friendly type from the internal interop structure.
+        /// </summary>
+        /// <param name="s">RendererDescriptionStructure from interop</param>
+        /// <returns>public RendererDescription to be consumed by the user</returns>
+        internal static RendererDescription Build(this RendererDescriptionStructure s) =>
+            new RendererDescription(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
+                Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.LongName) as string);
     }
 }

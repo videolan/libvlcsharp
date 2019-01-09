@@ -117,7 +117,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscoverer.Category category, ref IntPtr pppServices);
+            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, ref IntPtr pppServices);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
@@ -497,34 +497,29 @@ namespace LibVLCSharp.Shared
             Native.LibVLCAudioOutputDeviceListRelease);
 
         /// <summary>Get media discoverer services by category</summary>
-        /// <param name="category">category of services to fetch</param>
+        /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public MediaDiscoverer.Description[] MediaDiscoverers(MediaDiscoverer.Category category)
-        {
-            var arrayResultPtr = IntPtr.Zero;
-            var count = Native.LibVLCMediaDiscovererListGet(NativeReference, category, ref arrayResultPtr);
-#if NETSTANDARD1_1 || NET40
-            if (count == 0) return new MediaDiscoverer.Description[0];
-#else
-            if (count == 0) return Array.Empty<MediaDiscoverer.Description>();
-#endif
-            var mediaDiscovererDescription = new MediaDiscoverer.Description[(int)count];
-
-            for (var i = 0; i < (int)count; i++)
-            {
-                var ptr = Marshal.ReadIntPtr(arrayResultPtr, i * IntPtr.Size);
-                var managedStruct = (MediaDiscoverer.Description)Marshal.PtrToStructure(ptr, typeof(MediaDiscoverer.Description));
-                mediaDiscovererDescription[i] = managedStruct;
-            }
-
-            Native.LibVLCMediaDiscovererListRelease(arrayResultPtr, count);
-
-            return mediaDiscovererDescription;
-        }
+        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) => 
+            MarshalUtils.Retrieve(NativeReference, discovererCategory, 
+                (nativeRef, category, arrayPtr) => Native.LibVLCMediaDiscovererListGet(nativeRef, category, ref arrayPtr),
+            MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
+            m => m.Build(),
+            Native.LibVLCMediaDiscovererListRelease);
 
         readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
 
+        /// <summary>
+        /// Register callbacks in order to handle VLC dialogs. 
+        /// LibVLC 3.0.0 and later.
+        /// </summary>
+        /// <param name="error">Called when an error message needs to be displayed.</param>
+        /// <param name="login">Called when a login dialog needs to be displayed.
+        /// You can interact with this dialog by calling Dialog.PostLogin() to post an answer or Dialog.Dismiss() to cancel this dialog.</param>
+        /// <param name="question">Called when a question dialog needs to be displayed.
+        /// You can interact with this dialog by calling Dialog.PostLogin() to post an answer or Dialog.Dismiss() to cancel this dialog.</param>
+        /// <param name="displayProgress">Called when a progress dialog needs to be displayed.</param>
+        /// <param name="updateProgress">Called when a progress dialog needs to be updated.</param>
         public void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
             DisplayProgress displayProgress, UpdateProgress updateProgress)
         {
@@ -576,49 +571,18 @@ namespace LibVLCSharp.Shared
             Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbsPtr, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// True if dialog handlers are set
+        /// </summary>
         public bool DialogHandlersSet => _dialogCbsPtr != IntPtr.Zero;
 
-        public RendererDescription[] RendererList
-        {
-            get
-            {
-                // TODO: Move marshalling logic to generic MarshalUtils func
-                var discoverList = IntPtr.Zero;
-                var count = Native.LibVLCRendererDiscovererGetList(NativeReference, ref discoverList);
-
-                if (count == 0)
-#if NETSTANDARD1_1 || NET40
-                    return new RendererDescription[0];
-#else
-                    return Array.Empty<RendererDescription>();
-#endif
-
-                var rendererDiscovererDescription = new RendererDescription[(int)count];
-
-                for (var i = 0; i < (int)count; i++)
-                {
-                    var ptr = Marshal.ReadIntPtr(discoverList, i * IntPtr.Size);
-                    var managedStruct = (RendererDescription)Marshal.PtrToStructure(ptr, typeof(RendererDescription));
-                    rendererDiscovererDescription[i] = managedStruct;
-                }
-
-                Native.LibVLCRendererDiscovererReleaseList(discoverList, count);
-
-                return rendererDiscovererDescription;
-            }
-        }
-
-        public readonly struct RendererDescription
-        {
-            public string Name { get; }
-            public string LongName { get; }
-
-            public RendererDescription(string name, string longName)
-            {
-                Name = name;
-                LongName = longName;
-            }
-        }
+        /// <summary>
+        /// List of available renderers used to create RendererDiscoverer objects
+        /// </summary>       
+        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, (nativeRef, arrayPtr) => Native.LibVLCRendererDiscovererGetList(nativeRef, ref arrayPtr),
+           MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
+           m => m.Build(),
+           Native.LibVLCRendererDiscovererReleaseList);
 
         /// <summary>
         /// Code taken from Vlc.DotNet

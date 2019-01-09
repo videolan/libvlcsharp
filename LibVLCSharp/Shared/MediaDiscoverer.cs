@@ -7,82 +7,46 @@ namespace LibVLCSharp.Shared
     /// <summary>
     /// libvlc v3 check
     /// </summary>
-    public class MediaDiscoverer : Internal
+    public partial class MediaDiscoverer : Internal
     {
         MediaDiscovererEventManager _eventManager;
         MediaList _mediaList;
 
         readonly struct Native
         {
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_new")]
             internal static extern IntPtr LibVLCMediaDiscovererNew(IntPtr libvlc, [MarshalAs(UnmanagedType.LPStr)] string name);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_start")]
             internal static extern int LibVLCMediaDiscovererStart(IntPtr mediaDiscoverer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_stop")]
             internal static extern void LibVLCMediaDiscovererStop(IntPtr mediaDiscoverer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_release")]
             internal static extern void LibVLCMediaDiscovererRelease(IntPtr mediaDiscoverer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_localized_name")]
             internal static extern IntPtr LibVLCMediaDiscovererLocalizedName(IntPtr mediaDiscoverer);
             
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_event_manager")]
             internal static extern IntPtr LibVLCMediaDiscovererEventManager(IntPtr mediaDiscoverer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_discoverer_is_running")]
             internal static extern int LibVLCMediaDiscovererIsRunning(IntPtr mediaDiscoverer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_media_list")]
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
         }
-
-        /// <summary>Category of a media discoverer</summary>
-        /// <remarks>libvlc_media_discoverer_list_get()</remarks>
-        public enum Category
-        {
-            /// <summary>devices, like portable music player</summary>
-            Devices = 0,
-            /// <summary>LAN/WAN services, like Upnp, SMB, or SAP</summary>
-            Lan = 1,
-            /// <summary>Podcasts</summary>
-            Podcasts = 2,
-            /// <summary>Local directories, like Video, Music or Pictures directories</summary>
-            Localdirs = 3
-        }
-
-        public readonly struct Description
-        {
-            internal Description(string name, string longName, Category category)
-            {
-                Name = name;
-                LongName = longName;
-                Category = category;
-            }
-
-            public string Name { get; }
-            public string LongName { get; }
-            public Category Category { get; }
-        }
-
+        
         public MediaDiscoverer(LibVLC libVLC, string name) 
             //v3 check. differen ctors
             : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease)
@@ -189,5 +153,19 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
+    }
+
+    /// <summary>Category of a media discoverer</summary>
+    /// <remarks>libvlc_media_discoverer_list_get()</remarks>
+    public enum MediaDiscovererCategory
+    {
+        /// <summary>devices, like portable music player</summary>
+        Devices = 0,
+        /// <summary>LAN/WAN services, like Upnp, SMB, or SAP</summary>
+        Lan = 1,
+        /// <summary>Podcasts</summary>
+        Podcasts = 2,
+        /// <summary>Local directories, like Video, Music or Pictures directories</summary>
+        Localdirs = 3
     }
 }

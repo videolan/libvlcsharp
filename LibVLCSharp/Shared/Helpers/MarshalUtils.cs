@@ -44,33 +44,9 @@ namespace LibVLCSharp.Shared.Helpers
         }
 
         internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
-            Func<T, TU> create, Func<TU, TU> next, Action<IntPtr> releaseRef)
-        {
-            var nativeRef = getRef();
-            if (nativeRef == IntPtr.Zero)
-            {
-#if NETSTANDARD1_1 || NET40
-                return new TU[0];
-#else
-                return Array.Empty<TU>();
-#endif
-            }
-            var structure = retrieve(nativeRef);
-
-            var obj = create(structure);
-
-            var resultList = new List<TU>();
-            while (obj != null)
-            {
-                resultList.Add(obj);
-                obj = next(obj);
-            }
-            releaseRef(nativeRef);
-            return resultList.ToArray();
-        }
-
-        internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<T, IntPtr> next, Action<IntPtr> releaseRef)
+            where T : struct
+            where TU : struct
         {
             var nativeRef = getRef();
             if (nativeRef == IntPtr.Zero)
@@ -98,9 +74,10 @@ namespace LibVLCSharp.Shared.Helpers
             return resultList.ToArray();
         }
 
-        // ulong or uint?
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, Func<IntPtr, IntPtr, uint> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, uint> releaseRef)
+            where T : struct
+            where TU : struct
         {
             var arrayPtr = IntPtr.Zero;
             var count = getRef(nativeRef, arrayPtr);
@@ -125,6 +102,76 @@ namespace LibVLCSharp.Shared.Helpers
             }
 
             releaseRef(arrayPtr, count);
+            arrayPtr = IntPtr.Zero;
+
+            return resultList.ToArray();
+        }
+
+        internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, Func<IntPtr, IntPtr, ulong> getRef, Func<IntPtr, T> retrieve,
+            Func<T, TU> create, Action<IntPtr, ulong> releaseRef)
+            where T : struct
+            where TU : struct
+        {
+            var arrayPtr = IntPtr.Zero;
+            var countLong = getRef(nativeRef, arrayPtr);
+            var count = (int)countLong;
+
+            if (count == 0)
+            {
+#if NETSTANDARD1_1 || NET40
+                return new TU[0];
+#else
+                return Array.Empty<TU>();
+#endif
+            }
+
+            var resultList = new List<TU>();
+            T structure;
+
+            for (var i = 0; i < count; i++)
+            {
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                structure = retrieve(ptr);
+                var managedStruct = create(structure);
+                resultList.Add(managedStruct);
+            }
+
+            releaseRef(arrayPtr, countLong);
+            arrayPtr = IntPtr.Zero;
+
+            return resultList.ToArray();
+        }
+
+        internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, Func<IntPtr, TE, IntPtr, ulong> getRef, Func<IntPtr, T> retrieve,
+            Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
+            where TE : Enum
+            where T : struct
+            where TU : struct
+        {
+            var arrayPtr = IntPtr.Zero;
+            var countLong = getRef(nativeRef, extraParam, arrayPtr);
+            var count = (int)countLong;
+            if (count == 0)
+            {
+#if NETSTANDARD1_1 || NET40
+                return new TU[0];
+#else
+                return Array.Empty<TU>();
+#endif
+            }
+
+            var resultList = new List<TU>();
+            T structure;
+
+            for (var i = 0; i < count; i++)
+            {
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                structure = retrieve(ptr);
+                var managedStruct = create(structure);
+                resultList.Add(managedStruct);
+            }
+
+            releaseRef(arrayPtr, countLong);
             arrayPtr = IntPtr.Zero;
 
             return resultList.ToArray();
