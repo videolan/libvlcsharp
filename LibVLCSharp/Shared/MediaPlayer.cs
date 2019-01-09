@@ -1338,7 +1338,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Set Spu (subtitle)
         /// </summary>
-        /// <param name="spu">ideo subtitle track to select (id from track description)</param>
+        /// <param name="spu">Video subtitle track to select (id from track description)</param>
         /// <returns>true on success, false otherwise</returns>
         public bool SetSpu(int spu) => Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
 

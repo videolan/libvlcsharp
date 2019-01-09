@@ -166,21 +166,11 @@ namespace LibVLCSharp.Shared
                 string format,
                 IntPtr args);
         }
-    
-        internal static readonly System.Collections.Concurrent.ConcurrentDictionary<IntPtr, LibVLC> NativeToManagedMap 
-            = new System.Collections.Concurrent.ConcurrentDictionary<IntPtr, LibVLC>();
-
-        protected bool __ownsNativeInstance;
 
         /// <summary>
         /// <para>Create and initialize a libvlc instance.</para>
         /// <para>This functions accept a list of &quot;command line&quot; arguments similar to the</para>
         /// <para>main(). These arguments affect the LibVLC instance default configuration.</para>
-        /// </summary>
-        /// <param name="argc">the number of arguments (should be 0)</param>
-        /// <param name="args">list of arguments (should be NULL)</param>
-        /// <returns>the libvlc instance or NULL in case of error</returns>
-        /// <remarks>
         /// <para>LibVLC may create threads. Therefore, any thread-unsafe process</para>
         /// <para>initialization must be performed before calling libvlc_new(). In particular</para>
         /// <para>and where applicable:</para>
@@ -213,31 +203,12 @@ namespace LibVLCSharp.Shared
         /// <para>There is absolutely no warranty or promise of forward, backward and</para>
         /// <para>cross-platform compatibility with regards to libvlc_new() arguments.</para>
         /// <para>We recommend that you do not use them, other than when debugging.</para>
-        /// </remarks>
-        public LibVLC(params string[] args)
-            : base(() =>
-            {
-                var utf8Args = default(IntPtr[]);
-                try
-                {
-
-                    utf8Args = MarshalUtils.ToUtf8(args);
-                    return Native.LibVLCNew(utf8Args.Length, utf8Args);
-                }
-                finally
-                {
-                    foreach (var arg in utf8Args)
-                    {
-                        if (arg != IntPtr.Zero)
-                        {
-                            Marshal.FreeHGlobal(arg);
-                        }
-                    }
-                }
-            }, Native.LibVLCRelease)
+        /// </summary>
+        /// <param name="options">list of arguments (should be NULL)</param>
+        /// <returns>the libvlc instance or NULL in case of error</returns>
+        public LibVLC(params string[] options)
+            : base(() => MarshalUtils.CreateWithOptions(options, Native.LibVLCNew), Native.LibVLCRelease)
         {
-            __ownsNativeInstance = true;
-            NativeToManagedMap[NativeReference] = this;
         }
 
         protected override void Dispose(bool disposing)
@@ -264,11 +235,11 @@ namespace LibVLCSharp.Shared
             return obj1?.NativeReference != obj2?.NativeReference;
         }
 
-        /**
-         * Try to start a user interface for the libvlc instance.
-         *
-         * \param name  interface name, or empty string for default
-        */
+        /// <summary>
+        /// Try to start a user interface for the libvlc instance.
+        /// </summary>
+        /// <param name="name">interface name, or empty string for default</param>
+        /// <returns></returns>
         public bool AddInterface(string name)
         {
             return Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;

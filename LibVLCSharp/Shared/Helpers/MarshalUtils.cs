@@ -43,6 +43,26 @@ namespace LibVLCSharp.Shared.Helpers
             const string Write = "w";
         }
 
+        internal static IntPtr CreateWithOptions(string[] options, Func<int, IntPtr[], IntPtr> create)
+        {
+            var utf8Args = default(IntPtr[]);
+            try
+            {
+                utf8Args = ToUtf8(options);
+                return create(utf8Args.Length, utf8Args);
+            }
+            finally
+            {
+                foreach (var arg in utf8Args)
+                {
+                    if (arg != IntPtr.Zero)
+                    {
+                        Marshal.FreeHGlobal(arg);
+                    }
+                }
+            }
+        }
+
         internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<T, IntPtr> next, Action<IntPtr> releaseRef)
             where T : struct
