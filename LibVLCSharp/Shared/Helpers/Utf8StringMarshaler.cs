@@ -31,14 +31,14 @@ namespace LibVLCSharp.Shared.Helpers
             return ptr;
         }
 
-        public object MarshalNativeToManaged(IntPtr pNativeData)
+        public object MarshalNativeToManaged(IntPtr ptr)
         {
-            if (pNativeData == IntPtr.Zero)
+            if (ptr == IntPtr.Zero)
                 return null;
             List<byte> bytes = new List<byte>();
             for (int offset = 0; ; offset++)
             {
-                byte b = Marshal.ReadByte(pNativeData, offset);
+                byte b = Marshal.ReadByte(ptr, offset);
                 if (b == 0)
                     break;
                 else bytes.Add(b);

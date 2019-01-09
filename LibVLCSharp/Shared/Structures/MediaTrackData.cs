@@ -5,6 +5,12 @@
     /// </summary>
     public readonly struct MediaTrackData
     {
+        internal MediaTrackData(AudioTrack audio, VideoTrack video, SubtitleTrack subtitle)
+        {
+            Audio = audio;
+            Video = video;
+            Subtitle = subtitle;
+        }
         /// <summary>
         /// Audio track
         /// </summary>

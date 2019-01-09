@@ -124,7 +124,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_get")]
-            internal static extern uint LibVLCMediaTracksGet(IntPtr media, ref IntPtr tracksPtr);
+            internal static extern uint LibVLCMediaTracksGet(IntPtr media, out IntPtr tracksPtr);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_tracks_release")]
@@ -148,7 +148,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_get")]
-            internal static extern uint LibVLCMediaGetSlaves(IntPtr media, ref IntPtr slaves);
+            internal static extern uint LibVLCMediaGetSlaves(IntPtr media, out IntPtr slaves);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_release")]
@@ -559,7 +559,7 @@ namespace LibVLCSharp.Shared
         /// <para>Not doing this will result in an empty array.</para>
         /// <para>LibVLC 2.1.0 and later.</para>
         /// </remarks>
-        public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (nativeRef, arrayPtr) => Native.LibVLCMediaTracksGet(nativeRef, ref arrayPtr),
+        public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaTracksGet(nativeRef, out array),
             MarshalUtils.PtrToStructure<MediaTrackStructure>,
             m => m.Build(),
             Native.LibVLCMediaTracksRelease);
@@ -609,10 +609,10 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public MediaSlave[] Slaves => MarshalUtils.Retrieve(NativeReference, (nativeRef,  arrayPtr) => Native.LibVLCMediaGetSlaves(nativeRef, ref arrayPtr),
-                MarshalUtils.PtrToStructure<MediaSlaveStructure>,
-                s => s.Build(),
-                Native.LibVLCMediaReleaseSlaves);
+        public MediaSlave[] Slaves => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaGetSlaves(nativeRef, out array),
+            MarshalUtils.PtrToStructure<MediaSlaveStructure>,
+            s => s.Build(),
+            Native.LibVLCMediaReleaseSlaves);
 
         public override bool Equals(object obj)
         {

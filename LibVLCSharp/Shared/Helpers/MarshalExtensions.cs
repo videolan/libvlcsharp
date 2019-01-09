@@ -54,10 +54,47 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="s">TrackDescriptionStructure from interop</param>
         /// <returns>public TrackDescription to be consumed by the user</returns>
-        internal static MediaTrack Build(this MediaTrackStructure s) =>
-            new MediaTrack(s.Codec, s.OriginalFourcc, s.Id, s.TrackType, s.Profile, s.Level, s.Data, s.Bitrate,
-                Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Language) as string,
-                Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string);
+        internal static MediaTrack Build(this MediaTrackStructure s)
+        {
+            AudioTrack audioTrack = default;
+            VideoTrack videoTrack = default;
+            SubtitleTrack subtitleTrack = default;
+
+            switch (s.TrackType)
+            {
+                case TrackType.Audio:
+                    audioTrack = MarshalUtils.PtrToStructure<AudioTrack>(s.TrackData);
+                    break;
+                case TrackType.Video:
+                    videoTrack = MarshalUtils.PtrToStructure<VideoTrack>(s.TrackData);
+                    break;
+                case TrackType.Text:
+                    subtitleTrack = MarshalUtils.PtrToStructure<SubtitleTrackStructure>(s.TrackData).Build();
+                    break;
+                case TrackType.Unknown:
+                    break;
+            }
+
+            var language = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Language) as string;
+            var des = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Description) as string;
+
+            return new MediaTrack(s.Codec, 
+                s.OriginalFourcc, 
+                s.Id, 
+                s.TrackType, 
+                s.Profile, 
+                s.Level, 
+                new MediaTrackData(audioTrack, videoTrack, subtitleTrack), s.Bitrate,
+                language,
+                des);
+        }
+        
+        /// <summary>
+        /// Helper method that creates a user friendly type from the internal interop structure.
+        /// </summary>
+        /// <param name="s">SubtitleTrackStructure from interop</param>
+        /// <returns>public SubtitleTrack to be consumed by the user</returns>
+        internal static SubtitleTrack Build(this SubtitleTrackStructure s) => new SubtitleTrack(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Encoding) as string);
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.

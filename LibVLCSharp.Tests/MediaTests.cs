@@ -101,7 +101,8 @@ namespace LibVLCSharp.Tests
         {
             var media = new Media(new LibVLC(), RealMp3Path);
             media.Parse();
-            Assert.AreEqual(1, media.Tracks);
+            Assert.AreEqual(media.Tracks.Single().Data.Audio.Channels, 2);
+            Assert.AreEqual(media.Tracks.Single().Data.Audio.Rate, 44100);
         }
 
         [Test]

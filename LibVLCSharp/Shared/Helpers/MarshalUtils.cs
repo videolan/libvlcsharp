@@ -74,13 +74,13 @@ namespace LibVLCSharp.Shared.Helpers
             return resultList.ToArray();
         }
 
-        internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, Func<IntPtr, IntPtr, uint> getRef, Func<IntPtr, T> retrieve,
+        internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, uint> releaseRef)
             where T : struct
             where TU : struct
         {
             var arrayPtr = IntPtr.Zero;
-            var count = getRef(nativeRef, arrayPtr);
+            var count = getRef(nativeRef, out arrayPtr);
             if(count == 0)
             {
 #if NETSTANDARD1_1 || NET40
@@ -142,9 +142,10 @@ namespace LibVLCSharp.Shared.Helpers
             return resultList.ToArray();
         }
 
-        internal delegate ulong CategoryArrayRef<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
+        internal delegate ulong CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
+        internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);
 
-        internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayRef<TE> getRef, Func<IntPtr, T> retrieve,
+        internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayOut<TE> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
             where T : struct
             where TU : struct
