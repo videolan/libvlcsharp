@@ -1,5 +1,6 @@
 ﻿using LibVLCSharp.Shared.Helpers;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
@@ -13,26 +14,21 @@ namespace LibVLCSharp.Shared
 
         readonly struct Native
         {
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_new")]
             internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, string name);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_release")]
             internal static extern void LibVLCRendererDiscovererRelease(IntPtr rendererDiscoverer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_start")]
             internal static extern int LibVLCRendererDiscovererStart(IntPtr rendererDiscoverer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_stop")]
             internal static extern void LibVLCRendererDiscovererStop(IntPtr rendererDiscoverer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_event_manager")]
@@ -40,11 +36,11 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Renderer discoverer constructor
+        /// Create a new renderer discoverer with a LibVLC and protocol name depending on host platform
         /// </summary>
         /// <param name="libVLC">libvlc instance this will be connected to</param>
-        /// <param name="name">The service discovery protocol depending on platform (inferred)</param>
-        public RendererDiscoverer(LibVLC libVLC, string name = Constants.ServiceDiscoveryProtocol)
+        /// <param name="name">The service discovery protocol name depending on platform. Use LibVLC.RendererList to find the one for your platform</param>
+        public RendererDiscoverer(LibVLC libVLC, string name)
             : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), Native.LibVLCRendererDiscovererRelease)
         {
         }

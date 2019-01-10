@@ -151,11 +151,6 @@ namespace LibVLCSharp.Shared
 #endif
         internal const string CoreLibraryName = "libvlccore";
 
-#if COCOA
-        internal const string ServiceDiscoveryProtocol = "Bonjour_renderer";
-#else
-        internal const string ServiceDiscoveryProtocol = "microdns_renderer";
-#endif
         /// <summary>
         /// The name of the folder that contains the per-architecture folders
         /// </summary>
