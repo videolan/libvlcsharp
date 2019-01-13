@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
             var rendererList = libVLC.RendererList;
             Assert.IsNotEmpty(rendererList);
 
-            var rendererDiscoverer = new RendererDiscoverer(libVLC);
+            var rendererDiscoverer = new RendererDiscoverer(libVLC, libVLC.RendererList.LastOrDefault().Name);
             var rendererItems = new List<RendererItem>();
             var tcs = new TaskCompletionSource<bool>();
 
@@ -63,7 +63,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeRendererDiscoverer()
         {
-            var rendererDiscoverer = new RendererDiscoverer(new LibVLC());
+            var libVLC = new LibVLC();
+
+            var rendererDiscoverer = new RendererDiscoverer(libVLC, libVLC.RendererList.LastOrDefault().Name);
             rendererDiscoverer.Start();
             rendererDiscoverer.Dispose();
             Assert.AreEqual(IntPtr.Zero, rendererDiscoverer.NativeReference);
