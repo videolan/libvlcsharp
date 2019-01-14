@@ -22,6 +22,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         protected bool IsDisposed;
 
+        /// <summary>
+        /// Base constructor for most libvlc objects. Will perform native calls.
+        /// </summary>
+        /// <param name="create">A create function that will return a pointer to the instance in native code</param>
+        /// <param name="release">A release Action that takes the native pointer to that C# instance's native code representation
+        /// and performs the release call in native code. It will be called once when the C# instance gets disposed.</param>
         protected Internal(Func<IntPtr> create, Action<IntPtr> release)
         {
             Release = release;
@@ -40,6 +46,10 @@ namespace LibVLCSharp.Shared
             Dispose(true);
         }
 
+        /// <summary>
+        /// Dispose of this instance
+        /// </summary>
+        /// <param name="disposing">true if called from a method</param>
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
