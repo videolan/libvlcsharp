@@ -8,6 +8,10 @@ using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// Main LibVLC API object representing a libvlc instance in native code. 
+    /// Note: You may create multiple mediaplayers from a single LibVLC instance
+    /// </summary>
     public class LibVLC : Internal
     {
         protected bool Equals(LibVLC other)
@@ -239,12 +243,9 @@ namespace LibVLCSharp.Shared
         /// Try to start a user interface for the libvlc instance.
         /// </summary>
         /// <param name="name">interface name, or empty string for default</param>
-        /// <returns></returns>
-        public bool AddInterface(string name)
-        {
-            return Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
-        }
-        
+        /// <returns>True if successful, false otherwise</returns>
+        public bool AddInterface(string name) => Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
+
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
         /// <para>the VLC playlist and/or at least one interface are started with</para>
@@ -314,6 +315,9 @@ namespace LibVLCSharp.Shared
             _logCallback = null;
         }
 
+        /// <summary>
+        /// Unset dialog callbacks if previously set
+        /// </summary>
         public void UnsetDialogHandlers()
         {
             if (_dialogCbsPtr != IntPtr.Zero)
@@ -549,6 +553,7 @@ namespace LibVLCSharp.Shared
 
         /// <summary>
         /// List of available renderers used to create RendererDiscoverer objects
+        /// Note: LibVLC 3.0.0 and later
         /// </summary>       
         public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, 
             (IntPtr nativeRef, out IntPtr array) => Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
@@ -635,6 +640,11 @@ namespace LibVLCSharp.Shared
 
 #region Callbacks
 
+    /// <summary>
+    /// Registers a callback for the LibVLC exit event. 
+    /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play() 
+    /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
+    /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ExitCallback();
 
