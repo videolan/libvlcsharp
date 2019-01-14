@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 namespace LibVLCSharp.Shared
 {
     /// <summary>
-    /// libvlc v3 check
+    /// MediaDiscoverer should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
     /// </summary>
-    public partial class MediaDiscoverer : Internal
+    public class MediaDiscoverer : Internal
     {
         MediaDiscovererEventManager _eventManager;
         MediaList _mediaList;
@@ -47,8 +47,12 @@ namespace LibVLCSharp.Shared
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
         }
         
+        /// <summary>
+        /// Media discoverer constructor
+        /// </summary>
+        /// <param name="libVLC">libvlc instance this will be attached to</param>
+        /// <param name="name">name from one of LibVLC.MediaDiscoverers</param>
         public MediaDiscoverer(LibVLC libVLC, string name) 
-            //v3 check. differen ctors
             : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name), Native.LibVLCMediaDiscovererRelease)
         {
         }
@@ -118,12 +122,18 @@ namespace LibVLCSharp.Shared
 
         #region Events
 
+        /// <summary>
+        /// Media discovery has been started for this media discoverer
+        /// </summary>
         public event EventHandler<EventArgs> Started
         {
             add => EventManager.AttachEvent(EventType.MediaDiscovererStarted, value);
             remove => EventManager.DetachEvent(EventType.MediaDiscovererStarted, value);
         }
 
+        /// <summary>
+        /// Media discovery has been stopped for this media discoverer
+        /// </summary>
         public event EventHandler<EventArgs> Stopped
         {
             add => EventManager.AttachEvent(EventType.MediaDiscovererStopped, value);
@@ -132,6 +142,10 @@ namespace LibVLCSharp.Shared
 
         #endregion
 
+        /// <summary>
+        /// Dispose of this media discoverer
+        /// </summary>
+        /// <param name="disposing">true if called from a method</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
