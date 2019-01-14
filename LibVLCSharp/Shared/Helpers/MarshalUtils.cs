@@ -69,6 +69,17 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        /// <summary>
+        /// Generic marshalling function to retrieve structs from a libvlc linked list
+        /// </summary>
+        /// <typeparam name="T">Internal struct type</typeparam>
+        /// <typeparam name="TU">publicly facing struct type</typeparam>
+        /// <param name="getRef">Native libvlc call: retrieve collection start pointer from parent reference</param>
+        /// <param name="retrieve">Retrieve the internal struct by marshalling the native pointer</param>
+        /// <param name="create">Create a publicly facing struct from the internal struct values</param>
+        /// <param name="next">Access next element in the list</param>
+        /// <param name="releaseRef">Native libvlc call: release resources allocated with the getRef call</param>
+        /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU>(Func<IntPtr> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Func<T, IntPtr> next, Action<IntPtr> releaseRef)
             where T : struct
@@ -112,6 +123,18 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        /// <summary>
+        /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
+        /// This supports uint libvlc signatures.
+        /// </summary>
+        /// <typeparam name="T">Internal struct type</typeparam>
+        /// <typeparam name="TU">publicly facing struct type</typeparam>
+        /// <param name="nativeRef">native reference of the parent</param>
+        /// <param name="getRef">Native libvlc call: retrieve collection start pointer from parent reference</param>
+        /// <param name="retrieve">Retrieve the internal struct by marshalling the native pointer</param>
+        /// <param name="create">Create a publicly facing struct from the internal struct values</param>
+        /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
+        /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, uint> releaseRef)
             where T : struct
@@ -155,6 +178,18 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        /// <summary>
+        /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
+        /// This supports ulong libvlc signatures.
+        /// </summary>
+        /// <typeparam name="T">Internal struct type</typeparam>
+        /// <typeparam name="TU">publicly facing struct type</typeparam>
+        /// <param name="nativeRef">native reference of the parent</param>
+        /// <param name="getRef">Native libvlc call: retrieve collection start pointer from parent reference</param>
+        /// <param name="retrieve">Retrieve the internal struct by marshalling the native pointer</param>
+        /// <param name="create">Create a publicly facing struct from the internal struct values</param>
+        /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
+        /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayLongOut getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, ulong> releaseRef)
             where T : struct
@@ -200,6 +235,20 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        /// <summary>
+        /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
+        /// This supports ulong libvlc signatures and an additional enum configuration parameter.
+        /// </summary>
+        /// <typeparam name="T">Internal struct type</typeparam>
+        /// <typeparam name="TU">publicly facing struct type</typeparam>
+        /// <typeparam name="TE">Additional enum confugation type</typeparam>
+        /// <param name="nativeRef">native reference of the parent</param>
+        /// <param name="extraParam">Additional enum confugation type</param>
+        /// <param name="getRef">Native libvlc call: retrieve collection start pointer from parent reference</param>
+        /// <param name="retrieve">Retrieve the internal struct by marshalling the native pointer</param>
+        /// <param name="create">Create a publicly facing struct from the internal struct values</param>
+        /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
+        /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayOut<TE> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
             where T : struct
@@ -245,6 +294,7 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        // These delegates allow the definition of generic functions with [OUT] parameters
         internal delegate ulong CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
         internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);
         internal delegate ulong ArrayLongOut(IntPtr nativeRef, out IntPtr array);
