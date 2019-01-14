@@ -21,6 +21,11 @@ namespace LibVLCSharp.Shared
     internal readonly struct SubtitleTrackStructure
     {
         internal readonly IntPtr Encoding;
+
+        internal SubtitleTrackStructure(IntPtr encoding)
+        {
+            Encoding = encoding;
+        }
     }
 
     /// <summary>

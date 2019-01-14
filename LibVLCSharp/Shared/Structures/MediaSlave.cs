@@ -4,6 +4,13 @@ namespace LibVLCSharp.Shared
 {
     internal readonly struct MediaSlaveStructure
     {
+        internal MediaSlaveStructure(IntPtr uri, MediaSlaveType type, uint priority)
+        {
+            Uri = uri;
+            Type = type;
+            Priority = priority;
+        }
+
         internal readonly IntPtr Uri;
         internal readonly MediaSlaveType Type;
         internal readonly uint Priority;

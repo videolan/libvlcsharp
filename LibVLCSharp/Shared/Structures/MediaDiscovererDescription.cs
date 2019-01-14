@@ -4,6 +4,13 @@ namespace LibVLCSharp.Shared
 {
     internal readonly struct MediaDiscovererDescriptionStructure
     {
+        internal MediaDiscovererDescriptionStructure(IntPtr name, IntPtr longName, MediaDiscovererCategory category)
+        {
+            Name = name;
+            LongName = longName;
+            Category = category;
+        }
+
         internal readonly IntPtr Name;
         internal readonly IntPtr LongName;
         internal readonly MediaDiscovererCategory Category;

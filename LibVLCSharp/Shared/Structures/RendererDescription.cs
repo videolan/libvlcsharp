@@ -4,6 +4,12 @@ namespace LibVLCSharp.Shared
 {
     internal readonly struct RendererDescriptionStructure
     {
+        internal RendererDescriptionStructure(IntPtr name, IntPtr longName)
+        {
+            Name = name;
+            LongName = longName;
+        }
+
         internal readonly IntPtr Name;
         internal readonly IntPtr LongName;
     }
