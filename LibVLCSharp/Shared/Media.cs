@@ -548,7 +548,7 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
 
-        /// <summary>Get media descriptor's elementary streams description</summary>
+        /// <summary>Get media descriptor's elementary streams description
         /// <para>address to store an allocated array of Elementary Streams</para>
         /// <para>descriptions (must be freed with libvlc_media_tracks_release</para>
         /// <para>by the caller) [OUT]</para>
@@ -559,6 +559,7 @@ namespace LibVLCSharp.Shared
         /// <para>Not doing this will result in an empty array.</para>
         /// <para>LibVLC 2.1.0 and later.</para>
         /// </remarks>
+        /// </summary>
         public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaTracksGet(nativeRef, out array),
             MarshalUtils.PtrToStructure<MediaTrackStructure>,
             m => m.Build(),
