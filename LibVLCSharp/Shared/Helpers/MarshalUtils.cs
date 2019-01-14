@@ -43,6 +43,12 @@ namespace LibVLCSharp.Shared.Helpers
             const string Write = "w";
         }
 
+        /// <summary>
+        /// Helper for libvlc_new
+        /// </summary>
+        /// <param name="options">libvlc options, an UTF16 string array turned to UTF8 string pointer array</param>
+        /// <param name="create">the create function call</param>
+        /// <returns></returns>
         internal static IntPtr CreateWithOptions(string[] options, Func<int, IntPtr[], IntPtr> create)
         {
             var utf8Args = default(IntPtr[]);
@@ -68,30 +74,42 @@ namespace LibVLCSharp.Shared.Helpers
             where T : struct
             where TU : struct
         {
-            var nativeRef = getRef();
-            if (nativeRef == IntPtr.Zero)
+            var nativeRef = IntPtr.Zero;
+
+            try
             {
+                nativeRef = getRef();
+                if (nativeRef == IntPtr.Zero)
+                {
 #if NETSTANDARD1_1 || NET40
-                return new TU[0];
+                    return new TU[0];
 #else
-                return Array.Empty<TU>();
+                    return Array.Empty<TU>();
 #endif
+                }
+
+                var resultList = new List<TU>();
+                IntPtr nextRef = nativeRef;
+                T structure;
+                TU obj;
+
+                while (nextRef != IntPtr.Zero)
+                {
+                    structure = retrieve(nextRef);
+                    obj = create(structure);
+                    resultList.Add(obj);
+                    nextRef = next(structure);
+                }
+                return resultList.ToArray();
             }
-
-            var resultList = new List<TU>();
-            IntPtr nextRef = nativeRef;
-            T structure;
-            TU obj;
-
-            while (nextRef != IntPtr.Zero)
+            finally
             {
-                structure = retrieve(nextRef);
-                obj = create(structure);
-                resultList.Add(obj);
-                nextRef = next(structure);
+                if (nativeRef != IntPtr.Zero)
+                {
+                    releaseRef(nativeRef);
+                    nativeRef = IntPtr.Zero;
+                }
             }
-            releaseRef(nativeRef);
-            return resultList.ToArray();
         }
 
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T> retrieve,
@@ -100,31 +118,41 @@ namespace LibVLCSharp.Shared.Helpers
             where TU : struct
         {
             var arrayPtr = IntPtr.Zero;
-            var count = getRef(nativeRef, out arrayPtr);
-            if(count == 0)
+            uint count = 0;
+
+            try
             {
+                count = getRef(nativeRef, out arrayPtr);
+                if(count == 0)
+                {
 #if NETSTANDARD1_1 || NET40
-                return new TU[0];
+                    return new TU[0];
 #else
-                return Array.Empty<TU>();
+                    return Array.Empty<TU>();
 #endif
+                }
+
+                var resultList = new List<TU>();
+                T structure;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                    structure = retrieve(ptr);
+                    var managedStruct = create(structure);
+                    resultList.Add(managedStruct);
+                }
+
+                return resultList.ToArray();
             }
-
-            var resultList = new List<TU>();
-            T structure;
-
-            for (var i = 0; i < count; i++)
+            finally
             {
-                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
-                structure = retrieve(ptr);
-                var managedStruct = create(structure);
-                resultList.Add(managedStruct);
+                if (arrayPtr != IntPtr.Zero)
+                {
+                    releaseRef(arrayPtr, count);
+                    arrayPtr = IntPtr.Zero;
+                }
             }
-
-            releaseRef(arrayPtr, count);
-            arrayPtr = IntPtr.Zero;
-
-            return resultList.ToArray();
         }
 
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayLongOut getRef, Func<IntPtr, T> retrieve,
@@ -133,38 +161,44 @@ namespace LibVLCSharp.Shared.Helpers
             where TU : struct
         {
             var arrayPtr = IntPtr.Zero;
-            var countLong = getRef(nativeRef, out arrayPtr);
-            var count = (int)countLong;
+            ulong countLong = 0;
 
-            if (count == 0)
-            {
+            try
+            { 
+                countLong = getRef(nativeRef, out arrayPtr);
+                var count = (int)countLong;
+
+                if (count == 0)
+                {
 #if NETSTANDARD1_1 || NET40
-                return new TU[0];
+                    return new TU[0];
 #else
-                return Array.Empty<TU>();
+                    return Array.Empty<TU>();
 #endif
+                }
+
+                var resultList = new List<TU>();
+                T structure;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                    structure = retrieve(ptr);
+                    var managedStruct = create(structure);
+                    resultList.Add(managedStruct);
+                }
+
+                return resultList.ToArray();
             }
-
-            var resultList = new List<TU>();
-            T structure;
-
-            for (var i = 0; i < count; i++)
+            finally
             {
-                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
-                structure = retrieve(ptr);
-                var managedStruct = create(structure);
-                resultList.Add(managedStruct);
+                if(arrayPtr != IntPtr.Zero)
+                {
+                    releaseRef(arrayPtr, countLong);
+                    arrayPtr = IntPtr.Zero;
+                }
             }
-
-            releaseRef(arrayPtr, countLong);
-            arrayPtr = IntPtr.Zero;
-
-            return resultList.ToArray();
         }
-
-        internal delegate ulong CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
-        internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);
-        internal delegate ulong ArrayLongOut(IntPtr nativeRef, out IntPtr array);
 
         internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayOut<TE> getRef, Func<IntPtr, T> retrieve,
             Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
@@ -173,33 +207,47 @@ namespace LibVLCSharp.Shared.Helpers
             where TE : Enum
         {
             var arrayPtr = IntPtr.Zero;
-            var countLong = getRef(nativeRef, extraParam, out arrayPtr);
-            var count = (int)countLong;
-            if (count == 0)
-            {
+            ulong countLong = 0;
+
+            try
+            { 
+                countLong = getRef(nativeRef, extraParam, out arrayPtr);
+                var count = (int)countLong;
+                if (count == 0)
+                {
 #if NETSTANDARD1_1 || NET40
-                return new TU[0];
+                    return new TU[0];
 #else
-                return Array.Empty<TU>();
+                    return Array.Empty<TU>();
 #endif
+                }
+
+                var resultList = new List<TU>();
+                T structure;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                    structure = retrieve(ptr);
+                    var managedStruct = create(structure);
+                    resultList.Add(managedStruct);
+                }
+
+                return resultList.ToArray();
             }
-
-            var resultList = new List<TU>();
-            T structure;
-
-            for (var i = 0; i < count; i++)
+            finally
             {
-                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
-                structure = retrieve(ptr);
-                var managedStruct = create(structure);
-                resultList.Add(managedStruct);
+                if (arrayPtr != IntPtr.Zero)
+                {
+                    releaseRef(arrayPtr, countLong);
+                    arrayPtr = IntPtr.Zero;
+                }
             }
-
-            releaseRef(arrayPtr, countLong);
-            arrayPtr = IntPtr.Zero;
-
-            return resultList.ToArray();
         }
+
+        internal delegate ulong CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
+        internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);
+        internal delegate ulong ArrayLongOut(IntPtr nativeRef, out IntPtr array);
 
         /// <summary>
         /// Turns an array of UTF16 C# strings to an array of pointer to UTF8 strings
