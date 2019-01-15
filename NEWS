@@ -1,3 +1,12 @@
+LibVLCSharp version 0.2.0
+=========================
+* [Docs] Add public API comments
+* Use readonly structs https://github.com/videolan/libvlcsharp/pull/27
+* Refactor marshalling logic in generic code
+* Fix Unit tests
+* RendererDiscoverer: Remove service discovery name inference
+* Enable Xamarin Forms gestures on iOS (temporary workaround hopefully) https://github.com/videolan/libvlcsharp/commit/fa455586d1b93ee903fd1e34d49b59b323615754
+
 LibVLCSharp version 0.1.6
 =========================
 * Fix AWindow reference https://code.videolan.org/videolan/LibVLCSharp/issues/84
@@ -7,9 +16,9 @@ LibVLCSharp version 0.1.5
 * Handle null login/password dialog marshaling https://code.videolan.org/videolan/LibVLCSharp/issues/75
 * Build: Add a way to build all netstandard targets from CLI 
 * remove allow unsafe blocks https://code.videolan.org/videolan/LibVLCSharp/merge_requests/6
-* remove nuspec and update csproj https://code.videolan.org/videolan/LibVLCSharp/merge_requests/7
-- docs: fixes VS Intellisense
-- add better description on nuget.org
+* remove nuspec and update csproj https://code.videolan.org/videolan/LibVLCSharp/merge_requests/7:
+-> docs: fixes VS Intellisense
+-> add better description on nuget.org
 
 LibVLCSharp version 0.1.4
 =========================
