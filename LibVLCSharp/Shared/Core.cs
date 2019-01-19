@@ -109,7 +109,11 @@ namespace LibVLCSharp.Shared
             {
                 // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
                 if (Native.XInitThreads() == 0)
-                    Debug.WriteLine("XInitThreads failed");
+                {
+#if !NETSTANDARD1_1
+                    Trace.WriteLine("XInitThreads failed");
+#endif
+                }
             }
         }
 
@@ -128,8 +132,6 @@ namespace LibVLCSharp.Shared
 #endif
             return PlatformHelper.IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
         }
-
-
     }
 
     internal static class Constants
