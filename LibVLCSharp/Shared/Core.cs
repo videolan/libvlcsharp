@@ -25,7 +25,6 @@ namespace LibVLCSharp.Shared
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
 
-#if !COCOA && !ANDROID && !WINDOWS
             /// <summary>
             /// Initializes the X threading system
             /// </summary>
@@ -33,7 +32,6 @@ namespace LibVLCSharp.Shared
             /// <returns>non-zero on success, zero on failure</returns>
             [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int XInitThreads();
-#endif
         }
 
         static IntPtr _libvlccoreHandle;
@@ -109,11 +107,9 @@ namespace LibVLCSharp.Shared
             }
             else if (PlatformHelper.IsLinux)
             {
-#if !COCOA && !ANDROID && !WINDOWS
                 // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
                 if (Native.XInitThreads() == 0)
                     Debug.WriteLine("XInitThreads failed");
-#endif
             }
         }
 
