@@ -320,12 +320,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void UnsetDialogHandlers()
         {
-            if (_dialogCbsPtr != IntPtr.Zero)
+            if (DialogHandlersSet)
             {
                 Marshal.FreeHGlobal(_dialogCbsPtr);
                 _dialogCbsPtr = IntPtr.Zero;
+                Native.LibVLCDialogSetCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
             }
-            Native.LibVLCDialogSetCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
         }
 
         /// <summary>
