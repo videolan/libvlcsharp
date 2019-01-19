@@ -44,9 +44,8 @@ namespace LibVLCSharp.GTK
 
         private MediaPlayer _mediaPlayer;
 
-        public VideoView(MediaPlayer mediaPlayer = null)
+        public VideoView()
         {
-            _mediaPlayer = mediaPlayer;
             Color black = Color.Zero;
             Color.Parse("black", ref black);
             ModifyBg(StateType.Normal, black);
