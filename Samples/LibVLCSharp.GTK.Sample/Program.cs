@@ -20,8 +20,8 @@ namespace LibVLCSharp.GTK.Sample
                 myWin.Resize(800, 450);
 
                 // Creates the video view, and adds it to the window
-                VideoView view = new VideoView { MediaPlayer = mediaPlayer };
-                myWin.Add(view);
+                VideoView videoView = new VideoView { MediaPlayer = mediaPlayer };
+                myWin.Add(videoView);
 
                 //Show Everything
                 myWin.ShowAll();
@@ -34,7 +34,12 @@ namespace LibVLCSharp.GTK.Sample
                     mediaPlayer.Play(media);
                 }
 
-                myWin.DeleteEvent += (sender, args) => { Application.Quit(); };
+                myWin.DeleteEvent += (sender, args) => 
+                {
+                    mediaPlayer.Stop();
+                    videoView.Dispose(); 
+                    Application.Quit(); 
+                };
                 Application.Run();
             }
         }
