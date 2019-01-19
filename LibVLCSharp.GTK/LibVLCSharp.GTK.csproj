@@ -1,7 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
+  <Title>LibVLCSharp.GTK</Title>
+    <Summary>GTK integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
+    
+It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+
+Supported platforms:
+- Xamarin.Android
+- Xamarin.iOS
+- Xamarin.Mac
+- Windows (WPF/WinForms)
+- Xamarin.Forms
+- .NET Standard 1.1
+- .NET Core
+
+Features:
+- Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
+- HDMI passthrough for Audio HD codecs, like E-AC3, TrueHD or DTS-HD.
+- Stream to distant renderers, like Chromecast.
+- 360 video and 3D audio playback with viewpoint change.
+- Support for Ambisonics audio and more than 8 audio channels.
+- Subtitles size modification live.
+- Hardware decoding and display on all platforms.
+- DVD playback and menu navigation.
+    </Description>
     <TargetFramework>net47</TargetFramework>
+    <RootNamespace>LibVLCSharp.GTK</RootNamespace>
+    <Version>0.0.1</Version>
+    <PackageId>LibVLCSharp.GTK</PackageId>
+    <Authors>VideoLAN</Authors>
+    <Owners>VideoLAN</Owners>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
+    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
+    <PackageIconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</PackageIconUrl>
+    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
+    <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
