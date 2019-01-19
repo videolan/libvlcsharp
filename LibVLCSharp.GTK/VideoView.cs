@@ -6,6 +6,10 @@ using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.GTK
 {
+    /// <summary>
+    /// GTK VideoView for Windows, Linux and Mac.
+    /// Mac is currently unsupported (see https://github.com/mono/gtk-sharp/issues/257)
+    /// </summary>
     public class VideoView : DrawingArea, IVideoView
     {
         struct Native
@@ -28,8 +32,14 @@ namespace LibVLCSharp.GTK
             [DllImport("libgdk-x11-2.0.so.0", CallingConvention = CallingConvention.Cdecl)]
             internal static extern uint gdk_x11_drawable_get_xid(IntPtr gdkWindow);
 
+            /// <summary>
+            /// Gets the nsview's handle
+            /// </summary>
+            /// <remarks>Mac only</remarks>
+            /// <param name="gdkWindow">The pointer to the GdkWindow object</param>
+            /// <returns>The nsview's handle</returns>
             [DllImport("libgdk-quartz-2.0.0.dylib")]
-            internal static extern IntPtr gdk_quartz_window_get_nsview(IntPtr handle);
+            internal static extern IntPtr gdk_quartz_window_get_nsview(IntPtr gdkWindow);
         }
 
         private MediaPlayer _mediaPlayer;
