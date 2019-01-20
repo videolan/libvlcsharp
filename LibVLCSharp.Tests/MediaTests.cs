@@ -110,7 +110,7 @@ namespace LibVLCSharp.Tests
         {
             using (var libVLC = new LibVLC())
             {
-                libVLC.Log += LibVLC_Log;
+                libVLC.SetLogCallback(LibVLC_Log, LibVLCLogLevel.Debug);
                 using (var media = new Media(libVLC, RealMp3PathSpecialCharacter, Media.FromType.FromPath))
                 {
                     Assert.False(media.IsParsed);
@@ -126,7 +126,7 @@ namespace LibVLCSharp.Tests
                         mp.Stop();
                     }
                 }
-                libVLC.Log -= LibVLC_Log;
+                libVLC.SetLogCallback(null, LibVLCLogLevel.Debug);
             }
         }
 
@@ -174,7 +174,7 @@ namespace LibVLCSharp.Tests
             return new MemoryStream(imageData);
         }
 
-        private void LibVLC_Log(object sender, LogEventArgs e)
+        private void LibVLC_Log(LogMessage e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
         }

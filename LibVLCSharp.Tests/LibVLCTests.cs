@@ -120,13 +120,17 @@ namespace LibVLCSharp.Tests
             var libVLC = new LibVLC();
             var logCallbackCalled = false;
 
-            void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
-
-            libVLC.Log += LogCallback;
+            libVLC.SetLogCallback(message =>
+            {
+                if (message.Message.Contains("VLC media player"))
+                {
+                    logCallbackCalled = true;
+                }
+            }, LibVLCLogLevel.Debug);
 
             await Task.Delay(1000);
-
-            libVLC.Log -= LogCallback;
+            
+            libVLC.SetLogCallback(null, LibVLCLogLevel.Error);
 
             Assert.IsTrue(logCallbackCalled);
         }
@@ -147,7 +151,7 @@ namespace LibVLCSharp.Tests
         {
             var libvlc = new LibVLC();
 
-            libvlc.SetLog((data, logLevel, logContext, format, args) => { });
+            libvlc.SetLogCallback(message => { }, LibVLCLogLevel.Error);
             libvlc.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, firstActionText, secondActonText, token) => Task.CompletedTask,

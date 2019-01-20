@@ -26,17 +26,17 @@ namespace LibVLCSharp.Shared
             if (obj.GetType() != this.GetType()) return false;
             return Equals((LibVLC) obj);
         }
-        LogCallback _logCallback;
         readonly object _logLock = new object();
         /// <summary>
         /// The real log event handlers.
         /// </summary>
-        EventHandler<LogEventArgs> _log;
+        Action<LogMessage> _logEventHandler;
 
         /// <summary>
-        /// A boolean to make sure that we are calling SetLog only once
+        /// The reference to the managed log callback, to avoid garbage collection.
         /// </summary>
-        bool _logAttached;
+        FormattedLogCallback _logCallbackReference;
+        IntPtr _logCallbackNativeData;
 
         IntPtr _logFileHandle;
         IntPtr _dialogCbsPtr;
@@ -145,30 +145,13 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
 
-            /// <summary>
-            /// Compute the size required by vsprintf to print the parameters.
-            /// </summary>
-            /// <param name="format"></param>
-            /// <param name="ptr"></param>
-            /// <returns></returns>
-            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int _vscprintf(string format, IntPtr ptr);
+            #region LibvlcLogInterop
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+            internal delegate IntPtr LibVLCLogInteropMakeCallbackData(FormattedLogCallback callback, IntPtr data, LibVLCLogLevel minLevel);
 
-            /// <summary>
-            /// Format a string using printf style markers
-            /// </summary>
-            /// <remarks>
-            /// See https://stackoverflow.com/a/37629480/2663813
-            /// </remarks>
-            /// <param name="buffer">The output buffer (should be large enough, use _vscprintf)</param>
-            /// <param name="format">The message format</param>
-            /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
-            /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport(Constants.Msvcrt, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int vsprintf(
-                IntPtr buffer,
-                string format,
-                IntPtr args);
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+            internal delegate void LibVLCLogInteropDestroyCallbackData(IntPtr callbackData);
+            #endregion
         }
 
         /// <summary>
@@ -295,6 +278,39 @@ namespace LibVLCSharp.Shared
             Native.LibVLCSetAppId(NativeReference, id, version, icon);
         }
 
+        public void SetLogCallback(Action<LogMessage> eventHandler, LibVLCLogLevel minLogLevel)
+        {
+            if(Core.LibVLCLogInteropHandle == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("libVLCLogInterop library not loaded. Please refer to libvlcsharp's documentation to know how to install it.");
+            }
+
+            if(this._logCallbackReference != null)
+            {
+                this.UnsetLog();
+            }
+
+            var makeCallbackData = Core.GetLibraryFunction<Native.LibVLCLogInteropMakeCallbackData>(Core.LibVLCLogInteropHandle, "makeCallbackData");
+            var libvlcLogInteropCallback = Core.GetLibraryFunction<LogCallback>(Core.LibVLCLogInteropHandle, "libvlcLogInteropCallback");
+
+            this._logEventHandler = eventHandler;
+
+            this._logCallbackReference = this.OnLogInternal;
+            this._logCallbackNativeData = makeCallbackData(this._logCallbackReference, IntPtr.Zero, minLogLevel);
+
+            Native.LibVLCLogSet(NativeReference, libvlcLogInteropCallback, this._logCallbackNativeData);
+        }
+
+        private void OnLogInternal(IntPtr data, LibVLCLogLevel logLevel, IntPtr logContext, IntPtr message)
+        {
+            if (this._logEventHandler == null) return;
+
+            GetLogContext(logContext, out var module, out var file, out var line);
+
+            // Do the notification on another thread, so that VLC is not interrupted by the logging
+            this._logEventHandler?.Invoke(new LogMessage(logLevel, (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(message), module, file, line));
+        }
+
         /// <summary>Unsets the logging callback.</summary>
         /// <remarks>
         /// <para>This function deregisters the logging callback for a LibVLC instance.</para>
@@ -306,13 +322,18 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void UnsetLog()
         {
-            if (_logCallback == null) return;
+            if (_logCallbackReference == null) return;
 
             Native.LibVLCLogUnset(NativeReference);
-            if(!CloseLogFile())
+            this._logCallbackReference = null;
+            this._logEventHandler = null;
+            if (this._logCallbackNativeData != IntPtr.Zero)
+            {
+                var destroyCallbackData = Core.GetLibraryFunction<Native.LibVLCLogInteropDestroyCallbackData>(Core.LibVLCLogInteropHandle, "destroyCallbackData");
+                destroyCallbackData(this._logCallbackNativeData);
+            }
+            if (!CloseLogFile())
                 throw new VLCException("Could not close log file");
-
-            _logCallback = null;
         }
 
         /// <summary>
@@ -337,43 +358,6 @@ namespace LibVLCSharp.Shared
             if (_logFileHandle == IntPtr.Zero) return true;
 
             return MarshalUtils.Close(_logFileHandle);
-        }
-
-        public void SetLog(LogCallback cb)
-        {
-            if (cb == null) throw new ArgumentException(nameof(cb));
-
-            _logCallback = cb;
-
-            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
-        }
-
-        /// <summary>
-        /// The event that is triggered when a log is emitted from libVLC.
-        /// Listening to this event will discard the default logger in libvlc.
-        /// </summary>
-        public event EventHandler<LogEventArgs> Log
-        {
-            add
-            {
-                lock (_logLock)
-                {
-                    _log += value;
-                    if (!_logAttached)
-                    {
-                        SetLog(OnLogInternal);
-                        _logAttached = true;
-                    }
-                }
-            }
-
-            remove
-            {
-                lock (_logLock)
-                {
-                    _log -= value;
-                }
-            }
         }
 
         /// <summary>Sets up logging to a file.
@@ -562,44 +546,6 @@ namespace LibVLCSharp.Shared
             Native.LibVLCRendererDiscovererReleaseList);
 
         /// <summary>
-        /// Code taken from Vlc.DotNet
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="level"></param>
-        /// <param name="ctx"></param>
-        /// <param name="format"></param>
-        /// <param name="args"></param>
-        void OnLogInternal(IntPtr data, LogLevel level, IntPtr ctx, string format, IntPtr args)
-        {
-            if (_log == null) return;
-
-            // Original source for va_list handling: https://stackoverflow.com/a/37629480/2663813
-            var byteLength = Native._vscprintf(format, args) + 1;
-            var utf8Buffer = Marshal.AllocHGlobal(byteLength);
-
-            string formattedDecodedMessage;
-            try
-            {
-                Native.vsprintf(utf8Buffer, format, args);
-
-                formattedDecodedMessage = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(utf8Buffer);
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(utf8Buffer);
-            }
-
-            GetLogContext(ctx, out var module, out var file, out var line);
-
-            // Do the notification on another thread, so that VLC is not interrupted by the logging
-#if NET40
-            Task.Factory.StartNew(() => _log?.Invoke(NativeReference, new LogEventArgs(level, formattedDecodedMessage, module, file, line)));
-#else
-            Task.Run(() => _log?.Invoke(NativeReference, new LogEventArgs(level, formattedDecodedMessage, module, file, line)));
-#endif
-        }
-
-        /// <summary>
         /// Gets log message debug infos.
         ///
         /// This function retrieves self-debug information about a log message:
@@ -626,7 +572,7 @@ namespace LibVLCSharp.Shared
 
     /// <summary>Logging messages level.</summary>
     /// <remarks>Future LibVLC versions may define new levels.</remarks>
-    public enum LogLevel
+    public enum LibVLCLogLevel
     {
         /// <summary>Debug message</summary>
         Debug = 0,
@@ -649,8 +595,11 @@ namespace LibVLCSharp.Shared
     public delegate void ExitCallback();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void LogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext,
-        [MarshalAs(UnmanagedType.LPStr)] string format, IntPtr args);
+    internal delegate void LogCallback(IntPtr data, LibVLCLogLevel logLevel, IntPtr logContext,
+        IntPtr format, IntPtr args);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void FormattedLogCallback(IntPtr data, LibVLCLogLevel logLevel, IntPtr logContext,
+        IntPtr message);
 #endregion
 }

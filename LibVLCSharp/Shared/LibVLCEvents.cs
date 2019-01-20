@@ -782,9 +782,9 @@ namespace LibVLCSharp.Shared
     }
 
     #endregion
-    public sealed class LogEventArgs : EventArgs
+    public sealed class LogMessage
     {
-        internal LogEventArgs(LogLevel level, string message, string module, string sourceFile, uint? sourceLine)
+        internal LogMessage(LibVLCLogLevel level, string message, string module, string sourceFile, uint? sourceLine)
         {
             Level = level;
             Message = message;
@@ -797,7 +797,7 @@ namespace LibVLCSharp.Shared
         /// The severity of the log message.
         /// By default, you will only get error messages, but you can get all messages by specifying "-vv" in the options.
         /// </summary>
-        public LogLevel Level { get; }
+        public LibVLCLogLevel Level { get; }
 
         /// <summary>
         /// The log message
