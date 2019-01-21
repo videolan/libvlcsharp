@@ -30,7 +30,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 
 ## Features
 
-Check out [libvlc-nuget](https://github.com/mfkl/libvlc-nuget) to get a basic understanding of how `libvlc` works, what it can offer and how to install it with NuGet. 
+Check out [libvlc-nuget](https://code.videolan.org/videolan/libvlc-nuget) to get a basic understanding of how `libvlc` works, what it can offer and how to install it with NuGet. 
 
 Some of the [features](https://www.videolan.org/vlc/features.html) include:
 
@@ -63,7 +63,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 You need to install 2 packages to get started.
 
-The __first__ is `libvlc`, which is the actual VLC engine written mostly in C/C++ and compiled for your target platform. It's named `VideoLAN.LibVLC.[Platform]`. You can find information about it and how to download it on NuGet [here](https://github.com/mfkl/libvlc-nuget).
+The __first__ is `libvlc`, which is the actual VLC engine written mostly in C/C++ and compiled for your target platform. It's named `VideoLAN.LibVLC.[Platform]`. You can find information about it and how to download it on NuGet [here](https://code.videolan.org/videolan/libvlc-nuget).
 
 The __second__ package you need is LibVLCSharp, the .NET wrapper that consumes `libvlc` and allows you to interact with native code from C#/F#. 
 
