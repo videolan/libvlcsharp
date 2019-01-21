@@ -306,10 +306,10 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void UnsetLog()
         {
-            if (_logCallback == null) return;
+            if (_logCallback != null)
+                Native.LibVLCLogUnset(NativeReference);
 
-            Native.LibVLCLogUnset(NativeReference);
-            if(!CloseLogFile())
+            if (!CloseLogFile())
                 throw new VLCException("Could not close log file");
 
             _logCallback = null;
@@ -398,7 +398,7 @@ namespace LibVLCSharp.Shared
             var result = MarshalUtils.Open(filename, out var filePtr);
             if (!result)
                 throw new VLCException("Could not get FILE * for log_set_file");
-            return IntPtr.Zero;
+            return filePtr;
         }
 
         /// <summary>Returns a list of audio filters that are available.</summary>
