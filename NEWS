@@ -1,3 +1,8 @@
+LibVLCSharp version 0.3.0
+=========================
+* Add GTK# support (with Xamarin.Forms support) on Linux and Windows. https://code.videolan.org/videolan/LibVLCSharp/commit/a927af513addeacb7c17541d06c6b7d16bfef9c0
+* Fix dialog reset interop bug https://code.videolan.org/videolan/LibVLCSharp/commit/c954cad1be8642bf96a74650e7ecd1c814b323ee
+
 LibVLCSharp version 0.2.0
 =========================
 * [Docs] Add public API comments
