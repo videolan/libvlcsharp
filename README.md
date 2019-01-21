@@ -52,8 +52,9 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 - Xamarin.Android
 - Xamarin.iOS
-- Xamarin.Mac
-- Windows (WPF/WinForms)
+- Xamarin.Mac (Cocoa)
+- Windows (WPF, GTK)
+- Linux (GTK)
 - Xamarin.Forms
 - .NET Standard 1.1
 - .NET Core
@@ -118,14 +119,9 @@ Feel free to suggest and contribute new samples.
 
 ## Roadmap
 
-- macOS (using GTK)
 - tvOS
-- Linux (using GTK)
-- Windows 10 (using UWP, GTK)
-- Xamarin.Forms
-    - GTK
-    - UWP
 - Game engines (Unity, Unreal, Godot)
+- UWP
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
