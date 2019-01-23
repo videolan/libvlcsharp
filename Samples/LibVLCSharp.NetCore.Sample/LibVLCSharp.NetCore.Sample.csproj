@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net47</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <RuntimeIdentifiers>win7-x64;win7-x86;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
