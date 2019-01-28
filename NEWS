@@ -1,3 +1,8 @@
+LibVLCSharp version 0.4.0
+=========================
+* Add tvOS support https://code.videolan.org/videolan/LibVLCSharp/commit/e17a2a3a3a824b3be8401905690b8d7b6aacc970
+* Fix wrong log file pointer return https://code.videolan.org/videolan/LibVLCSharp/commit/014d3802ae2ebc12ff865ccc59d1767442fdf697
+
 LibVLCSharp version 0.3.0
 =========================
 * Add GTK# support (with Xamarin.Forms support) on Linux and Windows. https://code.videolan.org/videolan/LibVLCSharp/commit/a927af513addeacb7c17541d06c6b7d16bfef9c0
