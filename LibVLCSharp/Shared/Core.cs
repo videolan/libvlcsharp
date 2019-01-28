@@ -144,6 +144,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         internal const string UnityPlugin = "VlcUnityWrapper";
         internal const string LibraryName = "libvlcjni";
+#elif TVOS
+        internal const string LibraryName = "@rpath/DynamicTVVLCKit.framework/DynamicTVVLCKit";
 #else
         internal const string LibraryName = "libvlc";
 #endif

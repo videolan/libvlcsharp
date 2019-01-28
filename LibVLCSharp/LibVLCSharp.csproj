@@ -26,7 +26,7 @@ Features:
 - DVD playback and menu navigation.
     </Description>
     <TargetFrameworks>netstandard2.0;netstandard1.1;net40;net471</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
@@ -65,6 +65,12 @@ Features:
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
     <Compile Include="Platforms\Mac\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
+    <Compile Include="Platforms\tvOS\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Platforms\tvOS\" />
   </ItemGroup>
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ItemGroup>
