@@ -16,8 +16,8 @@ namespace LibVLCSharp.Shared
         struct Native
         {
 #if NET || NETSTANDARD
-            [DllImport(Constants.Kernel32, SetLastError = true)]
-            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
+            [DllImport(Constants.Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad, uint reserved =  0);
 
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);

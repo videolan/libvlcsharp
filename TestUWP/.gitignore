@@ -1,0 +1,2 @@
+#libvlc is ignored, create it with a win-x64 subfolder that contains the vlc-winrt nightly
+libvlc

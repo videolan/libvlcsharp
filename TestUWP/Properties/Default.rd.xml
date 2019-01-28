@@ -1,0 +1,31 @@
+<!--
+    Ce fichier contient les directives runtime utilisées par .NET Native. Les valeurs par défaut conviennent à la plupart des
+    développeurs. Toutefois, vous pouvez modifier ces paramètres pour changer le comportement de
+    l'optimiseur .NET Native.
+
+    Les directives runtime sont documentées sur https://go.microsoft.com/fwlink/?LinkID=391919
+
+    Pour activer complètement la réflexion de App1.MyClass et de tous ses membres publics/privés
+    <Type Name="App1.MyClass" Dynamic="Required All"/>
+
+    Pour activer la création dynamique de l'instanciation spécifique de AppClass<T> sur System.Int32
+    <TypeInstantiation Name="App1.AppClass" Arguments="System.Int32" Activate="Required Public" />
+
+    Utilisation de la directive Namespace pour appliquer la stratégie de réflexion à tous les types d'un espace de noms particulier
+    <Namespace Name="DataClasses.ViewModels" Serialize="All" />
+-->
+
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Application>
+    <!--
+      Un élément Assembly dont Name="*Application*" s'applique à tous les assemblys du
+      package d'application. Les astérisques ne sont pas des caractères génériques.
+    -->
+    <Assembly Name="*Application*" Dynamic="Required All" />
+    
+    
+    <!-- Ajoutez ici les directives runtime spécifiques à votre application. -->
+
+
+  </Application>
+</Directives>
