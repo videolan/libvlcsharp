@@ -52,6 +52,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 - Xamarin.Android
 - Xamarin.iOS
+- Xamarin.tvOS
 - Xamarin.Mac (Cocoa)
 - Windows (WPF, GTK)
 - Linux (GTK)
@@ -119,7 +120,6 @@ Feel free to suggest and contribute new samples.
 
 ## Roadmap
 
-- tvOS
 - Game engines (Unity, Unreal, Godot)
 - UWP
 
