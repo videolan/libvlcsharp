@@ -54,7 +54,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Xamarin.iOS
 - Xamarin.tvOS
 - Xamarin.Mac (Cocoa)
-- Windows (WPF, GTK)
+- Windows (WPF, WinForms, GTK)
 - Linux (GTK)
 - Xamarin.Forms
 - .NET Standard 1.1
@@ -62,11 +62,17 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 ## Installation
 
-You need to install 2 packages to get started.
+1. Install LibVLC in your platform specific project.
 
-The __first__ is `libvlc`, which is the actual VLC engine written mostly in C/C++ and compiled for your target platform. It's named `VideoLAN.LibVLC.[Platform]`. You can find information about it and how to download it on NuGet [here](https://code.videolan.org/videolan/libvlc-nuget).
+```cmd
+dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
+```
 
-The __second__ package you need is LibVLCSharp, the .NET wrapper that consumes `libvlc` and allows you to interact with native code from C#/F#. 
+LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
+
+2. Install LibVLCSharp _or_ LibVLCSharp.Forms (if you plan on using Xamarin.Forms)
+
+LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
 
 ```cmd
 dotnet add package LibVLCSharp
@@ -83,6 +89,35 @@ dotnet add package LibVLCSharp.Forms
 
 [![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.Forms.svg)](https://www.nuget.org/packages/LibVLCSharp.Forms)
 [![NuGet Stats](https://img.shields.io/nuget/dt/LibVLCSharp.Forms.svg)](https://www.nuget.org/packages/LibVLCSharp.Forms)
+
+The LibVLCSharp package contains platform specific View integrations (i.e. `VideoView`) for Android, iOS, Mac and tvOS.
+
+3. A few additional GUI toolkits have been integrated to LibVLCSharp. Those _optional_ packages aim to make the process of using LibVLC in your app as easy and fast as possible by providing a LibVLCSharp `VideoView`.
+
+For __WPF__ on Windows with or without Xamarin.Forms
+[![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.WPF.svg)](https://www.nuget.org/packages/LibVLCSharp.WPF)
+
+```cmd
+dotnet add package LibVLCSharp.WPF
+```
+
+or
+
+```cmd
+dotnet add package LibVLCSharp.Forms.WPF
+```
+
+For __WinForms__ on Windows [![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.WinForms.svg)](https://www.nuget.org/packages/LibVLCSharp.WinForms)
+
+```cmd
+dotnet add package LibVLCSharp.WinForms
+```
+
+If you're using __GTK__ (with or without Xamarin.Forms support) on Linux and/or Windows [![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.GTK.svg)](https://www.nuget.org/packages/LibVLCSharp.GTK)
+
+```cmd
+dotnet add package LibVLCSharp.GTK
+```
 
 ## Getting started
 
