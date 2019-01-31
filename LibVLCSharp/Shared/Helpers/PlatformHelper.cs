@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
-    internal class PlatformHelper
+    public class PlatformHelper
     {
-        internal static bool IsWindows
+        public static bool IsWindows
         {
 #if NET40
             get => Environment.OSVersion.Platform == PlatformID.Win32NT;
@@ -14,7 +14,7 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-        internal static bool IsLinux
+        public static bool IsLinux
         {
 #if NET40
             get => Environment.OSVersion.Platform == PlatformID.Unix;
@@ -23,7 +23,7 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-        internal static bool IsMac
+        public static bool IsMac
         {
 #if NET40
             get => false; // no easy way to detect Mac platform host at runtime under net471
@@ -32,6 +32,6 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-        internal static bool IsX64BitProcess => IntPtr.Size == 8;
+        public static bool IsX64BitProcess => IntPtr.Size == 8;
     }
 }
