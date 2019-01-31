@@ -2,9 +2,9 @@
 
 namespace LibVLCSharp.Shared
 {
-    public class VLCException : Exception
+    internal class VLCException : Exception
     {
-        public VLCException(string message = ""):base(message)
+        internal VLCException(string message = ""):base(message)
         {
         }
     }

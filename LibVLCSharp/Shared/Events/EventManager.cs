@@ -87,5 +87,5 @@ namespace LibVLCSharp.Shared
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void EventCallback(IntPtr args);
+    internal delegate void EventCallback(IntPtr args);
 }
