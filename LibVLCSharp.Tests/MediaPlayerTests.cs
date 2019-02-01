@@ -171,5 +171,26 @@ namespace LibVLCSharp.Tests
 
             Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
         }
+
+        [Test]
+        public async Task UpdateViewpoint()
+        {
+            var libvlc = new LibVLC();
+            var mp = new MediaPlayer(libvlc);
+
+            mp.Play(new Media(libvlc, "https://streams.videolan.org/streams/360/eagle_360.mp4", Media.FromType.FromLocation));
+
+            await Task.Delay(1000);
+
+            var result = mp.UpdateViewpoint(yaw: 0, pitch: 90, roll: 0, fov: 0);
+
+            Assert.IsTrue(result);
+
+            await Task.Delay(1000);
+            
+            mp.Dispose();
+
+            Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+        }
     }
 }

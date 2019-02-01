@@ -39,7 +39,9 @@ namespace LibVLCSharp.Shared.Helpers
 
             #endregion
 
-            
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_free", SetLastError = true)]
+            public static extern void LibVLCFree(IntPtr ptr);
+
             const string Write = "w";
         }
 
@@ -321,6 +323,7 @@ namespace LibVLCSharp.Shared.Helpers
         }
 
         /// <summary>
+        /// Marshal a pointer to a struct
         /// Helper with netstandard1.1 and net40 support
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -334,7 +337,7 @@ namespace LibVLCSharp.Shared.Helpers
             return Marshal.PtrToStructure<T>(ptr);
 #endif
         }
-
+        
         /// <summary>
         /// Crossplatform dlopen
         /// </summary>
@@ -402,6 +405,20 @@ namespace LibVLCSharp.Shared.Helpers
                 return Native.fcloseWindows(fileHandle) == 0;
             }
 #endif
+        }
+
+        /// <summary>
+        /// Frees an heap allocation returned by a LibVLC function.
+        /// If you know you're using the same underlying C run-time as the LibVLC
+        /// implementation, then you can call ANSI C free() directly instead.
+        /// </summary>
+        /// <param name="ptr">the pointer</param>
+        internal static void LibVLCFree(ref IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero) return;
+
+            Native.LibVLCFree(ptr);
+            ptr = IntPtr.Zero;
         }
     }
 

@@ -596,10 +596,13 @@ namespace LibVLCSharp.Shared
             internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType,
                 [MarshalAs(UnmanagedType.LPStr)] string uri, bool selectWhenloaded);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, 
+                EntryPoint = "libvlc_video_new_viewpoint")]
+            internal static extern IntPtr LibVLCVideoNewViewpoint();
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_update_viewpoint")]
-            internal static extern int LibVLCVideoUpdateViewpoint(IntPtr mediaPlayer, VideoViewpoint viewpoint, bool absolute);
+            internal static extern int LibVLCVideoUpdateViewpoint(IntPtr mediaPlayer, IntPtr viewpoint, bool absolute);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1560,12 +1563,36 @@ namespace LibVLCSharp.Shared
             Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri, select) == 0;
 
         /// <summary>
+        /// Current 360 viewpoint of this mediaplayer.
+        /// <para/>Update with <see cref="UpdateViewpoint"/>
         /// </summary>
-        /// <param name="viewpoint"></param>
-        /// <param name="absolute"></param>
-        /// <returns></returns>
-        public bool UpdateViewpoint(VideoViewpoint viewpoint, bool absolute) =>
-            Native.LibVLCVideoUpdateViewpoint(NativeReference, viewpoint, absolute) == 0;
+        public VideoViewpoint Viewpoint { get; private set; }
+
+        /// <summary>
+        /// Update the video viewpoint information.
+        /// The values are set asynchronously, it will be used by the next frame displayed. 
+        /// It is safe to call this function before the media player is started.
+        /// LibVLC 3.0.0 and later
+        /// </summary>
+        /// <param name="yaw">view point yaw in degrees  ]-180;180]</param>
+        /// <param name="pitch">view point pitch in degrees  ]-90;90]</param>
+        /// <param name="roll">view point roll in degrees ]-180;180]</param>
+        /// <param name="fov">field of view in degrees ]0;180[ (default 80.)</param>
+        /// <param name="absolute">if true replace the old viewpoint with the new one. If false, increase/decrease it.</param>
+        /// <returns>true if successful, false otherwise</returns>
+        public bool UpdateViewpoint(float yaw, float pitch, float roll, float fov, bool absolute = true)
+        {
+            var vpPtr = Native.LibVLCVideoNewViewpoint();
+            if (vpPtr == IntPtr.Zero) return false;
+
+            Viewpoint = new VideoViewpoint { Yaw = yaw, Pitch = pitch, Roll = roll, Fov = fov };
+            Marshal.StructureToPtr(Viewpoint, vpPtr, false);
+            
+            var result = Native.LibVLCVideoUpdateViewpoint(NativeReference, vpPtr, absolute) == 0;
+            MarshalUtils.LibVLCFree(ref vpPtr);
+
+            return result;
+        }
 
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
