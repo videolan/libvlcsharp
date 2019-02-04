@@ -28,7 +28,8 @@ namespace LibVLCSharp.WPF.Sample
             _libVLC = new LibVLC();
             _mediaPlayer = new MediaPlayer(_libVLC);
 
-            VideoView.MediaPlayer = _mediaPlayer;
+            // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
+            VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
         }
         
         void StopButton_Click(object sender, RoutedEventArgs e)
