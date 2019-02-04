@@ -1585,7 +1585,7 @@ namespace LibVLCSharp.Shared
             var vpPtr = Native.LibVLCVideoNewViewpoint();
             if (vpPtr == IntPtr.Zero) return false;
 
-            Viewpoint = new VideoViewpoint { Yaw = yaw, Pitch = pitch, Roll = roll, Fov = fov };
+            Viewpoint = new VideoViewpoint(yaw, pitch, roll, fov);
             Marshal.StructureToPtr(Viewpoint, vpPtr, false);
             
             var result = Native.LibVLCVideoUpdateViewpoint(NativeReference, vpPtr, absolute) == 0;

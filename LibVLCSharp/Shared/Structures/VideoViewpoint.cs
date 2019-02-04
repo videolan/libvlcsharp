@@ -4,26 +4,34 @@ namespace LibVLCSharp.Shared
 {
     /// <summary>Viewpoint for video outputs</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct VideoViewpoint
+    public readonly struct VideoViewpoint
     {
+        internal VideoViewpoint(float yaw, float pitch, float roll, float fov)
+        {
+            Yaw = yaw;
+            Pitch = pitch;
+            Roll = roll;
+            Fov = fov;
+        }
+
         /// <summary>
         /// view point yaw in degrees  ]-180;180]
         /// </summary>
-        public float Yaw { get; internal set; }
+        public readonly float Yaw;
 
         /// <summary>
         /// view point pitch in degrees  ]-90;90]
         /// </summary>
-        public float Pitch { get; internal set; }
+        public readonly float Pitch;
 
         /// <summary>
         /// view point roll in degrees ]-180;180]
         /// </summary>
-        public float Roll { get; internal set; }
+        public readonly float Roll;
 
         /// <summary>
         /// field of view in degrees ]0;180[ (default 80.)
         /// </summary>
-        public float Fov { get; internal set; }
+        public readonly float Fov;
     }
 }
