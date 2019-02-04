@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 #if ANDROID
 using Java.Interop;
@@ -36,21 +39,25 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
+#if NET || NETSTANDARD
         static IntPtr _libvlccoreHandle;
         static IntPtr _libvlcHandle;
-
+#endif
         /// <summary>
-        /// Load the native libvlc library (if necessary depending on platform)
+        /// Load the native libvlc library (if necessary, depending on platform)
+        /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
+        /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
         /// </summary>
-        /// <param name="appExecutionDirectory">The path to the app execution directory. 
+        /// <param name="libvlcDirectoryPath">The path to the directory that contains libvlc and libvlccore
         /// No need to specify unless running netstandard 1.1, or using custom location for libvlc
+        /// <para/> This parameter is NOT supported on Linux, use LD_LIBRARY_PATH instead.
         /// </param>
-        public static void Initialize(string appExecutionDirectory = null)
+        public static void Initialize(string libvlcDirectoryPath = null)
         {
 #if ANDROID
             InitializeAndroid();
 #elif NET || NETSTANDARD
-            InitializeDesktop(appExecutionDirectory);
+            InitializeDesktop(libvlcDirectoryPath);
 #endif
         }
 
@@ -63,52 +70,15 @@ namespace LibVLCSharp.Shared
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
 #elif NET || NETSTANDARD
-        //TODO: Add Unload library func using handles
-        static void InitializeDesktop(string appExecutionDirectory = null)
+        static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
-            if(appExecutionDirectory == null)
+            if(PlatformHelper.IsLinux)
             {
-#if NETSTANDARD1_1
-                throw new ArgumentNullException(nameof(appExecutionDirectory),
-                    $"{nameof(appExecutionDirectory)} cannot be null for netstandard1.1 target. Please provide a path to Initialize.");
-#else
-                var myPath = typeof(LibVLC).Assembly.Location;
-                appExecutionDirectory = Path.GetDirectoryName(myPath);
-                if (appExecutionDirectory == null)
-                    throw new NullReferenceException(nameof(appExecutionDirectory));
-#endif
-            }
-
-            if (PlatformHelper.IsWindows)
-            {
-                var arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
-
-                var librariesFolder = Path.Combine(appExecutionDirectory, Constants.LibrariesRepositoryFolderName, arch);
-
-                _libvlccoreHandle = PreloadNativeLibrary(librariesFolder, $"{Constants.CoreLibraryName}.dll");
-                
-                if(_libvlccoreHandle == IntPtr.Zero)
+                if (!string.IsNullOrEmpty(libvlcDirectoryPath))
                 {
-                    throw new VLCException($"Failed to load required native library {Constants.CoreLibraryName}.dll");
+                    throw new InvalidOperationException($"Using {nameof(libvlcDirectoryPath)} is not supported on the Linux platform. " +
+                        $"The recommended way is to have the libvlc librairies in /usr/lib. Use LD_LIBRARY_PATH if you need more customization");
                 }
-
-                _libvlcHandle = PreloadNativeLibrary(librariesFolder, $"{Constants.LibraryName}.dll");
-                
-                if(_libvlcHandle == IntPtr.Zero)
-                {
-                    throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dll");
-                }
-            }
-            else if (PlatformHelper.IsMac)
-            {
-                _libvlcHandle = PreloadNativeLibrary(appExecutionDirectory, $"{Constants.LibraryName}.dylib");
-                if (_libvlcHandle == IntPtr.Zero)
-                {
-                    throw new VLCException($"Failed to load required native library {Constants.LibraryName}.dylib");
-                }
-            }
-            else if (PlatformHelper.IsLinux)
-            {
                 // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
                 if (Native.XInitThreads() == 0)
                 {
@@ -116,23 +86,131 @@ namespace LibVLCSharp.Shared
                     Trace.WriteLine("XInitThreads failed");
 #endif
                 }
+                return;
             }
-        }
 
-        //TODO: Add dlopen for UWP, Linux
-        static IntPtr PreloadNativeLibrary(string nativeLibrariesPath, string libraryName)
-        {
-            Debug.WriteLine($"Loading {libraryName}");
-            var libraryPath = Path.Combine(nativeLibrariesPath, libraryName);
+            // full path to directory location of libvlc and libvlccore has been provided
+            if (!string.IsNullOrEmpty(libvlcDirectoryPath))
+            {
+                bool loadResult;
+                if(PlatformHelper.IsWindows)
+                {
+                    var libvlccorePath = LibVLCCorePath(libvlcDirectoryPath);
+                    loadResult = LoadNativeLibrary(libvlccorePath, out _libvlccoreHandle);
+                    if(!loadResult)
+                    {
+                        Log($"Failed to load required native libraries at {libvlccorePath}");
+                        return;
+                    }
+                }
+
+                var libvlcPath = LibVLCPath(libvlcDirectoryPath);
+                loadResult = LoadNativeLibrary(libvlcPath, out _libvlcHandle);
+                if(!loadResult)
+                    Log($"Failed to load required native libraries at {libvlcPath}");
+                return;
+            }
 
 #if !NETSTANDARD1_1
-            if (!File.Exists(libraryPath))
+            var paths = ComputeLibVLCSearchPaths();
+
+            foreach(var path in paths)
             {
-                Debug.WriteLine($"Cannot find {libraryPath}");
-                return IntPtr.Zero;
+                if (PlatformHelper.IsWindows)
+                {
+                    LoadNativeLibrary(path.libvlccore, out _libvlccoreHandle);
+                }
+                var loadResult = LoadNativeLibrary(path.libvlc, out _libvlcHandle);
+                if (loadResult) break;
+            }
+
+            if (!Loaded)
+            {
+                throw new VLCException($"Failed to load required native libraries. Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
             }
 #endif
-            return PlatformHelper.IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
+        }
+
+#if !NETSTANDARD1_1
+        static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
+        {
+            var paths = new List<(string, string)>();
+            string arch;
+
+            if(PlatformHelper.IsMac)
+            {
+                arch = ArchitectureNames.MacOS64;
+            }
+            else
+            {
+                arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
+            }            
+
+            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
+                Constants.LibrariesRepositoryFolderName, arch);
+
+            string libvlccorePath1 = string.Empty;
+            if (PlatformHelper.IsWindows)
+            {
+                libvlccorePath1 = LibVLCCorePath(libvlcDirPath1);
+            }
+            var libvlcPath1 = LibVLCPath(libvlcDirPath1);
+            paths.Add((libvlccorePath1, libvlcPath1));
+        
+            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), 
+                Constants.LibrariesRepositoryFolderName, arch);
+
+            string libvlccorePath2 = string.Empty;
+            if(PlatformHelper.IsWindows)
+            {
+                libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
+            }
+
+            var libvlcPath2 = LibVLCPath(libvlcDirPath2);
+            paths.Add((libvlccorePath2, libvlcPath2));
+            return paths;
+        }
+#endif
+
+        static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
+
+        static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
+
+        static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
+
+        static bool Loaded => _libvlcHandle != IntPtr.Zero;
+
+        static void Log(string message)
+        {
+#if !NETSTANDARD1_1
+            Trace.WriteLine(message);
+#else
+            Debug.WriteLine(message);
+#endif
+        }
+
+        static bool LoadNativeLibrary(string nativeLibraryPath, out IntPtr handle)
+        {
+            handle = IntPtr.Zero;
+            Log($"Loading {nativeLibraryPath}");
+
+#if !NETSTANDARD1_1
+            if (!File.Exists(nativeLibraryPath))
+            {
+                Log($"Cannot find {nativeLibraryPath}");
+                return false;
+            }
+#endif
+            if(PlatformHelper.IsMac)
+            {
+                handle = Native.dlopen(nativeLibraryPath);
+            }
+            else
+            {
+                handle = Native.LoadLibrary(nativeLibraryPath);
+            }
+
+            return handle != IntPtr.Zero;
         }
 #endif // NET || NETSTANDARD
     }
@@ -164,6 +242,8 @@ namespace LibVLCSharp.Shared
         internal const string libSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
         internal const string libX11 = "libX11";
+        internal const string WindowsLibraryExtension = ".dll";
+        internal const string MacLibraryExtension = ".dylib";
     }
 
     internal static class ArchitectureNames
