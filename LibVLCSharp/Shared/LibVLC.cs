@@ -28,6 +28,7 @@ namespace LibVLCSharp.Shared
         }
         LogCallback _logCallback;
         readonly object _logLock = new object();
+#if NET || NETSTANDARD
         /// <summary>
         /// The real log event handlers.
         /// </summary>
@@ -37,8 +38,8 @@ namespace LibVLCSharp.Shared
         /// A boolean to make sure that we are calling SetLog only once
         /// </summary>
         bool _logAttached;
-
         IntPtr _logFileHandle;
+#endif
         IntPtr _dialogCbsPtr;
 
         public override int GetHashCode()
