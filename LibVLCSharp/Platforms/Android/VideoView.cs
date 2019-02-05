@@ -84,8 +84,6 @@ namespace LibVLCSharp.Platforms.Android
             _awindow?.RemoveCallback(this);
             _awindow?.DetachViews();
 
-            _mediaPlayer?.SetAndroidContext(IntPtr.Zero);
-
             if (_layoutListener != null)
                 RemoveOnLayoutChangeListener(_layoutListener);
 
