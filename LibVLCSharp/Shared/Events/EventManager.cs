@@ -8,7 +8,7 @@ namespace LibVLCSharp.Shared
 {
     internal abstract class EventManager
     {
-        internal readonly struct Internal
+        internal readonly struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_attach")]
             internal static extern int LibVLCEventAttach(IntPtr eventManager, EventType eventType, EventCallback eventCallback,
@@ -33,7 +33,7 @@ namespace LibVLCSharp.Shared
         private void AttachNativeEvent(EventType eventType, EventCallback eventCallback)
         {
             _callbacks.Add(eventCallback);
-            if (Internal.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
+            if (Native.LibVLCEventAttach(NativeReference, eventType, eventCallback, IntPtr.Zero) != 0)
             {
                 _callbacks.Remove(eventCallback);
                 throw new VLCException($"Could not attach event {eventType}");
@@ -44,7 +44,7 @@ namespace LibVLCSharp.Shared
         {
             _callbacks.Remove(eventCallback);
 
-            Internal.LibVLCEventDetach(NativeReference, eventType, eventCallback, IntPtr.Zero);
+            Native.LibVLCEventDetach(NativeReference, eventType, eventCallback, IntPtr.Zero);
         }
 
         protected void Attach(EventType eventType, ref int registrationCount, Action managedSubscribe, Func<EventCallback> setCallback)
