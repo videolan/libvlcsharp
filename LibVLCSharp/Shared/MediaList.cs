@@ -32,12 +32,6 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_discoverer_media_list")]
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_library_media_list")]
-            internal static extern IntPtr LibVLCMediaLibraryMediaList(IntPtr libraryMediaList);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_set_media")]
             internal static extern void LibVLCMediaListSetMedia(IntPtr mediaList, IntPtr media);
