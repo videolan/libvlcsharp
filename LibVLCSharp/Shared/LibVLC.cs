@@ -57,22 +57,23 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_release")]
             internal static extern void LibVLCRelease(IntPtr libVLC);
 
+#if NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_add_intf")]
             internal static extern int LibVLCAddInterface(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name);
-
+#endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_exit_handler")]
             internal static extern void LibVLCSetExitHandler(IntPtr libVLC, IntPtr cb, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_user_agent")]
-            internal static extern void LibVLCSetUserAgent(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name, 
+            internal static extern void LibVLCSetUserAgent(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name,
                 [MarshalAs(UnmanagedType.LPStr)] string http);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_app_id")]
-            internal static extern void LibVLCSetAppId(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string id, 
+            internal static extern void LibVLCSetAppId(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string id,
                 [MarshalAs(UnmanagedType.LPStr)] string version, [MarshalAs(UnmanagedType.LPStr)] string icon);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -144,31 +145,6 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_set_android_context")]
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
-
-            /// <summary>
-            /// Compute the size required by vsprintf to print the parameters.
-            /// </summary>
-            /// <param name="format"></param>
-            /// <param name="ptr"></param>
-            /// <returns></returns>
-            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int _vscprintf(string format, IntPtr ptr);
-
-            /// <summary>
-            /// Format a string using printf style markers
-            /// </summary>
-            /// <remarks>
-            /// See https://stackoverflow.com/a/37629480/2663813
-            /// </remarks>
-            /// <param name="buffer">The output buffer (should be large enough, use _vscprintf)</param>
-            /// <param name="format">The message format</param>
-            /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
-            /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport(Constants.Msvcrt, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int vsprintf(
-                IntPtr buffer,
-                string format,
-                IntPtr args);
         }
 
         /// <summary>
@@ -239,13 +215,14 @@ namespace LibVLCSharp.Shared
             return obj1?.NativeReference != obj2?.NativeReference;
         }
 
+#if NET || NETSTANDARD
         /// <summary>
         /// Try to start a user interface for the libvlc instance.
         /// </summary>
         /// <param name="name">interface name, or empty string for default</param>
         /// <returns>True if successful, false otherwise</returns>
         public bool AddInterface(string name) => Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
-
+#endif
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
         /// <para>the VLC playlist and/or at least one interface are started with</para>
@@ -308,10 +285,10 @@ namespace LibVLCSharp.Shared
         {
             if (_logCallback != null)
                 Native.LibVLCLogUnset(NativeReference);
-
+#if NET || NETSTANDARD
             if (!CloseLogFile())
                 throw new VLCException("Could not close log file");
-
+#endif
             _logCallback = null;
         }
 
@@ -328,6 +305,16 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        public void SetLog(LogCallback cb)
+        {
+            if (cb == null) throw new ArgumentException(nameof(cb));
+
+            _logCallback = cb;
+
+            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
+        }
+
+#if NET || NETSTANDARD
         /// <summary>
         /// Native close log file handle
         /// </summary>
@@ -338,16 +325,7 @@ namespace LibVLCSharp.Shared
 
             return MarshalUtils.Close(_logFileHandle);
         }
-
-        public void SetLog(LogCallback cb)
-        {
-            if (cb == null) throw new ArgumentException(nameof(cb));
-
-            _logCallback = cb;
-
-            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
-        }
-
+        
         /// <summary>
         /// The event that is triggered when a log is emitted from libVLC.
         /// Listening to this event will discard the default logger in libvlc.
@@ -400,7 +378,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("Could not get FILE * for log_set_file");
             return filePtr;
         }
-
+#endif
         /// <summary>Returns a list of audio filters that are available.</summary>
         /// <returns>
         /// <para>a list of module descriptions. It should be freed with libvlc_module_description_list_release().</para>
@@ -561,6 +539,7 @@ namespace LibVLCSharp.Shared
             m => m.Build(),
             Native.LibVLCRendererDiscovererReleaseList);
 
+#if NET || NETSTANDARD
         /// <summary>
         /// Code taken from Vlc.DotNet
         /// </summary>
@@ -574,13 +553,13 @@ namespace LibVLCSharp.Shared
             if (_log == null) return;
 
             // Original source for va_list handling: https://stackoverflow.com/a/37629480/2663813
-            var byteLength = Native._vscprintf(format, args) + 1;
+            var byteLength = MarshalUtils.Vscprintf(format, args) + 1;
             var utf8Buffer = Marshal.AllocHGlobal(byteLength);
 
             string formattedDecodedMessage;
             try
             {
-                Native.vsprintf(utf8Buffer, format, args);
+                MarshalUtils.Vsprintf(utf8Buffer, format, args);
 
                 formattedDecodedMessage = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(utf8Buffer);
             }
@@ -598,7 +577,7 @@ namespace LibVLCSharp.Shared
             Task.Run(() => _log?.Invoke(NativeReference, new LogEventArgs(level, formattedDecodedMessage, module, file, line)));
 #endif
         }
-
+#endif
         /// <summary>
         /// Gets log message debug infos.
         ///

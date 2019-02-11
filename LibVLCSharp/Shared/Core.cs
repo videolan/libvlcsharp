@@ -12,6 +12,7 @@ namespace LibVLCSharp.Shared
     {
         struct Native
         {
+#if NET || NETSTANDARD
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
 
@@ -20,10 +21,6 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.libSystem)]
             internal static extern IntPtr dlopen(string libraryPath, int mode = 1);
-#if ANDROID
-            [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
-            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
-#endif
 
             /// <summary>
             /// Initializes the X threading system
@@ -32,6 +29,11 @@ namespace LibVLCSharp.Shared
             /// <returns>non-zero on success, zero on failure</returns>
             [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int XInitThreads();
+
+#elif ANDROID
+            [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
+            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
+#endif
         }
 
         static IntPtr _libvlccoreHandle;
@@ -47,7 +49,7 @@ namespace LibVLCSharp.Shared
         {
 #if ANDROID
             InitializeAndroid();
-#elif !IOS
+#elif NET || NETSTANDARD
             InitializeDesktop(appExecutionDirectory);
 #endif
         }
@@ -60,7 +62,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
-#endif
+#elif NET || NETSTANDARD
         //TODO: Add Unload library func using handles
         static void InitializeDesktop(string appExecutionDirectory = null)
         {
@@ -132,6 +134,7 @@ namespace LibVLCSharp.Shared
 #endif
             return PlatformHelper.IsMac ? Native.dlopen(libraryPath) : Native.LoadLibrary(libraryPath);
         }
+#endif // NET || NETSTANDARD
     }
 
     internal static class Constants
