@@ -69,9 +69,6 @@ Features:
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
     <Compile Include="Platforms\tvOS\**\*.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Platforms\tvOS\" />
-  </ItemGroup>
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ItemGroup>
       <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
