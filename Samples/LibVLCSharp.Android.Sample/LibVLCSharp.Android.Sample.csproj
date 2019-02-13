@@ -70,7 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
@@ -94,15 +93,9 @@
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
+    <PackageReference Include="VideoLAN.LibVLC.Android" Version="3.0.0" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\VideoLAN.LibVLC.Android.3.0.0\build\VideoLAN.LibVLC.Android.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\VideoLAN.LibVLC.Android.3.0.0\build\VideoLAN.LibVLC.Android.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\VideoLAN.LibVLC.Android.3.0.0\build\VideoLAN.LibVLC.Android.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.Android.3.0.0\build\VideoLAN.LibVLC.Android.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 		Other similar extension points exist, see Microsoft.Common.targets.
 		<Target Name="BeforeBuild">
