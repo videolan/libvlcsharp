@@ -14,3 +14,5 @@ For ubuntu:
 
 For ubuntu:
 > `apt-get install gtk-sharp2`
+
+Should you want to load the libvlc libraries from another location than `/usr/lib`, you'd need to set `LD_LIBRARY_PATH`.
