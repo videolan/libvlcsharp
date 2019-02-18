@@ -8,10 +8,14 @@ namespace LibVLCSharp.Tests
 {
     public abstract class BaseSetup
     {
+        protected LibVLC _libVLC;
+
         [SetUp]
         public void SetUp()
         {
             Core.Initialize();
+
+            _libVLC = new LibVLC("--no-audio", "--no-video");
         }
 
         protected string RealStreamMediaPath => "http://streams.videolan.org/streams/mp3/Owner-MPEG2.5.mp3";

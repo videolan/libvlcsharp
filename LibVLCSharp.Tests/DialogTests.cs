@@ -16,10 +16,9 @@ namespace LibVLCSharp.Tests
         [Ignore("requires network calls that may fail when run from CI")]
         public async Task PostLogin()
         {
-            var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
 
-            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
+            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) =>
                 {
                     // show UI dialog
@@ -32,9 +31,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            var mp = new MediaPlayer(libVLC)
+            var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
             };
 
             mp.Play();
@@ -48,10 +47,9 @@ namespace LibVLCSharp.Tests
         [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldThrowIfPostLoginsTwice()
         {
-            var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
 
-            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
+            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) =>
                 {
                     dialog.PostLogin(Username, Password, false);
@@ -63,9 +61,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            var mp = new MediaPlayer(libVLC)
+            var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
             };
 
             mp.Play();
@@ -79,10 +77,9 @@ namespace LibVLCSharp.Tests
         [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldNotThrowAndReturnFalseIfDimissingTwice()
         {
-            var libVLC = new LibVLC();
             var tcs = new TaskCompletionSource<bool>();
 
-            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
+            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) =>
                 {
                     var result = dialog.Dismiss();
@@ -96,9 +93,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            var mp = new MediaPlayer(libVLC)
+            var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
             };
 
             mp.Play();
@@ -110,19 +107,17 @@ namespace LibVLCSharp.Tests
         [Test]
         public void ShouldUnsetDialogHandlersWhenInstanceDisposed()
         {
-            var libVLC = new LibVLC();
-
-            libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
+            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, username, store, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            Assert.True(libVLC.DialogHandlersSet);
+            Assert.True(_libVLC.DialogHandlersSet);
 
-            libVLC.Dispose();
+            _libVLC.Dispose();
 
-            Assert.False(libVLC.DialogHandlersSet);
+            Assert.False(_libVLC.DialogHandlersSet);
         }
     }
 }

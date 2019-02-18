@@ -19,20 +19,18 @@ namespace LibVLCSharp.Tests
         {
             Core.Initialize();
 
-            var libVLC = new LibVLC();
-
-            var mp = new MediaPlayer(libVLC)
+            var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+                Media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
                     Media.FromType.FromLocation)
             };
 
             Assert.True(mp.Play());
 
-            var rendererList = libVLC.RendererList;
+            var rendererList = _libVLC.RendererList;
             Assert.IsNotEmpty(rendererList);
 
-            var rendererDiscoverer = new RendererDiscoverer(libVLC, libVLC.RendererList.LastOrDefault().Name);
+            var rendererDiscoverer = new RendererDiscoverer(_libVLC, _libVLC.RendererList.LastOrDefault().Name);
             var rendererItems = new List<RendererItem>();
             var tcs = new TaskCompletionSource<bool>();
 
@@ -63,9 +61,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeRendererDiscoverer()
         {
-            var libVLC = new LibVLC();
-
-            var rendererDiscoverer = new RendererDiscoverer(libVLC, libVLC.RendererList.LastOrDefault().Name);
+            var rendererDiscoverer = new RendererDiscoverer(_libVLC, _libVLC.RendererList.LastOrDefault().Name);
             rendererDiscoverer.Start();
             rendererDiscoverer.Dispose();
             Assert.AreEqual(IntPtr.Zero, rendererDiscoverer.NativeReference);

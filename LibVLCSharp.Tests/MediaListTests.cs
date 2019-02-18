@@ -11,9 +11,8 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AddAndRemoveMediaFromMediaList()
         {
-            var libVLC = new LibVLC();
-            var mediaList = new MediaList(libVLC);
-            var media = new Media(libVLC, Path.GetTempFileName());
+            var mediaList = new MediaList(_libVLC);
+            var media = new Media(_libVLC, Path.GetTempFileName());
             var itemAdded = false;
             var itemDeleted = false;
             mediaList.ItemAdded += (sender, args) => itemAdded = true;
@@ -33,7 +32,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AcquireLockTwiceThrows()
         {
-            var mediaList = new MediaList(new LibVLC());
+            var mediaList = new MediaList(_libVLC);
             mediaList.Lock();
             Assert.Throws<InvalidOperationException>(() => mediaList.Lock(), "already locked");
         }
@@ -41,7 +40,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void ReleaseLockTwiceThrows()
         {
-            var mediaList = new MediaList(new LibVLC());
+            var mediaList = new MediaList(_libVLC);
             mediaList.Lock();
             mediaList.Unlock();
             Assert.Throws<InvalidOperationException>(() => mediaList.Unlock(), "not locked");
@@ -50,7 +49,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeMediaList()
         {
-            var mediaList = new MediaList(new LibVLC());
+            var mediaList = new MediaList(_libVLC);
             mediaList.Dispose();
             Assert.AreEqual(IntPtr.Zero, mediaList.NativeReference);
         }

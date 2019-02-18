@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -15,23 +14,20 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeInstanceNativeRelease()
         {
-            var libVLC = new LibVLC();
-            libVLC.Dispose();
-            Assert.AreEqual(IntPtr.Zero, libVLC.NativeReference);
+            _libVLC.Dispose();
+            Assert.AreEqual(IntPtr.Zero, _libVLC.NativeReference);
         }
 
         [Test]
         public void AddInterface()
         {
-            var libVLC = new LibVLC();
-            Assert.True(libVLC.AddInterface(string.Empty));
+            Assert.True(_libVLC.AddInterface(string.Empty));
         }
 
         [Test]
         public void AudioFilters()
         {
-            var libVLC = new LibVLC();
-            var audioFilters = libVLC.AudioFilters;
+            var audioFilters = _libVLC.AudioFilters;
             foreach (var filter in audioFilters)
             {
                 Debug.WriteLine(filter.Help);
@@ -44,8 +40,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void VideoFilters()
         {
-            var libVLC = new LibVLC();
-            var videoFilters = libVLC.VideoFilters;
+            var videoFilters = _libVLC.VideoFilters;
             foreach (var filter in videoFilters)
             {
                 Debug.WriteLine(filter.LongName);
@@ -57,8 +52,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AudioOutputs()
         {
-            var libVLC = new LibVLC();
-            var audioOuputs = libVLC.AudioOutputs;
+            var audioOuputs = _libVLC.AudioOutputs;
             foreach (var audioOutput in audioOuputs)
             {
                 Debug.WriteLine(audioOutput.Name);
@@ -69,10 +63,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AudioOutputDevices()
         {
-            var libVLC = new LibVLC();
-            var outputs = libVLC.AudioOutputs;
+            var outputs = _libVLC.AudioOutputs;
             var name = outputs.First(output => output.Name.Equals("mmdevice")).Name;
-            var audioOutputDevices = libVLC.AudioOutputDevices(name);
+            var audioOutputDevices = _libVLC.AudioOutputDevices(name);
 
             foreach (var audioOutputDevice in audioOutputDevices)
             {
@@ -84,22 +77,20 @@ namespace LibVLCSharp.Tests
         [Test]
         public void EqualityTests()
         {
-            Assert.AreNotSame(new LibVLC(), new LibVLC());
+            Assert.AreNotSame(new LibVLC("--no-audio"), new LibVLC("--no-audio"));
         }
 
         [Test]
         public void Categories()
         {
-            var libVLC = new LibVLC();
-            var md1 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Devices);
-            var md2 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
-            var md3 = libVLC.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
+            var md1 = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Devices);
+            var md2 = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
+            var md3 = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Localdirs);
         }
 
         [Test]
         public void SetExitHandler()
         {
-            var libVLC = new LibVLC();
             var called = false;
 
             var exitCb = new ExitCallback(() =>
@@ -107,9 +98,9 @@ namespace LibVLCSharp.Tests
                 called = true;
             });
 
-            libVLC.SetExitHandler(exitCb, IntPtr.Zero);
+            _libVLC.SetExitHandler(exitCb, IntPtr.Zero);
 
-            libVLC.Dispose();
+            _libVLC.Dispose();
 
             Assert.IsTrue(called);
         }
@@ -117,16 +108,15 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task SetLogCallback()
         {
-            var libVLC = new LibVLC();
             var logCallbackCalled = false;
 
             void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
 
-            libVLC.Log += LogCallback;
+            _libVLC.Log += LogCallback;
 
             await Task.Delay(1000);
 
-            libVLC.Log -= LogCallback;
+            _libVLC.Log -= LogCallback;
 
             Assert.IsTrue(logCallbackCalled);
         }
@@ -134,10 +124,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void SetLogFile()
         {
-            var libVLC = new LibVLC();
             var path = Path.GetTempFileName();
-            libVLC.SetLogFile(path);
-            libVLC.UnsetLog();
+            _libVLC.SetLogFile(path);
+            _libVLC.UnsetLog();
             var logs = File.ReadAllText(path);
             Assert.True(logs.StartsWith("VLC media player"));
         }
@@ -145,21 +134,19 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeLibVLC()
         {
-            var libvlc = new LibVLC();
-
-            libvlc.SetLog((data, logLevel, logContext, format, args) => { });
-            libvlc.SetDialogHandlers((title, text) => Task.CompletedTask,
+            _libVLC.SetLog((data, logLevel, logContext, format, args) => { });
+            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, firstActionText, secondActonText, token) => Task.CompletedTask,
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            Assert.IsTrue(libvlc.DialogHandlersSet);
+            Assert.IsTrue(_libVLC.DialogHandlersSet);
 
-            libvlc.Dispose();
+            _libVLC.Dispose();
 
-            Assert.AreEqual(IntPtr.Zero, libvlc.NativeReference);
-            Assert.IsFalse(libvlc.DialogHandlersSet);
+            Assert.AreEqual(IntPtr.Zero, _libVLC.NativeReference);
+            Assert.IsFalse(_libVLC.DialogHandlersSet);
         }
     }
 }

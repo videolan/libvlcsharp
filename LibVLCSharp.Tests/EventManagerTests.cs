@@ -12,7 +12,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void MetaChangedEventSubscribe()
         {
-            var media = new Media(new LibVLC(), Path.GetTempFileName());
+            var media = new Media(_libVLC, Path.GetTempFileName());
             var eventHandlerCalled = false;
             const Media.MetadataType description = Media.MetadataType.Description;
             media.MetaChanged += (sender, args) =>
@@ -26,7 +26,7 @@ namespace LibVLCSharp.Tests
         
         public void DurationChanged()
         {
-            var media = new Media(new LibVLC(), RealMp3Path);
+            var media = new Media(_libVLC, RealMp3Path);
             var called = false;
             long duration = 0;
 
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void FreedMedia()
         {
-            var media = new Media(new LibVLC(), RealMp3Path);
+            var media = new Media(_libVLC, RealMp3Path);
             var eventCalled = false;
             media.MediaFreed += (sender, args) =>
             {
@@ -60,7 +60,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task OpeningStateChanged()
         {
-            var media = new Media(new LibVLC(), RealMp3Path);
+            var media = new Media(_libVLC, RealMp3Path);
             var tcs = new TaskCompletionSource<bool>();
             var openingCalled = false;
             media.StateChanged += (sender, args) =>
