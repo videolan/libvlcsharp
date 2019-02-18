@@ -156,8 +156,10 @@ namespace LibVLCSharp.Shared
             }
             var libvlcPath1 = LibVLCPath(libvlcDirPath1);
             paths.Add((libvlccorePath1, libvlcPath1));
-        
-            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), 
+
+            var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
+            
+            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
             string libvlccorePath2 = string.Empty;
