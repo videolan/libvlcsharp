@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace LibVLCSharp.Shared
 {
@@ -114,133 +113,97 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease)
         {
         }
-        public MediaList(IntPtr mediaListPtr) : base(() => mediaListPtr, Native.LibVLCMediaListRelease)
+
+        internal MediaList(IntPtr mediaListPtr) : base(() => mediaListPtr, Native.LibVLCMediaListRelease)
         {
         }
 
         /// <summary>
         /// Associate media instance with this media list instance. If another
-        /// media instance was present it will be released. The
-        /// MediaList lock should NOT be held upon entering this function.
+        /// media instance was present it will be released.
         /// </summary>
         /// <param name="media">media instance to add</param>
-        public void SetMedia(Media media)
-        {
-            Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
-        } 
+        public void SetMedia(Media media) => Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
 
         /// <summary>
-        /// Add media instance to media list The MediaList lock should be held upon entering this function.
+        /// Add media instance to media list
         /// </summary>
         /// <param name="media">a media instance</param>
-        /// <returns></returns>
-        public bool AddMedia(Media media)
+        /// <returns>true on success, false if the media list is read-only</returns>
+        public bool AddMedia(Media media) => NativeSync(() => Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
+
+        T NativeSync<T>(Func<T> operation)
         {
-            lock (_syncLock)
+            try
             {
-                if(!_nativeLock)
-                    throw new InvalidOperationException("not locked");
-                return Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0;
+                lock (_syncLock)
+                {
+                    if (!_nativeLock)
+                        Lock();
+                    return operation();
+                }
+            }
+            finally
+            {
+                Unlock();
             }
         }
 
         /// <summary>
-        /// Insert media instance in media list on a position The
-        /// MediaList lock should be held upon entering this function.
+        /// Insert media instance in media list on a position.
         /// </summary>
         /// <param name="media">a media instance</param>
-        /// <param name="position">position in array where to insert</param>
-        /// <returns></returns>
-        public bool InsertMedia(Media media, int position)
-        {
-            lock (_syncLock)
+        /// <param name="position">position in the array where to insert</param>
+        /// <returns>true on success, false if the media list is read-only</returns>
+        public bool InsertMedia(Media media, int position) => 
+            NativeSync(() =>
             {
-                if(!_nativeLock)
-                    throw new InvalidOperationException("not locked");
+                if (media == null) throw new ArgumentNullException(nameof(media));
                 return Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
-            }
-        }
+            });
 
         /// <summary>
-        /// Remove media instance from media list on a position The
-        /// MediaList lock should be held upon entering this function.
+        /// Remove media instance from media list on a position.
         /// </summary>
-        /// <param name="positionIndex">position in array where to insert</param>
-        /// <returns></returns>
-        public bool RemoveIndex(int positionIndex)
-        {
-            lock (_syncLock)
-            {
-                if (!_nativeLock)
-                    throw new InvalidOperationException("not locked");
-                return Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0;
-            }
-        }
+        /// <param name="positionIndex">position in the array where to remove the iteam</param>
+        /// <returns>true on success, false if the media list is read-only or the item was not found</returns>
+        public bool RemoveIndex(int positionIndex) => NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
 
         /// <summary>
-        /// Get count on media list items The MediaList lock should be
-        /// held upon entering this function.
+        /// Get count on media list items.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                lock (_syncLock)
-                {
-                    if(!_nativeLock)
-                        throw new InvalidOperationException("not locked");
-                    return Native.LibVLCMediaListCount(NativeReference);
-                }
-            }
-        } 
+        public int Count => NativeSync(() => Native.LibVLCMediaListCount(NativeReference));
 
         /// <summary>
-        /// List media instance in media list at a position The
-        /// MediaList lock should be held upon entering this function.
+        /// Gets the element at the specified index
         /// </summary>
         /// <param name="position">position in array where to insert</param>
-        /// <returns>media instance at position, or null if not found.</returns>
-        public Media this[int position]
+        /// <returns>media instance at position, or null if not found.
+        /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
+        public Media this[int position] => NativeSync(() => 
         {
-            get
-            {
-                lock (_syncLock)
-                {
-                    if(!_nativeLock)
-                        throw new InvalidOperationException("not locked");
-                    var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
-                    return ptr == IntPtr.Zero ? null : new Media(ptr);
-                }
-            }
-        }
+            var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
+            return ptr == IntPtr.Zero ? null : new Media(ptr);
+        });
 
         /// <summary>
         /// Find index position of List media instance in media list. Warning: the
-        /// function will return the first matched position. The
-        /// MediaList lock should be held upon entering this function.
+        /// function will return the first matched position.
         /// </summary>
         /// <param name="media">media instance</param>
         /// <returns>position of media instance or -1 if media not found</returns>
-        public int IndexOf(Media media)
-        {
-            lock (_syncLock)
-            {
-                if (!_nativeLock)
-                    throw new InvalidOperationException("not locked");
-                return Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference);
-            }
-        } 
+        public int IndexOf(Media media) => NativeSync(() => Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference));
 
         /// <summary>
-        /// This indicates if this media list is read-only from a user point of view
-        /// true if readonly, false otherwise
+        /// This indicates if this media list is read-only from a user point of view.
+        /// True if readonly, false otherwise
         /// </summary>
         public bool IsReadonly => Native.LibVLCMediaListIsReadonly(NativeReference) == 1;
 
         /// <summary>
         /// Get lock on media list items
         /// </summary>
-        public void Lock()
+        internal void Lock()
         {
             lock (_syncLock)
             {
@@ -255,7 +218,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Release lock on media list items The MediaList lock should be held upon entering this function.
         /// </summary>
-        public void Unlock()
+        internal void Unlock()
         {
             lock (_syncLock)
             {
