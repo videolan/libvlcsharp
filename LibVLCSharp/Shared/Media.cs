@@ -420,6 +420,19 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Parse() => Native.LibVLCMediaParse(NativeReference);
 
+        /// <summary>
+        /// Parse the media asynchronously with options. 
+        /// To track when this is over you can listen to the ParsedChanged event. However if this functions returns an error, you will not receive any events.
+        /// It uses a flag to specify parse options (see <see cref="MediaParseOptions"/>). All these flags can be combined. By default, media is parsed if it's a local file.
+        /// <para/> Note: Parsing can be aborted with ParseStop().
+        /// </summary>
+        /// <param name="options">parse options</param>
+        /// <param name="timeout">maximum time allowed to preparse the media. 
+        /// <para/>If -1, the default "preparse-timeout" option will be used as a timeout. 
+        /// <para/>If 0, it will wait indefinitely. If > 0, the timeout will be used (in milliseconds). 
+        /// </param>
+        public void Parse(MediaParseOptions options, int timeout = -1) => Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
+
         /// <summary>Return true is the media descriptor object is parsed</summary>
         /// <returns>true if media object has been parsed otherwise it returns false</returns>
         public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference) != 0;
