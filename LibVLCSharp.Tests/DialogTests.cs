@@ -12,6 +12,8 @@ namespace LibVLCSharp.Tests
         const string Password = "password";
 
         [Test]
+        [Retry(3)]
+        [Ignore("requires network calls that may fail when run from CI")]
         public async Task PostLogin()
         {
             var libVLC = new LibVLC();
@@ -23,7 +25,7 @@ namespace LibVLCSharp.Tests
                     // show UI dialog
                     // On "OK" call PostLogin
                     dialog.PostLogin(Username, Password, false);
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                     return Task.CompletedTask;
                 },
                 (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,
@@ -42,6 +44,8 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        [Retry(3)]
+        [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldThrowIfPostLoginsTwice()
         {
             var libVLC = new LibVLC();
@@ -52,7 +56,7 @@ namespace LibVLCSharp.Tests
                 {
                     dialog.PostLogin(Username, Password, false);
                     Assert.Throws<VLCException>(() => dialog.PostLogin(Username, Password, false), "Calling method on dismissed Dialog instance");
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                     return Task.CompletedTask;
                 },
                 (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,
@@ -70,8 +74,9 @@ namespace LibVLCSharp.Tests
             Assert.True(tcs.Task.Result);
         }
 
-
         [Test]
+        [Retry(3)]
+        [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldNotThrowAndReturnFalseIfDimissingTwice()
         {
             var libVLC = new LibVLC();
@@ -84,7 +89,7 @@ namespace LibVLCSharp.Tests
                     Assert.IsTrue(result);
                     result = dialog.Dismiss();
                     Assert.IsFalse(result);
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                     return Task.CompletedTask;
                 },
                 (dialog, title, text, type, cancelText, actionText, secondActionText, token) => Task.CompletedTask,

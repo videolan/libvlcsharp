@@ -27,18 +27,7 @@ namespace LibVLCSharp.Tests
             var t = mp.OutputDeviceEnum;
             Debug.WriteLine(t);
         }
-
-        string RealMediaPath
-        {
-            get
-            {
-                var dir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-           //     var binDir = Path.Combine(dir, "..\\..\\..\\");
-                var files = Directory.GetFiles(dir);
-                return files.First();
-            }
-        }
-
+        
         [Test]
         public async Task TrackDescription()
         {

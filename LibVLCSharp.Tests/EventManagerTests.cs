@@ -58,7 +58,7 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public async Task StateChanged()
+        public async Task OpeningStateChanged()
         {
             var media = new Media(new LibVLC(), RealMp3Path);
             var tcs = new TaskCompletionSource<bool>();
@@ -68,10 +68,9 @@ namespace LibVLCSharp.Tests
                 if (media.State == VLCState.Opening)
                 {
                     openingCalled = true;
+                    tcs.SetResult(true);
                     return;
                 }
-                Assert.AreEqual(VLCState.Playing, media.State);
-                tcs.SetResult(true);
             };
 
             var mp = new MediaPlayer(media);
