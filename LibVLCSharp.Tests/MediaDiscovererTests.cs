@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
 
@@ -20,13 +22,18 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void DisposeMediaDiscoverer()
+        public async Task DisposeMediaDiscoverer()
         {
             var mds = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(_libVLC, mds.First().Name);
             Assert.True(md.Start());
             Assert.True(md.IsRunning);
             Assert.NotNull(md.MediaList);
+            await Task.Delay(1000);
+            foreach(var media in md.MediaList)
+            {
+                Debug.WriteLine(media.Mrl);
+            }
             md.Dispose();
             Assert.IsNull(md.MediaList);
             Assert.False(md.IsRunning);

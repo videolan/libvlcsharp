@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
-    public class MediaList : Internal
+    public class MediaList : Internal, IEnumerable
     {
         MediaListEventManager _eventManager;
         readonly object _syncLock = new object();
@@ -145,7 +147,11 @@ namespace LibVLCSharp.Shared
             }
             finally
             {
-                Unlock();
+                lock (_syncLock)
+                {
+                    if (_nativeLock)
+                        Unlock();
+                }       
             }
         }
 
@@ -285,6 +291,41 @@ namespace LibVLCSharp.Shared
                 return;
 
             base.Dispose(disposing);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public MediaListEnumerator GetEnumerator() => new MediaListEnumerator(this);
+
+        public class MediaListEnumerator : IEnumerator<Media>
+        {
+            int position = -1;
+            MediaList _mediaList;
+
+            internal MediaListEnumerator(MediaList mediaList)
+            {
+                _mediaList = mediaList;
+            }
+
+            public bool MoveNext()
+            {
+                position++;
+                return position < _mediaList.Count;
+            }
+
+            void IEnumerator.Reset()
+            {
+                position = -1;
+            }
+
+            public void Dispose()
+            {
+                position = -1;
+                _mediaList = default;
+            }
+
+            object IEnumerator.Current => Current;
+            public Media Current => _mediaList[position];
         }
     }
 }

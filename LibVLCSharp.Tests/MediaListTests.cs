@@ -17,7 +17,6 @@ namespace LibVLCSharp.Tests
             var itemDeleted = false;
             mediaList.ItemAdded += (sender, args) => itemAdded = true;
             mediaList.ItemDeleted += (sender, args) => itemDeleted = true;
-            mediaList.Lock();
             mediaList.AddMedia(media);
             Assert.AreEqual(media, mediaList[0]);
             Assert.AreEqual(1, mediaList.Count);
@@ -26,24 +25,6 @@ namespace LibVLCSharp.Tests
             mediaList.RemoveIndex(0);
             Assert.Zero(mediaList.Count);
             Assert.True(itemDeleted);
-            mediaList.Unlock();
-        }
-
-        [Test]
-        public void AcquireLockTwiceThrows()
-        {
-            var mediaList = new MediaList(_libVLC);
-            mediaList.Lock();
-            Assert.Throws<InvalidOperationException>(() => mediaList.Lock(), "already locked");
-        }
-
-        [Test]
-        public void ReleaseLockTwiceThrows()
-        {
-            var mediaList = new MediaList(_libVLC);
-            mediaList.Lock();
-            mediaList.Unlock();
-            Assert.Throws<InvalidOperationException>(() => mediaList.Unlock(), "not locked");
         }
 
         [Test]
