@@ -23,8 +23,9 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Contribute](#contribute)
 - [Communication](#communication)
   - [Forum](#forum)
-  - [Issues](#issues)
+  - [GitLab Issues](#issues)
   - [IRC](#irc)
+  - [StackOverflow](#stackoverflow)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 
@@ -194,6 +195,10 @@ You will always find someone from the VLC team on IRC, __#videolan__ channel on 
 If you don't have an IRC client, you can always use the [freenode webchat](https://webchat.freenode.net/).
 
 We are also on Gitter [![Join the chat at https://gitter.im/libvlcsharp/Lobby](https://badges.gitter.im/libvlcsharp/Lobby.svg)](https://gitter.im/libvlcsharp/Lobby)
+
+### StackOverflow
+
+We regularly monitor the `libvlcsharp` tag on [![stackoverflow](https://img.shields.io/stackexchange/stackoverflow/t/libvlcsharp.svg?label=stackoverflow&style=flat)](https://stackoverflow.com/questions/tagged/libvlcsharp)
 
 ## Code of Conduct
 
