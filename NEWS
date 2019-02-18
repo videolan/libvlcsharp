@@ -1,3 +1,14 @@
+LibVLCSharp version 0.4.2
+=========================
+* Android: remove unnecessary native call https://github.com/videolan/libvlcsharp/commit/338d11d1c3619efe7232a8526a12ba195006332b
+* tvOS: Fix device builds
+* Add new assets thanks to Jeremy
+* Core.Initialize refactoring https://code.videolan.org/videolan/LibVLCSharp/issues/98
+- fixes netcore support
+- add docs
+- allow loading libvlc from custom path
+- document Linux custom path loading process
+
 LibVLCSharp version 0.4.1
 =========================
 * Fix viewpoint interop for 360 videos https://code.videolan.org/videolan/LibVLCSharp/issues/101
