@@ -71,6 +71,7 @@ Features:
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <PackageReference Include="System.ValueTuple" Version="4.5.0"/>
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ItemGroup>
