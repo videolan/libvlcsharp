@@ -414,69 +414,42 @@ namespace LibVLCSharp.Shared
         /// <para/>If 0, it will wait indefinitely. If > 0, the timeout will be used (in milliseconds). 
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
-        public async Task<bool> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
+            var tcs = new TaskCompletionSource<MediaParsedStatus>();
+            var cancellationTokenRegistration = cancellationToken.Register(() =>
+            {
+                ParsedChanged -= OnParsedChanged;
+                Native.LibVLCMediaParseStop(NativeReference);
+                tcs?.TrySetCanceled();
+            });
+
+            void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
+            {
+                tcs?.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);             
+            }
+
             try
             {
-                if (cancellationToken.IsCancellationRequested)
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                _tcs = new TaskCompletionSource<bool>();
-                var timeoutToken = new CancellationTokenSource(timeout);
+                cancellationToken.ThrowIfCancellationRequested();
 
                 ParsedChanged += OnParsedChanged;
-
-                cancellationToken.Register(() =>
-                {
-                    ParsedChanged -= OnParsedChanged;
-                    Native.LibVLCMediaParseStop(NativeReference);
-                    _tcs?.TrySetCanceled();
-                });
-
-                timeoutToken.Token.Register(() =>
-                {
-                    ParsedChanged -= OnParsedChanged;
-                    Native.LibVLCMediaParseStop(NativeReference);
-                    _tcs?.TrySetCanceled();
-                });
 
                 var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
                 if (result == -1)
                 {
-                    timeoutToken.Cancel();
-                    timeoutToken.Dispose();
-                    _tcs.TrySetResult(false);
-                    return false;
+                   tcs.TrySetResult(ParsedStatus);
                 }
 
-                return await _tcs.Task;
+                return await tcs.Task.ConfigureAwait(false);
             }
-            catch (OperationCanceledException)
-            {
-                _tcs?.TrySetCanceled();
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _tcs?.TrySetException(ex);
-                return false;
-            }
+            
             finally
             {
+                cancellationTokenRegistration.Dispose();
                 ParsedChanged -= OnParsedChanged;
             }
-        }
-
-        TaskCompletionSource<bool> _tcs;
-
-        void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
-        {
-            if (ParsedStatus == MediaParsedStatus.Done)
-                _tcs?.TrySetResult(true);
-            else if (ParsedStatus == MediaParsedStatus.Failed)
-                _tcs?.TrySetException(new VLCException($"parsing of {this} failed"));
-            else _tcs?.TrySetResult(false);
-        }
+        }        
 
         /// <summary>Return true is the media descriptor object is parsed</summary>
         /// <returns>true if media object has been parsed otherwise it returns false</returns>
