@@ -58,7 +58,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Windows (WPF, WinForms, GTK)
 - Linux (GTK)
 - Xamarin.Forms
-- .NET Standard 1.1
+- .NET Standard 1.1 and 2.0
 - .NET Core (including ASP.NET Core)
 
 ## Installation
