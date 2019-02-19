@@ -170,6 +170,11 @@ namespace LibVLCSharp.Shared
 
             var libvlcPath2 = LibVLCPath(libvlcDirPath2);
             paths.Add((libvlccorePath2, libvlcPath2));
+
+            var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location));
+
+            paths.Add((string.Empty, libvlcPath3));
+
             return paths;
         }
 #endif
