@@ -414,6 +414,7 @@ namespace LibVLCSharp.Shared
         /// <para/>If 0, it will wait indefinitely. If > 0, the timeout will be used (in milliseconds). 
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
+        /// <returns>the parse status of the media</returns>
         public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             var tcs = new TaskCompletionSource<MediaParsedStatus>();
