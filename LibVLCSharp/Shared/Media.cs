@@ -417,7 +417,7 @@ namespace LibVLCSharp.Shared
         /// <returns>the parse status of the media</returns>
         public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
-            var tcs = new TaskCompletionSource<MediaParsedStatus>();
+            TaskCompletionSource<MediaParsedStatus> tcs = null;
             var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
                 ParsedChanged -= OnParsedChanged;
@@ -425,26 +425,25 @@ namespace LibVLCSharp.Shared
                 tcs?.TrySetCanceled();
             });
 
-            void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
-            {
-                tcs?.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);             
-            }
+            void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs) 
+                => tcs?.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
 
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                tcs = new TaskCompletionSource<MediaParsedStatus>();
+                        
                 ParsedChanged += OnParsedChanged;
 
                 var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
                 if (result == -1)
                 {
-                   tcs.TrySetResult(ParsedStatus);
+                    tcs.TrySetResult(ParsedStatus);
                 }
 
                 return await tcs.Task.ConfigureAwait(false);
             }
-            
             finally
             {
                 cancellationTokenRegistration.Dispose();
