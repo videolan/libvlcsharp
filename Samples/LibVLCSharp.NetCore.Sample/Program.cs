@@ -11,7 +11,7 @@ namespace LibVLCSharp.NetCore.Sample
 
             using(var libVLC = new LibVLC())
             {
-                var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation);
+                var media = new Media(libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
                 using(var mp = new MediaPlayer(media))
                 {
                     media.Dispose();

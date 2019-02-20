@@ -25,7 +25,7 @@ namespace LibVLCSharp.WinForms.Sample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _mp.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            _mp.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
         }
     }
 }

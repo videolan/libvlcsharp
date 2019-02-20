@@ -33,7 +33,7 @@ namespace LibVLCSharp.Forms.Sample
             {
                 Media = new Media(_libVLC,
                 "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", 
-                Media.FromType.FromLocation)
+                FromType.FromLocation)
             };
         }
     }

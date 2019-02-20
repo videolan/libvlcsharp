@@ -45,7 +45,7 @@ namespace LibVLCSharp.WPF.Sample
             if (!VideoView.MediaPlayer.IsPlaying)
             {
                 VideoView.MediaPlayer.Play(new Media(_libVLC,
-                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
             }
         }
     }
