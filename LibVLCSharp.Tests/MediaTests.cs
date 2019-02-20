@@ -92,10 +92,10 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void GetTracks()
+        public async Task GetTracks()
         {
             var media = new Media(_libVLC, RealMp3Path);
-            media.Parse();
+            await media.Parse();
             Assert.AreEqual(media.Tracks.Single().Data.Audio.Channels, 2);
             Assert.AreEqual(media.Tracks.Single().Data.Audio.Rate, 44100);
         }
@@ -108,7 +108,7 @@ namespace LibVLCSharp.Tests
             {
                 Assert.False(media.IsParsed);
 
-                media.Parse();
+                await media.Parse();
                 await Task.Delay(5000);
                 Assert.True(media.IsParsed);
                 Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);

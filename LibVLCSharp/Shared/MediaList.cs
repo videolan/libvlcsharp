@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
-    public class MediaList : Internal, IEnumerable
+    public class MediaList : Internal, IEnumerable<Media>
     {
         MediaListEventManager _eventManager;
         readonly object _syncLock = new object();
@@ -293,9 +293,9 @@ namespace LibVLCSharp.Shared
             base.Dispose(disposing);
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<Media> GetEnumerator() => new MediaListEnumerator(this);
 
-        public MediaListEnumerator GetEnumerator() => new MediaListEnumerator(this);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public class MediaListEnumerator : IEnumerator<Media>
         {
