@@ -417,6 +417,8 @@ namespace LibVLCSharp.Shared
         /// <returns>the parse status of the media</returns>
         public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             TaskCompletionSource<MediaParsedStatus> tcs = null;
             var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
@@ -430,8 +432,6 @@ namespace LibVLCSharp.Shared
 
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 tcs = new TaskCompletionSource<MediaParsedStatus>();
                         
                 ParsedChanged += OnParsedChanged;
