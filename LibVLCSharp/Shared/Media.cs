@@ -195,6 +195,10 @@ namespace LibVLCSharp.Shared
             DiscTotal = 25
         }
 
+        /// <summary>
+        /// The FromType enum is used to drive the media creation.
+        /// A media is usually created using a string, which can represent one of 3 things: FromPath, FromLocation, AsNode.
+        /// </summary>
         public enum FromType
         {
             /// <summary>
@@ -274,7 +278,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
-        /// <param name="type">The type of the 2nd argument. \sa{FromType}</param>
+        /// <param name="type">The type of the 2nd argument.</param>
         public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
             : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease)
         {
