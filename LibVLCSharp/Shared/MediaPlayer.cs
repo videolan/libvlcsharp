@@ -1610,12 +1610,6 @@ namespace LibVLCSharp.Shared
             return frame;
         }
 #endif
-#region Enums
-
-
-
-
-#endregion
 
 #region Callbacks
 

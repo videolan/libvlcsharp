@@ -162,117 +162,7 @@ namespace LibVLCSharp.Shared
                             EntryPoint = "libvlc_media_get_codec_description")]
             internal static extern string LibvlcMediaGetCodecDescription(TrackType type, uint codec);
         }
-
-        #region enums
-        /// <summary>Meta data types</summary>
-        public enum MetadataType
-        {
-            Title = 0,
-            Artist = 1,
-            Genre = 2,
-            Copyright = 3,
-            Album = 4,
-            TrackNumber = 5,
-            Description = 6,
-            Rating = 7,
-            Date = 8,
-            Setting = 9,
-            URL = 10,
-            Language = 11,
-            NowPlaying = 12,
-            Publisher = 13,
-            EncodedBy = 14,
-            ArtworkURL = 15,
-            TrackID = 16,
-            TrackTotal = 17,
-            Director = 18,
-            Season = 19,
-            Episode = 20,
-            ShowName = 21,
-            Actors = 22,
-            AlbumArtist = 23,
-            DiscNumber = 24,
-            DiscTotal = 25
-        }
-
-        /// <summary>
-        /// The FromType enum is used to drive the media creation.
-        /// A media is usually created using a string, which can represent one of 3 things: FromPath, FromLocation, AsNode.
-        /// </summary>
-        public enum FromType
-        {
-            /// <summary>
-            /// Create a media for a certain file path.
-            /// </summary>
-            FromPath,
-            /// <summary>
-            /// Create a media with a certain given media resource location,
-            /// for instance a valid URL.
-            /// note To refer to a local file with this function,
-            /// the file://... URI syntax <b>must</b> be used (see IETF RFC3986).
-            /// We recommend using FromPath instead when dealing with
-            ///local files.
-            /// </summary>
-            FromLocation,
-            /// <summary>
-            /// Create a media as an empty node with a given name.
-            /// </summary>
-            AsNode
-        }
-
-        /// <summary>
-        /// Parse flags used by libvlc_media_parse_with_options()
-        /// </summary>
-        /// <remarks>libvlc_media_parse_with_options</remarks>
-        [Flags]
-        public enum MediaParseOptions
-        {
-            /// <summary>Parse media if it's a local file</summary>
-            ParseLocal = 0,
-            /// <summary>Parse media even if it's a network file</summary>
-            ParseNetwork = 1,
-            /// <summary>Fetch meta and covert art using local resources</summary>
-            FetchLocal = 2,
-            /// <summary>Fetch meta and covert art using network resources</summary>
-            FetchNetwork = 4,
-            /// <summary>
-            /// Interact with the user (via libvlc_dialog_cbs) when preparsing this item
-            /// (and not its sub items). Set this flag in order to receive a callback
-            /// when the input is asking for credentials.
-            /// </summary>
-            DoInteract = 8
-        }
-
-        /// <summary>
-        /// Parse status used sent by libvlc_media_parse_with_options() or returned by
-        /// libvlc_media_get_parsed_status()
-        /// </summary>
-        /// <remarks>
-        /// libvlc_media_parse_with_options
-        /// libvlc_media_get_parsed_status
-        /// </remarks>
-        public enum MediaParsedStatus
-        {
-            Skipped = 1,
-            Failed = 2,
-            Timeout = 3,
-            Done = 4
-        }
-
-        /// <summary>Media type</summary>
-        /// <remarks>libvlc_media_get_type</remarks>
-        public enum MediaType
-        {
-            Unknown = 0,
-            File = 1,
-            Directory = 2,
-            Disc = 3,
-            Stream = 4,
-            Playlist = 5
-        }
-
-        #endregion
-
+        
         /// <summary>
         /// Media Constructs a libvlc Media instance
         /// </summary>
@@ -1030,6 +920,114 @@ namespace LibVLCSharp.Shared
         /// </summary>
         Audio = 1
     }
+
+    /// <summary>Meta data types</summary>
+    public enum MetadataType
+    {
+        Title = 0,
+        Artist = 1,
+        Genre = 2,
+        Copyright = 3,
+        Album = 4,
+        TrackNumber = 5,
+        Description = 6,
+        Rating = 7,
+        Date = 8,
+        Setting = 9,
+        URL = 10,
+        Language = 11,
+        NowPlaying = 12,
+        Publisher = 13,
+        EncodedBy = 14,
+        ArtworkURL = 15,
+        TrackID = 16,
+        TrackTotal = 17,
+        Director = 18,
+        Season = 19,
+        Episode = 20,
+        ShowName = 21,
+        Actors = 22,
+        AlbumArtist = 23,
+        DiscNumber = 24,
+        DiscTotal = 25
+    }
+
+    /// <summary>
+    /// The FromType enum is used to drive the media creation.
+    /// A media is usually created using a string, which can represent one of 3 things: FromPath, FromLocation, AsNode.
+    /// </summary>
+    public enum FromType
+    {
+        /// <summary>
+        /// Create a media for a certain file path.
+        /// </summary>
+        FromPath,
+        /// <summary>
+        /// Create a media with a certain given media resource location,
+        /// for instance a valid URL.
+        /// note To refer to a local file with this function,
+        /// the file://... URI syntax <b>must</b> be used (see IETF RFC3986).
+        /// We recommend using FromPath instead when dealing with
+        ///local files.
+        /// </summary>
+        FromLocation,
+        /// <summary>
+        /// Create a media as an empty node with a given name.
+        /// </summary>
+        AsNode
+    }
+
+    /// <summary>
+    /// Parse flags used by libvlc_media_parse_with_options()
+    /// </summary>
+    /// <remarks>libvlc_media_parse_with_options</remarks>
+    [Flags]
+    public enum MediaParseOptions
+    {
+        /// <summary>Parse media if it's a local file</summary>
+        ParseLocal = 0,
+        /// <summary>Parse media even if it's a network file</summary>
+        ParseNetwork = 1,
+        /// <summary>Fetch meta and covert art using local resources</summary>
+        FetchLocal = 2,
+        /// <summary>Fetch meta and covert art using network resources</summary>
+        FetchNetwork = 4,
+        /// <summary>
+        /// Interact with the user (via libvlc_dialog_cbs) when preparsing this item
+        /// (and not its sub items). Set this flag in order to receive a callback
+        /// when the input is asking for credentials.
+        /// </summary>
+        DoInteract = 8
+    }
+
+    /// <summary>
+    /// Parse status used sent by libvlc_media_parse_with_options() or returned by
+    /// libvlc_media_get_parsed_status()
+    /// </summary>
+    /// <remarks>
+    /// libvlc_media_parse_with_options
+    /// libvlc_media_get_parsed_status
+    /// </remarks>
+    public enum MediaParsedStatus
+    {
+        Skipped = 1,
+        Failed = 2,
+        Timeout = 3,
+        Done = 4
+    }
+
+    /// <summary>Media type</summary>
+    /// <remarks>libvlc_media_get_type</remarks>
+    public enum MediaType
+    {
+        Unknown = 0,
+        File = 1,
+        Directory = 2,
+        Disc = 3,
+        Stream = 4,
+        Playlist = 5
+    }
+
     #endregion
 
     /// <summary>

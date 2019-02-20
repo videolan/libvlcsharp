@@ -243,7 +243,7 @@ namespace LibVLCSharp.Shared
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct MediaMetaChanged
         {
-            internal readonly Media.MetadataType MetaType;
+            internal readonly MetadataType MetaType;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -261,7 +261,7 @@ namespace LibVLCSharp.Shared
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct MediaParsedChanged
         {
-            internal readonly Media.MediaParsedStatus NewStatus;
+            internal readonly MediaParsedStatus NewStatus;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -441,9 +441,9 @@ namespace LibVLCSharp.Shared
 
     public class MediaMetaChangedEventArgs : EventArgs
     {
-        public readonly Media.MetadataType MetadataType;
+        public readonly MetadataType MetadataType;
 
-        internal MediaMetaChangedEventArgs(Media.MetadataType metadataType)
+        internal MediaMetaChangedEventArgs(MetadataType metadataType)
         {
             MetadataType = metadataType;
         }
@@ -451,9 +451,9 @@ namespace LibVLCSharp.Shared
 
     public class MediaParsedChangedEventArgs : EventArgs
     {
-        public readonly Media.MediaParsedStatus ParsedStatus;
+        public readonly MediaParsedStatus ParsedStatus;
 
-        internal MediaParsedChangedEventArgs(Media.MediaParsedStatus parsedStatus)
+        internal MediaParsedChangedEventArgs(MediaParsedStatus parsedStatus)
         {
             ParsedStatus = parsedStatus;
         }

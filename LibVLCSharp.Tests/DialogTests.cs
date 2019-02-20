@@ -33,7 +33,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();
@@ -63,7 +63,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();
@@ -95,7 +95,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, Media.FromType.FromLocation)
+                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();

@@ -14,13 +14,13 @@ namespace LibVLCSharp.Tests
         {
             var media = new Media(_libVLC, Path.GetTempFileName());
             var eventHandlerCalled = false;
-            const Media.MetadataType description = Media.MetadataType.Description;
+            const MetadataType description = MetadataType.Description;
             media.MetaChanged += (sender, args) =>
             {
                 Assert.AreEqual(description, args.MetadataType);
                 eventHandlerCalled = true;
             };
-            media.SetMeta(Media.MetadataType.Description, "test");
+            media.SetMeta(MetadataType.Description, "test");
             Assert.True(eventHandlerCalled);
         }
         

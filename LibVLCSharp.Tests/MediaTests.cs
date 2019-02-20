@@ -53,7 +53,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMedia()
         {
-            using (var media = new Media(_libVLC, RealStreamMediaPath, Media.FromType.FromLocation))
+            using (var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
@@ -86,9 +86,9 @@ namespace LibVLCSharp.Tests
         {
             var media = new Media(_libVLC, Path.GetTempFileName());
             const string test = "test";
-            media.SetMeta(Media.MetadataType.ShowName, test);
+            media.SetMeta(MetadataType.ShowName, test);
             Assert.True(media.SaveMeta());
-            Assert.AreEqual(test, media.Meta(Media.MetadataType.ShowName));
+            Assert.AreEqual(test, media.Meta(MetadataType.ShowName));
         }
 
         [Test]
@@ -104,14 +104,14 @@ namespace LibVLCSharp.Tests
         public async Task CreateRealMediaSpecialCharacters()
         {
             _libVLC.Log += LibVLC_Log;
-            using (var media = new Media(_libVLC, RealMp3PathSpecialCharacter, Media.FromType.FromPath))
+            using (var media = new Media(_libVLC, RealMp3PathSpecialCharacter, FromType.FromPath))
             {
                 Assert.False(media.IsParsed);
 
                 media.Parse();
                 await Task.Delay(5000);
                 Assert.True(media.IsParsed);
-                Assert.AreEqual(Media.MediaParsedStatus.Done, media.ParsedStatus);
+                Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);
                 using (var mp = new MediaPlayer(media))
                 {
                     Assert.True(mp.Play());
