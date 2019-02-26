@@ -1,3 +1,18 @@
+LibVLCSharp version 0.5.0
+=========================
+* Docs: Fix comments for LibVLC ctor
+* Improve test setup, mostly for CI: 
+- can be run from `dotnet run` 
+- targets netcoreapp now and uses NUnitLite
+- remove network calls
+* Fix libvlc loading from .NET Core on macOS
+* [API CHANGE] move Media enums outside the Media class
+* [API CHANGE] Media.Parse is now async only.
+* [API CHANGE] Refactor MediaList. Libvlc locking is now handled internally for easier use. LINQ ready.
+* net40 build of libvlcsharp has a new dependency to enable async/await support: Microsoft.Bcl.Async. This means you need binding redirects in your consuming projects.
+example of binding redirect file: https://code.videolan.org/videolan/LibVLCSharp/blob/master/Samples/LibVLCSharp.Windows.Net40.Sample/app.config
+* Fix network browsing. https://code.videolan.org/videolan/LibVLCSharp/issues/108
+
 LibVLCSharp version 0.4.2
 =========================
 * Android: remove unnecessary native call https://github.com/videolan/libvlcsharp/commit/338d11d1c3619efe7232a8526a12ba195006332b
