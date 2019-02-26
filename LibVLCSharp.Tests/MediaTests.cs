@@ -155,6 +155,38 @@ namespace LibVLCSharp.Tests
             await Task.Delay(10000);
         }
 
+        [Test]
+        public void ParseShouldThrowIfCancelledOperation()
+        {
+            var media = new Media(_libVLC, RealMp3Path);
+            var cancellationToken = new CancellationToken(canceled: true);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await media.Parse(cancellationToken: cancellationToken));
+        }
+
+        [Test]
+        public async Task ParseShouldTimeoutWith1MillisecondLimit()
+        {
+            var media = new Media(_libVLC, RealMp3Path);
+            var parseResult = await media.Parse(timeout: 1);
+            Assert.AreEqual(MediaParsedStatus.Timeout, parseResult);
+        }
+
+        [Test]
+        public async Task ParseShouldSucceed()
+        {
+            var media = new Media(_libVLC, RealMp3Path);
+            var parseResult = await media.Parse();
+            Assert.AreEqual(MediaParsedStatus.Done, parseResult);
+        }
+
+        [Test]
+        public async Task ParseShouldFailIfNotMediaFile()
+        {
+            var media = new Media(_libVLC, Path.GetTempFileName());
+            var parseResult = await media.Parse();
+            Assert.AreEqual(MediaParsedStatus.Failed, parseResult);
+        }
+
         private async Task<Stream> GetStreamFromUrl(string url)
         {
             byte[] imageData = null;
