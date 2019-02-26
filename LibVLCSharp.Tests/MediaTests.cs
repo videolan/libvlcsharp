@@ -187,6 +187,14 @@ namespace LibVLCSharp.Tests
             Assert.AreEqual(MediaParsedStatus.Failed, parseResult);
         }
 
+        [Test]
+        public async Task ParseShouldBeSkippedIfLocalParseSpecifiedAndRemoteUrlProvided()
+        {
+            var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation);
+            var parseResult = await media.Parse(MediaParseOptions.ParseLocal);
+            Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
+        }
+
         private async Task<Stream> GetStreamFromUrl(string url)
         {
             byte[] imageData = null;
