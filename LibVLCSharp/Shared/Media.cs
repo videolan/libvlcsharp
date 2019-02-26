@@ -439,7 +439,7 @@ namespace LibVLCSharp.Shared
                 var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
                 if (result == -1)
                 {
-                    tcs.TrySetResult(ParsedStatus);
+                    tcs.TrySetResult(MediaParsedStatus.Failed);
                 }
 
                 return await tcs.Task.ConfigureAwait(false);
