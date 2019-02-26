@@ -166,7 +166,7 @@ If you have a request or question regarding the roadmap, feel free to open an [i
 
 ### Pull request
 
-Pull requests are more than welcome! If you do submit one, please make sure to use a descriptive title and description.
+Pull requests are more than welcome! If you do submit one, please make sure to read the [contributing guidelines](CONTRIBUTING.md) first.
 
 ### Gitlab issues
 
