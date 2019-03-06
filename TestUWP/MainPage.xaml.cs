@@ -19,7 +19,7 @@ namespace TestUWP
     {
         public MainPage()
         {
-            Core.Initialize(@"D:\Projects\LibVLCSharp\TestUWP\bin\x64\Debug\AppX");
+            Core.Initialize();
             this.InitializeComponent();
             this.Loaded += OnLoaded;
         }
@@ -30,7 +30,7 @@ namespace TestUWP
             var libvlc = new LibVLC(
                 $"--winrt-d3dcontext=0x{_d3d11Device.ImmediateContext.NativePointer.ToString("x")}",
                 $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}");
-            var mp = new MediaPlayer(new Media(libvlc, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", Media.FromType.FromLocation));
+            var mp = new MediaPlayer(new Media(libvlc, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
             mp.Play();
         }
 

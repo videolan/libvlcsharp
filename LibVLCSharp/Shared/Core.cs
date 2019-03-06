@@ -214,7 +214,7 @@ namespace LibVLCSharp.Shared
             }
             else
             {
-                handle = Native.LoadLibrary(nativeLibraryPath);
+                handle = Native.LoadPackagedLibrary(nativeLibraryPath); // TODO: Use correct API depending on if UWP or not
             }
 
             return handle != IntPtr.Zero;
