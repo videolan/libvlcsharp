@@ -12,22 +12,24 @@ It provides a comprehensive multimedia API that can be used across mobile, serve
 
 _The official repository URL for this repo is https://code.videolan.org/videolan/LibVLCSharp._
 
-- [Features](#features)
-- [Supported platforms](#supported-platforms)
-- [Installation](#installation)
-- [Getting started](#getting-started)
-- [Samples](#samples)
-- [Quick API overview](#quick-api-overview)
-- [Roadmap](#roadmap)
-- [Versioning](VERSIONING.md)
-- [Contribute](#contribute)
-- [Communication](#communication)
-  - [Forum](#forum)
-  - [GitLab Issues](#issues)
-  - [IRC](#irc)
-  - [StackOverflow](#stackoverflow)
-- [Code of Conduct](#code-of-conduct)
-- [License](#license)
+- [LibVLCSharp](#libvlcsharp)
+  - [Features](#features)
+  - [Supported platforms](#supported-platforms)
+  - [Installation](#installation)
+  - [Getting started](#getting-started)
+  - [Samples](#samples)
+  - [Quick API overview](#quick-api-overview)
+  - [Roadmap](#roadmap)
+  - [Contribute](#contribute)
+    - [Pull request](#pull-request)
+    - [Gitlab issues](#gitlab-issues)
+  - [Communication](#communication)
+    - [Forum](#forum)
+    - [Issues](#issues)
+    - [IRC](#irc)
+    - [StackOverflow](#stackoverflow)
+  - [Code of Conduct](#code-of-conduct)
+  - [License](#license)
 
 ## Features
 
@@ -63,7 +65,16 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 ## Installation
 
-1. Install LibVLC in your platform specific project.
+1. Install **LibVLC** in your platform specific project.
+
+| Platform          | LibVLC Package                      | NuGet                                  |
+| ----------------- | ----------------------------------- | -------------------------------------- |
+| Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] |
+| Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         |
+| Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] |
+| iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         |
+| tvOS              | VideoLAN.LibVLC.tvOS                | [![LibVLCtvOSBadge]][LibVLCtvOS]       |
+| Linux             | [Linux guide](docs/linux-setup.md)  | N/A                                    |
 
 ```cmd
 dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
@@ -71,9 +82,24 @@ dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
 
 LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
 
-2. Install LibVLCSharp _or_ LibVLCSharp.Forms (if you plan on using Xamarin.Forms)
+2. Install **LibVLCSharp** _or_ **LibVLCSharp.Forms** (if you plan on using Xamarin.Forms)
 
-LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
+
+| Platform          | LibVLCSharp Package                          | NuGet                                             |
+| ----------------- | -------------------------------------------- | ------------------------------------------------- |
+| .NET Standard     | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Android   | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.iOS       | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.tvOS      | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Mac       | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Forms     | LibVLCSharp.Forms                            | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
+| WPF               | LibVLCSharp.WPF                              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
+| Xamarin.Forms.WPF | LibVLCSharp.Forms.WPF                        | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
+| GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md) | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
+| Xamarin.Forms.GTK | LibVLCSharp.Forms.GTK                        | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
+| Windows Forms     | LibVLCSharp.WinForms                         | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
+
+LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#. 
 
 ```cmd
 dotnet add package LibVLCSharp
@@ -119,6 +145,46 @@ If you're using __GTK__ (with or without Xamarin.Forms support) on Linux and/or 
 ```cmd
 dotnet add package LibVLCSharp.GTK
 ```
+
+
+
+
+[LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
+[LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
+
+[LibVLCMac]: https://www.nuget.org/packages/VideoLAN.LibVLC.Mac/
+[LibVLCMacBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Mac.svg
+
+[LibVLCAndroid]: https://www.nuget.org/packages/VideoLAN.LibVLC.Android/
+[LibVLCAndroidBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Android.svg
+
+[LibVLCiOS]: https://www.nuget.org/packages/VideoLAN.LibVLC.iOS/
+[LibVLCiOSBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.iOS.svg
+
+[LibVLCtvOS]: https://www.nuget.org/packages/VideoLAN.LibVLC.tvOS/
+[LibVLCtvOSBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.tvOS.svg
+
+[LibVLCSharp]: https://www.nuget.org/packages/LibVLCSharp/
+[LibVLCSharpBadge]: https://img.shields.io/nuget/v/LibVLCSharp.svg
+
+[LibVLCSharpForms]: https://www.nuget.org/packages/LibVLCSharp.Forms/
+[LibVLCSharpFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Forms.svg
+
+[LibVLCSharpWPF]: https://www.nuget.org/packages/LibVLCSharp.WPF/
+[LibVLCSharpWPFBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WPF.svg
+
+[LibVLCSharpFormsWPF]: https://www.nuget.org/packages/LibVLCSharp.Forms.WPF/
+[LibVLCSharpFormsWPFBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Forms.WPF.svg
+
+[LibVLCSharpGTK]: https://www.nuget.org/packages/LibVLCSharp.GTK/
+[LibVLCSharpGTKBadge]: https://img.shields.io/nuget/v/LibVLCSharp.GTK.svg
+
+[LibVLCSharpFormsGTK]: https://www.nuget.org/packages/LibVLCSharp.Forms.GTK/
+[LibVLCSharpFormsGTKBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Forms.GTK.svg
+
+[LibVLCSharpWinForms]: https://www.nuget.org/packages/LibVLCSharp.WinForms/
+[LibVLCSharpWinFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WinForms.svg
+
 
 ## Getting started
 
