@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using LibVLCSharp.Shared;
 using Device3 = SharpDX.DXGI.Device3;
+using System.Runtime.InteropServices;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -17,6 +18,9 @@ namespace TestUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        LibVLC _libVLC;
+        MediaPlayer _mp;
+
         public MainPage()
         {
             Core.Initialize();
@@ -27,11 +31,36 @@ namespace TestUWP
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             this.CreateSwapPanel();
-            var libvlc = new LibVLC(
-                $"--winrt-d3dcontext=0x{_d3d11Device.ImmediateContext.NativePointer.ToString("x")}",
-                $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}");
-            var mp = new MediaPlayer(new Media(libvlc, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
-            mp.Play();
+            UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
+
+            var d3dcontext = $"--winrt-d3dcontext=0x{_d3d11Device.ImmediateContext.NativePointer.ToString("x")}";
+            var swapchain = $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}";
+            _libVLC = new LibVLC(
+                d3dcontext,
+                swapchain);
+            _mp = new MediaPlayer(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+            _mp.Play();
+        }
+
+        readonly Guid SWAPCHAIN_WIDTH = new Guid(0xf1b59347, 0x1643, 0x411a, 0xad, 0x6b, 0xc7, 0x80, 0x17, 0x7a, 0x6, 0xb6);
+        readonly Guid SWAPCHAIN_HEIGHT = new Guid(0x6ea976a0, 0x9d60, 0x4bb7, 0xa5, 0xa9, 0x7d, 0xd1, 0x18, 0x7f, 0xc9, 0xbd);
+
+        void UpdateSize(float x, float y)
+        {
+            IntPtr width = Marshal.AllocHGlobal(sizeof(int));
+            IntPtr height = Marshal.AllocHGlobal(sizeof(int));
+
+            var w = (int)x;
+            var h = (int)y;
+
+            Marshal.WriteInt32(width, w);
+            Marshal.WriteInt32(height, h);
+
+            _swapChain.SetPrivateData(SWAPCHAIN_WIDTH, sizeof(int), width);
+            _swapChain.SetPrivateData(SWAPCHAIN_HEIGHT, sizeof(int), height);
+
+            Marshal.FreeHGlobal(width);
+            Marshal.FreeHGlobal(height);
         }
 
         private SharpDX.Direct3D11.Device _d3d11Device;
@@ -58,7 +87,6 @@ namespace TestUWP
 #else
             dxgiFactory = new SharpDX.DXGI.Factory2(false);
 #endif
-
             _d3d11Device = null;
             foreach (var adapter in dxgiFactory.Adapters)
             {
@@ -78,6 +106,7 @@ namespace TestUWP
             }
 
             _device = _d3d11Device.QueryInterface<SharpDX.DXGI.Device1>();
+            
             //Create the swapchain
             var swapChainDescription = new SharpDX.DXGI.SwapChainDescription1
             {
@@ -98,16 +127,20 @@ namespace TestUWP
             };
 
             _swapChain = new SharpDX.DXGI.SwapChain1(dxgiFactory, _d3d11Device, ref swapChainDescription);
-
+            
             _device.MaximumFrameLatency = 1;
 
             //TODO: perform the next 2 calls on the UI thread
             var panelNative = ComObject.As<ISwapChainPanelNative>(this.Panel);
             panelNative.SwapChain = _swapChain;
-
+            
             // This is necessary so we can call Trim() on suspend
             this._device3 = _device.QueryInterface<SharpDX.DXGI.Device3>();
+            if (_device3 == null)
+                throw new Exception();
             this._swapchain2 = _swapChain.QueryInterface<SharpDX.DXGI.SwapChain2>();
+            if (_swapchain2 == null)
+                throw new Exception();
             
             UpdateScale(this.Panel.CompositionScaleX, this.Panel.CompositionScaleY);
         }
