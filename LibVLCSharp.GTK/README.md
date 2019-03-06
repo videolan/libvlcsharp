@@ -16,7 +16,7 @@ Supported frameworks:
 
 - net47 (on mono)
 
-Supported platforms :
+Supported platforms:
 
 - Windows
 - Linux
@@ -33,7 +33,7 @@ Let's face it, mono/gtk-sharp has a lot of drawbacks :
 - It is based on GTK 2 (GTK 3 was released in 2011... but no stable version of GTK# for GTK3 as of now)
 - Requires mono and GTK# installed on both the build and the target machine. (aka no nuget package)
 
-Well, to be honnest, that's only two, but that's two big drawbacks.
+Well, to be honest, that's only two, but that's two big drawbacks.
 
 On the other hand, [GtkSharp/GtkSharp](https://github.com/GtkSharp/GtkSharp) fixes this issues by providing a
 .net standard 2.0 package for GTK 3.0
