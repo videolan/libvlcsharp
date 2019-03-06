@@ -113,8 +113,8 @@ namespace TestUWP
         }
 
         private void UpdateScale(float panelCompositionScaleX, float panelCompositionScaleY)
-        {
-            this._swapchain2.MatrixTransform = new RawMatrix3x2(1.0f/ panelCompositionScaleX, 0, 0, 1.0f / panelCompositionScaleY, 0, 0);
+        {           
+            _swapchain2.MatrixTransform = new RawMatrix3x2 { M11 = 1.0f / panelCompositionScaleX, M22 = 1.0f / panelCompositionScaleY };
         }
 
         private void Trim()
