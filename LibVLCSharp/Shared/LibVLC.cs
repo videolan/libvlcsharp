@@ -61,7 +61,7 @@ namespace LibVLCSharp.Shared
 #if NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_add_intf")]
-            internal static extern int LibVLCAddInterface(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name);
+            internal static extern int LibVLCAddInterface(IntPtr libVLC, IntPtr name);
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_exit_handler")]
@@ -69,13 +69,11 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_user_agent")]
-            internal static extern void LibVLCSetUserAgent(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string name,
-                [MarshalAs(UnmanagedType.LPStr)] string http);
+            internal static extern void LibVLCSetUserAgent(IntPtr libVLC, IntPtr name, IntPtr http);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_app_id")]
-            internal static extern void LibVLCSetAppId(IntPtr libVLC, [MarshalAs(UnmanagedType.LPStr)] string id,
-                [MarshalAs(UnmanagedType.LPStr)] string version, [MarshalAs(UnmanagedType.LPStr)] string icon);
+            internal static extern void LibVLCSetAppId(IntPtr libVLC, IntPtr id, IntPtr version, IntPtr icon);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_unset")]
@@ -222,7 +220,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="name">interface name, or empty string for default</param>
         /// <returns>True if successful, false otherwise</returns>
-        public bool AddInterface(string name) => Native.LibVLCAddInterface(NativeReference, name ?? string.Empty) == 0;
+        public bool AddInterface(string name) => Native.LibVLCAddInterface(NativeReference, 
+            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(name)) == 0;
 #endif
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
@@ -255,10 +254,8 @@ namespace LibVLCSharp.Shared
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public void SetUserAgent(string name, string http)
-        {
-            Native.LibVLCSetUserAgent(NativeReference, name, http);
-        }
+        public void SetUserAgent(string name, string http) => Native.LibVLCSetUserAgent(NativeReference, 
+            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(name), Utf8StringMarshaler.GetInstance().MarshalManagedToNative(http));        
 
         /// <summary>
         /// <para>Sets some meta-information about the application.</para>
@@ -268,10 +265,10 @@ namespace LibVLCSharp.Shared
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public void SetAppId(string id, string version, string icon)
-        {
-            Native.LibVLCSetAppId(NativeReference, id, version, icon);
-        }
+        public void SetAppId(string id, string version, string icon) => Native.LibVLCSetAppId(NativeReference, 
+            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(id),
+            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(version),
+            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(icon));
 
         /// <summary>Unsets the logging callback.</summary>
         /// <remarks>

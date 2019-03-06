@@ -50,11 +50,11 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option")]
-            internal static extern void LibVLCMediaAddOption(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options);
+            internal static extern void LibVLCMediaAddOption(IntPtr media, IntPtr option);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option_flag")]
-            internal static extern void LibVLCMediaAddOptionFlag(IntPtr media, [MarshalAs(UnmanagedType.LPStr)] string options, uint flags);
+            internal static extern void LibVLCMediaAddOptionFlag(IntPtr media, IntPtr options, uint flags);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_mrl")]
@@ -70,7 +70,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_set_meta")]
-            internal static extern void LibVLCMediaSetMeta(IntPtr media, MetadataType metadataType, [MarshalAs(UnmanagedType.LPStr)] string value);
+            internal static extern void LibVLCMediaSetMeta(IntPtr media, MetadataType metadataType, IntPtr value);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_save_meta")]
@@ -134,7 +134,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_add")]
-            internal static extern int LibVLCMediaAddSlaves(IntPtr media, MediaSlaveType slaveType, uint priority, [MarshalAs(UnmanagedType.LPStr)] string uri);
+            internal static extern int LibVLCMediaAddSlaves(IntPtr media, MediaSlaveType slaveType, uint priority, IntPtr uri);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_slaves_clear")]
@@ -154,7 +154,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_get_codec_description")]
-            internal static extern string LibvlcMediaGetCodecDescription(TrackType type, uint codec);
+            internal static extern IntPtr LibvlcMediaGetCodecDescription(TrackType type, uint codec);
         }
         
         /// <summary>
@@ -232,12 +232,12 @@ namespace LibVLCSharp.Shared
         public Media(LibVLC libVLC, Stream stream, params string[] options)
             : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
         {
-            if (options.Any())
-                Native.LibVLCMediaAddOption(NativeReference, options.ToString());
+            foreach(var option in options)
+            {
+                Native.LibVLCMediaAddOption(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(option));
+            }
         }
-
         
-
         static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
         {
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
@@ -280,11 +280,11 @@ namespace LibVLCSharp.Shared
         /// <para>such as text renderer options, have no effects on an individual media.</para>
         /// <para>These options must be set through libvlc_new() instead.</para>
         /// </remarks>
-        public void AddOption(string options)
+        public void AddOption(string option)
         {
-            if(string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
+            if(string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
 
-            Native.LibVLCMediaAddOption(NativeReference, options);
+            Native.LibVLCMediaAddOption(NativeReference, option.ToUtf8());
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Add an option to the media with configurable flags.</summary>
-        /// <param name="options">the options (as a string)</param>
+        /// <param name="options">the option (as a string)</param>
         /// <param name="flags">the flags for this option</param>
         /// <remarks>
         /// <para>This option will be used to determine how the media_player will</para>
@@ -311,11 +311,11 @@ namespace LibVLCSharp.Shared
         /// <para>such as text renderer options cannot be set on a single media. They</para>
         /// <para>must be set on the whole libvlc instance instead.</para>
         /// </remarks>
-        public void AddOptionFlag(string options, uint flags)
+        public void AddOptionFlag(string option, uint flags)
         {
-            if (string.IsNullOrEmpty(options)) throw new ArgumentNullException(nameof(options));
+            if (string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
 
-            Native.LibVLCMediaAddOptionFlag(NativeReference, options, flags);
+            Native.LibVLCMediaAddOptionFlag(NativeReference, option.ToUtf8(), flags);
         }
 
         string _mrl;
@@ -364,7 +364,7 @@ namespace LibVLCSharp.Shared
         {
             if(string.IsNullOrEmpty(value)) throw new ArgumentNullException(value);
 
-            Native.LibVLCMediaSetMeta(NativeReference, metadataType, value);
+            Native.LibVLCMediaSetMeta(NativeReference, metadataType, value.ToUtf8());
         }
 
         /// <summary>Save the meta previously set</summary>
@@ -514,7 +514,7 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
         public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
-            Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri) != 0;
+            Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri.ToUtf8()) != 0;
 
 
         /// <summary>

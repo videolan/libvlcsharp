@@ -1,4 +1,7 @@
 ﻿using LibVLCSharp.Shared.Structures;
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace LibVLCSharp.Shared.Helpers
 {
@@ -114,5 +117,9 @@ namespace LibVLCSharp.Shared.Helpers
         internal static RendererDescription Build(this RendererDescriptionStructure s) =>
             new RendererDescription(Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.Name) as string,
                 Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(s.LongName) as string);
+
+        internal static IntPtr ToUtf8(this string str) => Utf8StringMarshaler.GetInstance().MarshalManagedToNative(str);
+        
+        internal static string FromUtf8(this IntPtr nativeString) => Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(nativeString) as string;
     }
 }

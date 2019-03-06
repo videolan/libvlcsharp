@@ -16,7 +16,7 @@ namespace LibVLCSharp.Shared
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_new")]
-            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, string name);
+            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, IntPtr name);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_release")]
@@ -41,7 +41,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">libvlc instance this will be connected to</param>
         /// <param name="name">The service discovery protocol name depending on platform. Use LibVLC.RendererList to find the one for your platform</param>
         public RendererDiscoverer(LibVLC libVLC, string name)
-            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name), Native.LibVLCRendererDiscovererRelease)
+            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name.ToUtf8()), Native.LibVLCRendererDiscovererRelease)
         {
         }
 

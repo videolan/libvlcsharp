@@ -82,7 +82,7 @@ namespace LibVLCSharp.Shared.Helpers
             var utf8Args = default(IntPtr[]);
             try
             {
-                utf8Args = ToUtf8(options);
+                utf8Args = options.ToUtf8();
                 return create(utf8Args.Length, utf8Args);
             }
             finally
@@ -332,7 +332,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="args"></param>
         /// <returns>Array of pointer you need to release when you're done with Marshal.FreeHGlobal</returns>
-        internal static IntPtr[] ToUtf8(string[] args)
+        internal static IntPtr[] ToUtf8(this string[] args)
         {
             var utf8Args = new IntPtr[args?.Length ?? 0];
             
