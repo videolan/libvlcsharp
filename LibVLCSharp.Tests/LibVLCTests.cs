@@ -148,5 +148,12 @@ namespace LibVLCSharp.Tests
             Assert.AreEqual(IntPtr.Zero, _libVLC.NativeReference);
             Assert.IsFalse(_libVLC.DialogHandlersSet);
         }
+
+        [Test]
+        public void LibVLCVersion()
+        {
+            var version = _libVLC.Version;
+            Assert.True(version.StartsWith("3"));
+        }
     }
 }
