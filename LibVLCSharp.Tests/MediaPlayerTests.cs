@@ -21,14 +21,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void OutputDeviceEnum()
-        {
-            var mp = new MediaPlayer(_libVLC);
-            var t = mp.OutputDeviceEnum;
-            Debug.WriteLine(t);
-        }
-        
-        [Test]
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
@@ -191,6 +183,13 @@ namespace LibVLCSharp.Tests
 
             Assert.True(mp.SetRole(MediaPlayerRole.Video));
             Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+        }
+
+        [Test]
+        public void RetrieveAudioOutputDeviceEnum()
+        {
+            var mp = new MediaPlayer(_libVLC);
+            Assert.AreEqual("Default", mp.AudioOutputDeviceEnum[0].Description);
         }
     }
 }
