@@ -619,6 +619,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_set_role")]
             internal static extern int LibVLCMediaPlayerSetRole(IntPtr mediaplayer, MediaPlayerRole role);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_retain")]
+            internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
 #if ANDROID
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1600,6 +1603,9 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <returns>true on success, false otherwise</returns>
         public bool SetRole(MediaPlayerRole role) => Native.LibVLCMediaPlayerSetRole(NativeReference, role) == 0;
+
+        /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
+        public void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
 
 #if UNITY_ANDROID
         /// <summary>
