@@ -145,6 +145,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_retain")]
             internal static extern void LibVLCRetain(IntPtr libVLC);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_version")]
+            internal static extern IntPtr LibVLCVersion();
 
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -610,6 +613,10 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Increments the native reference counter for this libvlc instance</summary>
         public void Retain() => Native.LibVLCRetain(NativeReference);
+
+        /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
+        public string Version
+            => Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(Native.LibVLCVersion()) as string;
     }
 
     /// <summary>Logging messages level.</summary>
