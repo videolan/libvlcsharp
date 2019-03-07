@@ -405,7 +405,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_aspect_ratio")]
-            internal static extern string LibVLCVideoGetAspectRatio(IntPtr mediaPlayer);
+            internal static extern IntPtr LibVLCVideoGetAspectRatio(IntPtr mediaPlayer);
 
             //TODO: UTF8
 
@@ -1378,7 +1378,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public string AspectRatio
         {
-            get => Native.LibVLCVideoGetAspectRatio(NativeReference);
+            get
+            {
+                var aspectRatioPtr = Native.LibVLCVideoGetAspectRatio(NativeReference);
+                var aspectRatio = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(aspectRatioPtr) as string;
+                MarshalUtils.LibVLCFree(ref aspectRatioPtr);
+                return aspectRatio;
+            }
             set => Native.LibVLCVideoSetAspectRatio(NativeReference, value);
         }
 
