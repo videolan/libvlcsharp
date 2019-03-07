@@ -573,6 +573,14 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_set_renderer")]
             internal static extern int LibVLCMediaPlayerSetRenderer(IntPtr mediaplayer, IntPtr renderItem);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_role")]
+            internal static extern MediaPlayerRole LibVLCMediaPlayerGetRole(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_role")]
+            internal static extern int LibVLCMediaPlayerSetRole(IntPtr mediaplayer, MediaPlayerRole role);
+
 #if ANDROID
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1596,6 +1604,17 @@ namespace LibVLCSharp.Shared
         public bool SetRenderer(RendererItem rendererItem) =>
             Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
 
+        /// <summary>Gets the media role.
+        /// <para/> version LibVLC 3.0.0 and later.
+        /// </summary>
+        public MediaPlayerRole Role => Native.LibVLCMediaPlayerGetRole(NativeReference);
+        
+        /// <summary>Sets the media role.
+        /// <para/> version LibVLC 3.0.0 and later.
+        /// </summary>
+        /// <returns>true on success, false otherwise</returns>
+        public bool SetRole(MediaPlayerRole role) => Native.LibVLCMediaPlayerSetRole(NativeReference, role) == 0;
+
 #if UNITY_ANDROID
         /// <summary>
         /// Retrieve a video frame from the Unity plugin.
@@ -2163,6 +2182,7 @@ namespace LibVLCSharp.Shared
         Production = 7,
         /// <summary>Accessibility</summary>
         Accessibility = 8,
+        /// <summary>Testing</summary>
         Test = 9
     }    
 }

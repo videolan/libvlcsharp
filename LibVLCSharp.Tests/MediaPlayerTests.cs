@@ -175,5 +175,22 @@ namespace LibVLCSharp.Tests
 
             Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
         }
+
+        [Test]
+        public void GetMediaPlayerRole()
+        {
+            var mp = new MediaPlayer(_libVLC);
+            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+        }
+
+        [Test]
+        public void SetMediaPlayerRole()
+        {
+            var mp = new MediaPlayer(_libVLC);
+            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+
+            Assert.True(mp.SetRole(MediaPlayerRole.Video));
+            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+        }
     }
 }
