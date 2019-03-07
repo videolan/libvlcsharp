@@ -152,8 +152,13 @@ namespace LibVLCSharp.Tests
         [Test]
         public void LibVLCVersion()
         {
-            var version = _libVLC.Version;
-            Assert.True(version.StartsWith("3"));
+            Assert.True(_libVLC.Version.StartsWith("3"));
+        }
+
+         [Test]
+        public void LibVLCChangeset()
+        {
+            Assert.IsNotNull(_libVLC.Changeset);
         }
     }
 }

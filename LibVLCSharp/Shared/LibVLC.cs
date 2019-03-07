@@ -149,6 +149,10 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_changeset")]
+            internal static extern IntPtr LibVLCChangeset();
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -617,6 +621,10 @@ namespace LibVLCSharp.Shared
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
         public string Version
             => Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(Native.LibVLCVersion()) as string;
+
+        /// <summary>The changeset of the LibVLC engine currently used by LibVLCSharp</summary>
+        public string Changeset
+            => Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(Native.LibVLCChangeset()) as string;
     }
 
     /// <summary>Logging messages level.</summary>
