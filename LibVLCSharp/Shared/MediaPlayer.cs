@@ -429,14 +429,6 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_video_set_spu")]
             internal static extern int LibVLCVideoSetSpu(IntPtr mediaPlayer, int spu);
 
-            //TODO: UTF8
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_set_subtitle_file")]
-            internal static extern int LibVLCVideoSetSubtitleFile(IntPtr mediaPlayer,
-                [MarshalAs(UnmanagedType.LPStr)] string subtitle);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu_delay")]
             internal static extern long LibVLCVideoGetSpuDelay(IntPtr mediaPlayer);
@@ -1354,13 +1346,6 @@ namespace LibVLCSharp.Shared
             t => t.Build(),
             t => t.Next,
             Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
-        /// Set new video subtitle file.
-        /// </summary>
-        /// <param name="subtitle">new video subtitle file</param>
-        /// <returns></returns>
-        public bool SetSubtitleFile(string subtitle) => Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle) != 0;
 
         /// <summary>
         /// Get the current subtitle delay. 
