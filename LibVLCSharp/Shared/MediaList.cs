@@ -82,10 +82,13 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_list_unlock")]
             internal static extern void LibVLCMediaListUnlock(IntPtr mediaList);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_event_manager")]
             internal static extern IntPtr LibVLCMediaListEventManager(IntPtr mediaList);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_list_retain")]
+            internal static extern void LibVLCMediaListRetain(IntPtr mediaList);
         }
 
         /// <summary>
@@ -250,6 +253,9 @@ namespace LibVLCSharp.Shared
                 return _eventManager;
             }
         }
+
+        /// <summary>Increments the native reference counter for this medialist instance</summary>
+        public void Retain() => Native.LibVLCMediaListRetain(NativeReference);
 
         #region Events
 
