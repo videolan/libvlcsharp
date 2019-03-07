@@ -277,6 +277,10 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_audio_output_device_set")]
             internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, [MarshalAs(UnmanagedType.LPStr)] string module,
                 [MarshalAs(UnmanagedType.LPStr)] string deviceId);
+                    
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_output_device_get")]
+            internal static extern IntPtr LibVLCAudioOutputDeviceGet(IntPtr mediaPlayer);
 
             // TODO: UTF8
 
@@ -622,6 +626,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_retain")]
             internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
+
 #if ANDROID
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1093,9 +1098,52 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        public void OutputDeviceSet(string deviceId, string module = null)
+        /// <summary>
+        /// Configures an explicit audio output device.
+        /// If the module paramater is NULL, audio output will be moved to the device
+        /// specified by the device identifier string immediately.This is the
+        /// recommended usage.
+        /// A list of adequate potential device strings can be obtained with
+        /// libvlc_audio_output_device_enum().
+        /// However passing NULL is supported in LibVLC version 2.2.0 and later only;
+        /// in earlier versions, this function would have no effects when the module
+        /// parameter was NULL.
+        /// If the module parameter is not NULL, the device parameter of the
+        /// corresponding audio output, if it exists, will be set to the specified
+        /// string. 
+        /// A list of adequate potential device strings can be obtained with
+        /// LibVLC.AudioOutputDevices().
+        /// </summary>
+        /// <param name="deviceId">device identifier string</param>
+        /// <param name="module">If NULL, current audio output module. if non-NULL, name of audio output module</param>
+        public void SetOutputDevice(string deviceId, string module = null) 
+            => Native.LibVLCAudioOutputDeviceSet(NativeReference, module, deviceId);
+
+        /// <summary>
+        /// Get the current audio output device identifier.
+        /// This complements SetOutputDevice()
+        /// warning The initial value for the current audio output device identifier
+        /// may not be set or may be some unknown value.A LibVLC application should
+        /// compare this value against the known device identifiers (e.g.those that
+        /// were previously retrieved by a call to libvlc_audio_output_device_enum or
+        /// libvlc_audio_output_device_list_get) to find the current audio output device.
+        ///
+        /// It is possible that the selected audio output device changes(an external
+        /// change) without a call to libvlc_audio_output_device_set.That may make this
+        /// method unsuitable to use if a LibVLC application is attempting to track
+        /// dynamic audio device changes as they happen.
+        ///
+        /// </summary>
+        /// <returns>the current audio output device identifier, or NULL if no device is selected or in case of error.</returns>
+        public string OutputDevice
         {
-            Native.LibVLCAudioOutputDeviceSet(NativeReference, module, deviceId);
+            get
+            { 
+                var strPtr = Native.LibVLCAudioOutputDeviceGet(NativeReference);
+                var outputDevice = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(strPtr) as string;
+                MarshalUtils.LibVLCFree(ref strPtr);
+                return outputDevice;
+            }
         }
 
         /// <summary>
