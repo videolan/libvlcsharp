@@ -141,6 +141,11 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_renderer_discoverer_list_release")]
             internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_retain")]
+            internal static extern void LibVLCRetain(IntPtr libVLC);
+
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -602,6 +607,9 @@ namespace LibVLCSharp.Shared
             module = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(modulePtr) as string;
             file = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filePtr) as string;
         }
+
+        /// <summary>Increments the native reference counter for this libvlc instance</summary>
+        public void Retain() => Native.LibVLCRetain(NativeReference);
     }
 
     /// <summary>Logging messages level.</summary>
