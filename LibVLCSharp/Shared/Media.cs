@@ -695,7 +695,8 @@ namespace LibVLCSharp.Shared
             DicStreams.TryRemove(handle, out var result);
         }
 
-        void Retain()
+        /// <summary>Increments the native reference counter for the media</summary>
+        public void Retain()
         {
             if (NativeReference != IntPtr.Zero)
                 Native.LibVLCMediaRetain(NativeReference);
