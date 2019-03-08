@@ -1,6 +1,5 @@
 ﻿using LibVLCSharp.Forms.Platforms.GTK;
 using LibVLCSharp.Forms.Shared;
-using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.GTK;
 
@@ -23,16 +22,20 @@ namespace LibVLCSharp.Forms.Platforms.GTK
 
             if (e.OldElement != null)
             {
-                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
+                e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
             }
 
             if (e.NewElement != null)
             {
-                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
+                e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
+                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                {
+                    OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                }
             }
         }
 
-        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
+        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
         {
             if (Control == null)
             {

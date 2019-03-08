@@ -24,16 +24,20 @@ namespace LibVLCSharp.Forms.Platforms.iOS
 
             if (e.OldElement != null)
             {
-                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
+                e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
             }
 
             if (e.NewElement != null)
             {
-                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
+                e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
+                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                {
+                    OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                }
             }    
         }
 
-        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
+        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
         {
             Control.MediaPlayer = e.NewMediaPlayer;
         }

@@ -1,6 +1,6 @@
-﻿using LibVLCSharp.Shared;
-using LibVLCSharp.Forms.Platforms.WPF;
+﻿using LibVLCSharp.Forms.Platforms.WPF;
 using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Shared;
 using Xamarin.Forms.Platform.WPF;
 
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
@@ -19,16 +19,20 @@ namespace LibVLCSharp.Forms.Platforms.WPF
 
             if (e.OldElement != null)
             {
-                e.OldElement.MediaPlayerChanged -= OnMediaPlayerChanged;
+                e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
             }
 
             if (e.NewElement != null)
             {
-                e.NewElement.MediaPlayerChanged += OnMediaPlayerChanged;
+                e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
+                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                {
+                    OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                }
             }
         }
 
-        private void OnMediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
+        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
         {
             Control.MediaPlayer = e.NewMediaPlayer;
         }

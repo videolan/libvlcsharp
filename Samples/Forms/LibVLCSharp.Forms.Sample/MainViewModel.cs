@@ -1,12 +1,20 @@
 ﻿using LibVLCSharp.Shared;
+using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace LibVLCSharp.Forms.Sample
 {
     public class MainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        LibVLC _libVLC;
+
+        public MainViewModel()
+        {
+            Task.Run((Action)Initialize);
+        }
+
+        private LibVLC LibVLC { get; set; }
 
         private MediaPlayer _mediaPlayer;
         public MediaPlayer MediaPlayer
@@ -24,17 +32,22 @@ namespace LibVLCSharp.Forms.Sample
             }
         }
 
-        public void Initialize()
+        private void Initialize()
         {
             Core.Initialize();
 
-            _libVLC = new LibVLC();
-            MediaPlayer = new MediaPlayer(_libVLC)
+            LibVLC = new LibVLC();
+            MediaPlayer = new MediaPlayer(LibVLC)
             {
-                Media = new Media(_libVLC,
-                "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", 
-                FromType.FromLocation)
+                Media = new Media(LibVLC,
+                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+                    FromType.FromLocation)
             };
+        }
+
+        public void Play()
+        {
+            MediaPlayer?.Play();
         }
     }
 }
