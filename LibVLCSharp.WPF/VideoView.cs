@@ -19,7 +19,7 @@ namespace LibVLCSharp.WPF
         {
             DefaultStyleKey = typeof(VideoView);
         }
-        
+
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer),
                 typeof(MediaPlayer),
                 typeof(VideoView),
@@ -63,7 +63,7 @@ namespace LibVLCSharp.WPF
                         Content = ViewContent
                     };
                 }
-                
+
                 Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
                 if (Hwnd == null)
                 {
@@ -116,8 +116,8 @@ namespace LibVLCSharp.WPF
             {
                 if (disposing)
                 {
-                    if(MediaPlayer != null)
-                    { 
+                    if (MediaPlayer != null)
+                    {
                         MediaPlayer.Hwnd = IntPtr.Zero;
                     }
                 }
