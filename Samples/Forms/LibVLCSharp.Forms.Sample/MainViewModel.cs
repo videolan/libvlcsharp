@@ -23,6 +23,8 @@ namespace LibVLCSharp.Forms.Sample
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
         }
 
+        private bool IsLoaded { get; set; }
+
         private void Set<T>(string propertyName, ref T field, T value)
         {
             if (field == null && value != null || field != null && !field.Equals(value))
@@ -43,11 +45,21 @@ namespace LibVLCSharp.Forms.Sample
                     "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
                     FromType.FromLocation)
             };
+            Play();
         }
 
-        public void Play()
+        public void OnAppearing()
         {
-            MediaPlayer?.Play();
+            IsLoaded = true;
+            Play();
+        }
+
+        private void Play()
+        {
+            if (IsLoaded)
+            {
+                MediaPlayer?.Play();
+            }
         }
     }
 }
