@@ -1292,7 +1292,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public string AspectRatio
         {
-            get => Native.LibVLCVideoGetAspectRatio(NativeReference).FromUtf8();
+            get => Native.LibVLCVideoGetAspectRatio(NativeReference).FromUtf8(libvlcFree: true);
             set
             {
                 var aspectRatioUtf8 = value.ToUtf8();
@@ -1364,7 +1364,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public string CropGeometry
         {
-            get => Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8();
+            get => Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8(libvlcFree: true);
             set
             {
                 var cropGeometryUtf8 = value.ToUtf8();
