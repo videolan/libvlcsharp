@@ -207,3 +207,5 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 ## License
 
 LibVLCSharp is under the LGPLv2.1.
+
+Note: the .NET4.0 LibVLCSharp build references a nuget package that may indicate its license as the .NET Library license but it's actually [opensource](https://github.com/Microsoft/referencesource/commit/6952d2c3923d30a4d88bf57120688b9532bbe1d8) under MIT.
