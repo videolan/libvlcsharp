@@ -560,8 +560,7 @@ namespace LibVLCSharp.Shared
         /// <param name="type">The type of the track</param>
         /// <param name="codec">the codec or fourcc</param>
         /// <returns>the codec description</returns>
-        public string CodecDescription(TrackType type, uint codec) 
-            => Native.LibvlcMediaGetCodecDescription(type, codec);
+        public string CodecDescription(TrackType type, uint codec) => Native.LibvlcMediaGetCodecDescription(type, codec).FromUtf8();
 
         public override bool Equals(object obj)
         {
