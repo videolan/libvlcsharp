@@ -73,8 +73,7 @@ namespace LibVLCSharp.Shared
         /// Get media service discover object its localized name.
         /// under v3 only
         /// </summary>
-        public string LocalizedName => (string) Utf8StringMarshaler.GetInstance()
-            .MarshalNativeToManaged(Native.LibVLCMediaDiscovererLocalizedName(NativeReference));
+        public string LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
 
         /// <summary>
         /// Get event manager from media service discover object.

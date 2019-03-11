@@ -58,10 +58,12 @@ namespace LibVLCSharp.Shared
             if (password == null)
                 password = string.Empty;
 
-            var usernamePtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(username);
-            var passwordPtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(password);
+            var usernamePtr = username.ToUtf8();
+            var passwordPtr = password.ToUtf8();
 
-            var result = Native.LibVLCDialogPostLogin(_id, usernamePtr, passwordPtr, store) == 0;
+            var result = MarshalUtils.PerformInteropAndFree(
+                () => Native.LibVLCDialogPostLogin(_id, usernamePtr, passwordPtr, store), 
+                usernamePtr, passwordPtr) == 0;
 
             _id = IntPtr.Zero;
 

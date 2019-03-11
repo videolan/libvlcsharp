@@ -338,11 +338,7 @@ namespace LibVLCSharp.Shared.Helpers
             
             for (var i = 0; i < utf8Args.Length; i++)
             {
-                var bytes = Encoding.UTF8.GetBytes(args[i]);
-                var buffer = Marshal.AllocHGlobal(bytes.Length + 1);
-                Marshal.Copy(bytes, 0, buffer, bytes.Length);
-                Marshal.WriteByte(buffer, bytes.Length, 0);
-                utf8Args[i] = buffer;
+                utf8Args[i] = args[i].ToUtf8();
             }
 
             return utf8Args;
@@ -450,6 +446,49 @@ namespace LibVLCSharp.Shared.Helpers
 
             Native.LibVLCFree(ptr);
             ptr = IntPtr.Zero;
+        }
+
+        internal static void Free(params IntPtr[] ptrs)
+        {
+            foreach (var ptr in ptrs)
+                Marshal.FreeHGlobal(ptr);
+        }
+
+        /// <summary>
+        /// Performs the native call, frees the ptrs and returns the result
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="interopCall"></param>
+        /// <param name="ptrs"></param>
+        /// <returns></returns>
+        internal static T PerformInteropAndFree<T>(Func<T> interopCall, params IntPtr[] ptrs)
+        {
+            try
+            {
+                return interopCall();
+            }
+            finally
+            {
+                Free(ptrs);
+            }
+        }
+
+        /// <summary>
+        /// Performs the native call and frees the ptrs
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="interopCall"></param>
+        /// <param name="ptrs"></param>
+        internal static void PerformInteropAndFree(Action interopCall, params IntPtr[] ptrs)
+        {
+            try
+            {
+                interopCall();
+            }
+            finally
+            {
+                Free(ptrs);
+            }
         }
     }
 

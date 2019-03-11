@@ -173,21 +173,30 @@ namespace LibVLCSharp.Shared
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
             if (string.IsNullOrEmpty(mrl)) throw new ArgumentNullException(nameof(mrl));
 
-            var mrlPtr = Utf8StringMarshaler.GetInstance().MarshalManagedToNative(mrl);
+            var mrlPtr = mrl.ToUtf8();
             if (mrlPtr == IntPtr.Zero)
                 throw new ArgumentException($"error marshalling {mrl} to UTF-8 for native interop");
 
+            IntPtr result;
             switch (type)
             {
                 case FromType.FromLocation:
-                    return Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrlPtr);
+                    break;
                 case FromType.FromPath:
-                    return Native.LibVLCMediaNewPath(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewPath(libVLC.NativeReference, mrlPtr);
+                    break;
                 case FromType.AsNode:
-                    return Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrlPtr);
+                    break;
                 default:
-                    return IntPtr.Zero;
+                    result = IntPtr.Zero;
+                    break;
             }
+
+            Marshal.FreeHGlobal(mrlPtr);
+
+            return result;
         }
 
         /// <summary>
@@ -234,7 +243,9 @@ namespace LibVLCSharp.Shared
         {
             foreach(var option in options)
             {
-                Native.LibVLCMediaAddOption(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(option));
+                var optionUtf8 = option.ToUtf8();
+
+                MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
             }
         }
         
@@ -327,7 +338,8 @@ namespace LibVLCSharp.Shared
                 if (string.IsNullOrEmpty(_mrl))
                 {
                     var mrlPtr = Native.LibVLCMediaGetMrl(NativeReference);
-                    _mrl = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(mrlPtr) as string;
+                    _mrl = mrlPtr.FromUtf8();
+                    MarshalUtils.LibVLCFree(ref mrlPtr);
                 }
                 return _mrl;
             }
@@ -350,8 +362,7 @@ namespace LibVLCSharp.Shared
         public string Meta(MetadataType metadataType)
         {
             var metaPtr = Native.LibVLCMediaGetMeta(NativeReference, metadataType);
-            if (metaPtr == IntPtr.Zero) return string.Empty;
-            return Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(metaPtr) as string;
+            return metaPtr.FromUtf8(libvlcFree: true);
         }
 
         /// <summary>

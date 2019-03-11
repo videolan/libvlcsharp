@@ -636,7 +636,7 @@ namespace LibVLCSharp.Shared
         static void OnSnapshotTaken(IntPtr ptr)
         {
             var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
-            var filename = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filenamePtr);
+            var filename = filenamePtr.FromUtf8();
             _mediaPlayerSnapshotTaken?.Invoke(null, new MediaPlayerSnapshotTakenEventArgs(filename));
         }
 
@@ -686,7 +686,7 @@ namespace LibVLCSharp.Shared
         static void OnAudioDevice(IntPtr ptr)
         {
             var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
-            var deviceName = (string) Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(deviceNamePtr);
+            var deviceName = deviceNamePtr.FromUtf8();
             _mediaPlayerAudioDevice?.Invoke(null, new MediaPlayerAudioDeviceEventArgs(deviceName));
         }
 
@@ -817,7 +817,7 @@ namespace LibVLCSharp.Shared
         void OnSnapshotTaken(IntPtr ptr)
         {
             var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
-            var filename = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filenamePtr);
+            var filename = filenamePtr.FromUtf8();
             _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filename));
         }
 
@@ -860,7 +860,7 @@ namespace LibVLCSharp.Shared
         void OnAudioDevice(IntPtr ptr)
         {
             var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
-            var deviceName = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(deviceNamePtr);
+            var deviceName = deviceNamePtr.FromUtf8();
             _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceName));
         }
 

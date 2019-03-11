@@ -113,8 +113,6 @@ namespace LibVLCSharp.Shared
         const int VideoRenderer = 0x0002;
         const int AudioRenderer = 0x0001;
 
-        readonly Utf8StringMarshaler _utf8Marshaler = Utf8StringMarshaler.GetInstance();
-
         readonly struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -151,17 +149,17 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Name of the renderer item
         /// </summary>
-        public string Name => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemName(NativeReference)) as string;
+        public string Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8();
 
         /// <summary>
         /// Type of the renderer item
         /// </summary>
-        public string Type => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemType(NativeReference)) as string;
+        public string Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8();
 
         /// <summary>
         /// IconUri of the renderer item
         /// </summary>
-        public string IconUri => _utf8Marshaler.MarshalNativeToManaged(Native.LibVLCRendererItemIconUri(NativeReference)) as string;
+        public string IconUri => Native.LibVLCRendererItemIconUri(NativeReference).FromUtf8();
 
         /// <summary>
         /// true if the renderer item can render video

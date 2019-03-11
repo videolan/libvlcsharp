@@ -220,8 +220,11 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="name">interface name, or empty string for default</param>
         /// <returns>True if successful, false otherwise</returns>
-        public bool AddInterface(string name) => Native.LibVLCAddInterface(NativeReference, 
-            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(name)) == 0;
+        public bool AddInterface(string name)
+        {
+            var namePtr = name.ToUtf8();
+            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
+        }
 #endif
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
@@ -254,8 +257,13 @@ namespace LibVLCSharp.Shared
         /// <param name="name">human-readable application name, e.g. &quot;FooBar player 1.2.3&quot;</param>
         /// <param name="http">HTTP User Agent, e.g. &quot;FooBar/1.2.3 Python/2.6.0&quot;</param>
         /// <remarks>LibVLC 1.1.1 or later</remarks>
-        public void SetUserAgent(string name, string http) => Native.LibVLCSetUserAgent(NativeReference, 
-            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(name), Utf8StringMarshaler.GetInstance().MarshalManagedToNative(http));        
+        public void SetUserAgent(string name, string http)
+        {
+            var nameUtf8 = name.ToUtf8();
+            var httpUtf8 = http.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCSetUserAgent(NativeReference, nameUtf8, httpUtf8), nameUtf8, httpUtf8);
+        }
 
         /// <summary>
         /// <para>Sets some meta-information about the application.</para>
@@ -265,10 +273,15 @@ namespace LibVLCSharp.Shared
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public void SetAppId(string id, string version, string icon) => Native.LibVLCSetAppId(NativeReference, 
-            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(id),
-            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(version),
-            Utf8StringMarshaler.GetInstance().MarshalManagedToNative(icon));
+        public void SetAppId(string id, string version, string icon)
+        {
+            var idUtf8 = id.ToUtf8();
+            var versionUtf8 = version.ToUtf8();
+            var iconUtf8 = icon.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCSetAppId(NativeReference, idUtf8, versionUtf8, iconUtf8),
+                idUtf8, versionUtf8, iconUtf8);
+        }
 
         /// <summary>Unsets the logging callback.</summary>
         /// <remarks>
@@ -441,12 +454,16 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
         public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => 
-            MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, Utf8StringMarshaler.GetInstance().MarshalManagedToNative(audioOutputName)), 
+            MarshalUtils.Retrieve(() => 
+            {
+                var audioOutputNameUtf8 = audioOutputName.ToUtf8();
+                return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
+            }, 
             MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
             s => s.Build(), 
             device => device.Next, 
             Native.LibVLCAudioOutputDeviceListRelease);
-
+        
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
@@ -559,7 +576,7 @@ namespace LibVLCSharp.Shared
             {
                 MarshalUtils.Vsprintf(utf8Buffer, format, args);
 
-                formattedDecodedMessage = (string)Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(utf8Buffer);
+                formattedDecodedMessage = utf8Buffer.FromUtf8();
             }
             finally
             {
@@ -596,8 +613,8 @@ namespace LibVLCSharp.Shared
             Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
 
             line = linePtr == UIntPtr.Zero ? null : (uint?)linePtr.ToUInt32();
-            module = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(modulePtr) as string;
-            file = Utf8StringMarshaler.GetInstance().MarshalNativeToManaged(filePtr) as string;
+            module = modulePtr.FromUtf8();
+            file = filePtr.FromUtf8();
         }
     }
 
