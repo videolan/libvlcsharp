@@ -108,9 +108,14 @@ namespace LibVLCSharp.Shared.Helpers
         internal static RendererDescription Build(this RendererDescriptionStructure s) => 
             new RendererDescription(s.Name.FromUtf8(), s.LongName.FromUtf8());
 
+        /// <summary>
+        /// Helper method that marshals a UTF16 managed string to a UTF8 native string ptr
+        /// </summary>
+        /// <param name="str">the managed string to marshal to native</param>
+        /// <returns>a ptr to the UTF8 string that needs to be freed after use</returns>
         internal static IntPtr ToUtf8(this string str)
         {
-            if (string.IsNullOrEmpty(str))
+            if (str == null)
                 return IntPtr.Zero;
 
             byte[] utf8bytes = Encoding.UTF8.GetBytes(str);
@@ -120,6 +125,13 @@ namespace LibVLCSharp.Shared.Helpers
             return ptr;
         }
 
+        /// <summary>
+        /// Helper method that mashals a UTF8 native string ptr to a UTF16 managed string.
+        /// Optionally frees the native string ptr
+        /// </summary>
+        /// <param name="nativeString">the native string to marshal to managed</param>
+        /// <param name="libvlcFree">frees the native pointer of the libvlc string (use only for char*)</param>
+        /// <returns>a managed UTF16 string</returns>
         internal static string FromUtf8(this IntPtr nativeString, bool libvlcFree = false)
         {
             if (nativeString == IntPtr.Zero)

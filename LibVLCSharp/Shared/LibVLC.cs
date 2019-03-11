@@ -457,7 +457,8 @@ namespace LibVLCSharp.Shared
             MarshalUtils.Retrieve(() => 
             {
                 var audioOutputNameUtf8 = audioOutputName.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
+                return MarshalUtils.PerformInteropAndFree(() => 
+                    Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
             }, 
             MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
             s => s.Build(), 

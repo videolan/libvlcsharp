@@ -295,7 +295,8 @@ namespace LibVLCSharp.Shared
         {
             if(string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
 
-            Native.LibVLCMediaAddOption(NativeReference, option.ToUtf8());
+            var optionUtf8 = option.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
         }
 
         /// <summary>
@@ -326,7 +327,9 @@ namespace LibVLCSharp.Shared
         {
             if (string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
 
-            Native.LibVLCMediaAddOptionFlag(NativeReference, option.ToUtf8(), flags);
+            var optionUtf8 = option.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOptionFlag(NativeReference, optionUtf8, flags), optionUtf8);
         }
 
         string _mrl;
@@ -338,8 +341,7 @@ namespace LibVLCSharp.Shared
                 if (string.IsNullOrEmpty(_mrl))
                 {
                     var mrlPtr = Native.LibVLCMediaGetMrl(NativeReference);
-                    _mrl = mrlPtr.FromUtf8();
-                    MarshalUtils.LibVLCFree(ref mrlPtr);
+                    _mrl = mrlPtr.FromUtf8(libvlcFree: true);
                 }
                 return _mrl;
             }
@@ -371,11 +373,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="metadataType">the <see cref="MetadataType"/>  to write</param>
         /// <param name="value">the media's meta</param>
-        public void SetMeta(MetadataType metadataType, string value)
+        public void SetMeta(MetadataType metadataType, string metaValue)
         {
-            if(string.IsNullOrEmpty(value)) throw new ArgumentNullException(value);
+            if(string.IsNullOrEmpty(metaValue)) throw new ArgumentNullException(metaValue);
 
-            Native.LibVLCMediaSetMeta(NativeReference, metadataType, value.ToUtf8());
+            var metaUtf8 = metaValue.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaSetMeta(NativeReference, metadataType, metaUtf8), metaUtf8);
         }
 
         /// <summary>Save the meta previously set</summary>
@@ -524,9 +527,11 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
-        public bool AddSlave(MediaSlaveType type, uint priority, string uri) => 
-            Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uri.ToUtf8()) != 0;
-
+        public bool AddSlave(MediaSlaveType type, uint priority, string uri)
+        {
+            var uriUtf8 = uri.ToUtf8();
+            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uriUtf8) != 0, uriUtf8);
+        }
 
         /// <summary>
         /// <para>Clear all slaves previously added by libvlc_media_slaves_add() or</para>

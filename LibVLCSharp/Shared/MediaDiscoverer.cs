@@ -53,7 +53,12 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">libvlc instance this will be attached to</param>
         /// <param name="name">name from one of LibVLC.MediaDiscoverers</param>
         public MediaDiscoverer(LibVLC libVLC, string name) 
-            : base(() => Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, name.ToUtf8()), Native.LibVLCMediaDiscovererRelease)
+            : base(() =>
+            {
+                var nameUtf8 = name.ToUtf8();
+                return MarshalUtils.PerformInteropAndFree(() => 
+                    Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
+            }, Native.LibVLCMediaDiscovererRelease)
         {
         }
 

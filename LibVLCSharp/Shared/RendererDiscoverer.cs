@@ -41,7 +41,12 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">libvlc instance this will be connected to</param>
         /// <param name="name">The service discovery protocol name depending on platform. Use LibVLC.RendererList to find the one for your platform</param>
         public RendererDiscoverer(LibVLC libVLC, string name)
-            : base(() => Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, name.ToUtf8()), Native.LibVLCRendererDiscovererRelease)
+            : base(() =>
+            {
+                var nameUtf8 = name.ToUtf8();
+                return MarshalUtils.PerformInteropAndFree(() => 
+                    Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
+            }, Native.LibVLCRendererDiscovererRelease)
         {
         }
 

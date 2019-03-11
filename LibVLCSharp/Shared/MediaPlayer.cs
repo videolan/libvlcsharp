@@ -418,11 +418,6 @@ namespace LibVLCSharp.Shared
             internal static extern int LibVLCVideoSetSpu(IntPtr mediaPlayer, int spu);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_set_subtitle_file")]
-            internal static extern int LibVLCVideoSetSubtitleFile(IntPtr mediaPlayer, IntPtr subtitle);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu_delay")]
             internal static extern long LibVLCVideoGetSpuDelay(IntPtr mediaPlayer);
 
@@ -485,16 +480,13 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_video_get_track_count")]
             internal static extern int LibVLCVideoGetTrackCount(IntPtr mediaPlayer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_track_description")]
             internal static extern IntPtr LibVLCVideoGetTrackDescription(IntPtr mediaPlayer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_track")]
             internal static extern int LibVLCVideoGetTrack(IntPtr mediaPlayer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_track")]
@@ -509,11 +501,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_video_set_deinterlace")]
             internal static extern void LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, IntPtr mode);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_int")]
             internal static extern int LibVLCVideoGetMarqueeInt(IntPtr mediaPlayer, VideoMarqueeOption option);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_string")]
@@ -551,11 +541,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_video_get_adjust_float")]
             internal static extern float LibVLCVideoGetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_adjust_float")]
             internal static extern void LibVLCVideoSetAdjustFloat(IntPtr mediaPlayer, VideoAdjustOption option, float value);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_add_slave")]
@@ -1030,8 +1018,12 @@ namespace LibVLCSharp.Shared
         /// <param name="format">a four-characters string identifying the sample format (e.g. "S16N" or "FL32")</param>
         /// <param name="rate">sample rate (expressed in Hz)</param>
         /// <param name="channels">channels count</param>
-        public void SetAudioFormat(string format, uint rate, uint channels) => Native.LibVLCAudioSetFormat(NativeReference, format.ToUtf8(), rate, channels);
-        
+        public void SetAudioFormat(string format, uint rate, uint channels)
+        {
+            var formatUtf8 = format.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioSetFormat(NativeReference, formatUtf8, rate, channels), formatUtf8);
+        }
+
         /// <summary>
         /// Selects an audio output module.
         /// Note: 
@@ -1039,7 +1031,11 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="name">name of audio output, use psz_name of</param>
         /// <returns>0 if function succeeded, -1 on error</returns>
-        public int SetAudioOutput(string name) => Native.LibVLCAudioOutputSet(NativeReference, name.ToUtf8());
+        public int SetAudioOutput(string name)
+        {
+            var nameUtf8 = name.ToUtf8();
+            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputSet(NativeReference, nameUtf8), nameUtf8);
+        }
 
         // TODO
         /// <summary>
@@ -1053,7 +1049,14 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        public void OutputDeviceSet(string deviceId, string module = null) => Native.LibVLCAudioOutputDeviceSet(NativeReference, module.ToUtf8(), deviceId.ToUtf8());
+        public void OutputDeviceSet(string deviceId, string module = null)
+        {
+            var deviceIdUtf8 = deviceId.ToUtf8();
+            var moduleUtf8 = module.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => 
+                Native.LibVLCAudioOutputDeviceSet(NativeReference, moduleUtf8, deviceIdUtf8), 
+                moduleUtf8, deviceIdUtf8);
+        }
         
         /// <summary>
         /// Toggle mute status. 
@@ -1189,7 +1192,11 @@ namespace LibVLCSharp.Shared
         /// <param name="pitch">line pitch (in bytes)</param>
         public void SetVideoFormat(string chroma, uint width, uint height, uint pitch)
         {
-            Native.LibVLCVideoSetFormat(NativeReference, chroma.ToUtf8(), width, height, pitch);
+            var chromaUtf8 = chroma.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() => 
+                Native.LibVLCVideoSetFormat(NativeReference, chromaUtf8, width, height, pitch),
+                chromaUtf8);
         }
 
         /// <summary>
@@ -1286,7 +1293,11 @@ namespace LibVLCSharp.Shared
         public string AspectRatio
         {
             get => Native.LibVLCVideoGetAspectRatio(NativeReference).FromUtf8();
-            set => Native.LibVLCVideoSetAspectRatio(NativeReference, value.ToUtf8());
+            set
+            {
+                var aspectRatioUtf8 = value.ToUtf8();
+                MarshalUtils.PerformInteropAndFree(() => Native.LibVLCVideoSetAspectRatio(NativeReference, aspectRatioUtf8), aspectRatioUtf8);
+            }
         }
 
         public int Spu => Native.LibVLCVideoGetSpu(NativeReference);
@@ -1311,13 +1322,6 @@ namespace LibVLCSharp.Shared
             t => t.Build(),
             t => t.Next,
             Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
-        /// Set new video subtitle file.
-        /// </summary>
-        /// <param name="subtitle">new video subtitle file</param>
-        /// <returns></returns>
-        public bool SetSubtitleFile(string subtitle) => Native.LibVLCVideoSetSubtitleFile(NativeReference, subtitle.ToUtf8()) != 0;
 
         /// <summary>
         /// Get the current subtitle delay. 
@@ -1361,7 +1365,11 @@ namespace LibVLCSharp.Shared
         public string CropGeometry
         {
             get => Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8();
-            set => Native.LibVLCVideoSetCropGeometry(NativeReference, value.ToUtf8());
+            set
+            {
+                var cropGeometryUtf8 = value.ToUtf8();
+                MarshalUtils.PerformInteropAndFree(() => Native.LibVLCVideoSetCropGeometry(NativeReference, cropGeometryUtf8), cropGeometryUtf8);
+            }
         }
 
         /// <summary>
@@ -1410,14 +1418,26 @@ namespace LibVLCSharp.Shared
         /// <param name="width">the snapshot's width</param>
         /// <param name="height">the snapshot's height</param>
         /// <returns>true on success</returns>
-        public bool TakeSnapshot(uint num, string filePath, uint width, uint height) =>
-            Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePath.ToUtf8(), width, height) == 0;
+        public bool TakeSnapshot(uint num, string filePath, uint width, uint height)
+        {
+            var filePathUtf8 = filePath.ToUtf8();
+            return MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePathUtf8, width, height) == 0,
+                filePathUtf8);
+        }
 
         /// <summary>
         /// Enable or disable deinterlace filter
         /// </summary>
-        /// <param name="mode">type of deinterlace filter, empty string to disable</param>
-        public void SetDeinterlace(string mode) => Native.LibVLCVideoSetDeinterlace(NativeReference, mode.ToUtf8());
+        /// <param name="deinterlaceMode">type of deinterlace filter, empty string to disable</param>
+        public void SetDeinterlace(string deinterlaceMode)
+        {
+            var deinterlaceModeUtf8 = deinterlaceMode.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() => 
+                Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlaceModeUtf8),
+                deinterlaceModeUtf8);
+        }
 
         /// <summary>
         /// Get an integer marquee option value
@@ -1431,7 +1451,11 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">marq option to get</param>
         /// <returns></returns>
-        public string MarqueeString(VideoMarqueeOption option) => Native.LibVLCVideoGetMarqueeString(NativeReference, option).FromUtf8();
+        public string MarqueeString(VideoMarqueeOption option)
+        {
+            var marqueeStrPtr = Native.LibVLCVideoGetMarqueeString(NativeReference, option);
+            return marqueeStrPtr.FromUtf8(libvlcFree: true);
+        }
 
         /// <summary>
         /// Enable, disable or set an integer marquee option
@@ -1447,9 +1471,15 @@ namespace LibVLCSharp.Shared
         /// Enable, disable or set an string marquee option
         /// </summary>
         /// <param name="option">marq option to set</param>
-        /// <param name="value">marq option value</param>
-        public void SetMarqueeString(VideoMarqueeOption option, string value) =>
-            Native.LibVLCVideoSetMarqueeString(NativeReference, option, value.ToUtf8());
+        /// <param name="marqueeValue">marq option value</param>
+        public void SetMarqueeString(VideoMarqueeOption option, string marqueeValue)
+        {
+            var marqueeValueUtf8 = marqueeValue.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCVideoSetMarqueeString(NativeReference, option, marqueeValueUtf8),
+                marqueeValueUtf8);
+        }
+        
 
         /// <summary>
         /// Get integer logo option.
@@ -1471,8 +1501,15 @@ namespace LibVLCSharp.Shared
         /// Set logo option as string. Options that take a different type value are ignored.
         /// </summary>
         /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
-        /// <param name="value">logo option value</param>
-        public void SetLogoString(VideoLogoOption option, string value) => Native.LibVLCVideoSetLogoString(NativeReference, option, value.ToUtf8());
+        /// <param name="logoValue">logo option value</param>
+        public void SetLogoString(VideoLogoOption option, string logoValue)
+        {
+            var logoValueUtf8 = logoValue.ToUtf8();
+
+            MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCVideoSetLogoString(NativeReference, option, logoValueUtf8),
+                logoValueUtf8);
+        }
 
         /// <summary>
         /// Get integer adjust option.
@@ -1516,8 +1553,13 @@ namespace LibVLCSharp.Shared
         /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
         /// <param name="select">True if this slave should be selected when it's loaded</param>
         /// <returns></returns>
-        public bool AddSlave(MediaSlaveType type, string uri, bool select) =>
-            Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uri.ToUtf8(), select) == 0;
+        public bool AddSlave(MediaSlaveType type, string uri, bool select)
+        {
+            var uriUtf8 = uri.ToUtf8();
+            return MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uriUtf8, select) == 0,
+                uriUtf8);
+        }
 
         /// <summary>
         /// Current 360 viewpoint of this mediaplayer.
