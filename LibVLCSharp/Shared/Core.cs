@@ -82,7 +82,7 @@ namespace LibVLCSharp.Shared
                 // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
                 if (Native.XInitThreads() == 0)
                 {
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !UAP
                     Trace.WriteLine("XInitThreads failed");
 #endif
                 }
@@ -146,11 +146,19 @@ namespace LibVLCSharp.Shared
             }
             else
             {
+#if UAP
+                arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Winrt64 : ArchitectureNames.Winrt86; // TODO: ARM
+#else
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
-            }            
-
+#endif
+            }
+#if UAP
+            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).GetTypeInfo().Assembly.FullName), 
+                Constants.LibrariesRepositoryFolderName, arch);
+#else
             var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
                 Constants.LibrariesRepositoryFolderName, arch);
+#endif
 
             string libvlccorePath1 = string.Empty;
             if (PlatformHelper.IsWindows)
@@ -160,8 +168,9 @@ namespace LibVLCSharp.Shared
             var libvlcPath1 = LibVLCPath(libvlcDirPath1);
             paths.Add((libvlccorePath1, libvlcPath1));
 
+#if !UAP
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
-            
+
             var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
@@ -177,11 +186,10 @@ namespace LibVLCSharp.Shared
             var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location));
 
             paths.Add((string.Empty, libvlcPath3));
-
+#endif
             return paths;
         }
 #endif
-
         static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
 
         static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
@@ -192,7 +200,7 @@ namespace LibVLCSharp.Shared
 
         static void Log(string message)
         {
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !UAP
             Trace.WriteLine(message);
 #else
             Debug.WriteLine(message);
@@ -262,7 +270,8 @@ namespace LibVLCSharp.Shared
         internal const string Win86 = "win-x86";
         internal const string Winrt64 = "winrt-x64";
         internal const string Winrt86 = "winrt-x86";
-        
+        internal const string WinrtArm = "winrt-arm";
+
         internal const string Lin64 = "linux-x64";
         internal const string LinArm = "linux-arm";
 

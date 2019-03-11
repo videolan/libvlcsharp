@@ -23,4 +23,7 @@
   <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
+    <DefineConstants>$(DefineConstants);UAP;NET</DefineConstants>
+  </PropertyGroup>
 </Project>

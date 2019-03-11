@@ -9,6 +9,8 @@ namespace LibVLCSharp.Shared
         {
 #if NET40
             get => Environment.OSVersion.Platform == PlatformID.Win32NT;
+#elif UAP
+            get => true;
 #else
             get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 #endif
@@ -18,6 +20,8 @@ namespace LibVLCSharp.Shared
         {
 #if NET40
             get => Environment.OSVersion.Platform == PlatformID.Unix;
+#elif UAP
+            get => false;
 #else
             get => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 #endif
@@ -25,7 +29,7 @@ namespace LibVLCSharp.Shared
 
         public static bool IsMac
         {
-#if NET40
+#if NET40 || UAP
             get => false; // no easy way to detect Mac platform host at runtime under net471
 #else
             get => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
