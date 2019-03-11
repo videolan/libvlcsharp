@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -210,8 +211,22 @@ namespace LibVLCSharp.Shared
         /// <param name="options">list of arguments (should be NULL)</param>
         /// <returns>the libvlc instance or NULL in case of error</returns>
         public LibVLC(params string[] options)
-            : base(() => MarshalUtils.CreateWithOptions(options, Native.LibVLCNew), Native.LibVLCRelease)
+            : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options), Native.LibVLCNew), Native.LibVLCRelease)
         {
+        }
+
+        /// <summary>
+        /// Make dirty hacks to include necessary defaults on some platforms.
+        /// </summary>
+        /// <param name="options">The options given by the user</param>
+        /// <returns>The patched options</returns>
+        static string[] PatchOptions(string[] options)
+        {
+#if UWP
+            return options.Concat(new[] {"--aout=winstore"}).ToArray();
+#else
+            return options;
+#endif
         }
 
         protected override void Dispose(bool disposing)
