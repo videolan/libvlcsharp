@@ -1042,27 +1042,27 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Selects an audio output module.
         /// Note: 
-        /// Any change will take be effect only after playback is stopped and restarted.Audio output cannot be changed while playing.
+        /// Any change will take effect only after playback is stopped and restarted. Audio output cannot be changed while playing.
         /// </summary>
         /// <param name="name">name of audio output, use psz_name of</param>
-        /// <returns>0 if function succeeded, -1 on error</returns>
-        public int SetAudioOutput(string name)
+        /// <returns>true if function succeeded, false on error</returns>
+        public bool SetAudioOutput(string name)
         {
             var nameUtf8 = name.ToUtf8();
-            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputSet(NativeReference, nameUtf8), nameUtf8);
+            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputSet(NativeReference, nameUtf8), nameUtf8) == 0;
         }
 
         /// <summary>
         /// Get the current audio output device identifier.
-        /// This complements SetOutputDevice()
+        /// This complements <see cref="SetOutputDevice"/>
         /// warning The initial value for the current audio output device identifier
         /// may not be set or may be some unknown value.A LibVLC application should
         /// compare this value against the known device identifiers (e.g.those that
-        /// were previously retrieved by a call to libvlc_audio_output_device_enum or
-        /// libvlc_audio_output_device_list_get) to find the current audio output device.
+        /// were previously retrieved by a call to <see cref="AudioOutputDeviceEnum"/> or
+        /// <see cref="LibVLC.AudioOutputDevices"/>) to find the current audio output device.
         ///
         /// It is possible that the selected audio output device changes(an external
-        /// change) without a call to libvlc_audio_output_device_set.That may make this
+        /// change) without a call to <see cref="SetOutputDevice"/>.That may make this
         /// method unsuitable to use if a LibVLC application is attempting to track
         /// dynamic audio device changes as they happen.
         ///
@@ -1076,7 +1076,7 @@ namespace LibVLCSharp.Shared
         /// specified by the device identifier string immediately.This is the
         /// recommended usage.
         /// A list of adequate potential device strings can be obtained with
-        /// libvlc_audio_output_device_enum().
+        /// <see cref="AudioOutputDeviceEnum"/>
         /// However passing NULL is supported in LibVLC version 2.2.0 and later only;
         /// in earlier versions, this function would have no effects when the module
         /// parameter was NULL.
@@ -1084,7 +1084,7 @@ namespace LibVLCSharp.Shared
         /// corresponding audio output, if it exists, will be set to the specified
         /// string. 
         /// A list of adequate potential device strings can be obtained with
-        /// LibVLC.AudioOutputDevices().
+        /// <see cref="LibVLC.AudioOutputDevices"/>
         /// </summary>
         /// <param name="deviceId">device identifier string</param>
         /// <param name="module">If NULL, current audio output module. if non-NULL, name of audio output module</param>
@@ -1096,7 +1096,18 @@ namespace LibVLCSharp.Shared
                 Native.LibVLCAudioOutputDeviceSet(NativeReference, moduleUtf8, deviceIdUtf8), 
                 moduleUtf8, deviceIdUtf8);
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public AudioOutputDevice[] AudioOutputDeviceEnum =>
+           MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceEnum(NativeReference),
+           MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
+           s => s.Build(),
+           device => device.Next,
+           Native.LibVLCAudioOutputDeviceListRelease);
+
         /// <summary>
         /// Toggle mute status. 
         /// Warning
