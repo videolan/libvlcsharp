@@ -118,11 +118,20 @@ namespace LibVLCSharp.Shared.Helpers
             if (str == null)
                 return IntPtr.Zero;
 
-            byte[] utf8bytes = Encoding.UTF8.GetBytes(str);
-            IntPtr ptr = Marshal.AllocCoTaskMem(utf8bytes.Length + 1);
-            Marshal.Copy(utf8bytes, 0, ptr, utf8bytes.Length);
-            Marshal.WriteByte(ptr, utf8bytes.Length, 0);
-            return ptr;
+            byte[] bytes = Encoding.UTF8.GetBytes(str);
+            var nativeString = Marshal.AllocHGlobal(bytes.Length + 1);
+            try
+            {
+                Marshal.Copy(bytes, 0, nativeString, bytes.Length);
+                Marshal.WriteByte(nativeString, bytes.Length, 0);
+            }
+            catch (Exception)
+            {
+                Marshal.FreeHGlobal(nativeString);
+                throw;
+            }
+
+            return nativeString;
         }
 
         /// <summary>
@@ -137,19 +146,18 @@ namespace LibVLCSharp.Shared.Helpers
             if (nativeString == IntPtr.Zero)
                 return null;
 
-            var bytes = new List<byte>();
-            for (int offset = 0; ; offset++)
+            var length = 0;
+
+            while (Marshal.ReadByte(nativeString, length) != 0)
             {
-                byte b = Marshal.ReadByte(nativeString, offset);
-                if (b == 0)
-                    break;
-                else bytes.Add(b);
+                length++;
             }
 
-            var str = Encoding.UTF8.GetString(bytes.ToArray(), 0, bytes.Count);
+            byte[] buffer = new byte[length];
+            Marshal.Copy(nativeString, buffer, 0, buffer.Length);
             if (libvlcFree)
                 MarshalUtils.LibVLCFree(ref nativeString);
-            return str;
+            return Encoding.UTF8.GetString(buffer, 0, buffer.Length);
         }
     }
 }

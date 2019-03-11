@@ -448,12 +448,6 @@ namespace LibVLCSharp.Shared.Helpers
             ptr = IntPtr.Zero;
         }
 
-        internal static void Free(params IntPtr[] ptrs)
-        {
-            foreach (var ptr in ptrs)
-                Marshal.FreeHGlobal(ptr);
-        }
-
         /// <summary>
         /// Performs the native call, frees the ptrs and returns the result
         /// </summary>
@@ -489,6 +483,12 @@ namespace LibVLCSharp.Shared.Helpers
             {
                 Free(ptrs);
             }
+        }
+
+        private static void Free(params IntPtr[] ptrs)
+        {
+            foreach (var ptr in ptrs)
+                Marshal.FreeHGlobal(ptr);
         }
     }
 
