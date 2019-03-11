@@ -485,6 +485,15 @@ namespace LibVLCSharp.Shared.Helpers
             }
         }
 
+        internal static int SizeOf<T>(T structure)
+        {
+#if NETSTANDARD1_1 || NET40
+            return Marshal.SizeOf(typeof(T));
+#else
+            return Marshal.SizeOf<T>(structure);
+#endif
+        }
+
         private static void Free(params IntPtr[] ptrs)
         {
             foreach (var ptr in ptrs)

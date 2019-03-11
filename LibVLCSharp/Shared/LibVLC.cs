@@ -535,7 +535,7 @@ namespace LibVLCSharp.Shared
                     updateProgress(dlg, position, text);
                 });
 
-            _dialogCbsPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DialogCallbacks)));
+            _dialogCbsPtr = Marshal.AllocHGlobal(MarshalUtils.SizeOf(dialogCbs));
             Marshal.StructureToPtr(dialogCbs, _dialogCbsPtr, true);
             Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbsPtr, IntPtr.Zero);
         }
