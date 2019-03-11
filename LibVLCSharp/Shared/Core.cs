@@ -15,10 +15,10 @@ namespace LibVLCSharp.Shared
     {
         struct Native
         {
-#if NET || NETSTANDARD
-            [DllImport(Constants.Kernel32, SetLastError = true)]
-            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad);
-
+#if UWP
+            [DllImport(Constants.Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern IntPtr LoadPackagedLibrary(string dllToLoad, uint reserved = 0);
+#elif NET || NETSTANDARD
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
@@ -56,6 +56,8 @@ namespace LibVLCSharp.Shared
         {
 #if ANDROID
             InitializeAndroid();
+#elif UWP
+            InitializeUWP();
 #elif NET || NETSTANDARD
             InitializeDesktop(libvlcDirectoryPath);
 #endif
@@ -69,6 +71,16 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
+#elif UWP
+        static void InitializeUWP()
+        {
+            _libvlcHandle = Native.LoadPackagedLibrary(Constants.LibraryName);
+            if (_libvlcHandle == IntPtr.Zero)
+            {
+                throw new VLCException($"Failed to load {Constants.LibraryName}{Constants.WindowsLibraryExtension}, error {Marshal.GetLastWin32Error()}. Please make sure that this library, {Constants.CoreLibraryName}{Constants.WindowsLibraryExtension} and the plugins are copied to the `AppX` folder. For that, you can reference the `VideoLAN.LibVLC.WindowsRT` NuGet package.");
+            }
+        }
+
 #elif NET || NETSTANDARD
         static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
@@ -144,7 +156,7 @@ namespace LibVLCSharp.Shared
             else
             {
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
-            }            
+            }
 
             var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
                 Constants.LibrariesRepositoryFolderName, arch);
@@ -158,7 +170,7 @@ namespace LibVLCSharp.Shared
             paths.Add((libvlccorePath1, libvlcPath1));
 
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
-            
+
             var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
@@ -174,11 +186,9 @@ namespace LibVLCSharp.Shared
             var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location));
 
             paths.Add((string.Empty, libvlcPath3));
-
             return paths;
         }
 #endif
-
         static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
 
         static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
@@ -259,7 +269,8 @@ namespace LibVLCSharp.Shared
         internal const string Win86 = "win-x86";
         internal const string Winrt64 = "winrt-x64";
         internal const string Winrt86 = "winrt-x86";
-        
+        internal const string WinrtArm = "winrt-arm";
+
         internal const string Lin64 = "linux-x64";
         internal const string LinArm = "linux-arm";
 

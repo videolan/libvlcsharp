@@ -381,15 +381,15 @@ namespace LibVLCSharp.Shared.Helpers
                     return Native._wfopen_s(out fileHandle, filename) == 0;
             }
 #else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (PlatformHelper.IsWindows)
             {
                 if(Native._wfopen_s(out fileHandle, filename) != 0) return false;
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (PlatformHelper.IsLinux)
             {
                 fileHandle = Native.fopenLinux(filename);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (PlatformHelper.IsMac)
             {
                 fileHandle = Native.fopenMac(filename);
             }
@@ -415,11 +415,11 @@ namespace LibVLCSharp.Shared.Helpers
                     return Native.fcloseWindows(fileHandle) == 0;
             }
 #else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (PlatformHelper.IsMac)
             {
                 return Native.fcloseMac(fileHandle) == 0;
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (PlatformHelper.IsLinux)
             {
                 return Native.fcloseLinux(fileHandle) == 0;
             }
