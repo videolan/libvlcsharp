@@ -150,6 +150,19 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_changeset")]
             internal static extern IntPtr LibVLCChangeset();
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_errmsg")]
+            internal static extern IntPtr LibVLCErrorMessage();
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_clearerr")]
+            internal static extern void LibVLCClearError();
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_compiler")]
+            internal static extern IntPtr LibVLCGetCompiler();
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -637,6 +650,27 @@ namespace LibVLCSharp.Shared
 
         /// <summary>The changeset of the LibVLC engine currently used by LibVLCSharp</summary>
         public string Changeset => Native.LibVLCChangeset().FromUtf8();
+
+        /// <summary>
+        /// A human-readable error message for the last LibVLC error in the calling
+        /// thread. The resulting string is valid until another error occurs (at least
+        /// until the next LibVLC call). 
+        /// <para/> Null if no error.
+        /// </summary>
+        public string LastLibVLCError => Native.LibVLCErrorMessage().FromUtf8();
+
+        /// <summary>
+        /// Clears the LibVLC error status for the current thread. This is optional.
+        /// By default, the error status is automatically overridden when a new error
+        /// occurs, and destroyed when the thread exits.
+        /// </summary>
+        public void ClearLibVLCError() => Native.LibVLCClearError();
+
+        /// <summary>
+        /// Retrieve the libvlc compiler version.
+        /// Example: "gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)"
+        /// </summary>
+        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8();
     }
 
     /// <summary>Logging messages level.</summary>
