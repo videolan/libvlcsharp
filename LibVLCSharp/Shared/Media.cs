@@ -153,7 +153,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaRetain(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                            EntryPoint = "libvlc_media_get_codec_description")]
+                EntryPoint = "libvlc_media_get_codec_description")]
             internal static extern IntPtr LibvlcMediaGetCodecDescription(TrackType type, uint codec);
         }
         
