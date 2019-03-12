@@ -278,7 +278,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Add an option to the media.</summary>
-        /// <param name="options">the options (as a string)</param>
+        /// <param name="option">the media option</param>
         /// <remarks>
         /// <para>This option will be used to determine how the media_player will</para>
         /// <para>read the media. This allows to use VLC's advanced</para>
@@ -311,7 +311,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Add an option to the media with configurable flags.</summary>
-        /// <param name="options">the option (as a string)</param>
+        /// <param name="option">the media option</param>
         /// <param name="flags">the flags for this option</param>
         /// <remarks>
         /// <para>This option will be used to determine how the media_player will</para>
