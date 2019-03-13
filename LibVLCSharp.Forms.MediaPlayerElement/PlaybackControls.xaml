@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TemplatedView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LibVLCSharp.Forms"
+             x:Class="LibVLCSharp.Forms.PlaybackControls"
+             BackgroundColor="#20000000">
+    <TemplatedView.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="ButtonStyle" TargetType="Button">
+                        <Setter Property="FontSize" Value="24" />
+                        <Setter Property="CornerRadius" Value="12" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="WidthRequest" Value="24" />
+                        <Setter Property="HeightRequest" Value="24" />
+                        <Setter Property="BackgroundColor" Value="Transparent" />
+                        <Setter Property="FontFamily">
+                            <Setter.Value>
+                                <OnPlatform x:TypeArguments="x:String">
+                                    <On Platform="iOS" Value="Material Icons" />
+                                    <On Platform="Android" Value="MaterialIcons-Regular.ttf#Material Icons" />
+                                </OnPlatform>
+                            </Setter.Value>    
+                        </Setter> 
+                        <Setter Property="VerticalOptions" Value="Center" />
+                        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+                        <Setter Property="TextColor" Value="White" />
+                        <Style.Triggers>
+                            <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                                <Setter Property="TextColor" Value="DarkGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+                </Grid.Resources>
+
+                <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}">
+                    <ProgressBar x:Name="ProgressBar" HeightRequest="6" Progress="{TemplateBinding BufferingProgress}" 
+                                 IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource ObjectToBoolConverter}}" />
+
+                    <StackLayout Orientation="Horizontal">
+                        <Button x:Name="PlayPauseButton" Style="{StaticResource ButtonStyle}"
+                                IsVisible="{TemplateBinding IsPlayPauseButtonVisible}"
+                                Text="&#xe037;">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="PlayPauseStates">
+                                    <VisualState x:Name="PlayState" />
+                                    <VisualState x:Name="PauseState">
+                                        <VisualState.Setters>
+                                            <Setter Property="Text" Value="&#xe034;" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Enabled" />
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Property="IsEnabled" Value="false" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Button>
+                    </StackLayout>
+                </StackLayout>
+            </Grid>
+        </ControlTemplate>
+    </TemplatedView.ControlTemplate>
+</TemplatedView>
