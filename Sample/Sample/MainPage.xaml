@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Sample"
+             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"            
+             xmlns:vlc="clr-namespace:LibVLCSharp.Forms;assembly=LibVLCSharp.Forms.MediaPlayerElement"
+             x:Class="Sample.MainPage">
+    <ContentPage.BindingContext>
+        <local:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Behaviors>
+        <behaviors:EventHandlerBehavior EventName="Appearing">
+            <behaviors:InvokeCommandAction Command="{Binding InitCommand}" />
+        </behaviors:EventHandlerBehavior>
+    </ContentPage.Behaviors>
+
+    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" />
+</ContentPage>
