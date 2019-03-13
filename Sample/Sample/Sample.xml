@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sample</name>
+    </assembly>
+    <members>
+        <member name="T:Sample.App">
+            <summary>
+            Represents the sample application.
+            </summary>
+        </member>
+        <member name="M:Sample.App.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Sample.App"/> class.
+            </summary>
+        </member>
+        <member name="T:Sample.MainPage">
+            <summary>
+            Represents the main page.
+            </summary>
+        </member>
+        <member name="M:Sample.MainPage.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Sample.MainPage"/> class.
+            </summary>
+        </member>
+        <member name="T:Sample.MainViewModel">
+            <summary>
+            Represents the main viewmodel.
+            </summary>
+        </member>
+        <member name="M:Sample.MainViewModel.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:Sample.MainViewModel"/> class.
+            </summary>
+        </member>
+        <member name="P:Sample.MainViewModel.MediaPlayer">
+            <summary>
+            Gets the <see cref="T:LibVLCSharp.Shared.MediaPlayer"/> instance.
+            </summary>
+        </member>
+        <member name="P:Sample.MainViewModel.InitCommand">
+            <summary>
+            Gets the initialization command.
+            </summary>
+        </member>
+        <member name="M:Sample.MainViewModel.Init">
+            <summary>
+            Initializes the media player.
+            </summary>
+        </member>
+    </members>
+</doc>
