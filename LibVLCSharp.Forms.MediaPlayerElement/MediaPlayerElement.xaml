@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TemplatedView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibVLCSharp.Forms.MediaPlayerElement">
+    <TemplatedView.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <ContentPresenter Content="{TemplateBinding VideoView}" />
+                <ContentPresenter Content="{TemplateBinding PlaybackControls}" VerticalOptions="End" />
+            </Grid>
+        </ControlTemplate>
+    </TemplatedView.ControlTemplate>
+</TemplatedView>
