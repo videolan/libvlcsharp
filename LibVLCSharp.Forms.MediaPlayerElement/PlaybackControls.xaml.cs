@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,9 +18,74 @@ namespace LibVLCSharp.Forms
         public PlaybackControls()
         {
             InitializeComponent();
+
+            ButtonStyle = Resources[nameof(ButtonStyle)] as Style;
+            ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
+            PositionSliderStyle = Resources[nameof(PositionSliderStyle)] as Style;
+            BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
         }
 
+        private VisualElement ControlsPanel { get; set; }
         private Button PlayPauseButton { get; set; }
+        private Slider PositionSlider { get; set; }
+        private object LastFadeOutTimer { get; set; }
+        private object PositionSliderTimer { get; set; }
+
+        /// <summary>
+        /// Identifies the <see cref="BufferingProgressBarStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty BufferingProgressBarStyleProperty = BindableProperty.Create(nameof(BufferingProgressBarStyle),
+            typeof(Style), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets the controls panel style.
+        /// </summary>
+        public Style BufferingProgressBarStyle
+        {
+            get => (Style)GetValue(BufferingProgressBarStyleProperty);
+            set => SetValue(BufferingProgressBarStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ControlsPanelStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ControlsPanelStyleProperty = BindableProperty.Create(nameof(ControlsPanelStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets the controls panel style.
+        /// </summary>
+        public Style ControlsPanelStyle
+        {
+            get => (Style)GetValue(ControlsPanelStyleProperty);
+            set => SetValue(ControlsPanelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PositionSliderStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty PositionSliderStyleProperty = BindableProperty.Create(nameof(PositionSliderStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets the controls panel style.
+        /// </summary>
+        public Style PositionSliderStyle
+        {
+            get => (Style)GetValue(PositionSliderStyleProperty);
+            set => SetValue(PositionSliderStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ButtonStyleProperty = BindableProperty.Create(nameof(ButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets the buttons style.
+        /// </summary>
+        public Style ButtonStyle
+        {
+            get => (Style)GetValue(ButtonStyleProperty);
+            set => SetValue(ButtonStyleProperty, value);
+        }
 
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
@@ -38,15 +104,29 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Identifies the <see cref="BufferingProgress"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty BufferingProgressProperty = BindableProperty.Create(nameof(BufferingProgress), typeof(double?),
+        public static readonly BindableProperty BufferingProgressProperty = BindableProperty.Create(nameof(BufferingProgress), typeof(double),
             typeof(PlaybackControls));
         /// <summary>
         /// Gets or sets a value corresponding to the buffering progress
         /// </summary>
-        public double? BufferingProgress
+        public double BufferingProgress
         {
-            get => (double?)GetValue(BufferingProgressProperty);
+            get => (double)GetValue(BufferingProgressProperty);
             set => SetValue(BufferingProgressProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="Position"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty PositionProperty = BindableProperty.Create(nameof(Position), typeof(TimeSpan),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the playback position within the media.
+        /// </summary>
+        public TimeSpan Position
+        {
+            get => (TimeSpan)GetValue(PositionProperty);
+            set => SetValue(PositionProperty, value);
         }
 
         /// <summary>
@@ -85,7 +165,13 @@ namespace LibVLCSharp.Forms
             base.OnParentSet();
             if (Parent != null)
             {
-                PlayPauseButton = SetClickEventHandler("PlayPauseButton", PlayPauseButton_Clicked);
+                PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
+                ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
+                PositionSlider = this.FindChild<Slider>(nameof(PositionSlider));
+                if (PositionSlider != null)
+                {
+                    PositionSlider.ValueChanged += PositionSlider_ValueChanged;
+                }
             }
         }
 
@@ -117,19 +203,46 @@ namespace LibVLCSharp.Forms
 
         private void PlayPauseButton_Clicked(object sender, EventArgs e)
         {
-            switch (MediaPlayer.State)
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+
+            switch (mediaPlayer.State)
             {
                 case VLCState.Ended:
                 case VLCState.Paused:
                 case VLCState.Stopped:
                 case VLCState.Error:
                 case VLCState.NothingSpecial:
-                    MediaPlayer.Play();
+                    mediaPlayer.Play();
                     break;
                 default:
-                    MediaPlayer.Pause();
+                    mediaPlayer.Pause();
                     break;
             }
+        }
+
+        private void PositionSlider_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            _ = FadeInAsync();
+
+            var positionSliderTimer = new object();
+            PositionSliderTimer = positionSliderTimer;
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                if (PositionSliderTimer == positionSliderTimer)
+                {
+                    var mediaPlayer = MediaPlayer;
+                    if (mediaPlayer != null)
+                    {
+                        mediaPlayer.Position = (float)(e.NewValue / ((Slider)sender).Maximum);
+                    }
+                    PositionSliderTimer = null;
+                }
+                return false;
+            });
         }
 
         private void OnMediaPlayerChanged(MediaPlayer oldMediaPlayer, MediaPlayer newMediaPlayer)
@@ -137,20 +250,51 @@ namespace LibVLCSharp.Forms
             if (oldMediaPlayer != null)
             {
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
+                oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
+                oldMediaPlayer.Paused -= MediaPlayer_Paused;
+                oldMediaPlayer.Playing -= MediaPlayer_Playing;
+                oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
+                oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
             }
 
             if (newMediaPlayer != null)
             {
                 newMediaPlayer.Buffering += MediaPlayer_Buffering;
-                newMediaPlayer.Playing += MediaPlayer_Playing;
+                newMediaPlayer.EndReached += MediaPlayer_EndReached;
                 newMediaPlayer.Paused += MediaPlayer_Paused;
+                newMediaPlayer.Playing += MediaPlayer_Playing;
+                newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
             }
         }
 
+        private void MediaPlayer_PositionChanged(object sender, MediaPlayerPositionChangedEventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                Position = new TimeSpan((long)((MediaPlayer?.Length ?? 0) * 1000 * e.Position));
+                var positionSlider = PositionSlider;
+                if (positionSlider != null && PositionSliderTimer != null)
+                {
+                    positionSlider.ValueChanged -= PositionSlider_ValueChanged;
+                    positionSlider.Value = e.Position * positionSlider.Maximum;
+                    positionSlider.ValueChanged += PositionSlider_ValueChanged;
+                }
+            });
+        }
+
         private void MediaPlayer_Buffering(object sender, MediaPlayerBufferingEventArgs e)
         {
-            Device.BeginInvokeOnMainThread(() => BufferingProgress = e.Cache == 100 ? (double?)null : e.Cache / 100);
+            var value = (int)e.Cache / 100.0d;
+            if (BufferingProgress != value)
+            {
+                Device.BeginInvokeOnMainThread(() => BufferingProgress = value);
+            }
+        }
+
+        private void MediaPlayer_EndReached(object sender, EventArgs e)
+        {
+            UpdateState(VLCState.Ended);
         }
 
         private void MediaPlayer_Playing(object sender, EventArgs e)
@@ -179,17 +323,21 @@ namespace LibVLCSharp.Forms
             string playPauseStateName;
             switch (state)
             {
-                case VLCState.Stopped:
+                case VLCState.Ended:
+                case VLCState.Error:
                 case VLCState.Paused:
+                case VLCState.Stopped:
                     playPauseStateName = "PlayState";
                     break;
                 default:
                     playPauseStateName = "PauseState";
                     break;
             }
+
             Device.BeginInvokeOnMainThread(() =>
             {
-                BufferingProgress = null;
+                _ = FadeInAsync();
+                BufferingProgress = 0;
                 VisualStateManager.GoToState(playPauseButton, playPauseStateName);
             });
         }
@@ -197,6 +345,50 @@ namespace LibVLCSharp.Forms
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).OnMediaPlayerChanged((MediaPlayer)oldValue, (MediaPlayer)newValue);
+        }
+
+        private void StartFadeOutTimer()
+        {
+            if (MediaPlayer?.State == VLCState.Playing)
+            {
+                var fadeOutTimer = new object();
+                LastFadeOutTimer = fadeOutTimer;
+                Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+                {
+                    if (LastFadeOutTimer != fadeOutTimer)
+                    {
+                        return false;
+                    }
+
+                    Device.BeginInvokeOnMainThread(async () =>
+                    {
+                        if (LastFadeOutTimer == fadeOutTimer)
+                        {
+                            await ControlsPanel.FadeTo(0, 1000);
+                        }
+                        if (LastFadeOutTimer == fadeOutTimer)
+                        {
+                            ControlsPanel.IsVisible = false;
+                        }
+                    });
+                    return false;
+                });
+            }
+        }
+
+        /// <summary>
+        /// Controls fade in.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task FadeInAsync()
+        {
+            if (LastFadeOutTimer != null)
+            {
+                LastFadeOutTimer = null;
+                ControlsPanel.IsVisible = true;
+                await ControlsPanel.FadeTo(1);
+            }
+            StartFadeOutTimer();
         }
     }
 }
