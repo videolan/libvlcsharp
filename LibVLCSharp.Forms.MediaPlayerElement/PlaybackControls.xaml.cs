@@ -93,7 +93,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer), typeof(MediaPlayer),
             typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
+        /// Gets or sets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
         /// </summary>
         public MediaPlayer MediaPlayer
         {
@@ -107,7 +107,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty BufferingProgressProperty = BindableProperty.Create(nameof(BufferingProgress), typeof(double),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets or sets a value corresponding to the buffering progress
+        /// Gets or sets a value corresponding to the buffering progress.
         /// </summary>
         public double BufferingProgress
         {
