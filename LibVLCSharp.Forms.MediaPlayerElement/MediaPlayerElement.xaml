@@ -5,6 +5,14 @@
     <TemplatedView.ControlTemplate>
         <ControlTemplate>
             <Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnGestureRecognized" />
+                    <ClickGestureRecognizer Clicked="OnGestureRecognized" />
+                    <PanGestureRecognizer PanUpdated="OnGestureRecognized" />
+                    <PinchGestureRecognizer PinchUpdated="OnGestureRecognized" />
+                    <SwipeGestureRecognizer Swiped="OnGestureRecognized" />
+                </Grid.GestureRecognizers>
+
                 <ContentPresenter Content="{TemplateBinding VideoView}" />
                 <ContentPresenter Content="{TemplateBinding PlaybackControls}" VerticalOptions="End" />
             </Grid>

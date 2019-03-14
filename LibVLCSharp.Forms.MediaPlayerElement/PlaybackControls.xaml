@@ -2,47 +2,62 @@
 <TemplatedView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:LibVLCSharp.Forms"
-             x:Class="LibVLCSharp.Forms.PlaybackControls"
-             BackgroundColor="#20000000">
+             x:Class="LibVLCSharp.Forms.PlaybackControls">
+    <TemplatedView.Resources>
+        <Style x:Key="BufferingProgressBarStyle" TargetType="ProgressBar">
+            <Setter Property="HeightRequest" Value="6" />
+            <Setter Property="ProgressColor" Value="#E57A00" />
+        </Style>
+        
+        <Style x:Key="ControlsPanelStyle" TargetType="VisualElement">
+            <Setter Property="BackgroundColor" Value="#30000000" />
+        </Style>
+
+        <Style x:Key="PositionSliderStyle" TargetType="Slider">
+            <Setter Property="Maximum" Value="1000" />
+            <Setter Property="ThumbColor" Value="#E57A00" />
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="48" />
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="WidthRequest" Value="48" />
+            <Setter Property="HeightRequest" Value="48" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="FontFamily">
+                <Setter.Value>
+                    <OnPlatform x:TypeArguments="x:String">
+                        <On Platform="iOS" Value="Material Icons" />
+                        <On Platform="Android" Value="MaterialIcons-Regular.ttf#Material Icons" />
+                    </OnPlatform>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+            <Setter Property="TextColor" Value="White" />
+            <Style.Triggers>
+                <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="TextColor" Value="DarkGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+        <local:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
+    </TemplatedView.Resources>
+
     <TemplatedView.ControlTemplate>
         <ControlTemplate>
-            <Grid>
-                <Grid.Resources>
-                    <Style x:Key="ButtonStyle" TargetType="Button">
-                        <Setter Property="FontSize" Value="24" />
-                        <Setter Property="CornerRadius" Value="12" />
-                        <Setter Property="Padding" Value="0" />
-                        <Setter Property="Margin" Value="0" />
-                        <Setter Property="WidthRequest" Value="24" />
-                        <Setter Property="HeightRequest" Value="24" />
-                        <Setter Property="BackgroundColor" Value="Transparent" />
-                        <Setter Property="FontFamily">
-                            <Setter.Value>
-                                <OnPlatform x:TypeArguments="x:String">
-                                    <On Platform="iOS" Value="Material Icons" />
-                                    <On Platform="Android" Value="MaterialIcons-Regular.ttf#Material Icons" />
-                                </OnPlatform>
-                            </Setter.Value>    
-                        </Setter> 
-                        <Setter Property="VerticalOptions" Value="Center" />
-                        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
-                        <Setter Property="TextColor" Value="White" />
-                        <Style.Triggers>
-                            <Trigger TargetType="Button" Property="IsEnabled" Value="False">
-                                <Setter Property="TextColor" Value="DarkGray"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
+            <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}" Spacing="0">
+                <ProgressBar Style="{TemplateBinding BufferingProgressBarStyle}" Progress="{TemplateBinding BufferingProgress}" 
+                             IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
 
-                    <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
-                </Grid.Resources>
-
-                <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}">
-                    <ProgressBar x:Name="ProgressBar" HeightRequest="6" Progress="{TemplateBinding BufferingProgress}" 
-                                 IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource ObjectToBoolConverter}}" />
-
+                <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
+                    <Slider x:Name="PositionSlider" Style="{TemplateBinding PositionSliderStyle}" />
                     <StackLayout Orientation="Horizontal">
-                        <Button x:Name="PlayPauseButton" Style="{StaticResource ButtonStyle}"
+                        <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
                                 IsVisible="{TemplateBinding IsPlayPauseButtonVisible}"
                                 Text="&#xe037;">
                             <VisualStateManager.VisualStateGroups>
@@ -64,7 +79,7 @@
                         </Button>
                     </StackLayout>
                 </StackLayout>
-            </Grid>
+            </StackLayout>
         </ControlTemplate>
     </TemplatedView.ControlTemplate>
 </TemplatedView>

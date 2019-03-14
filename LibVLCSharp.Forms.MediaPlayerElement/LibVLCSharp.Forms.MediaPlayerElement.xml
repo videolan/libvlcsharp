@@ -4,6 +4,26 @@
         <name>LibVLCSharp.Forms.MediaPlayerElement</name>
     </assembly>
     <members>
+        <member name="T:LibVLCSharp.Forms.BufferingProgressToBoolConverter">
+            <summary>
+            Converts a value not equals to 0 and 1 to true.
+            </summary>
+        </member>
+        <member name="M:LibVLCSharp.Forms.BufferingProgressToBoolConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Modifies the source data before passing it to the target for display in the UI.
+            </summary>
+            <param name="value">The source data being passed to the target.</param>
+            <param name="targetType">The type of the target property.</param>
+            <param name="parameter">An optional parameter to be used in the converter logic.</param>
+            <param name="culture">The culture of the conversion.</param>
+            <returns>true if value is not equals to 0, false otherwise</returns>
+        </member>
+        <member name="M:LibVLCSharp.Forms.BufferingProgressToBoolConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Not implemented
+            </summary>
+        </member>
         <member name="T:LibVLCSharp.Forms.MediaPlayerElement">
             <summary>
             Represents an object that uses a <see cref="T:LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
@@ -71,6 +91,46 @@
             Initializes a new instance of <see cref="T:LibVLCSharp.Forms.PlaybackControls"/> class.
             </summary>
         </member>
+        <member name="F:LibVLCSharp.Forms.PlaybackControls.BufferingProgressBarStyleProperty">
+            <summary>
+            Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.BufferingProgressBarStyle"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:LibVLCSharp.Forms.PlaybackControls.BufferingProgressBarStyle">
+            <summary>
+            Gets the controls panel style.
+            </summary>
+        </member>
+        <member name="F:LibVLCSharp.Forms.PlaybackControls.ControlsPanelStyleProperty">
+            <summary>
+            Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.ControlsPanelStyle"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:LibVLCSharp.Forms.PlaybackControls.ControlsPanelStyle">
+            <summary>
+            Gets the controls panel style.
+            </summary>
+        </member>
+        <member name="F:LibVLCSharp.Forms.PlaybackControls.PositionSliderStyleProperty">
+            <summary>
+            Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.PositionSliderStyle"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:LibVLCSharp.Forms.PlaybackControls.PositionSliderStyle">
+            <summary>
+            Gets the controls panel style.
+            </summary>
+        </member>
+        <member name="F:LibVLCSharp.Forms.PlaybackControls.ButtonStyleProperty">
+            <summary>
+            Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.ButtonStyle"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:LibVLCSharp.Forms.PlaybackControls.ButtonStyle">
+            <summary>
+            Gets the buttons style.
+            </summary>
+        </member>
         <member name="F:LibVLCSharp.Forms.PlaybackControls.MediaPlayerProperty">
             <summary>
             Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.MediaPlayer"/> dependency property.
@@ -89,6 +149,16 @@
         <member name="P:LibVLCSharp.Forms.PlaybackControls.BufferingProgress">
             <summary>
             Gets or sets a value corresponding to the buffering progress
+            </summary>
+        </member>
+        <member name="F:LibVLCSharp.Forms.PlaybackControls.PositionProperty">
+            <summary>
+            Identifies the <see cref="P:LibVLCSharp.Forms.PlaybackControls.Position"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:LibVLCSharp.Forms.PlaybackControls.Position">
+            <summary>
+            Gets or sets the playback position within the media.
             </summary>
         </member>
         <member name="F:LibVLCSharp.Forms.PlaybackControls.IsPlayPauseButtonVisibleProperty">
@@ -115,6 +185,12 @@
             <summary>
             Called when the <see cref="P:Xamarin.Forms.Element.Parent"/> property has changed.
             </summary>
+        </member>
+        <member name="M:LibVLCSharp.Forms.PlaybackControls.FadeInAsync">
+            <summary>
+            Controls fade in.
+            </summary>
+            <returns>A task that represents the asynchronous operation.</returns>
         </member>
         <member name="T:LibVLCSharp.Forms.VisualTreeHelper">
             <summary>
