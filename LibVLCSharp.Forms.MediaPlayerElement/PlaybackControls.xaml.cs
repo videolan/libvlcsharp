@@ -274,7 +274,7 @@ namespace LibVLCSharp.Forms
             {
                 Position = new TimeSpan((long)((MediaPlayer?.Length ?? 0) * 1000 * e.Position));
                 var positionSlider = PositionSlider;
-                if (positionSlider != null && PositionSliderTimer != null)
+                if (positionSlider != null && PositionSliderTimer == null)
                 {
                     positionSlider.ValueChanged -= PositionSlider_ValueChanged;
                     positionSlider.Value = e.Position * positionSlider.Maximum;
