@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
+    <Authors>Stéphane Mitermite</Authors>
+    <Company>Stéphane Mitermite</Company>
+    <PackageLicenseUrl>https://github.com/kakone/VLC.MediaElement/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/kakone/VLC.MediaElement</PackageProjectUrl>
+    <PackageTags>vlc libvlc mediaplayer mediaplayerelement player video audio</PackageTags>
+    <Description>VLC MediaPlayerElement for Xamarin.Forms</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
