@@ -13,9 +13,19 @@
             <Setter Property="BackgroundColor" Value="#30000000" />
         </Style>
 
-        <Style x:Key="PositionSliderStyle" TargetType="Slider">
+        <Style x:Key="SeekBarStyle" TargetType="Slider">
             <Setter Property="Maximum" Value="1000" />
             <Setter Property="ThumbColor" Value="#E57A00" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="Small" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="HorizontalOptions" Value="End" />
+            <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
         <Style x:Key="ButtonStyle" TargetType="Button">
@@ -58,9 +68,12 @@
                              IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
 
                 <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
-                    <Slider x:Name="PositionSlider" Style="{TemplateBinding PositionSliderStyle}" />
+                    <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
+                        <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" IsEnabled="{TemplateBinding IsSeekEnabled}" />
+                        <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"></Label>
+                    </StackLayout>
                     <StackLayout Orientation="Horizontal">
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                             <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
@@ -79,8 +92,8 @@
                                 </VisualStateManager.VisualStateGroups>
                             </Button>
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
-                            <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}" HorizontalOptions="End"
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                            <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}"
                                 IsVisible="{TemplateBinding IsZoomButtonVisible}" IsEnabled="{TemplateBinding IsZoomButtonEnabled}"
                                 Text="&#xe85b;"/>
                         </StackLayout>
