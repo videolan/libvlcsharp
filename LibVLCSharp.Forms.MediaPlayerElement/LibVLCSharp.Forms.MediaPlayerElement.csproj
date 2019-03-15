@@ -5,10 +5,14 @@
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
     <Authors>Stéphane Mitermite</Authors>
     <Company>Stéphane Mitermite</Company>
-    <PackageLicenseUrl>https://github.com/kakone/VLC.MediaElement/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://github.com/kakone/VLC.MediaElement/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>https://github.com/kakone/VLC.MediaElement</PackageProjectUrl>
     <PackageTags>vlc libvlc mediaplayer mediaplayerelement player video audio</PackageTags>
     <Description>VLC MediaPlayerElement for Xamarin.Forms</Description>
+    <Version>0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/kakone/VLC.MediaElement.git</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
