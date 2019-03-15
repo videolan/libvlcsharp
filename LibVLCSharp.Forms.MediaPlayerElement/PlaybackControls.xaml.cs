@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,10 +25,13 @@ namespace LibVLCSharp.Forms
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
             PositionSliderStyle = Resources[nameof(PositionSliderStyle)] as Style;
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
+
+            DeviceDisplay.MainDisplayInfoChanged += (sender, e) => UpdateZoom();
         }
 
         private VisualElement ControlsPanel { get; set; }
         private Button PlayPauseButton { get; set; }
+        private Button ZoomButton { get; set; }
         private Slider PositionSlider { get; set; }
         private object LastFadeOutTimer { get; set; }
         private object PositionSliderTimer { get; set; }
@@ -130,6 +135,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="Zoom"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ZoomProperty = BindableProperty.Create(nameof(Zoom), typeof(bool), typeof(PlaybackControls),
+            propertyChanged: ZoomPropertyChanged);
+        /// <summary>
+        /// Gets or sets a value indicating whether the video is zoomed.
+        /// </summary>
+        public bool Zoom
+        {
+            get => (bool)GetValue(ZoomProperty);
+            set => SetValue(ZoomProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsPlayPauseButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsPlayPauseButtonVisibleProperty = BindableProperty.Create(nameof(IsPlayPauseButtonVisible),
@@ -158,6 +177,34 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsZoomButtonVisibleProperty = BindableProperty.Create(nameof(IsZoomButtonVisible),
+            typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value indicating whether the zoom button is shown.
+        /// </summary>
+        public bool IsZoomButtonVisible
+        {
+            get => (bool)GetValue(IsZoomButtonVisibleProperty);
+            set => SetValue(IsZoomButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsZoomEnabled"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsZoomEnabledProperty = BindableProperty.Create(nameof(IsZoomEnabled),
+            typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether a user can zoom the media.
+        /// </summary>
+        public bool IsZoomEnabled
+        {
+            get => (bool)GetValue(IsZoomEnabledProperty);
+            set => SetValue(IsZoomEnabledProperty, value);
+        }
+
+        /// <summary>
         /// Called when the <see cref="Element.Parent"/> property has changed.
         /// </summary>
         protected override void OnParentSet()
@@ -166,6 +213,7 @@ namespace LibVLCSharp.Forms
             if (Parent != null)
             {
                 PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
+                ZoomButton = SetClickEventHandler(nameof(ZoomButton), ZoomButton_Clicked);
                 ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
                 PositionSlider = this.FindChild<Slider>(nameof(PositionSlider));
                 if (PositionSlider != null)
@@ -224,6 +272,69 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void ZoomButton_Clicked(object sender, EventArgs e)
+        {
+            _ = FadeInAsync();
+            Zoom = !Zoom;
+        }
+
+        private static void ZoomPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdateZoom();
+        }
+
+        private void UpdateZoom()
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+
+            if (Zoom)
+            {
+                MediaTrack? mediaTrack;
+                try
+                {
+                    mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
+                }
+                catch (Exception)
+                {
+                    mediaTrack = null;
+                }
+                if (mediaTrack == null)
+                {
+                    return;
+                }
+
+                var videoTrack = mediaTrack.Value.Data.Video;
+                var videoWidth = videoTrack.Width;
+                var videoHeight = videoTrack.Height;
+                if (videoWidth == 0 || videoHeight == 0)
+                {
+                    return;
+                }
+
+                var sarDen = videoTrack.SarDen;
+                var sarNum = videoTrack.SarNum;
+                if (sarNum != sarDen)
+                {
+                    videoWidth = videoWidth * sarNum / sarDen;
+                }
+
+                var var = (double)videoWidth / videoHeight;
+                var displayInfo = DeviceDisplay.MainDisplayInfo;
+                var screenWidth = displayInfo.Width;
+                var screenHeight = displayInfo.Height;
+                var screenar = screenWidth / screenHeight;
+                mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
+            }
+            else
+            {
+                mediaPlayer.Scale = 0;
+            }
+        }
+
         private void PositionSlider_ValueChanged(object sender, ValueChangedEventArgs e)
         {
             _ = FadeInAsync();
@@ -255,6 +366,7 @@ namespace LibVLCSharp.Forms
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
                 oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
+                oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
 
             if (newMediaPlayer != null)
@@ -265,7 +377,13 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.Playing += MediaPlayer_Playing;
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
+                newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
+        }
+
+        private void MediaPlayer_VoutChanged(object sender, MediaPlayerVoutEventArgs e)
+        {
+            UpdateZoom();
         }
 
         private void MediaPlayer_PositionChanged(object sender, MediaPlayerPositionChangedEventArgs e)
