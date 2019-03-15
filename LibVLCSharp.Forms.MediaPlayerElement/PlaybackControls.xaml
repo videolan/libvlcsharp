@@ -19,12 +19,12 @@
         </Style>
 
         <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="48" />
-            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="FontSize" Value="36" />
+            <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="WidthRequest" Value="48" />
-            <Setter Property="HeightRequest" Value="48" />
+            <Setter Property="WidthRequest" Value="36" />
+            <Setter Property="HeightRequest" Value="36" />
             <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="FontFamily">
                 <Setter.Value>
@@ -34,13 +34,16 @@
                     </OnPlatform>
                 </Setter.Value>
             </Setter>
+            <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
             <Setter Property="TextColor" Value="White" />
             <Style.Triggers>
                 <Trigger TargetType="Button" Property="IsEnabled" Value="False">
                     <Setter Property="TextColor" Value="DarkGray"/>
                 </Trigger>
+                <EventTrigger Event="Clicked">
+                    <local:ClickEffect />
+                </EventTrigger>
             </Style.Triggers>
         </Style>
 
@@ -57,26 +60,30 @@
                 <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
                     <Slider x:Name="PositionSlider" Style="{TemplateBinding PositionSliderStyle}" />
                     <StackLayout Orientation="Horizontal">
-                        <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
                                 IsVisible="{TemplateBinding IsPlayPauseButtonVisible}"
+                                IsEnabled="{TemplateBinding IsPlayPauseButtonEnabled}"
                                 Text="&#xe037;">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="PlayPauseStates">
-                                    <VisualState x:Name="PlayState" />
-                                    <VisualState x:Name="PauseState">
-                                        <VisualState.Setters>
-                                            <Setter Property="Text" Value="&#xe034;" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="Enabled" />
-                                    <VisualState x:Name="Disabled">
-                                        <VisualState.Setters>
-                                            <Setter Property="IsEnabled" Value="false" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Button>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="PlayPauseStates">
+                                        <VisualState x:Name="PlayState" />
+                                        <VisualState x:Name="PauseState">
+                                            <VisualState.Setters>
+                                                <Setter Property="Text" Value="&#xe034;" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                            <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}" HorizontalOptions="End"
+                                IsVisible="{TemplateBinding IsZoomButtonVisible}" IsEnabled="{TemplateBinding IsZoomButtonEnabled}"
+                                Text="&#xe85b;"/>
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
