@@ -34,6 +34,11 @@
             Initializes a new instance of <see cref="T:Sample.MainViewModel"/> class.
             </summary>
         </member>
+        <member name="P:Sample.MainViewModel.LibVLC">
+            <summary>
+            Gets the <see cref="T:LibVLCSharp.Shared.LibVLC"/> instance.
+            </summary>
+        </member>
         <member name="P:Sample.MainViewModel.MediaPlayer">
             <summary>
             Gets the <see cref="T:LibVLCSharp.Shared.MediaPlayer"/> instance.

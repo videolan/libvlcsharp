@@ -15,5 +15,6 @@
         </behaviors:EventHandlerBehavior>
     </ContentPage.Behaviors>
 
-    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" />
+    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" />
+
 </ContentPage>
