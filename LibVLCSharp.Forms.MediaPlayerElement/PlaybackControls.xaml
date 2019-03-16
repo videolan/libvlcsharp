@@ -4,18 +4,22 @@
              xmlns:local="clr-namespace:LibVLCSharp.Forms"
              x:Class="LibVLCSharp.Forms.PlaybackControls">
     <TemplatedView.Resources>
+        <Color x:Key="MainColor">#E57A00</Color>
+        <Color x:Key="ButtonColor">#A0E57A00</Color>
+
         <Style x:Key="BufferingProgressBarStyle" TargetType="ProgressBar">
             <Setter Property="HeightRequest" Value="6" />
-            <Setter Property="ProgressColor" Value="#E57A00" />
+            <Setter Property="ProgressColor" Value="{TemplateBinding MainColor}" />
         </Style>
-        
-        <Style x:Key="ControlsPanelStyle" TargetType="VisualElement">
+
+        <Style x:Key="ControlsPanelStyle" TargetType="Layout">
             <Setter Property="BackgroundColor" Value="#30000000" />
+            <Setter Property="Padding" Value="2,0,2,2" />
         </Style>
 
         <Style x:Key="SeekBarStyle" TargetType="Slider">
             <Setter Property="Maximum" Value="1000" />
-            <Setter Property="ThumbColor" Value="#E57A00" />
+            <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
@@ -23,19 +27,18 @@
         <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="Small" />
             <Setter Property="TextColor" Value="White" />
-            <Setter Property="Margin" Value="0,0,2,0" />
             <Setter Property="HorizontalOptions" Value="End" />
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
         <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="36" />
-            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="CornerRadius" Value="20" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="WidthRequest" Value="36" />
-            <Setter Property="HeightRequest" Value="36" />
-            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="HeightRequest" Value="40" />
+            <Setter Property="BackgroundColor" Value="{TemplateBinding ButtonColor}" />
             <Setter Property="FontFamily">
                 <Setter.Value>
                     <OnPlatform x:TypeArguments="x:String">
@@ -96,6 +99,9 @@
                             <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}"
                                 IsVisible="{TemplateBinding IsZoomButtonVisible}" IsEnabled="{TemplateBinding IsZoomButtonEnabled}"
                                 Text="&#xe85b;"/>
+                            <Button x:Name="CastButton" Style="{TemplateBinding ButtonStyle}"
+                                IsVisible="{TemplateBinding IsCastButtonVisible}" IsEnabled="{TemplateBinding IsCastButtonEnabled}"
+                                Text="&#xe307;"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

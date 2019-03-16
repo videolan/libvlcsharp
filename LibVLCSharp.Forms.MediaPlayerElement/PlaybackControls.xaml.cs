@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Xamarin.Essentials;
@@ -21,11 +23,18 @@ namespace LibVLCSharp.Forms
         {
             InitializeComponent();
 
+            var mainColor = Resources[nameof(MainColor)];
+            MainColor = mainColor == null ? Color.Transparent : (Color)mainColor;
+            var buttonColor = Resources[nameof(ButtonColor)];
+            ButtonColor = buttonColor == null ? Color.Transparent : (Color)buttonColor;
             ButtonStyle = Resources[nameof(ButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
+
+            FadeOutTimer = new Timer(obj => FadeOut());
+            SeekBarTimer = new Timer(obj => UpdatePosition());
 
             DeviceDisplay.MainDisplayInfoChanged += (sender, e) => UpdateZoom();
         }
@@ -33,10 +42,41 @@ namespace LibVLCSharp.Forms
         private VisualElement ControlsPanel { get; set; }
         private Button PlayPauseButton { get; set; }
         private Button ZoomButton { get; set; }
+        private Button CastButton { get; set; }
         private Slider SeekBar { get; set; }
         private Label RemainingTimeLabel { get; set; }
-        private object LastFadeOutTimer { get; set; }
-        private object SeekBarTimer { get; set; }
+
+        private bool FadeOutEnabled { get; set; } = true;
+        private Timer FadeOutTimer { get; }
+        private Timer SeekBarTimer { get; set; }
+
+        /// <summary>
+        /// Identifies the <see cref="MainColor"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty MainColorProperty = BindableProperty.Create(nameof(MainColor), typeof(Color),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the main color.
+        /// </summary>
+        public Color MainColor
+        {
+            get => (Color)GetValue(MainColorProperty);
+            set => SetValue(MainColorProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ButtonColor"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ButtonColorProperty = BindableProperty.Create(nameof(ButtonColor), typeof(Color),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the button color.
+        /// </summary>
+        public Color ButtonColor
+        {
+            get => (Color)GetValue(ButtonColorProperty);
+            set => SetValue(ButtonColorProperty, value);
+        }
 
         /// <summary>
         /// Identifies the <see cref="BufferingProgressBarStyle"/> dependency property.
@@ -44,7 +84,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty BufferingProgressBarStyleProperty = BindableProperty.Create(nameof(BufferingProgressBarStyle),
             typeof(Style), typeof(PlaybackControls));
         /// <summary>
-        /// Gets the controls panel style.
+        /// Gets or sets the controls panel style.
         /// </summary>
         public Style BufferingProgressBarStyle
         {
@@ -58,7 +98,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty ControlsPanelStyleProperty = BindableProperty.Create(nameof(ControlsPanelStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets the controls panel style.
+        /// Gets or sets the controls panel style.
         /// </summary>
         public Style ControlsPanelStyle
         {
@@ -72,7 +112,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty SeekBarStyleProperty = BindableProperty.Create(nameof(SeekBarStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets the seek bar style.
+        /// Gets or sets the seek bar style.
         /// </summary>
         public Style SeekBarStyle
         {
@@ -86,7 +126,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty ButtonStyleProperty = BindableProperty.Create(nameof(ButtonStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets the buttons style.
+        /// Gets or sets the buttons style.
         /// </summary>
         public Style ButtonStyle
         {
@@ -100,12 +140,25 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty RemainingTimeLabelStyleProperty = BindableProperty.Create(nameof(RemainingTimeLabelStyle),
             typeof(Style), typeof(PlaybackControls));
         /// <summary>
-        /// Gets the remaining time label style.
+        /// Gets or sets the remaining time label style.
         /// </summary>
         public Style RemainingTimeLabelStyle
         {
             get => (Style)GetValue(RemainingTimeLabelStyleProperty);
             set => SetValue(RemainingTimeLabelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="LibVLC"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// </summary>
+        public LibVLC LibVLC
+        {
+            get => (LibVLC)GetValue(LibVLCProperty);
+            set => SetValue(LibVLCProperty, value);
         }
 
         /// <summary>
@@ -162,6 +215,34 @@ namespace LibVLCSharp.Forms
         {
             get => (bool)GetValue(ZoomProperty);
             set => SetValue(ZoomProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsCastButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsCastButtonVisibleProperty = BindableProperty.Create(nameof(IsCastButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value indicating whether the cast button is shown.
+        /// </summary>
+        public bool IsCastButtonVisible
+        {
+            get => (bool)GetValue(IsCastButtonVisibleProperty);
+            set => SetValue(IsCastButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsCastEnabled"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsCastEnabledProperty = BindableProperty.Create(nameof(IsCastEnabled), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether a user can cast the media.
+        /// </summary>
+        public bool IsCastEnabled
+        {
+            get => (bool)GetValue(IsCastEnabledProperty);
+            set => SetValue(IsCastEnabledProperty, value);
         }
 
         /// <summary>
@@ -272,6 +353,7 @@ namespace LibVLCSharp.Forms
             {
                 PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
                 ZoomButton = SetClickEventHandler(nameof(ZoomButton), ZoomButton_Clicked);
+                CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
                 ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
                 SeekBar = this.FindChild<Slider>(nameof(SeekBar));
                 RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -338,6 +420,56 @@ namespace LibVLCSharp.Forms
             Zoom = !Zoom;
         }
 
+        private async Task RotateElement(VisualElement element, CancellationToken cancellation)
+        {
+            while (!cancellation.IsCancellationRequested)
+            {
+                await element.RotateTo(360, 800);
+                await element.RotateTo(0, 0);
+            }
+        }
+
+        private async void CastButton_Clicked(object sender, EventArgs e)
+        {
+            var libVLC = LibVLC;
+            if (libVLC != null)
+            {
+                var mediaPlayer = MediaPlayer;
+                if (mediaPlayer != null)
+                {
+                    CastButton.Clicked -= CastButton_Clicked;
+                    FadeOutEnabled = false;
+                    try
+                    {
+                        _ = FadeInAsync();
+                        var cancellationTokenSource = new CancellationTokenSource();
+                        _ = RotateElement(CastButton, cancellationTokenSource.Token);
+                        IEnumerable<RendererItem> renderers;
+                        try
+                        {
+                            renderers = await Chromecast.FindRenderersAsync(libVLC);
+                        }
+                        finally
+                        {
+                            cancellationTokenSource.Cancel();
+                        }
+                        var rendererName = await this.GetParentPage()?.DisplayActionSheet("Cast to", null, null,    // TODO String in resx and add a ResourceManager dependency property ?
+                            renderers.OrderBy(r => r.Name).Select(r => r.Name).ToArray());
+                        if (rendererName != null)
+                        {
+                            mediaPlayer.SetRenderer(renderers.First(r => r.Name == rendererName));
+                        }
+                    }
+                    finally
+                    {
+                        CastButton.Clicked += CastButton_Clicked;
+                        FadeOutEnabled = true;
+                    }
+                }
+            }
+            _ = FadeInAsync();
+        }
+
         private static void ZoomPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).UpdateZoom();
@@ -400,22 +532,16 @@ namespace LibVLCSharp.Forms
             _ = FadeInAsync();
 
             UpdateTime();
+            SeekBarTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(-1));
+        }
 
-            var seekBarTimer = new object();
-            SeekBarTimer = seekBarTimer;
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+        private void UpdatePosition()
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
             {
-                if (SeekBarTimer == seekBarTimer)
-                {
-                    var mediaPlayer = MediaPlayer;
-                    if (mediaPlayer != null)
-                    {
-                        mediaPlayer.Position = (float)(e.NewValue / ((Slider)sender).Maximum);
-                    }
-                    SeekBarTimer = null;
-                }
-                return false;
-            });
+                mediaPlayer.Position = (float)(SeekBar.Value / SeekBar.Maximum);
+            }
         }
 
         private void UpdateTime(double? position = null)
@@ -448,6 +574,7 @@ namespace LibVLCSharp.Forms
                 oldMediaPlayer.Paused -= MediaPlayer_Paused;
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
                 oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
+                //TODO oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
                 oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
@@ -461,6 +588,7 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.Paused += MediaPlayer_Paused;
                 newMediaPlayer.Playing += MediaPlayer_Playing;
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
+                //TODO newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
                 newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
@@ -578,32 +706,15 @@ namespace LibVLCSharp.Forms
             ((PlaybackControls)bindable).OnMediaPlayerChanged((MediaPlayer)oldValue, (MediaPlayer)newValue);
         }
 
-        private void StartFadeOutTimer()
+        private void FadeOut()
         {
-            var fadeOutTimer = new object();
-            LastFadeOutTimer = fadeOutTimer;
-            Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                if (LastFadeOutTimer != fadeOutTimer)
+                if (await ControlsPanel.FadeTo(0, 1000) && ControlsPanel.Opacity == 0)
                 {
-                    return false;
+                    ControlsPanel.IsVisible = false;
                 }
-
-                _ = FadeOut(fadeOutTimer);
-                return false;
             });
-        }
-
-        private async Task FadeOut(object fadeOutTimer)
-        {
-            if (LastFadeOutTimer == fadeOutTimer)
-            {
-                await ControlsPanel.FadeTo(0, 1000);
-            }
-            if (LastFadeOutTimer == fadeOutTimer)
-            {
-                ControlsPanel.IsVisible = false;
-            }
         }
 
         /// <summary>
@@ -612,15 +723,15 @@ namespace LibVLCSharp.Forms
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task FadeInAsync()
         {
-            if (LastFadeOutTimer != null)
+            FadeOutTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
+            ControlsPanel.IsVisible = true;
+            if (ControlsPanel.Opacity != 1)
             {
-                LastFadeOutTimer = null;
-                ControlsPanel.IsVisible = true;
                 await ControlsPanel.FadeTo(1);
             }
-            if (ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
+            if (FadeOutEnabled && ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
             {
-                StartFadeOutTimer();
+                FadeOutTimer.Change(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(-1));
             }
         }
     }

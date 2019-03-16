@@ -12,10 +12,10 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Using the provided name, obtains a specific child object of the provided parent element by examining the visual tree.
         /// </summary>
-        /// <typeparam name="T">element type to obtain</typeparam>
-        /// <param name="parent">parent element</param>
-        /// <param name="name">searched name</param>
-        /// <returns>the child element, or null if not found</returns>
+        /// <typeparam name="T">The element type to obtain.</typeparam>
+        /// <param name="parent">The parent element.</param>
+        /// <param name="name">The searched name</param>
+        /// <returns>The child element, or null if not found.</returns>
         public static T FindChild<T>(this Element parent, string name) where T : Element
         {
             var result = parent.FindByName<T>(name);
@@ -47,6 +47,28 @@ namespace LibVLCSharp.Forms
                 }
             }
 
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the page to which an element belongs.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns>The page, or null if not found.</returns>
+        public static Page GetParentPage(this VisualElement element)
+        {
+            if (element != null)
+            {
+                var parent = element.Parent;
+                while (parent != null)
+                {
+                    if (parent is Page page)
+                    {
+                        return page;
+                    }
+                    parent = parent.Parent;
+                }
+            }
             return null;
         }
     }

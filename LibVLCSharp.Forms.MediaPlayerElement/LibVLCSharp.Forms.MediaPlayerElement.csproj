@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Behaviors.Forms" Version="1.4.0" />
     <PackageReference Include="LibVLCSharp.Forms" Version="0.5.0" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.0.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
   </ItemGroup>
 
