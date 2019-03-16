@@ -45,6 +45,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="LibVLC"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC),
+            typeof(MediaPlayerElement), propertyChanged: LibVLCPropertyChanged);
+        /// <summary>
+        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// </summary>
+        public LibVLC LibVLC
+        {
+            get => (LibVLC)GetValue(LibVLCProperty);
+            set => SetValue(LibVLCProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer), typeof(MediaPlayer),
@@ -74,6 +88,15 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void OnLibVLCChanged(LibVLC libVLC)
+        {
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
+            {
+                playbackControls.LibVLC = LibVLC;
+            }
+        }
+
         private void OnMediaPlayerChanged(MediaPlayer mediaPlayer)
         {
             var videoView = VideoView;
@@ -96,6 +119,11 @@ namespace LibVLCSharp.Forms
         private static void PlaybackControlsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((MediaPlayerElement)bindable).OnPlayControlsChanged((PlaybackControls)newValue);
+        }
+
+        private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((MediaPlayerElement)bindable).OnLibVLCChanged((LibVLC)newValue);
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
