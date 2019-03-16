@@ -21,7 +21,15 @@ namespace Sample
             InitCommand = new RelayCommand(Init);
         }
 
-        private LibVLC LibVLC { get; set; }
+        private LibVLC _libVLC;
+        /// <summary>
+        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// </summary>
+        public LibVLC LibVLC
+        {
+            get => _libVLC;
+            private set => Set(nameof(LibVLC), ref _libVLC, value);
+        }
 
         private MediaPlayer _mediaPlayer;
         /// <summary>
