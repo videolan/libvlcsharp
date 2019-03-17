@@ -40,14 +40,14 @@ namespace LibVLCSharp.Forms
         }
 
         private VisualElement ControlsPanel { get; set; }
-        private Button PlayPauseButton { get; set; }
-        private Button ZoomButton { get; set; }
         private Button CastButton { get; set; }
+        private Button PlayPauseButton { get; set; }
         private Slider SeekBar { get; set; }
         private Label RemainingTimeLabel { get; set; }
 
         private bool FadeOutEnabled { get; set; } = true;
         private Timer FadeOutTimer { get; }
+        private bool SeekBarTimerEnabled { get; set; }
         private Timer SeekBarTimer { get; set; }
 
         /// <summary>
@@ -262,8 +262,8 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Identifies the <see cref="IsPlayPauseEnabled"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty IsPlayPauseEnabledProperty = BindableProperty.Create(nameof(IsPlayPauseEnabled),
-            typeof(bool), typeof(PlaybackControls), true);
+        public static readonly BindableProperty IsPlayPauseEnabledProperty = BindableProperty.Create(nameof(IsPlayPauseEnabled), typeof(bool),
+            typeof(PlaybackControls), true);
         /// <summary>
         /// Gets or sets a value indicating whether a user can play/pause the media.
         /// </summary>
@@ -299,6 +299,34 @@ namespace LibVLCSharp.Forms
         {
             get => (bool)GetValue(IsSeekEnabledProperty);
             set => SetValue(IsSeekEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsStopButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsStopButtonVisibleProperty = BindableProperty.Create(nameof(IsStopButtonVisible), typeof(bool),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets a value that indicates whether the stop button is shown.
+        /// </summary>
+        public bool IsStopButtonVisible
+        {
+            get => (bool)GetValue(IsStopButtonVisibleProperty);
+            set => SetValue(IsStopButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsStopEnabled"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsStopEnabledProperty = BindableProperty.Create(nameof(IsStopEnabled), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether a user can stop the media playback.
+        /// </summary>
+        public bool IsStopEnabled
+        {
+            get => (bool)GetValue(IsStopEnabledProperty);
+            set => SetValue(IsStopEnabledProperty, value);
         }
 
         /// <summary>
@@ -351,9 +379,10 @@ namespace LibVLCSharp.Forms
             base.OnParentSet();
             if (Parent != null)
             {
-                PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
-                ZoomButton = SetClickEventHandler(nameof(ZoomButton), ZoomButton_Clicked);
                 CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
+                PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
+                SetClickEventHandler("StopButton", StopButton_Clicked, true);
+                SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
                 ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
                 SeekBar = this.FindChild<Slider>(nameof(SeekBar));
                 RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -365,18 +394,22 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private Button SetClickEventHandler(string name, EventHandler eventHandler)
+        private Button SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
         {
             var button = this.FindChild<Button>(name);
             if (button != null)
             {
-                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler);
+                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler, fadeIn);
             }
             return button;
         }
 
-        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler)
+        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler, bool fadeIn = false)
         {
+            if (fadeIn)
+            {
+                _ = FadeInAsync();
+            }
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer != null)
             {
@@ -414,9 +447,13 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void StopButton_Clicked(object sender, EventArgs e)
+        {
+            MediaPlayer?.Stop();
+        }
+
         private void ZoomButton_Clicked(object sender, EventArgs e)
         {
-            _ = FadeInAsync();
             Zoom = !Zoom;
         }
 
@@ -532,6 +569,7 @@ namespace LibVLCSharp.Forms
             _ = FadeInAsync();
 
             UpdateTime();
+            SeekBarTimerEnabled = true;
             SeekBarTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(-1));
         }
 
@@ -542,6 +580,8 @@ namespace LibVLCSharp.Forms
             {
                 mediaPlayer.Position = (float)(SeekBar.Value / SeekBar.Maximum);
             }
+
+            SeekBarTimerEnabled = false;
         }
 
         private void UpdateTime(double? position = null)
@@ -601,7 +641,7 @@ namespace LibVLCSharp.Forms
 
         private void MediaPlayer_PositionChanged(object sender, MediaPlayerPositionChangedEventArgs e)
         {
-            if (SeekBarTimer != null)
+            if (SeekBarTimerEnabled)
             {
                 return;
             }
@@ -684,8 +724,10 @@ namespace LibVLCSharp.Forms
             {
                 case VLCState.Ended:
                 case VLCState.Error:
-                case VLCState.Paused:
                 case VLCState.Stopped:
+                    UpdateSeekBar(TimeSpan.Zero);
+                    goto case VLCState.Paused;
+                case VLCState.Paused:
                     playPauseStateName = "PlayState";
                     break;
                 default:
