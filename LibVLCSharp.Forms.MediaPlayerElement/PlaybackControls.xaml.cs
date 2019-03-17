@@ -410,7 +410,7 @@ namespace LibVLCSharp.Forms
                 }
                 catch (Exception)
                 {
-                    //TODO
+                    //TODO Manage errors
                 }
             }
         }
