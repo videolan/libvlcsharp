@@ -218,6 +218,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsAudioTracksSelectionButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsAudioTracksSelectionButtonVisibleProperty = BindableProperty.Create(
+            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value indicating whether the audio tracks selection button is shown.
+        /// </summary>
+        public bool IsAudioTracksSelectionButtonVisible
+        {
+            get => (bool)GetValue(IsAudioTracksSelectionButtonVisibleProperty);
+            set => SetValue(IsAudioTracksSelectionButtonVisibleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsCastButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsCastButtonVisibleProperty = BindableProperty.Create(nameof(IsCastButtonVisible), typeof(bool),
@@ -232,17 +246,17 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsCastEnabled"/> dependency property.
+        /// Identifies the <see cref="IsClosedCaptionsSelectionButtonVisible"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty IsCastEnabledProperty = BindableProperty.Create(nameof(IsCastEnabled), typeof(bool),
-            typeof(PlaybackControls), true);
+        public static readonly BindableProperty IsClosedCaptionsSelectionButtonVisibleProperty = BindableProperty.Create(
+            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true);
         /// <summary>
-        /// Gets or sets a value that indicates whether a user can cast the media.
+        /// Gets or sets a value indicating whether the closed captions selection button is shown.
         /// </summary>
-        public bool IsCastEnabled
+        public bool IsClosedCaptionsSelectionButtonVisible
         {
-            get => (bool)GetValue(IsCastEnabledProperty);
-            set => SetValue(IsCastEnabledProperty, value);
+            get => (bool)GetValue(IsClosedCaptionsSelectionButtonVisibleProperty);
+            set => SetValue(IsClosedCaptionsSelectionButtonVisibleProperty, value);
         }
 
         /// <summary>
@@ -316,20 +330,6 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsStopEnabled"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IsStopEnabledProperty = BindableProperty.Create(nameof(IsStopEnabled), typeof(bool),
-            typeof(PlaybackControls), true);
-        /// <summary>
-        /// Gets or sets a value that indicates whether a user can stop the media playback.
-        /// </summary>
-        public bool IsStopEnabled
-        {
-            get => (bool)GetValue(IsStopEnabledProperty);
-            set => SetValue(IsStopEnabledProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsZoomButtonVisibleProperty = BindableProperty.Create(nameof(IsZoomButtonVisible),
@@ -341,20 +341,6 @@ namespace LibVLCSharp.Forms
         {
             get => (bool)GetValue(IsZoomButtonVisibleProperty);
             set => SetValue(IsZoomButtonVisibleProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="IsZoomEnabled"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IsZoomEnabledProperty = BindableProperty.Create(nameof(IsZoomEnabled),
-            typeof(bool), typeof(PlaybackControls), true);
-        /// <summary>
-        /// Gets or sets a value that indicates whether a user can zoom the media.
-        /// </summary>
-        public bool IsZoomEnabled
-        {
-            get => (bool)GetValue(IsZoomEnabledProperty);
-            set => SetValue(IsZoomEnabledProperty, value);
         }
 
         /// <summary>
@@ -379,7 +365,9 @@ namespace LibVLCSharp.Forms
             base.OnParentSet();
             if (Parent != null)
             {
+                SetClickEventHandler("AudioTracksSelectionButton", AudioTracksSelectionButton_Clicked, true);
                 CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
+                SetClickEventHandler("ClosedCaptionsSelectionButton", ClosedCaptionsSelectionButton_Clicked, true);
                 PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
                 SetClickEventHandler("StopButton", StopButton_Clicked, true);
                 SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
@@ -422,6 +410,64 @@ namespace LibVLCSharp.Forms
                     //TODO
                 }
             }
+        }
+
+        private string GetTrackName(string trackName, int trackId, int currentTrackId)
+        {
+            return trackId == currentTrackId ? $"{trackName} *" : trackName;
+        }
+
+        private string GetTrackName(MediaTrack mediaTrack, int currentTrackId)
+        {
+            var trackName = mediaTrack.Description ?? mediaTrack.Language ?? $"Track {mediaTrack.Id}";
+            return GetTrackName(trackName, mediaTrack.Id, currentTrackId);
+        }
+
+        private async Task SelectTrack(TrackType trackType, string popupTitle, Func<MediaPlayer, int> getCurrentTrackId,
+            Action<MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
+        {
+            var mediaPlayer = MediaPlayer;
+            var mediaTracks = mediaPlayer?.Media?.Tracks?.Where(t => t.TrackType == trackType);
+            if (mediaTracks == null)
+            {
+                return;
+            }
+
+            var currentTrackId = getCurrentTrackId(mediaPlayer);
+            IEnumerable<string> mediaTracksNames = mediaTracks.Select(t => GetTrackName(t, currentTrackId)).OrderBy(n => n);
+            if (addDeactivateRow)
+            {
+                mediaTracksNames = new[] { GetTrackName("Disable", -1, currentTrackId) }.Union(mediaTracksNames);
+            }
+
+            var mediaTrack = await this.GetParentPage()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
+            if (mediaTrack != null)
+            {
+                var found = false;
+                foreach (var mt in mediaTracks)
+                {
+                    if (GetTrackName(mt, currentTrackId) == mediaTrack)
+                    {
+                        found = true;
+                        setCurrentTrackId(mediaPlayer, mt.Id);
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    setCurrentTrackId(mediaPlayer, -1);
+                }
+            }
+        }
+
+        private async void AudioTracksSelectionButton_Clicked(object sender, EventArgs e)
+        {
+            await SelectTrack(TrackType.Audio, "Audio tracks", m => m.AudioTrack, (m, id) => m.SetAudioTrack(id));
+        }
+
+        private async void ClosedCaptionsSelectionButton_Clicked(object sender, EventArgs e)
+        {
+            await SelectTrack(TrackType.Text, "Closed captions tracks", m => m.Spu, (m, id) => m.SetSpu(id), true);
         }
 
         private void PlayPauseButton_Clicked(object sender, EventArgs e)
