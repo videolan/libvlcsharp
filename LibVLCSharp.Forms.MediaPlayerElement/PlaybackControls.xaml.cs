@@ -40,7 +40,9 @@ namespace LibVLCSharp.Forms
         }
 
         private VisualElement ControlsPanel { get; set; }
+        private Button AudioTracksSelectionButton { get; set; }
         private Button CastButton { get; set; }
+        private Button ClosedCaptionsSelectionButton { get; set; }
         private Button PlayPauseButton { get; set; }
         private Slider SeekBar { get; set; }
         private Label RemainingTimeLabel { get; set; }
@@ -221,7 +223,7 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="IsAudioTracksSelectionButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsAudioTracksSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true);
+            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls));
         /// <summary>
         /// Gets or sets a value indicating whether the audio tracks selection button is shown.
         /// </summary>
@@ -249,7 +251,7 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="IsClosedCaptionsSelectionButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsClosedCaptionsSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true);
+            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls));
         /// <summary>
         /// Gets or sets a value indicating whether the closed captions selection button is shown.
         /// </summary>
@@ -365,9 +367,10 @@ namespace LibVLCSharp.Forms
             base.OnParentSet();
             if (Parent != null)
             {
-                SetClickEventHandler("AudioTracksSelectionButton", AudioTracksSelectionButton_Clicked, true);
+                AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked, true);
                 CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
-                SetClickEventHandler("ClosedCaptionsSelectionButton", ClosedCaptionsSelectionButton_Clicked, true);
+                ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked,
+                    true);
                 PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
                 SetClickEventHandler("StopButton", StopButton_Clicked, true);
                 SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
@@ -412,6 +415,11 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private IEnumerable<MediaTrack> GetMediaTracks(MediaPlayer mediaPlayer, TrackType trackType)
+        {
+            return mediaPlayer?.Media?.Tracks.Where(t => t.TrackType == trackType);
+        }
+
         private string GetTrackName(string trackName, int trackId, int currentTrackId)
         {
             return trackId == currentTrackId ? $"{trackName} *" : trackName;
@@ -427,7 +435,7 @@ namespace LibVLCSharp.Forms
             Action<MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
         {
             var mediaPlayer = MediaPlayer;
-            var mediaTracks = mediaPlayer?.Media?.Tracks?.Where(t => t.TrackType == trackType);
+            var mediaTracks = GetMediaTracks(mediaPlayer, trackType);
             if (mediaTracks == null)
             {
                 return;
@@ -655,8 +663,11 @@ namespace LibVLCSharp.Forms
             {
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
                 oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
+                oldMediaPlayer.ESAdded -= MediaPlayer_TracksChanged;
+                oldMediaPlayer.ESDeleted -= MediaPlayer_TracksChanged;
                 oldMediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
                 oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
+                //TODO oldMediaPlayer.PausableChanged -= MediaPlayer_PausableChanged;
                 oldMediaPlayer.Paused -= MediaPlayer_Paused;
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
                 oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
@@ -668,9 +679,12 @@ namespace LibVLCSharp.Forms
             if (newMediaPlayer != null)
             {
                 newMediaPlayer.Buffering += MediaPlayer_Buffering;
+                newMediaPlayer.ESAdded += MediaPlayer_TracksChanged;
+                newMediaPlayer.ESDeleted += MediaPlayer_TracksChanged;
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
                 newMediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
                 newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
+                //TODO newMediaPlayer.PausableChanged += MediaPlayer_PausableChanged;
                 newMediaPlayer.Paused += MediaPlayer_Paused;
                 newMediaPlayer.Playing += MediaPlayer_Playing;
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
@@ -732,8 +746,35 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void SetTracksSelectionButtonVisible(Button tracksSelectionButton, bool isVisible)
+        {
+            if (tracksSelectionButton != null)
+            {
+                tracksSelectionButton.IsVisible = isVisible;
+            }
+        }
+
+        private void SetTracksSelectionButtonVisible(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
+            TrackType trackType, int count)
+        {
+            if (tracksSelectionButton != null)
+            {
+                SetTracksSelectionButtonVisible(tracksSelectionButton, isTracksSelectionButtonVisible &&
+                    GetMediaTracks(mediaPlayer, trackType).Count() >= count);
+            }
+        }
+
+        private void MediaPlayer_TracksChanged(object sender, EventArgs e)
+        {
+            var mediaPlayer = MediaPlayer;
+            SetTracksSelectionButtonVisible(mediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible, TrackType.Audio, 2);
+            SetTracksSelectionButtonVisible(mediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible, TrackType.Text, 1);
+        }
+
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
         {
+            SetTracksSelectionButtonVisible(AudioTracksSelectionButton, false);
+            SetTracksSelectionButtonVisible(ClosedCaptionsSelectionButton, false);
             UpdateSeekBar(TimeSpan.Zero);
         }
 
