@@ -77,6 +77,12 @@
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                            <Button x:Name="AudioTracksSelectionButton" Style="{TemplateBinding ButtonStyle}"
+                                IsVisible="{TemplateBinding IsAudioTracksSelectionButtonVisible}" 
+                                Text="&#xe3a1;"/>
+                            <Button x:Name="ClosedCaptionsSelectionButton" Style="{TemplateBinding ButtonStyle}"
+                                IsVisible="{TemplateBinding IsClosedCaptionsSelectionButtonVisible}" 
+                                Text="&#xe01c;"/>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                             <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
@@ -95,15 +101,15 @@
                                 </VisualStateManager.VisualStateGroups>
                             </Button>
                             <Button x:Name="StopButton" Style="{TemplateBinding ButtonStyle}"
-                                IsVisible="{TemplateBinding IsStopButtonVisible}" IsEnabled="{TemplateBinding IsStopButtonEnabled}"
+                                IsVisible="{TemplateBinding IsStopButtonVisible}"
                                 Text="&#xe047;"/>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                             <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}"
-                                IsVisible="{TemplateBinding IsZoomButtonVisible}" IsEnabled="{TemplateBinding IsZoomButtonEnabled}"
+                                IsVisible="{TemplateBinding IsZoomButtonVisible}"
                                 Text="&#xe85b;"/>
                             <Button x:Name="CastButton" Style="{TemplateBinding ButtonStyle}"
-                                IsVisible="{TemplateBinding IsCastButtonVisible}" IsEnabled="{TemplateBinding IsCastButtonEnabled}"
+                                IsVisible="{TemplateBinding IsCastButtonVisible}"
                                 Text="&#xe307;"/>
                         </StackLayout>
                     </StackLayout>
