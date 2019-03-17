@@ -80,6 +80,8 @@ namespace LibVLCSharp.Forms
             set => SetValue(ButtonColorProperty, value);
         }
 
+        // TODO Add ForeColor property
+
         /// <summary>
         /// Identifies the <see cref="BufferingProgressBarStyle"/> dependency property.
         /// </summary>
@@ -223,7 +225,8 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="IsAudioTracksSelectionButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsAudioTracksSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls));
+            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls),
+            propertyChanged: IsAudioTracksSelectionButtonVisiblePropertyChanged);
         /// <summary>
         /// Gets or sets a value indicating whether the audio tracks selection button is shown.
         /// </summary>
@@ -251,7 +254,8 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="IsClosedCaptionsSelectionButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsClosedCaptionsSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls));
+            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls),
+            propertyChanged: IsClosedCaptionsSelectionButtonVisiblePropertyChanged);
         /// <summary>
         /// Gets or sets a value indicating whether the closed captions selection button is shown.
         /// </summary>
@@ -764,11 +768,20 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void OnAudioTracksChanged()
+        {
+            SetTracksSelectionButtonVisible(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible, TrackType.Audio, 2);
+        }
+
+        private void OnClosedCaptionsTracksChanged()
+        {
+            SetTracksSelectionButtonVisible(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible, TrackType.Text, 1);
+        }
+
         private void MediaPlayer_TracksChanged(object sender, EventArgs e)
         {
-            var mediaPlayer = MediaPlayer;
-            SetTracksSelectionButtonVisible(mediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible, TrackType.Audio, 2);
-            SetTracksSelectionButtonVisible(mediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible, TrackType.Text, 1);
+            OnAudioTracksChanged();
+            OnClosedCaptionsTracksChanged();
         }
 
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
@@ -833,6 +846,16 @@ namespace LibVLCSharp.Forms
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).OnMediaPlayerChanged((MediaPlayer)oldValue, (MediaPlayer)newValue);
+        }
+
+        private static void IsAudioTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).OnAudioTracksChanged();
+        }
+
+        private static void IsClosedCaptionsSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).OnAudioTracksChanged();
         }
 
         private void FadeOut()
