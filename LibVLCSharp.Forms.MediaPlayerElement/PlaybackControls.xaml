@@ -94,6 +94,9 @@
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
                             </Button>
+                            <Button x:Name="StopButton" Style="{TemplateBinding ButtonStyle}"
+                                IsVisible="{TemplateBinding IsStopButtonVisible}" IsEnabled="{TemplateBinding IsStopButtonEnabled}"
+                                Text="&#xe047;"/>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                             <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}"
