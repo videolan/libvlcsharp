@@ -7,11 +7,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>D:\Visual_Studio\Projects\LibVLCSharp.Forms.MediaPlayerElement\Sample\Sample\Sample.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Sample.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Visual_Studio\Projects\LibVLCSharp.Forms.MediaPlayerElement\Sample\Sample\Sample.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Sample.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

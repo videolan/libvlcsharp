@@ -16,11 +16,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Visual_Studio\Projects\LibVLCSharp.Forms.MediaPlayerElement\LibVLCSharp.Forms.MediaPlayerElement\LibVLCSharp.Forms.MediaPlayerElement.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\LibVLCSharp.Forms.MediaPlayerElement.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Visual_Studio\Projects\LibVLCSharp.Forms.MediaPlayerElement\LibVLCSharp.Forms.MediaPlayerElement\LibVLCSharp.Forms.MediaPlayerElement.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\LibVLCSharp.Forms.MediaPlayerElement.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
