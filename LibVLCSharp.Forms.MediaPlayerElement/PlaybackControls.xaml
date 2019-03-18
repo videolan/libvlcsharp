@@ -33,6 +33,10 @@
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
+        <Style x:Key="ButtonBarStyle" TargetType="Layout">
+            <Setter Property="HeightRequest" Value="54" />
+        </Style>
+
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="30" />
             <Setter Property="CornerRadius" Value="20" />
@@ -83,11 +87,11 @@
                         <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" IsEnabled="{TemplateBinding IsSeekEnabled}" />
                         <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"></Label>
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal">
+                    <StackLayout Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
                         <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center">
                             <Button x:Name="AudioTracksSelectionButton" Style="{TemplateBinding ButtonStyle}" IsVisible="False" Text="&#xe3a1;">
                                 <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="AudioSelectionAvailablityStates">
+                                    <VisualStateGroup x:Name="AudioSelectionAvailabilityStates">
                                         <VisualState x:Name="AudioSelectionAvailable">
                                             <VisualState.Setters>
                                                 <Setter Property="IsVisible" Value="True" />
@@ -99,7 +103,7 @@
                             </Button>
                             <Button x:Name="ClosedCaptionsSelectionButton" Style="{TemplateBinding ButtonStyle}" IsVisible="False" Text="&#xe01c;">
                                 <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="ClosedCaptionsSelectionAvailablityStates">
+                                    <VisualStateGroup x:Name="ClosedCaptionsSelectionAvailabilityStates">
                                         <VisualState x:Name="ClosedCaptionsSelectionAvailable">
                                             <VisualState.Setters>
                                                 <Setter Property="IsVisible" Value="True" />
@@ -112,10 +116,7 @@
                         </StackLayout>
                         <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
-                            <Button x:Name="PlayPauseButton" Style="{StaticResource PlayPauseButtonStyle}"
-                                IsVisible="{TemplateBinding IsPlayPauseButtonVisible}"
-                                IsEnabled="{TemplateBinding IsPlayPauseButtonEnabled}"
-                                Text="&#xe037;">
+                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" Text="&#xe037;" IsVisible="False">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="PlayPauseStates">
                                         <VisualState x:Name="PlayState" />
@@ -124,6 +125,14 @@
                                                 <Setter Property="Text" Value="&#xe034;" />
                                             </VisualState.Setters>
                                         </VisualState>
+                                    </VisualStateGroup>
+                                    <VisualStateGroup x:Name="PauseAvailabilityStates">
+                                    <VisualState x:Name="PauseAvailable">
+                                            <VisualState.Setters>
+                                                <Setter Property="IsVisible" Value="True" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="PauseUnavailable" />
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
                             </Button>
