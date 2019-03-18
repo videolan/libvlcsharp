@@ -27,6 +27,8 @@ namespace LibVLCSharp.Forms
         private const string PauseState = "PauseState";
         private const string PauseAvailableState = "PauseAvailable";
         private const string PauseUnavailableState = "PauseUnavailable";
+        private const string SeekAvailableState = "SeekAvailable";
+        private const string SeekUnavailableState = "SeekUnavailable";
 
         /// <summary>
         /// Initializes a new instance of <see cref="PlaybackControls"/> class.
@@ -483,7 +485,7 @@ namespace LibVLCSharp.Forms
 
         private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).UpdatePlayPauseButtonAvailableState();
+            ((PlaybackControls)bindable).UpdatePauseAvailability();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -517,15 +519,16 @@ namespace LibVLCSharp.Forms
 
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
         {
-            UpdateTracksSelectionButtonAvailableState(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-            UpdateTracksSelectionButtonAvailableState(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
+            UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
+            UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
             UpdatePosition();
-            UpdatePlayPauseButtonAvailableState();
+            UpdatePauseAvailability();
+            UpdateSeekAvailability();
         }
 
         private void MediaPlayer_PausableChanged(object sender, MediaPlayerPausableChangedEventArgs e)
         {
-            UpdatePlayPauseButtonAvailableState(e.Pausable == 1);
+            UpdatePauseAvailability(e.Pausable == 1);
         }
 
         private void MediaPlayer_Paused(object sender, EventArgs e)
@@ -546,6 +549,11 @@ namespace LibVLCSharp.Forms
             }
 
             UpdatePosition(e.Position);
+        }
+
+        private void MediaPlayer_SeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
+        {
+            UpdateSeekAvailability(e.Seekable == 1);
         }
 
         private void MediaPlayer_Stopped(object sender, EventArgs e)
@@ -699,7 +707,7 @@ namespace LibVLCSharp.Forms
                 oldMediaPlayer.Paused -= MediaPlayer_Paused;
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
                 oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
-                //TODO oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
+                oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
                 oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
@@ -716,7 +724,7 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.Paused += MediaPlayer_Paused;
                 newMediaPlayer.Playing += MediaPlayer_Playing;
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
-                //TODO newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
+                newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
                 newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
@@ -784,7 +792,7 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void UpdateTracksSelectionButtonAvailableState(Button tracksSelectionButton, string state)
+        private void UpdateTracksSelectionButtonAvailability(Button tracksSelectionButton, string state)
         {
             if (tracksSelectionButton != null)
             {
@@ -792,25 +800,25 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void UpdateTracksSelectionButtonAvailableState(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
+        private void UpdateTracksSelectionAvailability(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
             Func<MediaPlayer, IEnumerable<TrackDescription>> getTrackDescriptions, string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
             {
-                UpdateTracksSelectionButtonAvailableState(tracksSelectionButton, isTracksSelectionButtonVisible &&
+                UpdateTracksSelectionButtonAvailability(tracksSelectionButton, isTracksSelectionButtonVisible &&
                     getTrackDescriptions(mediaPlayer).Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
             }
         }
 
         private void OnAudioTracksChanged()
         {
-            UpdateTracksSelectionButtonAvailableState(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
+            UpdateTracksSelectionAvailability(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
                 m => m.AudioTrackDescription, AudioSelectionAvailableState, AudioSelectionUnavailableState, 2);
         }
 
         private void OnClosedCaptionsTracksChanged()
         {
-            UpdateTracksSelectionButtonAvailableState(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
+            UpdateTracksSelectionAvailability(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
                 m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsUnavailableState, 1);
         }
 
@@ -823,13 +831,23 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void UpdatePlayPauseButtonAvailableState(bool? pausable = null)
+        private void UpdatePauseAvailability(bool? canPause = null)
         {
             var playPauseButton = PlayPauseButton;
             if (playPauseButton != null)
             {
                 Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(playPauseButton,
-                    IsPlayPauseButtonVisible && (pausable ?? MediaPlayer?.CanPause) == true ? PauseAvailableState : PauseUnavailableState));
+                    IsPlayPauseButtonVisible && (canPause ?? MediaPlayer?.CanPause) == true ? PauseAvailableState : PauseUnavailableState));
+            }
+        }
+
+        private void UpdateSeekAvailability(bool? canSeek = null)
+        {
+            var seekBar = SeekBar;
+            if (seekBar != null)
+            {
+                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar,
+                    IsSeekEnabled && (canSeek ?? MediaPlayer?.IsSeekable) == true ? SeekAvailableState : SeekUnavailableState));
             }
         }
 
