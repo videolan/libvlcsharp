@@ -25,6 +25,8 @@ namespace LibVLCSharp.Forms
         private const string ClosedCaptionsUnavailableState = "ClosedCaptionsUnavailable";
         private const string PlayState = "PlayState";
         private const string PauseState = "PauseState";
+        private const string PauseAvailableState = "PauseAvailable";
+        private const string PauseUnavailableState = "PauseUnavailable";
 
         /// <summary>
         /// Initializes a new instance of <see cref="PlaybackControls"/> class.
@@ -37,13 +39,15 @@ namespace LibVLCSharp.Forms
             ForeColor = (Color)(Resources[nameof(ForeColor)] ?? Color.White);
             MainColor = (Color)(Resources[nameof(MainColor)] ?? Color.Transparent);
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
+            ButtonBarStyle = Resources[nameof(ButtonBarStyle)] as Style;
             ButtonStyle = Resources[nameof(ButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
+            PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
 
             FadeOutTimer = new Timer(obj => FadeOut());
-            SeekBarTimer = new Timer(obj => UpdatePosition());
+            SeekBarTimer = new Timer(obj => UpdateMediaPlayerPosition());
 
             DeviceDisplay.MainDisplayInfoChanged += (sender, e) => UpdateZoom();
         }
@@ -118,6 +122,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="ButtonBarStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ButtonBarStyleProperty = BindableProperty.Create(nameof(ButtonBarStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the button bar style.
+        /// </summary>
+        public Style ButtonBarStyle
+        {
+            get => (Style)GetValue(ButtonBarStyleProperty);
+            set => SetValue(ButtonBarStyleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="ButtonStyle"/> dependency property.
         /// </summary>
         public static readonly BindableProperty ButtonStyleProperty = BindableProperty.Create(nameof(ButtonStyle), typeof(Style),
@@ -143,6 +161,20 @@ namespace LibVLCSharp.Forms
         {
             get => (Style)GetValue(ControlsPanelStyleProperty);
             set => SetValue(ControlsPanelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlayPauseButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty PlayPauseButtonStyleProperty = BindableProperty.Create(nameof(PlayPauseButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the play/pause button style.
+        /// </summary>
+        public Style PlayPauseButtonStyle
+        {
+            get => (Style)GetValue(PlayPauseButtonStyleProperty);
+            set => SetValue(PlayPauseButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -344,24 +376,10 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsPlayPauseEnabled"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IsPlayPauseEnabledProperty = BindableProperty.Create(nameof(IsPlayPauseEnabled), typeof(bool),
-            typeof(PlaybackControls), true);
-        /// <summary>
-        /// Gets or sets a value indicating whether a user can play/pause the media.
-        /// </summary>
-        public bool IsPlayPauseEnabled
-        {
-            get => (bool)GetValue(IsPlayPauseEnabledProperty);
-            set => SetValue(IsPlayPauseEnabledProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="IsPlayPauseButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsPlayPauseButtonVisibleProperty = BindableProperty.Create(nameof(IsPlayPauseButtonVisible),
-            typeof(bool), typeof(PlaybackControls), true);
+            typeof(bool), typeof(PlaybackControls), true, propertyChanged: IsPlayPauseButtonVisiblePropertyChanged);
         /// <summary>
         /// Gets or sets a value indicating whether the play/pause button is shown.
         /// </summary>
@@ -460,7 +478,12 @@ namespace LibVLCSharp.Forms
 
         private static void IsClosedCaptionsSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).OnAudioTracksChanged();
+            ((PlaybackControls)bindable).OnClosedCaptionsTracksChanged();
+        }
+
+        private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdatePlayPauseButtonAvailableState();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -494,9 +517,15 @@ namespace LibVLCSharp.Forms
 
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
         {
-            SetTracksSelectionButtonAvailableState(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-            SetTracksSelectionButtonAvailableState(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
-            UpdateSeekBar(TimeSpan.Zero);
+            UpdateTracksSelectionButtonAvailableState(AudioTracksSelectionButton, AudioSelectionUnavailableState);
+            UpdateTracksSelectionButtonAvailableState(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
+            UpdatePosition();
+            UpdatePlayPauseButtonAvailableState();
+        }
+
+        private void MediaPlayer_PausableChanged(object sender, MediaPlayerPausableChangedEventArgs e)
+        {
+            UpdatePlayPauseButtonAvailableState(e.Pausable == 1);
         }
 
         private void MediaPlayer_Paused(object sender, EventArgs e)
@@ -516,14 +545,7 @@ namespace LibVLCSharp.Forms
                 return;
             }
 
-            var position = TimeSpan.FromMilliseconds((MediaPlayer?.Length ?? 0) * e.Position);
-            var elapsedTime = (position - Position).TotalMilliseconds;
-            if (elapsedTime > 0 && elapsedTime < 750)
-            {
-                return;
-            }
-
-            UpdateSeekBar(position, e.Position);
+            UpdatePosition(e.Position);
         }
 
         private void MediaPlayer_Stopped(object sender, EventArgs e)
@@ -673,7 +695,7 @@ namespace LibVLCSharp.Forms
                 oldMediaPlayer.ESDeleted -= MediaPlayer_TracksChanged;
                 oldMediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
                 oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
-                //TODO oldMediaPlayer.PausableChanged -= MediaPlayer_PausableChanged;
+                oldMediaPlayer.PausableChanged -= MediaPlayer_PausableChanged;
                 oldMediaPlayer.Paused -= MediaPlayer_Paused;
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
                 oldMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
@@ -690,7 +712,7 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
                 newMediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
                 newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
-                //TODO newMediaPlayer.PausableChanged += MediaPlayer_PausableChanged;
+                newMediaPlayer.PausableChanged += MediaPlayer_PausableChanged;
                 newMediaPlayer.Paused += MediaPlayer_Paused;
                 newMediaPlayer.Playing += MediaPlayer_Playing;
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
@@ -762,7 +784,7 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void SetTracksSelectionButtonAvailableState(Button tracksSelectionButton, string state)
+        private void UpdateTracksSelectionButtonAvailableState(Button tracksSelectionButton, string state)
         {
             if (tracksSelectionButton != null)
             {
@@ -770,25 +792,25 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void SetTracksSelectionButtonAvailableState(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
+        private void UpdateTracksSelectionButtonAvailableState(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
             Func<MediaPlayer, IEnumerable<TrackDescription>> getTrackDescriptions, string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
             {
-                SetTracksSelectionButtonAvailableState(tracksSelectionButton, isTracksSelectionButtonVisible &&
+                UpdateTracksSelectionButtonAvailableState(tracksSelectionButton, isTracksSelectionButtonVisible &&
                     getTrackDescriptions(mediaPlayer).Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
             }
         }
 
         private void OnAudioTracksChanged()
         {
-            SetTracksSelectionButtonAvailableState(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
+            UpdateTracksSelectionButtonAvailableState(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
                 m => m.AudioTrackDescription, AudioSelectionAvailableState, AudioSelectionUnavailableState, 2);
         }
 
         private void OnClosedCaptionsTracksChanged()
         {
-            SetTracksSelectionButtonAvailableState(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
+            UpdateTracksSelectionButtonAvailableState(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
                 m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsUnavailableState, 1);
         }
 
@@ -798,6 +820,16 @@ namespace LibVLCSharp.Forms
             {
                 await element.RotateTo(360, 800);
                 await element.RotateTo(0, 0);
+            }
+        }
+
+        private void UpdatePlayPauseButtonAvailableState(bool? pausable = null)
+        {
+            var playPauseButton = PlayPauseButton;
+            if (playPauseButton != null)
+            {
+                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(playPauseButton,
+                    IsPlayPauseButtonVisible && (pausable ?? MediaPlayer?.CanPause) == true ? PauseAvailableState : PauseUnavailableState));
             }
         }
 
@@ -862,7 +894,7 @@ namespace LibVLCSharp.Forms
             SeekBarTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(-1));
         }
 
-        private void UpdatePosition()
+        private void UpdateMediaPlayerPosition()
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer != null)
@@ -871,6 +903,20 @@ namespace LibVLCSharp.Forms
             }
 
             SeekBarTimerEnabled = false;
+        }
+
+        private void UpdatePosition(float? position = null)
+        {
+            var mediaPlayer = MediaPlayer;
+            var pos = position ?? mediaPlayer?.Position ?? 0;
+            var timeSpanPosition = TimeSpan.FromMilliseconds((mediaPlayer?.Length ?? 0) * pos);
+            var elapsedTime = (timeSpanPosition - Position).TotalMilliseconds;
+            if (position != null && elapsedTime > 0 && elapsedTime < 750)
+            {
+                return;
+            }
+
+            UpdateSeekBar(timeSpanPosition, pos);
         }
 
         private void UpdateTime(double? position = null)
