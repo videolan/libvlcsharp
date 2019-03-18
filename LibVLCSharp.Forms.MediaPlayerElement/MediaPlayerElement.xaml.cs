@@ -12,7 +12,7 @@ namespace LibVLCSharp.Forms
     /// Represents an object that uses a <see cref="LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MediaPlayerElement : TemplatedView
+    public partial class MediaPlayerElement : ContentView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaPlayerElement"/> class.
