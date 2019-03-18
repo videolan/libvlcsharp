@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:LibVLCSharp.Forms"
              x:Class="LibVLCSharp.Forms.PlaybackControls">
     <TemplatedView.Resources>
+        <Color x:Key="ForeColor">White</Color>
         <Color x:Key="MainColor">#E57A00</Color>
         <Color x:Key="ButtonColor">#A0E57A00</Color>
 
@@ -19,6 +20,7 @@
 
         <Style x:Key="SeekBarStyle" TargetType="Slider">
             <Setter Property="Maximum" Value="1000" />
+            <Setter Property="MinimumTrackColor" Value="{TemplateBinding ForeColor}" />
             <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalOptions" Value="Center" />
@@ -26,7 +28,7 @@
 
         <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="Small" />
-            <Setter Property="TextColor" Value="White" />
+            <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
             <Setter Property="HorizontalOptions" Value="End" />
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
@@ -41,15 +43,14 @@
             <Setter Property="BackgroundColor" Value="{TemplateBinding ButtonColor}" />
             <Setter Property="FontFamily">
                 <Setter.Value>
-                    <OnPlatform x:TypeArguments="x:String">
-                        <On Platform="iOS" Value="Material Icons" />
-                        <On Platform="Android" Value="MaterialIcons-Regular.ttf#Material Icons" />
-                    </OnPlatform>
+                    <OnPlatform x:TypeArguments="x:String" 
+                                Android="MaterialIcons-Regular.ttf#Material Icons" 
+                                iOS="Material Icons" />
                 </Setter.Value>
             </Setter>
             <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="TextColor" Value="White" />
+            <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
             <Style.Triggers>
                 <Trigger TargetType="Button" Property="IsEnabled" Value="False">
                     <Setter Property="TextColor" Value="DarkGray"/>
@@ -58,6 +59,13 @@
                     <local:ClickEffect />
                 </EventTrigger>
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PlayPauseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+            <Setter Property="FontSize" Value="48" />
+            <Setter Property="CornerRadius" Value="27" />
+            <Setter Property="WidthRequest" Value="54" />
+            <Setter Property="HeightRequest" Value="54" />
         </Style>
 
         <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
@@ -76,16 +84,35 @@
                         <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"></Label>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                            <Button x:Name="AudioTracksSelectionButton" Style="{TemplateBinding ButtonStyle}"
-                                IsVisible="{TemplateBinding IsAudioTracksSelectionButtonVisible}" 
-                                Text="&#xe3a1;"/>
-                            <Button x:Name="ClosedCaptionsSelectionButton" Style="{TemplateBinding ButtonStyle}"
-                                IsVisible="{TemplateBinding IsClosedCaptionsSelectionButtonVisible}" 
-                                Text="&#xe01c;"/>
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center">
+                            <Button x:Name="AudioTracksSelectionButton" Style="{TemplateBinding ButtonStyle}" IsVisible="False" Text="&#xe3a1;">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="AudioSelectionAvailablityStates">
+                                        <VisualState x:Name="AudioSelectionAvailable">
+                                            <VisualState.Setters>
+                                                <Setter Property="IsVisible" Value="True" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="AudioSelectionUnavailable" />
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                            <Button x:Name="ClosedCaptionsSelectionButton" Style="{TemplateBinding ButtonStyle}" IsVisible="False" Text="&#xe01c;">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="ClosedCaptionsSelectionAvailablityStates">
+                                        <VisualState x:Name="ClosedCaptionsSelectionAvailable">
+                                            <VisualState.Setters>
+                                                <Setter Property="IsVisible" Value="True" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState x:Name="ClosedCaptionsUnavailable" />
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding ButtonStyle}"
+                        <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                            <Button x:Name="PlayPauseButton" Style="{StaticResource PlayPauseButtonStyle}"
                                 IsVisible="{TemplateBinding IsPlayPauseButtonVisible}"
                                 IsEnabled="{TemplateBinding IsPlayPauseButtonEnabled}"
                                 Text="&#xe037;">
@@ -104,7 +131,8 @@
                                 IsVisible="{TemplateBinding IsStopButtonVisible}"
                                 Text="&#xe047;"/>
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                        <ContentPresenter Content="{TemplateBinding ButtonBarEndArea}" HorizontalOptions="End" VerticalOptions="Center" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
                             <Button x:Name="ZoomButton" Style="{TemplateBinding ButtonStyle}"
                                 IsVisible="{TemplateBinding IsZoomButtonVisible}"
                                 Text="&#xe85b;"/>
