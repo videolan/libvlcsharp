@@ -84,7 +84,18 @@
 
                 <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
                     <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
-                        <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" IsEnabled="{TemplateBinding IsSeekEnabled}" />
+                        <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" IsEnabled="False">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="SeekAvailabilityStates">
+                                    <VisualState x:Name="SeekAvailable">
+                                        <VisualState.Setters>
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="SeekUnavailable" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Slider>
                         <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"></Label>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
@@ -127,7 +138,7 @@
                                         </VisualState>
                                     </VisualStateGroup>
                                     <VisualStateGroup x:Name="PauseAvailabilityStates">
-                                    <VisualState x:Name="PauseAvailable">
+                                        <VisualState x:Name="PauseAvailable">
                                             <VisualState.Setters>
                                                 <Setter Property="IsVisible" Value="True" />
                                             </VisualState.Setters>
