@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<TemplatedView xmlns="http://xamarin.com/schemas/2014/forms" 
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LibVLCSharp.Forms.MediaPlayerElement">
-    <TemplatedView.ControlTemplate>
+    <ContentView.ControlTemplate>
         <ControlTemplate>
             <Grid>
                 <Grid.GestureRecognizers>
@@ -13,9 +13,15 @@
                     <SwipeGestureRecognizer Swiped="OnGestureRecognized" />
                 </Grid.GestureRecognizers>
 
-                <ContentPresenter Content="{TemplateBinding VideoView}" />
-                <ContentPresenter Content="{TemplateBinding PlaybackControls}" VerticalOptions="End" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ContentPresenter Grid.RowSpan="2" Content="{TemplateBinding VideoView}" />
+                <ContentPresenter Content="{TemplateBinding Content}" />
+                <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}"  />
             </Grid>
         </ControlTemplate>
-    </TemplatedView.ControlTemplate>
-</TemplatedView>
+    </ContentView.ControlTemplate>
+</ContentView>
