@@ -3,9 +3,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -20,19 +19,20 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CheckLibVLCCoverage()
         {
-            var symPath = Path.GetTempFileName();
-            var deprecatedSymPath = Path.GetTempFileName();
+            string[] libvlc3Symbols;
+            string[] libvlc3deprecatedSym;
 
-            using (var client = new WebClient())
-            {                
-                client.DownloadFile(LibVLCSym3URL, symPath);
-                client.DownloadFile(LibVLCDeprecatedSymUrl, deprecatedSymPath);
+            using (var httpClient = new HttpClient())
+            {
+                libvlc3Symbols = (await httpClient.GetStringAsync(LibVLCSym3URL)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                libvlc3deprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
             }
-            
+
             List<string> dllImports = new List<string>();
 
+            // retrieving EventManager using reflection because the type is internal
             var eventManager = typeof(MediaPlayer).GetRuntimeProperties()
-                .FirstOrDefault(n => n.Name.EndsWith("EventManager"))
+                .First(n => n.Name.Equals("EventManager"))
                 .PropertyType
                 .BaseType;
 
@@ -52,13 +52,12 @@ namespace LibVLCSharp.Tests
 
             var deprecatedSymbolsLine = new List<string>();
 
-            var deprecatedSymFileLines = await File.ReadAllLinesAsync(deprecatedSymPath);
-            for (var i = 0; i < deprecatedSymFileLines.Count(); i++)
+            for (var i = 0; i < libvlc3deprecatedSym.Count(); i++)
             {
-                var currentLine = deprecatedSymFileLines[i];
+                var currentLine = libvlc3deprecatedSym[i];
                 if(currentLine.StartsWith("LIBVLC_DEPRECATED"))
                 {
-                    deprecatedSymbolsLine.Add(deprecatedSymFileLines[i + 1]);
+                    deprecatedSymbolsLine.Add(libvlc3deprecatedSym[i + 1]);
                 }
             }
 
@@ -69,11 +68,12 @@ namespace LibVLCSharp.Tests
                 var libvlcIndexStart = symLine.IndexOf("libvlc");
                 var sym1 = symLine.Substring(libvlcIndexStart);
                 var finalSymbol = new string(sym1.TakeWhile(c => c != '(').ToArray());
-                if(finalSymbol.Contains('*'))
+
+                if (finalSymbol.Contains('*'))
                 {
                     finalSymbol = finalSymbol.Substring(finalSymbol.IndexOf('*') + 1);
                 }
-                
+
                 deprecatedSymbols.Add(finalSymbol.Trim());
             }
 
@@ -83,12 +83,14 @@ namespace LibVLCSharp.Tests
                 "libvlc_free" // hidden in internal type
             };
 
+            // these symbols are internal, should not be in libvlc.sym and have been removed in libvlc 4+
             List<string> internalSymbolsThatShouldNotBeThere = new List<string>
             {
                 "libvlc_get_input_thread", "libvlc_media_new_from_input_item", "libvlc_media_set_state"
             };
 
-            List<string> NotGonnaImplementYetUntilActualUserDemandAndIfItMakesSense = new List<string>
+            // not implemented symbols for lack of use case or user interest
+            List<string> notImplementedOnPurpose = new List<string>
             {
                 "libvlc_printerr", "libvlc_vprinterr", "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
                 "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
@@ -97,7 +99,7 @@ namespace LibVLCSharp.Tests
             List<string> exclude = new List<string>();
             exclude.AddRange(implementedButHidden);
             exclude.AddRange(internalSymbolsThatShouldNotBeThere);
-            exclude.AddRange(NotGonnaImplementYetUntilActualUserDemandAndIfItMakesSense);
+            exclude.AddRange(notImplementedOnPurpose);
 
             foreach (var libvlcType in libvlcTypes)
             {
@@ -121,38 +123,22 @@ namespace LibVLCSharp.Tests
                 }
             }
 
-            bool ShouldExclude(string symbol)
-            {
-                foreach(var excludeSymbol in exclude)
-                {
-                    if (symbol.StartsWith(excludeSymbol))
-                        return true;
-                }
-                return false;
-            }
+            var missingApis = libvlc3Symbols
+                .Where(symbol => !exclude.Any(excludeSymbol => symbol.StartsWith(excludeSymbol))) // Filters out excluded symbols
+                .Except(dllImports)
+                .Except(deprecatedSymbols);
+
+            var missingApisCount = missingApis.Count();
 
             Debug.WriteLine($"we have {dllImports.Count} dll import statements");
+            Debug.WriteLine($"{missingApisCount} missing APIs implementation");
 
-            List<string> libvlcSymFile = new List<string>();
-            foreach(var sym in File.ReadLines(symPath))
-            {
-                if (ShouldExclude(sym)) continue;
-
-                libvlcSymFile.Add(sym);
-            }
-
-            var missingApis = libvlcSymFile
-                .Except(dllImports)
-                .Except(deprecatedSymbols)
-                .ToList();
-
-            Debug.WriteLine($"{missingApis.Count} missing APIs implementation");
-            foreach(var miss in missingApis)
+            foreach (var miss in missingApis)
             {
                 Debug.WriteLine(miss);
             }
 
-            Assert.Zero(missingApis.Count);
+            Assert.Zero(missingApisCount);
         }
     }
 }
