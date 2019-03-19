@@ -129,6 +129,12 @@
   <data name="Disable" xml:space="preserve">
     <value>Désactiver</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Track" xml:space="preserve">
     <value>Piste {0}</value>
   </data>

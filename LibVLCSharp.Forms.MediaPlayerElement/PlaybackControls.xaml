@@ -8,6 +8,12 @@
         <Color x:Key="MainColor">#E57A00</Color>
         <Color x:Key="ButtonColor">#A0E57A00</Color>
 
+        <Style x:Key="ErrorMessageStyle" TargetType="Label">
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="LineBreakMode" Value="WordWrap" />
+            <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
+        </Style>        
+
         <Style x:Key="BufferingProgressBarStyle" TargetType="ProgressBar">
             <Setter Property="HeightRequest" Value="6" />
             <Setter Property="ProgressColor" Value="{TemplateBinding MainColor}" />
@@ -19,17 +25,17 @@
         </Style>
 
         <Style x:Key="SeekBarStyle" TargetType="Slider">
-            <Setter Property="Maximum" Value="1000" />
-            <Setter Property="MinimumTrackColor" Value="{TemplateBinding ForeColor}" />
-            <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="MinimumTrackColor" Value="{TemplateBinding ForeColor}" />
+            <Setter Property="Maximum" Value="1000" />
+            <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
         <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
+            <Setter Property="HorizontalOptions" Value="End" />
             <Setter Property="FontSize" Value="Small" />
             <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
-            <Setter Property="HorizontalOptions" Value="End" />
             <Setter Property="VerticalOptions" Value="Center" />
         </Style>
 
@@ -38,13 +44,8 @@
         </Style>
 
         <Style x:Key="ButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="30" />
-            <Setter Property="CornerRadius" Value="20" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="WidthRequest" Value="40" />
-            <Setter Property="HeightRequest" Value="40" />
             <Setter Property="BackgroundColor" Value="{TemplateBinding ButtonColor}" />
+            <Setter Property="CornerRadius" Value="20" />
             <Setter Property="FontFamily">
                 <Setter.Value>
                     <OnPlatform x:TypeArguments="x:String" 
@@ -52,9 +53,14 @@
                                 iOS="Material Icons" />
                 </Setter.Value>
             </Setter>
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="HeightRequest" Value="40" />
             <Setter Property="HorizontalOptions" Value="Center" />
-            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="WidthRequest" Value="40" />
             <Style.Triggers>
                 <Trigger TargetType="Button" Property="IsEnabled" Value="False">
                     <Setter Property="TextColor" Value="DarkGray"/>
@@ -66,19 +72,21 @@
         </Style>
 
         <Style x:Key="PlayPauseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-            <Setter Property="FontSize" Value="48" />
             <Setter Property="CornerRadius" Value="27" />
-            <Setter Property="WidthRequest" Value="54" />
+            <Setter Property="FontSize" Value="48" />
             <Setter Property="HeightRequest" Value="54" />
+            <Setter Property="WidthRequest" Value="54" />
         </Style>
 
-        <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
         <local:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
+        <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
     </TemplatedView.Resources>
 
     <TemplatedView.ControlTemplate>
         <ControlTemplate>
             <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}" Spacing="0">
+                <Label Text="{TemplateBinding ErrorMessage}" Style="{TemplateBinding ErrorMessageStyle}"
+                       IsVisible="{TemplateBinding ErrorMessage, Converter={StaticResource ObjectToBoolConverter}}" />
                 <ProgressBar Style="{TemplateBinding BufferingProgressBarStyle}" Progress="{TemplateBinding BufferingProgress}" 
                              IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
 
@@ -127,7 +135,8 @@
                         </StackLayout>
                         <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
-                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" Text="&#xe037;" IsVisible="False">
+                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" Text="&#xe037;" 
+                                    IsVisible="{TemplateBinding IsPlayPauseButtonVisible}">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="PlayPauseStates">
                                         <VisualState x:Name="PlayState" />
@@ -136,14 +145,6 @@
                                                 <Setter Property="Text" Value="&#xe034;" />
                                             </VisualState.Setters>
                                         </VisualState>
-                                    </VisualStateGroup>
-                                    <VisualStateGroup x:Name="PauseAvailabilityStates">
-                                        <VisualState x:Name="PauseAvailable">
-                                            <VisualState.Setters>
-                                                <Setter Property="IsVisible" Value="True" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="PauseUnavailable" />
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
                             </Button>
