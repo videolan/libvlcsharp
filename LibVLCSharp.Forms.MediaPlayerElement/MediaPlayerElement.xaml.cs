@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Threading.Tasks;
 using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
@@ -149,29 +148,9 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private Task FadeIn()
+        private async void GestureRecognized(object sender, EventArgs e)
         {
-            return PlaybackControls.FadeInAsync();
-        }
-
-        private async void OnGestureRecognized(object sender, EventArgs e)
-        {
-            await FadeIn();
-        }
-
-        private async void OnGestureRecognized(object sender, PanUpdatedEventArgs e)
-        {
-            await FadeIn();
-        }
-
-        private async void OnGestureRecognized(object sender, PinchGestureUpdatedEventArgs e)
-        {
-            await FadeIn();
-        }
-
-        private async void OnGestureRecognized(object sender, SwipedEventArgs e)
-        {
-            await FadeIn();
+            await PlaybackControls.FadeInAsync();
         }
     }
 }
