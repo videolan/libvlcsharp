@@ -101,11 +101,6 @@ namespace LibVLCSharp.Shared
             if (IsDisposed || NativeReference == IntPtr.Zero)
                 return;
 
-            if(disposing)
-            {
-                Stop();
-            }
-
             base.Dispose(disposing);
         }
     }
