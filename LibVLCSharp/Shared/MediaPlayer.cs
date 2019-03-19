@@ -1098,9 +1098,11 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// 
+        /// Gets a list of potential audio output devices
+        /// <para/> Not all audio outputs support enumerating devices. The audio output may be functional even if the list is empty (NULL).
+        /// The list may not be exhaustive. Some audio output devices in the list might not actually work in some circumstances.
+        /// <para/> By default, it is recommended to not specify any explicit audio device.
         /// </summary>
-        /// <returns></returns>
         public AudioOutputDevice[] AudioOutputDeviceEnum =>
            MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputDeviceEnum(NativeReference),
            MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
