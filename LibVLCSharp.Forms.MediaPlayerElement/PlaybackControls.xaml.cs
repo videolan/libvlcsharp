@@ -25,8 +25,6 @@ namespace LibVLCSharp.Forms
         private const string ClosedCaptionsUnavailableState = "ClosedCaptionsUnavailable";
         private const string PlayState = "PlayState";
         private const string PauseState = "PauseState";
-        private const string PauseAvailableState = "PauseAvailable";
-        private const string PauseUnavailableState = "PauseUnavailable";
         private const string SeekAvailableState = "SeekAvailable";
         private const string SeekUnavailableState = "SeekUnavailable";
 
@@ -44,6 +42,7 @@ namespace LibVLCSharp.Forms
             ButtonBarStyle = Resources[nameof(ButtonBarStyle)] as Style;
             ButtonStyle = Resources[nameof(ButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
+            ErrorMessageStyle = Resources[nameof(ErrorMessageStyle)] as Style;
             PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
@@ -61,6 +60,8 @@ namespace LibVLCSharp.Forms
         private Button PlayPauseButton { get; set; }
         private Label RemainingTimeLabel { get; set; }
         private Slider SeekBar { get; set; }
+
+        private bool Initialized { get; set; }
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
@@ -166,6 +167,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="ErrorMessageStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ErrorMessageStyleProperty = BindableProperty.Create(nameof(ErrorMessageStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the error message style.
+        /// </summary>
+        public Style ErrorMessageStyle
+        {
+            get => (Style)GetValue(ErrorMessageStyleProperty);
+            set => SetValue(ErrorMessageStyleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="PlayPauseButtonStyle"/> dependency property.
         /// </summary>
         public static readonly BindableProperty PlayPauseButtonStyleProperty = BindableProperty.Create(nameof(PlayPauseButtonStyle), typeof(Style),
@@ -253,7 +268,8 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Identifies the <see cref="LibVLC"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls));
+        public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls),
+            propertyChanged: LibVLCPropertyChanged);
         /// <summary>
         /// Gets or sets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
         /// </summary>
@@ -289,6 +305,34 @@ namespace LibVLCSharp.Forms
         {
             get => (double)GetValue(BufferingProgressProperty);
             set => SetValue(BufferingProgressProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ErrorMessage"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ErrorMessageProperty = BindableProperty.Create(nameof(ErrorMessage), typeof(string),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets the last error message.
+        /// </summary>
+        public string ErrorMessage
+        {
+            get => (string)GetValue(ErrorMessageProperty);
+            private set => SetValue(ErrorMessageProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="KeepScreenOn"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
+            typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
+        /// <summary>
+        /// Gets or sets a value indicating whether the screen must be kept on when playing.
+        /// </summary>
+        public bool KeepScreenOn
+        {
+            get => (bool)GetValue(KeepScreenOnProperty);
+            set => SetValue(KeepScreenOnProperty, value);
         }
 
         /// <summary>
@@ -453,23 +497,28 @@ namespace LibVLCSharp.Forms
         protected override void OnParentSet()
         {
             base.OnParentSet();
-            if (Parent != null)
+            if (Parent != null && !Initialized)
             {
-                AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked, true);
-                CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
-                ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked,
-                    true);
-                PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
-                SetClickEventHandler("StopButton", StopButton_Clicked, true);
-                SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
-                ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
-                SeekBar = this.FindChild<Slider>(nameof(SeekBar));
-                RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
-                UpdateTime();
-                if (SeekBar != null)
-                {
-                    SeekBar.ValueChanged += SeekBar_ValueChanged;
-                }
+                OnApplyTemplate();
+            }
+        }
+
+        private void OnApplyTemplate()
+        {
+            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked, true);
+            CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
+            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked,
+                true);
+            PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
+            SetClickEventHandler("StopButton", StopButton_Clicked, true);
+            SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
+            ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
+            SeekBar = this.FindChild<Slider>(nameof(SeekBar));
+            RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
+            UpdateTime();
+            if (SeekBar != null)
+            {
+                SeekBar.ValueChanged += SeekBar_ValueChanged;
             }
         }
 
@@ -486,6 +535,16 @@ namespace LibVLCSharp.Forms
         private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).UpdatePauseAvailability();
+        }
+
+        private static void KeepScreenOnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdateKeepScreenOn((bool)newValue);
+        }
+
+        private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdateErrorMessage();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -507,6 +566,12 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void MediaPlayer_EncounteredError(object sender, EventArgs e)
+        {
+            UpdateErrorMessage();
+            UpdateState(VLCState.Error);
+        }
+
         private void MediaPlayer_EndReached(object sender, EventArgs e)
         {
             UpdateState(VLCState.Ended);
@@ -519,11 +584,7 @@ namespace LibVLCSharp.Forms
 
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
         {
-            UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-            UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
-            UpdatePosition();
-            UpdatePauseAvailability();
-            UpdateSeekAvailability();
+            Reset();
         }
 
         private void MediaPlayer_PausableChanged(object sender, MediaPlayerPausableChangedEventArgs e)
@@ -574,7 +635,7 @@ namespace LibVLCSharp.Forms
 
         private async void AudioTracksSelectionButton_Clicked(object sender, EventArgs e)
         {
-            await SelectTrack(TrackType.Audio, StringsResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
+            await SelectTrackAsync(TrackType.Audio, StringsResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
                 (m, id) => m.SetAudioTrack(id));
         }
 
@@ -592,7 +653,7 @@ namespace LibVLCSharp.Forms
                     {
                         _ = FadeInAsync();
                         var cancellationTokenSource = new CancellationTokenSource();
-                        _ = RotateElement(CastButton, cancellationTokenSource.Token);
+                        _ = RotateElementAsync(CastButton, cancellationTokenSource.Token);
                         IEnumerable<RendererItem> renderers;
                         try
                         {
@@ -609,6 +670,10 @@ namespace LibVLCSharp.Forms
                             mediaPlayer.SetRenderer(renderers.First(r => r.Name == rendererName));
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessageBox(ex);
+                    }
                     finally
                     {
                         CastButton.Clicked += CastButton_Clicked;
@@ -621,7 +686,7 @@ namespace LibVLCSharp.Forms
 
         private async void ClosedCaptionsSelectionButton_Clicked(object sender, EventArgs e)
         {
-            await SelectTrack(TrackType.Text, StringsResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
+            await SelectTrackAsync(TrackType.Text, StringsResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
                 true);
         }
 
@@ -679,17 +744,14 @@ namespace LibVLCSharp.Forms
             {
                 _ = FadeInAsync();
             }
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer != null)
+
+            try
             {
-                try
-                {
-                    eventHandler?.Invoke(sender, e);
-                }
-                catch (Exception)
-                {
-                    //TODO Manage errors
-                }
+                eventHandler?.Invoke(sender, e);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
             }
         }
 
@@ -698,6 +760,7 @@ namespace LibVLCSharp.Forms
             if (oldMediaPlayer != null)
             {
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
+                oldMediaPlayer.EncounteredError -= MediaPlayer_EncounteredError;
                 oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
                 oldMediaPlayer.ESAdded -= MediaPlayer_TracksChanged;
                 oldMediaPlayer.ESDeleted -= MediaPlayer_TracksChanged;
@@ -715,6 +778,7 @@ namespace LibVLCSharp.Forms
             if (newMediaPlayer != null)
             {
                 newMediaPlayer.Buffering += MediaPlayer_Buffering;
+                newMediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
                 newMediaPlayer.ESAdded += MediaPlayer_TracksChanged;
                 newMediaPlayer.ESDeleted += MediaPlayer_TracksChanged;
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
@@ -728,11 +792,20 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
                 newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
+
+            Reset();
         }
 
         private IEnumerable<MediaTrack> GetMediaTracks(MediaPlayer mediaPlayer, TrackType trackType)
         {
-            return mediaPlayer?.Media?.Tracks.Where(t => t.TrackType == trackType);
+            try
+            {
+                return mediaPlayer?.Media?.Tracks.Where(t => t.TrackType == trackType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private string GetTrackName(string trackName, int trackId, int currentTrackId)
@@ -747,7 +820,7 @@ namespace LibVLCSharp.Forms
             return GetTrackName(trackName, mediaTrack.Id, currentTrackId);
         }
 
-        private async Task SelectTrack(TrackType trackType, string popupTitle, Func<MediaPlayer, int> getCurrentTrackId,
+        private async Task SelectTrackAsync(TrackType trackType, string popupTitle, Func<MediaPlayer, int> getCurrentTrackId,
             Action<MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
         {
             var mediaPlayer = MediaPlayer;
@@ -757,38 +830,45 @@ namespace LibVLCSharp.Forms
                 return;
             }
 
-            var currentTrackId = getCurrentTrackId(mediaPlayer);
-            var index = 0;
-            IEnumerable<string> mediaTracksNames = mediaTracks.Select(t =>
-                {
-                    index += 1;
-                    return GetTrackName(t, currentTrackId, index);
-                }).OrderBy(n => n);
-            if (addDeactivateRow)
+            try
             {
-                mediaTracksNames = new[] { GetTrackName(StringsResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
-                    .Union(mediaTracksNames);
-            }
-
-            var mediaTrack = await this.GetParentPage()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
-            if (mediaTrack != null)
-            {
-                var found = false;
-                index = 0;
-                foreach (var mt in mediaTracks)
-                {
-                    index += 1;
-                    if (GetTrackName(mt, currentTrackId, index) == mediaTrack)
+                var currentTrackId = getCurrentTrackId(mediaPlayer);
+                var index = 0;
+                IEnumerable<string> mediaTracksNames = mediaTracks.Select(t =>
                     {
-                        found = true;
-                        setCurrentTrackId(mediaPlayer, mt.Id);
-                        break;
+                        index += 1;
+                        return GetTrackName(t, currentTrackId, index);
+                    }).OrderBy(n => n);
+                if (addDeactivateRow)
+                {
+                    mediaTracksNames = new[] { GetTrackName(StringsResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
+                        .Union(mediaTracksNames);
+                }
+
+                var mediaTrack = await this.GetParentPage()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
+                if (mediaTrack != null)
+                {
+                    var found = false;
+                    index = 0;
+                    foreach (var mt in mediaTracks)
+                    {
+                        index += 1;
+                        if (GetTrackName(mt, currentTrackId, index) == mediaTrack)
+                        {
+                            found = true;
+                            setCurrentTrackId(mediaPlayer, mt.Id);
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        setCurrentTrackId(mediaPlayer, -1);
                     }
                 }
-                if (!found)
-                {
-                    setCurrentTrackId(mediaPlayer, -1);
-                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
             }
         }
 
@@ -822,7 +902,23 @@ namespace LibVLCSharp.Forms
                 m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsUnavailableState, 1);
         }
 
-        private async Task RotateElement(VisualElement element, CancellationToken cancellation)
+        private void ShowError(string errorMessage)
+        {
+            Device.BeginInvokeOnMainThread(() => ErrorMessage = errorMessage);
+        }
+
+        private void Reset()
+        {
+            UpdateKeepScreenOn();
+            UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
+            UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
+            UpdatePosition();
+            UpdatePauseAvailability();
+            UpdateSeekAvailability();
+            UpdateErrorMessage();
+        }
+
+        private async Task RotateElementAsync(VisualElement element, CancellationToken cancellation)
         {
             while (!cancellation.IsCancellationRequested)
             {
@@ -831,13 +927,55 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private void UpdateErrorMessage()
+        {
+            try
+            {
+                var state = MediaPlayer?.State;
+                if (state == VLCState.Error || state == VLCState.Ended)
+                {
+                    ShowError("Error");
+                    //TODO ShowError(LibVLC?.LastLibVLCError);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
+        }
+
+        private void UpdateKeepScreenOn(bool? keepScreenOn = null)
+        {
+            var letScreenOn = keepScreenOn ?? KeepScreenOn;
+            if (!letScreenOn)
+            {
+                return;
+            }
+
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    var state = MediaPlayer?.State;
+                    letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
+                    if (DeviceDisplay.KeepScreenOn != letScreenOn)
+                    {
+                        DeviceDisplay.KeepScreenOn = letScreenOn;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
         private void UpdatePauseAvailability(bool? canPause = null)
         {
             var playPauseButton = PlayPauseButton;
             if (playPauseButton != null)
             {
-                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(playPauseButton,
-                    IsPlayPauseButtonVisible && (canPause ?? MediaPlayer?.CanPause) == true ? PauseAvailableState : PauseUnavailableState));
+                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(playPauseButton, canPause == true &&
+                    (MediaPlayer?.State == VLCState.Playing || MediaPlayer?.State == VLCState.Buffering) ? PauseState : PlayState));
             }
         }
 
@@ -846,8 +984,8 @@ namespace LibVLCSharp.Forms
             var seekBar = SeekBar;
             if (seekBar != null)
             {
-                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar,
-                    IsSeekEnabled && (canSeek ?? MediaPlayer?.IsSeekable) == true ? SeekAvailableState : SeekUnavailableState));
+                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar, IsSeekEnabled &&
+                    (canSeek ?? MediaPlayer?.IsSeekable == true && MediaPlayer?.WillPlay == true) ? SeekAvailableState : SeekUnavailableState));
             }
         }
 
@@ -859,47 +997,54 @@ namespace LibVLCSharp.Forms
                 return;
             }
 
-            if (Zoom)
+            try
             {
-                MediaTrack? mediaTrack;
-                try
+                if (Zoom)
                 {
-                    mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
-                }
-                catch (Exception)
-                {
-                    mediaTrack = null;
-                }
-                if (mediaTrack == null)
-                {
-                    return;
-                }
+                    MediaTrack? mediaTrack;
+                    try
+                    {
+                        mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
+                    }
+                    catch (Exception)
+                    {
+                        mediaTrack = null;
+                    }
+                    if (mediaTrack == null)
+                    {
+                        return;
+                    }
 
-                var videoTrack = mediaTrack.Value.Data.Video;
-                var videoWidth = videoTrack.Width;
-                var videoHeight = videoTrack.Height;
-                if (videoWidth == 0 || videoHeight == 0)
-                {
-                    return;
-                }
+                    var videoTrack = mediaTrack.Value.Data.Video;
+                    var videoWidth = videoTrack.Width;
+                    var videoHeight = videoTrack.Height;
+                    if (videoWidth == 0 || videoHeight == 0)
+                    {
+                        return;
+                    }
 
-                var sarDen = videoTrack.SarDen;
-                var sarNum = videoTrack.SarNum;
-                if (sarNum != sarDen)
-                {
-                    videoWidth = videoWidth * sarNum / sarDen;
-                }
+                    var sarDen = videoTrack.SarDen;
+                    var sarNum = videoTrack.SarNum;
+                    if (sarNum != sarDen)
+                    {
+                        videoWidth = videoWidth * sarNum / sarDen;
+                    }
 
-                var var = (double)videoWidth / videoHeight;
-                var displayInfo = DeviceDisplay.MainDisplayInfo;
-                var screenWidth = displayInfo.Width;
-                var screenHeight = displayInfo.Height;
-                var screenar = screenWidth / screenHeight;
-                mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
+                    var var = (double)videoWidth / videoHeight;
+                    var displayInfo = DeviceDisplay.MainDisplayInfo;
+                    var screenWidth = displayInfo.Width;
+                    var screenHeight = displayInfo.Height;
+                    var screenar = screenWidth / screenHeight;
+                    mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
+                }
+                else
+                {
+                    mediaPlayer.Scale = 0;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                mediaPlayer.Scale = 0;
+                ShowErrorMessageBox(ex);
             }
         }
 
@@ -914,27 +1059,43 @@ namespace LibVLCSharp.Forms
 
         private void UpdateMediaPlayerPosition()
         {
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer != null)
+            try
             {
-                mediaPlayer.Position = (float)(SeekBar.Value / SeekBar.Maximum);
+                var mediaPlayer = MediaPlayer;
+                if (mediaPlayer != null)
+                {
+                    mediaPlayer.Position = (float)(SeekBar.Value / SeekBar.Maximum);
+                }
             }
-
-            SeekBarTimerEnabled = false;
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
+            finally
+            {
+                SeekBarTimerEnabled = false;
+            }
         }
 
         private void UpdatePosition(float? position = null)
         {
-            var mediaPlayer = MediaPlayer;
-            var pos = position ?? mediaPlayer?.Position ?? 0;
-            var timeSpanPosition = TimeSpan.FromMilliseconds((mediaPlayer?.Length ?? 0) * pos);
-            var elapsedTime = (timeSpanPosition - Position).TotalMilliseconds;
-            if (position != null && elapsedTime > 0 && elapsedTime < 750)
+            try
             {
-                return;
-            }
+                var mediaPlayer = MediaPlayer;
+                var pos = position ?? mediaPlayer?.Position ?? 0;
+                var timeSpanPosition = TimeSpan.FromMilliseconds((mediaPlayer?.Length ?? 0) * pos);
+                var elapsedTime = (timeSpanPosition - Position).TotalMilliseconds;
+                if (position != null && elapsedTime > 0 && elapsedTime < 750)
+                {
+                    return;
+                }
 
-            UpdateSeekBar(timeSpanPosition, pos);
+                UpdateSeekBar(timeSpanPosition, pos);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
         }
 
         private void UpdateTime(double? position = null)
@@ -944,15 +1105,22 @@ namespace LibVLCSharp.Forms
                 return;
             }
 
-            var length = MediaPlayer?.Length ?? 0;
-            var time = position == null ? (SeekBar.Value * length / SeekBar.Maximum) : (double)position;
-            var timeRemaining = TimeSpan.FromMilliseconds(length - time).ToShortString();
-            if (RemainingTimeLabel.Text != timeRemaining)
+            try
             {
-                Device.BeginInvokeOnMainThread(() =>
+                var length = MediaPlayer?.Length ?? 0;
+                var time = position == null ? (SeekBar.Value * length / SeekBar.Maximum) : (double)position;
+                var timeRemaining = TimeSpan.FromMilliseconds(length - time).ToShortString();
+                if (RemainingTimeLabel.Text != timeRemaining)
                 {
-                    RemainingTimeLabel.Text = timeRemaining;
-                });
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        RemainingTimeLabel.Text = timeRemaining;
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
             }
         }
 
@@ -972,7 +1140,7 @@ namespace LibVLCSharp.Forms
             UpdateTime(timeSpan.TotalMilliseconds);
         }
 
-        private void UpdateState(VLCState state, double? bufferingProgress = null)
+        private void UpdateState(VLCState state)
         {
             var playPauseButton = PlayPauseButton;
             if (playPauseButton == null)
@@ -983,8 +1151,10 @@ namespace LibVLCSharp.Forms
             string playPauseState;
             switch (state)
             {
-                case VLCState.Ended:
                 case VLCState.Error:
+                    UpdateErrorMessage();
+                    goto case VLCState.Stopped;
+                case VLCState.Ended:
                 case VLCState.Stopped:
                     UpdateSeekBar(TimeSpan.Zero);
                     goto case VLCState.Paused;
@@ -992,7 +1162,8 @@ namespace LibVLCSharp.Forms
                     playPauseState = PlayState;
                     break;
                 default:
-                    playPauseState = PauseState;
+                    ShowError(null);
+                    playPauseState = MediaPlayer?.CanPause == true ? PauseState : PlayState;
                     break;
             }
 
@@ -1002,6 +1173,7 @@ namespace LibVLCSharp.Forms
                 BufferingProgress = 0;
                 VisualStateManager.GoToState(playPauseButton, playPauseState);
             });
+            UpdateKeepScreenOn();
         }
 
         private void FadeOut()
@@ -1013,6 +1185,17 @@ namespace LibVLCSharp.Forms
                     ControlsPanel.IsVisible = false;
                 }
             });
+        }
+
+        /// <summary>
+        /// Show an error message box.
+        /// </summary>
+        /// <param name="ex">The exception to show.</param>
+        protected virtual void ShowErrorMessageBox(Exception ex)
+        {
+            var error = StringsResourceManager.GetString(nameof(Strings.Error));
+            Device.BeginInvokeOnMainThread(() => this.GetParentPage().DisplayAlert(error, ex?.GetBaseException().Message ?? error,
+                StringsResourceManager.GetString(nameof(Strings.OK))));
         }
 
         /// <summary>
