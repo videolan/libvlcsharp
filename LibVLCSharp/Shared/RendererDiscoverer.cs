@@ -39,7 +39,7 @@ namespace LibVLCSharp.Shared
         /// Create a new renderer discoverer with a LibVLC and protocol name depending on host platform
         /// </summary>
         /// <param name="libVLC">libvlc instance this will be connected to</param>
-        /// <param name="name">The service discovery protocol name depending on platform. Use LibVLC.RendererList to find the one for your platform</param>
+        /// <param name="name">The service discovery protocol name depending on platform. Use <see cref="LibVLC.RendererList"/> to find the one for your platform</param>
         public RendererDiscoverer(LibVLC libVLC, string name)
             : base(() =>
             {
