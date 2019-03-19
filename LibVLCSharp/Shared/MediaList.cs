@@ -255,7 +255,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Increments the native reference counter for this medialist instance</summary>
-        public void Retain() => Native.LibVLCMediaListRetain(NativeReference);
+        internal void Retain() => Native.LibVLCMediaListRetain(NativeReference);
 
         #region Events
 

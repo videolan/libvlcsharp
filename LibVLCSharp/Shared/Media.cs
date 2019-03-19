@@ -711,7 +711,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Increments the native reference counter for the media</summary>
-        public void Retain()
+        internal void Retain()
         {
             if (NativeReference != IntPtr.Zero)
                 Native.LibVLCMediaRetain(NativeReference);

@@ -643,7 +643,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Increments the native reference counter for this libvlc instance</summary>
-        public void Retain() => Native.LibVLCRetain(NativeReference);
+        internal void Retain() => Native.LibVLCRetain(NativeReference);
 
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
         public string Version => Native.LibVLCVersion().FromUtf8();

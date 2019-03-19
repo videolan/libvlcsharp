@@ -1660,7 +1660,7 @@ namespace LibVLCSharp.Shared
         public bool SetRole(MediaPlayerRole role) => Native.LibVLCMediaPlayerSetRole(NativeReference, role) == 0;
 
         /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
-        public void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
+        internal void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
 
 #if UNITY_ANDROID
         /// <summary>
