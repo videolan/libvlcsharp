@@ -37,13 +37,14 @@ Check out [libvlc-nuget](https://code.videolan.org/videolan/libvlc-nuget) to get
 
 Some of the [features](https://www.videolan.org/vlc/features.html) include:
 
+- Plays all [formats](https://en.wikipedia.org/wiki/VLC_media_player#Format_support)
 - Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
 - HDMI pass-through for Audio HD codecs, like E-AC3, TrueHD or DTS-HD.
 - Stream to distant renderers, like Chromecast.
 - 360 video and 3D audio playback with viewpoint change.
 - Support for Ambisonics audio and more than 8 audio channels.
 - Subtitles size modification live.
-- Hardware decoding and display on all platforms.
+- Hardware and software decoding on all platforms.
 - DVD playback and menu navigation.
 - Equalizer support.
 
@@ -67,14 +68,14 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 1. Install **LibVLC** in your platform specific project.
 
-| Platform          | LibVLC Package                      | NuGet                                  |
-| ----------------- | ----------------------------------- | -------------------------------------- |
-| Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] |
-| Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         |
-| Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] |
-| iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         |
-| tvOS              | VideoLAN.LibVLC.tvOS                | [![LibVLCtvOSBadge]][LibVLCtvOS]       |
-| Linux             | [Linux guide](docs/linux-setup.md)  | N/A                                    |
+| Platform          | LibVLC Package                      | NuGet                                  | Minimum OS Version |
+| ----------------- | ----------------------------------- | -------------------------------------- |--------------------|
+| Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] | Windows XP         |
+| Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         | macOS 10.7         |
+| Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] | Android 2.3        |
+| iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         | iOS 8.4            |
+| tvOS              | VideoLAN.LibVLC.tvOS                | [![LibVLCtvOSBadge]][LibVLCtvOS]       | tvOS 10.2          |
+| Linux             | [Linux guide](docs/linux-setup.md)  | N/A                                    | N/A                |
 
 ```cmd
 dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
@@ -83,7 +84,6 @@ dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
 LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
 
 2. Install **LibVLCSharp** _or_ **LibVLCSharp.Forms** (if you plan on using Xamarin.Forms)
-
 
 | Platform          | LibVLCSharp Package                          | NuGet                                             |
 | ----------------- | -------------------------------------------- | ------------------------------------------------- |
@@ -100,54 +100,6 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | Windows Forms     | LibVLCSharp.WinForms                         | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#. 
-
-```cmd
-dotnet add package LibVLCSharp
-```
-
-[![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.svg)](https://www.nuget.org/packages/LibVLCSharp)
-[![NuGet Stats](https://img.shields.io/nuget/dt/LibVLCSharp.svg)](https://www.nuget.org/packages/LibVLCSharp)
-
-If you plan to use LibVLCSharp with Xamarin.Forms, you need to install LibVLCSharp.Forms instead (which references LibVLCSharp).
-
-```cmd
-dotnet add package LibVLCSharp.Forms
-```
-
-[![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.Forms.svg)](https://www.nuget.org/packages/LibVLCSharp.Forms)
-[![NuGet Stats](https://img.shields.io/nuget/dt/LibVLCSharp.Forms.svg)](https://www.nuget.org/packages/LibVLCSharp.Forms)
-
-The LibVLCSharp package contains platform specific View integrations (i.e. `VideoView`) for Android, iOS, Mac and tvOS.
-
-3. A few additional GUI toolkits have been integrated to LibVLCSharp. Those _optional_ packages aim to make the process of using LibVLC in your app as easy and fast as possible by providing a LibVLCSharp `VideoView`.
-
-For __WPF__ on Windows with or without Xamarin.Forms
-[![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.WPF.svg)](https://www.nuget.org/packages/LibVLCSharp.WPF)
-
-```cmd
-dotnet add package LibVLCSharp.WPF
-```
-
-or
-
-```cmd
-dotnet add package LibVLCSharp.Forms.WPF
-```
-
-For __WinForms__ on Windows [![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.WinForms.svg)](https://www.nuget.org/packages/LibVLCSharp.WinForms)
-
-```cmd
-dotnet add package LibVLCSharp.WinForms
-```
-
-If you're using __GTK__ (with or without Xamarin.Forms support) on Linux and/or Windows [![NuGet Stats](https://img.shields.io/nuget/v/LibVLCSharp.GTK.svg)](https://www.nuget.org/packages/LibVLCSharp.GTK)
-
-```cmd
-dotnet add package LibVLCSharp.GTK
-```
-
-
-
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
@@ -185,19 +137,9 @@ dotnet add package LibVLCSharp.GTK
 [LibVLCSharpWinForms]: https://www.nuget.org/packages/LibVLCSharp.WinForms/
 [LibVLCSharpWinFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WinForms.svg
 
-
 ## Getting started
 
-Feel free to check out the simple sample projects for [iOS](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.iOS.Sample) and [Android](https://github.com/videolan/libvlcsharp/tree/master/Samples/LibVLCSharp.Android.Sample) to get started.
-
-- You need to instantiate a `VideoView` and add it to your main View. 
-- You may need to call `Core.Initialize()` to load the `libvlc` native libraries, depending on your host platform. 
-- The `VideoView` offers a `MediaPlayer` object (with data-binding support) which allows you to control playback with APIs such as `Play`, `Pause`, set a new media or listen for `libvlc` events.
-
-For usage of the API, you should check out the `libvlc` [C API documentation](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html) which this wrapper follows closely.
-
-Regarding LibVLCSharp.Forms, check out the sample for [Forms](https://github.com/videolan/libvlcsharp/tree/master/Samples/Forms) to get started.
-Notably, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called.
+Follow the [Getting started guide](GETTING-STARTED.md).
 
 ## Samples
 
