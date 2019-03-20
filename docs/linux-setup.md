@@ -10,6 +10,11 @@ For ubuntu:
 
 *`libvlc.so` and `libvlccore.so` will be located at `/usr/lib`.*
 
+You may need:
+> `apt-get install vlc`
+
+Though note this might pull libvlc 2.x depending on the repository and distro you pull it from.
+
 3. Install **gtk-sharp** (or monodevelop which uses it)
 
 For ubuntu:
