@@ -2,6 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using Android.Views;
 using LibVLCSharp.Forms.Shared;
 using Xamarin.Essentials;
 
@@ -30,6 +31,8 @@ namespace Sample.Droid
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
             LibVLCSharpFormsRenderer.Init();
+            Window.DecorView.SystemUiVisibility = Window.DecorView.SystemUiVisibility |
+                (StatusBarVisibility)(SystemUiFlags.ImmersiveSticky | SystemUiFlags.Fullscreen | SystemUiFlags.HideNavigation);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
