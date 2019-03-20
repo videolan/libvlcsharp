@@ -8,11 +8,5 @@ namespace LibVLCSharp.Forms.Sample
         {
             InitializeComponent();
         }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            ((MainViewModel)BindingContext).OnAppearing();
-        }
     }
 }
