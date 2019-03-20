@@ -85,21 +85,24 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 
 2. Install **LibVLCSharp** _or_ **LibVLCSharp.Forms** (if you plan on using Xamarin.Forms)
 
-| Platform          | LibVLCSharp Package                          | NuGet                                             |
-| ----------------- | -------------------------------------------- | ------------------------------------------------- |
-| .NET Standard     | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Android   | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.iOS       | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.tvOS      | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Mac       | [LibVLCSharp](LibVLCSharp/README.md)         | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Forms     | LibVLCSharp.Forms                            | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
-| WPF               | LibVLCSharp.WPF                              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
-| Xamarin.Forms.WPF | LibVLCSharp.Forms.WPF                        | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
-| GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md) | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
-| Xamarin.Forms.GTK | LibVLCSharp.Forms.GTK                        | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
-| Windows Forms     | LibVLCSharp.WinForms                         | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
+| Platform          | LibVLCSharp Package                             | NuGet                                             |
+| ----------------- | ----------------------------------------------- | ------------------------------------------------- |
+| .NET Standard     | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Android   | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.iOS       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.tvOS      | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Mac       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Forms     | [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md)| [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
+| WPF               | LibVLCSharp.WPF                                 | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
+| Xamarin.Forms.WPF | [LibVLCSharp.Forms.WPF][RLibVLCSharpFormsWPF]    | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
+| GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md)    | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
+| Xamarin.Forms.GTK | [LibVLCSharp.Forms.GTK][RLibVLCSharpFormsGTK]    | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
+| Windows Forms     | LibVLCSharp.WinForms                            | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#. 
+
+[RLibVLCSharpFormsWPF]: LibVLCSharp.Forms.Platforms.WPF/README.md
+[RLibVLCSharpFormsGTK]: LibVLCSharp.Forms.Platforms.GTK/README.md
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
