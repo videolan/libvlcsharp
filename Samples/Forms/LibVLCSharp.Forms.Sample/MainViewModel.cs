@@ -24,6 +24,7 @@ namespace LibVLCSharp.Forms.Sample
         }
 
         private bool IsLoaded { get; set; }
+        private bool IsVideoViewInitialized { get; set; }
 
         private void Set<T>(string propertyName, ref T field, T value)
         {
@@ -53,11 +54,17 @@ namespace LibVLCSharp.Forms.Sample
             Play();
         }
 
-        public void Play()
+        public void OnVideoViewInitialized()
         {
-            if (IsLoaded)
+            IsVideoViewInitialized = true;
+            Play();
+        }
+
+        private void Play()
+        {
+            if (IsLoaded && IsVideoViewInitialized)
             {
-                MediaPlayer?.Play();
+                MediaPlayer.Play();
             }
         }
     }

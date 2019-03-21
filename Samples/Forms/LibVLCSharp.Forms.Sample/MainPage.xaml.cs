@@ -18,7 +18,7 @@ namespace LibVLCSharp.Forms.Sample
 
         private void VideoView_MediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
-            ((MainViewModel)BindingContext).Play();
+            ((MainViewModel)BindingContext).OnVideoViewInitialized();
         }
     }
 }
