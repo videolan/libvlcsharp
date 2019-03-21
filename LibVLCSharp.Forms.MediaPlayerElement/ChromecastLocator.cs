@@ -8,14 +8,14 @@ namespace LibVLCSharp.Forms
     /// <summary>
     /// Helper class to manage the cast
     /// </summary>
-    public static class Chromecast
+    public class ChromecastLocator
     {
         /// <summary>
         /// Finds the Chromecast renderers.
         /// </summary>
         /// <param name="libVLC">The <see cref="LibVLC"/> instance.</param>
         /// <returns>An enumerable collection of <see cref="RendererItem"/> representing the Chromecast renderers.</returns>
-        public static async Task<IEnumerable<RendererItem>> FindRenderersAsync(LibVLC libVLC)
+        public async Task<IEnumerable<RendererItem>> FindRenderersAsync(LibVLC libVLC)
         {
             var renderers = new List<RendererItem>();
             using (var rendererDiscover = new RendererDiscoverer(libVLC,
