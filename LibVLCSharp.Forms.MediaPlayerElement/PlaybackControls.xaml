@@ -135,14 +135,21 @@
                         </StackLayout>
                         <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
-                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" Text="&#xe037;" 
-                                    IsVisible="{TemplateBinding IsPlayPauseButtonVisible}">
+                            <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" Text="&#xe037;">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="PlayPauseStates">
                                         <VisualState x:Name="PlayState" />
                                         <VisualState x:Name="PauseState">
                                             <VisualState.Setters>
                                                 <Setter Property="Text" Value="&#xe034;" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                    <VisualStateGroup x:Name="PauseAvailabilityStates">
+                                        <VisualState x:Name="PauseAvailable" />
+                                        <VisualState x:Name="PauseUnavailable">
+                                            <VisualState.Setters>
+                                                <Setter Property="IsVisible" Value="False" />
                                             </VisualState.Setters>
                                         </VisualState>
                                     </VisualStateGroup>
