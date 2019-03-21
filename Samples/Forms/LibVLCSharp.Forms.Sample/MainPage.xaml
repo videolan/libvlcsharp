@@ -8,5 +8,5 @@
         <local:MainViewModel />
     </ContentPage.BindingContext>
     
-    <shared:VideoView MediaPlayer="{Binding MediaPlayer}" x:Name="videoView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+    <shared:VideoView MediaPlayer="{Binding MediaPlayer}" MediaPlayerChanged="VideoView_MediaPlayerChanged" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
 </ContentPage>

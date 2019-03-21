@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using LibVLCSharp.Shared;
+using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Sample
 {
@@ -7,6 +8,17 @@ namespace LibVLCSharp.Forms.Sample
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ((MainViewModel)BindingContext).OnAppearing();
+        }
+
+        private void VideoView_MediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
+        {
+            ((MainViewModel)BindingContext).Play();
         }
     }
 }
