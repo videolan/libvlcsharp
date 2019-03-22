@@ -10,6 +10,33 @@ namespace LibVLCSharp.Forms
     public static class VisualTreeHelper
     {
         /// <summary>
+        /// Obtains a child object of a given type of the provided parent element by examining the visual tree.
+        /// </summary>
+        /// <typeparam name="T">Element type to find.</typeparam>
+        /// <param name="parent">The parent element.</param>
+        /// <returns>The child element, or null if not found.</returns>
+        public static T FindChild<T>(this Element parent) where T : Element
+        {
+            if (parent is Layout layout)
+            {
+                foreach (var child in layout.Children)
+                {
+                    if (child is T result)
+                    {
+                        return result;
+                    }
+                    result = child.FindChild<T>();
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Using the provided name, obtains a specific child object of the provided parent element by examining the visual tree.
         /// </summary>
         /// <typeparam name="T">The element type to obtain.</typeparam>
@@ -24,25 +51,14 @@ namespace LibVLCSharp.Forms
                 return result;
             }
 
-            if (parent is ContentView contentView)
+            if (parent is Layout layout)
             {
-                result = contentView.Content?.FindChild<T>(name);
-                if (result != null)
+                foreach (var child in layout.Children.OfType<Layout>())
                 {
-                    return result;
-                }
-            }
-            else
-            {
-                if (parent is Layout layout)
-                {
-                    foreach (var child in layout.Children.OfType<Layout>())
+                    result = child.FindChild<T>(name);
+                    if (result != null)
                     {
-                        result = child.FindChild<T>(name);
-                        if (result != null)
-                        {
-                            return result;
-                        }
+                        return result;
                     }
                 }
             }
@@ -51,22 +67,23 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Gets the page to which an element belongs.
+        /// Gets the ancestor of a given type to which an element belongs.
         /// </summary>
+        /// <typeparam name="T">Ancestor element type.</typeparam>
         /// <param name="element">The element.</param>
-        /// <returns>The page, or null if not found.</returns>
-        public static Page GetParentPage(this VisualElement element)
+        /// <returns>The ancestor element of the given type, or null if not found.</returns>
+        public static T FindAncestor<T>(this Element element) where T : Element
         {
             if (element != null)
             {
-                var parent = element.Parent;
-                while (parent != null)
+                element = element.Parent;
+                while (element != null)
                 {
-                    if (parent is Page page)
+                    if (element is T ancestor)
                     {
-                        return page;
+                        return ancestor;
                     }
-                    parent = parent.Parent;
+                    element = element.Parent;
                 }
             }
             return null;
