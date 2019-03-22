@@ -37,17 +37,22 @@ namespace LibVLCSharp.Forms
         {
             InitializeComponent();
 
+            IconFontFamily = Resources[nameof(IconFontFamily)] as OnPlatform<string>;
             ButtonColor = (Color)(Resources[nameof(ButtonColor)] ?? Color.Transparent);
             ForeColor = (Color)(Resources[nameof(ForeColor)] ?? Color.White);
             MainColor = (Color)(Resources[nameof(MainColor)] ?? Color.Transparent);
+            AudioTracksSelectionButtonStyle = Resources[nameof(AudioTracksSelectionButtonStyle)] as Style;
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
             ButtonBarStyle = Resources[nameof(ButtonBarStyle)] as Style;
-            ButtonStyle = Resources[nameof(ButtonStyle)] as Style;
+            CastButtonStyle = Resources[nameof(CastButtonStyle)] as Style;
+            ClosedCaptionsSelectionButtonStyle = Resources[nameof(ClosedCaptionsSelectionButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
             ErrorMessageStyle = Resources[nameof(ErrorMessageStyle)] as Style;
             PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
+            StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
+            ZoomButtonStyle = Resources[nameof(ZoomButtonStyle)] as Style;
 
             FadeOutTimer = new Timer(obj => FadeOut());
             SeekBarTimer = new Timer(obj => UpdateMediaPlayerPosition());
@@ -69,6 +74,20 @@ namespace LibVLCSharp.Forms
         private bool FadeOutEnabled { get; set; } = true;
         private Timer SeekBarTimer { get; set; }
         private bool SeekBarTimerEnabled { get; set; }
+
+        /// <summary>
+        /// Identifies the <see cref="IconFontFamily"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IconFontFamilyProperty = BindableProperty.Create(nameof(IconFontFamily), typeof(string),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the icon font family.
+        /// </summary>
+        public string IconFontFamily
+        {
+            get => (string)GetValue(IconFontFamilyProperty);
+            set => SetValue(IconFontFamilyProperty, value);
+        }
 
         /// <summary>
         /// Identifies the <see cref="ButtonColor"/> dependency property.
@@ -113,6 +132,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="AudioTracksSelectionButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty AudioTracksSelectionButtonStyleProperty = BindableProperty.Create(
+            nameof(AudioTracksSelectionButtonStyle), typeof(Style), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the audio tracks selection button style.
+        /// </summary>
+        public Style AudioTracksSelectionButtonStyle
+        {
+            get => (Style)GetValue(AudioTracksSelectionButtonStyleProperty);
+            set => SetValue(AudioTracksSelectionButtonStyleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="BufferingProgressBarStyle"/> dependency property.
         /// </summary>
         public static readonly BindableProperty BufferingProgressBarStyleProperty = BindableProperty.Create(nameof(BufferingProgressBarStyle),
@@ -141,17 +174,31 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="ButtonStyle"/> dependency property.
+        /// Identifies the <see cref="CastButtonStyle"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty ButtonStyleProperty = BindableProperty.Create(nameof(ButtonStyle), typeof(Style),
+        public static readonly BindableProperty CastButtonStyleProperty = BindableProperty.Create(nameof(CastButtonStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets or sets the buttons style.
+        /// Gets or sets the cast button style.
         /// </summary>
-        public Style ButtonStyle
+        public Style CastButtonStyle
         {
-            get => (Style)GetValue(ButtonStyleProperty);
-            set => SetValue(ButtonStyleProperty, value);
+            get => (Style)GetValue(CastButtonStyleProperty);
+            set => SetValue(CastButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ClosedCaptionsSelectionButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ClosedCaptionsSelectionButtonStyleProperty = BindableProperty.Create(
+            nameof(ClosedCaptionsSelectionButtonStyle), typeof(Style), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the closed captions selection button style.
+        /// </summary>
+        public Style ClosedCaptionsSelectionButtonStyle
+        {
+            get => (Style)GetValue(ClosedCaptionsSelectionButtonStyleProperty);
+            set => SetValue(ClosedCaptionsSelectionButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -222,6 +269,34 @@ namespace LibVLCSharp.Forms
         {
             get => (Style)GetValue(SeekBarStyleProperty);
             set => SetValue(SeekBarStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="StopButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty StopButtonStyleProperty = BindableProperty.Create(nameof(StopButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the stop button style.
+        /// </summary>
+        public Style StopButtonStyle
+        {
+            get => (Style)GetValue(StopButtonStyleProperty);
+            set => SetValue(StopButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ZoomButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ZoomButtonStyleProperty = BindableProperty.Create(nameof(ZoomButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the zoom button style.
+        /// </summary>
+        public Style ZoomButtonStyle
+        {
+            get => (Style)GetValue(ZoomButtonStyleProperty);
+            set => SetValue(ZoomButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -1055,9 +1130,10 @@ namespace LibVLCSharp.Forms
                     }
 
                     var var = (double)videoWidth / videoHeight;
+                    var parentPage = this.GetParentPage();
                     var displayInfo = DeviceDisplay.MainDisplayInfo;
-                    var screenWidth = displayInfo.Width;
-                    var screenHeight = displayInfo.Height;
+                    var screenWidth = parentPage.Width * displayInfo.Density;
+                    var screenHeight = parentPage.Height * displayInfo.Density;
                     var screenar = screenWidth / screenHeight;
                     mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
                 }
@@ -1235,11 +1311,17 @@ namespace LibVLCSharp.Forms
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task FadeInAsync()
         {
-            FadeOutTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
-            ControlsPanel.IsVisible = true;
-            if (ControlsPanel.Opacity != 1)
+            var controlsPanel = ControlsPanel;
+            if (controlsPanel == null)
             {
-                await ControlsPanel.FadeTo(1);
+                return;
+            }
+
+            FadeOutTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
+            controlsPanel.IsVisible = true;
+            if (controlsPanel.Opacity != 1)
+            {
+                await controlsPanel.FadeTo(1);
             }
             if (FadeOutEnabled && ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
             {
