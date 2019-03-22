@@ -5,6 +5,7 @@ using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Forms.Resources;
+using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Xamarin.Essentials;
@@ -744,7 +745,7 @@ namespace LibVLCSharp.Forms
                         {
                             cancellationTokenSource.Cancel();
                         }
-                        var rendererName = await this.GetParentPage()?.DisplayActionSheet(StringsResourceManager.GetString(nameof(Strings.CastTo)),
+                        var rendererName = await this.FindAncestor<Page>()?.DisplayActionSheet(StringsResourceManager.GetString(nameof(Strings.CastTo)),
                             null, null, renderers.OrderBy(r => r.Name).Select(r => r.Name).ToArray());
                         if (rendererName != null)
                         {
@@ -936,7 +937,7 @@ namespace LibVLCSharp.Forms
                         .Union(mediaTracksNames);
                 }
 
-                var mediaTrack = await this.GetParentPage()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
+                var mediaTrack = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
                 if (mediaTrack != null)
                 {
                     var found = false;
@@ -1122,6 +1123,12 @@ namespace LibVLCSharp.Forms
                         return;
                     }
 
+                    var videoView = this.FindAncestor<Layout>()?.FindChild<VideoView>();
+                    if (videoView == null)
+                    {
+                        return;
+                    }
+
                     var sarDen = videoTrack.SarDen;
                     var sarNum = videoTrack.SarNum;
                     if (sarNum != sarDen)
@@ -1130,10 +1137,9 @@ namespace LibVLCSharp.Forms
                     }
 
                     var var = (double)videoWidth / videoHeight;
-                    var parentPage = this.GetParentPage();
-                    var displayInfo = DeviceDisplay.MainDisplayInfo;
-                    var screenWidth = parentPage.Width * displayInfo.Density;
-                    var screenHeight = parentPage.Height * displayInfo.Density;
+                    var density = DeviceDisplay.MainDisplayInfo.Density;
+                    var screenWidth = videoView.Width * density;
+                    var screenHeight = videoView.Height * density;
                     var screenar = screenWidth / screenHeight;
                     mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
                 }
@@ -1301,7 +1307,7 @@ namespace LibVLCSharp.Forms
         protected virtual void ShowErrorMessageBox(Exception ex)
         {
             var error = StringsResourceManager.GetString(nameof(Strings.Error));
-            Device.BeginInvokeOnMainThread(() => this.GetParentPage().DisplayAlert(error, ex?.GetBaseException().Message ?? error,
+            Device.BeginInvokeOnMainThread(() => this.FindAncestor<Page>().DisplayAlert(error, ex?.GetBaseException().Message ?? error,
                 StringsResourceManager.GetString(nameof(Strings.OK))));
         }
 
