@@ -8,7 +8,6 @@ using LibVLCSharp.Forms.Resources;
 using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -58,7 +57,7 @@ namespace LibVLCSharp.Forms
             FadeOutTimer = new Timer(obj => FadeOut());
             SeekBarTimer = new Timer(obj => UpdateMediaPlayerPosition());
 
-            DeviceDisplay.MainDisplayInfoChanged += (sender, e) => UpdateZoom();
+            Device.Info.PropertyChanged += (sender, e) => UpdateZoom();
         }
 
         private Button AudioTracksSelectionButton { get; set; }
@@ -399,19 +398,20 @@ namespace LibVLCSharp.Forms
             private set => SetValue(ErrorMessageProperty, value);
         }
 
-        /// <summary>
-        /// Identifies the <see cref="KeepScreenOn"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
-            typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
-        /// <summary>
-        /// Gets or sets a value indicating whether the screen must be kept on when playing.
-        /// </summary>
-        public bool KeepScreenOn
-        {
-            get => (bool)GetValue(KeepScreenOnProperty);
-            set => SetValue(KeepScreenOnProperty, value);
-        }
+        //TODO Add KeepScreenOn feature
+        ///// <summary>
+        ///// Identifies the <see cref="KeepScreenOn"/> dependency property.
+        ///// </summary>
+        //public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
+        //    typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
+        ///// <summary>
+        ///// Gets or sets a value indicating whether the screen must be kept on when playing.
+        ///// </summary>
+        //public bool KeepScreenOn
+        //{
+        //    get => (bool)GetValue(KeepScreenOnProperty);
+        //    set => SetValue(KeepScreenOnProperty, value);
+        //}
 
         /// <summary>
         /// Identifies the <see cref="Position"/> dependency property.
@@ -1039,27 +1039,27 @@ namespace LibVLCSharp.Forms
 
         private void UpdateKeepScreenOn(bool? keepScreenOn = null)
         {
-            var letScreenOn = keepScreenOn ?? KeepScreenOn;
-            if (!letScreenOn)
-            {
-                return;
-            }
+            //var letScreenOn = keepScreenOn ?? KeepScreenOn;
+            //if (!letScreenOn)
+            //{
+            //    return;
+            //}
 
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                try
-                {
-                    var state = MediaPlayer?.State;
-                    letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
-                    if (DeviceDisplay.KeepScreenOn != letScreenOn)
-                    {
-                        DeviceDisplay.KeepScreenOn = letScreenOn;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            });
+            //Device.BeginInvokeOnMainThread(() =>
+            //{
+            //    try
+            //    {
+            //        var state = MediaPlayer?.State;
+            //        letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
+            //        if (DeviceDisplay.KeepScreenOn != letScreenOn)
+            //        {
+            //            DeviceDisplay.KeepScreenOn = letScreenOn;
+            //        }
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //});
         }
 
         private void UpdatePauseAvailability(bool? canPause = null)
@@ -1137,9 +1137,9 @@ namespace LibVLCSharp.Forms
                     }
 
                     var var = (double)videoWidth / videoHeight;
-                    var density = DeviceDisplay.MainDisplayInfo.Density;
-                    var screenWidth = videoView.Width * density;
-                    var screenHeight = videoView.Height * density;
+                    var scalingFactor = Device.Info.ScalingFactor;
+                    var screenWidth = videoView.Width * scalingFactor;
+                    var screenHeight = videoView.Height * scalingFactor;
                     var screenar = screenWidth / screenHeight;
                     mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
                 }
