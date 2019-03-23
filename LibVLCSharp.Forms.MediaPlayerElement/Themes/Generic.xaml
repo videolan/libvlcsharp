@@ -2,9 +2,10 @@
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:local="clr-namespace:LibVLCSharp.Forms"
+                    xmlns:converters="clr-namespace:LibVLCSharp.Forms.Converters"
                     x:Class="LibVLCSharp.Forms.Themes.Generic">
-    <local:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
-    <local:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+    <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
+    <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
 
     <Color x:Key="ForeColor">White</Color>
     <Color x:Key="MainColor">#E57A00</Color>
