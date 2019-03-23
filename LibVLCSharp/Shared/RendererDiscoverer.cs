@@ -44,7 +44,7 @@ namespace LibVLCSharp.Shared
             : base(() =>
             {
                 var nameUtf8 = name.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
+                return MarshalUtils.PerformInteropAndFree(() =>
                     Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
             }, Native.LibVLCRendererDiscovererRelease)
         {
@@ -140,7 +140,7 @@ namespace LibVLCSharp.Shared
             internal static extern int LibVLCRendererItemFlags(IntPtr rendererItem);
         }
 
-        internal RendererItem(IntPtr reference) : 
+        internal RendererItem(IntPtr reference) :
             base(() => reference, Native.LibVLCRendererItemRelease)
         {
             Native.LibVLCRendererItemHold(reference);

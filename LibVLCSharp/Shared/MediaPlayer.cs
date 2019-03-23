@@ -554,7 +554,7 @@ namespace LibVLCSharp.Shared
             internal static extern int LibVLCMediaPlayerAddSlave(IntPtr mediaPlayer, MediaSlaveType mediaSlaveType,
                 IntPtr uri, bool selectWhenloaded);
 
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_new_viewpoint")]
             internal static extern IntPtr LibVLCVideoNewViewpoint();
 
@@ -1092,8 +1092,8 @@ namespace LibVLCSharp.Shared
         {
             var deviceIdUtf8 = deviceId.ToUtf8();
             var moduleUtf8 = module.ToUtf8();
-            MarshalUtils.PerformInteropAndFree(() => 
-                Native.LibVLCAudioOutputDeviceSet(NativeReference, moduleUtf8, deviceIdUtf8), 
+            MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCAudioOutputDeviceSet(NativeReference, moduleUtf8, deviceIdUtf8),
                 moduleUtf8, deviceIdUtf8);
         }
 
@@ -1119,7 +1119,7 @@ namespace LibVLCSharp.Shared
         /// See also the limitations of libvlc_audio_set_mute(). 
         /// </summary>
         public void ToggleMute() => Native.LibVLCAudioToggleMute(NativeReference);
-        
+
         /// <summary>
         /// Get current mute status.
         /// Set mute status.
@@ -1246,7 +1246,7 @@ namespace LibVLCSharp.Shared
         {
             var chromaUtf8 = chroma.ToUtf8();
 
-            MarshalUtils.PerformInteropAndFree(() => 
+            MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoSetFormat(NativeReference, chromaUtf8, width, height, pitch),
                 chromaUtf8);
         }
@@ -1486,7 +1486,7 @@ namespace LibVLCSharp.Shared
         {
             var deinterlaceModeUtf8 = deinterlaceMode.ToUtf8();
 
-            MarshalUtils.PerformInteropAndFree(() => 
+            MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlaceModeUtf8),
                 deinterlaceModeUtf8);
         }
@@ -1531,7 +1531,7 @@ namespace LibVLCSharp.Shared
                 Native.LibVLCVideoSetMarqueeString(NativeReference, option, marqueeValueUtf8),
                 marqueeValueUtf8);
         }
-        
+
 
         /// <summary>
         /// Get integer logo option.
@@ -1638,7 +1638,7 @@ namespace LibVLCSharp.Shared
 
             Viewpoint = new VideoViewpoint(yaw, pitch, roll, fov);
             Marshal.StructureToPtr(Viewpoint, vpPtr, false);
-            
+
             var result = Native.LibVLCVideoUpdateViewpoint(NativeReference, vpPtr, absolute) == 0;
             MarshalUtils.LibVLCFree(ref vpPtr);
 
@@ -1652,7 +1652,7 @@ namespace LibVLCSharp.Shared
         /// <para/> version LibVLC 3.0.0 and later.
         /// </summary>
         public MediaPlayerRole Role => Native.LibVLCMediaPlayerGetRole(NativeReference);
-        
+
         /// <summary>Sets the media role.
         /// <para/> version LibVLC 3.0.0 and later.
         /// </summary>
@@ -1676,7 +1676,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
 
-#region Callbacks
+        #region Callbacks
 
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -1861,8 +1861,8 @@ namespace LibVLCSharp.Shared
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-#endregion
-        
+        #endregion
+
         /// <summary>
         /// Get the Event Manager from which the media player send event.
         /// </summary>
@@ -1879,7 +1879,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#region events
+        #region events
 
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {
@@ -2000,7 +2000,7 @@ namespace LibVLCSharp.Shared
             add => EventManager.AttachEvent(EventType.MediaPlayerVout, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerVout, value);
         }
-        
+
         public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerScrambledChanged, value);
@@ -2061,26 +2061,26 @@ namespace LibVLCSharp.Shared
             remove => EventManager.DetachEvent(EventType.MediaPlayerAudioVolume, value);
         }
 
-#endregion
+        #endregion
 
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
                 return;
 
-            if(disposing)
+            if (disposing)
             {
-                if(IsPlaying)
+                if (IsPlaying)
                 {
                     Stop();
                 }
 
-                if(Media != null)
+                if (Media != null)
                 {
                     Media.Dispose();
                 }
             }
-            
+
             base.Dispose(disposing);
         }
     }
@@ -2231,5 +2231,5 @@ namespace LibVLCSharp.Shared
         Accessibility = 8,
         /// <summary>Testing</summary>
         Test = 9
-    }    
+    }
 }

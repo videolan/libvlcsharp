@@ -38,7 +38,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_amp_at_index")]
             internal static extern float LibVLCAudioEqualizerGetAmpAtIndex(IntPtr equalizer, uint band);
-            
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_equalizer_get_preset_count")]
             internal static extern uint LibVLCAudioEqualizerGetPresetCount();

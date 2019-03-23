@@ -31,7 +31,7 @@ namespace LibVLCSharp.Shared.Structures
         /// Device identifier string.
         /// </summary>
         public readonly string DeviceIdentifier;
-        
+
         /// <summary>
         /// User-friendly device description.
         /// </summary>

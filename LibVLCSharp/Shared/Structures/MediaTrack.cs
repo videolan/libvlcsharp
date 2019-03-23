@@ -123,7 +123,7 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public readonly struct MediaTrack
     {
-        internal MediaTrack(uint codec, uint originalFourcc, int id, TrackType trackType, int profile, 
+        internal MediaTrack(uint codec, uint originalFourcc, int id, TrackType trackType, int profile,
             int level, MediaTrackData data, uint bitrate, string language, string description)
         {
             Codec = codec;

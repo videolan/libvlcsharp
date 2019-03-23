@@ -72,7 +72,7 @@ namespace LibVLCSharp.Shared
 #elif NET || NETSTANDARD
         static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
-            if(PlatformHelper.IsLinux)
+            if (PlatformHelper.IsLinux)
             {
                 if (!string.IsNullOrEmpty(libvlcDirectoryPath))
                 {
@@ -93,11 +93,11 @@ namespace LibVLCSharp.Shared
             if (!string.IsNullOrEmpty(libvlcDirectoryPath))
             {
                 bool loadResult;
-                if(PlatformHelper.IsWindows)
+                if (PlatformHelper.IsWindows)
                 {
                     var libvlccorePath = LibVLCCorePath(libvlcDirectoryPath);
                     loadResult = LoadNativeLibrary(libvlccorePath, out _libvlccoreHandle);
-                    if(!loadResult)
+                    if (!loadResult)
                     {
                         Log($"Failed to load required native libraries at {libvlccorePath}");
                         return;
@@ -106,7 +106,7 @@ namespace LibVLCSharp.Shared
 
                 var libvlcPath = LibVLCPath(libvlcDirectoryPath);
                 loadResult = LoadNativeLibrary(libvlcPath, out _libvlcHandle);
-                if(!loadResult)
+                if (!loadResult)
                     Log($"Failed to load required native libraries at {libvlcPath}");
                 return;
             }
@@ -114,7 +114,7 @@ namespace LibVLCSharp.Shared
 #if !NETSTANDARD1_1
             var paths = ComputeLibVLCSearchPaths();
 
-            foreach(var path in paths)
+            foreach (var path in paths)
             {
                 if (PlatformHelper.IsWindows)
                 {
@@ -137,16 +137,16 @@ namespace LibVLCSharp.Shared
             var paths = new List<(string, string)>();
             string arch;
 
-            if(PlatformHelper.IsMac)
+            if (PlatformHelper.IsMac)
             {
                 arch = ArchitectureNames.MacOS64;
             }
             else
             {
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
-            }            
+            }
 
-            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
+            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location),
                 Constants.LibrariesRepositoryFolderName, arch);
 
             string libvlccorePath1 = string.Empty;
@@ -158,12 +158,12 @@ namespace LibVLCSharp.Shared
             paths.Add((libvlccorePath1, libvlcPath1));
 
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
-            
-            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
+
+            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation),
                 Constants.LibrariesRepositoryFolderName, arch);
 
             string libvlccorePath2 = string.Empty;
-            if(PlatformHelper.IsWindows)
+            if (PlatformHelper.IsWindows)
             {
                 libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
             }
@@ -208,7 +208,7 @@ namespace LibVLCSharp.Shared
                 return false;
             }
 #endif
-            if(PlatformHelper.IsMac)
+            if (PlatformHelper.IsMac)
             {
                 handle = Native.dlopen(nativeLibraryPath);
             }
@@ -259,7 +259,7 @@ namespace LibVLCSharp.Shared
         internal const string Win86 = "win-x86";
         internal const string Winrt64 = "winrt-x64";
         internal const string Winrt86 = "winrt-x86";
-        
+
         internal const string Lin64 = "linux-x64";
         internal const string LinArm = "linux-arm";
 
