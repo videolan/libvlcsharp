@@ -102,6 +102,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LibVLCSharp.Forms.MediaPlayerElement\LibVLCSharp.Forms.MediaPlayerElement.csproj">
+      <Project>{46A2F2FE-9D99-4D56-8E82-BA1B5868B3B4}</Project>
+      <Name>LibVLCSharp.Forms.MediaPlayerElement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sample\Sample.csproj">
       <Project>{5DB0C9A7-06F7-4551-9AAA-39AECCC9D24D}</Project>
       <Name>Sample</Name>

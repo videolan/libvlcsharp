@@ -4,6 +4,7 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using LibVLCSharp.Forms.PowerManagement;
 using LibVLCSharp.Forms.Resources;
 using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
@@ -359,14 +360,14 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer), typeof(MediaPlayer),
-            typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
+        public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
+            typeof(LibVLCSharp.Shared.MediaPlayer), typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
         /// Gets or sets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
-            get => (MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -398,20 +399,19 @@ namespace LibVLCSharp.Forms
             private set => SetValue(ErrorMessageProperty, value);
         }
 
-        //TODO Add KeepScreenOn feature
-        ///// <summary>
-        ///// Identifies the <see cref="KeepScreenOn"/> dependency property.
-        ///// </summary>
-        //public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
-        //    typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
-        ///// <summary>
-        ///// Gets or sets a value indicating whether the screen must be kept on when playing.
-        ///// </summary>
-        //public bool KeepScreenOn
-        //{
-        //    get => (bool)GetValue(KeepScreenOnProperty);
-        //    set => SetValue(KeepScreenOnProperty, value);
-        //}
+        /// <summary>
+        /// Identifies the <see cref="KeepScreenOn"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
+            typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
+        /// <summary>
+        /// Gets or sets a value indicating whether the screen must be kept on when playing.
+        /// </summary>
+        public bool KeepScreenOn
+        {
+            get => (bool)GetValue(KeepScreenOnProperty);
+            set => SetValue(KeepScreenOnProperty, value);
+        }
 
         /// <summary>
         /// Identifies the <see cref="Position"/> dependency property.
@@ -627,7 +627,7 @@ namespace LibVLCSharp.Forms
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).OnMediaPlayerChanged((MediaPlayer)oldValue, (MediaPlayer)newValue);
+            ((PlaybackControls)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)oldValue, (LibVLCSharp.Shared.MediaPlayer)newValue);
         }
 
         private static void ZoomPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -845,7 +845,7 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void OnMediaPlayerChanged(MediaPlayer oldMediaPlayer, MediaPlayer newMediaPlayer)
+        private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer oldMediaPlayer, LibVLCSharp.Shared.MediaPlayer newMediaPlayer)
         {
             if (oldMediaPlayer != null)
             {
@@ -888,7 +888,7 @@ namespace LibVLCSharp.Forms
             Reset();
         }
 
-        private IEnumerable<MediaTrack> GetMediaTracks(MediaPlayer mediaPlayer, TrackType trackType)
+        private IEnumerable<MediaTrack> GetMediaTracks(LibVLCSharp.Shared.MediaPlayer mediaPlayer, TrackType trackType)
         {
             try
             {
@@ -912,8 +912,8 @@ namespace LibVLCSharp.Forms
             return GetTrackName(trackName, mediaTrack.Id, currentTrackId);
         }
 
-        private async Task SelectTrackAsync(TrackType trackType, string popupTitle, Func<MediaPlayer, int> getCurrentTrackId,
-            Action<MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
+        private async Task SelectTrackAsync(TrackType trackType, string popupTitle, Func<LibVLCSharp.Shared.MediaPlayer, int> getCurrentTrackId,
+            Action<LibVLCSharp.Shared.MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
         {
             var mediaPlayer = MediaPlayer;
             var mediaTracks = GetMediaTracks(mediaPlayer, trackType);
@@ -972,8 +972,9 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void UpdateTracksSelectionAvailability(MediaPlayer mediaPlayer, Button tracksSelectionButton, bool isTracksSelectionButtonVisible,
-            Func<MediaPlayer, IEnumerable<TrackDescription>> getTrackDescriptions, string availableState, string unavailableState, int count)
+        private void UpdateTracksSelectionAvailability(LibVLCSharp.Shared.MediaPlayer mediaPlayer, Button tracksSelectionButton,
+            bool isTracksSelectionButtonVisible, Func<LibVLCSharp.Shared.MediaPlayer, IEnumerable<TrackDescription>> getTrackDescriptions,
+            string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
             {
@@ -1039,27 +1040,27 @@ namespace LibVLCSharp.Forms
 
         private void UpdateKeepScreenOn(bool? keepScreenOn = null)
         {
-            //var letScreenOn = keepScreenOn ?? KeepScreenOn;
-            //if (!letScreenOn)
-            //{
-            //    return;
-            //}
+            var letScreenOn = keepScreenOn ?? KeepScreenOn;
+            if (!letScreenOn)
+            {
+                return;
+            }
 
-            //Device.BeginInvokeOnMainThread(() =>
-            //{
-            //    try
-            //    {
-            //        var state = MediaPlayer?.State;
-            //        letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
-            //        if (DeviceDisplay.KeepScreenOn != letScreenOn)
-            //        {
-            //            DeviceDisplay.KeepScreenOn = letScreenOn;
-            //        }
-            //    }
-            //    catch (Exception)
-            //    {
-            //    }
-            //});
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    var state = MediaPlayer?.State;
+                    letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
+                    if (PowerManager.KeepScreenOn != letScreenOn)
+                    {
+                        PowerManager.KeepScreenOn = letScreenOn;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            });
         }
 
         private void UpdatePauseAvailability(bool? canPause = null)
