@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="MSBuild.Sdk.Extras/1.6.68">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
     <Authors>Stéphane Mitermite</Authors>
     <Company>Stéphane Mitermite</Company>
@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <None Remove="LibVLCSharp.Forms.MediaPlayerElement.xml" />
-  </ItemGroup>
+  </ItemGroup> 
 
   <ItemGroup>
     <PackageReference Include="LibVLCSharp.Forms" Version="0.5.0" />
@@ -55,6 +55,31 @@
     <EmbeddedResource Update="Themes\Generic.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="PowerManagement\**\*.cs" />
+    <None Include="PowerManagement\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <Compile Include="**\*.netstandard.cs" />
+    <Compile Include="**\*.netstandard.*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+    <Compile Include="**\*.android.cs" />
+    <Compile Include="**\*.android.*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
+    <Compile Include="**\*.ios.cs" />
+    <Compile Include="**\*.ios.*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
+    <Compile Include="**\*.mac.cs" />
+    <Compile Include="**\*.mac.*.cs" />
   </ItemGroup>
 
 </Project>
