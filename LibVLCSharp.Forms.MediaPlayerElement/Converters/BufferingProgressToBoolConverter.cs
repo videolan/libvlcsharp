@@ -2,7 +2,7 @@
 using System.Globalization;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Converters
 {
     /// <summary>
     /// Converts a value not equals to 0 and 1 to true.
