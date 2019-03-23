@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
@@ -38,19 +37,19 @@ namespace LibVLCSharp.Forms
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer), typeof(MediaPlayer),
-            typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
+        public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
+            typeof(LibVLCSharp.Shared.MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
         /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
-            get => (MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
-        private static readonly BindableProperty PlaybackControlsProperty = BindableProperty.Create(nameof(PlaybackControls), typeof(PlaybackControls),
-            typeof(MediaPlayerElement), propertyChanged: PlaybackControlsPropertyChanged);
+        private static readonly BindableProperty PlaybackControlsProperty = BindableProperty.Create(nameof(PlaybackControls),
+            typeof(PlaybackControls), typeof(MediaPlayerElement), propertyChanged: PlaybackControlsPropertyChanged);
         /// <summary>
         /// Gets or sets the playback controls for the media.
         /// </summary>
@@ -88,7 +87,7 @@ namespace LibVLCSharp.Forms
             }
         }
 
-        private void OnMediaPlayerChanged(MediaPlayer mediaPlayer)
+        private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer mediaPlayer)
         {
             var videoView = VideoView;
             if (videoView != null)
@@ -122,7 +121,7 @@ namespace LibVLCSharp.Forms
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((MediaPlayer)newValue);
+            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)newValue);
         }
 
         private static void PlaybackControlsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
