@@ -739,7 +739,7 @@ namespace LibVLCSharp.Forms
                         IEnumerable<RendererItem> renderers;
                         try
                         {
-                            renderers = await new ChromecastLocator().FindRenderersAsync(libVLC);
+                            renderers = await libVLC.FindRenderersAsync();
                         }
                         finally
                         {
