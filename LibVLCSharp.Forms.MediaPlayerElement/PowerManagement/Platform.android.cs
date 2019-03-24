@@ -55,11 +55,12 @@ namespace LibVLCSharp.Forms
             }
         }
 
+        private static ActivityLifecycleContextListener LifecycleListener { get; set; }
+
         /// <summary>
         /// Gets the current activity.
         /// </summary>
         public static Activity Activity => LifecycleListener?.Activity;
-        private static ActivityLifecycleContextListener LifecycleListener { get; set; }
 
         /// <summary>
         /// Sets the activity.

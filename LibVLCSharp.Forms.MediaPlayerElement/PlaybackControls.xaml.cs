@@ -329,21 +329,6 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="ResourceManager"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty ResourceManagerProperty = BindableProperty.Create(nameof(ResourceManager), typeof(ResourceManager),
-            typeof(PlaybackControls));
-        /// <summary>
-        /// Gets or sets the resource manager to localize strings.
-        /// </summary>
-        public ResourceManager ResourceManager
-        {
-            get => (ResourceManager)GetValue(ResourceManagerProperty);
-            set => SetValue(ResourceManagerProperty, value);
-        }
-        private ResourceManager StringsResourceManager => ResourceManager ?? Strings.ResourceManager;
-
-        /// <summary>
         /// Identifies the <see cref="LibVLC"/> dependency property.
         /// </summary>
         public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls),
@@ -428,6 +413,20 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="ResourceManager"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ResourceManagerProperty = BindableProperty.Create(nameof(ResourceManager), typeof(ResourceManager),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the resource manager to localize strings.
+        /// </summary>
+        public ResourceManager ResourceManager
+        {
+            get => (ResourceManager)GetValue(ResourceManagerProperty) ?? Strings.ResourceManager;
+            set => SetValue(ResourceManagerProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="ShowAndHideAutomatically"/> dependency property.
         /// </summary>
         public static readonly BindableProperty ShowAndHideAutomaticallyProperty = BindableProperty.Create(nameof(ShowAndHideAutomatically),
@@ -439,6 +438,21 @@ namespace LibVLCSharp.Forms
         {
             get => (bool)GetValue(ShowAndHideAutomaticallyProperty);
             set => SetValue(ShowAndHideAutomaticallyProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="VideoView"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
+            typeof(PlaybackControls), propertyChanged: VideoViewPropertyChanged);
+        /// <summary>
+        /// Gets or sets the associated <see cref="VideoView"/>.
+        /// </summary>
+        /// <remarks>It is only useful to set this property for the zoom feature.</remarks>
+        public VideoView VideoView
+        {
+            get => (VideoView)GetValue(VideoViewProperty);
+            set => SetValue(VideoViewProperty, value);
         }
 
         /// <summary>
@@ -630,6 +644,11 @@ namespace LibVLCSharp.Forms
             ((PlaybackControls)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)oldValue, (LibVLCSharp.Shared.MediaPlayer)newValue);
         }
 
+        private static void VideoViewPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdateZoom();
+        }
+
         private static void ZoomPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).UpdateZoom();
@@ -717,7 +736,7 @@ namespace LibVLCSharp.Forms
 
         private async void AudioTracksSelectionButton_Clicked(object sender, EventArgs e)
         {
-            await SelectTrackAsync(TrackType.Audio, StringsResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
+            await SelectTrackAsync(TrackType.Audio, ResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
                 (m, id) => m.SetAudioTrack(id));
         }
 
@@ -745,7 +764,7 @@ namespace LibVLCSharp.Forms
                         {
                             cancellationTokenSource.Cancel();
                         }
-                        var rendererName = await this.FindAncestor<Page>()?.DisplayActionSheet(StringsResourceManager.GetString(nameof(Strings.CastTo)),
+                        var rendererName = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
                             null, null, renderers.OrderBy(r => r.Name).Select(r => r.Name).ToArray());
                         if (rendererName != null)
                         {
@@ -768,7 +787,7 @@ namespace LibVLCSharp.Forms
 
         private async void ClosedCaptionsSelectionButton_Clicked(object sender, EventArgs e)
         {
-            await SelectTrackAsync(TrackType.Text, StringsResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
+            await SelectTrackAsync(TrackType.Text, ResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
                 true);
         }
 
@@ -907,8 +926,7 @@ namespace LibVLCSharp.Forms
 
         private string GetTrackName(MediaTrack mediaTrack, int currentTrackId, int index)
         {
-            var trackName = mediaTrack.Description ?? mediaTrack.Language ??
-                string.Format(StringsResourceManager.GetString(nameof(Strings.Track)), index);
+            var trackName = mediaTrack.Description ?? mediaTrack.Language ?? string.Format(ResourceManager.GetString(nameof(Strings.Track)), index);
             return GetTrackName(trackName, mediaTrack.Id, currentTrackId);
         }
 
@@ -933,8 +951,8 @@ namespace LibVLCSharp.Forms
                     }).OrderBy(n => n);
                 if (addDeactivateRow)
                 {
-                    mediaTracksNames = new[] { GetTrackName(StringsResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
-                        .Union(mediaTracksNames);
+                    mediaTracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
+                    .Union(mediaTracksNames);
                 }
 
                 var mediaTrack = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
@@ -1102,6 +1120,12 @@ namespace LibVLCSharp.Forms
             {
                 if (Zoom)
                 {
+                    var videoView = VideoView;
+                    if (videoView == null)
+                    {
+                        throw new NullReferenceException($"The {nameof(VideoView)} property must be set in order to use the zoom feature.");
+                    }
+
                     MediaTrack? mediaTrack;
                     try
                     {
@@ -1120,12 +1144,6 @@ namespace LibVLCSharp.Forms
                     var videoWidth = videoTrack.Width;
                     var videoHeight = videoTrack.Height;
                     if (videoWidth == 0 || videoHeight == 0)
-                    {
-                        return;
-                    }
-
-                    var videoView = this.FindAncestor<Layout>()?.FindChild<VideoView>();
-                    if (videoView == null)
                     {
                         return;
                     }
@@ -1307,9 +1325,9 @@ namespace LibVLCSharp.Forms
         /// <param name="ex">The exception to show.</param>
         protected virtual void ShowErrorMessageBox(Exception ex)
         {
-            var error = StringsResourceManager.GetString(nameof(Strings.Error));
+            var error = ResourceManager.GetString(nameof(Strings.Error));
             Device.BeginInvokeOnMainThread(() => this.FindAncestor<Page>().DisplayAlert(error, ex?.GetBaseException().Message ?? error,
-                StringsResourceManager.GetString(nameof(Strings.OK))));
+                ResourceManager.GetString(nameof(Strings.OK))));
         }
 
         /// <summary>
