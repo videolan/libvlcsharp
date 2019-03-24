@@ -30,10 +30,25 @@ namespace Sample.Droid
             base.OnCreate(savedInstanceState);
             LibVLCSharpFormsRenderer.Init();
             Platform.Init(this);
-            Window.DecorView.SystemUiVisibility = Window.DecorView.SystemUiVisibility |
-                (StatusBarVisibility)(SystemUiFlags.ImmersiveSticky | SystemUiFlags.Fullscreen | SystemUiFlags.HideNavigation);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+        }
+
+        /// <summary>
+        /// Called after <see cref="Activity.OnRestoreInstanceState(Bundle)"/>, <see cref="Activity.OnRestart"/>, or <see cref=" Activity.OnPause"/>, 
+        /// for your activity to start interacting with the user.
+        /// </summary>
+        protected override void OnResume()
+        {
+            base.OnResume();
+            HideSystemUI();
+        }
+
+        private void HideSystemUI()
+        {
+            Window.DecorView.SystemUiVisibility = Window.DecorView.SystemUiVisibility |
+                (StatusBarVisibility)(SystemUiFlags.ImmersiveSticky | SystemUiFlags.Fullscreen | SystemUiFlags.HideNavigation |
+                SystemUiFlags.LayoutStable | SystemUiFlags.LayoutFullscreen | SystemUiFlags.LayoutHideNavigation);
         }
     }
 }
