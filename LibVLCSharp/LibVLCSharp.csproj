@@ -1,5 +1,4 @@
-﻿<!--Project Sdk="MSBuild.Sdk.Extras/1.6.46"-->
-<Project Sdk="Microsoft.NET.SDK">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
   <PropertyGroup>
     <Title>LibVLCSharp</Title>
     <Summary>The official .NET wrapper around LibVLC.</Summary>
@@ -19,7 +18,7 @@
       libvlc needs to be installed separately. See VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFrameworks>netstandard2.0;netstandard1.1;net40;net471</TargetFrameworks>
-    <!--TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks-->
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
