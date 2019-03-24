@@ -75,6 +75,11 @@ namespace LibVLCSharp.Forms
             if (videoView != null)
             {
                 videoView.MediaPlayer = MediaPlayer;
+                var playbackControls = PlaybackControls;
+                if (playbackControls != null)
+                {
+                    playbackControls.VideoView = videoView;
+                }
             }
         }
 
@@ -106,6 +111,7 @@ namespace LibVLCSharp.Forms
             if (playbackControls != null)
             {
                 playbackControls.MediaPlayer = MediaPlayer;
+                playbackControls.VideoView = VideoView;
             }
         }
 
