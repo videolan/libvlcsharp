@@ -11,7 +11,7 @@ namespace LibVLCSharp.Shared
         /// The pointer to the native code representation of this object
         /// </summary>
         public IntPtr NativeReference { get; private set; }
-       
+
         /// <summary>
         /// Release native resources by calling this C function
         /// </summary>
@@ -32,7 +32,7 @@ namespace LibVLCSharp.Shared
         {
             Release = release;
             var nativeRef = create();
-            if(nativeRef == IntPtr.Zero)
+            if (nativeRef == IntPtr.Zero)
                 throw new VLCException("Failed to perform instanciation on the native side. " +
                     "Make sure you installed the correct VideoLAN.LibVLC.[YourPlatform] package in your platform specific project");
             NativeReference = nativeRef;

@@ -33,7 +33,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_localized_name")]
             internal static extern IntPtr LibVLCMediaDiscovererLocalizedName(IntPtr mediaDiscoverer);
-            
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_event_manager")]
             internal static extern IntPtr LibVLCMediaDiscovererEventManager(IntPtr mediaDiscoverer);
@@ -46,17 +46,17 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_discoverer_media_list")]
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
         }
-        
+
         /// <summary>
         /// Media discoverer constructor
         /// </summary>
         /// <param name="libVLC">libvlc instance this will be attached to</param>
         /// <param name="name">name from one of LibVLC.MediaDiscoverers</param>
-        public MediaDiscoverer(LibVLC libVLC, string name) 
+        public MediaDiscoverer(LibVLC libVLC, string name)
             : base(() =>
             {
                 var nameUtf8 = name.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
+                return MarshalUtils.PerformInteropAndFree(() =>
                     Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
             }, Native.LibVLCMediaDiscovererRelease)
         {
@@ -101,8 +101,8 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Query if media service discover object is running.
         /// </summary>
-        public bool IsRunning => NativeReference != IntPtr.Zero ? 
-            Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0 
+        public bool IsRunning => NativeReference != IntPtr.Zero ?
+            Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0
             : false;
 
         /// <summary>
@@ -155,15 +155,15 @@ namespace LibVLCSharp.Shared
             if (IsDisposed || NativeReference == IntPtr.Zero)
                 return;
 
-            if(disposing)
+            if (disposing)
             {
-                if(_mediaList != null)
+                if (_mediaList != null)
                 {
                     _mediaList.Dispose();
                     _mediaList = null;
                 }
 
-                if(IsRunning)
+                if (IsRunning)
                 {
                     Stop();
                 }

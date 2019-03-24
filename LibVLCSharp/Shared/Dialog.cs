@@ -28,10 +28,10 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_dialog_dismiss")]
             internal static extern int LibVLCDialogDismiss(IntPtr dialogId);
         }
-        
+
         Dialog(IntPtr id)
         {
-            if(id == IntPtr.Zero)
+            if (id == IntPtr.Zero)
                 throw new ArgumentNullException(nameof(id));
             _id = id;
         }
@@ -62,14 +62,14 @@ namespace LibVLCSharp.Shared
             var passwordPtr = password.ToUtf8();
 
             var result = MarshalUtils.PerformInteropAndFree(
-                () => Native.LibVLCDialogPostLogin(_id, usernamePtr, passwordPtr, store), 
+                () => Native.LibVLCDialogPostLogin(_id, usernamePtr, passwordPtr, store),
                 usernamePtr, passwordPtr) == 0;
 
             _id = IntPtr.Zero;
 
             return result;
         }
-        
+
         /// <summary>
         /// Post a question answer.
         /// After this call, this instance won't be valid anymore

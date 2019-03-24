@@ -103,7 +103,7 @@ namespace LibVLCSharp.Shared
         int _mutedRegistrationCount;
         int _unmutedRegistrationCount;
         int _volumeChangedRegistrationCount;
-        
+
         EventCallback _positionChangedCallback;
         EventCallback _mediaChangedCallback;
         EventCallback _nothingSpecialCallback;
@@ -137,7 +137,7 @@ namespace LibVLCSharp.Shared
 
         protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
         {
-            lock(_lock)
+            lock (_lock)
             {
                 switch (eventType)
                 {
@@ -284,43 +284,43 @@ namespace LibVLCSharp.Shared
                         ref _eSSelectedRegistrationCount,
                         () => _mediaPlayerESSelected += eventHandler as EventHandler<MediaPlayerESSelectedEventArgs>,
                         () => _eSSelectedCallback = OnESSelected);
-                       break;
+                        break;
                     case EventType.MediaPlayerAudioDevice:
                         Attach(eventType,
                         ref _audioDeviceRegistrationCount,
                         () => _mediaPlayerAudioDevice += eventHandler as EventHandler<MediaPlayerAudioDeviceEventArgs>,
                         () => _audioDeviceCallback = OnAudioDevice);
-                       break;
+                        break;
                     case EventType.MediaPlayerCorked:
                         Attach(eventType,
                         ref _corkedRegistrationCount,
                         () => _mediaPlayerCorked += eventHandler as EventHandler<EventArgs>,
                         () => _corkedCallback = OnCorked);
-                       break;
+                        break;
                     case EventType.MediaPlayerUncorked:
                         Attach(eventType,
                         ref _uncorkedRegistrationCount,
                         () => _mediaPlayerUncorked += eventHandler as EventHandler<EventArgs>,
                         () => _uncorkedCallback = OnUncorked);
-                       break;
+                        break;
                     case EventType.MediaPlayerMuted:
                         Attach(eventType,
                         ref _mutedRegistrationCount,
                         () => _mediaPlayerMuted += eventHandler as EventHandler<EventArgs>,
                         () => _mutedCallback = OnMuted);
-                       break;
+                        break;
                     case EventType.MediaPlayerUnmuted:
                         Attach(eventType,
                         ref _unmutedRegistrationCount,
                         () => _mediaPlayerUnmuted += eventHandler as EventHandler<EventArgs>,
                         () => _unmutedCallback = OnUnmuted);
-                       break;
+                        break;
                     case EventType.MediaPlayerAudioVolume:
                         Attach(eventType,
                         ref _volumeChangedRegistrationCount,
                         () => _mediaPlayerVolumeChanged += eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>,
                         () => _volumeChangedCallback = OnVolumeChanged);
-                       break;
+                        break;
                     default:
                         OnEventUnhandled(this, eventType);
                         break;
@@ -520,7 +520,7 @@ namespace LibVLCSharp.Shared
                 }
             }
         }
-        
+
 #if IOS
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnMediaChanged(IntPtr ptr)

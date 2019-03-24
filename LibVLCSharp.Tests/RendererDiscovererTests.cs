@@ -43,7 +43,7 @@ namespace LibVLCSharp.Tests
                     WriteLine("Can render audio");
 
                 rendererItems.Add(args.RendererItem);
-                
+
                 tcs.SetResult(true);
             };
 

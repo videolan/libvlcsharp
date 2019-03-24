@@ -30,7 +30,7 @@ namespace LibVLCSharp.Tests
             Assert.True(md.IsRunning);
             Assert.NotNull(md.MediaList);
             await Task.Delay(1000);
-            foreach(var media in md.MediaList)
+            foreach (var media in md.MediaList)
             {
                 Debug.WriteLine(media.Mrl);
             }

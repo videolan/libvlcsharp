@@ -55,7 +55,7 @@ namespace LibVLCSharp.Tests
             for (var i = 0; i < libvlc3deprecatedSym.Count(); i++)
             {
                 var currentLine = libvlc3deprecatedSym[i];
-                if(currentLine.StartsWith("LIBVLC_DEPRECATED"))
+                if (currentLine.StartsWith("LIBVLC_DEPRECATED"))
                 {
                     deprecatedSymbolsLine.Add(libvlc3deprecatedSym[i + 1]);
                 }

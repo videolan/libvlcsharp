@@ -28,7 +28,7 @@ namespace LibVLCSharp.Shared
         {
             lock (_lock)
             {
-                switch(eventType)
+                switch (eventType)
                 {
                     case EventType.RendererDiscovererItemAdded:
                         Attach(eventType,
@@ -97,7 +97,7 @@ namespace LibVLCSharp.Shared
 
         void OnItemAdded(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;           
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;
             _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem.item)));
         }
 #endif

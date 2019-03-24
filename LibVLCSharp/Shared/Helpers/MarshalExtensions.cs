@@ -13,7 +13,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="s">AudioOutputDescriptionStructure from interop</param>
         /// <returns>public AudioOutputDescription to be consumed by the user</returns>
-        internal static AudioOutputDescription Build(this AudioOutputDescriptionStructure s) => 
+        internal static AudioOutputDescription Build(this AudioOutputDescriptionStructure s) =>
             new AudioOutputDescription(s.Name.FromUtf8(), s.Description.FromUtf8());
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="s">MediaSlaveStructure from interop</param>
         /// <returns>public MediaSlave to be consumed by the user</returns>
-        internal static MediaSlave Build(this MediaSlaveStructure s) => 
+        internal static MediaSlave Build(this MediaSlaveStructure s) =>
             new MediaSlave(s.Uri.FromUtf8(), s.Type, s.Priority);
 
         /// <summary>
@@ -74,17 +74,17 @@ namespace LibVLCSharp.Shared.Helpers
                     break;
             }
 
-            return new MediaTrack(s.Codec, 
-                s.OriginalFourcc, 
-                s.Id, 
-                s.TrackType, 
-                s.Profile, 
-                s.Level, 
+            return new MediaTrack(s.Codec,
+                s.OriginalFourcc,
+                s.Id,
+                s.TrackType,
+                s.Profile,
+                s.Level,
                 new MediaTrackData(audioTrack, videoTrack, subtitleTrack), s.Bitrate,
                 s.Language.FromUtf8(),
                 s.Description.FromUtf8());
         }
-        
+
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
@@ -105,7 +105,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="s">RendererDescriptionStructure from interop</param>
         /// <returns>public RendererDescription to be consumed by the user</returns>
-        internal static RendererDescription Build(this RendererDescriptionStructure s) => 
+        internal static RendererDescription Build(this RendererDescriptionStructure s) =>
             new RendererDescription(s.Name.FromUtf8(), s.LongName.FromUtf8());
 
         /// <summary>

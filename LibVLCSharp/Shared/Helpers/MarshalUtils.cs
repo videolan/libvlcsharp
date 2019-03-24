@@ -174,7 +174,7 @@ namespace LibVLCSharp.Shared.Helpers
             try
             {
                 count = getRef(nativeRef, out arrayPtr);
-                if(count == 0)
+                if (count == 0)
                 {
 #if NETSTANDARD1_1 || NET40
                     return new TU[0];
@@ -227,7 +227,7 @@ namespace LibVLCSharp.Shared.Helpers
             ulong countLong = 0;
 
             try
-            { 
+            {
                 countLong = getRef(nativeRef, out arrayPtr);
                 var count = (int)countLong;
 
@@ -255,7 +255,7 @@ namespace LibVLCSharp.Shared.Helpers
             }
             finally
             {
-                if(arrayPtr != IntPtr.Zero)
+                if (arrayPtr != IntPtr.Zero)
                 {
                     releaseRef(arrayPtr, countLong);
                     arrayPtr = IntPtr.Zero;
@@ -278,7 +278,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
         /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayOut<TE> getRef, Func<IntPtr, T> retrieve,
-            Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
+            Func<T, TU> create, Action<IntPtr, ulong> releaseRef)
             where T : struct
             where TU : struct
             where TE : Enum
@@ -287,7 +287,7 @@ namespace LibVLCSharp.Shared.Helpers
             ulong countLong = 0;
 
             try
-            { 
+            {
                 countLong = getRef(nativeRef, extraParam, out arrayPtr);
                 var count = (int)countLong;
                 if (count == 0)
@@ -335,7 +335,7 @@ namespace LibVLCSharp.Shared.Helpers
         internal static IntPtr[] ToUtf8(this string[] args)
         {
             var utf8Args = new IntPtr[args?.Length ?? 0];
-            
+
             for (var i = 0; i < utf8Args.Length; i++)
             {
                 utf8Args[i] = args[i].ToUtf8();
@@ -383,7 +383,7 @@ namespace LibVLCSharp.Shared.Helpers
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if(Native._wfopen_s(out fileHandle, filename) != 0) return false;
+                if (Native._wfopen_s(out fileHandle, filename) != 0) return false;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

@@ -125,7 +125,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateMediaFromStreamMultiplePlay()
         {
-            using(var mp = new MediaPlayer(_libVLC))
+            using (var mp = new MediaPlayer(_libVLC))
             {
                 var media = new Media(_libVLC, await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"));
                 mp.Play(media);

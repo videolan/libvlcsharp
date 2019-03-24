@@ -23,7 +23,7 @@ namespace LibVLCSharp.Tests
             media.SetMeta(MetadataType.Description, "test");
             Assert.True(eventHandlerCalled);
         }
-        
+
         public void DurationChanged()
         {
             var media = new Media(_libVLC, RealMp3Path);

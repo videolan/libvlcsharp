@@ -120,7 +120,7 @@ namespace LibVLCSharp.Tests
 
             Assert.IsTrue(logCallbackCalled);
         }
-        
+
         [Test]
         public void SetLogFile()
         {
