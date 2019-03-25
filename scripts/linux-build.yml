@@ -1,0 +1,6 @@
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: LibVLCSharp/LibVLCSharp.csproj
+    arguments: '/p:NETSTANDARD_ONLY=true -c Release'

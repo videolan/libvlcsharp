@@ -1,0 +1,36 @@
+steps:
+- task: gep13.chocolatey-azuredevops.chocolatey-azuredevops.ChocolateyCommand@0
+  displayName: 'Install GTK#'
+  inputs:
+    command: install
+    installPackageId: gtksharp
+
+- task: MSBuild@1
+  displayName: 'Build LibVLCSharp'
+  inputs:
+    solution: LibVLCSharp/LibVLCSharp.csproj
+    msbuildArguments: '/t:restore,clean,build'
+
+- task: MSBuild@1
+  displayName: 'Build LibVLCSharp.GTK'
+  inputs:
+    solution: LibVLCSharp.GTK/LibVLCSharp.GTK.csproj
+    msbuildArguments: '/t:restore,build'
+
+- task: MSBuild@1
+  displayName: 'Build LibVLCSharp.Forms'
+  inputs:
+    solution: LibVLCSharp.Forms/LibVLCSharp.Forms.csproj
+    msbuildArguments: '/t:restore,build'
+
+- task: MSBuild@1
+  displayName: 'Build LibVLCSharp.Forms.Platforms.GTK'
+  inputs:
+    solution: LibVLCSharp.Forms.Platforms.GTK/LibVLCSharp.Forms.Platforms.GTK.csproj
+    msbuildArguments: '/t:restore,build'
+
+- task: MSBuild@1
+  displayName: 'Build LibVLCSharp.Tests'
+  inputs:
+    solution: LibVLCSharp.Tests/LibVLCSharp.Tests.csproj
+    msbuildArguments: '/t:restore,clean,build'
