@@ -1,3 +1,13 @@
+LibVLCSharp version 0.6.0
+=========================
+* Fix UTF8 interop everywhere and free libvlc strings where needed.
+* Completed libvlc API coverage. [API CHANGE] https://code.videolan.org/videolan/LibVLCSharp/issues/104
+* Add native API coverage unit test
+* Add public API docs
+* Rework main README and add sub-READMEs per platform.
+* Update linux install steps.
+* Fixed native crash when disposing RendererDiscoverer https://code.videolan.org/videolan/LibVLCSharp/issues/124
+
 LibVLCSharp version 0.5.0
 =========================
 * Docs: Fix comments for LibVLC ctor
