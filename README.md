@@ -4,7 +4,7 @@
 
 # LibVLCSharp
 
-[![Build Status](https://videolan.visualstudio.com/LibVLCSharp/_apis/build/status/LibVLCSharp-GitLab?branchName=master)](https://videolan.visualstudio.com/LibVLCSharp/_build/latest?definitionId=10?branchName=master)
+[![Build Status](https://videolan.visualstudio.com/LibVLCSharp/_apis/build/status/videolan.libvlcsharp?branchName=master)](https://videolan.visualstudio.com/LibVLCSharp/_build/latest?definitionId=22&branchName=master)
 [![Join the chat at https://gitter.im/libvlcsharp/Lobby](https://badges.gitter.im/libvlcsharp/Lobby.svg)](https://gitter.im/libvlcsharp/Lobby)
 
 LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
