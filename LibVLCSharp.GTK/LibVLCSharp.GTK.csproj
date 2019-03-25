@@ -15,7 +15,7 @@ libvlc needs to be installed separately.
     </Description>
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.GTK</RootNamespace>
-    <Version>0.0.1</Version>
+    <Version>0.0.6</Version>
     <PackageId>LibVLCSharp.GTK</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
