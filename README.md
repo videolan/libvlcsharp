@@ -20,6 +20,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
   - [Samples](#samples)
   - [Quick API overview](#quick-api-overview)
   - [Roadmap](#roadmap)
+  - [Versioning](#versioning)
   - [Release Notes](#release-notes)
   - [Contribute](#contribute)
     - [Pull request](#pull-request)
@@ -173,6 +174,10 @@ Feel free to suggest and contribute new samples.
 - UWP
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
+
+## Versioning
+
+As this is a libvlc binding, we try to follow the libvlc versioning scheme as much as possible. The versioning strategy is explained in the [VERSIONING](VERSIONING.md) document.
 
 ## Release Notes
 
