@@ -33,6 +33,11 @@ namespace TestUWP
             this.CreateSwapPanel();
             UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
 
+            this.Panel.SizeChanged += (s, eventArgs) =>
+            {
+                UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
+            };
+
             var d3dcontext = $"--winrt-d3dcontext=0x{_d3d11Device.ImmediateContext.NativePointer.ToString("x")}";
             var swapchain = $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}";
             _libVLC = new LibVLC(
