@@ -137,6 +137,9 @@ namespace LibVLCSharp.Shared
             var paths = new List<(string, string)>();
             string arch;
 
+            // TODO: Temp HACK to make it work for UAP target
+            paths.Add((Constants.CoreLibraryName, Constants.LibraryName));
+
             if(PlatformHelper.IsMac)
             {
                 arch = ArchitectureNames.MacOS64;
