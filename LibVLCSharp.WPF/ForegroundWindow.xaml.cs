@@ -38,7 +38,7 @@ namespace LibVLCSharp.WPF
         void Background_Unloaded(object sender, RoutedEventArgs e)
         {
             _wndhost.Closing -= Wndhost_Closing;
-            _wndhost.SizeChanged -= Wndhost_SizeChanged;
+            _bckgnd.SizeChanged -= Wndhost_SizeChanged;
             _wndhost.LocationChanged -= Wndhost_LocationChanged;
 
             Hide();
@@ -52,7 +52,7 @@ namespace LibVLCSharp.WPF
             Owner = _wndhost;
 
             _wndhost.Closing += Wndhost_Closing;
-            _wndhost.SizeChanged += Wndhost_SizeChanged;
+            _bckgnd.SizeChanged += Wndhost_SizeChanged;
             _wndhost.LocationChanged += Wndhost_LocationChanged;
 
             try
@@ -62,7 +62,7 @@ namespace LibVLCSharp.WPF
                 var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
                 Left = targetPoints.X;
                 Top = targetPoints.Y;
-                var size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
+                var size = new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight);
                 Height = size.Y;
                 Width = size.X;
                 Show();
@@ -91,7 +91,7 @@ namespace LibVLCSharp.WPF
             var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
             Left = targetPoints.X;
             Top = targetPoints.Y;
-            var size = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight)) - _bckgnd.PointToScreen(_zeroPoint);
+            var size = new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight);
             Height = size.Y;
             Width = size.X;
         }
