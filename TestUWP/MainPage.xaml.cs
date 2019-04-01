@@ -42,7 +42,8 @@ namespace TestUWP
             var swapchain = $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}";
             _libVLC = new LibVLC(
                 d3dcontext,
-                swapchain);
+                swapchain,
+                "--aout=winstore");
             _mp = new MediaPlayer(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
             _mp.Play();
         }
