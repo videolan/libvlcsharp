@@ -8,6 +8,8 @@ using Windows.UI.Xaml.Controls;
 using LibVLCSharp.Shared;
 using Device3 = SharpDX.DXGI.Device3;
 using System.Runtime.InteropServices;
+using Windows.Media.Devices;
+using Windows.ApplicationModel.Core;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -28,7 +30,7 @@ namespace TestUWP
             this.Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             this.CreateSwapPanel();
             UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
@@ -40,12 +42,54 @@ namespace TestUWP
 
             var d3dcontext = $"--winrt-d3dcontext=0x{_d3d11Device.ImmediateContext.NativePointer.ToString("x")}";
             var swapchain = $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}";
-            _libVLC = new LibVLC(
-                d3dcontext,
-                swapchain,
-                "--aout=winstore");
+
+            await CoreApplication.MainView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                _libVLC = new LibVLC(
+                    d3dcontext,
+                    swapchain,
+            //"-I",
+            //"dummy",
+            //"--no-osd",
+            "--verbose=2",
+                    //"--no-stats",
+                    //"--avcodec-fast",
+                    //"--subsdec-encoding");
+                    "--aout=winstore");
+
             _mp = new MediaPlayer(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
-            _mp.Play();
+                var devices = _mp.AudioOutputDeviceEnum;
+                _mp.SetOutputDevice(AudioDeviceID);
+
+                MediaDevice.DefaultAudioRenderDeviceChanged += onDefaultAudioRenderDeviceChanged;
+
+                _mp.Play();
+            });
+     
+        }
+
+        private void onDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role != AudioDeviceRole.Default || args.Id == AudioDeviceID)
+                return;
+
+            AudioDeviceID = args.Id;
+            // Always fetch the new audio client, as we always assign it when starting a new playback
+            // But if a playback is in progress, inform VLC backend that we changed device
+            if (_mp != null)
+                _mp.SetOutputDevice(AudioDeviceID);
+        }
+
+        string _audioDeviceID;
+        private string AudioDeviceID
+        {
+            get
+            {
+                if (_audioDeviceID == null)
+                    _audioDeviceID = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Default);
+                return _audioDeviceID;
+            }
+            set { _audioDeviceID = value; }
         }
 
         readonly Guid SWAPCHAIN_WIDTH = new Guid(0xf1b59347, 0x1643, 0x411a, 0xad, 0x6b, 0xc7, 0x80, 0x17, 0x7a, 0x6, 0xb6);
