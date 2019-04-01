@@ -212,7 +212,7 @@ namespace LibVLCSharp.Shared
             handle = IntPtr.Zero;
             Log($"Loading {nativeLibraryPath}");
 
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !UAP
             if (!File.Exists(nativeLibraryPath))
             {
                 Log($"Cannot find {nativeLibraryPath}");
