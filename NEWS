@@ -1,3 +1,8 @@
+LibVLCSharp version 0.7.0
+=========================
+* WPF: Fix HiDPi support in relation to airspace workaround. https://github.com/videolan/libvlcsharp/pull/42
+* Improve MVVM scenario and fix mediaplayer change event. [API CHANGE] https://github.com/videolan/libvlcsharp/pull/36
+
 LibVLCSharp version 0.6.0
 =========================
 * Fix UTF8 interop everywhere and free libvlc strings where needed.
