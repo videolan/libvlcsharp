@@ -131,7 +131,7 @@
     <None Include="TestUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <LibVLCLibs Include="libvlc\winrt-x86\**" />
+    <LibVLCLibs Include="libvlc\winrt-x64\**" />
     <Content Include="@(LibVLCLibs)">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
