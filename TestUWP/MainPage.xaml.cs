@@ -11,13 +11,8 @@ using System.Runtime.InteropServices;
 using Windows.Media.Devices;
 using Windows.ApplicationModel.Core;
 
-// Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace TestUWP
 {
-    /// <summary>
-    /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         LibVLC _libVLC;
@@ -26,16 +21,16 @@ namespace TestUWP
         public MainPage()
         {
             Core.Initialize();
-            this.InitializeComponent();
-            this.Loaded += OnLoaded;
+            InitializeComponent();
+            Loaded += OnLoaded;
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.CreateSwapPanel();
+            CreateSwapPanel();
             UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
 
-            this.Panel.SizeChanged += (s, eventArgs) =>
+            Panel.SizeChanged += (s, eventArgs) =>
             {
                 UpdateSize((float)Panel.ActualWidth * Panel.CompositionScaleX, (float)Panel.ActualHeight * Panel.CompositionScaleY);
             };
@@ -48,27 +43,19 @@ namespace TestUWP
                 _libVLC = new LibVLC(
                     d3dcontext,
                     swapchain,
-            //"-I",
-            //"dummy",
-            //"--no-osd",
-            "--verbose=2",
-                    //"--no-stats",
-                    //"--avcodec-fast",
-                    //"--subsdec-encoding");
+                    "--verbose=2",
                     "--aout=winstore");
 
-            _mp = new MediaPlayer(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+                _mp = new MediaPlayer(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
                 var devices = _mp.AudioOutputDeviceEnum;
                 _mp.SetOutputDevice(AudioDeviceID);
 
-                MediaDevice.DefaultAudioRenderDeviceChanged += onDefaultAudioRenderDeviceChanged;
-
+                MediaDevice.DefaultAudioRenderDeviceChanged += OnDefaultAudioRenderDeviceChanged;
                 _mp.Play();
             });
-     
         }
 
-        private void onDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        void OnDefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
         {
             if (args.Role != AudioDeviceRole.Default || args.Id == AudioDeviceID)
                 return;
@@ -81,7 +68,7 @@ namespace TestUWP
         }
 
         string _audioDeviceID;
-        private string AudioDeviceID
+        string AudioDeviceID
         {
             get
             {
@@ -195,12 +182,12 @@ namespace TestUWP
             UpdateScale(this.Panel.CompositionScaleX, this.Panel.CompositionScaleY);
         }
 
-        private void UpdateScale(float panelCompositionScaleX, float panelCompositionScaleY)
+        void UpdateScale(float panelCompositionScaleX, float panelCompositionScaleY)
         {           
             _swapchain2.MatrixTransform = new RawMatrix3x2 { M11 = 1.0f / panelCompositionScaleX, M22 = 1.0f / panelCompositionScaleY };
         }
 
-        private void Trim()
+        void Trim()
         {
             _device3?.Trim();
         }
