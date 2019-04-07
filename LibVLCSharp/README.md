@@ -14,6 +14,7 @@ This package also contains the views for the following platforms:
 - iOS
 - Mac
 - tvOS
+- UWP
 
 This package has multiple target frameworks, which means it will pick the right features for your project (you will only get the mac view if you are building a mac project).
 
@@ -25,6 +26,6 @@ This package has multiple target frameworks, which means it will pick the right 
 If you are in one of these situation, this package is made for you.
 
 - You want to build a console application that leverages the power of VLC for transcoding/streaming/recording/playing audio... without displaying the video anywhere
-- You want to build a Xamarin.iOS/Android/Mac/tvOS (not Xamarin.Forms, for that, see [LibVLCSharp.Forms](../LibVLCSharp.Forms/README.md) )
+- You want to build a Xamarin.iOS/Android/Mac/tvOS/UWP app (not Xamarin.Forms, for that, see [LibVLCSharp.Forms](../LibVLCSharp.Forms/README.md) )
 
 For other platforms, see the [main documentation](../README.md)

@@ -14,6 +14,7 @@
       - iOS
       - Mac
       - tvOS
+      - UWP
 
       libvlc needs to be installed separately. See VideoLAN.LibVLC.* packages.
     </Description>
