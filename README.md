@@ -61,6 +61,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Xamarin.tvOS
 - Xamarin.Mac (Cocoa)
 - Windows (WPF, WinForms, GTK)
+- Windows 10 (UWP)
 - Linux (GTK)
 - Xamarin.Forms
 - .NET Standard 1.1 and 2.0
@@ -73,6 +74,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 | Platform          | LibVLC Package                      | NuGet                                  | Minimum OS Version |
 | ----------------- | ----------------------------------- | -------------------------------------- |--------------------|
 | Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] | Windows XP         |
+| UWP               | VideoLAN.LibVLC.WindowsRT           | [![LibVLCWin10Badge]][LibVLCWin10]     | Windows 10         |
 | Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         | macOS 10.7         |
 | Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] | Android 2.3        |
 | iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         | iOS 8.4            |
@@ -80,7 +82,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 | Linux             | [Linux guide](docs/linux-setup.md)  | N/A                                    | N/A                |
 
 ```cmd
-dotnet add package VideoLAN.LibVLC.[Windows|Android|iOS|Mac|tvOS]
+dotnet add package VideoLAN.LibVLC.[Windows|WindowsRT|Android|iOS|Mac|tvOS]
 ```
 
 LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
@@ -94,6 +96,7 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | Xamarin.iOS       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.tvOS      | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Mac       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| UWP               | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Forms     | [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md)| [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
 | WPF               | LibVLCSharp.WPF                                 | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
 | Xamarin.Forms.WPF | [LibVLCSharp.Forms.WPF][RLibVLCSharpFormsWPF]    | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
@@ -108,6 +111,9 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
+
+[LibVLCWin10Badge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.WindowsRT.svg
+[LibVLCWin10]: https://www.nuget.org/packages/VideoLAN.LibVLC.WindowsRT/
 
 [LibVLCMac]: https://www.nuget.org/packages/VideoLAN.LibVLC.Mac/
 [LibVLCMacBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Mac.svg
@@ -144,7 +150,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 
 ## Getting started
 
-Follow the [Getting started guide](GETTING-STARTED.md).
+Follow the [Getting started guide](GETTING-STARTED.md). Make sure you read it since it contains platform-specific caveats
 
 ## Samples
 
