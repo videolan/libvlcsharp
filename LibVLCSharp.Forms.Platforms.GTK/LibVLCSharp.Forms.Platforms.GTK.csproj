@@ -26,7 +26,7 @@ Features:
 - DVD playback and menu navigation.
     </Description>    
     <TargetFramework>net47</TargetFramework>
-    <RootNamespace>LibVLCSharp.Forms.GTK</RootNamespace>
+    <RootNamespace>LibVLCSharp.Forms.Platforms.GTK</RootNamespace>
     <PackageVersion>0.7.0</PackageVersion>
     <PackageId>LibVLCSharp.Forms.GTK</PackageId>
     <Authors>VideoLAN</Authors>
