@@ -56,6 +56,30 @@ The content you place inside the `VideoView` is used for the window, like this:
     </lvs:VideoView>
 ```
 
+## UWP
+
+These issues are issues of libvlc 3, that we hope to get fixed for libvlc 4
+
+### LibVLC additionnal parameters
+
+tl;dr : If you want to play a video with UWP, integrate the `VideoView` in your control, handle the `Loaded` event and then initialize your player with:
+```cs
+new LibVLC(VideoView.GetSwapChainOptions());
+```
+
+Detailed explanation:
+In UWP here are mandatory options to be given to the LibVLC constructor. These options tells libvlc (and more precisely the DirectX plugin) where to output the video, using a so-called "swap chain".
+
+This initialization step will disappear in libvlc 4, but for now, you will need to have a code similar to [this one](Samples/LibVLCSharp.UWP.Sample/MainPage.xaml.cs)
+
+
+### Automatic audio output module selection
+
+tl;dr : You don't have anything to do. This section explains how things work internally
+
+Detailed explanation:
+When you create a `new LibVLC()` in UWP, the `--aout=winstore` is automatically added. This means that you can't specify another `--aout` option in that constructor.
+
 # Documentation
 
 For usage of the API, you should check out the `libvlc` [C API documentation](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html) which this wrapper follows closely.
