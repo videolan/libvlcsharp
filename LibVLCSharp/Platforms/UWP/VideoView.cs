@@ -141,7 +141,6 @@
 
                 _device.MaximumFrameLatency = 1;
 
-                //TODO: perform the next 2 calls on the UI thread
                 using (var panelNative = ComObject.As<ISwapChainPanelNative>(_panel))
                 {
                     panelNative.SwapChain = _swapChain;
