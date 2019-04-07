@@ -1,4 +1,6 @@
-﻿namespace LibVLCSharp.Platforms.UWP
+﻿using Windows.UI.Xaml;
+
+namespace LibVLCSharp.Platforms.UWP
 {
     using LibVLCSharp.Shared;
     using SharpDX;
@@ -29,10 +31,12 @@
         /// </summary>
         public VideoView()
         {
-            this._panel = new SwapChainPanel();
-            this.Content = this._panel;
-            this.Loaded += (s, e) => this.OnLoad();
-            this.Unloaded += (s, e) => this.OnUnload();
+            _panel = new SwapChainPanel();
+            Content = _panel;
+            Loaded += (s, e) => OnLoad();
+            Unloaded += (s, e) => OnUnload();
+
+            Application.Current.Suspending += (s, e) => { Trim(); };
 
             _panel.SizeChanged += (s, eventArgs) =>
             {
@@ -83,7 +87,7 @@
             {
                 dxgiFactory = new SharpDX.DXGI.Factory2(true);
             }
-            catch (SharpDXException e)
+            catch (SharpDXException)
             {
                 dxgiFactory = new SharpDX.DXGI.Factory2(false);
             }
@@ -98,7 +102,7 @@
                     _d3d11Device = new SharpDX.Direct3D11.Device(adapter, deviceCreationFlags);
                     break;
                 }
-                catch (SharpDXException e)
+                catch (SharpDXException)
                 {
                 }
             }
