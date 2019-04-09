@@ -74,7 +74,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 | Platform          | LibVLC Package                      | NuGet                                  | Minimum OS Version |
 | ----------------- | ----------------------------------- | -------------------------------------- |--------------------|
 | Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] | Windows XP         |
-| UWP               | VideoLAN.LibVLC.WindowsRT           | [![LibVLCWin10Badge]][LibVLCWin10]     | Windows 10         |
+| UWP               | VideoLAN.LibVLC.UWP                 | [![LibVLCWin10Badge]][LibVLCWin10]     | Windows 10         |
 | Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         | macOS 10.7         |
 | Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] | Android 2.3        |
 | iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         | iOS 8.4            |
@@ -82,7 +82,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 | Linux             | [Linux guide](docs/linux-setup.md)  | N/A                                    | N/A                |
 
 ```cmd
-dotnet add package VideoLAN.LibVLC.[Windows|WindowsRT|Android|iOS|Mac|tvOS]
+dotnet add package VideoLAN.LibVLC.[Windows|UWP|Android|iOS|Mac|tvOS]
 ```
 
 LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
@@ -112,8 +112,8 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
 
-[LibVLCWin10Badge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.WindowsRT.svg
-[LibVLCWin10]: https://www.nuget.org/packages/VideoLAN.LibVLC.WindowsRT/
+[LibVLCWin10Badge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.UWP.svg
+[LibVLCWin10]: https://www.nuget.org/packages/VideoLAN.LibVLC.UWP/
 
 [LibVLCMac]: https://www.nuget.org/packages/VideoLAN.LibVLC.Mac/
 [LibVLCMacBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Mac.svg
