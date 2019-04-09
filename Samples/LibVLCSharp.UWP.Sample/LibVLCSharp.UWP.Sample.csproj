@@ -155,8 +155,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.7</Version>
     </PackageReference>
-    <PackageReference Include="VideoLAN.LibVLC.WindowsRT">
-      <Version>3.1.0-alpha01</Version>
+    <PackageReference Include="VideoLAN.LibVLC.UWP">
+      <Version>3.1.0-alpha</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
