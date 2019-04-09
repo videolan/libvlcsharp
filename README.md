@@ -176,8 +176,8 @@ Feel free to suggest and contribute new samples.
 
 ## Roadmap
 
+- MediaPlayerElement control
 - Game engines (Unity, Unreal, Godot)
-- UWP
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
