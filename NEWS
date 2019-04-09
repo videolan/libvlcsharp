@@ -1,3 +1,8 @@
+LibVLCSharp version 0.8.0
+=========================
+* Fix root namespace for GTK/WPF X.F backends.
+* Add UWP support for mobile, desktop and Xbox.
+
 LibVLCSharp version 0.7.0
 =========================
 * WPF: Fix HiDPi support in relation to airspace workaround. https://github.com/videolan/libvlcsharp/pull/42
