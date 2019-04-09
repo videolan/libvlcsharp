@@ -17,7 +17,7 @@ namespace LibVLCSharp.UWP.Sample
             InitializeComponent();
             Loaded += (s, e) =>
             {
-                _libVLC = new LibVLC(VideoView.GetSwapChainOptions());
+                _libVLC = new LibVLC(VideoView.SwapChainOptions);
                 _mediaPlayer = new MediaPlayer(_libVLC);
                 VideoView.MediaPlayer = _mediaPlayer;
                 this._mediaPlayer.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));

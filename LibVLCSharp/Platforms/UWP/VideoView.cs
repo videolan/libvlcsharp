@@ -55,23 +55,26 @@
 
         /// <summary>
         /// Gets the swapchain parameters to pass to the <see cref="LibVLC"/> constructor.
-        ///
         /// If you don't pass them to the <see cref="LibVLC"/> constructor, the video won't
         /// be displayed in your application.
+        /// Calling this property will throw an <see cref="InvalidOperationException"/> if the VideoView is not yet full Loaded.
         /// </summary>
         /// <returns>The list of arguments to be given to the <see cref="LibVLC"/> constructor.</returns>
-        public string[] GetSwapChainOptions()
+        public string[] SwapChainOptions
         {
-            if (!_loaded)
+            get
             {
-                throw new InvalidOperationException("You must wait for the VideoView to be loaded before calling GetSwapChainOptions()");
-            }
+                if (!_loaded)
+                {
+                    throw new InvalidOperationException("You must wait for the VideoView to be loaded before calling GetSwapChainOptions()");
+                }
 
-            return new string[]
-            {
-                $"--winrt-d3dcontext=0x{_d3D11Device.ImmediateContext.NativePointer.ToString("x")}",
-                $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}"
-            };
+                return new string[]
+                {
+                    $"--winrt-d3dcontext=0x{_d3D11Device.ImmediateContext.NativePointer.ToString("x")}",
+                    $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}"
+                };
+            }
         }
 
         /// <summary>

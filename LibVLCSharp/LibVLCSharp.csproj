@@ -4,9 +4,10 @@
     <Summary>The official .NET wrapper around LibVLC.</Summary>
     <Description>
       LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
+      
       It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
-      This package contains the core features of LibVLCSharp (libvlc loading and initialization, .NET-friendly classes to ease the use of libvlc...).
-      All other `LibVLCSharp.*` packages depend on this one.
+      
+      This package contains the core features of LibVLCSharp (libvlc loading and initialization, .NET-friendly classes to ease the use of libvlc...). All other `LibVLCSharp.*` packages depend on this one.
 
       This package also contains the views for the following platforms:
 

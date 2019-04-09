@@ -60,8 +60,8 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Xamarin.iOS
 - Xamarin.tvOS
 - Xamarin.Mac (Cocoa)
-- Windows (WPF, WinForms, GTK)
-- Windows 10 (UWP)
+- Windows Classic (WPF, WinForms, GTK)
+- Windows Universal (UWP for Desktop, mobile and Xbox)
 - Linux (GTK)
 - Xamarin.Forms
 - .NET Standard 1.1 and 2.0

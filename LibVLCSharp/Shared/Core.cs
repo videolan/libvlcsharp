@@ -40,9 +40,12 @@ namespace LibVLCSharp.Shared
         }
 
 #if NET || NETSTANDARD
+#if !UWP
         static IntPtr _libvlccoreHandle;
+#endif // !UWP
         static IntPtr _libvlcHandle;
-#endif
+#endif // NET || NETSTANDARD
+
         /// <summary>
         /// Load the native libvlc library (if necessary, depending on platform)
         /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
