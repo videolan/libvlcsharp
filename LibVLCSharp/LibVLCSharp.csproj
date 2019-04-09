@@ -26,7 +26,7 @@
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>7.3</LangVersion>
-    <PackageVersion>0.7.0</PackageVersion>
+    <PackageVersion>0.8.0</PackageVersion>
     <PackageId>LibVLCSharp</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
