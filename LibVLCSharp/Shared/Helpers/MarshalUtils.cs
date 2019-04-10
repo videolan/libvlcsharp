@@ -18,31 +18,6 @@ namespace LibVLCSharp.Shared.Helpers
             [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseWindows(IntPtr stream);
 
-            /// <summary>
-            /// Compute the size required by vsprintf to print the parameters.
-            /// </summary>
-            /// <param name="format"></param>
-            /// <param name="ptr"></param>
-            /// <returns></returns>
-            [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int _vscprintf(string format, IntPtr ptr);
-
-            /// <summary>
-            /// Format a string using printf style markers
-            /// </summary>
-            /// <remarks>
-            /// See https://stackoverflow.com/a/37629480/2663813
-            /// </remarks>
-            /// <param name="buffer">The output buffer (should be large enough, use _vscprintf)</param>
-            /// <param name="format">The message format</param>
-            /// <param name="args">The variable arguments list pointer. We do not know what it is, but the pointer must be given as-is from C back to sprintf.</param>
-            /// <returns>A negative value on failure, the number of characters written otherwise.</returns>
-            [DllImport(Constants.Msvcrt, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-            public static extern int vsprintf(
-                IntPtr buffer,
-                string format,
-                IntPtr args);
-
             #endregion
 
             #region Linux
@@ -430,9 +405,6 @@ namespace LibVLCSharp.Shared.Helpers
 #endif
         }
 
-        internal static int Vscprintf(string format, IntPtr ptr) => Native._vscprintf(format, ptr);
-
-        internal static int Vsprintf(IntPtr buffer, string format, IntPtr args) => Native.vsprintf(buffer, format, args);
 #endif
         /// <summary>
         /// Frees an heap allocation returned by a LibVLC function.

@@ -106,27 +106,11 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public async Task SetLogCallback()
-        {
-            var logCallbackCalled = false;
-
-            void LogCallback(object sender, LogEventArgs args) => logCallbackCalled = true;
-
-            _libVLC.Log += LogCallback;
-
-            await Task.Delay(1000);
-
-            _libVLC.Log -= LogCallback;
-
-            Assert.IsTrue(logCallbackCalled);
-        }
-        
-        [Test]
         public void SetLogFile()
         {
             var path = Path.GetTempFileName();
             _libVLC.SetLogFile(path);
-            _libVLC.UnsetLog();
+            _libVLC.CloseLogFile();
             var logs = File.ReadAllText(path);
             Assert.True(logs.StartsWith("VLC media player"));
         }
@@ -134,7 +118,6 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeLibVLC()
         {
-            _libVLC.SetLog((data, logLevel, logContext, format, args) => { });
             _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
                 (dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, firstActionText, secondActonText, token) => Task.CompletedTask,

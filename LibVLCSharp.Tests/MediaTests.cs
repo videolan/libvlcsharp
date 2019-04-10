@@ -103,7 +103,6 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMediaSpecialCharacters()
         {
-            _libVLC.Log += LibVLC_Log;
             using (var media = new Media(_libVLC, RealMp3PathSpecialCharacter, FromType.FromPath))
             {
                 Assert.False(media.IsParsed);
@@ -119,7 +118,6 @@ namespace LibVLCSharp.Tests
                     mp.Stop();
                 }
             }
-            _libVLC.Log -= LibVLC_Log;
         }
 
         [Test]
