@@ -21,7 +21,7 @@
         SharpDX.DXGI.Device3 _device3;
         SwapChain2 _swapChain2;
         SwapChain1 _swapChain;
-
+        const string Mobile = "Windows.Mobile";
         bool _loaded;
 
         /// <summary>
@@ -89,7 +89,9 @@
                     DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
 
 #if DEBUG
-                deviceCreationFlags |= DeviceCreationFlags.Debug;
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != Mobile)
+                    deviceCreationFlags |= DeviceCreationFlags.Debug;
+
                 try
                 {
                     dxgiFactory = new SharpDX.DXGI.Factory2(true);
