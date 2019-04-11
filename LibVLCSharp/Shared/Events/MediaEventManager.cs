@@ -46,7 +46,7 @@ namespace LibVLCSharp.Shared
 
         protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
         {
-            lock(_lock)
+            lock (_lock)
             {
                 switch (eventType)
                 {
@@ -212,23 +212,23 @@ namespace LibVLCSharp.Shared
         void OnMediaStateChanged(IntPtr ptr)
         {
             _mediaStateChanged?.Invoke(this,
-                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));    
+                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
         }
-        
+
         void OnMediaFreed(IntPtr ptr)
         {
-            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));    
+            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
         }
 
         void OnDurationChanged(IntPtr ptr)
         {
-            _mediaDurationChanged?.Invoke(this, 
-                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));    
+            _mediaDurationChanged?.Invoke(this,
+                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
         }
 
         void OnSubItemAdded(IntPtr ptr)
         {
-            _mediaSubItemAdded?.Invoke(this, 
+            _mediaSubItemAdded?.Invoke(this,
                 new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
         }
 

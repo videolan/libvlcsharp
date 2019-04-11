@@ -76,7 +76,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_lock")]
             internal static extern void LibVLCMediaListLock(IntPtr mediaList);
-            
+
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_unlock")]
@@ -154,7 +154,7 @@ namespace LibVLCSharp.Shared
                 {
                     if (_nativeLock)
                         Unlock();
-                }       
+                }
             }
         }
 
@@ -164,7 +164,7 @@ namespace LibVLCSharp.Shared
         /// <param name="media">a media instance</param>
         /// <param name="position">position in the array where to insert</param>
         /// <returns>true on success, false if the media list is read-only</returns>
-        public bool InsertMedia(Media media, int position) => 
+        public bool InsertMedia(Media media, int position) =>
             NativeSync(() =>
             {
                 if (media == null) throw new ArgumentNullException(nameof(media));
@@ -189,7 +189,7 @@ namespace LibVLCSharp.Shared
         /// <param name="position">position in array where to insert</param>
         /// <returns>media instance at position, or null if not found.
         /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
-        public Media this[int position] => NativeSync(() => 
+        public Media this[int position] => NativeSync(() =>
         {
             var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
             return ptr == IntPtr.Zero ? null : new Media(ptr);

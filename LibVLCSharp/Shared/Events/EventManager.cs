@@ -81,7 +81,7 @@ namespace LibVLCSharp.Shared
 
         internal protected void OnEventUnhandled(object sender, EventType eventType)
             => throw new InvalidOperationException($"eventType {nameof(eventType)} unhandled by type {sender.GetType().Name}");
-        
+
         internal protected abstract void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
         internal protected abstract void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
     }

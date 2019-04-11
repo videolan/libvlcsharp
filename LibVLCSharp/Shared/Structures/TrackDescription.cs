@@ -15,7 +15,7 @@ namespace LibVLCSharp.Shared.Structures
     /// <para>Description for video, audio tracks and subtitles. It contains</para>
     /// <para>id, name (description string)</para>
     /// </summary>
-    public readonly struct TrackDescription 
+    public readonly struct TrackDescription
     {
         /// <summary>
         /// Track description Id

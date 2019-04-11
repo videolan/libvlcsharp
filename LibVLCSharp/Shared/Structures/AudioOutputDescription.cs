@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared.Structures
-{   
+{
     [StructLayout(LayoutKind.Sequential)]
     internal readonly struct AudioOutputDescriptionStructure
     {

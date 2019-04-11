@@ -236,7 +236,7 @@ namespace LibVLCSharp.Shared
             [FieldOffset(0)]
             internal readonly RendererDiscovererItemAdded RendererDiscovererItemAdded;
             [FieldOffset(0)]
-            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted; 
+            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
         }
 
         #region Media

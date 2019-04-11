@@ -24,7 +24,7 @@ namespace LibVLCSharp.Shared
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((LibVLC) obj);
+            return Equals((LibVLC)obj);
         }
 #if NET || NETSTANDARD
         IntPtr _logFileHandle;
@@ -221,7 +221,7 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-        
+
         public static bool operator ==(LibVLC obj1, LibVLC obj2)
         {
             return obj1?.NativeReference == obj2?.NativeReference;
@@ -363,7 +363,7 @@ namespace LibVLCSharp.Shared
         public ModuleDescription[] AudioFilters => MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
             MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
             s => s.Build(),
-            module => module.Next, 
+            module => module.Next,
             Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Returns a list of video filters that are available.</summary>
@@ -378,7 +378,7 @@ namespace LibVLCSharp.Shared
         public ModuleDescription[] VideoFilters => MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
             MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
             s => s.Build(),
-            module => module.Next, 
+            module => module.Next,
             Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Gets the list of available audio output modules.</summary>
@@ -388,10 +388,10 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference), 
+        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
             ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
-            s => s.Build(), 
-            s => s.Next, 
+            s => s.Build(),
+            s => s.Next,
             Native.LibVLCAudioOutputListRelease);
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
@@ -414,24 +414,24 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => 
-            MarshalUtils.Retrieve(() => 
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) =>
+            MarshalUtils.Retrieve(() =>
             {
                 var audioOutputNameUtf8 = audioOutputName.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
+                return MarshalUtils.PerformInteropAndFree(() =>
                     Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
-            }, 
+            },
             MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
-            s => s.Build(), 
-            device => device.Next, 
+            s => s.Build(),
+            device => device.Next,
             Native.LibVLCAudioOutputDeviceListRelease);
-        
+
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
         public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) =>
-            MarshalUtils.Retrieve(NativeReference, discovererCategory, 
+            MarshalUtils.Retrieve(NativeReference, discovererCategory,
                 (IntPtr nativeRef, MediaDiscovererCategory enumType, out IntPtr array) => Native.LibVLCMediaDiscovererListGet(nativeRef, enumType, out array),
             MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
             m => m.Build(),
@@ -510,7 +510,7 @@ namespace LibVLCSharp.Shared
         /// List of available renderers used to create RendererDiscoverer objects
         /// Note: LibVLC 3.0.0 and later
         /// </summary>       
-        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, 
+        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference,
             (IntPtr nativeRef, out IntPtr array) => Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
             MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
             m => m.Build(),
@@ -561,7 +561,7 @@ namespace LibVLCSharp.Shared
         Error = 4
     }
 
-#region Callbacks
+    #region Callbacks
 
     /// <summary>
     /// Registers a callback for the LibVLC exit event. 
@@ -570,5 +570,5 @@ namespace LibVLCSharp.Shared
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ExitCallback();
-#endregion
+    #endregion
 }
