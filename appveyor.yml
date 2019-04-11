@@ -1,0 +1,29 @@
+version: 1.0.0.{build}
+image:
+  - Visual Studio 2017
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+    - master
+skip_branch_with_pr: true
+configuration: Release
+before_build:
+  - cmd: dotnet tool install -g dotnet-format
+  - cmd: dotnet restore
+build:
+  verbosity: minimal
+  parallel: true
+build_script:
+  - cmd: dotnet build -c Release LibVLCSharp.sln
+  - cmd: dotnet format --check --dry-run -w LibVLCSharp.CodeFormatter.sln
+test_script:
+  - cmd: dotnet test -c Release LibVLCSharp.sln
+artifacts:
+  - path: '**\*.nupkg'
+nuget:
+  disable_publish_on_pr: true
+#deploy:
+#  provider: NuGet
+#  api_key:
+#    secure: <Your secret>
