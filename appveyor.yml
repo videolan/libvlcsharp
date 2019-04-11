@@ -10,7 +10,7 @@ skip_branch_with_pr: true
 configuration: Release
 before_build:
   - cmd: dotnet tool install -g dotnet-format
-  - cmd: dotnet restore
+  - cmd: dotnet restore LibVLCSharp.sln
 build:
   verbosity: minimal
   parallel: true
