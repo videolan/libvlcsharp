@@ -10,15 +10,15 @@ skip_branch_with_pr: true
 configuration: Release
 before_build:
   - cmd: dotnet tool install -g dotnet-format
-  - cmd: dotnet restore LibVLCSharp.sln
+  - cmd: dotnet restore scripts
 build:
   verbosity: minimal
   parallel: true
 build_script:
-  - cmd: dotnet build -c Release LibVLCSharp.sln
-  - cmd: dotnet format --check --dry-run -w LibVLCSharp.CodeFormatter.sln
+  - cmd: dotnet build -c Release scripts
+  - cmd: dotnet format --check --dry-run -w scripts
 test_script:
-  - cmd: dotnet test -c Release LibVLCSharp.sln
+  - cmd: dotnet test -c Release scripts
 artifacts:
   - path: '**\*.nupkg'
 nuget:
