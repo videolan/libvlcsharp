@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using LibVLCSharp.Forms.Platforms.WPF;
+using LibVLCSharp.Forms.Shared;
+using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.PowerManagement
+[assembly: Dependency(typeof(PowerManager))]
+namespace LibVLCSharp.Forms.Platforms.WPF
 {
     /// <summary>
     /// Power manager.
     /// </summary>
-    public static class PowerManager
+    public class PowerManager : IPowerManager
     {
         [DllImport("kernel32.dll")]
         private static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
@@ -20,11 +24,11 @@ namespace LibVLCSharp.Forms.PowerManagement
             ES_SYSTEM_REQUIRED = 0x00000001
         }
 
-        private static bool _keepScreenOn;
+        private bool _keepScreenOn;
         /// <summary>
         /// Gets or sets a value indicating whether the screen should be kept on.
         /// </summary>
-        public static bool KeepScreenOn
+        public bool KeepScreenOn
         {
             get => _keepScreenOn;
             set

@@ -2,7 +2,7 @@
 using System.Globalization;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.Converters
+namespace LibVLCSharp.Forms.Shared.Converters
 {
     /// <summary>
     /// Converts not null object to true.
