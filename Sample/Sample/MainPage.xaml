@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Sample"
              xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"            
-             xmlns:vlc="clr-namespace:LibVLCSharp.Forms;assembly=LibVLCSharp.Forms.MediaPlayerElement"
+             xmlns:vlc="clr-namespace:LibVLCSharp.Forms.Shared;assembly=LibVLCSharp.Forms.MediaPlayerElement"
              x:Class="Sample.MainPage">
     <ContentPage.BindingContext>
         <local:MainViewModel />

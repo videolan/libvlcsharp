@@ -29,12 +29,12 @@
   </ItemGroup> 
 
   <ItemGroup>
-    <PackageReference Include="LibVLCSharp.Forms" Version="0.5.0" />
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.264807" />
+    <PackageReference Include="LibVLCSharp.Forms" Version="0.8.0" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.293080" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Strings.Designer.cs">
+    <Compile Update="Shared\Resources\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
@@ -42,44 +42,36 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="MediaPlayerElement.xaml">
+    <EmbeddedResource Update="Shared\MediaPlayerElement.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="PlaybackControls.xaml">
+    <EmbeddedResource Update="Shared\PlaybackControls.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Strings.resx">
+    <EmbeddedResource Update="Shared\Resources\Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Themes\Generic.xaml">
+    <EmbeddedResource Update="Shared\Themes\Generic.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="PowerManagement\**\*.cs" />
-    <None Include="PowerManagement\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
-    <Compile Include="**\*.netstandard.cs" />
-    <Compile Include="**\*.netstandard.*.cs" />
-  </ItemGroup>
+    <Compile Remove="Platforms\**\*.cs" />
+    <None Include="Platforms\**\*.cs" />
+  </ItemGroup>  
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-    <Compile Include="**\*.android.cs" />
-    <Compile Include="**\*.android.*.cs" />
+    <Compile Include="Platforms\Android\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <Compile Include="**\*.ios.cs" />
-    <Compile Include="**\*.ios.*.cs" />
+    <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
-    <Compile Include="**\*.mac.cs" />
-    <Compile Include="**\*.mac.*.cs" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <Compile Include="Platforms\WPF\**\*.cs" />
   </ItemGroup>
 
 </Project>

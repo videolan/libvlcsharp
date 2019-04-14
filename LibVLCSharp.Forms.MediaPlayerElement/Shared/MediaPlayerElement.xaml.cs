@@ -1,10 +1,9 @@
 ﻿using System;
-using LibVLCSharp.Forms.Shared;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Shared
 {
     /// <summary>
     /// Represents an object that uses a <see cref="LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
@@ -19,6 +18,8 @@ namespace LibVLCSharp.Forms
         {
             InitializeComponent();
         }
+
+        private bool Initialized { get; set; }
 
         /// <summary>
         /// Identifies the <see cref="LibVLC"/> dependency property.
@@ -60,7 +61,7 @@ namespace LibVLCSharp.Forms
         }
 
         private static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
-          typeof(MediaPlayerElement), propertyChanged: VideoViewPropertyChanged);
+         typeof(MediaPlayerElement), propertyChanged: VideoViewPropertyChanged);
         /// <summary>
         /// Gets or sets the video view.
         /// </summary>
@@ -143,13 +144,50 @@ namespace LibVLCSharp.Forms
         protected override void OnParentSet()
         {
             base.OnParentSet();
-            if (VideoView == null)
+
+            if (Parent != null && !Initialized)
             {
-                VideoView = new VideoView();
+                Initialized = true;
+
+                if (VideoView == null)
+                {
+                    VideoView = new VideoView();
+                }
+                if (PlaybackControls == null)
+                {
+                    PlaybackControls = new PlaybackControls();
+                }
+
+                var application = Application.Current;
+                application.PageAppearing += PageAppearing;
+                application.PageDisappearing += PageDisappearing;
             }
-            if (PlaybackControls == null)
+        }
+
+        private void PageAppearing(object sender, Page e)
+        {
+            if (e == this.FindAncestor<Page>())
             {
-                PlaybackControls = new PlaybackControls();
+                MessagingCenter.Subscribe<LifecycleMessage>(this, "OnSleep", m =>
+                {
+                    //TODO Manage application lifecycle
+                    //MediaPlayer?.Stop();
+                    //VideoView = null;
+                });
+                MessagingCenter.Subscribe<LifecycleMessage>(this, "OnResume", m =>
+                {
+                    //VideoView = new VideoView();
+                    //MediaPlayer?.Play();
+                });
+            }
+        }
+
+        private void PageDisappearing(object sender, Page e)
+        {
+            if (e == this.FindAncestor<Page>())
+            {
+                MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnSleep");
+                MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnResume");
             }
         }
 
