@@ -1,16 +1,20 @@
-﻿using UIKit;
+﻿using LibVLCSharp.Forms.Platforms.iOS;
+using LibVLCSharp.Forms.Shared;
+using UIKit;
+using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.PowerManagement
+[assembly: Dependency(typeof(PowerManager))]
+namespace LibVLCSharp.Forms.Platforms.iOS
 {
     /// <summary>
     /// Power manager.
     /// </summary>
-    public static class PowerManager
+    public class PowerManager : IPowerManager
     {
         /// <summary>
         /// Gets or sets a value indicating whether the screen should be kept on.
         /// </summary>
-        public static bool KeepScreenOn
+        public bool KeepScreenOn
         {
             get => UIApplication.SharedApplication.IdleTimerDisabled;
             set => UIApplication.SharedApplication.IdleTimerDisabled = value;

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Shared
 {
     /// <summary>
     /// Helper class to manage the cast.

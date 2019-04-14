@@ -4,15 +4,13 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
-using LibVLCSharp.Forms.PowerManagement;
-using LibVLCSharp.Forms.Resources;
-using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Forms.Shared.Resources;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Shared
 {
     /// <summary>
     /// Represents the playback controls for a <see cref="LibVLCSharp.Shared.MediaPlayer"/>.
@@ -23,13 +21,15 @@ namespace LibVLCSharp.Forms
         private const string AudioSelectionAvailableState = "AudioSelectionAvailable";
         private const string AudioSelectionUnavailableState = "AudioSelectionUnavailable";
         private const string ClosedCaptionsSelectionAvailableState = "ClosedCaptionsSelectionAvailable";
-        private const string ClosedCaptionsUnavailableState = "ClosedCaptionsUnavailable";
+        private const string ClosedCaptionsSelectionUnavailableState = "ClosedCaptionsSelectionUnavailable";
         private const string PlayState = "PlayState";
         private const string PauseState = "PauseState";
         private const string PauseAvailableState = "PauseAvailable";
         private const string PauseUnavailableState = "PauseUnavailable";
         private const string SeekAvailableState = "SeekAvailable";
         private const string SeekUnavailableState = "SeekUnavailable";
+        private const string CastAvailableState = "CastAvailable";
+        private const string CastUnavailableState = "CastUnavailable";
 
         /// <summary>
         /// Initializes a new instance of <see cref="PlaybackControls"/> class.
@@ -70,6 +70,7 @@ namespace LibVLCSharp.Forms
         private Slider SeekBar { get; set; }
 
         private bool Initialized { get; set; }
+        private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
@@ -488,7 +489,7 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="IsCastButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsCastButtonVisibleProperty = BindableProperty.Create(nameof(IsCastButtonVisible), typeof(bool),
-            typeof(PlaybackControls), true);
+            typeof(PlaybackControls), true, propertyChanged: IsCastButtonVisiblePropertyChanged);
         /// <summary>
         /// Gets or sets a value indicating whether the cast button is shown.
         /// </summary>
@@ -591,7 +592,9 @@ namespace LibVLCSharp.Forms
             base.OnParentSet();
             if (Parent != null && !Initialized)
             {
+                Initialized = true;
                 OnApplyTemplate();
+                UpdateCastAvailability();
                 Reset();
             }
         }
@@ -629,6 +632,11 @@ namespace LibVLCSharp.Forms
             ((PlaybackControls)bindable).UpdatePauseAvailability();
         }
 
+        private static void IsCastButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((PlaybackControls)bindable).UpdateCastAvailability();
+        }
+
         private static void KeepScreenOnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).UpdateKeepScreenOn((bool)newValue);
@@ -636,7 +644,9 @@ namespace LibVLCSharp.Forms
 
         private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).UpdateErrorMessage();
+            var playbackControls = (PlaybackControls)bindable;
+            playbackControls.UpdateCastAvailability();
+            playbackControls.UpdateErrorMessage();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -882,7 +892,8 @@ namespace LibVLCSharp.Forms
                 oldMediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
                 oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
-                //TODO oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
+                //TODO Uncomment this line when https://code.videolan.org/videolan/LibVLCSharp/issues/123 will be resolved.
+                //oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
 
             if (newMediaPlayer != null)
@@ -901,7 +912,8 @@ namespace LibVLCSharp.Forms
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
-                // TODO newMediaPlayer.Vout += MediaPlayer_VoutChanged;
+                //TODO Uncomment this line when https://code.videolan.org/videolan/LibVLCSharp/issues/123 will be resolved.
+                //newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
 
             Reset();
@@ -1011,7 +1023,7 @@ namespace LibVLCSharp.Forms
         private void UpdateClosedCaptionsTracksSelectionAvailability()
         {
             UpdateTracksSelectionAvailability(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
-                m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsUnavailableState, 1);
+                m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
         private void ShowError(string errorMessage)
@@ -1046,8 +1058,7 @@ namespace LibVLCSharp.Forms
                 state = state ?? MediaPlayer?.State;
                 if (state == VLCState.Error || state == VLCState.Ended)
                 {
-                    ShowError("Error");
-                    //TODO ShowError(LibVLC?.LastLibVLCError);
+                    ShowError(LibVLC?.LastLibVLCError);
                 }
             }
             catch (Exception ex)
@@ -1064,15 +1075,21 @@ namespace LibVLCSharp.Forms
                 return;
             }
 
+            var powerManager = PowerManager;
+            if (powerManager == null)
+            {
+                return;
+            }
+
             Device.BeginInvokeOnMainThread(() =>
             {
                 try
                 {
                     var state = MediaPlayer?.State;
                     letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
-                    if (PowerManager.KeepScreenOn != letScreenOn)
+                    if (powerManager.KeepScreenOn != letScreenOn)
                     {
-                        PowerManager.KeepScreenOn = letScreenOn;
+                        powerManager.KeepScreenOn = letScreenOn;
                     }
                 }
                 catch (Exception)
@@ -1105,6 +1122,18 @@ namespace LibVLCSharp.Forms
             {
                 Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar, IsSeekEnabled &&
                     (canSeek ?? MediaPlayer?.IsSeekable == true) ? SeekAvailableState : SeekUnavailableState));
+            }
+        }
+
+        private void UpdateCastAvailability()
+        {
+            var castButton = CastButton;
+            if (castButton != null)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null ? CastAvailableState : CastUnavailableState);
+                });
             }
         }
 
@@ -1284,7 +1313,7 @@ namespace LibVLCSharp.Forms
                     UpdatePauseAvailability(true);
                     UpdateSeekAvailability(false);
                     UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-                    UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsUnavailableState);
+                    UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsSelectionUnavailableState);
                     goto case VLCState.Paused;
                 case VLCState.Paused:
                     playPauseState = PlayState;
