@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    xmlns:local="clr-namespace:LibVLCSharp.Forms"
-                    xmlns:converters="clr-namespace:LibVLCSharp.Forms.Converters"
-                    x:Class="LibVLCSharp.Forms.Themes.Generic">
+                    xmlns:converters="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
+                    xmlns:effects="clr-namespace:LibVLCSharp.Forms.Shared.Effects"
+                    x:Class="LibVLCSharp.Forms.Shared.Themes.Generic">
     <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
 
@@ -80,7 +80,7 @@
                 <Setter Property="TextColor" Value="DarkGray"/>
             </Trigger>
             <EventTrigger Event="Clicked">
-                <local:ClickEffect />
+                <effects:ClickEffect />
             </EventTrigger>
         </Style.Triggers>
     </Style>
@@ -103,8 +103,20 @@
     </Style>
 
     <Style x:Key="CastButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-        <Setter Property="IsVisible" Value="{TemplateBinding IsCastButtonVisible}" />
+        <Setter Property="IsVisible" Value="False" />
         <Setter Property="Text" Value="&#xe307;" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CastAvailabilityStates">
+                    <VisualState x:Name="CastAvailable">
+                        <VisualState.Setters>
+                            <Setter Property="IsVisible" Value="True" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="CastUnavailable" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
     <Style x:Key="ClosedCaptionsSelectionButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
@@ -118,7 +130,7 @@
                             <Setter Property="IsVisible" Value="True" />
                         </VisualState.Setters>
                     </VisualState>
-                    <VisualState x:Name="ClosedCaptionsUnavailable" />
+                    <VisualState x:Name="ClosedCaptionsSelectionUnavailable" />
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>

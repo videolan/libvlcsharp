@@ -2,7 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using LibVLCSharp.Forms;
+using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Shared;
 
 namespace Sample.Droid

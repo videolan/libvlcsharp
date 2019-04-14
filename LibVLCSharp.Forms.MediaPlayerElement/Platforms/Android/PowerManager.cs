@@ -1,17 +1,20 @@
-﻿using Android.App;
-using Android.Views;
+﻿using Android.Views;
+using LibVLCSharp.Forms.Platforms.Android;
+using LibVLCSharp.Forms.Shared;
+using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.PowerManagement
+[assembly: Dependency(typeof(PowerManager))]
+namespace LibVLCSharp.Forms.Platforms.Android
 {
     /// <summary>
     /// Power manager.
     /// </summary>
-    public static class PowerManager
+    public class PowerManager : IPowerManager
     {
         /// <summary>
         /// Gets or sets a value indicating whether the screen should be kept on.
         /// </summary>
-        public static bool KeepScreenOn
+        public bool KeepScreenOn
         {
             get => (Platform.Activity?.Window?.Attributes?.Flags ?? 0).HasFlag(WindowManagerFlags.KeepScreenOn);
             set

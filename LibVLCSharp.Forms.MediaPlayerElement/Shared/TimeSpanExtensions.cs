@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Shared
 {
     /// <summary>
     /// Extensions methods for <see cref="TimeSpan"/>.

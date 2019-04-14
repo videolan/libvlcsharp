@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms
+namespace LibVLCSharp.Forms.Shared.Effects
 {
     /// <summary>
     /// Click effect.

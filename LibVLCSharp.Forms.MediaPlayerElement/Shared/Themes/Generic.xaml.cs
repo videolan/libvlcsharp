@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LibVLCSharp.Forms.Themes
+namespace LibVLCSharp.Forms.Shared.Themes
 {
     /// <summary>
     /// Resource dictionary for the default style.
