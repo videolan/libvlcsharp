@@ -48,14 +48,16 @@ namespace Sample
             Core.Initialize();
 
             LibVLC = new LibVLC();
-            var mediaPlayer = new MediaPlayer(LibVLC)
-            {
-                Media = new Media(LibVLC,
-                    "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi",
-                    FromType.FromLocation)
-            };
-            MediaPlayer = mediaPlayer;
-            mediaPlayer.Play();
+
+            var media = new Media(LibVLC,
+                "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi",
+                FromType.FromLocation);
+            var mediaConfiguration = new MediaConfiguration();
+            mediaConfiguration.EnableHardwareDecoding();
+            media.AddOption(mediaConfiguration);
+
+            MediaPlayer = new MediaPlayer(media);
+            MediaPlayer.Play();
         }
     }
 }
