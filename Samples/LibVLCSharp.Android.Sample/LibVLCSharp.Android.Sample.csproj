@@ -93,14 +93,7 @@
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
-    <PackageReference Include="VideoLAN.LibVLC.Android" Version="3.0.0" />
+    <PackageReference Include="VideoLAN.LibVLC.Android" Version="3.1.2" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-		Other similar extension points exist, see Microsoft.Common.targets.
-		<Target Name="BeforeBuild">
-		</Target>
-		<Target Name="AfterBuild">
-		</Target>
-	-->
 </Project>
