@@ -29,7 +29,7 @@ Features:
     <RootNamespace>LibVLCSharp.WPF</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>7.3</LangVersion>
-    <Version>0.8.0</Version>
+    <Version>0.8.1</Version>
     <PackageId>LibVLCSharp.WPF</PackageId>
     <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
     <Authors>VideoLAN</Authors>
