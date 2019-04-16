@@ -1,3 +1,9 @@
+LibVLCSharp version 0.8.1
+=========================
+* Fix ARM debug support for UWP.
+* LibVLC: Remove Log API in preparation for 3.0 release
+* Android: Update AWindow aar autogen bindings.
+
 LibVLCSharp version 0.8.0
 =========================
 * Fix root namespace for GTK/WPF X.F backends.
