@@ -11,20 +11,19 @@ If this is a question please ask on StackOverflow: https://stackoverflow.com/que
 
 <!-- Summarize the bug encountered concisely -->
 
-### Steps to reproduce
+### Minimal project and steps to reproduce
 
 <!-- How one can reproduce the issue - this is very important
 
-Provide the steps to reproduce the behavior:
+Provide a Minimal, Complete, and Verifiable example (https://stackoverflow.com/help/mcve) through a git hosting platform
+and post the URL here. If you don't provide this, we may not be able to help and may close the issue.
+
+Please also provide the functional steps to reproduce the behavior (if necessary):
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 -->
-
-### Example Project
-
-<!-- If possible, please create an example project on gitalb or github that exhibits the problematic behaviour, and link to it here in the bug report -->
 
 ### What is the current *bug* behavior?
 
