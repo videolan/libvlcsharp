@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Android">
-      <Version>3.0.0</Version>
+      <Version>3.1.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design">
       <Version>27.0.2</Version>
