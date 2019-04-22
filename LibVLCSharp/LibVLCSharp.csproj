@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
     <Title>LibVLCSharp</Title>
     <Summary>The official .NET wrapper around LibVLC.</Summary>
