@@ -64,7 +64,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
-#if COCOA || NET || NETSTANDARD
+#if APPLE || NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
@@ -664,7 +664,11 @@ namespace LibVLCSharp.Shared
         /// If playback was already started, this method has no effect
         /// </summary>
         /// <returns>true if successful</returns>
-        public bool Play() => Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
+        public bool Play()
+        {
+            Media?.AddOption(Configuration);
+            return Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
+        }
 
         /// <summary>
         /// Set media and start playback
@@ -697,7 +701,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
-#if COCOA || NET || NETSTANDARD
+#if APPLE || NET || NETSTANDARD
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
@@ -1662,6 +1666,35 @@ namespace LibVLCSharp.Shared
         /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
         internal void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
 
+        /// <summary>
+        /// Enable/disable hardware decoding in a crossplatform way.
+        /// </summary>
+        public bool EnableHardwareDecoding
+        {
+            get => Configuration.EnableHardwareDecoding;
+            set => Configuration.EnableHardwareDecoding = value;
+        }
+
+        /// <summary>
+        /// Caching value for local files, in milliseconds [0 .. 60000ms]
+        /// </summary>
+        public int FileCaching
+        {
+            get => Configuration.FileCaching;
+            set => Configuration.FileCaching = value;
+        }
+
+        /// <summary>
+        /// Caching value for network resources, in milliseconds [0 .. 60000ms]
+        /// </summary>
+        public int NetworkCaching
+        {
+            get => Configuration.NetworkCaching;
+            set => Configuration.NetworkCaching = value;
+        }
+
+        MediaConfiguration Configuration = new MediaConfiguration();
+
 #if UNITY_ANDROID
         /// <summary>
         /// Retrieve a video frame from the Unity plugin.
@@ -1676,7 +1709,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
 
-#region Callbacks
+        #region Callbacks
 
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -1879,7 +1912,8 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#region events
+
+        #region events
 
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {

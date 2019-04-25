@@ -307,7 +307,10 @@ namespace LibVLCSharp.Shared
         {
             if (mediaConfiguration == null) throw new ArgumentNullException(nameof(mediaConfiguration));
 
-            AddOption(mediaConfiguration.Build());
+            foreach(var option in mediaConfiguration.Build())
+            {
+                AddOption(option);
+            }
         }
 
         /// <summary>Add an option to the media with configurable flags.</summary>
@@ -1082,23 +1085,5 @@ namespace LibVLCSharp.Shared
         Playlist = 5
     }
 
-    #endregion
-
-    /// <summary>
-    /// Small configuration helper
-    /// </summary>
-    public class MediaConfiguration
-    {
-        HashSet<string> _options = new HashSet<string>();
-
-        public MediaConfiguration EnableHardwareDecoding()
-        {
-#if ANDROID
-            _options.Add(":codec=mediacodec_ndk");
-#endif
-            return this;
-        }
-
-        public string Build() => string.Join(",", _options);
-    }
+#endregion
 }
