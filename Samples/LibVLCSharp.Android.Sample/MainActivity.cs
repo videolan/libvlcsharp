@@ -29,14 +29,17 @@ namespace LibVLCSharp.Android.Sample
             Core.Initialize();
 
             _libVLC = new LibVLC();
-            _mediaPlayer = new MediaPlayer(_libVLC);
+            _mediaPlayer = new MediaPlayer(_libVLC)
+            {
+                EnableHardwareDecoding = true
+            };
 
             _videoView = new VideoView(this) { MediaPlayer = _mediaPlayer };
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
             var media = new Media(_libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation);
-            var configuration = new MediaConfiguration();
-            configuration.EnableHardwareDecoding();
-            media.AddOption(configuration);
+            //var configuration = new MediaConfiguration();
+            //configuration.EnableHardwareDecoding();
+            //media.AddOption(configuration);
             _videoView.MediaPlayer.Play(media);
         }
 

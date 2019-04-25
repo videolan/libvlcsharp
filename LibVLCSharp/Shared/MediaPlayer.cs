@@ -664,7 +664,11 @@ namespace LibVLCSharp.Shared
         /// If playback was already started, this method has no effect
         /// </summary>
         /// <returns>true if successful</returns>
-        public bool Play() => Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
+        public bool Play()
+        {
+            Media.AddOption(Configuration);
+            return Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
+        }
 
         /// <summary>
         /// Set media and start playback
@@ -1662,6 +1666,26 @@ namespace LibVLCSharp.Shared
         /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
         internal void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
 
+        public bool EnableHardwareDecoding
+        {
+            get => Configuration.EnableHardwareDecoding;
+            set => Configuration.EnableHardwareDecoding = value;
+        }
+
+        public int FileCaching
+        {
+            get => Configuration.FileCaching;
+            set => Configuration.FileCaching = value;
+        }
+
+        public int NetworkCaching
+        {
+            get => Configuration.NetworkCaching;
+            set => Configuration.NetworkCaching = value;
+        }
+
+        MediaConfiguration Configuration = new MediaConfiguration();
+
 #if UNITY_ANDROID
         /// <summary>
         /// Retrieve a video frame from the Unity plugin.
@@ -1676,7 +1700,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
 
-#region Callbacks
+        #region Callbacks
 
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -1879,7 +1903,8 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#region events
+
+        #region events
 
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {
