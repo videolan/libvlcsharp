@@ -1666,18 +1666,27 @@ namespace LibVLCSharp.Shared
         /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
         internal void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
 
+        /// <summary>
+        /// Enable/disable hardware decoding in a crossplatform way.
+        /// </summary>
         public bool EnableHardwareDecoding
         {
             get => Configuration.EnableHardwareDecoding;
             set => Configuration.EnableHardwareDecoding = value;
         }
 
+        /// <summary>
+        /// Caching value for local files, in milliseconds [0 .. 60000ms]
+        /// </summary>
         public int FileCaching
         {
             get => Configuration.FileCaching;
             set => Configuration.FileCaching = value;
         }
 
+        /// <summary>
+        /// Caching value for network resources, in milliseconds [0 .. 60000ms]
+        /// </summary>
         public int NetworkCaching
         {
             get => Configuration.NetworkCaching;
