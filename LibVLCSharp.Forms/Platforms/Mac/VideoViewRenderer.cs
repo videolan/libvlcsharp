@@ -15,23 +15,23 @@ namespace LibVLCSharp.Forms.Platforms.Mac
         {
             base.OnElementChanged(e);
 
-            if (Control == null)
+            if (e.NewElement != null)
             {
-                SetNativeControl(new LibVLCSharp.Platforms.Mac.VideoView());
+                if (Control == null)
+                {
+                    SetNativeControl(new LibVLCSharp.Platforms.Mac.VideoView());
+
+                    e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
+                    if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                    {
+                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                    }
+                }
             }
 
             if (e.OldElement != null)
             {
                 e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
-            }
-
-            if (e.NewElement != null)
-            {
-                e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
-                {
-                    OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
-                }
             }
         }
 

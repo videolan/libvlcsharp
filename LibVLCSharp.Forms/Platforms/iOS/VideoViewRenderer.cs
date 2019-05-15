@@ -17,24 +17,24 @@ namespace LibVLCSharp.Forms.Platforms.iOS
         {
             base.OnElementChanged(e);
 
-            if(Control == null)
+            if (e.NewElement != null)
             {
-                SetNativeControl(new LibVLCSharp.Forms.Platforms.iOS.VideoView());
+                if (Control == null)
+                {
+                    SetNativeControl(new LibVLCSharp.Platforms.iOS.VideoView());
+
+                    e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
+                    if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                    {
+                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                    }
+                }
             }
 
             if (e.OldElement != null)
             {
                 e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
             }
-
-            if (e.NewElement != null)
-            {
-                e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
-                {
-                    OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
-                }
-            }    
         }
 
         private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
