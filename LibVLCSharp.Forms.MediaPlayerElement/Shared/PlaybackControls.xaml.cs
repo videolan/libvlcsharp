@@ -892,8 +892,7 @@ namespace LibVLCSharp.Forms.Shared
                 oldMediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
                 oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
-                //TODO Uncomment this line when https://code.videolan.org/videolan/LibVLCSharp/issues/123 will be resolved.
-                //oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
+                oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
 
             if (newMediaPlayer != null)
@@ -912,8 +911,7 @@ namespace LibVLCSharp.Forms.Shared
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
-                //TODO Uncomment this line when https://code.videolan.org/videolan/LibVLCSharp/issues/123 will be resolved.
-                //newMediaPlayer.Vout += MediaPlayer_VoutChanged;
+                newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
 
             Reset();

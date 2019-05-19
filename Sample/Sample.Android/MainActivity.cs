@@ -5,7 +5,7 @@ using Android.Views;
 using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Shared;
 
-namespace Sample.Droid
+namespace LibVLCSharp.Forms.Sample.MediaPlayerElement.Droid
 {
     /// <summary>
     /// Represents the main activity.

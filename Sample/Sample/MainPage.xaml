@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Sample"
+             xmlns:local="clr-namespace:LibVLCSharp.Forms.Sample.MediaPlayerElement"
              xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"            
              xmlns:vlc="clr-namespace:LibVLCSharp.Forms.Shared;assembly=LibVLCSharp.Forms.MediaPlayerElement"
-             x:Class="Sample.MainPage">
+             x:Class="LibVLCSharp.Forms.Sample.MediaPlayerElement.MainPage">
     <ContentPage.BindingContext>
         <local:MainViewModel />
     </ContentPage.BindingContext>

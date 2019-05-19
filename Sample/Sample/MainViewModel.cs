@@ -3,7 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using LibVLCSharp.Shared;
 
-namespace Sample
+namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 {
     /// <summary>
     /// Represents the main viewmodel.

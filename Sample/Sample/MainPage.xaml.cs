@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace Sample
+namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 {
     /// <summary>
     /// Represents the main page.
