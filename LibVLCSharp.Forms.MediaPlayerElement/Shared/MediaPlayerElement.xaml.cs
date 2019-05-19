@@ -68,7 +68,7 @@ namespace LibVLCSharp.Forms.Shared
         public VideoView VideoView
         {
             get => (VideoView)GetValue(VideoViewProperty);
-            set => SetValue(VideoViewProperty, value);
+            private set => SetValue(VideoViewProperty, value);
         }
 
         private void OnVideoViewChanged(VideoView videoView)
@@ -170,14 +170,25 @@ namespace LibVLCSharp.Forms.Shared
             {
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnSleep", m =>
                 {
-                    //TODO Manage application lifecycle
-                    //MediaPlayer?.Stop();
-                    //VideoView = null;
+                    var applicationProperties = Application.Current.Properties;
+                    applicationProperties["VLC_MediaPlayerElement_Position"] = MediaPlayer?.Position;
+                    applicationProperties["VLC_MediaPlayerElement_IsPlaying"] = MediaPlayer?.State == VLCState.Playing;
+                    MediaPlayer?.Stop();
+                    VideoView = null;
                 });
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnResume", m =>
                 {
-                    //VideoView = new VideoView();
-                    //MediaPlayer?.Play();
+                    VideoView = new VideoView();
+                    var mediaPlayer = MediaPlayer;
+                    if (mediaPlayer != null)
+                    {
+                        var applicationProperties = Application.Current.Properties;
+                        if (applicationProperties["VLC_MediaPlayerElement_IsPlaying"] is bool play && play)
+                        {
+                            mediaPlayer.Play();
+                            mediaPlayer.Position = applicationProperties["VLC_MediaPlayerElement_Position"] is float position ? position : 0;
+                        }
+                    }
                 });
             }
         }
