@@ -20,7 +20,7 @@
 
                 <ContentPresenter Grid.RowSpan="2" Content="{TemplateBinding VideoView}" />
                 <ContentPresenter Content="{TemplateBinding Content}" />
-                <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}"  />
+                <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
             </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>

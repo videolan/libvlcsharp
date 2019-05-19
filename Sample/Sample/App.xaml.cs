@@ -3,7 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
-namespace Sample
+namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 {
     /// <summary>
     /// Represents the sample application.
