@@ -177,11 +177,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
-  <Import Project="..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0-alpha1\build\VideoLAN.LibVLC.tvOS.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0-alpha1\build\VideoLAN.LibVLC.tvOS.targets')" />
+  <Import Project="..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0\build\VideoLAN.LibVLC.tvOS.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0\build\VideoLAN.LibVLC.tvOS.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0-alpha1\build\VideoLAN.LibVLC.tvOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0-alpha1\build\VideoLAN.LibVLC.tvOS.targets'))" />
+    <Error Condition="!Exists('..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0\build\VideoLAN.LibVLC.tvOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\VideoLAN.LibVLC.tvOS.3.2.0\build\VideoLAN.LibVLC.tvOS.targets'))" />
   </Target>
 </Project>
