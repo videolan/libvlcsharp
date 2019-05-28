@@ -28,7 +28,7 @@ namespace LibVLCSharp.GTK.Sample
 
                 //Starts playing
                 using (var media = new Media(libvlc,
-                    "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+                    "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4",
                     FromType.FromLocation))
                 {
                     mediaPlayer.Play(media);

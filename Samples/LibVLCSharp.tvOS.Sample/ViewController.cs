@@ -22,7 +22,7 @@ namespace LibVLCSharp.tvOS.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+            _videoView.MediaPlayer.Play(new Media(_libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation));
         }
     }
 }
