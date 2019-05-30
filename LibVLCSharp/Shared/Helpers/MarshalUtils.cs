@@ -471,6 +471,8 @@ namespace LibVLCSharp.Shared.Helpers
             foreach (var ptr in ptrs)
                 Marshal.FreeHGlobal(ptr);
         }
+
+        internal static int ToInt(this char c) => c - '0';
     }
 
     [AttributeUsage(AttributeTargets.Method)]

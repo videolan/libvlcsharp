@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibVLCSharp.Shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,6 +38,9 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_version")]
+            internal static extern IntPtr LibVLCVersion();
         }
 
 #if NET || NETSTANDARD
@@ -64,8 +68,25 @@ namespace LibVLCSharp.Shared
 #elif NET || NETSTANDARD
             InitializeDesktop(libvlcDirectoryPath);
 #endif
+#if !UWP10_0 && !NETSTANDARD1_1
+            EnsureVersionsMatch();
+#endif
         }
 
+#if !UWP10_0 && !NETSTANDARD1_1
+        /// <summary>
+        /// Checks whether the major version of LibVLC and LibVLCSharp match <para/>
+        /// Throws an NotSupportedException if the major versions mismatch
+        /// </summary>
+        static void EnsureVersionsMatch()
+        {
+            var libvlcMajorVersion = Native.LibVLCVersion().FromUtf8()[0].ToInt();
+            var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
+            if(libvlcMajorVersion != libvlcsharpMajorVersion)
+                throw new NotSupportedException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
+                    $"They must share the same major version number");
+        }
+#endif
 #if ANDROID
         static void InitializeAndroid()
         {
