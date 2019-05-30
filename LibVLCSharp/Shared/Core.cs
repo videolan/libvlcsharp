@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibVLCSharp.Shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,6 +38,9 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_get_version")]
+            internal static extern IntPtr LibVLCVersion();
         }
 
 #if NET || NETSTANDARD
@@ -50,6 +54,8 @@ namespace LibVLCSharp.Shared
         /// Load the native libvlc library (if necessary, depending on platform)
         /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
         /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
+        /// <para/> It may also throw a <see cref="VLCException"/> if the LibVLC and LibVLCSharp major versions do not match.
+        /// See https://code.videolan.org/videolan/LibVLCSharp/blob/master/VERSIONING.md for more info about the versioning strategy.
         /// </summary>
         /// <param name="libvlcDirectoryPath">The path to the directory that contains libvlc and libvlccore
         /// No need to specify unless running netstandard 1.1, or using custom location for libvlc
@@ -64,8 +70,25 @@ namespace LibVLCSharp.Shared
 #elif NET || NETSTANDARD
             InitializeDesktop(libvlcDirectoryPath);
 #endif
+#if !UWP10_0 && !NETSTANDARD1_1
+            EnsureVersionsMatch();
+#endif
         }
 
+#if !UWP10_0 && !NETSTANDARD1_1
+        /// <summary>
+        /// Checks whether the major version of LibVLC and LibVLCSharp match <para/>
+        /// Throws an NotSupportedException if the major versions mismatch
+        /// </summary>
+        static void EnsureVersionsMatch()
+        {
+            var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8().Split('.').First());
+            var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
+            if(libvlcMajorVersion != libvlcsharpMajorVersion)
+                throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
+                    $"They must share the same major version number");
+        }
+#endif
 #if ANDROID
         static void InitializeAndroid()
         {
