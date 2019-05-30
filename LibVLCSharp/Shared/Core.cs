@@ -80,7 +80,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         static void EnsureVersionsMatch()
         {
-            var libvlcMajorVersion = Native.LibVLCVersion().FromUtf8()[0].ToInt();
+            var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8().Split('.').First());
             var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
             if(libvlcMajorVersion != libvlcsharpMajorVersion)
                 throw new NotSupportedException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
