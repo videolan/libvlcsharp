@@ -54,6 +54,8 @@ namespace LibVLCSharp.Shared
         /// Load the native libvlc library (if necessary, depending on platform)
         /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
         /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
+        /// <para/> It may also throw a <see cref="VLCException"/> if the LibVLC and LibVLCSharp major versions do not match.
+        /// See https://code.videolan.org/videolan/LibVLCSharp/blob/master/VERSIONING.md for more info about the versioning strategy.
         /// </summary>
         /// <param name="libvlcDirectoryPath">The path to the directory that contains libvlc and libvlccore
         /// No need to specify unless running netstandard 1.1, or using custom location for libvlc
@@ -83,7 +85,7 @@ namespace LibVLCSharp.Shared
             var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8().Split('.').First());
             var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
             if(libvlcMajorVersion != libvlcsharpMajorVersion)
-                throw new NotSupportedException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
+                throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
                     $"They must share the same major version number");
         }
 #endif
