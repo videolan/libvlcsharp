@@ -1,3 +1,8 @@
+LibVLCSharp version 3.0.1
+=========================
+* Add libvlc/libvlcsharp version check
+* Add Xamarin.Forms 4.0 support for LibVLCSharp.Forms
+
 LibVLCSharp version 3.0.0
 =========================
 * First stable release: https://mfkl.github.io/libvlc/crossplatform/xamarin/forms/release/2019/05/13/LibVLCSharp-goes-stable.html
