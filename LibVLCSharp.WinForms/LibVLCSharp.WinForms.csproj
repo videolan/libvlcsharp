@@ -21,7 +21,7 @@
     </Description>
     <TargetFrameworks>net40</TargetFrameworks>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <PackageId>LibVLCSharp.WinForms</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>

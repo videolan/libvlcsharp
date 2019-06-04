@@ -27,7 +27,7 @@ Features:
     </Description>    
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.Forms.Platforms.GTK</RootNamespace>
-    <PackageVersion>3.0.0</PackageVersion>
+    <Version>3.0.1</Version>
     <PackageId>LibVLCSharp.Forms.GTK</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
