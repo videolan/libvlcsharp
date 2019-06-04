@@ -26,20 +26,37 @@ namespace LibVLCSharp.Shared
             set
             {
                 _enableHardwareDecoding = value;
-                if (_enableHardwareDecoding)
-                    _options[nameof(EnableHardwareDecoding)] = HardwareDecodingOptionString(_enableHardwareDecoding);
+                _options[nameof(EnableHardwareDecoding)] = HardwareDecodingOptionString(_enableHardwareDecoding);
             }
         }
 
+        int _fileCaching;
         /// <summary>
         /// Caching value for local files, in milliseconds [0 .. 60000ms]
         /// </summary>
-        public int FileCaching { get; set; } = -1;
+        public int FileCaching
+        {
+            get => _fileCaching;
+            set
+            {
+                _fileCaching = value;
+                _options[nameof(FileCaching)] = _fileCaching.ToString();
+            }
+        }
 
+        int _networkCaching;
         /// <summary>
         /// Caching value for network resources, in milliseconds [0 .. 60000ms]
         /// </summary>
-        public int NetworkCaching { get; set; } = -1;
+        public int NetworkCaching
+        {
+            get => _networkCaching;
+            set
+            {
+                _networkCaching = value;
+                _options[nameof(NetworkCaching)] = _networkCaching.ToString();
+            }
+        }
 
 #if ANDROID
         const string ENABLE_HW_ANDROID = ":codec=mediacodec_ndk";
@@ -85,6 +102,10 @@ namespace LibVLCSharp.Shared
 
         }
 
+        /// <summary>
+        /// Builds the current MediaConfiguration for consumption by libvlc (or storage)
+        /// </summary>
+        /// <returns></returns>
         public string[] Build() => _options.Values.ToArray();
     }
 }
