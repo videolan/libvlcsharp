@@ -2,29 +2,15 @@
   <PropertyGroup>
     <Title>LibVLCSharp.WPF</Title>
     <Summary>WPF integration for LibVLCSharp</Summary>
-    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
-    
-It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+  
+LibVLCSharp.WPF contains the integration with Windows Presentation Foundation (WPF).
 
-Supported platforms:
-- Xamarin.Android
-- Xamarin.iOS
-- Xamarin.Mac
-- Windows (WPF/WinForms)
-- Xamarin.Forms
-- .NET Standard 1.1
-- .NET Core
+This package contains the views that allows to display a video played with LibVLCSharp
+in a WPF app. It depends on LibVLCSharp.
 
-Features:
-- Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
-- HDMI passthrough for Audio HD codecs, like E-AC3, TrueHD or DTS-HD.
-- Stream to distant renderers, like Chromecast.
-- 360 video and 3D audio playback with viewpoint change.
-- Support for Ambisonics audio and more than 8 audio channels.
-- Subtitles size modification live.
-- Hardware decoding and display on all platforms.
-- DVD playback and menu navigation.
-    </Description>    
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
+    </Description> 
     <TargetFramework>net461</TargetFramework>
     <RootNamespace>LibVLCSharp.WPF</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>

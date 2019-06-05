@@ -2,16 +2,15 @@
   <PropertyGroup>
   <Title>LibVLCSharp.GTK</Title>
     <Summary>GTK integration for LibVLCSharp</Summary>
-    <Description>The official GTK# (mono/gtk-sharp) views for LibVLCSharp.
-
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+  
+LibVLCSharp.GTK contains the integration with GTK# (mono/gtk-sharp).
 This package contains the views that allows to display a video played with LibVLCSharp
 in a GTK# app.
 
-LibVLCSharp.Forms.Platforms.GTK depends on this package.
+This package depends on LibVLCSharp. If you need Xamarin.Forms support for your GTK app, see LibVLCSharp.Forms.Platforms.GTK (which depends on this package).
 
-This package depends on LibVLCSharp.
-
-libvlc needs to be installed separately.
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.GTK</RootNamespace>
