@@ -2,28 +2,14 @@
   <PropertyGroup>
     <Title>LibVLCSharp.Forms</Title>
     <Summary>Xamarin.Forms integration for LibVLCSharp</Summary>
-    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
-    
-It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+     
+LibVLCSharp.Forms contains the Xamarin.Forms support for LibVLCSharp through custom renderers. It depends on LibVLCSharp and brings Xamarin.Forms support for:
+- Android,
+- iOS,
+- Mac.
 
-Supported platforms:
-- Xamarin.Android
-- Xamarin.iOS
-- Xamarin.Mac
-- Windows (WPF/WinForms)
-- Xamarin.Forms
-- .NET Standard 1.1
-- .NET Core
-
-Features:
-- Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
-- HDMI passthrough for Audio HD codecs, like E-AC3, TrueHD or DTS-HD.
-- Stream to distant renderers, like Chromecast.
-- 360 video and 3D audio playback with viewpoint change.
-- Support for Ambisonics audio and more than 8 audio channels.
-- Subtitles size modification live.
-- Hardware decoding and display on all platforms.
-- DVD playback and menu navigation.
+Xamarin.Forms support for GTK and WPF are in separate packages. LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20</TargetFrameworks>
