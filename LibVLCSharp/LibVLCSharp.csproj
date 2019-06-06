@@ -25,7 +25,9 @@ This package also contains the views for the following platforms:
 - tvOS
 - UWP
 
-If you need Xamarin.Forms support, see LibVLCSharp.Forms. LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
+If you need Xamarin.Forms support, see LibVLCSharp.Forms. 
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
     <TargetFrameworks>netstandard2.0;netstandard1.1;net40;net471</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299</TargetFrameworks>
