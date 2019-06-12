@@ -1,3 +1,8 @@
+LibVLCSharp version 3.0.2
+=========================
+* Improve nuget docs
+* Fix iOS linker issue https://code.videolan.org/videolan/LibVLCSharp/issues/163
+
 LibVLCSharp version 3.0.1
 =========================
 * Add libvlc/libvlcsharp version check
