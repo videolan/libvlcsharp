@@ -1,16 +1,15 @@
 ﻿using LibVLCSharp.Shared;
 
 using LibVLCSharp.Forms.Platforms.iOS;
-using LibVLCSharp.Forms.Shared;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
-using UIKit;
-using System;
+using Foundation;
 
 [assembly: ExportRenderer(typeof(LibVLCSharp.Forms.Shared.VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.iOS
 {
+    [Preserve(AllMembers = true)]
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
     {
         protected override void OnElementChanged(ElementChangedEventArgs<LibVLCSharp.Forms.Shared.VideoView> e)
