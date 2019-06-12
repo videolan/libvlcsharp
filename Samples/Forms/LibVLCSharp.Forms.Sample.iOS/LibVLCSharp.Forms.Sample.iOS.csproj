@@ -50,6 +50,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -120,7 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.iOS">
-      <Version>3.0.0-alpha2</Version>
+      <Version>3.1.5</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="3.2.0.871581" />
   </ItemGroup>
