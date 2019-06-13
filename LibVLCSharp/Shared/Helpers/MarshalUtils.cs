@@ -44,6 +44,32 @@ namespace LibVLCSharp.Shared.Helpers
             public static extern void LibVLCFree(IntPtr ptr);
 
             const string Write = "w";
+
+            [DllImport(Constants.libSystem, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsprintf_apple(IntPtr buffer, IntPtr format, IntPtr args);
+
+            [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsprintf_linux(IntPtr buffer, IntPtr format, IntPtr args);
+
+            [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args);
+        }
+
+        internal static int vsprintf(IntPtr buffer, IntPtr format, IntPtr args)
+        {
+#if ANDROID
+            return Native.vsprintf_linux(buffer, format, args);
+#elif APPLE
+            return Native.vsprintf_apple(buffer, format, args);
+#else
+            if (PlatformHelper.IsWindows)
+                return Native.vsprintf_windows(buffer, format, args);
+            else if (PlatformHelper.IsMac)
+                return Native.vsprintf_apple(buffer, format, args);
+            else if (PlatformHelper.IsLinux)
+                return Native.vsprintf_linux(buffer, format, args);
+            return -1;
+#endif
         }
 
         /// <summary>

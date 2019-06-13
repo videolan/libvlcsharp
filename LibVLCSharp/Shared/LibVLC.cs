@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using LibVLCSharp.Shared.Helpers;
 using LibVLCSharp.Shared.Structures;
 
@@ -26,6 +27,15 @@ namespace LibVLCSharp.Shared
             if (obj.GetType() != this.GetType()) return false;
             return Equals((LibVLC) obj);
         }
+
+        LogCallback _logCallback;
+        readonly object _logLock = new object();
+
+        /// <summary>
+        /// The real log event handlers.
+        /// </summary>
+        static EventHandler<LogEventArgs> _log;
+
 #if NET || NETSTANDARD
         IntPtr _logFileHandle;
 #endif
@@ -63,12 +73,20 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCSetAppId(IntPtr libVLC, IntPtr id, IntPtr version, IntPtr icon);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_log_unset")]
+            internal static extern void LibVLCLogUnset(IntPtr libVLC);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_set_file")]
             internal static extern void LibVLCLogSetFile(IntPtr libVLC, IntPtr stream);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 CharSet = CharSet.Ansi, EntryPoint = "libvlc_log_get_context")]
             internal static extern void LibVLCLogGetContext(IntPtr ctx, out IntPtr module, out IntPtr file, out UIntPtr line);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_log_set")]
+            internal static extern void LibVLCLogSet(IntPtr libVLC, LogCallback cb, IntPtr data);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_module_description_list_release")]
@@ -299,8 +317,6 @@ namespace LibVLCSharp.Shared
                 idUtf8, versionUtf8, iconUtf8);
         }
 
-        
-
 #if NET || NETSTANDARD
         /// <summary>
         /// Close log file handle
@@ -338,6 +354,59 @@ namespace LibVLCSharp.Shared
             return filePtr;
         }
 #endif
+
+        void SetLog(LogCallback cb)
+        {
+            _logCallback = cb ?? throw new ArgumentException(nameof(cb));
+
+            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
+        }
+
+        void UnsetLog()
+        {
+            if (_logCallback == null) return;
+
+            _logCallback = null;
+            Native.LibVLCLogUnset(NativeReference);
+        }
+
+        int _logSubscriberCount = 0;
+        /// <summary>
+        /// The event that is triggered when a log is emitted from libVLC.
+        /// Listening to this event will discard the default logger in libvlc.
+        /// </summary>
+        public event EventHandler<LogEventArgs> Log
+        {
+            add
+            {
+                lock (_logLock)
+                {
+                    _log += value;
+                    if(_logSubscriberCount == 0)
+                    {
+                        SetLog(OnLogInternal);
+                    }
+                    _logSubscriberCount++;
+                }
+            }
+
+            remove
+            {
+                lock (_logLock)
+                {
+                    _log -= value;
+                    if (_logSubscriberCount > 0)
+                    {
+                        _logSubscriberCount--;
+                    }
+                    if (_logSubscriberCount == 0)
+                    {
+                        UnsetLog();
+                    }
+                }
+            }
+        }
+
         /// <summary>Returns a list of audio filters that are available.</summary>
         /// <returns>
         /// <para>a list of module descriptions. It should be freed with libvlc_module_description_list_release().</para>
@@ -551,6 +620,58 @@ namespace LibVLCSharp.Shared
             m => m.Build(),
             Native.LibVLCRendererDiscovererReleaseList);
 
+        [MonoPInvokeCallback(typeof(LogCallback))]
+        static void OnLogInternal(IntPtr data, LogLevel level, IntPtr ctx, IntPtr format, IntPtr args)
+        {
+            if (_log == null) return;
+
+            IntPtr buffer = IntPtr.Zero;
+            try
+            {
+                buffer = Marshal.AllocHGlobal(2048 + 1);
+                var count = MarshalUtils.vsprintf(buffer, format, args);
+                if (count > -1)
+                {
+                    var message = buffer.FromUtf8();
+                    GetLogContext(ctx, out var module, out var file, out var line);
+#if NET40
+                    Task.Factory.StartNew(() => _log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+#else
+                    Task.Run(() => _log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+#endif
+                }
+            }
+            finally
+            {
+                if(buffer != IntPtr.Zero)
+                    Marshal.FreeHGlobal(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Gets log message debug infos.
+        ///
+        /// This function retrieves self-debug information about a log message:
+        /// - the name of the VLC module emitting the message,
+        /// - the name of the source code module (i.e.file) and
+        /// - the line number within the source code module.
+        ///
+        /// The returned module name and file name will be NULL if unknown.
+        /// The returned line number will similarly be zero if unknown.
+        /// </summary>
+        /// <param name="logContext">The log message context (as passed to the <see cref="LogCallback"/>)</param>
+        /// <param name="module">The module name storage.</param>
+        /// <param name="file">The source code file name storage.</param>
+        /// <param name="line">The source code file line number storage.</param>
+        static void GetLogContext(IntPtr logContext, out string module, out string file, out uint? line)
+        {
+            Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
+
+            line = linePtr == UIntPtr.Zero ? null : (uint?)linePtr.ToUInt32();
+            module = modulePtr.FromUtf8();
+            file = filePtr.FromUtf8();
+        }
+
         /// <summary>Increments the native reference counter for this libvlc instance</summary>
         internal void Retain() => Native.LibVLCRetain(NativeReference);
 
@@ -605,5 +726,9 @@ namespace LibVLCSharp.Shared
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ExitCallback();
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void LogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext, IntPtr format, IntPtr args);
+
 #endregion
 }
