@@ -83,11 +83,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\..\packages\VideoLAN.LibVLC.iOS.3.3.1\build\VideoLAN.LibVLC.iOS.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.iOS.3.3.1\build\VideoLAN.LibVLC.iOS.targets')" />
+  <Import Project="..\..\packages\VideoLAN.LibVLC.iOS.3.1.5\build\VideoLAN.LibVLC.iOS.targets" Condition="Exists('..\..\packages\VideoLAN.LibVLC.iOS.3.1.5\build\VideoLAN.LibVLC.iOS.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\VideoLAN.LibVLC.iOS.3.3.1\build\VideoLAN.LibVLC.iOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\VideoLAN.LibVLC.iOS.3.3.1\build\VideoLAN.LibVLC.iOS.targets'))" />
+    <Error Condition="!Exists('..\..\packages\VideoLAN.LibVLC.iOS.3.1.5\build\VideoLAN.LibVLC.iOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\VideoLAN.LibVLC.iOS.3.1.5\build\VideoLAN.LibVLC.iOS.targets'))" />
   </Target>
 </Project>
