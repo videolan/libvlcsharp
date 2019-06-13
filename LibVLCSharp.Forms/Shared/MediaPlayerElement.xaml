@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibVLCSharp.Forms.Shared.MediaPlayerElement">
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="GestureRecognized" />
+                    <ClickGestureRecognizer Clicked="GestureRecognized" />
+                    <PanGestureRecognizer PanUpdated="GestureRecognized" />
+                    <PinchGestureRecognizer PinchUpdated="GestureRecognized" />
+                    <SwipeGestureRecognizer Swiped="GestureRecognized" />
+                </Grid.GestureRecognizers>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ContentPresenter Grid.RowSpan="2" Content="{TemplateBinding VideoView}" />
+                <ContentPresenter Content="{TemplateBinding Content}" />
+                <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
+            </Grid>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
+</ContentView>
