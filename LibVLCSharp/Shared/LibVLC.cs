@@ -29,8 +29,6 @@ namespace LibVLCSharp.Shared
 #if NET || NETSTANDARD
         IntPtr _logFileHandle;
 #endif
-        IntPtr _dialogCbsPtr;
-
         public override int GetHashCode()
         {
             return NativeReference.GetHashCode();
@@ -110,7 +108,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_set_callbacks")]
-            internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, IntPtr callbacks, IntPtr data);
+            internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, DialogCallbacks callbacks, IntPtr data);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
@@ -301,18 +299,7 @@ namespace LibVLCSharp.Shared
                 idUtf8, versionUtf8, iconUtf8);
         }
 
-        /// <summary>
-        /// Unset dialog callbacks if previously set
-        /// </summary>
-        public void UnsetDialogHandlers()
-        {
-            if (DialogHandlersSet)
-            {
-                Marshal.FreeHGlobal(_dialogCbsPtr);
-                _dialogCbsPtr = IntPtr.Zero;
-                Native.LibVLCDialogSetCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
-            }
-        }
+        
 
 #if NET || NETSTANDARD
         /// <summary>
@@ -437,7 +424,7 @@ namespace LibVLCSharp.Shared
             m => m.Build(),
             Native.LibVLCMediaDiscovererListRelease);
 
-        readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
+        #region DialogManagement
 
         /// <summary>
         /// Register callbacks in order to handle VLC dialogs. 
@@ -453,59 +440,107 @@ namespace LibVLCSharp.Shared
         public void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
             DisplayProgress displayProgress, UpdateProgress updateProgress)
         {
-            if (error == null) throw new ArgumentNullException(nameof(error));
-            if (login == null) throw new ArgumentNullException(nameof(login));
-            if (question == null) throw new ArgumentNullException(nameof(question));
-            if (displayProgress == null) throw new ArgumentNullException(nameof(displayProgress));
-            if (updateProgress == null) throw new ArgumentNullException(nameof(updateProgress));
+            _error = error ?? throw new ArgumentNullException(nameof(error));
+            _login = login ?? throw new ArgumentNullException(nameof(login));
+            _question = question ?? throw new ArgumentNullException(nameof(question));
+            _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
+            _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
-            var dialogCbs = new DialogCallbacks(
-                displayError: (data, title, text) => error(title, text),
-                displayLogin: (data, id, title, text, username, store) =>
-                {
-                    var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId(id));
-                    _cts[id] = cts;
-                    login(dlg, title, text, username, store, cts.Token);
-                },
-                displayQuestion: (data, id, title, text, type, cancelText, firstActionText, secondActionText) =>
-                {
-                    var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId(id));
-                    _cts[id] = cts;
-                    question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
-                },
-                displayProgress: (data, id, title, text, indeterminate, position, cancelText) =>
-                {
-                    var cts = new CancellationTokenSource();
-                    var dlg = new Dialog(new DialogId(id));
-                    _cts[id] = cts;
-                    displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
-                },
-                cancel: (data, id) =>
-                {
-                    if (_cts.TryGetValue(id, out var token))
-                    {
-                        token.Cancel();
-                        _cts.Remove(id);
-                    }
-                },
-                updateProgress: (data, id, position, text) =>
-                {
-                    var dlg = new Dialog(new DialogId(id));
-                    updateProgress(dlg, position, text);
-                });
+            _dialogCbs = new DialogCallbacks(Error, Login, Question, DisplayProgress, Cancel, UpdateProgress);
+            Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbs, IntPtr.Zero);
+        }
 
-            _dialogCbsPtr = Marshal.AllocHGlobal(MarshalUtils.SizeOf(dialogCbs));
-            Marshal.StructureToPtr(dialogCbs, _dialogCbsPtr, true);
-            Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbsPtr, IntPtr.Zero);
+        /// <summary>
+        /// Unset dialog callbacks if previously set
+        /// </summary>
+        public void UnsetDialogHandlers()
+        {
+            if (DialogHandlersSet)
+            {
+                _dialogCbs = default;
+                Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbs, IntPtr.Zero);
+                _error = null;
+                _login = null;
+                _question = null;
+                _displayProgress = null;
+                _updateProgress = null;
+            }
         }
 
         /// <summary>
         /// True if dialog handlers are set
         /// </summary>
-        public bool DialogHandlersSet => _dialogCbsPtr != IntPtr.Zero;
+        public bool DialogHandlersSet => _dialogCbs.DisplayLogin != IntPtr.Zero;
 
+        DialogCallbacks _dialogCbs;
+        static DisplayError _error;
+        static DisplayLogin _login;
+        static DisplayQuestion _question;
+        static DisplayProgress _displayProgress;
+        static UpdateProgress _updateProgress;
+        static readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
+
+        [MonoPInvokeCallback(typeof(DisplayErrorCallback))]
+        static void Error(IntPtr data, string title, string text)
+        {
+            _error?.Invoke(title, text);
+        }
+
+        [MonoPInvokeCallback(typeof(DisplayLoginCallback))]
+        static void Login(IntPtr data, IntPtr dialogId, string title, string text, string defaultUsername, bool askStore)
+        {
+            if (_login == null) return;
+
+            var cts = new CancellationTokenSource();
+            var dlg = new Dialog(new DialogId(dialogId));
+            _cts[dialogId] = cts;
+            _login(dlg, title, text, defaultUsername, askStore, cts.Token);
+        }
+        
+        [MonoPInvokeCallback(typeof(DisplayQuestionCallback))]
+        static void Question(IntPtr data, IntPtr dialogId, string title, string text, DialogQuestionType type, 
+            string cancelText, string firstActionText, string secondActionText)
+        {
+            if (_question == null) return;
+
+            var cts = new CancellationTokenSource();
+            var dlg = new Dialog(new DialogId(dialogId));
+            _cts[dialogId] = cts;
+            _question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
+        }
+
+        [MonoPInvokeCallback(typeof(DisplayProgressCallback))]
+        static void DisplayProgress(IntPtr data, IntPtr dialogId, string title, string text, bool indeterminate, float position, string cancelText)
+        {
+            if (_displayProgress == null) return;
+
+            var cts = new CancellationTokenSource();
+            var dlg = new Dialog(new DialogId(dialogId));
+            _cts[dialogId] = cts;
+            _displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
+        }
+
+        [MonoPInvokeCallback(typeof(CancelCallback))]
+        static void Cancel(IntPtr data, IntPtr dialogId)
+        {
+            if (_cts.TryGetValue(dialogId, out var token))
+            {
+                token.Cancel();
+                _cts.Remove(dialogId);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(UpdateProgressCallback))]
+        static void UpdateProgress(IntPtr data, IntPtr dialogId, float position, string text)
+        {
+            if (_updateProgress == null) return;
+
+            var dlg = new Dialog(new DialogId(dialogId));
+            _updateProgress(dlg, position, text);
+        }
+
+        #endregion
+        
         /// <summary>
         /// List of available renderers used to create RendererDiscoverer objects
         /// Note: LibVLC 3.0.0 and later
