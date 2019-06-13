@@ -666,7 +666,7 @@ namespace LibVLCSharp.Shared
         /// <returns>true if successful</returns>
         public bool Play()
         {
-            Media.AddOption(Configuration);
+            Media?.AddOption(Configuration);
             return Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
         }
 
