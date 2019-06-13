@@ -205,24 +205,24 @@ namespace LibVLCSharp.Shared
         internal DialogCallbacks(DisplayErrorCallback displayError, DisplayLoginCallback displayLogin, DisplayQuestionCallback displayQuestion,
             DisplayProgressCallback displayProgress, CancelCallback cancel, UpdateProgressCallback updateProgress)
         {
-            DisplayError = displayError;
-            DisplayLogin = displayLogin;
-            DisplayQuestion = displayQuestion;
-            DisplayProgress = displayProgress;
-            Cancel = cancel;
-            UpdateProgress = updateProgress;
+            DisplayError = Marshal.GetFunctionPointerForDelegate(displayError);
+            DisplayLogin = Marshal.GetFunctionPointerForDelegate(displayLogin);
+            DisplayQuestion = Marshal.GetFunctionPointerForDelegate(displayQuestion);
+            DisplayProgress = Marshal.GetFunctionPointerForDelegate(displayProgress);
+            Cancel = Marshal.GetFunctionPointerForDelegate(cancel);
+            UpdateProgress = Marshal.GetFunctionPointerForDelegate(updateProgress);
         }
 
-        internal readonly DisplayErrorCallback DisplayError;
+        internal readonly IntPtr DisplayError;
 
-        internal readonly DisplayLoginCallback DisplayLogin;
+        internal readonly IntPtr DisplayLogin;
 
-        internal readonly DisplayQuestionCallback DisplayQuestion;
+        internal readonly IntPtr DisplayQuestion;
 
-        internal readonly DisplayProgressCallback DisplayProgress;
+        internal readonly IntPtr DisplayProgress;
 
-        internal readonly CancelCallback Cancel;
+        internal readonly IntPtr Cancel;
 
-        internal readonly UpdateProgressCallback UpdateProgress;
+        internal readonly IntPtr UpdateProgress;
     }
 }
