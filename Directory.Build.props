@@ -12,13 +12,13 @@
     <DefineConstants>$(DefineConstants);NET471;NET</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <DefineConstants>$(DefineConstants);MONO;IOS;COCOA</DefineConstants>
+    <DefineConstants>$(DefineConstants);MONO;IOS;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
-    <DefineConstants>$(DefineConstants);MONO;MAC;COCOA</DefineConstants>
+    <DefineConstants>$(DefineConstants);MONO;MAC;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
-    <DefineConstants>$(DefineConstants);MONO;TVOS;COCOA</DefineConstants>
+    <DefineConstants>$(DefineConstants);MONO;TVOS;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>

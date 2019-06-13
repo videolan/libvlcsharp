@@ -64,7 +64,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
-#if COCOA || NET || NETSTANDARD
+#if APPLE || NET || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
@@ -701,7 +701,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
-#if COCOA || NET || NETSTANDARD
+#if APPLE || NET || NETSTANDARD
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
