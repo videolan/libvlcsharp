@@ -21,6 +21,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+# intermediary build output for mediaelement android project to circumvent path too long exception
+tmp/
 
 # Visual Studio 2015 cache/options directory
 .vs/
