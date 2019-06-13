@@ -61,15 +61,12 @@ namespace LibVLCSharp.Shared
 #if ANDROID
         const string ENABLE_HW_ANDROID = ":codec=mediacodec_ndk";
         const string DISABLE_HW_ANDROID = "";
-#elif IOS || TVOS
-        const string ENABLE_HW_IOS = "codec";
-        const string DISABLE_HW_IOS = "";
 #endif
+        const string ENABLE_HW_APPLE = ":videotoolbox";
         const string ENABLE_HW_WINDOWS = ":avcodec-hw=d3d11va";
-        const string ENABLE_HW_MAC = ":videotoolbox";
 
-        const string DISABLE_HW_WINDOWS =":avcodec-hw=none";
-        const string DISABLE_HW_MAC = ":no-videotoolbox";
+        const string DISABLE_HW_APPLE = ":no-videotoolbox";
+        const string DISABLE_HW_WINDOWS = ":avcodec-hw=none";
 
         private string HardwareDecodingOptionString(bool enable)
         {
@@ -77,27 +74,29 @@ namespace LibVLCSharp.Shared
             {
 #if ANDROID
                 return ENABLE_HW_ANDROID;
-#elif IOS || TVOS
-                return ENABLE_HW_IOS;
-#endif
+#elif APPLE
+                return ENABLE_HW_APPLE;
+#else
                 if (PlatformHelper.IsWindows)
                     return ENABLE_HW_WINDOWS;
                 if (PlatformHelper.IsMac)
-                    return ENABLE_HW_MAC;
+                    return ENABLE_HW_APPLE;
                 return string.Empty;
+#endif
             }
             else
             {
 #if ANDROID
                 return DISABLE_HW_ANDROID;
-#elif IOS || TVOS
-                return DISABLE_HW_IOS;
-#endif
+#elif APPLE
+                return DISABLE_HW_APPLE;
+#else
                 if (PlatformHelper.IsWindows)
                     return DISABLE_HW_WINDOWS;
                 if (PlatformHelper.IsMac)
-                    return DISABLE_HW_MAC;
+                    return DISABLE_HW_APPLE;
                 return string.Empty;
+#endif
             }
 
         }
