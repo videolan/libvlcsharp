@@ -18,7 +18,7 @@ namespace LibVLCSharp.Shared
 
         bool _enableHardwareDecoding;
         /// <summary>
-        /// Enable/disable hardware decoding in a crossplatform way.
+        /// Enable/disable hardware decoding (crossplatform).
         /// </summary>
         public bool EnableHardwareDecoding
         {
@@ -104,7 +104,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Builds the current MediaConfiguration for consumption by libvlc (or storage)
         /// </summary>
-        /// <returns></returns>
-        public string[] Build() => _options.Values.ToArray();
+        /// <returns>Configured libvlc options as strings</returns>
+        public string[] Build() => _options.Values.Where(option => !string.IsNullOrEmpty(option)).ToArray();
     }
 }

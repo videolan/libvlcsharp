@@ -309,8 +309,7 @@ namespace LibVLCSharp.Shared
 
             foreach(var option in mediaConfiguration.Build())
             {
-                if(!string.IsNullOrWhiteSpace(option))
-                    AddOption(option);
+                AddOption(option);
             }
         }
 
