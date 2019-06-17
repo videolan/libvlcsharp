@@ -27,6 +27,36 @@ If you encounter UI issues with the WPF VideoView in your application, you may b
 For context and explanations of the tradeoffs, see this [PR](https://github.com/videolan/libvlcsharp/pull/1).
 Issues related to airspace are tracked on our GitLab with the [airspace](https://code.videolan.org/videolan/LibVLCSharp/issues?scope=all&utf8=%E2%9C%93&state=all&label_name[]=airspace) tag.
 
+## WPF control specific stuffs
+
+Due to the Airspace issue, you cannot easily draw things over the video in WPF, unless you have a hack like the one that is included in this project.
+This hack means that the WPF control works a little differently than other platform's.
+
+If you want to place something over the control, you would probably write code like this in other platforms:
+
+```xml
+<Grid>
+    <vlc:VideoView x:Name="VideoView" />
+    <Button Click="Play_Clicked">PLAY</Button>
+</Grid>
+```
+
+But for WPF, you would rather need something like this:
+
+```xml
+<Grid>
+    <vlc:VideoView x:Name="VideoView">
+        <Button Click="Play_Clicked">PLAY</Button>
+    </vlc:VideoView>
+</Grid>
+```
+
+The `VideoView` appears as a container in your XAML (you can set its `Content` property from code too), but it is really a detached window over your video control.
+
+The DataContext of the `VideoView` is propagated to your overlay content. This means you can inherit the `DataContext` environment from the outside of your `VideoView`
+
+*Note : This behavior is specific to the LibVLCSharp WPF implementation and is not (yet?) available to LibVLCSharp.Forms.Platforms.WPF*
+
 ## Why should I reference this package in my project?
 
 If you want to create a video application using WPF and any supported .NET language, this package is made for you.
