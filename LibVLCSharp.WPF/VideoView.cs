@@ -60,8 +60,7 @@ namespace LibVLCSharp.WPF
                 {
                     ForegroundWindow = new ForegroundWindow(windowsFormsHost)
                     {
-                        Content = ViewContent,
-                        DataContext = windowsFormsHost.DataContext
+                        Content = ViewContent
                     };
                 }
 
