@@ -30,9 +30,17 @@ namespace LibVLCSharp.WPF
         {
             InitializeComponent();
 
+            this.DataContext = background.DataContext;
+
             _bckgnd = background;
+            _bckgnd.DataContextChanged += Background_DataContextChanged;
             _bckgnd.Loaded += Background_Loaded;
             _bckgnd.Unloaded += Background_Unloaded;
+        }
+
+        void Background_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            this.DataContext = e.NewValue;
         }
 
         void Background_Unloaded(object sender, RoutedEventArgs e)
