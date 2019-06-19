@@ -54,14 +54,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
                 "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi",
                 FromType.FromLocation);
 
-            if(Device.RuntimePlatform == Device.Android)
-            {
-                var mediaConfiguration = new MediaConfiguration();
-                mediaConfiguration.EnableHardwareDecoding();
-                media.AddOption(mediaConfiguration);
-            }
-
-            MediaPlayer = new MediaPlayer(media);
+            MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
             MediaPlayer.Play();
         }
     }
