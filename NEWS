@@ -1,3 +1,10 @@
+LibVLCSharp version 3.0.3
+=========================
+* Fix AOT for dialogs callbacks on iOS device https://code.videolan.org/videolan/LibVLCSharp/issues/166
+* WPF: Propagate DataContext to enable databinding for VideoView's child elements
+* MediaConfiguration: Add crossplatform configuration API to enable hardware decoding and a couple other settings https://code.videolan.org/videolan/LibVLCSharp/issues/132
+* Add back libvlc logging support, on all platforms and runtimes.
+
 LibVLCSharp version 3.0.2
 =========================
 * Improve nuget docs
