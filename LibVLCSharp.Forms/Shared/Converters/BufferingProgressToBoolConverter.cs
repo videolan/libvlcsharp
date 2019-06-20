@@ -16,7 +16,7 @@ namespace LibVLCSharp.Forms.Shared.Converters
         /// <param name="targetType">The type of the target property.</param>
         /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
         /// <param name="culture">The culture of the conversion.</param>
-        /// <returns>true if value is not equals to 0, false otherwise</returns>
+        /// <returns>true if value is not equals to 0 or 1, false otherwise</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is double d && d != 0 && d != 1;
