@@ -775,7 +775,7 @@ namespace LibVLCSharp.Forms.Shared
                             cancellationTokenSource.Cancel();
                         }
                         var rendererName = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
-                            null, null, renderers.OrderBy(r => r.Name).Select(r => r.Name).ToArray());
+                            null, null, renderers.Select(r => r.Name).OrderBy(r => r).ToArray());
                         if (rendererName != null)
                         {
                             mediaPlayer.SetRenderer(renderers.First(r => r.Name == rendererName));
