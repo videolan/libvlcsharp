@@ -40,7 +40,7 @@ namespace LibVLCSharp.Forms.Shared
 
             IconFontFamily = Resources[nameof(IconFontFamily)] as OnPlatform<string>;
             ButtonColor = (Color)(Resources[nameof(ButtonColor)] ?? Color.Transparent);
-            ForeColor = (Color)(Resources[nameof(ForeColor)] ?? Color.White);
+            Foreground = (Color)(Resources[nameof(Foreground)] ?? Color.White);
             MainColor = (Color)(Resources[nameof(MainColor)] ?? Color.Transparent);
             AudioTracksSelectionButtonStyle = Resources[nameof(AudioTracksSelectionButtonStyle)] as Style;
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
@@ -106,17 +106,17 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Identifies the <see cref="ForeColor"/> dependency property.
+        /// Identifies the <see cref="Foreground"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty ForeColorProperty = BindableProperty.Create(nameof(ForeColor), typeof(Color),
+        public static readonly BindableProperty ForegroundProperty = BindableProperty.Create(nameof(Foreground), typeof(Color),
             typeof(PlaybackControls));
         /// <summary>
         /// Gets or sets the button color.
         /// </summary>
-        public Color ForeColor
+        public Color Foreground
         {
-            get => (Color)GetValue(ForeColorProperty);
-            set => SetValue(ForeColorProperty, value);
+            get => (Color)GetValue(ForegroundProperty);
+            set => SetValue(ForegroundProperty, value);
         }
 
         /// <summary>

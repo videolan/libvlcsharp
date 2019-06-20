@@ -7,7 +7,7 @@
     <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
 
-    <Color x:Key="ForeColor">White</Color>
+    <Color x:Key="Foreground">White</Color>
     <Color x:Key="MainColor">#E57A00</Color>
     <Color x:Key="ButtonColor">#A0E57A00</Color>
 
@@ -18,7 +18,7 @@
     <Style x:Key="ErrorMessageStyle" TargetType="Label">
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="LineBreakMode" Value="WordWrap" />
-        <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
     </Style>
 
     <Style x:Key="BufferingProgressBarStyle" TargetType="ProgressBar">
@@ -34,7 +34,7 @@
     <Style x:Key="SeekBarStyle" TargetType="Slider">
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="IsEnabled" Value="False" />
-        <Setter Property="MinimumTrackColor" Value="{TemplateBinding ForeColor}" />
+        <Setter Property="MinimumTrackColor" Value="{TemplateBinding Foreground}" />
         <Setter Property="Maximum" Value="1000" />
         <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
         <Setter Property="VerticalOptions" Value="Center" />
@@ -55,7 +55,7 @@
     <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
         <Setter Property="HorizontalOptions" Value="End" />
         <Setter Property="FontSize" Value="Small" />
-        <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
@@ -72,7 +72,7 @@
         <Setter Property="HorizontalOptions" Value="Center" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="TextColor" Value="{TemplateBinding ForeColor}" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="WidthRequest" Value="40" />
         <Style.Triggers>
