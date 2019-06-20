@@ -12,8 +12,8 @@
     <Color x:Key="ButtonColor">#A0E57A00</Color>
 
     <OnPlatform x:Key="IconFontFamily" x:TypeArguments="x:String"
-                Android = "MaterialIcons-Regular.ttf#Material Icons"
-                iOS = "Material Icons" />
+                Android = "PlaybackControlsIcons.ttf#PlaybackControlsIcons"
+                iOS = "PlaybackControlsIcons" />
 
     <Style x:Key="ErrorMessageStyle" TargetType="Label">
         <Setter Property="HorizontalTextAlignment" Value="Center" />
