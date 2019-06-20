@@ -13,7 +13,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFrameworks>net40</TargetFrameworks>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
     <PackageId>LibVLCSharp.WinForms</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>

@@ -10,7 +10,7 @@ Xamarin.Forms support for other platforms are in different packages (namely LibV
     </Description>   
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.Forms.Platforms.WPF</RootNamespace>
-    <Version>3.0.2</Version>
+    <Version>3.0.3</Version>
     <PackageId>LibVLCSharp.Forms.WPF</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
