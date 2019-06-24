@@ -328,12 +328,12 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_get_channel")]
-            internal static extern int LibVLCAudioGetChannel(IntPtr mediaPlayer);
+            internal static extern AudioOutputChannel LibVLCAudioGetChannel(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_set_channel")]
-            internal static extern int LibVLCAudioSetChannel(IntPtr mediaPlayer, int channel);
+            internal static extern int LibVLCAudioSetChannel(IntPtr mediaPlayer, AudioOutputChannel channel);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1179,14 +1179,14 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get current audio channel.
         /// </summary>
-        public int Channel => Native.LibVLCAudioGetChannel(NativeReference);
+        public AudioOutputChannel Channel => Native.LibVLCAudioGetChannel(NativeReference);
 
         /// <summary>
         /// Set current audio channel.
         /// </summary>
         /// <param name="channel">the audio channel</param>
         /// <returns></returns>
-        public bool SetChannel(int channel) => Native.LibVLCAudioSetChannel(NativeReference, channel) == 0;
+        public bool SetChannel(AudioOutputChannel channel) => Native.LibVLCAudioSetChannel(NativeReference, channel) == 0;
 
         public override bool Equals(object obj)
         {
