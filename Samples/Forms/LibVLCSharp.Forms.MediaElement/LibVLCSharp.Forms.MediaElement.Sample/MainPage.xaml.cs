@@ -14,5 +14,11 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
         {
             InitializeComponent();
         }
+
+        void OnAppearing(object sender, System.EventArgs e)
+        {
+            base.OnAppearing();
+            ((MainViewModel)BindingContext).OnAppearing();
+        }
     }
 }
