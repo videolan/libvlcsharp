@@ -1,22 +1,23 @@
-﻿using System.Windows.Input;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using System.ComponentModel;
 using LibVLCSharp.Shared;
-using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 {
     /// <summary>
     /// Represents the main viewmodel.
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Property changed event
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Initializes a new instance of <see cref="MainViewModel"/> class.
         /// </summary>
         public MainViewModel()
         {
-            InitCommand = new RelayCommand(Init);
         }
 
         private LibVLC _libVLC;
@@ -40,11 +41,9 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
         }
 
         /// <summary>
-        /// Gets the initialization command.
+        /// Initialize LibVLC and playback when page appears
         /// </summary>
-        public ICommand InitCommand { get; }
-
-        private void Init()
+        public void OnAppearing()
         {
             Core.Initialize();
 
@@ -57,5 +56,15 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
             MediaPlayer.Play();
         }
+
+        private void Set<T>(string propertyName, ref T field, T value)
+        {
+            if (field == null && value != null || field != null && !field.Equals(value))
+            {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
     }
 }
