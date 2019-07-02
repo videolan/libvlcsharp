@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms> 
     </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.6" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.7.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
