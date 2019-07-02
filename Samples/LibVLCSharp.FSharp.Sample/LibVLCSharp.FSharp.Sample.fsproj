@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.4" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.7.1" />
   </ItemGroup>
 
   <ItemGroup>
