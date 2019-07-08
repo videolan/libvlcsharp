@@ -72,7 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\PlaybackControlsIcons.ttf" />
+    <AndroidAsset Include="Assets\FontAwesome5Brands.otf" />
+    <AndroidAsset Include="Assets\FontAwesome5Regular.otf" />
+    <AndroidAsset Include="Assets\FontAwesome5Solid.otf" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
