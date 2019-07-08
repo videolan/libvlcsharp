@@ -183,10 +183,10 @@ namespace LibVLCSharp.Forms.Shared
                     if (mediaPlayer != null)
                     {
                         var applicationProperties = Application.Current.Properties;
-                        if (applicationProperties["VLC_MediaPlayerElement_IsPlaying"] is bool play && play)
+                        if (applicationProperties.TryGetValue("VLC_MediaPlayerElement_IsPlaying", out var play) && play is true)
                         {
                             mediaPlayer.Play();
-                            mediaPlayer.Position = applicationProperties["VLC_MediaPlayerElement_Position"] is float position ? position : 0;
+                            mediaPlayer.Position = applicationProperties.TryGetValue("VLC_MediaPlayerElement_Position", out var position) && position is float p ? p : 0;
                         }
                     }
                 });
