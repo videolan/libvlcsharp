@@ -3,6 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:converters="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
                     xmlns:effects="clr-namespace:LibVLCSharp.Forms.Shared.Effects"
+                    xmlns:fontawesome="clr-namespace:FontAwesome"
                     x:Class="LibVLCSharp.Forms.Shared.Themes.Generic">
     <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
@@ -10,11 +11,37 @@
     <Color x:Key="Foreground">White</Color>
     <Color x:Key="MainColor">#E57A00</Color>
     <Color x:Key="ButtonColor">#A0E57A00</Color>
+    
+    <OnPlatform x:TypeArguments="x:String"
+                          x:Key="FontAwesomeBrands">
+        <On Platform="Android"
+            Value="FontAwesome5Brands.otf#Regular" />
+        <On Platform="iOS"
+            Value="FontAwesome5Brands-Regular" />
+        <On Platform="UWP"
+            Value="/Assets/FontAwesome5Brands.otf#Font Awesome 5 Brands" />
+    </OnPlatform>
 
-    <OnPlatform x:Key="IconFontFamily" x:TypeArguments="x:String"
-                Android = "PlaybackControlsIcons.ttf#PlaybackControlsIcons"
-                iOS = "PlaybackControlsIcons" />
+    <OnPlatform x:TypeArguments="x:String"
+                x:Key="FontAwesomeSolid">
+        <On Platform="Android"
+            Value="FontAwesome5Solid.otf#Regular" />
+        <On Platform="iOS"
+            Value="FontAwesome5Free-Solid" />
+        <On Platform="UWP"
+            Value="/Assets/FontAwesome5Solid.otf#Font Awesome 5 Free" />
+    </OnPlatform>
 
+    <OnPlatform x:TypeArguments="x:String"
+                x:Key="FontAwesomeRegular">
+        <On Platform="Android"
+            Value="FontAwesome5Regular.otf#Regular" />
+        <On Platform="iOS"
+            Value="FontAwesome5Free-Regular" />
+        <On Platform="UWP"
+            Value="/Assets/FontAwesome5Regular.otf#Font Awesome 5 Free" />
+    </OnPlatform>
+    
     <Style x:Key="ErrorMessageStyle" TargetType="Label">
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="LineBreakMode" Value="WordWrap" />
@@ -66,7 +93,7 @@
     <Style x:Key="ButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{TemplateBinding ButtonColor}" />
         <Setter Property="CornerRadius" Value="20" />
-        <Setter Property="FontFamily" Value="{TemplateBinding IconFontFamily}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeSolid}" />
         <Setter Property="FontSize" Value="30" />
         <Setter Property="HeightRequest" Value="40" />
         <Setter Property="HorizontalOptions" Value="Center" />
@@ -87,7 +114,8 @@
 
     <Style x:Key="AudioTracksSelectionButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="False" />
-        <Setter Property="Text" Value="&#xe3a1;" />
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeRegular}" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.FileAudio}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="AudioSelectionAvailabilityStates">
@@ -104,7 +132,8 @@
 
     <Style x:Key="CastButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="False" />
-        <Setter Property="Text" Value="&#xe307;" />
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeBrands}" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Chromecast}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CastAvailabilityStates">
@@ -121,7 +150,8 @@
 
     <Style x:Key="ClosedCaptionsSelectionButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="False" />
-        <Setter Property="Text" Value="&#xe01c;" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.ClosedCaptioning}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesomeRegular}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="ClosedCaptionsSelectionAvailabilityStates">
@@ -138,17 +168,17 @@
 
     <Style x:Key="PlayPauseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="CornerRadius" Value="27" />
-        <Setter Property="FontSize" Value="48" />
+        <Setter Property="FontSize" Value="36" />
         <Setter Property="HeightRequest" Value="54" />
         <Setter Property="WidthRequest" Value="54" />
-        <Setter Property="Text" Value="&#xe037;" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Play}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="PlayPauseStates">
                     <VisualState x:Name="PlayState" />
                     <VisualState x:Name="PauseState">
                         <VisualState.Setters>
-                            <Setter Property="Text" Value="&#xe034;" />
+                            <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Pause}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -166,12 +196,12 @@
 
     <Style x:Key="StopButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="{TemplateBinding IsStopButtonVisible}" />
-        <Setter Property="Text" Value="&#xe047;" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Stop}" />
     </Style>
 
     <Style x:Key="ZoomButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="{TemplateBinding IsZoomButtonVisible}" />
-        <Setter Property="Text" Value="&#xe85b;" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.ExpandArrowsAlt}" />
     </Style>
 
     <Style x:Key="PlaybackControlsStyle" TargetType="TemplatedView">

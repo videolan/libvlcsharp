@@ -50,5 +50,11 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>LibVLCSharp.Forms.Sample</string>
+    <key>UIAppFonts</key>
+    <array>
+        <string>FontAwesome5Brands.otf</string>
+        <string>FontAwesome5Regular.otf</string>
+        <string>FontAwesome5Solid.otf</string>
+    </array>
 </dict>
 </plist>

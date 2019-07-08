@@ -38,7 +38,6 @@ namespace LibVLCSharp.Forms.Shared
         {
             InitializeComponent();
 
-            IconFontFamily = Resources[nameof(IconFontFamily)] as OnPlatform<string>;
             ButtonColor = (Color)(Resources[nameof(ButtonColor)] ?? Color.Transparent);
             Foreground = (Color)(Resources[nameof(Foreground)] ?? Color.White);
             MainColor = (Color)(Resources[nameof(MainColor)] ?? Color.Transparent);
@@ -76,20 +75,6 @@ namespace LibVLCSharp.Forms.Shared
         private bool FadeOutEnabled { get; set; } = true;
         private Timer SeekBarTimer { get; set; }
         private bool SeekBarTimerEnabled { get; set; }
-
-        /// <summary>
-        /// Identifies the <see cref="IconFontFamily"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IconFontFamilyProperty = BindableProperty.Create(nameof(IconFontFamily), typeof(string),
-            typeof(PlaybackControls));
-        /// <summary>
-        /// Gets or sets the icon font family.
-        /// </summary>
-        public string IconFontFamily
-        {
-            get => (string)GetValue(IconFontFamilyProperty);
-            set => SetValue(IconFontFamilyProperty, value);
-        }
 
         /// <summary>
         /// Identifies the <see cref="ButtonColor"/> dependency property.
