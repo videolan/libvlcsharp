@@ -199,8 +199,8 @@
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Stop}" />
     </Style>
 
-    <Style x:Key="ZoomButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-        <Setter Property="IsVisible" Value="{TemplateBinding IsZoomButtonVisible}" />
+    <Style x:Key="AspectRatioButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsAspectRatioButtonVisible}" />
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.ExpandArrowsAlt}" />
     </Style>
 
@@ -230,7 +230,7 @@
                             </StackLayout>
                             <ContentPresenter Content="{TemplateBinding ButtonBarEndArea}" HorizontalOptions="End" VerticalOptions="Center" />
                             <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
-                                <Button x:Name="ZoomButton" Style="{TemplateBinding ZoomButtonStyle}" />
+                                <Button x:Name="AspectRatioButton" Style="{TemplateBinding AspectRatioButtonStyle}" />
                                 <Button x:Name="CastButton" Style="{TemplateBinding CastButtonStyle}" />
                             </StackLayout>
                         </StackLayout>
