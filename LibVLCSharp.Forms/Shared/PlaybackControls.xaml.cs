@@ -52,11 +52,9 @@ namespace LibVLCSharp.Forms.Shared
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
             StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
-            ZoomButtonStyle = Resources[nameof(ZoomButtonStyle)] as Style;
+            AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
 
             FadeOutTimer = new Timer(obj => FadeOut());
-
-            Device.Info.PropertyChanged += (sender, e) => UpdateZoom();
         }
 
         private Button AudioTracksSelectionButton { get; set; }
@@ -69,6 +67,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private bool Initialized { get; set; }
         private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
+        private AspectRatio CurrentAspectRatio = AspectRatio.Original;
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
@@ -270,17 +269,33 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Identifies the <see cref="ZoomButtonStyle"/> dependency property.
+        /// Identifies the <see cref="VideoView"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty ZoomButtonStyleProperty = BindableProperty.Create(nameof(ZoomButtonStyle), typeof(Style),
+        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
+            typeof(PlaybackControls), propertyChanged: null);
+
+        /// <summary>
+        /// Gets or sets the associated <see cref="VideoView"/>.
+        /// </summary>
+        /// <remarks>It is only useful to set this property for the aspect ratio feature.</remarks>
+        public VideoView VideoView
+        {
+            get => (VideoView)GetValue(VideoViewProperty);
+            set => SetValue(VideoViewProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="AspectRatioButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty AspectRatioButtonStyleProperty = BindableProperty.Create(nameof(AspectRatioButtonStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets or sets the zoom button style.
+        /// Gets or sets the aspect ratio button style.
         /// </summary>
-        public Style ZoomButtonStyle
+        public Style AspectRatioButtonStyle
         {
-            get => (Style)GetValue(ZoomButtonStyleProperty);
-            set => SetValue(ZoomButtonStyleProperty, value);
+            get => (Style)GetValue(AspectRatioButtonStyleProperty);
+            set => SetValue(AspectRatioButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -424,35 +439,6 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Identifies the <see cref="VideoView"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
-            typeof(PlaybackControls), propertyChanged: VideoViewPropertyChanged);
-        /// <summary>
-        /// Gets or sets the associated <see cref="VideoView"/>.
-        /// </summary>
-        /// <remarks>It is only useful to set this property for the zoom feature.</remarks>
-        public VideoView VideoView
-        {
-            get => (VideoView)GetValue(VideoViewProperty);
-            set => SetValue(VideoViewProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="Zoom"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty ZoomProperty = BindableProperty.Create(nameof(Zoom), typeof(bool), typeof(PlaybackControls),
-            propertyChanged: ZoomPropertyChanged);
-        /// <summary>
-        /// Gets or sets a value indicating whether the video is zoomed.
-        /// </summary>
-        public bool Zoom
-        {
-            get => (bool)GetValue(ZoomProperty);
-            set => SetValue(ZoomProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="IsAudioTracksSelectionButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsAudioTracksSelectionButtonVisibleProperty = BindableProperty.Create(
@@ -553,17 +539,17 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
+        /// Identifies the <see cref="IsAspectRatioButtonVisible"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty IsZoomButtonVisibleProperty = BindableProperty.Create(nameof(IsZoomButtonVisible),
+        public static readonly BindableProperty IsAspectRatioButtonVisibleProperty = BindableProperty.Create(nameof(IsAspectRatioButtonVisible),
             typeof(bool), typeof(PlaybackControls), true);
         /// <summary>
-        /// Gets or sets a value indicating whether the zoom button is shown.
+        /// Gets or sets a value indicating whether the aspect ratio button is shown.
         /// </summary>
-        public bool IsZoomButtonVisible
+        public bool IsAspectRatioButtonVisible
         {
-            get => (bool)GetValue(IsZoomButtonVisibleProperty);
-            set => SetValue(IsZoomButtonVisibleProperty, value);
+            get => (bool)GetValue(IsAspectRatioButtonVisibleProperty);
+            set => SetValue(IsAspectRatioButtonVisibleProperty, value);
         }
 
         /// <summary>
@@ -589,7 +575,7 @@ namespace LibVLCSharp.Forms.Shared
                 true);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
             SetClickEventHandler("StopButton", StopButton_Clicked, true);
-            SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
+            SetClickEventHandler("AspectRatioButton", AspectRatioButton_Clicked, true);
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -634,16 +620,6 @@ namespace LibVLCSharp.Forms.Shared
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((PlaybackControls)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)oldValue, (LibVLCSharp.Shared.MediaPlayer)newValue);
-        }
-
-        private static void VideoViewPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateZoom();
-        }
-
-        private static void ZoomPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateZoom();
         }
 
         private void MediaPlayer_Buffering(object sender, MediaPlayerBufferingEventArgs e)
@@ -714,11 +690,6 @@ namespace LibVLCSharp.Forms.Shared
         {
             UpdateAudioTracksSelectionAvailability();
             UpdateClosedCaptionsTracksSelectionAvailability();
-        }
-
-        private void MediaPlayer_VoutChanged(object sender, MediaPlayerVoutEventArgs e)
-        {
-            UpdateZoom();
         }
 
         private async void AudioTracksSelectionButton_Clicked(object sender, EventArgs e)
@@ -819,9 +790,110 @@ namespace LibVLCSharp.Forms.Shared
             MediaPlayer?.Stop();
         }
 
-        private void ZoomButton_Clicked(object sender, EventArgs e)
+
+        private void AspectRatioButton_Clicked(object sender, EventArgs e)
         {
-            Zoom = !Zoom;
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var videoView = VideoView;
+                if (videoView == null)
+                {
+                    throw new NullReferenceException($"The {nameof(VideoView)} property must be set in order to use the aspect ratio feature.");
+                }
+
+                MediaTrack? mediaTrack;
+                try
+                {
+                    mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
+                }
+                catch (Exception)
+                {
+                    mediaTrack = null;
+                }
+                if (mediaTrack == null || !mediaTrack.HasValue)
+                {
+                    return;
+                }
+
+                AspectRatio nextAspectRatio;
+
+                if (CurrentAspectRatio == AspectRatio.Original)
+                    nextAspectRatio = AspectRatio.BestFit;
+                else
+                    nextAspectRatio = ++CurrentAspectRatio;
+
+                var scalingFactor = Device.Info.ScalingFactor;
+                var displayW = videoView.Width * scalingFactor;
+                var displayH = videoView.Height * scalingFactor;
+
+                switch (nextAspectRatio)
+                {
+                    case AspectRatio.BestFit:
+                        mediaPlayer.AspectRatio = string.Empty;
+                        mediaPlayer.Scale = 0;
+                        break;
+                    case AspectRatio.FitScreen:
+                    case AspectRatio.Fill:
+                        var videoSwapped = mediaTrack.Value.Data.Video.Orientation == VideoOrientation.LeftBottom ||
+                            mediaTrack.Value.Data.Video.Orientation == VideoOrientation.RightTop;
+                        if(nextAspectRatio == AspectRatio.FitScreen)
+                        {
+                            var videoW = mediaTrack.Value.Data.Video.Width;
+                            var videoH = mediaTrack.Value.Data.Video.Height;
+
+                            if (videoSwapped)
+                            {
+                                var swap = videoW;
+                                videoW = videoH;
+                                videoH = swap;
+                            }
+                            if (mediaTrack.Value.Data.Video.SarNum != mediaTrack.Value.Data.Video.SarDen)
+                                videoW = videoW * mediaTrack.Value.Data.Video.SarNum / mediaTrack.Value.Data.Video.SarDen;
+
+                            var ar = videoW / (float)videoH;
+                            var dar = displayW / (float)displayH;
+
+                            float scale;
+                            if (dar >= ar)
+                                scale = (float)displayW / videoW; /* horizontal */
+                            else
+                                scale = (float)displayH / videoH; /* vertical */
+
+                            mediaPlayer.Scale = scale;
+                            mediaPlayer.AspectRatio = string.Empty;
+                        }
+                        else
+                        {
+                            mediaPlayer.Scale = 0;
+                            mediaPlayer.AspectRatio = videoSwapped ? $"{displayH}:{displayW}" : $"{displayW}:{displayH}";
+                        }
+                        break;
+                    case AspectRatio._16_9:
+                        mediaPlayer.AspectRatio = "16:9";
+                        mediaPlayer.Scale = 0;
+                        break;
+                    case AspectRatio._4_3:
+                        mediaPlayer.AspectRatio = "4:3";
+                        mediaPlayer.Scale = 0;
+                        break;
+                    case AspectRatio.Original:
+                        mediaPlayer.AspectRatio = string.Empty;
+                        mediaPlayer.Scale = 1;
+                        break;
+                }
+
+                CurrentAspectRatio = nextAspectRatio;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
         }
 
         private Button SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
@@ -869,7 +941,6 @@ namespace LibVLCSharp.Forms.Shared
                 oldMediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
                 oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
-                oldMediaPlayer.Vout -= MediaPlayer_VoutChanged;
             }
 
             if (newMediaPlayer != null)
@@ -888,7 +959,6 @@ namespace LibVLCSharp.Forms.Shared
                 newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
                 newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
-                newMediaPlayer.Vout += MediaPlayer_VoutChanged;
             }
 
             Reset();
@@ -1112,71 +1182,6 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateZoom()
-        {
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer == null)
-            {
-                return;
-            }
-
-            try
-            {
-                if (Zoom)
-                {
-                    var videoView = VideoView;
-                    if (videoView == null)
-                    {
-                        throw new NullReferenceException($"The {nameof(VideoView)} property must be set in order to use the zoom feature.");
-                    }
-
-                    MediaTrack? mediaTrack;
-                    try
-                    {
-                        mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
-                    }
-                    catch (Exception)
-                    {
-                        mediaTrack = null;
-                    }
-                    if (mediaTrack == null)
-                    {
-                        return;
-                    }
-
-                    var videoTrack = mediaTrack.Value.Data.Video;
-                    var videoWidth = videoTrack.Width;
-                    var videoHeight = videoTrack.Height;
-                    if (videoWidth == 0 || videoHeight == 0)
-                    {
-                        return;
-                    }
-
-                    var sarDen = videoTrack.SarDen;
-                    var sarNum = videoTrack.SarNum;
-                    if (sarNum != sarDen)
-                    {
-                        videoWidth = videoWidth * sarNum / sarDen;
-                    }
-
-                    var var = (double)videoWidth / videoHeight;
-                    var scalingFactor = Device.Info.ScalingFactor;
-                    var screenWidth = videoView.Width * scalingFactor;
-                    var screenHeight = videoView.Height * scalingFactor;
-                    var screenar = screenWidth / screenHeight;
-                    mediaPlayer.Scale = (float)(screenar >= var ? screenWidth / videoWidth : screenHeight / videoHeight);
-                }
-                else
-                {
-                    mediaPlayer.Scale = 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex);
-            }
-        }
-
         private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
         {
             _ = FadeInAsync();
@@ -1352,5 +1357,15 @@ namespace LibVLCSharp.Forms.Shared
                 FadeOutTimer.Change(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(-1));
             }
         }
+    }
+
+    internal enum AspectRatio
+    {
+        BestFit,
+        FitScreen,
+        Fill,
+        _16_9,
+        _4_3,
+        Original
     }
 }
