@@ -1263,7 +1263,7 @@ namespace LibVLCSharp.Forms.Shared
                 var state = mediaPlayer?.State;
                 var length = mediaPlayer == null || state == VLCState.Ended || state == VLCState.Error || state == VLCState.NothingSpecial ||
                     state == VLCState.Stopped ? 0 : mediaPlayer.Length;
-                var time = position == null ? (SeekBar.Value * length / SeekBar.Maximum) : (double)position;
+                var time = position ?? (SeekBar.Value * length / SeekBar.Maximum);
                 var timeRemaining = TimeSpan.FromMilliseconds(length - time).ToShortString();
                 if (RemainingTimeLabel.Text != timeRemaining)
                 {
