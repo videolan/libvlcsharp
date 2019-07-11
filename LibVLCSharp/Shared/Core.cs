@@ -38,6 +38,9 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
+            [DllImport(Constants.Kernel32, SetLastError = true)]
+            internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
@@ -63,6 +66,7 @@ namespace LibVLCSharp.Shared
         /// </param>
         public static void Initialize(string libvlcDirectoryPath = null)
         {
+            DisableMessageErrorBox();
 #if ANDROID
             InitializeAndroid();
 #elif UWP
@@ -73,6 +77,23 @@ namespace LibVLCSharp.Shared
 #if !UWP10_0 && !NETSTANDARD1_1
             EnsureVersionsMatch();
 #endif
+        }
+
+        /// <summary>
+        /// Disable error dialogs in case of dll loading failures on older Windows versions.
+        /// <para/>
+        /// This is mostly to fix Windows XP support (https://code.videolan.org/videolan/LibVLCSharp/issues/173),
+        /// though it may happen under other conditions (broken plugins/wrong ABI).
+        /// <para/>
+        /// As libvlc may load additional plugins later in the lifecycle of the application, 
+        /// we should not unset this on exiting <see cref="Initialize(string)"/>
+        /// </summary>
+        static void DisableMessageErrorBox()
+        {
+            if (!PlatformHelper.IsWindows) return;
+
+            var oldMode = Native.SetErrorMode(ErrorModes.SYSTEM_DEFAULT);
+            Native.SetErrorMode(oldMode | ErrorModes.SEM_FAILCRITICALERRORS | ErrorModes.SEM_NOOPENFILEERRORBOX);
         }
 
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -301,5 +322,15 @@ namespace LibVLCSharp.Shared
         internal const string LinArm = "linux-arm";
 
         internal const string MacOS64 = "osx-x64";
+    }
+
+    [Flags]
+    internal enum ErrorModes : uint
+    {
+        SYSTEM_DEFAULT = 0x0,
+        SEM_FAILCRITICALERRORS = 0x0001,
+        SEM_NOALIGNMENTFAULTEXCEPT = 0x0004,
+        SEM_NOGPFAULTERRORBOX = 0x0002,
+        SEM_NOOPENFILEERRORBOX = 0x8000
     }
 }
