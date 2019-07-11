@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);PORTABLE;NETSTANDARD2_0;NETSTANDARD</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETSTANDARD2_0;NETSTANDARD</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
     <DefineConstants>$(DefineConstants);NETSTANDARD1_1;NETSTANDARD</DefineConstants>
@@ -12,16 +12,16 @@
     <DefineConstants>$(DefineConstants);NET471;NET</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <DefineConstants>$(DefineConstants);MONO;IOS;APPLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);IOS;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
-    <DefineConstants>$(DefineConstants);MONO;MAC;APPLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);MAC;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
-    <DefineConstants>$(DefineConstants);MONO;TVOS;APPLE</DefineConstants>
+    <DefineConstants>$(DefineConstants);TVOS;APPLE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
-    <DefineConstants>$(DefineConstants);MONO;ANDROID</DefineConstants>
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <DefineConstants>$(DefineConstants);UWP;NET</DefineConstants>
