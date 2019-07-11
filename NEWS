@@ -1,3 +1,8 @@
+LibVLCSharp version 3.1.0
+=========================
+* Fix Windows XP support by disabling message box for plugins that fail to load https://code.videolan.org/videolan/LibVLCSharp/issues/174
+* [BREAKING API] strong typing Audio Channel API https://code.videolan.org/videolan/LibVLCSharp/issues/169
+
 LibVLCSharp version 3.0.3
 =========================
 * Fix AOT for dialogs callbacks on iOS device https://code.videolan.org/videolan/LibVLCSharp/issues/166
