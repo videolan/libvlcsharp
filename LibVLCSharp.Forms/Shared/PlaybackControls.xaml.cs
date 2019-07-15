@@ -56,7 +56,6 @@ namespace LibVLCSharp.Forms.Shared
             ZoomButtonStyle = Resources[nameof(ZoomButtonStyle)] as Style;
 
             FadeOutTimer = new Timer(obj => FadeOut());
-            SeekBarTimer = new Timer(obj => UpdateMediaPlayerPosition());
 
             Device.Info.PropertyChanged += (sender, e) => UpdateZoom();
         }
@@ -74,8 +73,6 @@ namespace LibVLCSharp.Forms.Shared
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
-        private Timer SeekBarTimer { get; set; }
-        private bool SeekBarTimerEnabled { get; set; }
 
         /// <summary>
         /// Identifies the <see cref="IconFontFamily"/> dependency property.
@@ -715,11 +712,6 @@ namespace LibVLCSharp.Forms.Shared
 
         private void MediaPlayer_PositionChanged(object sender, MediaPlayerPositionChangedEventArgs e)
         {
-            if (SeekBarTimerEnabled)
-            {
-                return;
-            }
-
             UpdatePosition(e.Position);
         }
 
@@ -1205,8 +1197,7 @@ namespace LibVLCSharp.Forms.Shared
             _ = FadeInAsync();
 
             UpdateTime();
-            SeekBarTimerEnabled = true;
-            SeekBarTimer.Change(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(-1));
+            UpdateMediaPlayerPosition();
         }
 
         private void UpdateMediaPlayerPosition()
@@ -1222,10 +1213,6 @@ namespace LibVLCSharp.Forms.Shared
             catch (Exception ex)
             {
                 ShowErrorMessageBox(ex);
-            }
-            finally
-            {
-                SeekBarTimerEnabled = false;
             }
         }
 
