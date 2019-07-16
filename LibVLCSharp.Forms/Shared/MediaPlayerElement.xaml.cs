@@ -171,9 +171,13 @@ namespace LibVLCSharp.Forms.Shared
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnSleep", m =>
                 {
                     var applicationProperties = Application.Current.Properties;
-                    applicationProperties["VLC_MediaPlayerElement_Position"] = MediaPlayer?.Position;
-                    applicationProperties["VLC_MediaPlayerElement_IsPlaying"] = MediaPlayer?.State == VLCState.Playing;
-                    MediaPlayer?.Stop();
+                    var mediaPlayer = MediaPlayer;
+                    if (mediaPlayer != null)
+                    {
+                        applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position"] = mediaPlayer.Position;
+                        applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying"] = mediaPlayer.State == VLCState.Playing;
+                        mediaPlayer.Stop();
+                    }                 
                     VideoView = null;
                 });
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnResume", m =>
@@ -183,10 +187,11 @@ namespace LibVLCSharp.Forms.Shared
                     if (mediaPlayer != null)
                     {
                         var applicationProperties = Application.Current.Properties;
-                        if (applicationProperties.TryGetValue("VLC_MediaPlayerElement_IsPlaying", out var play) && play is true)
+                        if (applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", out var play) && play is true)
                         {
                             mediaPlayer.Play();
-                            mediaPlayer.Position = applicationProperties.TryGetValue("VLC_MediaPlayerElement_Position", out var position) && position is float p ? p : 0;
+                            mediaPlayer.Position = applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position) 
+                                && position is float p ? p : 0;
                         }
                     }
                 });
