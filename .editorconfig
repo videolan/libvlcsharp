@@ -110,12 +110,12 @@ dotnet_style_coalesce_expression = true:error
 dotnet_style_null_propagation = true:error
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = false:error
-csharp_style_expression_bodied_constructors = false:error
-csharp_style_expression_bodied_operators = false:error
-csharp_style_expression_bodied_properties = true:error
-csharp_style_expression_bodied_indexers = true:error
-csharp_style_expression_bodied_accessors = true:error
+csharp_style_expression_bodied_methods = true
+csharp_style_expression_bodied_constructors = true
+csharp_style_expression_bodied_operators = true
+csharp_style_expression_bodied_properties = true
+csharp_style_expression_bodied_indexers = true
+csharp_style_expression_bodied_accessors = true
 
 # Pattern matching
 csharp_style_pattern_matching_over_is_with_cast_check = true:error
