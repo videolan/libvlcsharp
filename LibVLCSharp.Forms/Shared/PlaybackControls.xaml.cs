@@ -48,7 +48,7 @@ namespace LibVLCSharp.Forms.Shared
             CastButtonStyle = Resources[nameof(CastButtonStyle)] as Style;
             ClosedCaptionsSelectionButtonStyle = Resources[nameof(ClosedCaptionsSelectionButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
-            ErrorMessageStyle = Resources[nameof(ErrorMessageStyle)] as Style;
+            MessageStyle = Resources[nameof(MessageStyle)] as Style;
             PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
@@ -64,6 +64,8 @@ namespace LibVLCSharp.Forms.Shared
         private VisualElement ControlsPanel { get; set; }
         private Button PlayPauseButton { get; set; }
         private Label RemainingTimeLabel { get; set; }
+        private Label AspectRatioLabel { get; set; }
+
         private Slider SeekBar { get; set; }
 
         private bool Initialized { get; set; }
@@ -72,6 +74,16 @@ namespace LibVLCSharp.Forms.Shared
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
+
+        private readonly Dictionary<AspectRatio, string> AspectRatioLabels = new Dictionary<AspectRatio, string>
+        {
+            { AspectRatio.Original, "Original" },
+            { AspectRatio.FitScreen, "Fit Screen" },
+            { AspectRatio.BestFit, "Best Fit" },
+            { AspectRatio.Fill, "Fill" },
+            { AspectRatio._16_9, "16:9" },
+            { AspectRatio._4_3, "4:3" }
+        };
 
         /// <summary>
         /// Identifies the <see cref="IconFontFamily"/> dependency property.
@@ -214,17 +226,17 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Identifies the <see cref="ErrorMessageStyle"/> dependency property.
+        /// Identifies the <see cref="MessageStyle"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty ErrorMessageStyleProperty = BindableProperty.Create(nameof(ErrorMessageStyle), typeof(Style),
+        public static readonly BindableProperty MessageStyleProperty = BindableProperty.Create(nameof(MessageStyle), typeof(Style),
             typeof(PlaybackControls));
         /// <summary>
-        /// Gets or sets the error message style.
+        /// Gets or sets the message style.
         /// </summary>
-        public Style ErrorMessageStyle
+        public Style MessageStyle
         {
-            get => (Style)GetValue(ErrorMessageStyleProperty);
-            set => SetValue(ErrorMessageStyleProperty, value);
+            get => (Style)GetValue(MessageStyleProperty);
+            set => SetValue(MessageStyleProperty, value);
         }
 
         /// <summary>
@@ -594,6 +606,8 @@ namespace LibVLCSharp.Forms.Shared
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
+            AspectRatioLabel = this.FindChild<Label>(nameof(AspectRatioLabel));
+
             if (SeekBar != null)
             {
                 SeekBar.ValueChanged += SeekBar_ValueChanged;
@@ -806,7 +820,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
 
-        private void AspectRatioButton_Clicked(object sender, EventArgs e)
+        private async void AspectRatioButton_Clicked(object sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer == null)
@@ -904,6 +918,9 @@ namespace LibVLCSharp.Forms.Shared
                 }
 
                 CurrentAspectRatio = nextAspectRatio;
+                AspectRatioLabel.Text = AspectRatioLabels[CurrentAspectRatio];
+                await AspectRatioLabel.FadeTo(1);
+                await  AspectRatioLabel.FadeTo(0, 2000);
             }
             catch (Exception ex)
             {
