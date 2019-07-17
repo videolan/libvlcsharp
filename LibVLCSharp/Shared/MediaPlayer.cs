@@ -1649,8 +1649,13 @@ namespace LibVLCSharp.Shared
             return result;
         }
 
+        /// <summary>
+        /// Set a renderer to the media player.
+        /// </summary>
+        /// <param name="rendererItem">discovered renderer item or null to fallback on local rendering</param>
+        /// <returns>true on success, false otherwise</returns>
         public bool SetRenderer(RendererItem rendererItem) =>
-            Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem.NativeReference) == 0;
+            Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem?.NativeReference ?? IntPtr.Zero) == 0;
 
         /// <summary>Gets the media role.
         /// <para/> version LibVLC 3.0.0 and later.
