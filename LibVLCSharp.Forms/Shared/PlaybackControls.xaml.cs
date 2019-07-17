@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Resources;
 using System.Threading;
@@ -54,7 +55,13 @@ namespace LibVLCSharp.Forms.Shared
             StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
             AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
 
+            RendererItems.CollectionChanged += RendererItems_CollectionChanged;
             FadeOutTimer = new Timer(obj => FadeOut());
+        }
+
+        private void RendererItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            UpdateCastAvailability();
         }
 
         private Button AudioTracksSelectionButton { get; set; }
@@ -73,6 +80,9 @@ namespace LibVLCSharp.Forms.Shared
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
+        private bool RemoteRendering { get; set; } = false;
+        private const string Disconnect = "Disconnect";
+        private const string Cancel = "Cancel";
 
         private readonly Dictionary<AspectRatio, string> AspectRatioLabels = new Dictionary<AspectRatio, string>
         {
@@ -574,7 +584,6 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Initialized = true;
                 OnApplyTemplate();
-                UpdateCastAvailability();
                 Reset();
             }
         }
@@ -629,6 +638,12 @@ namespace LibVLCSharp.Forms.Shared
             var playbackControls = (PlaybackControls)bindable;
             playbackControls.UpdateCastAvailability();
             playbackControls.UpdateErrorMessage();
+            playbackControls.ResetRendererDiscovery();
+        }
+
+        private void ResetRendererDiscovery()
+        {
+            FindRenderers();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -720,27 +735,34 @@ namespace LibVLCSharp.Forms.Shared
                 var mediaPlayer = MediaPlayer;
                 if (mediaPlayer != null)
                 {
-                    CastButton.Clicked -= CastButton_Clicked;
                     FadeOutEnabled = false;
                     try
                     {
                         _ = FadeInAsync();
-                        var cancellationTokenSource = new CancellationTokenSource();
-                        _ = RotateElementAsync(CastButton, cancellationTokenSource.Token);
-                        IEnumerable<RendererItem> renderers;
-                        try
+
+                        if(!RemoteRendering && RendererItems.Count == 1)
                         {
-                            renderers = await libVLC.FindRenderersAsync();
+                            mediaPlayer.SetRenderer(RendererItems.First());
+                            RemoteRendering = true;
                         }
-                        finally
+                        else
                         {
-                            cancellationTokenSource.Cancel();
-                        }
-                        var rendererName = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
-                            null, null, renderers.Select(r => r.Name).OrderBy(r => r).ToArray());
-                        if (rendererName != null)
-                        {
-                            mediaPlayer.SetRenderer(renderers.First(r => r.Name == rendererName));
+                            var result = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
+                                Cancel, Disconnect, RendererItems.Select(r => r.Name).OrderBy(r => r).ToArray());
+                            if (result != null)
+                            {
+                                var rendererName = RendererItems.FirstOrDefault(r => r.Name == result);
+                                if (rendererName != null)
+                                {
+                                    mediaPlayer.SetRenderer(rendererName);
+                                    RemoteRendering = true;
+                                }
+                                else if (result == Disconnect)
+                                {
+                                    mediaPlayer.SetRenderer(null);
+                                    RemoteRendering = false;
+                                }
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -749,7 +771,6 @@ namespace LibVLCSharp.Forms.Shared
                     }
                     finally
                     {
-                        CastButton.Clicked += CastButton_Clicked;
                         FadeOutEnabled = true;
                     }
                 }
@@ -1194,7 +1215,8 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null ? CastAvailableState : CastUnavailableState);
+                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null && RendererItems.Any() 
+                        ? CastAvailableState : CastUnavailableState);
                 });
             }
         }
@@ -1339,6 +1361,49 @@ namespace LibVLCSharp.Forms.Shared
                 }
             });
         }
+
+        ObservableCollection<RendererItem> RendererItems = new ObservableCollection<RendererItem>();
+        List<RendererDiscoverer> RendererDiscoverers = new List<RendererDiscoverer>();
+
+        private void FindRenderers()
+        {
+            if (LibVLC == null)
+                return;
+
+            if(RendererItems.Any())
+            {
+                foreach (var ri in RendererItems)
+                    ri.Dispose();
+            }
+            RendererItems.Clear();
+
+            if (RendererDiscoverers.Any())
+            {
+                foreach(var rd in RendererDiscoverers)
+                {
+                    rd.Stop();
+                    rd.ItemAdded -= RendererDiscoverer_ItemAdded;
+                    rd.ItemDeleted -= RendererDiscoverer_ItemDeleted;
+                    rd.Dispose();
+                }
+
+                RendererDiscoverers.Clear();
+            }
+
+            var renderers = LibVLC.RendererList;
+            foreach(var discoverer in renderers)
+            {
+                var rendererDiscoverer = new RendererDiscoverer(LibVLC, discoverer.Name);
+                rendererDiscoverer.ItemAdded += RendererDiscoverer_ItemAdded;
+                rendererDiscoverer.ItemDeleted += RendererDiscoverer_ItemDeleted;
+                rendererDiscoverer.Start();
+                RendererDiscoverers.Add(rendererDiscoverer);
+            }
+        }
+
+        private void RendererDiscoverer_ItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e) => RendererItems.Remove(e.RendererItem);
+
+        private void RendererDiscoverer_ItemAdded(object sender, RendererDiscovererItemAddedEventArgs e) => RendererItems.Add(e.RendererItem);
 
         /// <summary>
         /// Show an error message box.
