@@ -50,7 +50,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
             LibVLC = new LibVLC();
 
             var media = new Media(LibVLC,
-                "http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_surround-fix.avi",
+                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                 FromType.FromLocation);
 
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
