@@ -41,8 +41,8 @@
         <On Platform="UWP"
             Value="/Assets/FontAwesome5Regular.otf#Font Awesome 5 Free" />
     </OnPlatform>
-    
-    <Style x:Key="ErrorMessageStyle" TargetType="Label">
+
+    <Style x:Key="MessageStyle" TargetType="Label">
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="LineBreakMode" Value="WordWrap" />
         <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
@@ -208,11 +208,12 @@
         <Setter Property="ControlTemplate">
             <ControlTemplate>
                 <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}" Spacing="0">
-                    <Label Text="{TemplateBinding ErrorMessage}" Style="{TemplateBinding ErrorMessageStyle}"
+                    <Label Text="{TemplateBinding ErrorMessage}" Style="{TemplateBinding MessageStyle}"
                        IsVisible="{TemplateBinding ErrorMessage, Converter={StaticResource ObjectToBoolConverter}}" />
                     <ProgressBar Style="{TemplateBinding BufferingProgressBarStyle}" Progress="{TemplateBinding BufferingProgress}" 
                              IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
-
+                    <Label x:Name="AspectRatioLabel" Style="{TemplateBinding MessageStyle}"/>
+                    
                     <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
                         <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
                             <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" />
