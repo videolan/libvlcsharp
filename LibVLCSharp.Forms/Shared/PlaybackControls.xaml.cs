@@ -574,6 +574,17 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(IsAspectRatioButtonVisibleProperty, value);
         }
 
+        private static readonly BindableProperty EnableRendererDiscoveryProperty = BindableProperty.Create(nameof(EnableRendererDiscovery), 
+            typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Enable or disable renderer discovery
+        /// </summary>
+        public bool EnableRendererDiscovery
+        {
+            get => (bool)GetValue(EnableRendererDiscoveryProperty);
+            set => SetValue(EnableRendererDiscoveryProperty, value);
+        }
+
         /// <summary>
         /// Called when the <see cref="Element.Parent"/> property has changed.
         /// </summary>
@@ -643,7 +654,10 @@ namespace LibVLCSharp.Forms.Shared
 
         private void ResetRendererDiscovery()
         {
-            FindRenderers();
+            ClearRenderers();
+
+            if(EnableRendererDiscovery)
+                FindRenderers();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -1215,7 +1229,7 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null && RendererItems.Any() 
+                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null && EnableRendererDiscovery && RendererItems.Any()
                         ? CastAvailableState : CastUnavailableState);
                 });
             }
@@ -1365,12 +1379,9 @@ namespace LibVLCSharp.Forms.Shared
         ObservableCollection<RendererItem> RendererItems = new ObservableCollection<RendererItem>();
         List<RendererDiscoverer> RendererDiscoverers = new List<RendererDiscoverer>();
 
-        private void FindRenderers()
+        private void ClearRenderers()
         {
-            if (LibVLC == null)
-                return;
-
-            if(RendererItems.Any())
+            if (RendererItems.Any())
             {
                 foreach (var ri in RendererItems)
                     ri.Dispose();
@@ -1379,7 +1390,7 @@ namespace LibVLCSharp.Forms.Shared
 
             if (RendererDiscoverers.Any())
             {
-                foreach(var rd in RendererDiscoverers)
+                foreach (var rd in RendererDiscoverers)
                 {
                     rd.Stop();
                     rd.ItemAdded -= RendererDiscoverer_ItemAdded;
@@ -1389,6 +1400,15 @@ namespace LibVLCSharp.Forms.Shared
 
                 RendererDiscoverers.Clear();
             }
+        }
+
+        private void FindRenderers()
+        {
+            if (LibVLC == null)
+                return;
+
+            if (!EnableRendererDiscovery)
+                return;
 
             var renderers = LibVLC.RendererList;
             foreach(var discoverer in renderers)
