@@ -8,7 +8,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
     /// <summary>
     /// To get the current activity.
     /// </summary>
-    public static class Platform
+    internal static class Platform
     {
         private class ActivityLifecycleContextListener : Java.Lang.Object, IActivityLifecycleCallbacks
         {
@@ -60,13 +60,13 @@ namespace LibVLCSharp.Forms.Platforms.Android
         /// <summary>
         /// Gets the current activity.
         /// </summary>
-        public static Activity Activity => LifecycleListener?.Activity;
+        internal static Activity Activity => LifecycleListener?.Activity;
 
         /// <summary>
         /// Sets the activity.
         /// </summary>
         /// <param name="activity">Current activity.</param>
-        public static void Init(Activity activity)
+        internal static void Init(Activity activity)
         {
             var lifecycleListener = LifecycleListener;
             if (lifecycleListener == null)

@@ -7,7 +7,7 @@ namespace LibVLCSharp.Forms.Shared.Converters
     /// <summary>
     /// Converts not null object to true.
     /// </summary>
-    public class ObjectToBoolConverter : IValueConverter
+    internal class ObjectToBoolConverter : IValueConverter
     {
         /// <summary>
         /// Modifies the source data before passing it to the target for display in the UI.

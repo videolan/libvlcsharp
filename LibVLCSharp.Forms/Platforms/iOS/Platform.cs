@@ -3,12 +3,12 @@
     /// <summary>
     /// Empty shell used to load the custom renderer assembly.
     /// </summary>
-    public static class Platform
+    internal static class Platform
     {
         /// <summary>
         /// Call this to load the custom renderer assembly.
         /// </summary>
-        public static void Init()
+        internal static void Init()
         {
         }
     }
