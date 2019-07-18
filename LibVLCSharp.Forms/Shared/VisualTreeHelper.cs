@@ -7,7 +7,7 @@ namespace LibVLCSharp.Forms.Shared
     /// Provides utility methods that can be used to traverse object relationships (along child-object or parent-object axes) 
     /// in the visual tree of your app.
     /// </summary>
-    public static class VisualTreeHelper
+    internal static class VisualTreeHelper
     {
         /// <summary>
         /// Obtains a child object of a given type of the provided parent element by examining the visual tree.
@@ -15,7 +15,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <typeparam name="T">Element type to find.</typeparam>
         /// <param name="parent">The parent element.</param>
         /// <returns>The child element, or null if not found.</returns>
-        public static T FindChild<T>(this Element parent) where T : Element
+        internal static T FindChild<T>(this Element parent) where T : Element
         {
             if (parent is Layout layout)
             {
@@ -43,7 +43,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <param name="parent">The parent element.</param>
         /// <param name="name">The searched name</param>
         /// <returns>The child element, or null if not found.</returns>
-        public static T FindChild<T>(this Element parent, string name) where T : Element
+        internal static T FindChild<T>(this Element parent, string name) where T : Element
         {
             var result = parent.FindByName<T>(name);
             if (result != null)
@@ -72,7 +72,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <typeparam name="T">Ancestor element type.</typeparam>
         /// <param name="element">The element.</param>
         /// <returns>The ancestor element of the given type, or null if not found.</returns>
-        public static T FindAncestor<T>(this Element element) where T : Element
+        internal static T FindAncestor<T>(this Element element) where T : Element
         {
             if (element != null)
             {

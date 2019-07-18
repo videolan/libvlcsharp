@@ -9,7 +9,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
     /// <summary>
     /// Power manager.
     /// </summary>
-    public class PowerManager : IPowerManager
+    internal class PowerManager : IPowerManager
     {
         /// <summary>
         /// Gets or sets a value indicating whether the screen should be kept on.

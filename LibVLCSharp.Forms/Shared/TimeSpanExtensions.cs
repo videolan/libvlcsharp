@@ -5,14 +5,14 @@ namespace LibVLCSharp.Forms.Shared
     /// <summary>
     /// Extensions methods for <see cref="TimeSpan"/>.
     /// </summary>
-    public static class TimeSpanExtensions
+    internal static class TimeSpanExtensions
     {
         /// <summary>
         /// Converts the value of the current <see cref="TimeSpan"/> object to its equivalent short string representation.
         /// </summary>
         /// <param name="span">Time interval.</param>
         /// <returns>The short string representation of the current <see cref="TimeSpan"/> value.</returns>
-        public static string ToShortString(this TimeSpan span)
+        internal static string ToShortString(this TimeSpan span)
         {
             if (span.Days != 0)
             {
