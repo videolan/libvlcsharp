@@ -5,7 +5,7 @@ namespace LibVLCSharp.Forms.Shared.Effects
     /// <summary>
     /// Click effect.
     /// </summary>
-    public class ClickEffect : TriggerAction<VisualElement>
+    internal class ClickEffect : TriggerAction<VisualElement>
     {
         /// <summary>
         /// Apply a click effect.

@@ -7,7 +7,7 @@ namespace LibVLCSharp.Forms.Shared.Converters
     /// <summary>
     /// Converts a value not equals to 0 and 1 to true.
     /// </summary>
-    public class BufferingProgressToBoolConverter : IValueConverter
+    internal class BufferingProgressToBoolConverter : IValueConverter
     {
         /// <summary>
         /// Modifies the source data before passing it to the target for display in the UI.
