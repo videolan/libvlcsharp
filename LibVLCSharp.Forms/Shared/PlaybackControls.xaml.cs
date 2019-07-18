@@ -54,8 +54,6 @@ namespace LibVLCSharp.Forms.Shared
             StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
             ZoomButtonStyle = Resources[nameof(ZoomButtonStyle)] as Style;
 
-            FadeOutTimer = new Timer(obj => FadeOut());
-
             Device.Info.PropertyChanged += (sender, e) => UpdateZoom();
         }
 
@@ -69,9 +67,6 @@ namespace LibVLCSharp.Forms.Shared
 
         private bool Initialized { get; set; }
         private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
-
-        private Timer FadeOutTimer { get; }
-        private bool FadeOutEnabled { get; set; } = true;
 
         /// <summary>
         /// Identifies the <see cref="ButtonColor"/> dependency property.
@@ -583,13 +578,12 @@ namespace LibVLCSharp.Forms.Shared
 
         private void OnApplyTemplate()
         {
-            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked, true);
+            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked);
             CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
-            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked,
-                true);
+            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
-            SetClickEventHandler("StopButton", StopButton_Clicked, true);
-            SetClickEventHandler("ZoomButton", ZoomButton_Clicked, true);
+            SetClickEventHandler("StopButton", StopButton_Clicked);
+            SetClickEventHandler("ZoomButton", ZoomButton_Clicked);
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -736,10 +730,8 @@ namespace LibVLCSharp.Forms.Shared
                 if (mediaPlayer != null)
                 {
                     CastButton.Clicked -= CastButton_Clicked;
-                    FadeOutEnabled = false;
                     try
                     {
-                        _ = FadeInAsync();
                         var cancellationTokenSource = new CancellationTokenSource();
                         _ = RotateElementAsync(CastButton, cancellationTokenSource.Token);
                         IEnumerable<RendererItem> renderers;
@@ -765,11 +757,9 @@ namespace LibVLCSharp.Forms.Shared
                     finally
                     {
                         CastButton.Clicked += CastButton_Clicked;
-                        FadeOutEnabled = true;
                     }
                 }
             }
-            _ = FadeInAsync();
         }
 
         private async void ClosedCaptionsSelectionButton_Clicked(object sender, EventArgs e)
@@ -786,7 +776,6 @@ namespace LibVLCSharp.Forms.Shared
                 return;
             }
 
-            _ = FadeInAsync();
             string playPauseState;
             switch (mediaPlayer.State)
             {
@@ -807,6 +796,7 @@ namespace LibVLCSharp.Forms.Shared
             if (playPauseState == PauseState)
             {
                 mediaPlayer.Play();
+                FadeOut();
             }
             else
             {
@@ -824,23 +814,18 @@ namespace LibVLCSharp.Forms.Shared
             Zoom = !Zoom;
         }
 
-        private Button SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
+        private Button SetClickEventHandler(string name, EventHandler eventHandler)
         {
             var button = this.FindChild<Button>(name);
             if (button != null)
             {
-                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler, fadeIn);
+                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler);
             }
             return button;
         }
 
-        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler, bool fadeIn = false)
+        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler)
         {
-            if (fadeIn)
-            {
-                _ = FadeInAsync();
-            }
-
             try
             {
                 eventHandler?.Invoke(sender, e);
@@ -1179,8 +1164,6 @@ namespace LibVLCSharp.Forms.Shared
 
         private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
         {
-            _ = FadeInAsync();
-
             UpdateTime();
             UpdateMediaPlayerPosition();
         }
@@ -1296,7 +1279,6 @@ namespace LibVLCSharp.Forms.Shared
 
             Device.BeginInvokeOnMainThread(() =>
             {
-                _ = FadeInAsync();
                 BufferingProgress = 0;
                 var playPauseButton = PlayPauseButton;
                 if (playPauseButton != null)
@@ -1307,16 +1289,7 @@ namespace LibVLCSharp.Forms.Shared
             UpdateKeepScreenOn();
         }
 
-        private void FadeOut()
-        {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                if (await ControlsPanel.FadeTo(0, 1000) && ControlsPanel.Opacity == 0)
-                {
-                    ControlsPanel.IsVisible = false;
-                }
-            });
-        }
+        
 
         /// <summary>
         /// Show an error message box.
@@ -1333,7 +1306,7 @@ namespace LibVLCSharp.Forms.Shared
         /// Controls fade in.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task FadeInAsync()
+        public void FadeIn()
         {
             var controlsPanel = ControlsPanel;
             if (controlsPanel == null)
@@ -1341,15 +1314,35 @@ namespace LibVLCSharp.Forms.Shared
                 return;
             }
 
-            FadeOutTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
-            controlsPanel.IsVisible = true;
-            if (controlsPanel.Opacity != 1)
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                await controlsPanel.FadeTo(1);
+                await ControlsPanel.FadeTo(1);
+            });
+        }
+
+        private void FadeOut()
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await ControlsPanel.FadeTo(0, 1000);
+            });
+        }
+
+        internal void ToggleVisibility()
+        {
+            var controlsPanel = ControlsPanel;
+            if (controlsPanel == null)
+            {
+                return;
             }
-            if (FadeOutEnabled && ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
+
+            if (controlsPanel.Opacity == 1)
             {
-                FadeOutTimer.Change(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(-1));
+                FadeOut();
+            }
+            else
+            {
+                FadeIn();
             }
         }
     }

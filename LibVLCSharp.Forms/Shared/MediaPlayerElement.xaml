@@ -6,7 +6,7 @@
         <ControlTemplate>
             <Grid>
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="GestureRecognized" />
+                    <TapGestureRecognizer Tapped="OnTapped" />
                     <ClickGestureRecognizer Clicked="GestureRecognized" />
                     <PanGestureRecognizer PanUpdated="GestureRecognized" />
                     <PinchGestureRecognizer PinchUpdated="GestureRecognized" />

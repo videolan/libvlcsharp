@@ -209,7 +209,11 @@ namespace LibVLCSharp.Forms.Shared
 
         private async void GestureRecognized(object sender, EventArgs e)
         {
-            await PlaybackControls.FadeInAsync();
+        }
+
+        private void OnTapped(object sender, EventArgs e)
+        {
+            PlaybackControls.ToggleVisibility();
         }
     }
 }
