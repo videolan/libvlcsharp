@@ -71,6 +71,19 @@ namespace LibVLCSharp.Forms.Shared
             private set => SetValue(VideoViewProperty, value);
         }
 
+        private static readonly BindableProperty EnableRendererDiscoveryProperty = BindableProperty.Create(nameof(EnableRendererDiscovery),
+            typeof(bool), typeof(PlaybackControls), true, propertyChanged: EnableRendererDiscoveryPropertyChanged);
+
+        /// <summary>
+        /// Enable or disable renderer discovery
+        /// </summary>
+        public bool EnableRendererDiscovery
+        {
+            get => (bool)GetValue(EnableRendererDiscoveryProperty);
+            set => SetValue(EnableRendererDiscoveryProperty, value);
+        }
+
+       
         private void OnVideoViewChanged(VideoView videoView)
         {
             if (videoView != null)
@@ -116,6 +129,15 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
+        private void OnEnableRendererDiscoveryChanged(bool enableRendererDiscovery)
+        {
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
+            {
+                playbackControls.EnableRendererDiscovery = enableRendererDiscovery;
+            }
+        }
+
         private static void VideoViewPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((MediaPlayerElement)bindable).OnVideoViewChanged((VideoView)newValue);
@@ -134,6 +156,11 @@ namespace LibVLCSharp.Forms.Shared
         private static void PlaybackControlsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((MediaPlayerElement)bindable).OnPlayControlsChanged((PlaybackControls)newValue);
+        }
+
+        private static void EnableRendererDiscoveryPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((MediaPlayerElement)bindable).OnEnableRendererDiscoveryChanged((bool)newValue);
         }
 
         /// <summary>
@@ -155,7 +182,10 @@ namespace LibVLCSharp.Forms.Shared
                 }
                 if (PlaybackControls == null)
                 {
-                    PlaybackControls = new PlaybackControls();
+                    PlaybackControls = new PlaybackControls
+                    {
+                        EnableRendererDiscovery = EnableRendererDiscovery
+                    };
                 }
 
                 var application = Application.Current;

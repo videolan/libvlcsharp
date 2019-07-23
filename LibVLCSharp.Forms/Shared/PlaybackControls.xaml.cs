@@ -636,17 +636,22 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(IsAspectRatioButtonVisibleProperty, value);
         }
 
-        private static readonly BindableProperty EnableRendererDiscoveryProperty = BindableProperty.Create(nameof(EnableRendererDiscovery), 
-            typeof(bool), typeof(PlaybackControls), true);
+        bool _enableRendererDiscovery;
         /// <summary>
         /// Enable or disable renderer discovery
         /// </summary>
-        public bool EnableRendererDiscovery
+        internal bool EnableRendererDiscovery
         {
-            get => (bool)GetValue(EnableRendererDiscoveryProperty);
-            set => SetValue(EnableRendererDiscoveryProperty, value);
+            get => _enableRendererDiscovery;
+            set
+            {
+                _enableRendererDiscovery = value;
+                IsCastButtonVisible = _enableRendererDiscovery;
+                UpdateCastAvailability();
+                ResetRendererDiscovery();
+            }
         }
-
+        
         /// <summary>
         /// Identifies the <see cref="IsRewindButtonVisible"/> dependency property.
         /// </summary>s
