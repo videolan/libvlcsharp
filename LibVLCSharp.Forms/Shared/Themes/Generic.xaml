@@ -61,7 +61,8 @@
     <Style x:Key="SeekBarStyle" TargetType="Slider">
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="IsEnabled" Value="False" />
-        <Setter Property="MinimumTrackColor" Value="{TemplateBinding Foreground}" />
+        <Setter Property="MinimumTrackColor" Value="{TemplateBinding MainColor}" />
+        <Setter Property="MaximumTrackColor" Value="{TemplateBinding Foreground}" />
         <Setter Property="Maximum" Value="1000" />
         <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
         <Setter Property="VerticalOptions" Value="Center" />
