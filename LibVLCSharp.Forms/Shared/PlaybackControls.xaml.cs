@@ -54,6 +54,8 @@ namespace LibVLCSharp.Forms.Shared
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
             StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
             AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
+            RewindButtonStyle = Resources[nameof(RewindButtonStyle)] as Style;
+            SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
 
             FadeOutTimer = new Timer(obj => FadeOut());
         }
@@ -74,6 +76,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
+        private const int SEEK_OFFSET = 2000;
 
         private readonly Dictionary<AspectRatio, string> AspectRatioLabels = new Dictionary<AspectRatio, string>
         {
@@ -323,6 +326,34 @@ namespace LibVLCSharp.Forms.Shared
         {
             get => (Style)GetValue(AspectRatioButtonStyleProperty);
             set => SetValue(AspectRatioButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="RewindButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty RewindButtonStyleProperty = BindableProperty.Create(nameof(RewindButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the rewind button style.
+        /// </summary>
+        public Style RewindButtonStyle
+        {
+            get => (Style)GetValue(RewindButtonStyleProperty);
+            set => SetValue(RewindButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="SeekButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty SeekButtonStyleProperty = BindableProperty.Create(nameof(SeekButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the rewind button style.
+        /// </summary>
+        public Style SeekButtonStyle
+        {
+            get => (Style)GetValue(SeekButtonStyleProperty);
+            set => SetValue(SeekButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -580,6 +611,34 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsRewindButtonVisible"/> dependency property.
+        /// </summary>s
+        public static readonly BindableProperty IsRewindButtonVisibleProperty = BindableProperty.Create(nameof(IsRewindButtonVisible),
+            typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value indicating whether the rewind button is shown.
+        /// </summary>
+        public bool IsRewindButtonVisible
+        {
+            get => (bool)GetValue(IsRewindButtonVisibleProperty);
+            set => SetValue(IsRewindButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsSeekButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsSeekButtonVisibleProperty = BindableProperty.Create(nameof(IsSeekButtonVisible),
+            typeof(bool), typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value indicating whether the seek button is shown.
+        /// </summary>
+        public bool IsSeekButtonVisible
+        {
+            get => (bool)GetValue(IsSeekButtonVisibleProperty);
+            set => SetValue(IsSeekButtonVisibleProperty, value);
+        }
+
+        /// <summary>
         /// Called when the <see cref="Element.Parent"/> property has changed.
         /// </summary>
         protected override void OnParentSet()
@@ -607,6 +666,8 @@ namespace LibVLCSharp.Forms.Shared
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
             AspectRatioLabel = this.FindChild<Label>(nameof(AspectRatioLabel));
+            SetClickEventHandler("RewindButton", RewindButton_Clicked);
+            SetClickEventHandler("SeekButton", SeekButton_Clicked);
 
             if (SeekBar != null)
             {
@@ -819,7 +880,6 @@ namespace LibVLCSharp.Forms.Shared
             MediaPlayer?.Stop();
         }
 
-
         private async void AspectRatioButton_Clicked(object sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
@@ -926,6 +986,28 @@ namespace LibVLCSharp.Forms.Shared
             {
                 ShowErrorMessageBox(ex);
             }
+        }
+
+        private void RewindButton_Clicked(object sender, EventArgs e)
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+
+            mediaPlayer.Time -= SEEK_OFFSET;
+        }
+
+        private void SeekButton_Clicked(object sender, EventArgs e)
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+
+            mediaPlayer.Time += SEEK_OFFSET;
         }
 
         private Button SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)

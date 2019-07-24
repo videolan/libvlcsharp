@@ -200,7 +200,17 @@
         <Setter Property="IsVisible" Value="{TemplateBinding IsAspectRatioButtonVisible}" />
         <Setter Property="Text" Value="&#xe85b;" />
     </Style>
+    
+    <Style x:Key="RewindButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsRewindButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Backward}" />
+    </Style>
 
+    <Style x:Key="SeekButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsSeekButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Forward}" />
+    </Style>
+        
     <Style x:Key="PlaybackControlsStyle" TargetType="TemplatedView">
         <Setter Property="ControlTemplate">
             <ControlTemplate>
@@ -223,8 +233,10 @@
                             </StackLayout>
                             <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
                             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                                <Button x:Name="RewindButton" Style="{TemplateBinding RewindButtonStyle}" />
                                 <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" />
                                 <Button x:Name="StopButton" Style="{TemplateBinding StopButtonStyle}" />
+                                <Button x:Name="SeekButton" Style="{TemplateBinding SeekButtonStyle}" />
                             </StackLayout>
                             <ContentPresenter Content="{TemplateBinding ButtonBarEndArea}" HorizontalOptions="End" VerticalOptions="Center" />
                             <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
