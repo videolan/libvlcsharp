@@ -79,8 +79,18 @@
         </Setter>
     </Style>
 
+        
+    <Style x:Key="ElapsedTimeLabelStyle" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+        <Setter Property="Margin" Value="15,15,15,0" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="TextColor" Value="{TemplateBinding MainColor}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
     <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
-        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+        <Setter Property="Margin" Value="15,15,15,0" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
         <Setter Property="VerticalOptions" Value="Center" />
@@ -225,9 +235,16 @@
                     <Label x:Name="AspectRatioLabel" Style="{TemplateBinding MessageStyle}"/>
                     
                     <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
+                        <StackLayout Orientation="Horizontal" >
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                                <Label x:Name="ElapsedTimeLabel" Style="{TemplateBinding ElapsedTimeLabelStyle}"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                                <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"/>
+                            </StackLayout>
+                        </StackLayout>
                         <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
                             <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" />
-                            <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"></Label>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center">
