@@ -51,6 +51,7 @@ namespace LibVLCSharp.Forms.Shared
             MessageStyle = Resources[nameof(MessageStyle)] as Style;
             PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
             RemainingTimeLabelStyle = Resources[nameof(RemainingTimeLabelStyle)] as Style;
+            ElapsedTimeLabelStyle = Resources[nameof(ElapsedTimeLabelStyle)] as Style;
             SeekBarStyle = Resources[nameof(SeekBarStyle)] as Style;
             StopButtonStyle = Resources[nameof(StopButtonStyle)] as Style;
             AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
@@ -66,6 +67,7 @@ namespace LibVLCSharp.Forms.Shared
         private VisualElement ControlsPanel { get; set; }
         private Button PlayPauseButton { get; set; }
         private Label RemainingTimeLabel { get; set; }
+        private Label ElapsedTimeLabel { get; set; }
         private Label AspectRatioLabel { get; set; }
 
         private Slider SeekBar { get; set; }
@@ -268,6 +270,20 @@ namespace LibVLCSharp.Forms.Shared
         {
             get => (Style)GetValue(RemainingTimeLabelStyleProperty);
             set => SetValue(RemainingTimeLabelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ElapsedTimeLabelStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty ElapsedTimeLabelStyleProperty = BindableProperty.Create(nameof(ElapsedTimeLabelStyle),
+            typeof(Style), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the elapsed time label style.
+        /// </summary>
+        public Style ElapsedTimeLabelStyle
+        {
+            get => (Style)GetValue(ElapsedTimeLabelStyleProperty);
+            set => SetValue(ElapsedTimeLabelStyleProperty, value);
         }
 
         /// <summary>
@@ -665,6 +681,7 @@ namespace LibVLCSharp.Forms.Shared
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
+            ElapsedTimeLabel = this.FindChild<Label>(nameof(ElapsedTimeLabel));
             AspectRatioLabel = this.FindChild<Label>(nameof(AspectRatioLabel));
             SetClickEventHandler("RewindButton", RewindButton_Clicked);
             SetClickEventHandler("SeekButton", SeekButton_Clicked);
@@ -1343,7 +1360,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void UpdateTime(double? position = null)
         {
-            if (RemainingTimeLabel == null)
+            if (RemainingTimeLabel == null || ElapsedTimeLabel == null)
             {
                 return;
             }
@@ -1356,11 +1373,13 @@ namespace LibVLCSharp.Forms.Shared
                     state == VLCState.Stopped ? 0 : mediaPlayer.Length;
                 var time = position ?? (SeekBar.Value * length / SeekBar.Maximum);
                 var timeRemaining = TimeSpan.FromMilliseconds(length - time).ToShortString();
+                var timeElapsed = TimeSpan.FromMilliseconds(time).ToShortString();
                 if (RemainingTimeLabel.Text != timeRemaining)
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         RemainingTimeLabel.Text = timeRemaining;
+                        ElapsedTimeLabel.Text = timeElapsed;
                     });
                 }
             }
