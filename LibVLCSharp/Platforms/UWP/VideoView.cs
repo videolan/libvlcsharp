@@ -213,11 +213,16 @@
         /// </summary>
         void UpdateSize()
         {
-            IntPtr width = Marshal.AllocHGlobal(sizeof(int));
-            IntPtr height = Marshal.AllocHGlobal(sizeof(int));
+            if (_swapChain == null || _swapChain.IsDisposed) return;
+
+            IntPtr width = IntPtr.Zero;
+            IntPtr height = IntPtr.Zero;
 
             try
             {
+                width = Marshal.AllocHGlobal(sizeof(int));
+                height = Marshal.AllocHGlobal(sizeof(int));
+
                 var w = (int)(_panel.ActualWidth * _panel.CompositionScaleX);
                 var h = (int)(_panel.ActualHeight * _panel.CompositionScaleY);
 
