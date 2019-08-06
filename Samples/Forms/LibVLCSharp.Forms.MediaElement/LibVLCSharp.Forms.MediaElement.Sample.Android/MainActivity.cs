@@ -42,14 +42,6 @@ namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
         protected override void OnResume()
         {
             base.OnResume();
-            HideSystemUI();
-        }
-
-        private void HideSystemUI()
-        {
-            Window.DecorView.SystemUiVisibility = Window.DecorView.SystemUiVisibility |
-                (StatusBarVisibility)(SystemUiFlags.ImmersiveSticky | SystemUiFlags.Fullscreen | SystemUiFlags.HideNavigation |
-                SystemUiFlags.LayoutStable | SystemUiFlags.LayoutFullscreen | SystemUiFlags.LayoutHideNavigation);
         }
     }
 }

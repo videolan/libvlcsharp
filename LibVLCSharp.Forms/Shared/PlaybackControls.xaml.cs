@@ -81,6 +81,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private bool Initialized { get; set; }
         private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
+        private ISystemUI SystemUI => DependencyService.Get<ISystemUI>();
         private AspectRatio CurrentAspectRatio = AspectRatio.Original;
 
         private Timer FadeOutTimer { get; }
@@ -1495,6 +1496,15 @@ namespace LibVLCSharp.Forms.Shared
                     ControlsPanel.IsVisible = false;
                 }
             });
+
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var systemUI = SystemUI;
+                if (systemUI != null)
+                {
+                    systemUI.HideSystemUI();
+                }
+            });
         }
 
         ObservableCollection<RendererItem> RendererItems = new ObservableCollection<RendererItem>();
@@ -1573,6 +1583,14 @@ namespace LibVLCSharp.Forms.Shared
             controlsPanel.IsVisible = true;
             if (controlsPanel.Opacity != 1)
             {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    var systemUI = SystemUI;
+                    if (systemUI != null)
+                    {
+                        systemUI.ShowSystemUI();
+                    }
+                });
                 await controlsPanel.FadeTo(1);
             }
             if (FadeOutEnabled && ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
