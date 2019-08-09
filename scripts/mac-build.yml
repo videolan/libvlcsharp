@@ -1,13 +1,13 @@
 steps:
-- task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core sdk 2.2.105'
+- task: UseDotNet@2
+  displayName: 'Use dotnet sdk 2.2.401'
   inputs:
-    version: 2.2.105
+    version: 2.2.401
 
 - bash: |
    #!/bin/bash
    set -ex   
-   MONO_MACOS_PKG_DOWNLOAD_URL='https://download.mono-project.com/archive/mdk-latest-vs.pkg'
+   MONO_MACOS_PKG_DOWNLOAD_URL='https://download.mono-project.com/archive/mdk-latest-stable.pkg'
    mkdir -p /tmp/mono-install
    cd /tmp/mono-install
    mono --version
