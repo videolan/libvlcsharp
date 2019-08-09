@@ -1,3 +1,8 @@
+LibVLCSharp version 3.1.1
+=========================
+* Core: MediaPlayer: Allow to unset remote renderer https://code.videolan.org/videolan/LibVLCSharp/issues/198
+* UWP: Fix NullReferenceException when a disposed VideoView is added to the tree https://code.videolan.org/videolan/LibVLCSharp/issues/193
+
 LibVLCSharp version 3.1.0
 =========================
 * Fix Windows XP support by disabling message box for plugins that fail to load https://code.videolan.org/videolan/LibVLCSharp/issues/174
