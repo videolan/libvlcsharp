@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:LibVLCSharp.Forms.Sample.MediaPlayerElement"
-             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"            
              xmlns:vlc="clr-namespace:LibVLCSharp.Forms.Shared;assembly=LibVLCSharp.Forms"
              x:Class="LibVLCSharp.Forms.Sample.MediaPlayerElement.MainPage"
              Appearing="OnAppearing">

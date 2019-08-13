@@ -1,10 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using Android.Views;
 using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Sample.MediaPlayerElement;
-using LibVLCSharp.Forms.Shared;
 
 namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
 {
@@ -29,7 +27,6 @@ namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-            LibVLCSharpFormsRenderer.Init();
             Platform.Init(this);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
