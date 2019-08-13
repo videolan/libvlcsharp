@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for power management.
     /// </summary>
-    internal interface IPowerManager
+    public interface IPowerManager
     {
         /// <summary>
         /// Gets or sets a value indicating whether the screen should be kept on.
