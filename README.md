@@ -12,26 +12,27 @@ It provides a comprehensive multimedia API that can be used across mobile, serve
 
 _The official repository URL for this repo is https://code.videolan.org/videolan/LibVLCSharp._
 
-- [LibVLCSharp](#libvlcsharp)
-  - [Features](#features)
-  - [Supported platforms](#supported-platforms)
-  - [Installation](#installation)
-  - [Getting started](#getting-started)
-  - [Samples](#samples)
-  - [Quick API overview](#quick-api-overview)
-  - [Roadmap](#roadmap)
-  - [Versioning](#versioning)
-  - [Release Notes](#release-notes)
-  - [Contribute](#contribute)
-    - [Pull request](#pull-request)
-    - [Gitlab issues](#gitlab-issues)
-  - [Communication](#communication)
-    - [Forum](#forum)
-    - [Issues](#issues)
-    - [IRC](#irc)
-    - [StackOverflow](#stackoverflow)
-  - [Code of Conduct](#code-of-conduct)
-  - [License](#license)
+- [LibVLCSharp](#LibVLCSharp)
+  - [Features](#Features)
+    - [MediaPlayerElement](#MediaPlayerElement)
+  - [Supported platforms](#Supported-platforms)
+  - [Installation](#Installation)
+  - [Getting started](#Getting-started)
+  - [Samples](#Samples)
+  - [Quick API overview](#Quick-API-overview)
+  - [Roadmap](#Roadmap)
+  - [Versioning](#Versioning)
+  - [Release Notes](#Release-Notes)
+  - [Contribute](#Contribute)
+    - [Pull request](#Pull-request)
+    - [Gitlab issues](#Gitlab-issues)
+  - [Communication](#Communication)
+    - [Forum](#Forum)
+    - [Issues](#Issues)
+    - [IRC](#IRC)
+    - [StackOverflow](#StackOverflow)
+  - [Code of Conduct](#Code-of-Conduct)
+  - [License](#License)
 
 ## Features
 
@@ -51,6 +52,14 @@ Some of the [features](https://www.videolan.org/vlc/features.html) include:
 - Equalizer support.
 
 Most things you can achieve with the regular VLC desktop app, you can also achieve using `libvlc`.
+
+### MediaPlayerElement
+
+Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android).
+
+<h3 align="center">
+  <img src="Assets/media-element.png"/>
+</h3>
 
 ## Supported platforms
 
@@ -240,3 +249,8 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 LibVLCSharp is under the LGPLv2.1.
 
 Note: the .NET4.0 LibVLCSharp build references a nuget package that may indicate its license as the .NET Library license but it's actually [opensource](https://github.com/Microsoft/referencesource/commit/6952d2c3923d30a4d88bf57120688b9532bbe1d8) under MIT.
+
+<br/>
+<h3 align="center">
+    <a href="https://code.videolan.org/videolan/LibVLCSharp"><img src="Assets/icon.png"/></a>
+</h3>
