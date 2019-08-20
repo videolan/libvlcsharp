@@ -192,7 +192,7 @@ The [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md) package features a `MediaPl
 
 - Game engines (Unity, Unreal, Godot)
 
-If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) or [PR](https://github.com/videolan/libvlcsharp/pulls).
+If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) (using an issue template) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
 ## Versioning
 
@@ -206,11 +206,11 @@ Check out the [NEWS](NEWS) file for details about each release.
 
 ### Pull request
 
-Pull requests are more than welcome! If you do submit one, please make sure to read the [contributing guidelines](CONTRIBUTING.md) first.
+Pull requests are more than welcome! If you do submit one, please make sure to read the [contributing guidelines](CONTRIBUTING.md) first, and use our pull request template.
 
 ### Gitlab issues
 
-You can look through issues we currently have on the [VideoLAN Gitlab](https://code.videolan.org/videolan/LibVLCSharp).
+You can look through issues we currently have on the [VideoLAN Gitlab](https://code.videolan.org/videolan/LibVLCSharp). Please pick one of our GitLab issue templates so we can assist you better.
 
 ## Communication
 
