@@ -123,7 +123,7 @@
     </Style>
 
     <Style x:Key="AudioTracksSelectionButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-        <Setter Property="IsVisible" Value="True" />
+        <Setter Property="IsVisible" Value="{TemplateBinding IsAudioTracksSelectionButtonVisible}" />
         <Setter Property="Text" Value="&#xe3a1;" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -157,7 +157,7 @@
     </Style>
 
     <Style x:Key="ClosedCaptionsSelectionButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
-        <Setter Property="IsVisible" Value="True" />
+        <Setter Property="IsVisible" Value="{TemplateBinding IsClosedCaptionsSelectionButtonVisible}" />
         <Setter Property="Text" Value="&#xe01c;" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
