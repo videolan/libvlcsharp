@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 
 namespace LibVLCSharp.WPF
 {
@@ -107,6 +108,14 @@ namespace LibVLCSharp.WPF
         void Wndhost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Close();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.System && e.SystemKey == Key.F4)
+            {
+                _wndhost.Focus();
+            }
         }
     }
 }
