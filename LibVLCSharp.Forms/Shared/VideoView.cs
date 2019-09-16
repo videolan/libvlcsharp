@@ -5,6 +5,9 @@ using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
 {
+    /// <summary>
+    /// Generic Xamarin.Forms VideoView
+    /// </summary>
     public class VideoView : View
     {
         /// <summary>
@@ -17,6 +20,9 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         public event EventHandler<MediaPlayerChangedEventArgs> MediaPlayerChanged;
 
+        /// <summary>
+        /// Xamarin.Forms MediaPlayer databinded property
+        /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
                 typeof(LibVLCSharp.Shared.MediaPlayer),
                 typeof(VideoView),

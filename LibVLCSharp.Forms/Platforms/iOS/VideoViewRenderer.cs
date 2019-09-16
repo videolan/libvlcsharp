@@ -9,9 +9,16 @@ using Foundation;
 [assembly: ExportRenderer(typeof(LibVLCSharp.Forms.Shared.VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.iOS
 {
+    /// <summary>
+    /// Xamarin.Forms custom renderer for the iOS VideoView
+    /// </summary>
     [Preserve(AllMembers = true)]
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
     {
+        /// <summary>
+        /// Native control management during lifecycle events
+        /// </summary>
+        /// <param name="e">lifecycle event</param>
         protected override void OnElementChanged(ElementChangedEventArgs<LibVLCSharp.Forms.Shared.VideoView> e)
         {
             base.OnElementChanged(e);

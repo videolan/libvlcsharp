@@ -10,12 +10,23 @@ using Xamarin.Forms.Platform.Android;
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.Android
 {
+    /// <summary>
+    /// Xamarin.Forms custom renderer for the Android VideoView
+    /// </summary>
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Android.VideoView>
     {
+        /// <summary>
+        /// Main constructor (empty)
+        /// </summary>
+        /// <param name="context">Android context</param>
         public VideoViewRenderer(Context context) : base(context)
         {
         }
 
+        /// <summary>
+        /// Native control management during lifecycle events
+        /// </summary>
+        /// <param name="e">lifecycle event</param>
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);

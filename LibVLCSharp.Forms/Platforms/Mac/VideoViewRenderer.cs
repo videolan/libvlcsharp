@@ -9,8 +9,15 @@ using Xamarin.Forms.Platform.MacOS;
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.Mac
 {
+    /// <summary>
+    /// Xamarin.Forms custom renderer for the macOS VideoView
+    /// </summary>
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Mac.VideoView>
     {
+        /// <summary>
+        /// Native control management during lifecycle events
+        /// </summary>
+        /// <param name="e">lifecycle event</param>
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);
