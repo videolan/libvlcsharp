@@ -92,6 +92,11 @@ namespace LibVLCSharp.WinForms
         }
 
         bool disposedValue;
+
+        /// <summary>
+        /// Detaches the MediaPlayer from this VideoView
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (!disposedValue)
