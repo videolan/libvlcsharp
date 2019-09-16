@@ -118,11 +118,11 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
-            internal static extern ulong LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, out IntPtr pppServices);
+            internal static extern UIntPtr LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, out IntPtr pppServices);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_release")]
-            internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, ulong count);
+            internal static extern void LibVLCMediaDiscovererListRelease(IntPtr ppServices, UIntPtr count);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_set_callbacks")]
@@ -130,11 +130,11 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
-            internal static extern ulong LibVLCRendererDiscovererGetList(IntPtr libVLC, out IntPtr discovererList);
+            internal static extern UIntPtr LibVLCRendererDiscovererGetList(IntPtr libVLC, out IntPtr discovererList);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_release")]
-            internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, ulong count);
+            internal static extern void LibVLCRendererDiscovererReleaseList(IntPtr discovererList, UIntPtr count);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_retain")]

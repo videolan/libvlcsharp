@@ -209,7 +209,6 @@ namespace LibVLCSharp.Shared.Helpers
 
         /// <summary>
         /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
-        /// This supports ulong libvlc signatures.
         /// </summary>
         /// <typeparam name="T">Internal struct type</typeparam>
         /// <typeparam name="TU">publicly facing struct type</typeparam>
@@ -220,17 +219,25 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
         /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU>(IntPtr nativeRef, ArrayLongOut getRef, Func<IntPtr, T> retrieve,
-            Func<T, TU> create, Action<IntPtr, ulong> releaseRef)
+            Func<T, TU> create, Action<IntPtr, UIntPtr> releaseRef)
             where T : struct
             where TU : struct
         {
             var arrayPtr = IntPtr.Zero;
-            ulong countLong = 0;
+            var countSizeT = UIntPtr.Zero;
+            var count = 0;
 
             try
-            { 
-                countLong = getRef(nativeRef, out arrayPtr);
-                var count = (int)countLong;
+            {
+                countSizeT = getRef(nativeRef, out arrayPtr);
+                if (IntPtr.Size == 4)
+                {
+                    count = Convert.ToInt32((uint)countSizeT);
+                }
+                else if (IntPtr.Size == 8)
+                {
+                    count = Convert.ToInt32((ulong)countSizeT);
+                }
 
                 if (count == 0)
                 {
@@ -258,7 +265,7 @@ namespace LibVLCSharp.Shared.Helpers
             {
                 if(arrayPtr != IntPtr.Zero)
                 {
-                    releaseRef(arrayPtr, countLong);
+                    releaseRef(arrayPtr, countSizeT);
                     arrayPtr = IntPtr.Zero;
                 }
             }
@@ -266,7 +273,7 @@ namespace LibVLCSharp.Shared.Helpers
 
         /// <summary>
         /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
-        /// This supports ulong libvlc signatures and an additional enum configuration parameter.
+        /// This supports an additional enum configuration parameter.
         /// </summary>
         /// <typeparam name="T">Internal struct type</typeparam>
         /// <typeparam name="TU">publicly facing struct type</typeparam>
@@ -279,18 +286,27 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
         /// <returns>An array of publicly facing struct types</returns>
         internal static TU[] Retrieve<T, TU, TE>(IntPtr nativeRef, TE extraParam, CategoryArrayOut<TE> getRef, Func<IntPtr, T> retrieve,
-            Func<T, TU> create, Action<IntPtr, ulong> releaseRef) 
+            Func<T, TU> create, Action<IntPtr, UIntPtr> releaseRef) 
             where T : struct
             where TU : struct
             where TE : Enum
         {
             var arrayPtr = IntPtr.Zero;
-            ulong countLong = 0;
+            var countSizeT = UIntPtr.Zero;
+            var count = 0;
 
             try
-            { 
-                countLong = getRef(nativeRef, extraParam, out arrayPtr);
-                var count = (int)countLong;
+            {
+                countSizeT = getRef(nativeRef, extraParam, out arrayPtr);
+                if (IntPtr.Size == 4)
+                {
+                    count = Convert.ToInt32((uint)countSizeT);
+                }
+                else if (IntPtr.Size == 8)
+                {
+                    count = Convert.ToInt32((ulong)countSizeT);
+                }
+
                 if (count == 0)
                 {
 #if NETSTANDARD1_1 || NET40
@@ -317,16 +333,16 @@ namespace LibVLCSharp.Shared.Helpers
             {
                 if (arrayPtr != IntPtr.Zero)
                 {
-                    releaseRef(arrayPtr, countLong);
+                    releaseRef(arrayPtr, countSizeT);
                     arrayPtr = IntPtr.Zero;
                 }
             }
         }
 
         // These delegates allow the definition of generic functions with [OUT] parameters
-        internal delegate ulong CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
+        internal delegate UIntPtr CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
         internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);
-        internal delegate ulong ArrayLongOut(IntPtr nativeRef, out IntPtr array);
+        internal delegate UIntPtr ArrayLongOut(IntPtr nativeRef, out IntPtr array);
 
         /// <summary>
         /// Turns an array of UTF16 C# strings to an array of pointer to UTF8 strings
