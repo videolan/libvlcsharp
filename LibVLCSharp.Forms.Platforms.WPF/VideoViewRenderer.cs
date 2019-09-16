@@ -6,8 +6,15 @@ using Xamarin.Forms.Platform.WPF;
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.WPF
 {
+    /// <summary>
+    /// Xamarin.Forms renderer for the VideoView on WPF
+    /// </summary>
     public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.WPF.VideoView>
     {
+        /// <summary>
+        /// Native control management during lifecycle events
+        /// </summary>
+        /// <param name="e">lifecycle event</param>
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);
