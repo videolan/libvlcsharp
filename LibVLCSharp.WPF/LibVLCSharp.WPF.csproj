@@ -21,7 +21,8 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
