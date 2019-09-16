@@ -7,10 +7,17 @@ using Xamarin.Forms.Platform.GTK;
 [assembly: ExportRenderer(typeof(LibVLCSharp.Forms.Shared.VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.GTK
 {
+    /// <summary>
+    /// Xamarin.Forms renderer for the VideoView on GTK
+    /// </summary>
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.GTK.VideoView>
     {
         LibVLCSharp.GTK.VideoView _videoView;
 
+        /// <summary>
+        /// Native control management during lifecycle events
+        /// </summary>
+        /// <param name="e">lifecycle event</param>
         protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);
@@ -45,6 +52,10 @@ namespace LibVLCSharp.Forms.Platforms.GTK
             Control.MediaPlayer = e.NewMediaPlayer;
         }
 
+        /// <summary>
+        /// Dispose of the videoview, if any
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
