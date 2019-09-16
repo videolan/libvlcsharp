@@ -34,7 +34,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// The real log event handlers.
         /// </summary>
-        static EventHandler<LogEventArgs> _log;
+        EventHandler<LogEventArgs> _log;
 
 #if NET || NETSTANDARD
         IntPtr _logFileHandle;
@@ -354,17 +354,25 @@ namespace LibVLCSharp.Shared
             return filePtr;
         }
 #endif
-
+        GCHandle _logGcHandle;
         void SetLog(LogCallback cb)
         {
             _logCallback = cb ?? throw new ArgumentException(nameof(cb));
 
-            Native.LibVLCLogSet(NativeReference, cb, IntPtr.Zero);
+            _logGcHandle = GCHandle.Alloc(_log, GCHandleType.Normal);
+
+            Native.LibVLCLogSet(NativeReference, cb, GCHandle.ToIntPtr(_logGcHandle));
         }
 
         void UnsetLog()
         {
             if (_logCallback == null) return;
+
+            // TODO: List of GcHandles?
+            if (_logGcHandle.IsAllocated)
+            {
+                _logGcHandle.Free();
+            }
 
             _logCallback = null;
             Native.LibVLCLogUnset(NativeReference);
@@ -623,7 +631,10 @@ namespace LibVLCSharp.Shared
         [MonoPInvokeCallback(typeof(LogCallback))]
         static void OnLogInternal(IntPtr data, LogLevel level, IntPtr ctx, IntPtr format, IntPtr args)
         {
-            if (_log == null) return;
+            var gch = GCHandle.FromIntPtr(data);
+            var logger = gch.Target as EventHandler<LogEventArgs>;
+
+            if (logger == null) return;
 
             IntPtr buffer = IntPtr.Zero;
             try
@@ -635,9 +646,9 @@ namespace LibVLCSharp.Shared
                     var message = buffer.FromUtf8();
                     GetLogContext(ctx, out var module, out var file, out var line);
 #if NET40
-                    Task.Factory.StartNew(() => _log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                    Task.Factory.StartNew(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #else
-                    Task.Run(() => _log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                    Task.Run(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #endif
                 }
             }
