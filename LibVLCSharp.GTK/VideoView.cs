@@ -44,6 +44,9 @@ namespace LibVLCSharp.GTK
 
         private MediaPlayer _mediaPlayer;
 
+        /// <summary>
+        /// GTK VideoView constructor
+        /// </summary>
         public VideoView()
         {
             Color black = Color.Zero;
@@ -53,6 +56,9 @@ namespace LibVLCSharp.GTK
             Realized += (s, e) => Attach();
         }
 
+        /// <summary>
+        /// The MediaPlayer property for that GTK VideoView
+        /// </summary>
         public MediaPlayer MediaPlayer
         {
             get
@@ -122,6 +128,9 @@ namespace LibVLCSharp.GTK
             }
         }
 
+        /// <summary>
+        /// Detaches the MediaPlayer before disposing
+        /// </summary>
         public override void Dispose()
         {
             Detach();
