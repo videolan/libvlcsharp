@@ -357,6 +357,8 @@ namespace LibVLCSharp.Shared
         GCHandle _logGcHandle;
         void SetLog(LogCallback cb)
         {
+            UnsetLog();
+
             _logCallback = cb ?? throw new ArgumentException(nameof(cb));
 
             _logGcHandle = GCHandle.Alloc(_log, GCHandleType.Normal);
@@ -368,7 +370,6 @@ namespace LibVLCSharp.Shared
         {
             if (_logCallback == null) return;
 
-            // TODO: List of GcHandles?
             if (_logGcHandle.IsAllocated)
             {
                 _logGcHandle.Free();
@@ -390,10 +391,7 @@ namespace LibVLCSharp.Shared
                 lock (_logLock)
                 {
                     _log += value;
-                    if(_logSubscriberCount == 0)
-                    {
-                        SetLog(OnLogInternal);
-                    }
+                    SetLog(OnLogInternal);
                     _logSubscriberCount++;
                 }
             }
@@ -410,6 +408,10 @@ namespace LibVLCSharp.Shared
                     if (_logSubscriberCount == 0)
                     {
                         UnsetLog();
+                    }
+                    else
+                    {
+                        SetLog(OnLogInternal);
                     }
                 }
             }
@@ -631,10 +633,13 @@ namespace LibVLCSharp.Shared
         [MonoPInvokeCallback(typeof(LogCallback))]
         static void OnLogInternal(IntPtr data, LogLevel level, IntPtr ctx, IntPtr format, IntPtr args)
         {
-            var gch = GCHandle.FromIntPtr(data);
-            var logger = gch.Target as EventHandler<LogEventArgs>;
+            if (data == IntPtr.Zero)
+                return;
 
-            if (logger == null) return;
+            var gch = GCHandle.FromIntPtr(data);
+
+            if (!gch.IsAllocated || !(gch.Target is EventHandler<LogEventArgs> logger))
+                return;
 
             IntPtr buffer = IntPtr.Zero;
             try
