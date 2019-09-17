@@ -53,6 +53,32 @@ namespace LibVLCSharp.Shared.Helpers
 
             [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args);
+
+            [DllImport(Constants.libSystem, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsnprintf_apple(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+
+            [DllImport(Constants.Libc, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsnprintf_linux(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+
+            [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+        }
+
+        internal static int vsnprintf(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
+        {
+#if ANDROID
+            return Native.vsnprintf_linux(buffer, size, format, args);
+#elif APPLE
+            return Native.vsnprintf_apple(buffer, size, format, args);
+#else
+            if (PlatformHelper.IsWindows)
+                return Native.vsnprintf_windows(buffer, size, format, args);
+            else if (PlatformHelper.IsMac)
+                return Native.vsnprintf_apple(buffer, size, format, args);
+            else if (PlatformHelper.IsLinux)
+                return Native.vsnprintf_linux(buffer, size, format, args);
+            return -1;
+#endif
         }
 
         internal static int vsprintf(IntPtr buffer, IntPtr format, IntPtr args)
