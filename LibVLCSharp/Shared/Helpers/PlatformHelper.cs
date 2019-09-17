@@ -27,6 +27,15 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
+        public static bool IsLinuxDesktop
+        {
+#if ANDROID
+            get => false;
+#else
+            get => IsLinux;
+#endif
+        }
+
         public static bool IsMac
         {
 #if NET40 || UWP

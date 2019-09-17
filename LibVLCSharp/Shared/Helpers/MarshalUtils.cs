@@ -64,7 +64,90 @@ namespace LibVLCSharp.Shared.Helpers
             public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
         }
 
-        internal static int vsnprintf(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
+        #region logging
+
+        internal static string GetLogMessage(IntPtr format, IntPtr args)
+        {
+            // special marshalling is needed on Linux desktop 64 bits.
+            if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
+            {
+                return LinuxX64Callback(format, args);
+            }
+
+            var byteLength = vsnprintf(IntPtr.Zero, UIntPtr.Zero, format, args) + 1;
+            if (byteLength <= 1)
+                return string.Empty;
+
+            var buffer = IntPtr.Zero;
+            try
+            {
+                buffer = Marshal.AllocHGlobal(byteLength);
+                vsprintf(buffer, format, args);
+                return buffer.FromUtf8();
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+
+        static string LinuxX64Callback(IntPtr format, IntPtr args)
+        {
+            // The args pointer cannot be reused between two calls. We need to make a copy of the underlying structure.
+            var listStructure = PtrToStructure<VaListLinuxX64>(args);
+            var byteLength = 0;
+            UseStructurePointer(listStructure, listPointer =>
+            {
+                byteLength = Native.vsnprintf_linux(IntPtr.Zero, UIntPtr.Zero, format, listPointer) + 1;
+            });
+
+            var utf8Buffer = IntPtr.Zero;
+            try
+            {
+                utf8Buffer = Marshal.AllocHGlobal(byteLength);
+
+                return UseStructurePointer(listStructure, listPointer =>
+                {
+                    Native.vsprintf_linux(utf8Buffer, format, listPointer);
+                    return utf8Buffer.FromUtf8();
+                });
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(utf8Buffer);
+            }
+        }
+
+        static string UseStructurePointer<T>(T structure, Func<IntPtr, string> action)
+        {
+            var listPointer = IntPtr.Zero;
+            try
+            {
+                listPointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
+                Marshal.StructureToPtr(structure, listPointer, false);
+                return action(listPointer);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(listPointer);
+            }
+        }
+
+        static void UseStructurePointer<T>(T structure, Action<IntPtr> action)
+        {
+            var listPointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
+            try
+            {
+                Marshal.StructureToPtr(structure, listPointer, false);
+                action(listPointer);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(listPointer);
+            }
+        }
+
+        static int vsnprintf(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
         {
 #if ANDROID
             return Native.vsnprintf_linux(buffer, size, format, args);
@@ -81,7 +164,7 @@ namespace LibVLCSharp.Shared.Helpers
 #endif
         }
 
-        internal static int vsprintf(IntPtr buffer, IntPtr format, IntPtr args)
+        static int vsprintf(IntPtr buffer, IntPtr format, IntPtr args)
         {
 #if ANDROID
             return Native.vsprintf_linux(buffer, format, args);
@@ -97,6 +180,8 @@ namespace LibVLCSharp.Shared.Helpers
             return -1;
 #endif
         }
+        
+        #endregion
 
         /// <summary>
         /// Helper for libvlc_new
@@ -538,6 +623,15 @@ namespace LibVLCSharp.Shared.Helpers
         {
             foreach (var ptr in ptrs)
                 Marshal.FreeHGlobal(ptr);
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        struct VaListLinuxX64
+        {
+            uint gp_offset;
+            uint fp_offset;
+            IntPtr overflow_arg_area;
+            IntPtr reg_save_area;
         }
     }
 
