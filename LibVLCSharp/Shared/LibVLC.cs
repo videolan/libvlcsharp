@@ -641,21 +641,22 @@ namespace LibVLCSharp.Shared
             if (!gch.IsAllocated || !(gch.Target is EventHandler<LogEventArgs> logger))
                 return;
 
-            IntPtr buffer = IntPtr.Zero;
+            var buffer = IntPtr.Zero;
             try
             {
-                buffer = Marshal.AllocHGlobal(2048 + 1);
+                var byteLength = MarshalUtils.vsnprintf(IntPtr.Zero, UIntPtr.Zero, format, args) + 1;
+                if (byteLength <= 1) return;
+
+                buffer = Marshal.AllocHGlobal(byteLength);
                 var count = MarshalUtils.vsprintf(buffer, format, args);
-                if (count > -1)
-                {
-                    var message = buffer.FromUtf8();
-                    GetLogContext(ctx, out var module, out var file, out var line);
+
+                var message = buffer.FromUtf8();
+                GetLogContext(ctx, out var module, out var file, out var line);
 #if NET40
-                    Task.Factory.StartNew(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Factory.StartNew(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #else
-                    Task.Run(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Run(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #endif
-                }
             }
             finally
             {
