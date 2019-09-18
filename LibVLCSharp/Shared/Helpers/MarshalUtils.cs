@@ -528,7 +528,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <summary>
         /// Crossplatform fclose
         /// </summary>
-        /// <param name="file handle"></param>
+        /// <param name="fileHandle"></param>
         /// <returns>true if successful</returns>
         internal static bool Close(IntPtr fileHandle)
         {
@@ -595,7 +595,6 @@ namespace LibVLCSharp.Shared.Helpers
         /// <summary>
         /// Performs the native call and frees the ptrs
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="interopCall"></param>
         /// <param name="ptrs"></param>
         internal static void PerformInteropAndFree(Action interopCall, params IntPtr[] ptrs)

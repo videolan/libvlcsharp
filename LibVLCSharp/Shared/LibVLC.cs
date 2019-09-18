@@ -15,16 +15,26 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class LibVLC : Internal
     {
+        /// <summary>
+        /// Determines whether two object instances are equal. 
+        /// </summary>
+        /// <param name="other">other libvlc instance to compare with</param>
+        /// <returns>true if same instance, false otherwise</returns>
         protected bool Equals(LibVLC other)
         {
             return NativeReference.Equals(other.NativeReference);
         }
 
+        /// <summary>
+        /// Determines whether two object instances are equal. 
+        /// </summary>
+        /// <param name="obj">other libvlc instance to compare with</param>
+        /// <returns>true if same instance, false otherwise</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((LibVLC) obj);
         }
 
@@ -39,6 +49,10 @@ namespace LibVLCSharp.Shared
 #if NET || NETSTANDARD
         IntPtr _logFileHandle;
 #endif
+        /// <summary>
+        /// Returns the hashcode for this libvlc instance
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return NativeReference.GetHashCode();
@@ -225,6 +239,10 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
+        /// <summary>
+        /// Dipose of this libvlc instance
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
@@ -238,15 +256,27 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-        
-        public static bool operator ==(LibVLC obj1, LibVLC obj2)
+
+        /// <summary>
+        /// Determines whether 2 instances of libvlc are equals
+        /// </summary>
+        /// <param name="libvlc1">1st instance of libvlc</param>
+        /// <param name="libvlc2">2nd instance of libvlc</param>
+        /// <returns></returns>
+        public static bool operator ==(LibVLC libvlc1, LibVLC libvlc2)
         {
-            return obj1?.NativeReference == obj2?.NativeReference;
+            return libvlc1?.NativeReference == libvlc2?.NativeReference;
         }
 
-        public static bool operator !=(LibVLC obj1, LibVLC obj2)
+        /// <summary>
+        /// Determines whether 2 instances of libvlc are different
+        /// </summary>
+        /// <param name="libvlc1">1st instance of libvlc</param>
+        /// <param name="libvlc2">2nd instance of libvlc</param>
+        /// <returns></returns>
+        public static bool operator !=(LibVLC libvlc1, LibVLC libvlc2)
         {
-            return obj1?.NativeReference != obj2?.NativeReference;
+            return libvlc1?.NativeReference != libvlc2?.NativeReference;
         }
 
 #if NET || NETSTANDARD
