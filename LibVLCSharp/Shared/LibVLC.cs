@@ -233,6 +233,7 @@ namespace LibVLCSharp.Shared
             if (disposing)
             {
                 UnsetDialogHandlers();
+                UnsetLog();
             }
 
             base.Dispose(disposing);
@@ -354,25 +355,23 @@ namespace LibVLCSharp.Shared
             return filePtr;
         }
 #endif
-        GCHandle _logGcHandle;
+        GCHandle _libvlcGcHandle;
         void SetLog(LogCallback cb)
         {
-            UnsetLog();
-
             _logCallback = cb ?? throw new ArgumentException(nameof(cb));
 
-            _logGcHandle = GCHandle.Alloc(_log, GCHandleType.Normal);
+            _libvlcGcHandle = GCHandle.Alloc(this, GCHandleType.Normal);
 
-            Native.LibVLCLogSet(NativeReference, cb, GCHandle.ToIntPtr(_logGcHandle));
+            Native.LibVLCLogSet(NativeReference, cb, GCHandle.ToIntPtr(_libvlcGcHandle));
         }
 
         void UnsetLog()
         {
             if (_logCallback == null) return;
 
-            if (_logGcHandle.IsAllocated)
+            if (_libvlcGcHandle.IsAllocated)
             {
-                _logGcHandle.Free();
+                _libvlcGcHandle.Free();
             }
 
             _logCallback = null;
@@ -391,7 +390,8 @@ namespace LibVLCSharp.Shared
                 lock (_logLock)
                 {
                     _log += value;
-                    SetLog(OnLogInternal);
+                    if(_logSubscriberCount == 0)
+                        SetLog(OnLogInternal);
                     _logSubscriberCount++;
                 }
             }
@@ -408,10 +408,6 @@ namespace LibVLCSharp.Shared
                     if (_logSubscriberCount == 0)
                     {
                         UnsetLog();
-                    }
-                    else
-                    {
-                        SetLog(OnLogInternal);
                     }
                 }
             }
@@ -638,7 +634,7 @@ namespace LibVLCSharp.Shared
 
             var gch = GCHandle.FromIntPtr(data);
 
-            if (!gch.IsAllocated || !(gch.Target is EventHandler<LogEventArgs> logger))
+            if (!gch.IsAllocated || !(gch.Target is LibVLC libvlc))
                 return;
 
             try
@@ -647,9 +643,9 @@ namespace LibVLCSharp.Shared
 
                 GetLogContext(ctx, out var module, out var file, out var line);
 #if NET40
-                Task.Factory.StartNew(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Factory.StartNew(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #else
-                Task.Run(() => logger?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Run(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #endif
             }
             catch
