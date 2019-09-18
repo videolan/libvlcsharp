@@ -12,6 +12,10 @@ using Java.Interop;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// The Core class handles libvlc loading intricacies on various platforms as well as 
+    /// the libvlc/libvlcsharp version match check.
+    /// </summary>
     public static class Core
     {
         struct Native
