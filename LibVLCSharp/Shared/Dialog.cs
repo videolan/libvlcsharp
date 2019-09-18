@@ -118,8 +118,19 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public enum DialogQuestionType
     {
+        /// <summary>
+        /// Normal question
+        /// </summary>
         Normal = 0,
+
+        /// <summary>
+        /// Warning question
+        /// </summary>
         Warning = 1,
+
+        /// <summary>
+        /// Critical question
+        /// </summary>
         Critical = 2
     }
 
