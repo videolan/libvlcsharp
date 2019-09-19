@@ -634,7 +634,7 @@ namespace LibVLCSharp.Shared
 
             var gch = GCHandle.FromIntPtr(data);
 
-            if (!gch.IsAllocated || !(gch.Target is LibVLC libvlc))
+            if (!gch.IsAllocated || !(gch.Target is LibVLC libvlc) || libvlc.IsDisposed)
                 return;
 
             try
@@ -643,9 +643,9 @@ namespace LibVLCSharp.Shared
 
                 GetLogContext(ctx, out var module, out var file, out var line);
 #if NET40
-                Task.Factory.StartNew(() => libvlc?._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Factory.StartNew(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #else
-                Task.Run(() => libvlc?._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
+                Task.Run(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #endif
             }
             catch
