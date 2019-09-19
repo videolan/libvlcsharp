@@ -7,6 +7,6 @@ let main argv =
     Core.Initialize()
     let libVLC = new LibVLC()
     let mp = new MediaPlayer(libVLC)
-    mp.Play(new Media(libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation)) |> ignore
+    mp.Play(new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation)) |> ignore
     let result = Console.ReadKey()
     0

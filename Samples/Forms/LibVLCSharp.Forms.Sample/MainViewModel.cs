@@ -43,7 +43,7 @@ namespace LibVLCSharp.Forms.Sample
             MediaPlayer = new MediaPlayer(LibVLC)
             {
                 Media = new Media(LibVLC,
-                    "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4",
+                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                     FromType.FromLocation)
             };
         }
