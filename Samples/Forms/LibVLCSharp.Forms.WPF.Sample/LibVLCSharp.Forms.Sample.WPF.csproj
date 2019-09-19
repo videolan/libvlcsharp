@@ -146,9 +146,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.props'))" />
     <Error Condition="!Exists('..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.targets'))" />
-    <Error Condition="!Exists('..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.7.1\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.7.1\build\VideoLAN.LibVLC.Windows.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.8\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.8\build\VideoLAN.LibVLC.Windows.targets'))" />
   </Target>
   <Import Project="..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.0-alpha3\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.0-alpha3\build\VideoLAN.LibVLC.Windows.targets')" />
   <Import Project="..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.targets" Condition="Exists('..\..\..\packages\Xamarin.Forms.3.2.0.871581\build\netstandard2.0\Xamarin.Forms.targets')" />
-  <Import Project="..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.7.1\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.7.1\build\VideoLAN.LibVLC.Windows.targets')" />
+  <Import Project="..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.8\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\..\..\packages\VideoLAN.LibVLC.Windows.3.0.8\build\VideoLAN.LibVLC.Windows.targets')" />
 </Project>

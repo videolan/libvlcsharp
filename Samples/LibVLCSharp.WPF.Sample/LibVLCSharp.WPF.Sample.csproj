@@ -121,7 +121,7 @@
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.7.1" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
