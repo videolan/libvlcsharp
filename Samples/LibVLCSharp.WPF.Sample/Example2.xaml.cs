@@ -45,7 +45,7 @@ namespace LibVLCSharp.WPF.Sample
             if (!VideoView.MediaPlayer.IsPlaying)
             {
                 VideoView.MediaPlayer.Play(new Media(_libVLC,
-                    "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation));
+                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
             }
         }
     }

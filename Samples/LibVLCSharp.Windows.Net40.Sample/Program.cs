@@ -10,7 +10,7 @@ namespace LibVLCSharp.Windows.Net40.Sample
             Core.Initialize();
 
             var libVLC = new LibVLC();
-            var media = new Media(libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation);
+            var media = new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation);
             var mp = new MediaPlayer(media);
             mp.Play();
             Console.ReadKey();

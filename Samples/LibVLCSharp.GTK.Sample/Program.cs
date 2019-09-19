@@ -28,7 +28,7 @@ namespace LibVLCSharp.GTK.Sample
 
                 //Starts playing
                 using (var media = new Media(libvlc,
-                    "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4",
+                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                     FromType.FromLocation))
                 {
                     mediaPlayer.Play(media);
