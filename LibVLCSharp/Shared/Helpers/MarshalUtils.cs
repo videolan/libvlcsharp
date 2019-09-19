@@ -120,30 +120,30 @@ namespace LibVLCSharp.Shared.Helpers
 
         static string UseStructurePointer<T>(T structure, Func<IntPtr, string> action)
         {
-            var listPointer = IntPtr.Zero;
+            var structurePointer = IntPtr.Zero;
             try
             {
-                listPointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
-                Marshal.StructureToPtr(structure, listPointer, false);
-                return action(listPointer);
+                structurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
+                Marshal.StructureToPtr(structure, structurePointer, false);
+                return action(structurePointer);
             }
             finally
             {
-                Marshal.FreeHGlobal(listPointer);
+                Marshal.FreeHGlobal(structurePointer);
             }
         }
 
         static void UseStructurePointer<T>(T structure, Action<IntPtr> action)
         {
-            var listPointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
+            var structurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
             try
             {
-                Marshal.StructureToPtr(structure, listPointer, false);
-                action(listPointer);
+                Marshal.StructureToPtr(structure, structurePointer, false);
+                action(structurePointer);
             }
             finally
             {
-                Marshal.FreeHGlobal(listPointer);
+                Marshal.FreeHGlobal(structurePointer);
             }
         }
 

@@ -648,6 +648,7 @@ namespace LibVLCSharp.Shared
                 Task.Run(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
 #endif
             }
+            // Silently catching OOM exceptions and others as this is not critical if it fails
             catch
             {
             }
