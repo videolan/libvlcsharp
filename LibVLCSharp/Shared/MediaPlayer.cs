@@ -1741,7 +1741,7 @@ namespace LibVLCSharp.Shared
         /// <para>planes must be aligned on 32-bytes boundaries.</para>
         /// </remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr LibVLCVideoLockCb(IntPtr opaque, IntPtr planes);
+        public delegate IntPtr LibVLCVideoLockCb(IntPtr opaque, out IntPtr planes);
 
         /// <summary>Callback prototype to unlock a picture buffer.</summary>
         /// <param name="opaque">private pointer as passed to libvlc_video_set_callbacks() [IN]</param>
@@ -1799,8 +1799,8 @@ namespace LibVLCSharp.Shared
         /// <para>to not break assumptions that might be held by optimized code</para>
         /// <para>in the video decoders, video filters and/or video converters.</para>
         /// </remarks>
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate uint LibVLCVideoFormatCb(ref IntPtr userData, IntPtr chroma, ref uint width,
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        public delegate uint LibVLCVideoFormatCb(ref IntPtr userData, ref uint chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
