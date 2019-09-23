@@ -1,3 +1,12 @@
+LibVLCSharp version 3.2.2
+=========================
+* Core: Fix size_t C# interop https://code.videolan.org/videolan/LibVLCSharp/issues/217
+* Core: libvlc logging https://code.videolan.org/videolan/LibVLCSharp/issues/216:
+    - Allow dynamic buffer size allocation for logs
+    - Fix libvlc log interop on Linux 64 bits
+* WPF: Move the focus to the parent window when ALT+F4 is pressed.
+* tvOS: Fix device link error regression https://code.videolan.org/videolan/LibVLCSharp/issues/218
+
 LibVLCSharp version 3.2.1
 =========================
 * MediaPlayerElement minor fix: Some buttons from PlaybackControls would not hide https://code.videolan.org/videolan/LibVLCSharp/issues/206
