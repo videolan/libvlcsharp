@@ -34,13 +34,12 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int XInitThreads();
 
+            [DllImport(Constants.Kernel32, SetLastError = true)]
+            internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
 #elif ANDROID
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
-            [DllImport(Constants.Kernel32, SetLastError = true)]
-            internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
@@ -66,34 +65,17 @@ namespace LibVLCSharp.Shared
         /// </param>
         public static void Initialize(string libvlcDirectoryPath = null)
         {
-            DisableMessageErrorBox();
 #if ANDROID
             InitializeAndroid();
 #elif UWP
             InitializeUWP();
 #elif NET || NETSTANDARD
+            DisableMessageErrorBox();
             InitializeDesktop(libvlcDirectoryPath);
 #endif
 #if !UWP10_0 && !NETSTANDARD1_1
             EnsureVersionsMatch();
 #endif
-        }
-
-        /// <summary>
-        /// Disable error dialogs in case of dll loading failures on older Windows versions.
-        /// <para/>
-        /// This is mostly to fix Windows XP support (https://code.videolan.org/videolan/LibVLCSharp/issues/173),
-        /// though it may happen under other conditions (broken plugins/wrong ABI).
-        /// <para/>
-        /// As libvlc may load additional plugins later in the lifecycle of the application, 
-        /// we should not unset this on exiting <see cref="Initialize(string)"/>
-        /// </summary>
-        static void DisableMessageErrorBox()
-        {
-            if (!PlatformHelper.IsWindows) return;
-
-            var oldMode = Native.SetErrorMode(ErrorModes.SYSTEM_DEFAULT);
-            Native.SetErrorMode(oldMode | ErrorModes.SEM_FAILCRITICALERRORS | ErrorModes.SEM_NOOPENFILEERRORBOX);
         }
 
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -129,6 +111,24 @@ namespace LibVLCSharp.Shared
         }
 
 #elif NET || NETSTANDARD
+        /// <summary>
+        /// Disable error dialogs in case of dll loading failures on older Windows versions.
+        /// <para/>
+        /// This is mostly to fix Windows XP support (https://code.videolan.org/videolan/LibVLCSharp/issues/173),
+        /// though it may happen under other conditions (broken plugins/wrong ABI).
+        /// <para/>
+        /// As libvlc may load additional plugins later in the lifecycle of the application, 
+        /// we should not unset this on exiting <see cref="Initialize(string)"/>
+        /// </summary>
+        static void DisableMessageErrorBox()
+        {
+            if (!PlatformHelper.IsWindows)
+                return;
+
+            var oldMode = Native.SetErrorMode(ErrorModes.SYSTEM_DEFAULT);
+            Native.SetErrorMode(oldMode | ErrorModes.SEM_FAILCRITICALERRORS | ErrorModes.SEM_NOOPENFILEERRORBOX);
+        }
+
         static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
             if(PlatformHelper.IsLinux)
