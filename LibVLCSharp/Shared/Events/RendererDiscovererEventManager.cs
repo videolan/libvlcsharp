@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared
     internal class RendererDiscovererEventManager : EventManager
     {
         readonly object _lock = new object();
-#if IOS
+#if APPLE
         static EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
         static EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
 #else
@@ -74,7 +74,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
+#if APPLE
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnItemDeleted(IntPtr args)
         {

@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared
     internal class MediaDiscovererEventManager : EventManager
     {
         readonly object _lock = new object();
-#if IOS
+#if APPLE
         static EventHandler<EventArgs> _mediaDiscovererStarted;
         static EventHandler<EventArgs> _mediaDiscovererStopped;
 #else
@@ -74,7 +74,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
+#if APPLE
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnStarted(IntPtr ptr)
         {

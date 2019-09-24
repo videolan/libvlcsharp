@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared
     internal class MediaPlayerEventManager : EventManager
     {
         readonly object _lock = new object();
-#if IOS
+#if APPLE
         static EventHandler<MediaPlayerMediaChangedEventArgs> _mediaPlayerMediaChanged;
         static EventHandler<EventArgs> _mediaPlayerNothingSpecial;
         static EventHandler<EventArgs> _mediaPlayerOpening;
@@ -521,7 +521,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
+#if APPLE
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnMediaChanged(IntPtr ptr)
         {

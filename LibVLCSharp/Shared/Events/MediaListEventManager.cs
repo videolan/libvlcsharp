@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared
     internal class MediaListEventManager : EventManager
     {
         readonly object _lock = new object();
-#if IOS
+#if APPLE
         static EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
         static EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
         static EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
@@ -123,7 +123,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#if IOS
+#if APPLE
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnItemAdded(IntPtr ptr)
         {
