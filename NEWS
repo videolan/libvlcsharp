@@ -1,3 +1,7 @@
+LibVLCSharp version 3.2.3
+=========================
+* tvOS: Add missing AOT support for native events https://code.videolan.org/videolan/LibVLCSharp/issues/222
+
 LibVLCSharp version 3.2.2
 =========================
 * Core: Fix size_t C# interop https://code.videolan.org/videolan/LibVLCSharp/issues/217
