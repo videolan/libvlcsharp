@@ -40,7 +40,7 @@ namespace LibVLCSharp.Shared
             set
             {
                 _fileCaching = value;
-                _options[nameof(FileCaching)] = _fileCaching.ToString();
+                _options[nameof(FileCaching)] = FileCachingOptionString(_fileCaching);
             }
         }
 
@@ -54,7 +54,7 @@ namespace LibVLCSharp.Shared
             set
             {
                 _networkCaching = value;
-                _options[nameof(NetworkCaching)] = _networkCaching.ToString();
+                _options[nameof(NetworkCaching)] = NetworkCachingOptionString(_networkCaching);
             }
         }
 
@@ -99,6 +99,16 @@ namespace LibVLCSharp.Shared
 #endif
             }
 
+        }
+
+        private string FileCachingOptionString(int fileCaching)
+        {
+            return ":file-caching=" + fileCaching;
+        }
+
+        private string NetworkCachingOptionString(int networkCaching)
+        {
+            return ":network-caching=" + networkCaching;
         }
 
         /// <summary>
