@@ -1683,7 +1683,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Caching value for local files, in milliseconds [0 .. 60000ms]
         /// </summary>
-        public int FileCaching
+        public uint FileCaching
         {
             get => Configuration.FileCaching;
             set => Configuration.FileCaching = value;
@@ -1692,7 +1692,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Caching value for network resources, in milliseconds [0 .. 60000ms]
         /// </summary>
-        public int NetworkCaching
+        public uint NetworkCaching
         {
             get => Configuration.NetworkCaching;
             set => Configuration.NetworkCaching = value;
