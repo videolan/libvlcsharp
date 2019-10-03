@@ -1244,15 +1244,6 @@ namespace LibVLCSharp.Forms.Shared
             UpdateErrorMessage();
         }
 
-        private async Task RotateElementAsync(VisualElement element, CancellationToken cancellation)
-        {
-            while (!cancellation.IsCancellationRequested)
-            {
-                await element.RotateTo(360, 800);
-                await element.RotateTo(0, 0);
-            }
-        }
-
         private void UpdateErrorMessage(VLCState? state = null)
         {
             try
