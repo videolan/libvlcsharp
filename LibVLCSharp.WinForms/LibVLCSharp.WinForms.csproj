@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <Title>LibVLCSharp.WinForms</Title>
     <Summary>WinForms integration for LibVLCSharp</Summary>
@@ -11,7 +11,8 @@ in a Windows Forms app. It depends on LibVLCSharp.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
     <Version>3.2.3</Version>
     <PackageId>LibVLCSharp.WinForms</PackageId>
@@ -31,7 +32,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 </Project>
