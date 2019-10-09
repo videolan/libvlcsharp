@@ -5,10 +5,10 @@ steps:
     command: install
     installPackageId: gtksharp
 
-- task: DotNetCoreInstaller@2
-  displayName: 'Use .NET Core SDK 3.0.100'
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 3.0.x'
   inputs:
-    version: 3.0.100
+    version: 3.0.x
 
 - task: MSBuild@1
   displayName: 'Build LibVLCSharp'
