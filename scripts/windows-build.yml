@@ -23,6 +23,12 @@ steps:
     msbuildArguments: '/t:restore,build'
 
 - task: MSBuild@1
+  displayName: 'Build LibVLCSharp.WinForms'
+  inputs:
+    solution: LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj
+    msbuildArguments: '/t:restore,build'
+
+- task: MSBuild@1
   displayName: 'Build LibVLCSharp.GTK'
   inputs:
     solution: LibVLCSharp.GTK/LibVLCSharp.GTK.csproj
