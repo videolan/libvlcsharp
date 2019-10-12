@@ -26,6 +26,7 @@ namespace LibVLCSharp.Android.Sample
 		
 		public static void UpdateIdValues()
 		{
+			global::LibVLCSharp.Resource.String.app_name = global::LibVLCSharp.Android.Sample.Resource.String.app_name;
 		}
 		
 		public partial class Attribute
@@ -44,8 +45,8 @@ namespace LibVLCSharp.Android.Sample
 		public partial class Layout
 		{
 			
-			// aapt resource value: 0x7f020000
-			public const int Main = 2130837504;
+			// aapt resource value: 0x7F010000
+			public const int Main = 2130771968;
 			
 			static Layout()
 			{
@@ -60,8 +61,8 @@ namespace LibVLCSharp.Android.Sample
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f030000
-			public const int app_name = 2130903040;
+			// aapt resource value: 0x7F020000
+			public const int app_name = 2130837504;
 			
 			static String()
 			{

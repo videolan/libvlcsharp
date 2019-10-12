@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <Title>LibVLCSharp.WPF</Title>
     <Summary>WPF integration for LibVLCSharp</Summary>
@@ -32,25 +32,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
-    <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
-  </ItemGroup>
-  <!-- Workaround https://github.com/onovotny/MSBuildSdkExtras/issues/158 -->
-  <ItemGroup Condition=" '$(UseWpf)' == 'true'">
-    <None Remove="**\*.xaml" />
-    <Page Remove="**\*.xaml" />
-    <Page Include="**\*.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Remove="**\App.xaml" />
-    <ApplicationDefinition Include="**\App.xaml" />
-    <Reference Include="System.Xaml" Condition="'$(TargetFramework)'=='net461'"/>
   </ItemGroup>
 </Project>

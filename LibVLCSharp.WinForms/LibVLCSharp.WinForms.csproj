@@ -32,7 +32,4 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
 </Project>
