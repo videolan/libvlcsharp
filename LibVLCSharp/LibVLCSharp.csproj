@@ -45,7 +45,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp/tree/master/LibVLCSharp</RepositoryUrl>
-    <PackageIconUrl>https://code.videolan.org/videolan/LibVLCSharp/raw/master/Assets/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
   </PropertyGroup>
@@ -59,6 +59,10 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
+    <None Include="..\Assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Compile Include="Platforms\Android\**\*.cs" />
