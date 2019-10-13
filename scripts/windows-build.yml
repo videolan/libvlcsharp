@@ -10,47 +10,12 @@ steps:
   inputs:
     version: 3.0.x
 
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp'
+- task: PowerShell@2
+  displayName: 'Build all'
   inputs:
-    solution: LibVLCSharp/LibVLCSharp.csproj
-    msbuildArguments: '/t:restore,clean,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.WPF'
-  inputs:
-    solution: LibVLCSharp.WPF/LibVLCSharp.WPF.csproj
-    msbuildArguments: '/t:restore,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.WinForms'
-  inputs:
-    solution: LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj
-    msbuildArguments: '/t:restore,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.GTK'
-  inputs:
-    solution: LibVLCSharp.GTK/LibVLCSharp.GTK.csproj
-    msbuildArguments: '/t:restore,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.Forms'
-  inputs:
-    solution: LibVLCSharp.Forms/LibVLCSharp.Forms.csproj
-    msbuildArguments: '/t:restore,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.Forms.Platforms.WPF'
-  inputs:
-    solution: LibVLCSharp.Forms.Platforms.WPF/LibVLCSharp.Forms.Platforms.WPF.csproj
-    msbuildArguments: '/t:restore,build'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.Forms.Platforms.GTK'
-  inputs:
-    solution: LibVLCSharp.Forms.Platforms.GTK/LibVLCSharp.Forms.Platforms.GTK.csproj
-    msbuildArguments: '/t:restore,build'
+    targetType: filePath
+    filePath: 'scripts\build-and-package-all.ps1'
+    workingDirectory: scripts
 
 - task: MSBuild@1
   displayName: 'Build LibVLCSharp.Tests'
