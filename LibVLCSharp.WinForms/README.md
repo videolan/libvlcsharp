@@ -10,9 +10,10 @@ in a Windows Forms app.
 
 This package depends on [LibVLCSharp](../LibVLCSharp/README.md).
 
-Supported framework:
+Supported frameworks:
 
 - net40+
+- netcoreapp3.0
 
 Supported platform:
 

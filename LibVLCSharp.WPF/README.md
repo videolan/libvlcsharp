@@ -12,9 +12,10 @@ in a WPF app.
 
 This package depends on [LibVLCSharp](../LibVLCSharp/README.md).
 
-Supported framework:
+Supported frameworks:
 
 - net461+
+- netcoreapp3.0
 
 Supported platform:
 
