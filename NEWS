@@ -1,3 +1,11 @@
+LibVLCSharp version 3.2.4
+=========================
+* Core: bit of documentation comments for public APIs, remove dead code
+* Media: Fix wrong event handler type
+* MediaConfiguration: Correctly handle FileCaching and NetworkCaching options in MediaConfiguration by contributor Andrei
+* Update MSBuild.Sdk.Extras
+* WPF/WinForms: Add .NET Core 3 support by contributor Ashkan Daie 
+
 LibVLCSharp version 3.2.3
 =========================
 * tvOS: Add missing AOT support for native events https://code.videolan.org/videolan/LibVLCSharp/issues/222
