@@ -729,20 +729,6 @@ namespace LibVLCSharp.Shared
 
     #endregion
 
-    #region MediaListPlayer events
-
-    public class MediaListPlayerNextItemSetEventArgs : EventArgs
-    {
-        public readonly Media Media;
-
-        internal MediaListPlayerNextItemSetEventArgs(Media media)
-        {
-            Media = media;
-        }
-    }
-
-    #endregion
-
     #region VLM events
 
     public class VLMMediaEventArgs : EventArgs
