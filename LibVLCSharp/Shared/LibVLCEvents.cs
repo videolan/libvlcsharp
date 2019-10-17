@@ -902,6 +902,9 @@ namespace LibVLCSharp.Shared
 
     #region RendererDiscoverer events
 
+    /// <summary>
+    /// A new RendererItem has been found
+    /// </summary>
     public class RendererDiscovererItemAddedEventArgs : EventArgs
     {
         internal RendererDiscovererItemAddedEventArgs(RendererItem rendererItem)
@@ -909,9 +912,15 @@ namespace LibVLCSharp.Shared
             RendererItem = rendererItem;
         }
 
+        /// <summary>
+        /// The newly found RendererItem
+        /// </summary>
         public RendererItem RendererItem { get; }
     }
 
+    /// <summary>
+    /// A RendererItem has been deleted
+    /// </summary>
     public class RendererDiscovererItemDeletedEventArgs : EventArgs
     {
         internal RendererDiscovererItemDeletedEventArgs(RendererItem rendererItem)
@@ -919,10 +928,17 @@ namespace LibVLCSharp.Shared
             RendererItem = rendererItem;
         }
 
+        /// <summary>
+        /// The deleted RendererItem
+        /// </summary>
         public RendererItem RendererItem { get; }
     }
 
     #endregion
+
+    /// <summary>
+    /// The LibVLC Log Event Arg
+    /// </summary>
     public sealed class LogEventArgs : EventArgs
     {
         internal LogEventArgs(LogLevel level, string message, string module, string sourceFile, uint? sourceLine)
