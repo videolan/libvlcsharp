@@ -637,7 +637,7 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(IsAspectRatioButtonVisibleProperty, value);
         }
 
-        bool _enableRendererDiscovery;
+        bool _enableRendererDiscovery = true;
         /// <summary>
         /// Enable or disable renderer discovery
         /// </summary>
