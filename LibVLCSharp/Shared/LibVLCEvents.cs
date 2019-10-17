@@ -900,22 +900,6 @@ namespace LibVLCSharp.Shared
 
     #endregion
 
-    #region VLM events
-
-    public class VLMMediaEventArgs : EventArgs
-    {
-        public readonly string InstanceName;
-        public readonly string MediaName;
-
-        internal VLMMediaEventArgs(string mediaName = "", string instanceName = "")
-        {
-            MediaName = mediaName;
-            InstanceName = instanceName;
-        }
-    }
-
-    #endregion
-
     #region RendererDiscoverer events
 
     public class RendererDiscovererItemAddedEventArgs : EventArgs
