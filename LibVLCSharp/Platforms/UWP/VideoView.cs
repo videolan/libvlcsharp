@@ -1,20 +1,24 @@
 ﻿namespace LibVLCSharp.Platforms.UWP
 {
+    using System;
+    using System.Runtime.InteropServices;
     using LibVLCSharp.Shared;
     using SharpDX;
     using SharpDX.Direct3D11;
     using SharpDX.DXGI;
     using SharpDX.Mathematics.Interop;
-    using System;
-    using System.Runtime.InteropServices;
+    using Windows.ApplicationModel;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
 
     /// <summary>
     /// The VideoView implementation for UWP applications
     /// </summary>
-    public class VideoView : UserControl, IVideoView
+    [TemplatePart(Name = PartSwapChainPanelName, Type = typeof(SwapChainPanel))]
+    public class VideoView : Control, IVideoView
     {
+        private const string PartSwapChainPanelName = "SwapChainPanel";
+
         SwapChainPanel _panel;
         SharpDX.Direct3D11.Device _d3D11Device;
         SharpDX.DXGI.Device1 _device;
@@ -25,32 +29,54 @@
         bool _loaded;
 
         /// <summary>
+        /// Occurs when the <see cref="VideoView"/> is fully loaded and the <see cref="SwapChainOptions"/> property is set
+        /// </summary>
+        public event EventHandler<InitializedEventArgs> Initialized;
+
+        /// <summary>
         /// The constructor
         /// </summary>
         public VideoView()
         {
-            _panel = new SwapChainPanel();
-            Content = _panel;
-            Loaded += (s, e) => CreateSwapChain();
-            Unloaded += (s, e) => DestroySwapChain();
+            DefaultStyleKey = typeof(VideoView);
 
-            Application.Current.Suspending += (s, e) => { Trim(); };
-
-            _panel.SizeChanged += (s, eventArgs) =>
+            if (!DesignMode.DesignModeEnabled)
             {
-                if (_loaded)
-                {
-                    UpdateSize();
-                }
-            };
+                Loaded += (s, e) => CreateSwapChain();
+                Unloaded += (s, e) => DestroySwapChain();
 
-            _panel.CompositionScaleChanged += (s, eventArgs) =>
+                Application.Current.Suspending += (s, e) => { Trim(); };
+            }
+        }
+
+        /// <summary>
+        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate. 
+        /// In simplest terms, this means the method is called just before a UI element displays in your app.
+        /// Override this method to influence the default post-template logic of a class.
+        /// </summary>
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _panel = (SwapChainPanel)GetTemplateChild(PartSwapChainPanelName);
+
+            if (!DesignMode.DesignModeEnabled)
             {
-                if (_loaded)
+                _panel.SizeChanged += (s, eventArgs) =>
                 {
-                    UpdateScale();
-                }
-            };
+                    if (_loaded)
+                    {
+                        UpdateSize();
+                    }
+                };
+
+                _panel.CompositionScaleChanged += (s, eventArgs) =>
+                {
+                    if (_loaded)
+                    {
+                        UpdateScale();
+                    }
+                };
+            }
         }
 
         /// <summary>
@@ -85,7 +111,7 @@
             SharpDX.DXGI.Factory2 dxgiFactory = null;
             try
             {
-                DeviceCreationFlags deviceCreationFlags =
+                var deviceCreationFlags =
                     DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
 
 #if DEBUG
@@ -126,8 +152,8 @@
                 //Create the swapchain
                 var swapChainDescription = new SharpDX.DXGI.SwapChainDescription1
                 {
-                    Width = (int) (_panel.ActualWidth * _panel.CompositionScaleX),
-                    Height = (int) (_panel.ActualHeight * _panel.CompositionScaleY),
+                    Width = (int)(_panel.ActualWidth * _panel.CompositionScaleX),
+                    Height = (int)(_panel.ActualHeight * _panel.CompositionScaleY),
                     Format = SharpDX.DXGI.Format.B8G8R8A8_UNorm,
                     Stereo = false,
                     SampleDescription =
@@ -167,6 +193,7 @@
                 UpdateScale();
                 UpdateSize();
                 _loaded = true;
+                Initialized?.Invoke(this, new InitializedEventArgs(SwapChainOptions));
             }
             catch (Exception ex)
             {
@@ -213,10 +240,11 @@
         /// </summary>
         void UpdateSize()
         {
-            if (_swapChain == null || _swapChain.IsDisposed) return;
+            if (_swapChain == null || _swapChain.IsDisposed)
+                return;
 
-            IntPtr width = IntPtr.Zero;
-            IntPtr height = IntPtr.Zero;
+            var width = IntPtr.Zero;
+            var height = IntPtr.Zero;
 
             try
             {
@@ -269,28 +297,29 @@
         {
         }
 
-        MediaPlayer _mediaPlayer;
 
+        /// <summary>
+        /// Identifies the <see cref="MediaPlayer"/> dependency property.
+        /// </summary>
+        public static DependencyProperty MediaPlayerProperty { get; } = DependencyProperty.Register(nameof(MediaPlayer), typeof(MediaPlayer),
+            typeof(VideoView), new PropertyMetadata(null, OnMediaPlayerChanged));
         /// <summary>
         /// MediaPlayer object connected to the view
         /// </summary>
         public MediaPlayer MediaPlayer
         {
-            get => _mediaPlayer;
-            set
-            {
-                if (_mediaPlayer != value)
-                {
-                    Detach();
-                    _mediaPlayer = value;
-
-                    if (_mediaPlayer != null)
-                    {
-                        Attach();
-                    }
-                }
-            }
+            get => (MediaPlayer)GetValue(MediaPlayerProperty);
+            set => SetValue(MediaPlayerProperty, value);
         }
 
+        private static void OnMediaPlayerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var videoView = (VideoView)d;
+            videoView.Detach();
+            if (e.NewValue != null)
+            {
+                videoView.Attach();
+            }
+        }
     }
 }
