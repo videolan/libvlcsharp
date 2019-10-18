@@ -1,5 +1,4 @@
 ﻿using Windows.UI.Xaml.Controls;
-using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.UWP.Sample
 {
@@ -8,27 +7,11 @@ namespace LibVLCSharp.UWP.Sample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private LibVLC _libVLC;
-
-        private MediaPlayer _mediaPlayer;
-
+        /// <summary>
+        /// Initializes a new instance of <see cref="MainPage"/> class
         public MainPage()
         {
             InitializeComponent();
-            Loaded += (s, e) =>
-            {
-                _libVLC = new LibVLC(VideoView.SwapChainOptions);
-                _mediaPlayer = new MediaPlayer(_libVLC);
-                VideoView.MediaPlayer = _mediaPlayer;
-                this._mediaPlayer.Play(new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
-            };
-
-            Unloaded += (s, e) =>
-            {
-                VideoView.MediaPlayer = null;
-                this._mediaPlayer.Dispose();
-                this._libVLC.Dispose();
-            };
         }
     }
 }

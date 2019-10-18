@@ -8,8 +8,11 @@
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <local:MainViewModel />
+    </Page.DataContext>
 
     <Grid>
-      <lvs:VideoView x:Name="VideoView"></lvs:VideoView>
+      <lvs:VideoView SwapChainOptions="{Binding SwapChainOptions, Mode=TwoWay}" MediaPlayer="{Binding MediaPlayer}"></lvs:VideoView>
     </Grid>
 </Page>
