@@ -335,7 +335,7 @@ namespace LibVLCSharp.Shared
             MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOptionFlag(NativeReference, optionUtf8, flags), optionUtf8);
         }
 
-        string _mrl;
+        string? _mrl;
         /// <summary>Get the media resource locator (mrl) from a media descriptor object</summary>
         public string Mrl
         {
@@ -346,7 +346,7 @@ namespace LibVLCSharp.Shared
                     var mrlPtr = Native.LibVLCMediaGetMrl(NativeReference);
                     _mrl = mrlPtr.FromUtf8(libvlcFree: true);
                 }
-                return _mrl;
+                return _mrl!;
             }
         }
 
@@ -364,7 +364,7 @@ namespace LibVLCSharp.Shared
         /// <remarks>
         /// If the media has not yet been parsed this will return NULL.
         /// </remarks>
-        public string Meta(MetadataType metadataType)
+        public string? Meta(MetadataType metadataType)
         {
             var metaPtr = Native.LibVLCMediaGetMeta(NativeReference, metadataType);
             return metaPtr.FromUtf8(libvlcFree: true);
@@ -399,7 +399,7 @@ namespace LibVLCSharp.Shared
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
             ? default : mediaStats;
 
-        MediaEventManager _eventManager;
+        MediaEventManager? _eventManager;
         /// <summary>
         /// <para>Get event manager from media descriptor object.</para>
         /// <para>NOTE: this function doesn't increment reference counting.</para>
@@ -436,21 +436,19 @@ namespace LibVLCSharp.Shared
         {
             cancellationToken.ThrowIfCancellationRequested();
             
-            TaskCompletionSource<MediaParsedStatus> tcs = null;
+            var tcs = new TaskCompletionSource<MediaParsedStatus>();
             var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
                 ParsedChanged -= OnParsedChanged;
                 Native.LibVLCMediaParseStop(NativeReference);
-                tcs?.TrySetCanceled();
+                tcs.TrySetCanceled();
             });
 
             void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs) 
-                => tcs?.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
+                => tcs.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
 
             try
             {
-                tcs = new TaskCompletionSource<MediaParsedStatus>();
-                        
                 ParsedChanged += OnParsedChanged;
 
                 var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
@@ -566,7 +564,7 @@ namespace LibVLCSharp.Shared
         /// <param name="type">The type of the track</param>
         /// <param name="codec">the codec or fourcc</param>
         /// <returns>the codec description</returns>
-        public string CodecDescription(TrackType type, uint codec) => Native.LibvlcMediaGetCodecDescription(type, codec).FromUtf8();
+        public string CodecDescription(TrackType type, uint codec) => Native.LibvlcMediaGetCodecDescription(type, codec).FromUtf8()!;
 
         /// <summary>
         /// Equality override for this media instance
@@ -590,19 +588,30 @@ namespace LibVLCSharp.Shared
 
         internal class StreamData
         {
-            internal IntPtr Handle { get; set; }
-            internal Stream Stream { get; set; }
-            internal byte[] Buffer { get; set; }
-            internal OpenMedia OpenMedia { get; set; }
-            internal ReadMedia ReadMedia { get; set; }
-            internal SeekMedia SeekMedia { get; set; }
-            internal CloseMedia CloseMedia { get; set; }
+            public StreamData(IntPtr handle, Stream stream, byte[] buffer, OpenMedia openMedia, ReadMedia readMedia, SeekMedia seekMedia, CloseMedia closeMedia)
+            {
+                Handle = handle;
+                Stream = stream;
+                Buffer = buffer;
+                OpenMedia = openMedia;
+                ReadMedia = readMedia;
+                SeekMedia = seekMedia;
+                CloseMedia = closeMedia;
+            }
+
+            internal IntPtr Handle { get; }
+            internal Stream Stream { get; }
+            internal byte[] Buffer { get; }
+            internal OpenMedia OpenMedia { get; }
+            internal ReadMedia ReadMedia { get; }
+            internal SeekMedia SeekMedia { get; }
+            internal CloseMedia CloseMedia { get; }
         }
 
         #region private
 
         [MonoPInvokeCallback(typeof(OpenMedia))]
-        static int CallbackOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size)
+        static int CallbackOpenMedia(IntPtr opaque, out IntPtr data, out ulong size)
         {
             data = opaque;
 
@@ -701,23 +710,14 @@ namespace LibVLCSharp.Shared
                 _streamIndex++;
 
                 handle = new IntPtr(_streamIndex);
-                DicStreams[handle] = new StreamData
-                {
-                    Buffer = new byte[0x4000],
-                    Handle = handle,
-                    Stream = stream,
-                    OpenMedia = openMedia,
-                    ReadMedia = readMedia,
-                    SeekMedia = seekMedia,
-                    CloseMedia = closeMedia
-                };
+                DicStreams[handle] = new StreamData(handle, stream, new byte[0x4000], openMedia, readMedia, seekMedia, closeMedia);
             }
             return handle;
         }
 
         static StreamData GetStream(IntPtr handle)
         {
-            return !DicStreams.TryGetValue(handle, out var result) ? null : result;
+            return DicStreams[handle] ?? throw new ArgumentOutOfRangeException(nameof(handle), "Failed to call GetStream : handle not found.");
         }
 
         static void RemoveStream(IntPtr handle)
@@ -839,7 +839,7 @@ namespace LibVLCSharp.Shared
     /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
     /// </remarks>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int OpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
+    internal delegate int OpenMedia(IntPtr opaque, out IntPtr data, out ulong size);
 
     /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
     /// <param name="opaque">private pointer as set by the</param>

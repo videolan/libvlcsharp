@@ -14,7 +14,8 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
-    <Version>3.1.1</Version>
+    <Version>4.0.0</Version>
+    <LangVersion>8.0</LangVersion>
     <PackageId>LibVLCSharp.WinForms</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>

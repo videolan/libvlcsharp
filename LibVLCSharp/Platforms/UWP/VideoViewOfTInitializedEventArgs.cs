@@ -10,7 +10,7 @@ namespace LibVLCSharp.Platforms.UWP
         /// <summary>
         /// Occurs when the <see cref="VideoView"/> is fully loaded and the <see cref="VideoViewBase.SwapChainOptions"/> property is set
         /// </summary>
-        public event EventHandler<TInitializedEventArgs> Initialized;
+        public event EventHandler<TInitializedEventArgs>? Initialized;
 
         /// <summary>
         /// Creates args for <see cref="Initialized"/> event

@@ -30,7 +30,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="obj">other libvlc instance to compare with</param>
         /// <returns>true if same instance, false otherwise</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -38,13 +38,13 @@ namespace LibVLCSharp.Shared
             return Equals((LibVLC) obj);
         }
 
-        LogCallback _logCallback;
+        LogCallback? _logCallback;
         readonly object _logLock = new object();
 
         /// <summary>
         /// The real log event handlers.
         /// </summary>
-        EventHandler<LogEventArgs> _log;
+        EventHandler<LogEventArgs>? _log;
 
 #if NETFRAMEWORK || NETSTANDARD
         IntPtr _logFileHandle;
@@ -240,7 +240,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Dipose of this libvlc instance
+        /// Dispose of this libvlc instance
         /// </summary>
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
@@ -263,7 +263,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libvlc1">1st instance of libvlc</param>
         /// <param name="libvlc2">2nd instance of libvlc</param>
         /// <returns></returns>
-        public static bool operator ==(LibVLC libvlc1, LibVLC libvlc2)
+        public static bool operator ==(LibVLC? libvlc1, LibVLC? libvlc2)
         {
             return libvlc1?.NativeReference == libvlc2?.NativeReference;
         }
@@ -274,7 +274,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libvlc1">1st instance of libvlc</param>
         /// <param name="libvlc2">2nd instance of libvlc</param>
         /// <returns></returns>
-        public static bool operator !=(LibVLC libvlc1, LibVLC libvlc2)
+        public static bool operator !=(LibVLC? libvlc1, LibVLC? libvlc2)
         {
             return libvlc1?.NativeReference != libvlc2?.NativeReference;
         }
@@ -283,9 +283,9 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Try to start a user interface for the libvlc instance.
         /// </summary>
-        /// <param name="name">interface name, or empty string for default</param>
+        /// <param name="name">interface name, or null for default</param>
         /// <returns>True if successful, false otherwise</returns>
-        public bool AddInterface(string name)
+        public bool AddInterface(string? name)
         {
             var namePtr = name.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
@@ -309,7 +309,7 @@ namespace LibVLCSharp.Shared
         /// <para>be raised before the handler is registered.</para>
         /// <para>This function and libvlc_wait() cannot be used at the same time.</para>
         /// </remarks>
-        public void SetExitHandler(ExitCallback cb, IntPtr opaque)
+        public void SetExitHandler(ExitCallback? cb, IntPtr opaque)
         {
             var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
             Native.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
@@ -338,7 +338,7 @@ namespace LibVLCSharp.Shared
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public void SetAppId(string id, string version, string icon)
+        public void SetAppId(string? id, string? version, string? icon)
         {
             var idUtf8 = id.ToUtf8();
             var versionUtf8 = version.ToUtf8();
@@ -578,11 +578,11 @@ namespace LibVLCSharp.Shared
         public bool DialogHandlersSet => _dialogCbs.DisplayLogin != IntPtr.Zero;
 
         DialogCallbacks _dialogCbs;
-        static DisplayError _error;
-        static DisplayLogin _login;
-        static DisplayQuestion _question;
-        static DisplayProgress _displayProgress;
-        static UpdateProgress _updateProgress;
+        static DisplayError? _error;
+        static DisplayLogin? _login;
+        static DisplayQuestion? _question;
+        static DisplayProgress? _displayProgress;
+        static UpdateProgress? _updateProgress;
         static readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
 
         [MonoPInvokeCallback(typeof(DisplayErrorCallback))]
@@ -604,7 +604,7 @@ namespace LibVLCSharp.Shared
         
         [MonoPInvokeCallback(typeof(DisplayQuestionCallback))]
         static void Question(IntPtr data, IntPtr dialogId, string title, string text, DialogQuestionType type, 
-            string cancelText, string firstActionText, string secondActionText)
+            string cancelText, string? firstActionText, string? secondActionText)
         {
             if (_question == null) return;
 
@@ -615,7 +615,7 @@ namespace LibVLCSharp.Shared
         }
 
         [MonoPInvokeCallback(typeof(DisplayProgressCallback))]
-        static void DisplayProgress(IntPtr data, IntPtr dialogId, string title, string text, bool indeterminate, float position, string cancelText)
+        static void DisplayProgress(IntPtr data, IntPtr dialogId, string title, string text, bool indeterminate, float position, string? cancelText)
         {
             if (_displayProgress == null) return;
 
@@ -699,7 +699,7 @@ namespace LibVLCSharp.Shared
         /// <param name="module">The module name storage.</param>
         /// <param name="file">The source code file name storage.</param>
         /// <param name="line">The source code file line number storage.</param>
-        static void GetLogContext(IntPtr logContext, out string module, out string file, out uint? line)
+        static void GetLogContext(IntPtr logContext, out string? module, out string? file, out uint? line)
         {
             Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
 
@@ -712,10 +712,10 @@ namespace LibVLCSharp.Shared
         internal void Retain() => Native.LibVLCRetain(NativeReference);
 
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string Version => Native.LibVLCVersion().FromUtf8();
+        public string Version => Native.LibVLCVersion().FromUtf8()!;
 
         /// <summary>The changeset of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string Changeset => Native.LibVLCChangeset().FromUtf8();
+        public string Changeset => Native.LibVLCChangeset().FromUtf8()!;
 
         /// <summary>
         /// A human-readable error message for the last LibVLC error in the calling
@@ -723,7 +723,7 @@ namespace LibVLCSharp.Shared
         /// until the next LibVLC call). 
         /// <para/> Null if no error.
         /// </summary>
-        public string LastLibVLCError => Native.LibVLCErrorMessage().FromUtf8();
+        public string? LastLibVLCError => Native.LibVLCErrorMessage().FromUtf8();
 
         /// <summary>
         /// Clears the LibVLC error status for the current thread. This is optional.
@@ -736,7 +736,7 @@ namespace LibVLCSharp.Shared
         /// Retrieve the libvlc compiler version.
         /// Example: "gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)"
         /// </summary>
-        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8();
+        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8()!;
     }
 
     /// <summary>Logging messages level.</summary>

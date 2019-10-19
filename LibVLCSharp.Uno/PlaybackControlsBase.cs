@@ -847,7 +847,7 @@ namespace LibVLCSharp.Uno
         {
             if (trackDescription is TrackDescription td && !string.IsNullOrWhiteSpace(td.Name))
             {
-                AddTrack(menuFlyout, trackDescription?.Id, td.Name);
+                AddTrack(menuFlyout, trackDescription?.Id, td.Name!);
             }
         }
 
@@ -929,7 +929,7 @@ namespace LibVLCSharp.Uno
             Manager.Get<StateManager>().TogglePause();
         }
 
-        private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string name, bool disconnectItem = false)
+        private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string? name, bool disconnectItem = false)
         {
             var menuItem = new MenuFlyoutItem() { Text = name };
             menuItem.Command = new ActionCommand<string>(CastMenuItemClick);

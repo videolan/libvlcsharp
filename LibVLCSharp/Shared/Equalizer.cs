@@ -126,7 +126,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="index">index of the preset, counting from zero</param>
         /// <returns>preset name, or empty string if there is no such preset</returns>
-        public string PresetName(uint index) => Native.LibVLCAudioEqualizerGetPresetName(index).FromUtf8();
+        public string? PresetName(uint index) => Native.LibVLCAudioEqualizerGetPresetName(index).FromUtf8();
 
         /// <summary>
         /// Get the number of distinct frequency bands for an equalizer.
@@ -145,7 +145,7 @@ namespace LibVLCSharp.Shared
         public float BandFrequency(uint index) => Native.LibVLCAudioEqualizerGetBandFrequency(index);
 
         /// <summary>
-        /// Dipose for equalizer
+        /// Dispose for equalizer
         /// </summary>
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)

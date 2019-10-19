@@ -7,18 +7,18 @@ namespace LibVLCSharp.Shared
     {
         readonly object _lock = new object();
 #if APPLE
-        static EventHandler<EventArgs> _mediaDiscovererStarted;
-        static EventHandler<EventArgs> _mediaDiscovererStopped;
+        static EventHandler<EventArgs>? _mediaDiscovererStarted;
+        static EventHandler<EventArgs>? _mediaDiscovererStopped;
 #else
-        EventHandler<EventArgs> _mediaDiscovererStarted;
-        EventHandler<EventArgs> _mediaDiscovererStopped;
+        EventHandler<EventArgs>? _mediaDiscovererStarted;
+        EventHandler<EventArgs>? _mediaDiscovererStopped;
 #endif
 
         int _discovererStartedRegistrationCount;
         int _discovererStoppedRegistrationCount;
 
-        EventCallback _discovererStartedCallback;
-        EventCallback _discovererStoppedCallback;
+        EventCallback? _discovererStartedCallback;
+        EventCallback? _discovererStoppedCallback;
 
         public MediaDiscovererEventManager(IntPtr ptr) : base(ptr)
         {

@@ -10,7 +10,7 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class MediaList : Internal, IEnumerable<Media>
     {
-        MediaListEventManager _eventManager;
+        MediaListEventManager? _eventManager;
         readonly object _syncLock = new object();
         bool _nativeLock;
 
@@ -192,7 +192,7 @@ namespace LibVLCSharp.Shared
         /// <param name="position">position in array where to insert</param>
         /// <returns>media instance at position, or null if not found.
         /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
-        public Media this[int position] => NativeSync(() => 
+        public Media? this[int position] => NativeSync(() => 
         {
             var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
             return ptr == IntPtr.Zero ? null : new Media(ptr);
@@ -332,7 +332,7 @@ namespace LibVLCSharp.Shared
         internal class MediaListEnumerator : IEnumerator<Media>
         {
             int position = -1;
-            MediaList _mediaList;
+            MediaList? _mediaList;
 
             internal MediaListEnumerator(MediaList mediaList)
             {
@@ -342,7 +342,7 @@ namespace LibVLCSharp.Shared
             public bool MoveNext()
             {
                 position++;
-                return position < _mediaList.Count;
+                return position < (_mediaList?.Count ?? 0);
             }
 
             void IEnumerator.Reset()
@@ -357,7 +357,18 @@ namespace LibVLCSharp.Shared
             }
 
             object IEnumerator.Current => Current;
-            public Media Current => _mediaList[position];
+
+            public Media Current
+            {
+                get
+                {
+                    if (_mediaList == null)
+                    {
+                        throw new ObjectDisposedException(nameof(MediaListEnumerator));
+                    }
+                    return _mediaList[position] ?? throw new ArgumentOutOfRangeException(nameof(position));
+                }
+            }
         }
     }
 }

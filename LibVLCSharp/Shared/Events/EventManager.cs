@@ -58,7 +58,7 @@ namespace LibVLCSharp.Shared
             registrationCount++;
         }
 
-        protected void Detach(EventType eventType, ref int registrationCount, Action managedUnsubscribe, ref EventCallback eventCallback)
+        protected void Detach(EventType eventType, ref int registrationCount, Action managedUnsubscribe, ref EventCallback? eventCallback)
         {
             if (registrationCount == 0) return;
             registrationCount--;
@@ -68,7 +68,7 @@ namespace LibVLCSharp.Shared
             if (registrationCount == 0)
             {
                 Debug.Assert(eventCallback != null);
-                DetachNativeEvent(eventType, eventCallback);
+                DetachNativeEvent(eventType, eventCallback!);
                 eventCallback = null;
             }
         }
