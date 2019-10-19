@@ -14,7 +14,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <TargetFrameworks>net461;netcoreapp3.0</TargetFrameworks>
     <RootNamespace>LibVLCSharp.WPF</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Version>3.3.1</Version>
     <PackageId>LibVLCSharp.WPF</PackageId>
     <UseWPF>true</UseWPF>

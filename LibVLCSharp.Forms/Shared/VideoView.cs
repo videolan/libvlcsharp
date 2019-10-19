@@ -14,12 +14,12 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Raised when a new MediaPlayer is set and will be attached to the view
         /// </summary>
-        public event EventHandler<MediaPlayerChangingEventArgs> MediaPlayerChanging;
+        public event EventHandler<MediaPlayerChangingEventArgs>? MediaPlayerChanging;
 
         /// <summary>
         /// Raised when a new MediaPlayer is set and attached to the view
         /// </summary>
-        public event EventHandler<MediaPlayerChangedEventArgs> MediaPlayerChanged;
+        public event EventHandler<MediaPlayerChangedEventArgs>? MediaPlayerChanged;
 
         /// <summary>
         /// Xamarin.Forms MediaPlayer databinded property
@@ -33,7 +33,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// The MediaPlayer object attached to this view
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
+        public LibVLCSharp.Shared.MediaPlayer? MediaPlayer
         {
             get { return GetValue(MediaPlayerProperty) as LibVLCSharp.Shared.MediaPlayer; }
             set { SetValue(MediaPlayerProperty, value); }

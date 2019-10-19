@@ -19,12 +19,12 @@ namespace LibVLCSharp.Platforms.UWP
     {
         private const string PartSwapChainPanelName = "SwapChainPanel";
 
-        SwapChainPanel _panel;
-        SharpDX.Direct3D11.Device _d3D11Device;
-        SharpDX.DXGI.Device1 _device;
-        SharpDX.DXGI.Device3 _device3;
-        SwapChain2 _swapChain2;
-        SwapChain1 _swapChain;
+        SwapChainPanel? _panel;
+        SharpDX.Direct3D11.Device? _d3D11Device;
+        SharpDX.DXGI.Device1? _device;
+        SharpDX.DXGI.Device3? _device3;
+        SwapChain2? _swapChain2;
+        SwapChain1? _swapChain;
         const string Mobile = "Windows.Mobile";
         bool _loaded;
 
@@ -98,8 +98,8 @@ namespace LibVLCSharp.Platforms.UWP
 
                 return new string[]
                 {
-                    $"--winrt-d3dcontext=0x{_d3D11Device.ImmediateContext.NativePointer.ToString("x")}",
-                    $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}"
+                    $"--winrt-d3dcontext=0x{_d3D11Device!.ImmediateContext.NativePointer.ToString("x")}",
+                    $"--winrt-swapchain=0x{_swapChain!.NativePointer.ToString("x")}"
                 };
             }
         }
@@ -118,7 +118,8 @@ namespace LibVLCSharp.Platforms.UWP
             if (_panel == null || _panel.ActualHeight == 0)
                 return;
 
-            SharpDX.DXGI.Factory2 dxgiFactory = null;
+
+            SharpDX.DXGI.Factory2? dxgiFactory = null;
             try
             {
                 var deviceCreationFlags =
@@ -252,7 +253,7 @@ namespace LibVLCSharp.Platforms.UWP
         /// </summary>
         void UpdateSize()
         {
-            if (_swapChain == null || _swapChain.IsDisposed)
+            if (_panel is null || _swapChain is null || _swapChain.IsDisposed)
                 return;
 
             var width = IntPtr.Zero;
@@ -284,7 +285,8 @@ namespace LibVLCSharp.Platforms.UWP
         /// </summary>
         void UpdateScale()
         {
-            _swapChain2.MatrixTransform = new RawMatrix3x2 { M11 = 1.0f / _panel.CompositionScaleX, M22 = 1.0f / _panel.CompositionScaleY };
+            if (_panel is null) return;
+            _swapChain2!.MatrixTransform = new RawMatrix3x2 { M11 = 1.0f / _panel.CompositionScaleX, M22 = 1.0f / _panel.CompositionScaleY };
         }
 
         /// <summary>
@@ -318,9 +320,9 @@ namespace LibVLCSharp.Platforms.UWP
         /// <summary>
         /// MediaPlayer object connected to the view
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
-            get => (MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (MediaPlayer?)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 

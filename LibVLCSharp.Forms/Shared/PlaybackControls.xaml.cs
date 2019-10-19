@@ -96,18 +96,18 @@ namespace LibVLCSharp.Forms.Shared
 
         private MediaPlayerElementManager Manager { get; }
         private Button AudioTracksSelectionButton { get; set; }
-        private Button CastButton { get; set; }
-        private Button ClosedCaptionsSelectionButton { get; set; }
-        private VisualElement ControlsPanel { get; set; }
-        private Button PlayPauseButton { get; set; }
-        private Label RemainingTimeLabel { get; set; }
-        private Label ElapsedTimeLabel { get; set; }
-        private Label AspectRatioLabel { get; set; }
+        private Button? CastButton { get; set; }
+        private Button? ClosedCaptionsSelectionButton { get; set; }
+        private VisualElement? ControlsPanel { get; set; }
+        private Button? PlayPauseButton { get; set; }
+        private Label? RemainingTimeLabel { get; set; }
+        private Label? ElapsedTimeLabel { get; set; }
+        private Label? AspectRatioLabel { get; set; }
 
-        private Slider SeekBar { get; set; }
+        private Slider? SeekBar { get; set; }
 
         private bool Initialized { get; set; }
-        private ISystemUI SystemUI => DependencyService.Get<ISystemUI>();
+        private ISystemUI? SystemUI => DependencyService.Get<ISystemUI>();
 
         private const int SEEK_OFFSET = 2000;
         private bool RemoteRendering { get; set; } = false;
@@ -164,7 +164,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the audio tracks selection button style.
         /// </summary>
-        public Style AudioTracksSelectionButtonStyle
+        public Style? AudioTracksSelectionButtonStyle
         {
             get => (Style)GetValue(AudioTracksSelectionButtonStyleProperty);
             set => SetValue(AudioTracksSelectionButtonStyleProperty, value);
@@ -178,7 +178,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the controls panel style.
         /// </summary>
-        public Style BufferingProgressBarStyle
+        public Style? BufferingProgressBarStyle
         {
             get => (Style)GetValue(BufferingProgressBarStyleProperty);
             set => SetValue(BufferingProgressBarStyleProperty, value);
@@ -192,7 +192,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the button bar style.
         /// </summary>
-        public Style ButtonBarStyle
+        public Style? ButtonBarStyle
         {
             get => (Style)GetValue(ButtonBarStyleProperty);
             set => SetValue(ButtonBarStyleProperty, value);
@@ -206,7 +206,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the cast button style.
         /// </summary>
-        public Style CastButtonStyle
+        public Style? CastButtonStyle
         {
             get => (Style)GetValue(CastButtonStyleProperty);
             set => SetValue(CastButtonStyleProperty, value);
@@ -220,7 +220,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the closed captions selection button style.
         /// </summary>
-        public Style ClosedCaptionsSelectionButtonStyle
+        public Style? ClosedCaptionsSelectionButtonStyle
         {
             get => (Style)GetValue(ClosedCaptionsSelectionButtonStyleProperty);
             set => SetValue(ClosedCaptionsSelectionButtonStyleProperty, value);
@@ -234,7 +234,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the controls panel style.
         /// </summary>
-        public Style ControlsPanelStyle
+        public Style? ControlsPanelStyle
         {
             get => (Style)GetValue(ControlsPanelStyleProperty);
             set => SetValue(ControlsPanelStyleProperty, value);
@@ -248,7 +248,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the message style.
         /// </summary>
-        public Style MessageStyle
+        public Style? MessageStyle
         {
             get => (Style)GetValue(MessageStyleProperty);
             set => SetValue(MessageStyleProperty, value);
@@ -262,7 +262,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the play/pause button style.
         /// </summary>
-        public Style PlayPauseButtonStyle
+        public Style? PlayPauseButtonStyle
         {
             get => (Style)GetValue(PlayPauseButtonStyleProperty);
             set => SetValue(PlayPauseButtonStyleProperty, value);
@@ -276,7 +276,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the remaining time label style.
         /// </summary>
-        public Style RemainingTimeLabelStyle
+        public Style? RemainingTimeLabelStyle
         {
             get => (Style)GetValue(RemainingTimeLabelStyleProperty);
             set => SetValue(RemainingTimeLabelStyleProperty, value);
@@ -290,7 +290,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the elapsed time label style.
         /// </summary>
-        public Style ElapsedTimeLabelStyle
+        public Style? ElapsedTimeLabelStyle
         {
             get => (Style)GetValue(ElapsedTimeLabelStyleProperty);
             set => SetValue(ElapsedTimeLabelStyleProperty, value);
@@ -304,7 +304,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the seek bar style.
         /// </summary>
-        public Style SeekBarStyle
+        public Style? SeekBarStyle
         {
             get => (Style)GetValue(SeekBarStyleProperty);
             set => SetValue(SeekBarStyleProperty, value);
@@ -318,7 +318,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the stop button style.
         /// </summary>
-        public Style StopButtonStyle
+        public Style? StopButtonStyle
         {
             get => (Style)GetValue(StopButtonStyleProperty);
             set => SetValue(StopButtonStyleProperty, value);
@@ -335,7 +335,7 @@ namespace LibVLCSharp.Forms.Shared
         /// Gets or sets the associated <see cref="VideoView"/>.
         /// </summary>
         /// <remarks>It is only useful to set this property for the aspect ratio feature.</remarks>
-        public VideoView VideoView
+        public VideoView? VideoView
         {
             get => (VideoView)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
@@ -349,7 +349,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the aspect ratio button style.
         /// </summary>
-        public Style AspectRatioButtonStyle
+        public Style? AspectRatioButtonStyle
         {
             get => (Style)GetValue(AspectRatioButtonStyleProperty);
             set => SetValue(AspectRatioButtonStyleProperty, value);
@@ -363,7 +363,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the rewind button style.
         /// </summary>
-        public Style RewindButtonStyle
+        public Style? RewindButtonStyle
         {
             get => (Style)GetValue(RewindButtonStyleProperty);
             set => SetValue(RewindButtonStyleProperty, value);
@@ -377,7 +377,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the rewind button style.
         /// </summary>
-        public Style SeekButtonStyle
+        public Style? SeekButtonStyle
         {
             get => (Style)GetValue(SeekButtonStyleProperty);
             set => SetValue(SeekButtonStyleProperty, value);
@@ -461,7 +461,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets the last error message.
         /// </summary>
-        public string ErrorMessage
+        public string? ErrorMessage
         {
             get => (string)GetValue(ErrorMessageProperty);
             private set => SetValue(ErrorMessageProperty, value);
@@ -687,11 +687,11 @@ namespace LibVLCSharp.Forms.Shared
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
             SetClickEventHandler("StopButton", StopButton_Clicked);
             SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync);
-            ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
-            SeekBar = this.FindChild<Slider>(nameof(SeekBar));
-            RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
-            ElapsedTimeLabel = this.FindChild<Label>(nameof(ElapsedTimeLabel));
-            AspectRatioLabel = this.FindChild<Label>(nameof(AspectRatioLabel));
+            ControlsPanel = this.FindChild<VisualElement?>(nameof(ControlsPanel));
+            SeekBar = this.FindChild<Slider?>(nameof(SeekBar));
+            RemainingTimeLabel = this.FindChild<Label?>(nameof(RemainingTimeLabel));
+            ElapsedTimeLabel = this.FindChild<Label?>(nameof(ElapsedTimeLabel));
+            AspectRatioLabel = this.FindChild<Label?>(nameof(AspectRatioLabel));
             SetClickEventHandler("RewindButton", RewindButton_Clicked);
             SetClickEventHandler("SeekButton", SeekButton_Clicked);
 
@@ -808,6 +808,9 @@ namespace LibVLCSharp.Forms.Shared
                 OnShowAndHideAutomaticallyPropertyChanged();
             }
             Show();
+
+
+
         }
 
         private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
@@ -841,6 +844,7 @@ namespace LibVLCSharp.Forms.Shared
             {
                 ShowErrorMessageBox(ex);
             }
+
         }
 
         private void RewindButton_Clicked(object sender, EventArgs e)
@@ -865,9 +869,9 @@ namespace LibVLCSharp.Forms.Shared
             mediaPlayer.Time += SEEK_OFFSET;
         }
 
-        private Button SetClickEventHandler(string name, EventHandler eventHandler)
+        private Button? SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
         {
-            var button = this.FindChild<Button>(name);
+            var button = this.FindChild<Button?>(name);
             if (button != null)
             {
                 button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler);
@@ -930,6 +934,7 @@ namespace LibVLCSharp.Forms.Shared
                 var trackName = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
                 if (trackName != null)
                 {
+                    var mediaTrack = await ancestorPage.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
                     var found = false;
                     index = 0;
                     foreach (var trackDescription in tracks)
@@ -954,7 +959,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateTracksSelectionButtonAvailability(Button tracksSelectionButton, string state)
+        private void UpdateTracksSelectionButtonAvailability(Button? tracksSelectionButton, string state)
         {
             if (tracksSelectionButton != null)
             {
@@ -985,9 +990,9 @@ namespace LibVLCSharp.Forms.Shared
                 IsClosedCaptionsSelectionButtonVisible, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
-        private void ShowError()
+        private void ShowError(string? errorMessage)
         {
-            ErrorMessage = string.Format(ResourceManager.GetString(nameof(Strings.ErrorWithMedia)), Manager.Get<StateManager>().MediaResourceLocator);
+            Device.BeginInvokeOnMainThread(() => ErrorMessage = string.Format(ResourceManager.GetString(nameof(Strings.ErrorWithMedia)), Manager.Get<StateManager>().MediaResourceLocator));
         }
 
         private void UpdateKeepScreenOn(bool keepScreenOn)
@@ -1070,7 +1075,7 @@ namespace LibVLCSharp.Forms.Shared
         protected virtual void ShowErrorMessageBox(Exception ex)
         {
             var error = ResourceManager.GetString(nameof(Strings.Error));
-            Device.BeginInvokeOnMainThread(() => this.FindAncestor<Page>().DisplayAlert(error, ex?.GetBaseException().Message ?? error,
+            Device.BeginInvokeOnMainThread(() => this.FindAncestor<Page?>()?.DisplayAlert(error, ex?.GetBaseException().Message ?? error,
                 ResourceManager.GetString(nameof(Strings.OK))));
         }
 

@@ -7,18 +7,18 @@ namespace LibVLCSharp.Shared
     {
         readonly object _lock = new object();
 #if APPLE
-        static EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
-        static EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+        static EventHandler<RendererDiscovererItemAddedEventArgs>? _itemAdded;
+        static EventHandler<RendererDiscovererItemDeletedEventArgs>? _itemDeleted;
 #else
-        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
-        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+        EventHandler<RendererDiscovererItemAddedEventArgs>? _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs>? _itemDeleted;
 #endif
 
         int _itemAddedRegistrationCount;
         int _itemDeletedRegistrationCount;
 
-        EventCallback _itemAddedCallback;
-        EventCallback _itemDeletedCallback;
+        EventCallback? _itemAddedCallback;
+        EventCallback? _itemDeletedCallback;
 
         internal RendererDiscovererEventManager(IntPtr ptr) : base(ptr)
         {

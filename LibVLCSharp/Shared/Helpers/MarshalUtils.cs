@@ -32,10 +32,10 @@ namespace LibVLCSharp.Shared.Helpers
 
             #region Mac
 
-            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
+            [DllImport(Constants.LibSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
             public static extern IntPtr fopenMac(string path, string mode = Write);
 
-            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            [DllImport(Constants.LibSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseMac(IntPtr file);
 
             #endregion
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Shared.Helpers
 
             const string Write = "w";
 
-            [DllImport(Constants.libSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.LibSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vasprintf_apple(ref IntPtr buffer, IntPtr format, IntPtr args);
 
             [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
@@ -83,7 +83,7 @@ namespace LibVLCSharp.Shared.Helpers
             {
                 buffer = Marshal.AllocHGlobal(byteLength);
                 vsprintf(buffer, format, args);
-                return buffer.FromUtf8();
+                return buffer.FromUtf8()!;
             }
             finally
             {
@@ -102,7 +102,7 @@ namespace LibVLCSharp.Shared.Helpers
                 if (count == -1)
                     return string.Empty;
 
-                return buffer.FromUtf8();
+                return buffer.FromUtf8() ?? string.Empty;
             }
             finally
             {
@@ -128,7 +128,7 @@ namespace LibVLCSharp.Shared.Helpers
                 return UseStructurePointer(listStructure, listPointer =>
                 {
                     Native.vsprintf_linux(utf8Buffer, format, listPointer);
-                    return utf8Buffer.FromUtf8();
+                    return utf8Buffer.FromUtf8()!;
                 });
             }
             finally
@@ -210,11 +210,14 @@ namespace LibVLCSharp.Shared.Helpers
             }
             finally
             {
-                foreach (var arg in utf8Args)
+                if (!(utf8Args is null))
                 {
-                    if (arg != IntPtr.Zero)
+                    foreach (var arg in utf8Args)
                     {
-                        Marshal.FreeHGlobal(arg);
+                        if (arg != IntPtr.Zero)
+                        {
+                            Marshal.FreeHGlobal(arg);
+                        }
                     }
                 }
             }
@@ -471,13 +474,13 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="args"></param>
         /// <returns>Array of pointer you need to release when you're done with Marshal.FreeHGlobal</returns>
-        internal static IntPtr[] ToUtf8(this string[] args)
+        internal static IntPtr[] ToUtf8(this string[]? args)
         {
             var utf8Args = new IntPtr[args?.Length ?? 0];
             
             for (var i = 0; i < utf8Args.Length; i++)
             {
-                utf8Args[i] = args[i].ToUtf8();
+                utf8Args[i] = args![i].ToUtf8();
             }
 
             return utf8Args;
