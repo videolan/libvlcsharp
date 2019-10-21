@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Input;
+using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.UWP.Sample
@@ -15,6 +17,14 @@ namespace LibVLCSharp.UWP.Sample
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
+        /// Initialized a new instance of <see cref="MainViewModel"/> class
+        /// </summary>
+        public MainViewModel()
+        {
+            InitializedCommand = new RelayCommand<InitializedEventArgs>(Initialize);
+        }
+
+        /// <summary>
         /// Destructor
         /// </summary>
         ~MainViewModel()
@@ -22,25 +32,10 @@ namespace LibVLCSharp.UWP.Sample
             Dispose();
         }
 
-        private string[] _swapChainOptions;
         /// <summary>
-        /// Sets the swap chain parameters
+        /// Gets the command for the initialization
         /// </summary>
-        public string[] SwapChainOptions
-        {
-            private get => _swapChainOptions;
-            set
-            {
-                if (_swapChainOptions != value)
-                {
-                    _swapChainOptions = value;
-                    LibVLC = new LibVLC(value);
-                    MediaPlayer = new MediaPlayer(LibVLC);
-                    MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                        FromType.FromLocation));
-                }
-            }
-        }
+        public ICommand InitializedCommand { get; }
 
         private LibVLC LibVLC { get; set; }
 
@@ -61,6 +56,14 @@ namespace LibVLCSharp.UWP.Sample
                 field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private void Initialize(InitializedEventArgs eventArgs)
+        {
+            LibVLC = new LibVLC(eventArgs.SwapChainOptions);
+            MediaPlayer = new MediaPlayer(LibVLC);
+            MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                FromType.FromLocation));
         }
 
         /// <summary>

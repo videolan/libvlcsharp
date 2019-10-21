@@ -26,6 +26,12 @@
         SwapChain2 _swapChain2;
         SwapChain1 _swapChain;
         const string Mobile = "Windows.Mobile";
+        bool _loaded;
+
+        /// <summary>
+        /// Occurs when the <see cref="VideoView"/> is fully loaded and the <see cref="SwapChainOptions"/> property is set
+        /// </summary>
+        public event EventHandler<InitializedEventArgs> Initialized;
 
         /// <summary>
         /// The constructor
@@ -43,8 +49,6 @@
             }
         }
 
-        private bool IsSwapChainCreated => SwapChainOptions != null;
-
         /// <summary>
         /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate. 
         /// In simplest terms, this means the method is called just before a UI element displays in your app.
@@ -59,7 +63,7 @@
             {
                 _panel.SizeChanged += (s, eventArgs) =>
                 {
-                    if (IsSwapChainCreated)
+                    if (_loaded)
                     {
                         UpdateSize();
                     }
@@ -67,7 +71,7 @@
 
                 _panel.CompositionScaleChanged += (s, eventArgs) =>
                 {
-                    if (IsSwapChainCreated)
+                    if (_loaded)
                     {
                         UpdateScale();
                     }
@@ -76,21 +80,27 @@
         }
 
         /// <summary>
-        /// Identifies the <see cref="SwapChainOptions"/> dependency property.
-        /// </summary>
-        public static DependencyProperty SwapChainOptionsProperty { get; } = DependencyProperty.Register(nameof(SwapChainOptions), typeof(string[]),
-            typeof(VideoView), new PropertyMetadata(null));
-        /// <summary>
         /// Gets the swapchain parameters to pass to the <see cref="LibVLC"/> constructor.
         /// If you don't pass them to the <see cref="LibVLC"/> constructor, the video won't
         /// be displayed in your application.
+        /// Calling this property will throw an <see cref="InvalidOperationException"/> if the VideoView is not yet full Loaded.
         /// </summary>
-        /// <remarks>returns null if the VideoView is not yet fully loaded</remarks>
         /// <returns>The list of arguments to be given to the <see cref="LibVLC"/> constructor.</returns>
         public string[] SwapChainOptions
         {
-            get => (string[])GetValue(SwapChainOptionsProperty);
-            set => SetValue(SwapChainOptionsProperty, value);
+            get
+            {
+                if (!_loaded)
+                {
+                    throw new InvalidOperationException("You must wait for the VideoView to be loaded before calling GetSwapChainOptions()");
+                }
+
+                return new string[]
+                {
+                    $"--winrt-d3dcontext=0x{_d3D11Device.ImmediateContext.NativePointer.ToString("x")}",
+                    $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}"
+                };
+            }
         }
 
         /// <summary>
@@ -182,11 +192,8 @@
 
                 UpdateScale();
                 UpdateSize();
-                SwapChainOptions = new string[]
-                {
-                    $"--winrt-d3dcontext=0x{_d3D11Device.ImmediateContext.NativePointer.ToString("x")}",
-                    $"--winrt-swapchain=0x{_swapChain.NativePointer.ToString("x")}"
-                };
+                _loaded = true;
+                Initialized?.Invoke(this, new InitializedEventArgs(SwapChainOptions));
             }
             catch (Exception ex)
             {

@@ -48,7 +48,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
   </PropertyGroup>
   <PropertyGroup Condition="$(UNITY_ANDROID)=='true'">
     <TargetFramework>netstandard2.0</TargetFramework>

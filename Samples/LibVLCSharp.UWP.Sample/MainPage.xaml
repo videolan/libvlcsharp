@@ -5,6 +5,8 @@
     xmlns:local="using:LibVLCSharp.UWP.Sample"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -13,6 +15,12 @@
     </Page.DataContext>
 
     <Grid>
-      <lvs:VideoView SwapChainOptions="{Binding SwapChainOptions, Mode=TwoWay}" MediaPlayer="{Binding MediaPlayer}"></lvs:VideoView>
+      <lvs:VideoView MediaPlayer="{Binding MediaPlayer}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:EventTriggerBehavior EventName="Initialized">
+                    <interactions:InvokeCommandAction Command="{Binding InitializedCommand}"/>
+                </interactions:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </lvs:VideoView>
     </Grid>
 </Page>
