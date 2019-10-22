@@ -56,7 +56,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <PropertyGroup Condition="$(NETSTANDARD_ONLY)=='true'">
     <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
   </PropertyGroup>
   <ItemGroup>
