@@ -375,7 +375,7 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_save_meta in order to save the meta)</para>
         /// </summary>
         /// <param name="metadataType">the <see cref="MetadataType"/>  to write</param>
-        /// <param name="value">the media's meta</param>
+        /// <param name="metaValue">the media's meta</param>
         public void SetMeta(MetadataType metadataType, string metaValue)
         {
             if(string.IsNullOrEmpty(metaValue)) throw new ArgumentNullException(metaValue);
@@ -397,7 +397,7 @@ namespace LibVLCSharp.Shared
         /// structure that contain the statistics about the media
         /// </summary>
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
-            ? default(MediaStats) : mediaStats;
+            ? default : mediaStats;
 
         MediaEventManager _eventManager;
         /// <summary>
@@ -515,6 +515,9 @@ namespace LibVLCSharp.Shared
         /// <returns>list of media descriptor subitems or NULL</returns>
         public MediaList SubItems => new MediaList(Native.LibVLCMediaSubitems(NativeReference));
        
+        /// <summary>
+        /// The type of the media
+        /// </summary>
         public MediaType Type => Native.LibVLCMediaGetType(NativeReference);
 
         /// <summary>Add a slave to the current media.</summary>
@@ -565,15 +568,24 @@ namespace LibVLCSharp.Shared
         /// <returns>the codec description</returns>
         public string CodecDescription(TrackType type, uint codec) => Native.LibvlcMediaGetCodecDescription(type, codec).FromUtf8();
 
+        /// <summary>
+        /// Equality override for this media instance
+        /// </summary>
+        /// <param name="obj">the media to compare this one with</param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             return obj is Media media &&
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, media.NativeReference);
         }
 
+        /// <summary>
+        /// Custom hascode implemenation for this Media instance
+        /// </summary>
+        /// <returns>the hashcode for this Media instance</returns>
         public override int GetHashCode()
         {
-            return this.NativeReference.GetHashCode();
+            return NativeReference.GetHashCode();
         }
 
         internal class StreamData
@@ -724,42 +736,63 @@ namespace LibVLCSharp.Shared
 
         #region Events
 
+        /// <summary>
+        /// The meta information changed
+        /// </summary>
         public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
         {
             add => EventManager.AttachEvent(EventType.MediaMetaChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaMetaChanged, value);
         }
 
+        /// <summary>
+        /// The parsing status changed
+        /// </summary>
         public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
         {
             add => EventManager.AttachEvent(EventType.MediaParsedChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaParsedChanged, value);
         }
 
+        /// <summary>
+        /// A sub item was added to this media's MediaList
+        /// </summary>
         public event EventHandler<MediaSubItemAddedEventArgs> SubItemAdded
         {
             add => EventManager.AttachEvent(EventType.MediaSubItemAdded, value);
             remove => EventManager.DetachEvent(EventType.MediaSubItemAdded, value);
         }
 
+        /// <summary>
+        /// The duration of the media changed
+        /// </summary>
         public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
         {
             add => EventManager.AttachEvent(EventType.MediaDurationChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaDurationChanged, value);
         }
 
+        /// <summary>
+        /// The media was freed on the native side
+        /// </summary>
         public event EventHandler<MediaFreedEventArgs> MediaFreed
         {
             add => EventManager.AttachEvent(EventType.MediaFreed, value);
             remove => EventManager.DetachEvent(EventType.MediaFreed, value);
         }
 
+        /// <summary>
+        /// The media state changed
+        /// </summary>
         public event EventHandler<MediaStateChangedEventArgs> StateChanged
         {
             add => EventManager.AttachEvent(EventType.MediaStateChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaStateChanged, value);
         }
 
+        /// <summary>
+        /// A sub item tree was added to this media
+        /// </summary>
         public event EventHandler<MediaSubItemTreeAddedEventArgs> SubItemTreeAdded
         {
             add => EventManager.AttachEvent(EventType.MediaSubItemTreeAdded, value);
@@ -978,34 +1011,139 @@ namespace LibVLCSharp.Shared
         Audio = 1
     }
 
-    /// <summary>Meta data types</summary>
+    /// <summary>
+    /// Meta data types
+    /// </summary>
     public enum MetadataType
     {
+        /// <summary>
+        /// Title metadata
+        /// </summary>
         Title = 0,
+
+        /// <summary>
+        /// Artist metadata
+        /// </summary>
         Artist = 1,
+
+        /// <summary>
+        /// Genre metadata
+        /// </summary>
         Genre = 2,
+
+        /// <summary>
+        /// Copyright metadata
+        /// </summary>
         Copyright = 3,
+
+        /// <summary>
+        /// Album metadata
+        /// </summary>
         Album = 4,
+
+        /// <summary>
+        /// Track number metadata
+        /// </summary>
         TrackNumber = 5,
+
+        /// <summary>
+        /// Description metadata
+        /// </summary>
         Description = 6,
+
+        /// <summary>
+        /// Rating metadata
+        /// </summary>
         Rating = 7,
+
+        /// <summary>
+        /// Date metadata
+        /// </summary>
         Date = 8,
+
+        /// <summary>
+        /// Setting metadata
+        /// </summary>
         Setting = 9,
+
+        /// <summary>
+        /// URL metadata
+        /// </summary>
         URL = 10,
+
+        /// <summary>
+        /// Language metadata
+        /// </summary>
         Language = 11,
+
+        /// <summary>
+        /// Now playing metadata
+        /// </summary>
         NowPlaying = 12,
+
+        /// <summary>
+        /// Publisher metadata
+        /// </summary>
         Publisher = 13,
+
+        /// <summary>
+        /// Encoded by metadata
+        /// </summary>
         EncodedBy = 14,
+
+        /// <summary>
+        /// Artwork URL metadata
+        /// </summary>
         ArtworkURL = 15,
+
+        /// <summary>
+        /// Track ID metadata
+        /// </summary>
         TrackID = 16,
+
+        /// <summary>
+        /// Total track metadata
+        /// </summary>
         TrackTotal = 17,
+
+        /// <summary>
+        /// Director metadata
+        /// </summary>
         Director = 18,
+
+        /// <summary>
+        /// Season metadata
+        /// </summary>
         Season = 19,
+
+        /// <summary>
+        /// Episode metadata
+        /// </summary>
         Episode = 20,
+
+        /// <summary>
+        /// Show name metadata
+        /// </summary>
         ShowName = 21,
+
+        /// <summary>
+        /// Actors metadata
+        /// </summary>
         Actors = 22,
+
+        /// <summary>
+        /// Album artist metadata
+        /// </summary>
         AlbumArtist = 23,
+
+        /// <summary>
+        /// Disc number metadata
+        /// </summary>
         DiscNumber = 24,
+
+        /// <summary>
+        /// Disc total metadata
+        /// </summary>
         DiscTotal = 25
     }
 
@@ -1067,9 +1205,24 @@ namespace LibVLCSharp.Shared
     /// </remarks>
     public enum MediaParsedStatus
     {
+        /// <summary>
+        /// Parsing was skipped
+        /// </summary>
         Skipped = 1,
+
+        /// <summary>
+        /// Parsing failed
+        /// </summary>
         Failed = 2,
+
+        /// <summary>
+        /// Parsing timed out
+        /// </summary>
         Timeout = 3,
+
+        /// <summary>
+        /// Parsing completed successfully
+        /// </summary>
         Done = 4
     }
 
@@ -1077,11 +1230,34 @@ namespace LibVLCSharp.Shared
     /// <remarks>libvlc_media_get_type</remarks>
     public enum MediaType
     {
+        /// <summary>
+        /// Unknown media type
+        /// </summary>
         Unknown = 0,
+
+        /// <summary>
+        /// File type
+        /// </summary>
         File = 1,
+
+        /// <summary>
+        /// Directory type
+        /// </summary>
         Directory = 2,
+
+        /// <summary>
+        /// Disc type
+        /// </summary>
         Disc = 3,
+
+        /// <summary>
+        /// Stream type
+        /// </summary>
         Stream = 4,
+
+        /// <summary>
+        /// Playlist type
+        /// </summary>
         Playlist = 5
     }
 
