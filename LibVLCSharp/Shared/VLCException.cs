@@ -11,14 +11,14 @@ namespace LibVLCSharp.Shared
         /// VLC Exception constructor
         /// </summary>
         /// <param name="message"></param>
-        internal VLCException(string message = ""):base(message)
+        public VLCException(string message = ""):base(message)
         {
         }
 
         /// <summary>
         /// Creates a <see cref="VLCException" /> with a message and an inner exeption
         /// </summary>
-        internal VLCException(string message, Exception innerException) : base(message, innerException)
+        public VLCException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }
