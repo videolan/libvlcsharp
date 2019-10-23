@@ -12,7 +12,7 @@
     using Windows.UI.Xaml.Controls;
 
     /// <summary>
-    /// The VideoView implementation for UWP applications
+    /// VideoView implementation for the UWP platform
     /// </summary>
     [TemplatePart(Name = PartSwapChainPanelName, Type = typeof(SwapChainPanel))]
     public class VideoView : Control, IVideoView

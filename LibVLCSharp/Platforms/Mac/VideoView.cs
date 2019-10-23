@@ -4,6 +4,9 @@ using AppKit;
 
 namespace LibVLCSharp.Platforms.Mac
 {
+    /// <summary>
+    /// VideoView implementation for the macOS platform
+    /// </summary>
     public class VideoView : NSView, IVideoView
     {
         Shared.MediaPlayer _mediaPlayer;
