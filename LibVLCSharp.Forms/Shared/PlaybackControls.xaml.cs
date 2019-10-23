@@ -738,7 +738,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void ResetRendererDiscovery()
         {
-            ClearRenderers();
+            ClearRenderer();
 
             if(EnableRendererDiscovery)
                 FindRenderers();
@@ -838,7 +838,7 @@ namespace LibVLCSharp.Forms.Shared
                     {
                         _ = FadeInAsync();
 
-                        if(!RemoteRendering && RendererItems.Count == 1)
+                        if (!RemoteRendering && RendererItems.Count == 1)
                         {
                             mediaPlayer.SetRenderer(RendererItems.First());
                             RemoteRendering = true;
@@ -1484,28 +1484,17 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         ObservableCollection<RendererItem> RendererItems = new ObservableCollection<RendererItem>();
-        List<RendererDiscoverer> RendererDiscoverers = new List<RendererDiscoverer>();
+        RendererDiscoverer RendererDiscoverer;
 
-        private void ClearRenderers()
+        private void ClearRenderer()
         {
-            if (RendererItems.Any())
+            if(RendererDiscoverer != null)
             {
-                foreach (var ri in RendererItems)
-                    ri.Dispose();
-            }
-            RendererItems.Clear();
-
-            if (RendererDiscoverers.Any())
-            {
-                foreach (var rd in RendererDiscoverers)
-                {
-                    rd.Stop();
-                    rd.ItemAdded -= RendererDiscoverer_ItemAdded;
-                    rd.ItemDeleted -= RendererDiscoverer_ItemDeleted;
-                    rd.Dispose();
-                }
-
-                RendererDiscoverers.Clear();
+                RendererDiscoverer.Stop();
+                RendererDiscoverer.ItemAdded -= RendererDiscoverer_ItemAdded;
+                RendererDiscoverer.ItemDeleted -= RendererDiscoverer_ItemDeleted;
+                RendererDiscoverer.Dispose();
+                RendererDiscoverer = null;
             }
         }
 
@@ -1517,15 +1506,10 @@ namespace LibVLCSharp.Forms.Shared
             if (!EnableRendererDiscovery)
                 return;
 
-            var renderers = LibVLC.RendererList;
-            foreach(var discoverer in renderers)
-            {
-                var rendererDiscoverer = new RendererDiscoverer(LibVLC, discoverer.Name);
-                rendererDiscoverer.ItemAdded += RendererDiscoverer_ItemAdded;
-                rendererDiscoverer.ItemDeleted += RendererDiscoverer_ItemDeleted;
-                rendererDiscoverer.Start();
-                RendererDiscoverers.Add(rendererDiscoverer);
-            }
+            var rendererDiscoverer = new RendererDiscoverer(LibVLC);
+            rendererDiscoverer.ItemAdded += RendererDiscoverer_ItemAdded;
+            rendererDiscoverer.ItemDeleted += RendererDiscoverer_ItemDeleted;
+            rendererDiscoverer.Start();
         }
 
         private void RendererDiscoverer_ItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e) => RendererItems.Remove(e.RendererItem);
