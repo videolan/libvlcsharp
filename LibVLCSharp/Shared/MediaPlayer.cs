@@ -6,6 +6,9 @@ using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// The MediaPlayer type is used to control playback, set renderers, provide events and much more
+    /// </summary>
     public class MediaPlayer : Internal
     {
         readonly struct Native
@@ -1188,15 +1191,24 @@ namespace LibVLCSharp.Shared
         /// <returns></returns>
         public bool SetChannel(AudioOutputChannel channel) => Native.LibVLCAudioSetChannel(NativeReference, channel) == 0;
 
+        /// <summary>
+        /// Equals override based on the native instance reference
+        /// </summary>
+        /// <param name="obj">the mediaplayer instance to compare this to</param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             return obj is MediaPlayer player &&
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, player.NativeReference);
         }
 
+        /// <summary>
+        /// Custom hascode implemenation for this MediaPlayer instance
+        /// </summary>
+        /// <returns>the hashcode for this MediaPlayer instance</returns>
         public override int GetHashCode()
         {
-            return this.NativeReference.GetHashCode();
+            return NativeReference.GetHashCode();
         }
 
         /// <summary>
@@ -1356,6 +1368,9 @@ namespace LibVLCSharp.Shared
             }
         }
 
+        /// <summary>
+        /// The current video subtitle track
+        /// </summary>
         public int Spu => Native.LibVLCVideoGetSpu(NativeReference);
 
         /// <summary>
@@ -1583,6 +1598,11 @@ namespace LibVLCSharp.Shared
         /// <param name="value">adjust option value</param>
         public void SetAdjustInt(VideoAdjustOption option, int value) => Native.LibVLCVideoSetAdjustInt(NativeReference, option, value);
 
+        /// <summary>
+        /// Get adjust option float value
+        /// </summary>
+        /// <param name="option">The option for which to get the value</param>
+        /// <returns>the float value for a given option</returns>
         public float AdjustFloat(VideoAdjustOption option) => Native.LibVLCVideoGetAdjustFloat(NativeReference, option);
 
         /// <summary>
@@ -1800,7 +1820,7 @@ namespace LibVLCSharp.Shared
         /// <para>in the video decoders, video filters and/or video converters.</para>
         /// </remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate uint LibVLCVideoFormatCb(ref IntPtr userData, IntPtr chroma, ref uint width,
+        public delegate uint LibVLCVideoFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
@@ -1822,13 +1842,13 @@ namespace LibVLCSharp.Shared
         /// <returns>0 on success, anything else to skip audio playback</returns>
         /// <remarks>This is called when the media player needs to create a new audio output.</remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate int LibVLCAudioSetupCb(ref IntPtr data, ref IntPtr format, ref uint rate, ref uint channels);
+        public delegate int LibVLCAudioSetupCb(ref IntPtr opaque, ref IntPtr format, ref uint rate, ref uint channels);
 
         /// <summary>Callback prototype for audio playback cleanup.</summary>
         /// <param name="opaque">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
         /// <remarks>This is called when the media player no longer needs an audio output.</remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LibVLCAudioCleanupCb(IntPtr data);
+        public delegate void LibVLCAudioCleanupCb(IntPtr opaque);
 
         /// <summary>Callback prototype for audio playback.</summary>
         /// <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
@@ -1872,13 +1892,12 @@ namespace LibVLCSharp.Shared
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCAudioResumeCb(IntPtr data, long pts);
 
-        /// <summary>Callback prototype for audio buffer flush.</summary>
-        /// <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
-        /// <remarks>
+        /// <summary>Callback prototype for audio buffer flush.
         /// <para>LibVLC invokes this callback if it needs to discard all pending buffers and</para>
-        /// <para>stop playback as soon as possible. This typically occurs when the media is</para>
-        /// <para>stopped.</para>
-        /// </remarks>
+        /// <para>stop playback as soon as possible. This typically occurs when the media is stopped.</para>
+        /// </summary>
+        /// <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
+        /// <param name="pts">current presentation timestamp</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCAudioFlushCb(IntPtr data, long pts);
 
@@ -1920,180 +1939,270 @@ namespace LibVLCSharp.Shared
 
         #region events
 
+        /// <summary>
+        /// The media of this mediaplayer changed
+        /// </summary>
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerMediaChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerMediaChanged, value);
         }
 
+        /// <summary>
+        /// Nothing special to report
+        /// </summary>
         public event EventHandler<EventArgs> NothingSpecial
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerNothingSpecial, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerNothingSpecial, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is opening a media
+        /// </summary>
         public event EventHandler<EventArgs> Opening
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerOpening, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerOpening, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is buffering
+        /// </summary>
         public event EventHandler<MediaPlayerBufferingEventArgs> Buffering
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerBuffering, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerBuffering, value);
         }
 
+        /// <summary>
+        /// The mediaplayer started playing a media
+        /// </summary>
         public event EventHandler<EventArgs> Playing
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerPlaying, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerPlaying, value);
         }
 
+        /// <summary>
+        /// The mediaplayer paused playback
+        /// </summary>
         public event EventHandler<EventArgs> Paused
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerPaused, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerPaused, value);
         }
 
+        /// <summary>
+        /// The mediaplayer stopped playback
+        /// </summary>
         public event EventHandler<EventArgs> Stopped
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerStopped, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerStopped, value);
         }
 
+        /// <summary>
+        /// The mediaplayer went forward in the playback
+        /// </summary>
         public event EventHandler<EventArgs> Forward
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerForward, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerForward, value);
         }
 
+        /// <summary>
+        /// The mediaplayer went backward in the playback
+        /// </summary>
         public event EventHandler<EventArgs> Backward
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerBackward, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerBackward, value);
         }
 
+        /// <summary>
+        /// The mediaplayer reached the end of the playback
+        /// </summary>
         public event EventHandler<EventArgs> EndReached
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerEndReached, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerEndReached, value);
         }
 
+        /// <summary>
+        /// The mediaplayer encountered an error during playback
+        /// </summary>
         public event EventHandler<EventArgs> EncounteredError
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerEncounteredError, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerEncounteredError, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's playback time changed
+        /// </summary>
         public event EventHandler<MediaPlayerTimeChangedEventArgs> TimeChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerTimeChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerTimeChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's position changed
+        /// </summary>
         public event EventHandler<MediaPlayerPositionChangedEventArgs> PositionChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerPositionChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerPositionChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's seek capability changed
+        /// </summary>
         public event EventHandler<MediaPlayerSeekableChangedEventArgs> SeekableChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerSeekableChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerSeekableChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's pause capability changed
+        /// </summary>
         public event EventHandler<MediaPlayerPausableChangedEventArgs> PausableChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerPausableChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerPausableChanged, value);
         }
 
+        /// <summary>
+        /// The title of the mediaplayer changed
+        /// </summary>
         public event EventHandler<MediaPlayerTitleChangedEventArgs> TitleChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerTitleChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerTitleChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer changed the chapter of a media
+        /// </summary>
         public event EventHandler<MediaPlayerChapterChangedEventArgs> ChapterChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerChapterChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerChapterChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer took a snapshot
+        /// </summary>
         public event EventHandler<MediaPlayerSnapshotTakenEventArgs> SnapshotTaken
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerSnapshotTaken, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerSnapshotTaken, value);
         }
 
+        /// <summary>
+        /// The length of a playback changed
+        /// </summary>
         public event EventHandler<MediaPlayerLengthChangedEventArgs> LengthChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerLengthChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerLengthChanged, value);
         }
 
+        /// <summary>
+        /// The Video Output count of the MediaPlayer changed
+        /// </summary>
         public event EventHandler<MediaPlayerVoutEventArgs> Vout
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerVout, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerVout, value);
         }
-        
+
+        /// <summary>
+        /// The mediaplayer scrambled status changed
+        /// </summary>
         public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerScrambledChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerScrambledChanged, value);
         }
 
+        /// <summary>
+        /// The mediaplayer has a new Elementary Stream (ES)
+        /// </summary>
         public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerESAdded, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerESAdded, value);
         }
 
+        /// <summary>
+        /// The mediaplayer has one less Elementary Stream (ES)
+        /// </summary>
         public event EventHandler<MediaPlayerESDeletedEventArgs> ESDeleted
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerESDeleted, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerESDeleted, value);
         }
 
+        /// <summary>
+        /// An Elementary Stream (ES) was selected
+        /// </summary>
         public event EventHandler<MediaPlayerESSelectedEventArgs> ESSelected
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerESSelected, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerESSelected, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's audio device changed
+        /// </summary>
         public event EventHandler<MediaPlayerAudioDeviceEventArgs> AudioDevice
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerAudioDevice, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerAudioDevice, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is corked
+        /// </summary>
         public event EventHandler<EventArgs> Corked
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerCorked, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerCorked, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is uncorked
+        /// </summary>
         public event EventHandler<EventArgs> Uncorked
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerUncorked, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerUncorked, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is muted
+        /// </summary>
         public event EventHandler<EventArgs> Muted
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerMuted, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerMuted, value);
         }
 
+        /// <summary>
+        /// The mediaplayer is unmuted
+        /// </summary>
         public event EventHandler<EventArgs> Unmuted
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerUnmuted, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerUnmuted, value);
         }
 
+        /// <summary>
+        /// The mediaplayer's volume changed
+        /// </summary>
         public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerAudioVolume, value);
@@ -2102,6 +2211,11 @@ namespace LibVLCSharp.Shared
 
 #endregion
 
+        /// <summary>
+        /// Dispose override
+        /// Effectively stops playback and disposes a media if any
+        /// </summary>
+        /// <param name="disposing">release any unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
@@ -2127,56 +2241,156 @@ namespace LibVLCSharp.Shared
     /// <summary>Description for titles</summary>
     public enum Title
     {
+        /// <summary>
+        /// Menu title
+        /// </summary>
         Menu = 1,
+
+        /// <summary>
+        /// Interactive title
+        /// </summary>
         Interactive = 2
     }
 
     /// <summary>Marq options definition</summary>
     public enum VideoMarqueeOption
     {
+        /// <summary>
+        /// Enable marquee
+        /// </summary>
         Enable = 0,
+
+        /// <summary>
+        /// Text marquee
+        /// </summary>
         Text = 1,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Color marquee
+        /// </summary>
         Color = 2,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Opacity marquee
+        /// </summary>
         Opacity = 3,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Position marquee
+        /// </summary>
         Position = 4,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Refresh marquee
+        /// </summary>
         Refresh = 5,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Size marquee
+        /// </summary>
         Size = 6,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Timeout marquee
+        /// </summary>
         Timeout = 7,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// X marquee
+        /// </summary>
         X = 8,
-        /// <summary>string argument</summary>
+
+        /// <summary>
+        /// Y marquee
+        /// </summary>
         Y = 9
     }
 
     /// <summary>Navigation mode</summary>
     public enum NavigationMode
     {
+        /// <summary>
+        /// Activate
+        /// </summary>
         Activate = 0,
+
+        /// <summary>
+        /// Navigation up
+        /// </summary>
         Up = 1,
+
+        /// <summary>
+        /// Navigation down
+        /// </summary>
         Down = 2,
+
+        /// <summary>
+        /// Navigation left
+        /// </summary>
         Left = 3,
+
+        /// <summary>
+        /// Navigation right
+        /// </summary>
         Right = 4,
+
+        /// <summary>
+        /// Navigation popup
+        /// </summary>
         Popup = 5
     }
 
     /// <summary>Enumeration of values used to set position (e.g. of video title).</summary>
     public enum Position
     {
+        /// <summary>
+        /// Disable
+        /// </summary>
         Disable = -1,
+
+        /// <summary>
+        /// Center video title
+        /// </summary>
         Center = 0,
+
+        /// <summary>
+        /// Left video title
+        /// </summary>
         Left = 1,
+
+        /// <summary>
+        /// Right video title
+        /// </summary>
         Right = 2,
+
+        /// <summary>
+        /// Top video title
+        /// </summary>
         Top = 3,
+
+        /// <summary>
+        /// TopLeft video title
+        /// </summary>
         TopLeft = 4,
+
+        /// <summary>
+        /// TopRight video title
+        /// </summary>
         TopRight = 5,
+
+        /// <summary>
+        /// Bottom video title
+        /// </summary>
         Bottom = 6,
+
+        /// <summary>
+        /// BottomLeft video title
+        /// </summary>
         BottomLeft = 7,
+
+        /// <summary>
+        /// BottomRight video title
+        /// </summary>
         BottomRight = 8
     }
 
@@ -2186,60 +2400,147 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public enum TeletextKey
     {
+        /// <summary>
+        /// Red
+        /// </summary>
         Red = 7471104,
+
+        /// <summary>
+        /// Green
+        /// </summary>
         Green = 6750208,
+
+        /// <summary>
+        /// Yellow
+        /// </summary>
         Yellow = 7929856,
+
+        /// <summary>
+        /// Blue
+        /// </summary>
         Blue = 6422528,
+
+        /// <summary>
+        /// Index
+        /// </summary>
         Index = 6881280
     }
 
-    /// <summary>option values for libvlc_video_{get,set}_logo_{int,string}</summary>
+    /// <summary>
+    /// option values for libvlc_video_{get,set}_logo_{int,string}
+    /// </summary>
     public enum VideoLogoOption
     {
+        /// <summary>
+        /// Enable
+        /// </summary>
         Enable = 0,
-        /// <summary>string argument, &quot;file,d,t;file,d,t;...&quot;</summary>
+
+        /// <summary>
+        /// string argument, &quot;file,d,t;file,d,t;...&quot;
+        /// </summary>
         File = 1,
+
+        /// <summary>
+        /// X
+        /// </summary>
         X = 2,
+
+        /// <summary>
+        /// Y
+        /// </summary>
         Y = 3,
+
+        /// <summary>
+        /// Delay
+        /// </summary>
         Delay = 4,
+
+        /// <summary>
+        /// Repeat
+        /// </summary>
         Repeat = 5,
+
+        /// <summary>
+        /// Opacity
+        /// </summary>
         Opacity = 6,
+
+        /// <summary>
+        /// Position
+        /// </summary>
         Position = 7
     }
 
-    /// <summary>option values for libvlc_video_{get,set}_adjust_{int,float,bool}</summary>
+    /// <summary>
+    /// option values for libvlc_video_{get,set}_adjust_{int,float,bool}
+    /// </summary>
     public enum VideoAdjustOption
     {
+        /// <summary>
+        /// Enable
+        /// </summary>
         Enable = 0,
+
+        /// <summary>
+        /// Contrast
+        /// </summary>
         Contrast = 1,
+
+        /// <summary>
+        /// Brightness
+        /// </summary>
         Brightness = 2,
+
+        /// <summary>
+        /// Hue
+        /// </summary>
         Hue = 3,
+
+        /// <summary>
+        /// Saturation
+        /// </summary>
         Saturation = 4,
+
+        /// <summary>
+        /// Gamma
+        /// </summary>
         Gamma = 5
     }
 
-    /// <summary>Audio device types</summary>
-    public enum AudioOutputDeviceType
-    {
-        DeviceError = -1,
-        DeviceMono = 1,
-        DeviceStereo = 2,
-        Device2F2R = 4,
-        Device3F2R = 5,
-        Device5_1 = 6,
-        Device6_1 = 7,
-        Device7_1 = 8,
-        DeviceSPDIF = 10
-    }
-
-    /// <summary>Audio channels</summary>
+    /// <summary>
+    /// Audio channels
+    /// </summary>
     public enum AudioOutputChannel
     {
+        /// <summary>
+        /// Error
+        /// </summary>
         Error = -1,
+
+        /// <summary>
+        /// Stereo mode
+        /// </summary>
         Stereo = 1,
+
+        /// <summary>
+        /// RStereo mode
+        /// </summary>
         RStereo = 2,
+
+        /// <summary>
+        /// Left mode
+        /// </summary>
         Left = 3,
+
+        /// <summary>
+        /// Right mode
+        /// </summary>
         Right = 4,
+
+        /// <summary>
+        /// Dolbys mode
+        /// </summary>
         Dolbys = 5
     }
 
