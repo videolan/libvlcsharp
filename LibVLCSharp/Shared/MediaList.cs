@@ -5,6 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
 {
+    /// <summary>
+    /// The MediaList holds a list of Media types
+    /// </summary>
     public class MediaList : Internal, IEnumerable<Media>
     {
         MediaListEventManager _eventManager;
@@ -259,30 +262,45 @@ namespace LibVLCSharp.Shared
 
         #region Events
 
+        /// <summary>
+        /// An item has been added to the MediaList
+        /// </summary>
         public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
         {
             add => EventManager.AttachEvent(EventType.MediaListItemAdded, value);
             remove => EventManager.DetachEvent(EventType.MediaListItemAdded, value);
         }
 
+        /// <summary>
+        /// An item is about to be added to the MediaList
+        /// </summary>
         public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
         {
             add => EventManager.AttachEvent(EventType.MediaListWillAddItem, value);
             remove => EventManager.DetachEvent(EventType.MediaListWillAddItem, value);
         }
 
+        /// <summary>
+        /// An item has been deleted from the MediaList
+        /// </summary>
         public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
         {
             add => EventManager.AttachEvent(EventType.MediaListItemDeleted, value);
             remove => EventManager.DetachEvent(EventType.MediaListItemDeleted, value);
         }
 
+        /// <summary>
+        /// An item is about to be deleted from the MediaList
+        /// </summary>
         public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
         {
             add => EventManager.AttachEvent(EventType.MediaListWillDeleteItem, value);
             remove => EventManager.DetachEvent(EventType.MediaListWillDeleteItem, value);
         }
 
+        /// <summary>
+        /// The media list reached its end
+        /// </summary>
         public event EventHandler<EventArgs> EndReached
         {
             add => EventManager.AttachEvent(EventType.MediaListEndReached, value);
@@ -291,6 +309,10 @@ namespace LibVLCSharp.Shared
 
         #endregion 
 
+        /// <summary>
+        /// Dispose of this media list instance
+        /// </summary>
+        /// <param name="disposing">true to dispose of unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed || NativeReference == IntPtr.Zero)
@@ -298,12 +320,16 @@ namespace LibVLCSharp.Shared
 
             base.Dispose(disposing);
         }
-
+        
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection of media
+        /// </summary>
+        /// <returns>an enumerator over a media collection</returns>
         public IEnumerator<Media> GetEnumerator() => new MediaListEnumerator(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public class MediaListEnumerator : IEnumerator<Media>
+        internal class MediaListEnumerator : IEnumerator<Media>
         {
             int position = -1;
             MediaList _mediaList;
