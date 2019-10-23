@@ -4,6 +4,9 @@ using UIKit;
 
 namespace LibVLCSharp.Platforms.tvOS
 {
+    /// <summary>
+    /// VideoView implementation for the tvOS platform
+    /// </summary>
     public class VideoView : UIView, IVideoView
     {
         Shared.MediaPlayer _mediaPlayer;

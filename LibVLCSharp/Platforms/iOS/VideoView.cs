@@ -6,6 +6,9 @@ using UIKit;
 
 namespace LibVLCSharp.Platforms.iOS
 {
+    /// <summary>
+    /// VideoView implementation for the iOS platform
+    /// </summary>
     public class VideoView : UIView, IVideoView
     {
         Shared.MediaPlayer _mediaPlayer;
