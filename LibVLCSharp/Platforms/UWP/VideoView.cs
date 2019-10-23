@@ -1,16 +1,16 @@
-﻿namespace LibVLCSharp.Platforms.UWP
-{
-    using System;
-    using System.Runtime.InteropServices;
-    using LibVLCSharp.Shared;
-    using SharpDX;
-    using SharpDX.Direct3D11;
-    using SharpDX.DXGI;
-    using SharpDX.Mathematics.Interop;
-    using Windows.ApplicationModel;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Runtime.InteropServices;
+using LibVLCSharp.Shared;
+using SharpDX;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
+namespace LibVLCSharp.Platforms.UWP
+{
     /// <summary>
     /// VideoView implementation for the UWP platform
     /// </summary>
