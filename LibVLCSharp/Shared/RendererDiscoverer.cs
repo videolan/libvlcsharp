@@ -11,6 +11,8 @@ namespace LibVLCSharp.Shared
     public class RendererDiscoverer : Internal
     {
         RendererDiscovererEventManager _eventManager;
+        const string Bonjour = "Bonjour_renderer";
+        const string Mdns = "microdns_renderer";
 
         readonly struct Native
         {
@@ -39,10 +41,22 @@ namespace LibVLCSharp.Shared
         /// Create a new renderer discoverer with a LibVLC and protocol name depending on host platform
         /// </summary>
         /// <param name="libVLC">libvlc instance this will be connected to</param>
-        /// <param name="name">The service discovery protocol name depending on platform. Use <see cref="LibVLC.RendererList"/> to find the one for your platform</param>
-        public RendererDiscoverer(LibVLC libVLC, string name)
+        /// <param name="name">
+        /// The service discovery protocol name depending on platform. Use <see cref="LibVLC.RendererList"/> to find the one for your platform,
+        /// or let libvlcsharp find it for you
+        /// </param>
+        public RendererDiscoverer(LibVLC libVLC, string name = null)
             : base(() =>
             {
+                if(string.IsNullOrEmpty(name))
+                {
+#if APPLE
+                    name = Bonjour;
+#else
+                    name = Mdns;
+#endif
+                }
+
                 var nameUtf8 = name.ToUtf8();
                 return MarshalUtils.PerformInteropAndFree(() => 
                     Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
