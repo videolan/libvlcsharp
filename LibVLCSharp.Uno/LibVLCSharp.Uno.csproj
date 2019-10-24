@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90;uap10.0.16299</TargetFrameworks>
+    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <Authors>VideoLAN</Authors>
+    <Owners>VideoLAN</Owners>
+    <Version>0.1.1-alpha</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>VLC MediaPlayerElement for Uno Platform (UWP, Android, iOS)</Description>
+    <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;mediaelement;mediaplayerelement;codec;ffmpeg;graphics;ios;android;windows;cross-platform;uno</PackageTags>
+    <PackageProjectUrl>https://github.com/libvlcsharp/libvlcsharp.uno</PackageProjectUrl>
+    <PackageId>LibVLCSharp.Uno</PackageId>
+    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+  </PropertyGroup> 
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid81' or '$(TargetFramework)'=='monoandroid90'">
+    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3565" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="**\*.Shared.cs" />
+    <Compile Remove="**\*.UWP.cs" />
+    <Compile Remove="**\*.Android.cs" />
+    <Compile Remove="**\*.iOS.cs" />
+    <None Include="**\*.Shared.cs" />
+    <None Include="**\*.UWP.cs" />
+    <None Include="**\*.Android.cs" />
+    <None Include="**\*.iOS.cs" />
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">    
+    <Compile Include="**\*.UWP.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
+    <Compile Include="**\*.Shared.cs" />
+    <Compile Include="**\*.Android.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
+    <Compile Include="**\*.Shared.cs" />
+    <Compile Include="**\*.iOS.cs" />
+  </ItemGroup>
+</Project>
