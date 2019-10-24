@@ -7,7 +7,7 @@ steps:
 - bash: |
    #!/bin/bash
    set -ex   
-   MONO_MACOS_PKG_DOWNLOAD_URL='https://download.mono-project.com/archive/mdk-latest-stable.pkg'
+   MONO_MACOS_PKG_DOWNLOAD_URL='https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg'
    mkdir -p /tmp/mono-install
    cd /tmp/mono-install
    mono --version
