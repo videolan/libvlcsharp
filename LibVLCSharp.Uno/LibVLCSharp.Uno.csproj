@@ -3,7 +3,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90;uap10.0.16299</TargetFrameworks>
+    <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
@@ -29,25 +29,16 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="**\*.Shared.cs" />
-    <Compile Remove="**\*.UWP.cs" />
     <Compile Remove="**\*.Android.cs" />
     <Compile Remove="**\*.iOS.cs" />
-    <None Include="**\*.Shared.cs" />
-    <None Include="**\*.UWP.cs" />
     <None Include="**\*.Android.cs" />
     <None Include="**\*.iOS.cs" />
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">    
-    <Compile Include="**\*.UWP.cs" />
-  </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
-    <Compile Include="**\*.Shared.cs" />
     <Compile Include="**\*.Android.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
-    <Compile Include="**\*.Shared.cs" />
     <Compile Include="**\*.iOS.cs" />
   </ItemGroup>
 </Project>
