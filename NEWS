@@ -1,3 +1,10 @@
+LibVLCSharp version 3.3.0
+=========================
+* Docs: All public APIs are now documented and accessible through intellisense https://code.videolan.org/videolan/LibVLCSharp/issues/33
+* MediaElement: Fix bug on iOS showing renderer item duplicate because of mdns usage. https://code.videolan.org/videolan/LibVLCSharp/issues/237
+* RendererDiscoverer: Simplify API usage by inferring protocol depending on platform (not breaking public API).
+* UWP: Makes the UWP VideoView more MVVM friendly https://github.com/videolan/libvlcsharp/pull/73
+
 LibVLCSharp version 3.2.5
 =========================
 * MediaElement: Fix RendererDiscovery bug triggered when some controls are hidden. https://code.videolan.org/videolan/LibVLCSharp/issues/235
