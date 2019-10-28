@@ -4,7 +4,7 @@ using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace LibVLCSharp.Platforms.UWP
+namespace LibVLCSharp.Uno
 {
     /// <summary>
     /// Video view

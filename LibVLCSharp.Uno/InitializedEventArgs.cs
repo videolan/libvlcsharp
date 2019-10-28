@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace LibVLCSharp.Platforms.UWP
+namespace LibVLCSharp.Uno
 {
     /// <summary>
-    /// Provides data for the <see cref="VideoView.Initialized"/> event.
+    /// Provides data for Initialized event.
     /// </summary>
     public class InitializedEventArgs : EventArgs
     {
