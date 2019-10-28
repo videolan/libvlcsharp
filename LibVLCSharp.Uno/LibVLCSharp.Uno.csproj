@@ -16,10 +16,8 @@
     <PackageId>LibVLCSharp.Uno</PackageId>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
   </PropertyGroup> 
-  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid81' or '$(TargetFramework)'=='monoandroid90'">
-    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3565" />
-  </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3599" />
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
@@ -29,13 +27,14 @@
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
     <Compile Remove="**\*.Android.cs" />
     <Compile Remove="**\*.iOS.cs" />
     <None Include="**\*.Android.cs" />
     <None Include="**\*.iOS.cs" />
-    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
+    <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" />
     <Compile Include="**\*.Android.cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">

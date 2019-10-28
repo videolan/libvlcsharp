@@ -1,21 +1,22 @@
 ﻿using Uno.UI;
+using Windows.UI.Xaml.Controls;
 
 namespace LibVLCSharp.Platforms.UWP
 {
     /// <summary>
     /// Video view
     /// </summary>
-    public partial class VideoView
+    public partial class VideoView : VideoViewWrapper<Android.VideoView>
     {
-        private Android.VideoView? UnderlyingVideoView
+        /// <summary>
+        /// Creates the underlying video view and set the <see cref="Border.Child"/> property value
+        /// </summary>
+        /// <returns>the created underlying video view</returns>
+        protected override Android.VideoView CreateUnderlyingVideoView()
         {
-            get;
-            set;
-        }
-
-        private Android.VideoView CreateVideoView()
-        {
-            return new Android.VideoView(ContextHelper.Current);
+            var underlyingVideoView = new Android.VideoView(ContextHelper.Current);
+            Border!.Child = underlyingVideoView;
+            return underlyingVideoView;
         }
     }
 }

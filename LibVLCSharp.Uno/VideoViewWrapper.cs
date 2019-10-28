@@ -9,7 +9,8 @@ namespace LibVLCSharp.Platforms.UWP
     /// <summary>
     /// Video view
     /// </summary>
-    public partial class VideoView : Control, IVideoView
+    public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoView
+        where TUnderlyingVideoView : class, IVideoView, IDisposable
     {
         /// <summary>
         /// Occurs when the <see cref="VideoView"/> is fully loaded
@@ -19,13 +20,17 @@ namespace LibVLCSharp.Platforms.UWP
         /// <summary>
         /// Initializes a new instance of <see cref="VideoView"/> class
         /// </summary>
-        public VideoView()
+        public VideoViewWrapper()
         {
             DefaultStyleKey = typeof(VideoView);
             Loaded += (sender, e) => Initialized?.Invoke(this, new InitializedEventArgs(SwapChainOptions));
         }
 
-        private Border? Border { get; set; }
+        /// <summary>
+        /// Gets the <see cref="Border"/> control where the underlying video view will be put
+        /// </summary>
+        protected Border? Border { get; private set; }
+        private TUnderlyingVideoView? UnderlyingVideoView { get; set; }
 
         /// <summary>
         /// Gets the swapchain parameters to pass to the <see cref="LibVLC"/> constructor.
@@ -61,7 +66,7 @@ namespace LibVLCSharp.Platforms.UWP
 
         private static void OnMediaPlayerPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            ((VideoView)dependencyObject).UpdateUnderlyingVideoView();
+            ((VideoViewWrapper<TUnderlyingVideoView>)dependencyObject).UpdateUnderlyingVideoView();
         }
 
         /// <summary>
@@ -78,6 +83,12 @@ namespace LibVLCSharp.Platforms.UWP
                 UpdateUnderlyingVideoView();
             }
         }
+
+        /// <summary>
+        /// Creates the underlying video view and set the <see cref="Border.Child"/> property value
+        /// </summary>
+        /// <returns>the created underlying video view</returns>
+        protected abstract TUnderlyingVideoView CreateUnderlyingVideoView();
 
         private void UpdateUnderlyingVideoView()
         {
@@ -98,9 +109,7 @@ namespace LibVLCSharp.Platforms.UWP
                 {
                     if (underlyingVideoView == null)
                     {
-                        underlyingVideoView = CreateVideoView();
-                        UnderlyingVideoView = underlyingVideoView;
-                        Border.Child = underlyingVideoView;
+                        UnderlyingVideoView = underlyingVideoView = CreateUnderlyingVideoView();
                     }
                     underlyingVideoView.MediaPlayer = mediaPlayer;
                 }
