@@ -1,7 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 
@@ -10,8 +9,13 @@ namespace LibVLCSharp.Uno.Sample
     /// <summary>
     /// Main view model
     /// </summary>
-    public class MainViewModel : ViewModelBase, IDisposable
+    public class MainViewModel : INotifyPropertyChanged, IDisposable
     {
+        /// <summary>
+        /// Occurs when a property value changes
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Initialized a new instance of <see cref="MainViewModel"/> class
         /// </summary>
@@ -43,6 +47,15 @@ namespace LibVLCSharp.Uno.Sample
         {
             get => _mediaPlayer;
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
+        }
+
+        private void Set<T>(string propertyName, ref T field, T value)
+        {
+            if (field == null && value != null || field != null && !field.Equals(value))
+            {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         private void Initialize(InitializedEventArgs eventArgs)
