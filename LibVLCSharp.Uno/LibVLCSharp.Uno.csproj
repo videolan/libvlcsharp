@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
