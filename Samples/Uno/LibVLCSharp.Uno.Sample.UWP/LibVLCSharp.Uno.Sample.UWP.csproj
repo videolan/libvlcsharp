@@ -125,6 +125,12 @@
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
+      <Project>{82ab6f00-b0cc-4b88-8d09-cd95789e6c38}</Project>
+      <Name>LibVLCSharp.Uno</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems')" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

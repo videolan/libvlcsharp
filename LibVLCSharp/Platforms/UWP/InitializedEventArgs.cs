@@ -3,7 +3,7 @@
 namespace LibVLCSharp.Platforms.UWP
 {
     /// <summary>
-    /// Provides data for the <see cref="VideoView.Initialized"/> event.
+    /// Provides data for the <see cref="VideoView{TInitializedEventArgs}.Initialized"/> event.
     /// </summary>
     public class InitializedEventArgs : EventArgs
     {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90</TargetFrameworks>
+    <TargetFrameworks>xamarinios10;monoandroid81;monoandroid90;uap10.0.16299</TargetFrameworks>
     <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
@@ -17,7 +17,6 @@
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
   </PropertyGroup> 
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3599" />
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
@@ -28,16 +27,25 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <Compile Remove="**\*.UWP.cs" />
     <Compile Remove="**\*.Android.cs" />
     <Compile Remove="**\*.iOS.cs" />
+    <None Include="**\*.UWP.cs" />
     <None Include="**\*.Android.cs" />
     <None Include="**\*.iOS.cs" />
   </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios')) or $(TargetFramework.StartsWith('monoandroid'))">
+    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3599" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
+    <Compile Remove="Themes\VideoView.xaml" />
+    <Compile Include="**\*.UWP.*cs" />
+  </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" />
-    <Compile Include="**\*.Android.cs" />
+    <Compile Include="**\*.Android.*cs" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
-    <Compile Include="**\*.iOS.cs" />
+    <Compile Include="**\*.iOS.*cs" />
   </ItemGroup>
 </Project>

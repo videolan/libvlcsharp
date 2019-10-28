@@ -3,10 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vlc="using:LibVLCSharp.Platforms.UWP">
 
-    <Style TargetType="vlc:VideoView">
+    <Style TargetType="vlc:VideoViewBase">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="vlc:VideoView">
+                <ControlTemplate>
                     <SwapChainPanel x:Name="SwapChainPanel" />
                 </ControlTemplate>
             </Setter.Value>
