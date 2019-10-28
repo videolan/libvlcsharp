@@ -1,4 +1,6 @@
-﻿namespace LibVLCSharp.Platforms.UWP
+﻿using LibVLCSharp.Platforms.UWP;
+
+namespace LibVLCSharp.Uno
 {
     /// <summary>
     /// VideoView implementation for the UWP platform
