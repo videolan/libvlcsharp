@@ -8,6 +8,6 @@
         /// <summary>
         /// MediaPlayer object connected to the view
         /// </summary>
-        MediaPlayer MediaPlayer { get; }
+        MediaPlayer MediaPlayer { get; set; }
     }
 }
