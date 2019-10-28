@@ -1,19 +1,21 @@
-﻿namespace LibVLCSharp.Platforms.UWP
+﻿using Windows.UI.Xaml.Controls;
+
+namespace LibVLCSharp.Platforms.UWP
 {
     /// <summary>
     /// Video view
     /// </summary>
-    public partial class VideoView
+    public partial class VideoView : VideoViewWrapper<iOS.VideoView>
     {
-        private iOS.VideoView? UnderlyingVideoView
+        /// <summary>
+        /// Creates the underlying video view and set the <see cref="Border.Child"/> property value
+        /// </summary>
+        /// <returns>the created underlying video view</returns>
+        protected override iOS.VideoView CreateUnderlyingVideoView()
         {
-            get;
-            set;
-        }
-
-        private iOS.VideoView CreateVideoView()
-        {
-            return new iOS.VideoView();
+            var underlyingVideoView = new iOS.VideoView();
+            Border!.Child = underlyingVideoView;
+            return underlyingVideoView;
         }
     }
 }
