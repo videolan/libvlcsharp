@@ -302,7 +302,7 @@ namespace LibVLCSharp.Platforms.UWP
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static DependencyProperty MediaPlayerProperty { get; } = DependencyProperty.Register(nameof(MediaPlayer), typeof(MediaPlayer),
-            typeof(VideoView), new PropertyMetadata(null, OnMediaPlayerChanged));
+            typeof(VideoViewBase), new PropertyMetadata(null, OnMediaPlayerChanged));
         /// <summary>
         /// MediaPlayer object connected to the view
         /// </summary>
