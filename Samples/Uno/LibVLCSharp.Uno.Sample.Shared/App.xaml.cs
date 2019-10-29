@@ -1,7 +1,5 @@
 ﻿using System;
 using LibVLCSharp.Shared;
-using Microsoft.Extensions.Logging;
-using Uno.Extensions;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -21,12 +19,10 @@ namespace LibVLCSharp.Uno.Sample
         /// </summary>
         public App()
         {
-            ConfigureFilters(LogExtensionPoint.AmbientLoggerFactory);
-
             Core.Initialize(); // LibVLCSharp initialization
 
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         /// <summary>
@@ -42,11 +38,10 @@ namespace LibVLCSharp.Uno.Sample
                 // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            Frame rootFrame = Windows.UI.Xaml.Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Windows.UI.Xaml.Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -98,48 +93,6 @@ namespace LibVLCSharp.Uno.Sample
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-
-
-        /// <summary>
-        /// Configures global logging
-        /// </summary>
-        /// <param name="factory"></param>
-        static void ConfigureFilters(ILoggerFactory factory)
-        {
-            factory
-                .WithFilter(new FilterLoggerSettings
-                    {
-                        { "Uno", Microsoft.Extensions.Logging.LogLevel.Warning },
-                        { "Windows", Microsoft.Extensions.Logging.LogLevel.Warning },
-
-						// Debug JS interop
-						// { "Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug },
-
-						// Generic Xaml events
-						// { "Windows.UI.Xaml", LogLevel.Debug },
-						// { "Windows.UI.Xaml.VisualStateGroup", LogLevel.Debug },
-						// { "Windows.UI.Xaml.StateTriggerBase", LogLevel.Debug },
-						// { "Windows.UI.Xaml.UIElement", LogLevel.Debug },
-
-						// Layouter specific messages
-						// { "Windows.UI.Xaml.Controls", LogLevel.Debug },
-						// { "Windows.UI.Xaml.Controls.Layouter", LogLevel.Debug },
-						// { "Windows.UI.Xaml.Controls.Panel", LogLevel.Debug },
-						// { "Windows.Storage", LogLevel.Debug },
-
-						// Binding related messages
-						// { "Windows.UI.Xaml.Data", LogLevel.Debug },
-
-						// DependencyObject memory references tracking
-						// { "ReferenceHolder", LogLevel.Debug },
-					}
-                )
-#if DEBUG
-                .AddConsole(Microsoft.Extensions.Logging.LogLevel.Debug);
-#else
-                .AddConsole(Microsoft.Extensions.Logging.LogLevel.Information);
-#endif
         }
     }
 }

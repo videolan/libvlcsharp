@@ -15,7 +15,6 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Uno.Core" Version="1.29.0-dev.97" />
     <PackageReference Include="VideoLAN.LibVLC.UWP">
       <Version>3.2.0</Version>
     </PackageReference>
