@@ -1,24 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="MSBuild.Sdk.Extras/2.0.54">
   <PropertyGroup>
+    <Title>LibVLCSharp.Uno</Title>
+    <Summary>Uno integration for LibVLCSharp</Summary>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <TargetFrameworks>xamarinios10;monoandroid81</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
-    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
-    <Version>0.1.1-alpha</Version>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>VLC MediaPlayerElement for Uno Platform (UWP, Android, iOS)</Description>
+    <Version>0.0.1</Version>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
+
+It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iOS)</Description>
     <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;mediaelement;mediaplayerelement;codec;ffmpeg;graphics;ios;android;windows;cross-platform;uno</PackageTags>
-    <PackageProjectUrl>https://github.com/libvlcsharp/libvlcsharp.uno</PackageProjectUrl>
+    <PackageProjectUrl>https://code.videolan.org/videolan/LibVLCSharp</PackageProjectUrl>
+    <RootNamespace>LibVLCSharp.Uno</RootNamespace>
     <PackageId>LibVLCSharp.Uno</PackageId>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
   </PropertyGroup> 
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <None Include="..\Assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Compile Update="**\*.xaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
