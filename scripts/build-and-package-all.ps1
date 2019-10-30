@@ -1,6 +1,6 @@
 del *.nupkg
 
-$libvlcsharpPackagesCount = 7;
+$libvlcsharpPackagesCount = 8;
 [bool] $isCIBuild = $false;
 
 if([System.Environment]::GetEnvironmentVariable('TF_BUILD') -eq "True")
@@ -16,6 +16,7 @@ if([System.Environment]::GetEnvironmentVariable('TF_BUILD') -eq "True")
 .\build-and-package-libvlcsharp-gtk.ps1 $msbuild
 .\build-and-package-libvlcsharp-forms-gtk.ps1 $msbuild
 .\build-and-package-libvlcsharp-winforms.ps1 $msbuild
+.\build-and-package-libvlcsharp-uno.ps1 $msbuild
 
 $nugetPackages = Get-ChildItem -recurse -filter *.nupkg | Group-Object -Property Directory
 
