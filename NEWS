@@ -1,3 +1,7 @@
+LibVLCSharp version 3.3.1
+=========================
+* Add support for the Uno Platform by @kakone https://github.com/videolan/libvlcsharp/pull/76 Fixes https://code.videolan.org/videolan/LibVLCSharp/issues/232
+
 LibVLCSharp version 3.3.0
 =========================
 * Docs: All public APIs are now documented and accessible through intellisense https://code.videolan.org/videolan/LibVLCSharp/issues/33
