@@ -73,6 +73,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Windows Universal (UWP for Desktop, mobile and Xbox)
 - Linux including desktop, server and Raspberry Pi (GTK)
 - Xamarin.Forms
+- Uno Platform (UWP, Android, iOS)
 - .NET Standard 1.1 and 2.0
 - .NET Core (including ASP.NET Core)
 
@@ -112,6 +113,7 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md)    | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
 | Xamarin.Forms.GTK | [LibVLCSharp.Forms.GTK][RLibVLCSharpFormsGTK]   | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
+| Uno Platform      | LibVLCSharp.Uno                                 | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#. 
 
@@ -157,6 +159,9 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 
 [LibVLCSharpWinForms]: https://www.nuget.org/packages/LibVLCSharp.WinForms/
 [LibVLCSharpWinFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WinForms.svg
+
+[LibVLCSharpUno]: https://www.nuget.org/packages/LibVLCSharp.Uno/
+[LibVLCSharpUnoBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Uno.svg
 
 ## Getting started
 
