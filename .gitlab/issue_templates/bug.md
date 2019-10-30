@@ -16,7 +16,8 @@ If this is a question please ask on StackOverflow: https://stackoverflow.com/que
 <!-- How one can reproduce the issue - this is very important
 
 Provide a Minimal, Complete, and Verifiable example (https://stackoverflow.com/help/mcve) through a git hosting platform
-and post the URL here. If you don't provide this, we may not be able to help and may close the issue.
+and post the URL here. Do NOT paste parts of your code in the GitLab issue, share your full (but minimal) code through a git repository.
+If you don't provide this, we may not be able to help and may close the issue.
 
 Please also provide the functional steps to reproduce the behavior (if necessary):
 1. Go to '...'
