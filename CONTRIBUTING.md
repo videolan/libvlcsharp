@@ -79,7 +79,7 @@ Before you submit your pull request consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-In GitHub, send a pull request to `libvlcsharp:master`.
+In GitHub, send a pull request to `libvlcsharp:3.x`.
 
 If we suggest changes, then:
 
@@ -91,7 +91,7 @@ If we suggest changes, then:
 If the PR gets too outdated we may ask you to rebase and force push to update the PR:
 
 ```shell
-git rebase master -i
+git rebase target_branch -i
 git push origin my-fix-branch -f
 ```
 
