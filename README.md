@@ -113,13 +113,14 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md)    | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
 | Xamarin.Forms.GTK | [LibVLCSharp.Forms.GTK][RLibVLCSharpFormsGTK]   | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
-| Uno Platform      | LibVLCSharp.Uno                                 | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
+| Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#. 
 
 [RLibVLCSharpFormsWPF]: LibVLCSharp.Forms.Platforms.WPF/README.md
 [RLibVLCSharpFormsGTK]: LibVLCSharp.Forms.Platforms.GTK/README.md
 [RLibVLCSharpWinForms]: LibVLCSharp.WinForms/README.md
+[RLibVLCSharpUno]: LibVLCSharp.Uno/README.md
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
