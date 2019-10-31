@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///LibVLCSharp.Uno/Themes/MediaPlayerElement.xaml" />
+        <ResourceDictionary Source="ms-appx:///LibVLCSharp.Uno/Themes/MediaTransportControls.UWP.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

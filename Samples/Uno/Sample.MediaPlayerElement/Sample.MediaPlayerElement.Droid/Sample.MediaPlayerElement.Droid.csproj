@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9ED87460-46C2-4775-BA67-045408636EB3}</ProjectGuid>
+    <ProjectGuid>{58B261DA-523B-4C1E-84EA-1BB19DB33B90}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibVLCSharp.Uno.Sample.Droid</RootNamespace>
-    <AssemblyName>LibVLCSharp.Uno.Sample.Droid</AssemblyName>
+    <RootNamespace>Sample.MediaPlayerElement.Droid</RootNamespace>
+    <AssemblyName>Sample.MediaPlayerElement.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
@@ -21,7 +21,7 @@
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidUseIntermediateDesignerFile>True</AndroidUseIntermediateDesignerFile>
-    <ResourcesDirectory>..\LibVLCSharp.Uno.Sample.Shared\Strings</ResourcesDirectory>
+    <ResourcesDirectory>..\Sample.MediaPlayerElement.Shared\Strings</ResourcesDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <AotAssemblies>false</AotAssemblies>
-    <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
@@ -99,16 +95,16 @@
     <AndroidResource Include="Resources\values\Styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
+    <ProjectReference Include="..\..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
       <Project>{82ab6f00-b0cc-4b88-8d09-cd95789e6c38}</Project>
       <Name>LibVLCSharp.Uno</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\LibVLCSharp\LibVLCSharp.csproj">
+    <ProjectReference Include="..\..\..\..\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems')" />
+  <Import Project="..\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not buildig inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />

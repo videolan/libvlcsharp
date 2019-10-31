@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace LibVLCSharp.Uno.Sample
+namespace Sample.MediaPlayerElement
 {
     /// <summary>
     /// Main page

@@ -1,0 +1,25 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vlc="using:LibVLCSharp.Uno">
+
+    <Style TargetType="vlc:MediaPlayerElement">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="vlc:MediaPlayerElement">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <vlc:VideoView x:Name="VideoView" Grid.RowSpan="2" MediaPlayer="{TemplateBinding MediaPlayer}" />
+                        <ContentPresenter Background="Transparent" x:Name="ContentPresenter" Content="{TemplateBinding Content}" />
+                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding TransportControls}"
+                                          Visibility="{TemplateBinding AreTransportControlsEnabled}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

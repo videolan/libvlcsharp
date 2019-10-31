@@ -25,9 +25,12 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <PackageIcon>icon.png</PackageIcon>
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup> 
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <PRIResource Include="Strings\**\*.resw" />
     <None Include="..\Assets\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -47,19 +50,27 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.UWP.cs" />
     <None Include="**\*.Android.cs" />
     <None Include="**\*.iOS.cs" />
+    <Page Remove="**\*.UWP.xaml" />
+    <Page Remove="**\*.Android.xaml" />
+    <Page Remove="**\*.iOS.xaml" />
+    <None Include="**\*.UWP.xaml" />
+    <None Include="**\*.Android.xaml" />
+    <None Include="**\*.iOS.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios')) or $(TargetFramework.StartsWith('monoandroid'))">
-    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3599" />
+    <PackageReference Include="Uno.UI" Version="2.0.512-dev.3644" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
-    <Compile Remove="Themes\VideoView.xaml" />
     <Compile Include="**\*.UWP.*cs" />
+    <Page Include="**\*.UWP.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" />
     <Compile Include="**\*.Android.*cs" />
+    <Page Include="**\*.Android.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
     <Compile Include="**\*.iOS.*cs" />
+    <Page Include="**\*.iOS.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
 </Project>

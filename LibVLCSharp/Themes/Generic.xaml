@@ -6,7 +6,7 @@
     <Style TargetType="vlc:VideoViewBase">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="vlc:VideoViewBase">
                     <SwapChainPanel x:Name="SwapChainPanel" />
                 </ControlTemplate>
             </Setter.Value>

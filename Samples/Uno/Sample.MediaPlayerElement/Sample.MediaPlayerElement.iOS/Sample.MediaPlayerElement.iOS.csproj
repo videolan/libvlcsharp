@@ -3,15 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectGuid>{F2D3699A-9C73-4569-8E74-73442C8116B8}</ProjectGuid>
+    <ProjectGuid>{EF68D2A7-067D-427C-9690-5E0F0DD06F2B}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>LibVLCSharp.Uno.Sample</RootNamespace>
+    <RootNamespace>Sample.MediaPlayerElement</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>LibVLCSharp.Uno.Sample</AssemblyName>
+    <AssemblyName>Sample.MediaPlayerElement</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <ResourcesDirectory>..\LibVLCSharp.Uno.Sample.Shared\Strings</ResourcesDirectory>
+    <ResourcesDirectory>..\Sample.MediaPlayerElement.Shared\Strings</ResourcesDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -155,15 +155,15 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
+    <ProjectReference Include="..\..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
       <Project>{82ab6f00-b0cc-4b88-8d09-cd95789e6c38}</Project>
       <Name>LibVLCSharp.Uno</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\LibVLCSharp\LibVLCSharp.csproj">
+    <ProjectReference Include="..\..\..\..\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems" Label="Shared" Condition="Exists('..\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems')" />
+  <Import Project="..\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems" Label="Shared" Condition="Exists('..\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
