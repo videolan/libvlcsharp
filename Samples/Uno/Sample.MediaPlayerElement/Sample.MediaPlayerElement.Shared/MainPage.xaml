@@ -16,6 +16,9 @@
                     <interactions:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}"/>
                 </interactions:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
+            <vlc:MediaPlayerElement.TransportControls>
+                <vlc:MediaTransportControls IsStopButtonVisible="True" />
+            </vlc:MediaPlayerElement.TransportControls>
         </vlc:MediaPlayerElement>
     </Grid>
 </Page>
