@@ -123,4 +123,7 @@
   <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
 </root>

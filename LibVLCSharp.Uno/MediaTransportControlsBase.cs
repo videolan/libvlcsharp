@@ -7,7 +7,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
 
 namespace LibVLCSharp.Uno
 {
@@ -47,8 +46,12 @@ namespace LibVLCSharp.Uno
         private TextBlock? TimeElapsedElement { get; set; }
         private TextBlock? TimeRemainingElement { get; set; }
         private FrameworkElement? TimeTextGrid { get; set; }
-        private Control? PlayPauseButton { get; set; }
-        private Control? PlayPauseButtonOnLeft { get; set; }
+        private FrameworkElement? PlayPauseButton { get; set; }
+        private FrameworkElement? PlayPauseButtonOnLeft { get; set; }
+        private FrameworkElement? StopButton { get; set; }
+        private FrameworkElement? CastButton { get; set; }
+        private FrameworkElement? ZoomButton { get; set; }
+        private FrameworkElement? FullWindowButton { get; set; }
 
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
@@ -114,6 +117,34 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsStopButtonVisible"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsStopButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsStopButtonVisible), typeof(bool),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(false, (d, e) => ((MediaTransportControlsBase)d).UpdateStopButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether the stop button is shown.
+        /// </summary>
+        public bool IsStopButtonVisible
+        {
+            get => (bool)GetValue(IsStopButtonVisibleProperty);
+            set => SetValue(IsStopButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsStopEnabled"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsStopEnabledProperty { get; } = DependencyProperty.Register(nameof(IsStopEnabled), typeof(bool),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateStopButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether a user can stop the media playback.
+        /// </summary>
+        public bool IsStopEnabled
+        {
+            get => (bool)GetValue(IsStopEnabledProperty);
+            set => SetValue(IsStopEnabledProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsSeekBarVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(MediaTransportControls),
@@ -163,14 +194,11 @@ namespace LibVLCSharp.Uno
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (GetTemplateChild("RootGrid") is FrameworkElement rootGrid)
-            {
-                rootGrid.DoubleTapped += Grid_DoubleTapped;
-                rootGrid.PointerEntered += OnPointerMoved;
-                rootGrid.PointerMoved += OnPointerMoved;
-                rootGrid.Tapped += OnPointerMoved;
-                rootGrid.PointerExited += (sender, e) => Show();
-            }
+
+            PointerEntered += OnPointerMoved;
+            PointerMoved += OnPointerMoved;
+            Tapped += OnPointerMoved;
+            PointerExited += (sender, e) => Show();
 
             LeftSeparator = GetTemplateChild("LeftSeparator") as FrameworkElement;
             RightSeparator = GetTemplateChild("RightSeparator") as FrameworkElement;
@@ -191,12 +219,23 @@ namespace LibVLCSharp.Uno
             TimeRemainingElement = GetTemplateChild("TimeRemainingElement") as TextBlock;
             TimeTextGrid = GetTemplateChild("TimeTextGrid") as FrameworkElement;
 
-            PlayPauseButton = GetTemplateChild("PlayPauseButton") as Control;
-            PlayPauseButtonOnLeft = GetTemplateChild("PlayPauseButtonOnLeft") as Control;
-            SetButtonClick(PlayPauseButton, PlayPauseButtons_Click);
-            SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButtons_Click);
+            PlayPauseButton = GetTemplateChild("PlayPauseButton") as FrameworkElement;
+            PlayPauseButtonOnLeft = GetTemplateChild("PlayPauseButtonOnLeft") as FrameworkElement;
+            StopButton = GetTemplateChild("StopButton") as FrameworkElement;
+            CastButton = GetTemplateChild("CastButton") as FrameworkElement;
+            ZoomButton = GetTemplateChild("ZoomButton") as FrameworkElement;
+            FullWindowButton = GetTemplateChild("FullWindowButton") as FrameworkElement;
+
+            UpdateControl(CastButton, false);
+            UpdateControl(ZoomButton, false);
+            UpdateControl(FullWindowButton, false);
+
+            SetButtonClick(PlayPauseButton, PlayPauseButton_Click);
+            SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
+            SetButtonClick(StopButton, StopButton_Click);
             SetToolTip(PlayPauseButton, "Play");
             SetToolTip(PlayPauseButtonOnLeft, "Play");
+            SetToolTip(StopButton, "Stop");
 
             Reset();
         }
@@ -310,7 +349,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void PlayPauseButtons_Click(object sender, RoutedEventArgs e)
+        private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
             var mediaPlayer = MediaPlayer!;
             var state = mediaPlayer.State;
@@ -341,42 +380,47 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            MediaPlayer?.Stop();
+        }
+
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
         {
             if (oldValue != null)
             {
                 oldValue.Buffering -= MediaPlayer_BufferingAsync;
-                oldValue.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
-                oldValue.EndReached -= MediaPlayer_EndReachedAsync;
+                oldValue.EncounteredError -= MediaPlayer_UpdateStateAsync;
+                oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
                 oldValue.ESAdded -= MediaPlayer_TracksChanged;
                 oldValue.ESDeleted -= MediaPlayer_TracksChanged;
                 oldValue.LengthChanged -= MediaPlayer_LengthChangedAsync;
                 oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
-                oldValue.NothingSpecial -= MediaPlayer_NothingSpecialAsync;
+                oldValue.NothingSpecial -= MediaPlayer_UpdateStateAsync;
                 oldValue.PausableChanged -= MediaPlayer_PausableChangedAsync;
-                oldValue.Paused -= MediaPlayer_PausedAsync;
-                oldValue.Playing -= MediaPlayer_PlayingAsync;
+                oldValue.Paused -= MediaPlayer_UpdateStateAsync;
+                oldValue.Playing -= MediaPlayer_UpdateStateAsync;
                 oldValue.PositionChanged -= MediaPlayer_PositionChangedAsync;
                 oldValue.SeekableChanged -= MediaPlayer_SeekableChangedAsync;
-                oldValue.Stopped -= MediaPlayer_StoppedAsync;
+                oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
             }
 
             if (newValue != null)
             {
                 newValue.Buffering += MediaPlayer_BufferingAsync;
-                newValue.EncounteredError += MediaPlayer_EncounteredErrorAsync;
+                newValue.EncounteredError += MediaPlayer_UpdateStateAsync;
                 newValue.ESAdded += MediaPlayer_TracksChanged;
                 newValue.ESDeleted += MediaPlayer_TracksChanged;
-                newValue.EndReached += MediaPlayer_EndReachedAsync;
+                newValue.EndReached += MediaPlayer_UpdateStateAsync;
                 newValue.LengthChanged += MediaPlayer_LengthChangedAsync;
                 newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
-                newValue.NothingSpecial += MediaPlayer_NothingSpecialAsync;
+                newValue.NothingSpecial += MediaPlayer_UpdateStateAsync;
                 newValue.PausableChanged += MediaPlayer_PausableChangedAsync;
-                newValue.Paused += MediaPlayer_PausedAsync;
-                newValue.Playing += MediaPlayer_PlayingAsync;
+                newValue.Paused += MediaPlayer_UpdateStateAsync;
+                newValue.Playing += MediaPlayer_UpdateStateAsync;
                 newValue.PositionChanged += MediaPlayer_PositionChangedAsync;
                 newValue.SeekableChanged += MediaPlayer_SeekableChangedAsync;
-                newValue.Stopped += MediaPlayer_StoppedAsync;
+                newValue.Stopped += MediaPlayer_UpdateStateAsync;
             }
 
             Reset();
@@ -384,17 +428,7 @@ namespace LibVLCSharp.Uno
 
         private async void MediaPlayer_BufferingAsync(object sender, MediaPlayerBufferingEventArgs e)
         {
-            await UpdateStateAsync(e.Cache == 100 ? (VLCState?)null : VLCState.Buffering);
-        }
-
-        private async void MediaPlayer_EncounteredErrorAsync(object sender, EventArgs e)
-        {
-            await UpdateStateAsync(VLCState.Error);
-        }
-
-        private async void MediaPlayer_EndReachedAsync(object sender, EventArgs e)
-        {
-            await UpdateStateAsync(VLCState.Ended);
+            await DispatcherRunAsync(() => UpdateState(e.Cache == 100 ? (VLCState?)null : VLCState.Buffering));
         }
 
         private async void MediaPlayer_LengthChangedAsync(object sender, MediaPlayerLengthChangedEventArgs e)
@@ -407,24 +441,9 @@ namespace LibVLCSharp.Uno
             await DispatcherRunAsync(Reset);
         }
 
-        private async void MediaPlayer_NothingSpecialAsync(object sender, EventArgs e)
-        {
-            await UpdateStateAsync(VLCState.NothingSpecial);
-        }
-
         private async void MediaPlayer_PausableChangedAsync(object sender, MediaPlayerPausableChangedEventArgs e)
         {
             await DispatcherRunAsync(() => UpdatePlayPauseAvailability(e.Pausable == 1));
-        }
-
-        private async void MediaPlayer_PausedAsync(object sender, EventArgs e)
-        {
-            await UpdateStateAsync(VLCState.Paused);
-        }
-
-        private async void MediaPlayer_PlayingAsync(object sender, EventArgs e)
-        {
-            await UpdateStateAsync(VLCState.Playing);
         }
 
         private async void MediaPlayer_PositionChangedAsync(object sender, MediaPlayerPositionChangedEventArgs e)
@@ -437,9 +456,9 @@ namespace LibVLCSharp.Uno
             await DispatcherRunAsync(() => UpdateSeekAvailability(e.Seekable == 1));
         }
 
-        private async void MediaPlayer_StoppedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_UpdateStateAsync(object sender, EventArgs e)
         {
-            await UpdateStateAsync(VLCState.Stopped);
+            await DispatcherRunAsync(() => UpdateState());
         }
 
         private void MediaPlayer_TracksChanged(object sender, EventArgs e)
@@ -451,6 +470,7 @@ namespace LibVLCSharp.Uno
             UpdateState();
             UpdateSeekBarPosition();
             UpdatePlayPauseAvailability();
+            UpdateStopButton();
             UpdateSeekAvailability();
         }
 
@@ -459,16 +479,11 @@ namespace LibVLCSharp.Uno
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, handler);
         }
 
-        private async Task UpdateStateAsync(VLCState? state = null)
-        {
-            await DispatcherRunAsync(() => UpdateState(state));
-        }
-
         private void UpdateState(VLCState? state = null)
         {
-            state ??= MediaPlayer?.State ?? VLCState.NothingSpecial;
             string statusState;
             string? playPauseState;
+            state ??= MediaPlayer?.State ?? VLCState.NothingSpecial;
             switch (state)
             {
                 case VLCState.Error:
@@ -507,6 +522,7 @@ namespace LibVLCSharp.Uno
                 SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
                 VisualStateManager.GoToState(this, playPauseState, true);
             }
+            UpdateStopButton();
             //UpdateKeepScreenOn();
         }
 
@@ -523,6 +539,13 @@ namespace LibVLCSharp.Uno
             {
                 ProgressSlider.IsEnabled = IsSeekBarEnabled && (seekable ?? MediaPlayer?.IsSeekable == true);
             }
+        }
+
+        private void UpdateStopButton()
+        {
+            var state = MediaPlayer?.State;
+            UpdateControl(StopButton, IsStopButtonVisible && MediaPlayer?.Media != null,
+                IsStopEnabled && state != null && state != VLCState.Ended && state != VLCState.Stopped);
         }
 
         private void StartTimer()
@@ -583,14 +606,6 @@ namespace LibVLCSharp.Uno
         private void OnPointerMoved(object sender, RoutedEventArgs e)
         {
             Show(false);
-        }
-
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            if (e.OriginalSource == sender)
-            {
-                //ToggleFullscreen();
-            }
         }
     }
 }
