@@ -30,7 +30,6 @@ namespace LibVLCSharp.Uno
         public MediaTransportControlsBase()
         {
             DefaultStyleKey = typeof(MediaTransportControls);
-            ResourceLoader = ResourceLoader.GetForCurrentView();
             Timer.Tick += Timer_Tick;
         }
 
@@ -39,7 +38,7 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Gets the <see cref="ResourceLoader"/>
         /// </summary>
-        protected ResourceLoader? ResourceLoader { get; }
+        protected ResourceLoader? ResourceLoader => ResourceLoader.GetForCurrentView("LibVLCSharp.Uno/Resources");
 
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
@@ -49,6 +48,7 @@ namespace LibVLCSharp.Uno
         private TextBlock? TimeRemainingElement { get; set; }
         private FrameworkElement? TimeTextGrid { get; set; }
         private Control? PlayPauseButton { get; set; }
+        private Control? PlayPauseButtonOnLeft { get; set; }
 
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
@@ -85,7 +85,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public static readonly DependencyProperty IsPlayPauseButtonVisibleProperty = DependencyProperty.Register(nameof(IsPlayPauseButtonVisible),
             typeof(bool), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(true, (d, args) => ((MediaTransportControlsBase)d).UpdatePauseAvailability()));
+            new PropertyMetadata(true, (d, args) => ((MediaTransportControlsBase)d).UpdatePlayPauseAvailability()));
         /// <summary>
         /// Gets or sets a value indicating whether the play/pause button is shown
         /// </summary>
@@ -99,8 +99,11 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="PlayPauseButtonStyle"/> dependency property
         /// </summary>
         public static readonly DependencyProperty PlayPauseButtonStyleProperty = DependencyProperty.Register(nameof(PlayPauseButtonStyle),
-            typeof(Style), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.PlayPauseButton)));
+            typeof(Style), typeof(MediaTransportControlsBase), new PropertyMetadata(null, (d, args) =>
+            {
+                UpdateStyle(d, args.NewValue, d => d.PlayPauseButton);
+                UpdateStyle(d, args.NewValue, d => d.PlayPauseButtonOnLeft);
+            }));
         /// <summary>
         /// Gets or sets the play/pause button style
         /// </summary>
@@ -189,8 +192,11 @@ namespace LibVLCSharp.Uno
             TimeTextGrid = GetTemplateChild("TimeTextGrid") as FrameworkElement;
 
             PlayPauseButton = GetTemplateChild("PlayPauseButton") as Control;
+            PlayPauseButtonOnLeft = GetTemplateChild("PlayPauseButtonOnLeft") as Control;
             SetButtonClick(PlayPauseButton, PlayPauseButtons_Click);
+            SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButtons_Click);
             SetToolTip(PlayPauseButton, "Play");
+            SetToolTip(PlayPauseButtonOnLeft, "Play");
 
             Reset();
         }
@@ -408,7 +414,7 @@ namespace LibVLCSharp.Uno
 
         private async void MediaPlayer_PausableChangedAsync(object sender, MediaPlayerPausableChangedEventArgs e)
         {
-            await DispatcherRunAsync(() => UpdatePauseAvailability(e.Pausable == 1));
+            await DispatcherRunAsync(() => UpdatePlayPauseAvailability(e.Pausable == 1));
         }
 
         private async void MediaPlayer_PausedAsync(object sender, EventArgs e)
@@ -444,7 +450,7 @@ namespace LibVLCSharp.Uno
         {
             UpdateState();
             UpdateSeekBarPosition();
-            UpdatePauseAvailability();
+            UpdatePlayPauseAvailability();
             UpdateSeekAvailability();
         }
 
@@ -471,7 +477,7 @@ namespace LibVLCSharp.Uno
                 case VLCState.Stopped:
                 case VLCState.Ended:
                 case VLCState.NothingSpecial:
-                    UpdatePauseAvailability(true);
+                    UpdatePlayPauseAvailability(true);
                     UpdateSeekBarPosition();
                     UpdateSeekAvailability(false);
                     //UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
@@ -496,6 +502,9 @@ namespace LibVLCSharp.Uno
             VisualStateManager.GoToState(this, statusState, true);
             if (playPauseState != null)
             {
+                var playPauseToolTip = playPauseState == PlayState ? "Play" : "Pause";
+                SetToolTip(PlayPauseButton, playPauseToolTip);
+                SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
                 VisualStateManager.GoToState(this, playPauseState, true);
             }
             //UpdateKeepScreenOn();
@@ -548,13 +557,15 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void UpdatePauseAvailability(bool? pausable = null)
+        private void UpdatePlayPauseAvailability(bool? pausable = null)
         {
             var mediaPlayer = MediaPlayer;
             var state = mediaPlayer?.State;
-            UpdateControl(PlayPauseButton,
-                IsPlayPauseButtonVisible && mediaPlayer?.Media != null && ((pausable ?? mediaPlayer?.CanPause) != false ||
-                state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering));
+            var playPauseButtonVisible = IsPlayPauseButtonVisible && mediaPlayer != null && mediaPlayer.Media != null &&
+                ((pausable ?? mediaPlayer?.CanPause) != false ||
+                state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering);
+            UpdateControl(PlayPauseButton, playPauseButtonVisible);
+            UpdateControl(PlayPauseButtonOnLeft, playPauseButtonVisible);
         }
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
