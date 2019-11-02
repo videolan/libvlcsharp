@@ -464,7 +464,7 @@
                                             <Button x:Name='ZoomButton'
 													Style='{StaticResource MTC_ButtonStyle}'
 													Visibility='Collapsed'>
-                                                <FontIcon Glyph="&#xE799;" />
+                                                <FontIcon Glyph="&#xE1A3;" />
                                             </Button>
                                             <Button x:Name='CastButton'
 													Style='{StaticResource MTC_ButtonStyle}'

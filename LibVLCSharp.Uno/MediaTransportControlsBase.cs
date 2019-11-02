@@ -35,6 +35,7 @@ namespace LibVLCSharp.Uno
 
         private AspectRatioManager AspectRatioManager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
+        private bool IsVolumeFlyoutOpen { get; set; }
 
         /// <summary>
         /// Gets the <see cref="ResourceLoader"/>
@@ -44,6 +45,7 @@ namespace LibVLCSharp.Uno
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
         private CommandBar? CommandBar { get; set; }
+        private Slider? VolumeSlider { get; set; }
         private Slider? ProgressSlider { get; set; }
         private TextBlock? TimeElapsedElement { get; set; }
         private TextBlock? TimeRemainingElement { get; set; }
@@ -299,6 +301,17 @@ namespace LibVLCSharp.Uno
             CastButton = GetTemplateChild("CastButton") as FrameworkElement;
             ZoomButton = GetTemplateChild("ZoomButton") as FrameworkElement;
             FullWindowButton = GetTemplateChild("FullWindowButton") as FrameworkElement;
+            var audioMuteButton = GetTemplateChild("AudioMuteButton");
+            VolumeSlider = GetTemplateChild("VolumeSlider") as Slider;
+            if (VolumeSlider != null)
+            {
+                VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
+            }
+            if (GetTemplateChild("VolumeFlyout") is Flyout volumeFlyout)
+            {
+                volumeFlyout.Opened += VolumeFlyout_Opened;
+                volumeFlyout.Closed += VolumeFlyout_Closed;
+            }
 
             UpdateZoomButton();
             UpdateControl(CastButton, false);
@@ -308,13 +321,27 @@ namespace LibVLCSharp.Uno
             SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
             SetButtonClick(StopButton, StopButton_Click);
             SetButtonClick(ZoomButton, ZoomButton_Click);
+            SetButtonClick(audioMuteButton, AudioMuteButton_Click);
 
             SetToolTip(PlayPauseButton, "Play");
             SetToolTip(PlayPauseButtonOnLeft, "Play");
             SetToolTip(StopButton, "Stop");
             SetToolTip(ZoomButton, "AspectRatio");
+            SetToolTip(audioMuteButton, "Mute");
 
             Reset();
+        }
+
+        private void VolumeFlyout_Closed(object sender, object e)
+        {
+            IsVolumeFlyoutOpen = false;
+            Show(true);
+        }
+
+        private void VolumeFlyout_Opened(object sender, object e)
+        {
+            IsVolumeFlyoutOpen = true;
+            Show(false);
         }
 
         /// <summary>
@@ -467,6 +494,15 @@ namespace LibVLCSharp.Uno
             AspectRatioManager.ToggleZoom(VideoView, MediaPlayer);
         }
 
+        private void AudioMuteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
+            {
+                mediaPlayer.ToggleMute();
+            }
+        }
+
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
         {
             if (oldValue != null)
@@ -485,6 +521,9 @@ namespace LibVLCSharp.Uno
                 oldValue.PositionChanged -= MediaPlayer_PositionChangedAsync;
                 oldValue.SeekableChanged -= MediaPlayer_SeekableChangedAsync;
                 oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
+                oldValue.VolumeChanged -= MediaPlayer_VolumeChanged;
+                oldValue.Muted -= MediaPlayer_MuteChanged;
+                oldValue.Unmuted -= MediaPlayer_MuteChanged;
             }
 
             if (newValue != null)
@@ -503,9 +542,22 @@ namespace LibVLCSharp.Uno
                 newValue.PositionChanged += MediaPlayer_PositionChangedAsync;
                 newValue.SeekableChanged += MediaPlayer_SeekableChangedAsync;
                 newValue.Stopped += MediaPlayer_UpdateStateAsync;
+                newValue.VolumeChanged += MediaPlayer_VolumeChanged;
+                newValue.Muted += MediaPlayer_MuteChanged;
+                newValue.Unmuted += MediaPlayer_MuteChanged;
             }
 
             Reset();
+        }
+
+        private void MediaPlayer_MuteChanged(object sender, EventArgs e)
+        {
+            UpdateMuteState();
+        }
+
+        private void MediaPlayer_VolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
+        {
+            UpdateVolume();
         }
 
         private async void MediaPlayer_BufferingAsync(object sender, MediaPlayerBufferingEventArgs e)
@@ -554,6 +606,8 @@ namespace LibVLCSharp.Uno
             UpdatePlayPauseAvailability();
             UpdateStopButton();
             UpdateSeekAvailability();
+            UpdateMuteState();
+            UpdateVolume();
         }
 
         private async Task DispatcherRunAsync(DispatchedHandler handler)
@@ -623,6 +677,34 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void UpdateMuteState()
+        {
+            VisualStateManager.GoToState(this, MediaPlayer?.Mute == true ? "MuteState" : "VolumeState", true);
+        }
+
+        private void UpdateVolume()
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer == null)
+            {
+                return;
+            }
+            var volumeSlider = VolumeSlider;
+            if (volumeSlider == null)
+            {
+                return;
+            }
+            volumeSlider.ValueChanged -= VolumeSlider_ValueChanged;
+            try
+            {
+                volumeSlider.Value = mediaPlayer.Volume;
+            }
+            finally
+            {
+                volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
+            }
+        }
+
         private void UpdateStopButton()
         {
             var state = MediaPlayer?.State;
@@ -637,7 +719,7 @@ namespace LibVLCSharp.Uno
 
         private void StartTimer()
         {
-            if (ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
+            if (ShowAndHideAutomatically && !IsVolumeFlyoutOpen && MediaPlayer?.State == VLCState.Playing)
             {
                 Timer.Start();
             }
@@ -693,6 +775,19 @@ namespace LibVLCSharp.Uno
         private void OnPointerMoved(object sender, RoutedEventArgs e)
         {
             Show(false);
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (MediaPlayer != null)
+            {
+                var mute = MediaPlayer.Mute;
+                MediaPlayer.Volume = (int)e.NewValue;
+                if (mute)
+                {
+                    MediaPlayer.Mute = mute;
+                }
+            }
         }
     }
 }

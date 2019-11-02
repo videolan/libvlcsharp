@@ -120,6 +120,9 @@
   <data name="AspectRatio" xml:space="preserve">
     <value>Aspect Ratio</value>
   </data>
+  <data name="Mute" xml:space="preserve">
+    <value>Mute</value>
+  </data>
   <data name="Pause" xml:space="preserve">
     <value>Pause</value>
   </data>

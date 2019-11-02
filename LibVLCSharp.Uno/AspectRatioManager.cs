@@ -126,8 +126,8 @@ namespace LibVLCSharp.Uno
                     var dar = videoViewWidth / videoViewHeight;
 
                     var rawPixelsPerViewPixel = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-                    var displayWidth = videoViewWidth / rawPixelsPerViewPixel;
-                    var displayHeight = videoViewHeight / rawPixelsPerViewPixel;
+                    var displayWidth = videoViewWidth * rawPixelsPerViewPixel;
+                    var displayHeight = videoViewHeight * rawPixelsPerViewPixel;
                     mediaPlayer.Scale = (float)(dar >= ar ? (displayWidth / videoWidth) : (displayHeight / videoHeigth));
                     mediaPlayer.AspectRatio = null;
                     break;
