@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <vlc:MediaPlayerElement MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}">
+        <vlc:MediaPlayerElement MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}" AreTransportControlsEnabled="True">
             <interactivity:Interaction.Behaviors>
                 <interactions:EventTriggerBehavior EventName="Initialized">
                     <interactions:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}"/>

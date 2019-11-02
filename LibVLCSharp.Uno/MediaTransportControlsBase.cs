@@ -29,9 +29,11 @@ namespace LibVLCSharp.Uno
         public MediaTransportControlsBase()
         {
             DefaultStyleKey = typeof(MediaTransportControls);
+            AspectRatioManager = new AspectRatioManager();
             Timer.Tick += Timer_Tick;
         }
 
+        private AspectRatioManager AspectRatioManager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
 
         /// <summary>
@@ -54,13 +56,27 @@ namespace LibVLCSharp.Uno
         private FrameworkElement? FullWindowButton { get; set; }
 
         /// <summary>
+        /// Identifies the <see cref="VideoView"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(FrameworkElement),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(null));
+        /// <summary>
+        /// Gets or sets the video view
+        /// </summary>
+        public FrameworkElement? VideoView
+        {
+            get => (FrameworkElement)GetValue(VideoViewProperty);
+            set => SetValue(VideoViewProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
             typeof(MediaTransportControlsBase), new PropertyMetadata(null, (d, args) =>
             ((MediaTransportControlsBase)d).OnMediaPlayerChanged((Shared.MediaPlayer)args.OldValue, (Shared.MediaPlayer)args.NewValue)));
         /// <summary>
-        /// Gets the <see cref="Shared.MediaPlayer"/> instance
+        /// Gets or sets the <see cref="Shared.MediaPlayer"/> instance
         /// </summary>
         public Shared.MediaPlayer? MediaPlayer
         {
@@ -145,6 +161,64 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="StopButtonStyle"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty StopButtonStyleProperty = DependencyProperty.Register(nameof(StopButtonStyle),
+            typeof(Style), typeof(MediaTransportControlsBase),
+            new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.StopButton)));
+        /// <summary>
+        /// Gets or sets the stop button style
+        /// </summary>
+        public Style? StopButtonStyle
+        {
+            get => (Style)GetValue(StopButtonStyleProperty);
+            set => SetValue(StopButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsZoomButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsZoomButtonVisible), typeof(bool),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateZoomButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether the zoom button is shown.
+        /// </summary>
+        public bool IsZoomButtonVisible
+        {
+            get => (bool)GetValue(IsZoomButtonVisibleProperty);
+            set => SetValue(IsZoomButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsZoomEnabled"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsZoomEnabledProperty { get; } = DependencyProperty.Register(nameof(IsZoomEnabled), typeof(bool),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateZoomButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether a user can zoom the media.
+        /// </summary>
+        public bool IsZoomEnabled
+        {
+            get => (bool)GetValue(IsZoomEnabledProperty);
+            set => SetValue(IsZoomEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ZoomButtonStyle"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty ZoomButtonStyleProperty = DependencyProperty.Register(nameof(ZoomButtonStyle),
+            typeof(Style), typeof(MediaTransportControlsBase),
+            new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.ZoomButton)));
+        /// <summary>
+        /// Gets or sets the zoom button style
+        /// </summary>
+        public Style? ZoomButtonStyle
+        {
+            get => (Style)GetValue(ZoomButtonStyleProperty);
+            set => SetValue(ZoomButtonStyleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsSeekBarVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(MediaTransportControls),
@@ -226,16 +300,19 @@ namespace LibVLCSharp.Uno
             ZoomButton = GetTemplateChild("ZoomButton") as FrameworkElement;
             FullWindowButton = GetTemplateChild("FullWindowButton") as FrameworkElement;
 
+            UpdateZoomButton();
             UpdateControl(CastButton, false);
-            UpdateControl(ZoomButton, false);
             UpdateControl(FullWindowButton, false);
 
             SetButtonClick(PlayPauseButton, PlayPauseButton_Click);
             SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
             SetButtonClick(StopButton, StopButton_Click);
+            SetButtonClick(ZoomButton, ZoomButton_Click);
+
             SetToolTip(PlayPauseButton, "Play");
             SetToolTip(PlayPauseButtonOnLeft, "Play");
             SetToolTip(StopButton, "Stop");
+            SetToolTip(ZoomButton, "AspectRatio");
 
             Reset();
         }
@@ -383,6 +460,11 @@ namespace LibVLCSharp.Uno
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             MediaPlayer?.Stop();
+        }
+
+        private void ZoomButton_Click(object sender, RoutedEventArgs e)
+        {
+            AspectRatioManager.ToggleZoom(VideoView, MediaPlayer);
         }
 
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
@@ -546,6 +628,11 @@ namespace LibVLCSharp.Uno
             var state = MediaPlayer?.State;
             UpdateControl(StopButton, IsStopButtonVisible && MediaPlayer?.Media != null,
                 IsStopEnabled && state != null && state != VLCState.Ended && state != VLCState.Stopped);
+        }
+
+        private void UpdateZoomButton()
+        {
+            UpdateControl(ZoomButton, IsZoomButtonVisible, IsZoomEnabled);
         }
 
         private void StartTimer()
