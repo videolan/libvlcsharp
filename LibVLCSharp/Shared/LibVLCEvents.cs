@@ -236,7 +236,7 @@ namespace LibVLCSharp.Shared
             [FieldOffset(0)]
             internal readonly RendererDiscovererItemAdded RendererDiscovererItemAdded;
             [FieldOffset(0)]
-            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted; 
+            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
         }
 
         #region Media
@@ -757,9 +757,15 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public readonly int Id;
 
-        internal MediaPlayerESAddedEventArgs(int id)
+        /// <summary>
+        /// The type of the new Elementary Stream (ES)
+        /// </summary>
+        public readonly TrackType Type;
+
+        internal MediaPlayerESAddedEventArgs(int id, TrackType type)
         {
             Id = id;
+            Type = type;
         }
     }
 
@@ -773,9 +779,15 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public readonly int Id;
 
-        internal MediaPlayerESDeletedEventArgs(int id)
+        /// <summary>
+        /// The type of the deleted Elementary Stream (ES)
+        /// </summary>
+        public readonly TrackType Type;
+
+        internal MediaPlayerESDeletedEventArgs(int id, TrackType type)
         {
             Id = id;
+            Type = type;
         }
     }
 
@@ -789,9 +801,15 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public readonly int Id;
 
-        internal MediaPlayerESSelectedEventArgs(int id)
+        /// <summary>
+        /// The type of the seleted Elementary Stream (ES)
+        /// </summary>
+        public readonly TrackType Type;
+
+        internal MediaPlayerESSelectedEventArgs(int id, TrackType type)
         {
             Id = id;
+            Type = type;
         }
     }
 

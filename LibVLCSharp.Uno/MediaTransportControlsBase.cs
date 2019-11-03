@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -30,12 +32,13 @@ namespace LibVLCSharp.Uno
         {
             DefaultStyleKey = typeof(MediaTransportControls);
             AspectRatioManager = new AspectRatioManager();
-            Timer.Tick += Timer_Tick;
+            Timer.Tick += (sender, e) => Hide();
         }
 
         private AspectRatioManager AspectRatioManager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
         private bool IsVolumeFlyoutOpen { get; set; }
+        private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
 
         /// <summary>
         /// Gets the <see cref="ResourceLoader"/>
@@ -313,6 +316,9 @@ namespace LibVLCSharp.Uno
                 volumeFlyout.Closed += VolumeFlyout_Closed;
             }
 
+            AddTracksMenu("AudioTracksSelectionButton", TrackType.Audio, "AudioSelectionAvailable", "AudioSelectionUnavailable");
+            AddTracksMenu("CCSelectionButton", TrackType.Text, "CCSelectionAvailable", "CCSelectionUnavailable", true);
+
             UpdateZoomButton();
             UpdateControl(CastButton, false);
             UpdateControl(FullWindowButton, false);
@@ -445,6 +451,92 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void AddTracksMenu(string trackButtonName, TrackType trackType, string availableStateName, string unavailableStateName,
+            bool addNoneItem = false)
+        {
+            if (GetTemplateChild(trackButtonName) is Button button)
+            {
+                var menuFlyout = new MenuFlyout();
+                button.Flyout = menuFlyout;
+                var tracksMenu = new TracksMenu(trackType, availableStateName, unavailableStateName, addNoneItem);
+                TracksMenus.Add(menuFlyout, tracksMenu);
+                if (addNoneItem)
+                {
+                    AddNoneItem(menuFlyout);
+                }
+            }
+        }
+
+        private void AddNoneItem(MenuFlyout menuflyout)
+        {
+            AddTrack(menuflyout, null, ResourceLoader?.GetString("None"));
+        }
+
+        private void AddTrack(MenuFlyout menuflyout, int? trackId, string? trackName, bool subTitle = false)
+        {
+            if (menuflyout == null)
+            {
+                return;
+            }
+
+            var menuItem = new ToggleMenuFlyoutItem()
+            {
+                Text = trackName,
+                Tag = trackId
+            };
+            menuItem.Click += TrackMenuItem_Click;
+            var menuItems = menuflyout.Items;
+            menuItems.Add(menuItem);
+
+            if (menuItems.Count == 2)
+            {
+                var firstMenuItem = (menuItems.FirstOrDefault() as ToggleMenuFlyoutItem);
+                if (subTitle || firstMenuItem?.Tag != null)
+                {
+                    firstMenuItem!.IsChecked = true;
+                }
+                else
+                {
+                    menuItem.IsChecked = true;
+                }
+                VisualStateManager.GoToState(this, TracksMenus[menuflyout].AvailableStateName, true);
+            }
+        }
+
+        private void CheckMenuItem(MenuFlyout menuFlyout, object menuItem)
+        {
+            foreach (var item in menuFlyout.Items)
+            {
+                if (item is ToggleMenuFlyoutItem toggleMenuFlyoutItem)
+                {
+                    var isChecked = (item == menuItem);
+                    if (toggleMenuFlyoutItem.IsChecked != isChecked)
+                    {
+                        toggleMenuFlyoutItem.IsChecked = isChecked;
+                    }
+                }
+            }
+        }
+
+        private void TrackMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = TracksMenus.FirstOrDefault(kvp => kvp.Key.Items.Contains(sender));
+            if (!menu.Equals(default(KeyValuePair<MenuFlyout, TracksMenu>)))
+            {
+                CheckMenuItem(menu.Key, sender);
+                var trackId = ((int?)((MenuFlyoutItemBase)sender).Tag) ?? -1;
+                switch (menu.Value.TrackType)
+                {
+                    case TrackType.Audio:
+                        MediaPlayer!.SetAudioTrack(trackId);
+                        break;
+                    case TrackType.Text:
+                        MediaPlayer!.SetSpu(trackId);
+                        break;
+                }
+            }
+        }
+
         private void SetButtonClick(DependencyObject? dependencyObject, RoutedEventHandler eventHandler)
         {
             if (dependencyObject is ButtonBase button)
@@ -510,8 +602,6 @@ namespace LibVLCSharp.Uno
                 oldValue.Buffering -= MediaPlayer_BufferingAsync;
                 oldValue.EncounteredError -= MediaPlayer_UpdateStateAsync;
                 oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
-                oldValue.ESAdded -= MediaPlayer_TracksChanged;
-                oldValue.ESDeleted -= MediaPlayer_TracksChanged;
                 oldValue.LengthChanged -= MediaPlayer_LengthChangedAsync;
                 oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
                 oldValue.NothingSpecial -= MediaPlayer_UpdateStateAsync;
@@ -521,6 +611,9 @@ namespace LibVLCSharp.Uno
                 oldValue.PositionChanged -= MediaPlayer_PositionChangedAsync;
                 oldValue.SeekableChanged -= MediaPlayer_SeekableChangedAsync;
                 oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
+                oldValue.ESAdded -= MediaPlayer_ESAddedAsync;
+                oldValue.ESSelected -= MediaPlayer_ESSelectedAsync;
+                oldValue.ESDeleted -= MediaPlayer_ESDeletedAsync;
                 oldValue.VolumeChanged -= MediaPlayer_VolumeChanged;
                 oldValue.Muted -= MediaPlayer_MuteChanged;
                 oldValue.Unmuted -= MediaPlayer_MuteChanged;
@@ -530,8 +623,6 @@ namespace LibVLCSharp.Uno
             {
                 newValue.Buffering += MediaPlayer_BufferingAsync;
                 newValue.EncounteredError += MediaPlayer_UpdateStateAsync;
-                newValue.ESAdded += MediaPlayer_TracksChanged;
-                newValue.ESDeleted += MediaPlayer_TracksChanged;
                 newValue.EndReached += MediaPlayer_UpdateStateAsync;
                 newValue.LengthChanged += MediaPlayer_LengthChangedAsync;
                 newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
@@ -542,12 +633,88 @@ namespace LibVLCSharp.Uno
                 newValue.PositionChanged += MediaPlayer_PositionChangedAsync;
                 newValue.SeekableChanged += MediaPlayer_SeekableChangedAsync;
                 newValue.Stopped += MediaPlayer_UpdateStateAsync;
+                newValue.ESAdded += MediaPlayer_ESAddedAsync;
+                newValue.ESSelected += MediaPlayer_ESSelectedAsync;
+                newValue.ESDeleted += MediaPlayer_ESDeletedAsync;
                 newValue.VolumeChanged += MediaPlayer_VolumeChanged;
                 newValue.Muted += MediaPlayer_MuteChanged;
                 newValue.Unmuted += MediaPlayer_MuteChanged;
             }
 
             Reset();
+        }
+
+        private KeyValuePair<MenuFlyout, TracksMenu> GetTracksMenu(TrackType trackType)
+        {
+            return TracksMenus.FirstOrDefault(tm => tm.Value.TrackType == trackType);
+        }
+
+        private async void MediaPlayer_ESAddedAsync(object sender, MediaPlayerESAddedEventArgs e)
+        {
+            await DispatcherRunAsync(() =>
+            {
+                var trackId = e.Id;
+                var trackType = e.Type;
+                IList<TrackDescription> source;
+                switch (trackType)
+                {
+                    case TrackType.Audio:
+                        source = MediaPlayer!.AudioTrackDescription;
+                        break;
+                    case TrackType.Text:
+                        source = MediaPlayer!.SpuDescription;
+                        break;
+                    default:
+                        return;
+                }
+
+                var trackName = source?.FirstOrDefault(td => td.Id == trackId).Name;
+                if (!string.IsNullOrWhiteSpace(trackName))
+                {
+                    AddTrack(GetTracksMenu(trackType).Key, trackId, trackName, trackType == TrackType.Text);
+                }
+            });
+        }
+
+        private async void MediaPlayer_ESSelectedAsync(object sender, MediaPlayerESSelectedEventArgs e)
+        {
+            var menuFlyout = GetTracksMenu(e.Type).Key;
+            if (menuFlyout == null)
+            {
+                return;
+            }
+
+            await DispatcherRunAsync(() =>
+                CheckMenuItem(menuFlyout, menuFlyout.Items.FirstOrDefault(mi => e.Id == -1 && mi.Tag == null || e.Id.Equals(mi.Tag))));
+        }
+
+        private async void MediaPlayer_ESDeletedAsync(object sender, MediaPlayerESDeletedEventArgs e)
+        {
+            var tracksMenu = GetTracksMenu(e.Type);
+            var menuFlyout = tracksMenu.Key;
+            if (menuFlyout == null)
+            {
+                return;
+            }
+
+            await DispatcherRunAsync(() =>
+            {
+                var menuItems = menuFlyout.Items;
+                var menuItem = menuItems.FirstOrDefault(mi => e.Id.Equals(mi.Tag));
+                if (menuItem != null)
+                {
+                    var isChecked = menuItem is ToggleMenuFlyoutItem toggleMenuFlyoutItem && toggleMenuFlyoutItem.IsChecked;
+                    menuItems.Remove(menuItem);
+                    if (isChecked && menuItems.FirstOrDefault() is ToggleMenuFlyoutItem firstMenuItem)
+                    {
+                        firstMenuItem.IsChecked = true;
+                    }
+                    if (menuItems.Count < 2)
+                    {
+                        VisualStateManager.GoToState(this, tracksMenu.Value.UnavailableStateName, true);
+                    }
+                }
+            });
         }
 
         private void MediaPlayer_MuteChanged(object sender, EventArgs e)
@@ -608,6 +775,17 @@ namespace LibVLCSharp.Uno
             UpdateSeekAvailability();
             UpdateMuteState();
             UpdateVolume();
+            foreach (var tracksMenukeyValuePair in TracksMenus)
+            {
+                var menuFlyout = tracksMenukeyValuePair.Key;
+                var tracksMenu = tracksMenukeyValuePair.Value;
+                menuFlyout.Items.Clear();
+                if (tracksMenu.HasNoneItem)
+                {
+                    AddNoneItem(menuFlyout);
+                }
+                VisualStateManager.GoToState(this, tracksMenu.UnavailableStateName, true);
+            }
         }
 
         private async Task DispatcherRunAsync(DispatchedHandler handler)
@@ -725,18 +903,21 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void Timer_Tick(object sender, object e)
-        {
-            Timer.Stop();
-            VisualStateManager.GoToState(this, ControlPanelFadeOutState, true);
-        }
-
         /// <summary>
         /// Shows the tranport controls if they're hidden
         /// </summary>
         public void Show()
         {
             Show(true);
+        }
+
+        /// <summary>
+        /// Hides the transport controls if they're shown
+        /// </summary>
+        public void Hide()
+        {
+            Timer.Stop();
+            VisualStateManager.GoToState(this, ControlPanelFadeOutState, true);
         }
 
         private void Show(bool startTimer)

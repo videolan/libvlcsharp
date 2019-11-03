@@ -1,5 +1,5 @@
-﻿using LibVLCSharp.Shared.Helpers;
-using System;
+﻿using System;
+using LibVLCSharp.Shared.Helpers;
 
 namespace LibVLCSharp.Shared
 {
@@ -661,25 +661,30 @@ namespace LibVLCSharp.Shared
                 new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
         }
 
+        private static LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
+        {
+            return RetrieveEvent(ptr).Union.EsChanged;
+        }
+
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnESAdded(IntPtr ptr)
         {
-            _mediaPlayerESAdded?.Invoke(null,
-                new MediaPlayerESAddedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESAdded?.Invoke(null, new MediaPlayerESAddedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnESDeleted(IntPtr ptr)
         {
-            _mediaPlayerESDeleted?.Invoke(null,
-                new MediaPlayerESDeletedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESDeleted?.Invoke(null, new MediaPlayerESDeletedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
         static void OnESSelected(IntPtr ptr)
         {
-            _mediaPlayerESSelected?.Invoke(null,
-                new MediaPlayerESSelectedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESSelected?.Invoke(null, new MediaPlayerESSelectedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
@@ -839,22 +844,27 @@ namespace LibVLCSharp.Shared
                 new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
         }
 
+        private LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
+        {
+            return RetrieveEvent(ptr).Union.EsChanged;
+        }
+
         void OnESAdded(IntPtr ptr)
         {
-            _mediaPlayerESAdded?.Invoke(this,
-                new MediaPlayerESAddedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESAdded?.Invoke(this, new MediaPlayerESAddedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         void OnESDeleted(IntPtr ptr)
         {
-            _mediaPlayerESDeleted?.Invoke(this,
-                new MediaPlayerESDeletedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESDeleted?.Invoke(this, new MediaPlayerESDeletedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         void OnESSelected(IntPtr ptr)
         {
-            _mediaPlayerESSelected?.Invoke(this,
-                new MediaPlayerESSelectedEventArgs(RetrieveEvent(ptr).Union.EsChanged.Id));
+            var esChanged = GetEsChanged(ptr);
+            _mediaPlayerESSelected?.Invoke(this, new MediaPlayerESSelectedEventArgs(esChanged.Id, esChanged.Type));
         }
 
         void OnAudioDevice(IntPtr ptr)
