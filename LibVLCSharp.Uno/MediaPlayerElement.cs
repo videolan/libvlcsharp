@@ -44,6 +44,20 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="LibVLC"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
+            typeof(MediaPlayerElement), new PropertyMetadata(null));
+        /// <summary>
+        /// Gets or sets the <see cref="Shared.LibVLC"/> instance
+        /// </summary>
+        public LibVLC? LibVLC
+        {
+            get => (LibVLC)GetValue(LibVLCProperty);
+            set => SetValue(LibVLCProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
@@ -142,6 +156,7 @@ namespace LibVLCSharp.Uno
             if (transportControls != null)
             {
                 transportControls.VideoView = VideoView;
+                transportControls.LibVLC = LibVLC;
                 transportControls.MediaPlayer = MediaPlayer;
             }
         }
