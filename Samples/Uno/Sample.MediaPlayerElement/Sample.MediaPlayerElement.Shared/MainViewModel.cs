@@ -37,7 +37,15 @@ namespace Sample.MediaPlayerElement
         /// </summary>
         public ICommand InitializedCommand { get; }
 
-        private LibVLC LibVLC { get; set; }
+        private LibVLC _libVLC;
+        /// <summary>
+        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance
+        /// </summary>
+        public LibVLC LibVLC
+        {
+            get => _libVLC;
+            private set => Set(nameof(LibVLC), ref _libVLC, value);
+        }
 
         private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
         /// <summary>

@@ -21,6 +21,7 @@ namespace LibVLCSharp.Uno
         private const string PauseState = "PauseState";
         private const string DisabledState = "Disabled";
         private const string NormalState = "Normal";
+        private const string ErrorState = "Error";
         private const string BufferingState = "Buffering";
         private const string ControlPanelFadeInState = "ControlPanelFadeIn";
         private const string ControlPanelFadeOutState = "ControlPanelFadeOut";
@@ -38,6 +39,7 @@ namespace LibVLCSharp.Uno
         private AspectRatioManager AspectRatioManager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
         private bool IsVolumeFlyoutOpen { get; set; }
+        private bool HasError { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
 
         /// <summary>
@@ -48,6 +50,7 @@ namespace LibVLCSharp.Uno
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
         private CommandBar? CommandBar { get; set; }
+        private TextBlock? ErrorTextBlock { get; set; }
         private Slider? VolumeSlider { get; set; }
         private Slider? ProgressSlider { get; set; }
         private TextBlock? TimeElapsedElement { get; set; }
@@ -72,6 +75,20 @@ namespace LibVLCSharp.Uno
         {
             get => (FrameworkElement)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="LibVLC"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(null));
+        /// <summary>
+        /// Gets or sets the <see cref="Shared.LibVLC"/> instance
+        /// </summary>
+        public LibVLC? LibVLC
+        {
+            get => (LibVLC)GetValue(LibVLCProperty);
+            set => SetValue(LibVLCProperty, value);
         }
 
         /// <summary>
@@ -286,6 +303,7 @@ namespace LibVLCSharp.Uno
             {
                 CommandBar.LayoutUpdated += CommandBar_LayoutUpdated;
             }
+            ErrorTextBlock = GetTemplateChild("ErrorTextBlock") as TextBlock;
 
             ProgressSlider = GetTemplateChild("ProgressSlider") as Slider;
             if (ProgressSlider != null)
@@ -600,7 +618,7 @@ namespace LibVLCSharp.Uno
             if (oldValue != null)
             {
                 oldValue.Buffering -= MediaPlayer_BufferingAsync;
-                oldValue.EncounteredError -= MediaPlayer_UpdateStateAsync;
+                oldValue.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
                 oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
                 oldValue.LengthChanged -= MediaPlayer_LengthChangedAsync;
                 oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
@@ -622,7 +640,7 @@ namespace LibVLCSharp.Uno
             if (newValue != null)
             {
                 newValue.Buffering += MediaPlayer_BufferingAsync;
-                newValue.EncounteredError += MediaPlayer_UpdateStateAsync;
+                newValue.EncounteredError += MediaPlayer_EncounteredErrorAsync;
                 newValue.EndReached += MediaPlayer_UpdateStateAsync;
                 newValue.LengthChanged += MediaPlayer_LengthChangedAsync;
                 newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
@@ -732,6 +750,11 @@ namespace LibVLCSharp.Uno
             await DispatcherRunAsync(() => UpdateState(e.Cache == 100 ? (VLCState?)null : VLCState.Buffering));
         }
 
+        private async void MediaPlayer_EncounteredErrorAsync(object sender, EventArgs e)
+        {
+            await DispatcherRunAsync(() => UpdateState(VLCState.Error));
+        }
+
         private async void MediaPlayer_LengthChangedAsync(object sender, MediaPlayerLengthChangedEventArgs e)
         {
             await DispatcherRunAsync(() => UpdateTime(MediaPlayer!.Position));
@@ -768,6 +791,7 @@ namespace LibVLCSharp.Uno
 
         private void Reset()
         {
+            HasError = false;
             UpdateState();
             UpdateSeekBarPosition();
             UpdatePlayPauseAvailability();
@@ -775,6 +799,7 @@ namespace LibVLCSharp.Uno
             UpdateSeekAvailability();
             UpdateMuteState();
             UpdateVolume();
+
             foreach (var tracksMenukeyValuePair in TracksMenus)
             {
                 var menuFlyout = tracksMenukeyValuePair.Key;
@@ -785,6 +810,22 @@ namespace LibVLCSharp.Uno
                     AddNoneItem(menuFlyout);
                 }
                 VisualStateManager.GoToState(this, tracksMenu.UnavailableStateName, true);
+            }
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
+            {
+                AddTracks(mediaPlayer.SpuDescription, TrackType.Text);
+                AddTracks(mediaPlayer.AudioTrackDescription, TrackType.Audio);
+            }
+        }
+
+        private void AddTracks(IEnumerable<TrackDescription> trackDescriptions, TrackType trackType)
+        {
+            var menuFlyout = GetTracksMenu(trackType).Key;
+            var subTitle = trackType == TrackType.Text;
+            foreach (var track in trackDescriptions)
+            {
+                AddTrack(menuFlyout, track.Id, track.Name, subTitle);
             }
         }
 
@@ -801,18 +842,31 @@ namespace LibVLCSharp.Uno
             switch (state)
             {
                 case VLCState.Error:
-                    //UpdateErrorMessage(state);
-                    goto case VLCState.Stopped;
+                    var error = LibVLC?.LastLibVLCError ?? string.Empty;
+                    HasError = !string.IsNullOrWhiteSpace(error);
+                    if (!HasError)
+                    {
+                        goto case VLCState.Stopped;
+                    }
+                    statusState = ErrorState;
+                    playPauseState = PlayState;
+                    if (ErrorTextBlock != null)
+                    {
+                        ErrorTextBlock.Text = error;
+                    }
+                    break;
                 case VLCState.Stopped:
                 case VLCState.Ended:
                 case VLCState.NothingSpecial:
                     UpdatePlayPauseAvailability(true);
                     UpdateSeekBarPosition();
                     UpdateSeekAvailability(false);
-                    //UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-                    //UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsSelectionUnavailableState);
                     goto case VLCState.Paused;
                 case VLCState.Paused:
+                    if (HasError)
+                    {
+                        return;
+                    }
                     statusState = DisabledState;
                     playPauseState = PlayState;
                     break;
@@ -821,7 +875,7 @@ namespace LibVLCSharp.Uno
                     playPauseState = null;
                     break;
                 default:
-                    //ShowError(null);
+                    HasError = false;
                     statusState = NormalState;
                     playPauseState = PauseState;
                     break;
