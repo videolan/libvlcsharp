@@ -395,12 +395,12 @@
                                             <Button x:Name='CCSelectionButton'
 													Style='{StaticResource MTC_ButtonStyle}'
 													Visibility='Collapsed'>
-                                                <FontIcon Glyph="&#xED1E;" />
+                                                <FontIcon Glyph="&#xE190;" />
                                             </Button>
                                             <Button x:Name='AudioTracksSelectionButton'
 													Style='{StaticResource MTC_ButtonStyle}'
 													Visibility='Collapsed'>
-                                                <FontIcon Glyph="&#xED1F;" />
+                                                <FontIcon Glyph="&#xE189;" />
                                             </Button>
                                         </StackPanel>
 
