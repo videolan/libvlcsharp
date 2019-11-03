@@ -115,6 +115,10 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Fonts\Font Awesome 5 Free-Solid-900.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Fonts\Font Awesome 5 Brands-Regular-400.otf" />
     <None Include="Sample.MediaPlayerElement.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

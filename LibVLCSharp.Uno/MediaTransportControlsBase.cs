@@ -49,7 +49,6 @@ namespace LibVLCSharp.Uno
 
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
-        private CommandBar? CommandBar { get; set; }
         private TextBlock? ErrorTextBlock { get; set; }
         private Slider? VolumeSlider { get; set; }
         private Slider? ProgressSlider { get; set; }
@@ -137,24 +136,6 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="PlayPauseButtonStyle"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty PlayPauseButtonStyleProperty = DependencyProperty.Register(nameof(PlayPauseButtonStyle),
-            typeof(Style), typeof(MediaTransportControlsBase), new PropertyMetadata(null, (d, args) =>
-            {
-                UpdateStyle(d, args.NewValue, d => d.PlayPauseButton);
-                UpdateStyle(d, args.NewValue, d => d.PlayPauseButtonOnLeft);
-            }));
-        /// <summary>
-        /// Gets or sets the play/pause button style
-        /// </summary>
-        public Style? PlayPauseButtonStyle
-        {
-            get => (Style)GetValue(PlayPauseButtonStyleProperty);
-            set => SetValue(PlayPauseButtonStyleProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="IsStopButtonVisible"/> dependency property.
         /// </summary>
         public static DependencyProperty IsStopButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsStopButtonVisible), typeof(bool),
@@ -180,21 +161,6 @@ namespace LibVLCSharp.Uno
         {
             get => (bool)GetValue(IsStopEnabledProperty);
             set => SetValue(IsStopEnabledProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="StopButtonStyle"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty StopButtonStyleProperty = DependencyProperty.Register(nameof(StopButtonStyle),
-            typeof(Style), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.StopButton)));
-        /// <summary>
-        /// Gets or sets the stop button style
-        /// </summary>
-        public Style? StopButtonStyle
-        {
-            get => (Style)GetValue(StopButtonStyleProperty);
-            set => SetValue(StopButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -226,21 +192,6 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="ZoomButtonStyle"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty ZoomButtonStyleProperty = DependencyProperty.Register(nameof(ZoomButtonStyle),
-            typeof(Style), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.ZoomButton)));
-        /// <summary>
-        /// Gets or sets the zoom button style
-        /// </summary>
-        public Style? ZoomButtonStyle
-        {
-            get => (Style)GetValue(ZoomButtonStyleProperty);
-            set => SetValue(ZoomButtonStyleProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="IsSeekBarVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(MediaTransportControls),
@@ -269,20 +220,6 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="SeekBarStyle"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty SeekBarStyleProperty = DependencyProperty.Register(nameof(SeekBarStyle), typeof(Style),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(null, (d, args) => UpdateStyle(d, args.NewValue, d => d.ProgressSlider)));
-        /// <summary>
-        /// Gets or sets the seek bar style
-        /// </summary>
-        public Style? SeekBarStyle
-        {
-            get => (Style)GetValue(SeekBarStyleProperty);
-            set => SetValue(SeekBarStyleProperty, value);
-        }
-
-        /// <summary>
         /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate. 
         /// In simplest terms, this means the method is called just before a UI element displays in your app.
         /// Override this method to influence the default post-template logic of a class.
@@ -298,11 +235,6 @@ namespace LibVLCSharp.Uno
 
             LeftSeparator = GetTemplateChild("LeftSeparator") as FrameworkElement;
             RightSeparator = GetTemplateChild("RightSeparator") as FrameworkElement;
-            CommandBar = GetTemplateChild("MediaControlsCommandBar") as CommandBar;
-            if (CommandBar != null)
-            {
-                CommandBar.LayoutUpdated += CommandBar_LayoutUpdated;
-            }
             ErrorTextBlock = GetTemplateChild("ErrorTextBlock") as TextBlock;
 
             ProgressSlider = GetTemplateChild("ProgressSlider") as Slider;
@@ -376,17 +308,6 @@ namespace LibVLCSharp.Uno
         /// <param name="args">an object array that contains zero or more objects to format</param>
         protected abstract void SetToolTip(DependencyObject? element, string resource, params string[] args);
 
-        private static void UpdateStyle(DependencyObject dependencyObject, object newValue,
-            Func<MediaTransportControlsBase, FrameworkElement?> getFrameworkElement)
-        {
-            var mediaTransportControls = (MediaTransportControlsBase)dependencyObject;
-            var frameworkElement = getFrameworkElement(mediaTransportControls);
-            if (frameworkElement != null)
-            {
-                frameworkElement.Style = (Style)newValue;
-            }
-        }
-
         private void UpdateControl(FrameworkElement? control, bool visible, bool enabled = true)
         {
             if (control != null)
@@ -396,27 +317,6 @@ namespace LibVLCSharp.Uno
                 {
                     ((Control)control).IsEnabled = enabled;
                 }
-            }
-        }
-
-        private void CommandBar_LayoutUpdated(object sender, object e)
-        {
-            var leftSeparator = LeftSeparator;
-            var rightSeparator = RightSeparator;
-            if (leftSeparator == null || rightSeparator == null)
-            {
-                return;
-            }
-
-            var commandBar = CommandBar!;
-            var width = commandBar.PrimaryCommands
-                .Where(el => !(el is AppBarSeparator) && ((FrameworkElement)el).Visibility == Visibility.Visible)
-                .Sum(el => ((FrameworkElement)el).Width);
-            width = (commandBar.ActualWidth - width) / 2;
-            if (width >= 0 && leftSeparator.Width != width)
-            {
-                leftSeparator.Width = width;
-                rightSeparator.Width = width;
             }
         }
 
@@ -497,13 +397,18 @@ namespace LibVLCSharp.Uno
                 return;
             }
 
+            var menuItems = menuflyout.Items;
+            if (trackId == null && menuItems.Any(i => i.Tag == null) || trackId != null && menuItems.Any(i => trackId.Equals(i.Tag)))
+            {
+                return;
+            }
+
             var menuItem = new ToggleMenuFlyoutItem()
             {
                 Text = trackName,
                 Tag = trackId
             };
             menuItem.Click += TrackMenuItem_Click;
-            var menuItems = menuflyout.Items;
             menuItems.Add(menuItem);
 
             if (menuItems.Count == 2)
@@ -800,6 +705,17 @@ namespace LibVLCSharp.Uno
             UpdateMuteState();
             UpdateVolume();
 
+            ClearTracksMenus();
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
+            {
+                AddTracks(mediaPlayer.SpuDescription, TrackType.Text);
+                AddTracks(mediaPlayer.AudioTrackDescription, TrackType.Audio);
+            }
+        }
+
+        private void ClearTracksMenus()
+        {
             foreach (var tracksMenukeyValuePair in TracksMenus)
             {
                 var menuFlyout = tracksMenukeyValuePair.Key;
@@ -810,12 +726,6 @@ namespace LibVLCSharp.Uno
                     AddNoneItem(menuFlyout);
                 }
                 VisualStateManager.GoToState(this, tracksMenu.UnavailableStateName, true);
-            }
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer != null)
-            {
-                AddTracks(mediaPlayer.SpuDescription, TrackType.Text);
-                AddTracks(mediaPlayer.AudioTrackDescription, TrackType.Audio);
             }
         }
 
@@ -858,6 +768,7 @@ namespace LibVLCSharp.Uno
                 case VLCState.Stopped:
                 case VLCState.Ended:
                 case VLCState.NothingSpecial:
+                    ClearTracksMenus();
                     UpdatePlayPauseAvailability(true);
                     UpdateSeekBarPosition();
                     UpdateSeekAvailability(false);
