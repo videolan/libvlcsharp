@@ -1,5 +1,6 @@
 ﻿using System;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Uno;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -90,7 +91,7 @@ namespace Sample.MediaPlayerElement
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            SuspensionManager.Save(((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel?.MediaPlayer);
             deferral.Complete();
         }
     }
