@@ -23,6 +23,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
   </PropertyGroup> 
   <ItemGroup>
