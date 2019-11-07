@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vlc="using:LibVLCSharp.Uno">
 
-    <Style TargetType="vlc:MediaTransportControls">
+    <Style TargetType="vlc:PlaybackControls">
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FlowDirection" Value="LeftToRight" />
@@ -11,7 +11,7 @@
         <Setter Property="IsTextScaleFactorEnabled" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="vlc:MediaTransportControls">
+                <ControlTemplate TargetType="vlc:PlaybackControls">
                     <Grid x:Name="RootGrid" Background="Transparent">
                         <Grid.Resources>
                             <!-- New AppBar button style 48x48 pixels in size -->
@@ -31,7 +31,7 @@
                                 <Setter Property="Style" Value="{ThemeResource CaptionTextBlockStyle }" />
                                 <Setter Property="IsTextScaleFactorEnabled" Value="False" />
                             </Style>
-                            <!-- Style for Position slider used in Media Transport Controls -->
+                            <!-- Style for Position slider used in Playback Controls -->
                             <Style x:Key="MediaSliderStyle" TargetType="Slider">
                                 <Setter Property="Background" Value="{ThemeResource SliderTrackFill}" />
                                 <Setter Property="BorderThickness" Value="{ThemeResource SliderBorderThemeThickness}" />
@@ -339,7 +339,7 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                            <!-- Style for Volume Flyout used in Media Transport Controls -->
+                            <!-- Style for Volume Flyout used in Playback Controls -->
                             <Style x:Key="MTC_FlyoutStyle" TargetType="FlyoutPresenter">
                                 <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundAltMediumBrush}" />
                                 <Setter Property="Padding" Value="0" />
@@ -412,7 +412,7 @@
                                         <DoubleAnimation Storyboard.TargetName="ProgressSlider"
 														 Storyboard.TargetProperty="Opacity"
 														 To="0" Duration="0" />
-                                        <DoubleAnimation Storyboard.TargetName="MediaControlsCommandBar"
+                                        <DoubleAnimation Storyboard.TargetName="PlaybackControlsCommandBar"
 														 Storyboard.TargetProperty="Opacity"
 														 To="0" Duration="0" />
                                     </Storyboard>
@@ -530,7 +530,7 @@
                                 <VisualState x:Name="PointerFocused" />
                             </VisualStateGroup>
                             <!--Focus states-->
-                            <VisualStateGroup x:Name="MediaTransportControlMode">
+                            <VisualStateGroup x:Name="PlaybackControlMode">
                                 <VisualState x:Name="NormalMode" />
                                 <VisualState x:Name="CompactMode">
                                     <Storyboard>
@@ -550,15 +550,15 @@
 																	   Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MediaTransportControls_Command_Border"
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaybackControls_Command_Border"
 																	   Storyboard.TargetProperty="(Grid.Column)">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="2" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MediaTransportControls_Command_Border"
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaybackControls_Command_Border"
 																	   Storyboard.TargetProperty="(Grid.Row)">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="1" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MediaControlsCommandBar"
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaybackControlsCommandBar"
 																	   Storyboard.TargetProperty="Margin">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -674,8 +674,8 @@
                                                TextWrapping="WrapWholeWords"
                                                Margin="12" />
                                 </Border>
-                                <Border x:Name="MediaTransportControls_Timeline_Border" Grid.Column="1" Grid.Row="1">
-                                    <Grid x:Name="MediaTransportControls_Timeline_Grid">
+                                <Border x:Name="PlaybackControls_Timeline_Border" Grid.Column="1" Grid.Row="1">
+                                    <Grid x:Name="PlaybackControls_Timeline_Grid">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
@@ -734,10 +734,10 @@
                                         </Button>
                                     </Grid>
                                 </Border>
-                                <Border x:Name="MediaTransportControls_Command_Border"
+                                <Border x:Name="PlaybackControls_Command_Border"
                                         Grid.Column="1"
                                         Grid.Row="2">
-                                    <Grid x:Name="MediaControlsCommandBar">
+                                    <Grid x:Name="PlaybackControlsCommandBar">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />

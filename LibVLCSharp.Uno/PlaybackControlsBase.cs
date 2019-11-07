@@ -6,6 +6,7 @@ using FontAwesome;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
+using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,7 +17,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Represents the playback controls for a media player element
     /// </summary>
-    public abstract partial class MediaTransportControlsBase : Control
+    public abstract partial class PlaybackControlsBase : Control
     {
         private const string PlayState = "PlayState";
         private const string PauseState = "PauseState";
@@ -44,17 +45,40 @@ namespace LibVLCSharp.Uno
         private const string NormalModeState = "NormalMode";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MediaTransportControlsBase"/> class
+        /// Initializes a new instance of the <see cref="PlaybackControlsBase"/> class
         /// </summary>
-        public MediaTransportControlsBase()
+        public PlaybackControlsBase()
         {
-            DefaultStyleKey = typeof(MediaTransportControls);
+            DefaultStyleKey = typeof(PlaybackControls);
             AspectRatioManager = new AspectRatioManager();
             Timer.Tick += (sender, e) => Hide();
         }
 
         private AspectRatioManager AspectRatioManager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
+
+        private DisplayRequest? _displayRequest;
+        private DisplayRequest DisplayRequest => _displayRequest ?? (_displayRequest = new DisplayRequest());
+        private bool _mustKeepDeviceAwake;
+        private bool MustKeepDeviceAwake
+        {
+            get => _mustKeepDeviceAwake;
+            set
+            {
+                if (MustKeepDeviceAwake != value)
+                {
+                    _mustKeepDeviceAwake = value;
+                    if (value)
+                    {
+                        DisplayRequest.RequestActive();
+                    }
+                    else
+                    {
+                        DisplayRequest.RequestRelease();
+                    }
+                }
+            }
+        }
         private bool IsVolumeFlyoutOpen { get; set; }
         private bool HasError { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
@@ -66,7 +90,6 @@ namespace LibVLCSharp.Uno
 
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
-        private CommandBar? MediaControlsCommandBar { get; set; }
         private TextBlock? ErrorTextBlock { get; set; }
         private Slider? VolumeSlider { get; set; }
         private Slider? ProgressSlider { get; set; }
@@ -86,7 +109,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="VideoView"/> dependency property
         /// </summary>
         public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(FrameworkElement),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(null));
+            typeof(PlaybackControlsBase), new PropertyMetadata(null));
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
@@ -100,7 +123,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="LibVLC"/> dependency property
         /// </summary>
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(null));
+            typeof(PlaybackControlsBase), new PropertyMetadata(null));
         /// <summary>
         /// Gets or sets the <see cref="Shared.LibVLC"/> instance
         /// </summary>
@@ -114,8 +137,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(null, (d, args) =>
-            ((MediaTransportControlsBase)d).OnMediaPlayerChanged((Shared.MediaPlayer)args.OldValue, (Shared.MediaPlayer)args.NewValue)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(null, (d, args) =>
+            ((PlaybackControlsBase)d).OnMediaPlayerChanged((Shared.MediaPlayer)args.OldValue, (Shared.MediaPlayer)args.NewValue)));
         /// <summary>
         /// Gets or sets the <see cref="Shared.MediaPlayer"/> instance
         /// </summary>
@@ -129,8 +152,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="ShowAndHideAutomatically"/> dependency property
         /// </summary>
         public static readonly DependencyProperty ShowAndHideAutomaticallyProperty = DependencyProperty.Register(nameof(ShowAndHideAutomatically),
-            typeof(bool), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(true, (d, args) => ((MediaTransportControlsBase)d).OnShowAndHideAutomaticallyPropertyChanged()));
+            typeof(bool), typeof(PlaybackControlsBase),
+            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).OnShowAndHideAutomaticallyPropertyChanged()));
         /// <summary>
         /// Gets or sets a value that indicates whether the controls are shown and hidden automatically
         /// </summary>
@@ -141,11 +164,26 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="KeepDeviceAwake"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty KeepDeviceAwakeProperty = DependencyProperty.Register(nameof(KeepDeviceAwake), typeof(bool),
+            typeof(PlaybackControlsBase),
+            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).OnKeepDeviceAwakePropertyChanged()));
+        /// <summary>
+        /// Gets or sets a value indicating whether the device should be kept awake
+        /// </summary>
+        public bool KeepDeviceAwake
+        {
+            get => (bool)GetValue(KeepDeviceAwakeProperty);
+            set => SetValue(KeepDeviceAwakeProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsCompact"/> dependency property
         /// </summary>
         public static readonly DependencyProperty IsCompactProperty = DependencyProperty.Register(nameof(IsCompact), typeof(bool),
-            typeof(MediaTransportControlsBase),
-            new PropertyMetadata(false, (d, args) => ((MediaTransportControlsBase)d).OnIsCompactPropertyChanged()));
+            typeof(PlaybackControlsBase),
+            new PropertyMetadata(false, (d, args) => ((PlaybackControlsBase)d).OnIsCompactPropertyChanged()));
         /// <summary>
         /// Gets or sets a value that indicates whether playback controls are shown on one row instead of two
         /// </summary>
@@ -159,7 +197,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="CCSelectionButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty CCSelectionButtonContentProperty = DependencyProperty.Register(nameof(CCSelectionButtonContent),
-            typeof(object), typeof(MediaTransportControlsBase),
+            typeof(object), typeof(PlaybackControlsBase),
             new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.ClosedCaptioning)));
         /// <summary>
         /// Gets or sets the closed captions selection button content
@@ -174,7 +212,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="AudioTracksSelectionButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty AudioTracksSelectionButtonContentProperty = DependencyProperty.Register(
-            nameof(AudioTracksSelectionButtonContent), typeof(object), typeof(MediaTransportControlsBase),
+            nameof(AudioTracksSelectionButtonContent), typeof(object), typeof(PlaybackControlsBase),
             new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.FileAudio)));
         /// <summary>
         /// Gets or sets the audio tracks selection button content
@@ -189,8 +227,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsPlayPauseButtonVisible"/> dependency property
         /// </summary>
         public static readonly DependencyProperty IsPlayPauseButtonVisibleProperty = DependencyProperty.Register(nameof(IsPlayPauseButtonVisible),
-            typeof(bool), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(true, (d, args) => ((MediaTransportControlsBase)d).UpdatePlayPauseAvailability()));
+            typeof(bool), typeof(PlaybackControlsBase),
+            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).UpdatePlayPauseAvailability()));
         /// <summary>
         /// Gets or sets a value indicating whether the play/pause button is shown
         /// </summary>
@@ -204,7 +242,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="PlayButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty PlayButtonContentProperty = DependencyProperty.Register(nameof(PlayButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
         /// <summary>
         /// Gets or sets the play button content
         /// </summary>
@@ -218,7 +256,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="PlayButtonOnLeftContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty PlayButtonOnLeftContentProperty = DependencyProperty.Register(nameof(PlayButtonOnLeftContent),
-            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
+            typeof(object), typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
         /// <summary>
         /// Gets or sets the play button on left content
         /// </summary>
@@ -232,7 +270,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="PauseButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty PauseButtonContentProperty = DependencyProperty.Register(nameof(PauseButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
         /// <summary>
         /// Gets or sets the pause button content
         /// </summary>
@@ -246,7 +284,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="PauseButtonOnLeftContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty PauseButtonOnLeftContentProperty = DependencyProperty.Register(nameof(PauseButtonOnLeftContent),
-            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
+            typeof(object), typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
         /// <summary>
         /// Gets or sets the pause button on left content
         /// </summary>
@@ -260,7 +298,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsStopButtonVisible"/> dependency property.
         /// </summary>
         public static DependencyProperty IsStopButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsStopButtonVisible), typeof(bool),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(false, (d, e) => ((MediaTransportControlsBase)d).UpdateStopButton()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(false, (d, e) => ((PlaybackControlsBase)d).UpdateStopButton()));
         /// <summary>
         /// Gets or sets a value indicating whether the stop button is shown.
         /// </summary>
@@ -274,7 +312,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsStopEnabled"/> dependency property.
         /// </summary>
         public static DependencyProperty IsStopEnabledProperty { get; } = DependencyProperty.Register(nameof(IsStopEnabled), typeof(bool),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateStopButton()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateStopButton()));
         /// <summary>
         /// Gets or sets a value indicating whether a user can stop the media playback.
         /// </summary>
@@ -288,7 +326,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="StopButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty StopButtonContentProperty = DependencyProperty.Register(nameof(StopButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Stop)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Stop)));
         /// <summary>
         /// Gets or sets the font icon for stop
         /// </summary>
@@ -302,8 +340,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsVolumeButtonVisible"/> dependency property.
         /// </summary>
         public static DependencyProperty IsVolumeButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsVolumeButtonVisible),
-            typeof(bool), typeof(MediaTransportControlsBase),
-            new PropertyMetadata(false, (d, e) => ((MediaTransportControlsBase)d).UpdateVolumeButton()));
+            typeof(bool), typeof(PlaybackControlsBase),
+            new PropertyMetadata(false, (d, e) => ((PlaybackControlsBase)d).UpdateVolumeButton()));
         /// <summary>
         /// Gets or sets a value indicating whether the stop button is shown.
         /// </summary>
@@ -317,7 +355,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsVolumeEnabled"/> dependency property.
         /// </summary>
         public static DependencyProperty IsVolumeEnabledProperty { get; } = DependencyProperty.Register(nameof(IsVolumeEnabled), typeof(bool),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateVolumeButton()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateVolumeButton()));
         /// <summary>
         /// Gets or sets a value indicating whether a user can stop the media playback.
         /// </summary>
@@ -331,7 +369,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="VolumeButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty VolumeButtonContentProperty = DependencyProperty.Register(nameof(VolumeButtonContent),
-            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
+            typeof(object), typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
         /// <summary>
         /// Gets or sets the volume button content
         /// </summary>
@@ -345,7 +383,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="AudioButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty AudioButtonContentProperty = DependencyProperty.Register(nameof(AudioButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
         /// <summary>
         /// Gets or sets the audio button content
         /// </summary>
@@ -359,7 +397,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="VolumeMuteButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty VolumeMuteButtonContentProperty = DependencyProperty.Register(nameof(VolumeMuteButtonContent),
-            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
+            typeof(object), typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
         /// <summary>
         /// Gets or sets the volume mute button content
         /// </summary>
@@ -373,7 +411,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="AudioMuteButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty AudioMuteButtonContentProperty = DependencyProperty.Register(nameof(AudioMuteButtonContent),
-            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
+            typeof(object), typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
         /// <summary>
         /// Gets or sets the audio mute button content
         /// </summary>
@@ -387,7 +425,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
         /// </summary>
         public static DependencyProperty IsZoomButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsZoomButtonVisible), typeof(bool),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateZoomButton()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateZoomButton()));
         /// <summary>
         /// Gets or sets a value indicating whether the zoom button is shown.
         /// </summary>
@@ -401,7 +439,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsZoomEnabled"/> dependency property.
         /// </summary>
         public static DependencyProperty IsZoomEnabledProperty { get; } = DependencyProperty.Register(nameof(IsZoomEnabled), typeof(bool),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateZoomButton()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateZoomButton()));
         /// <summary>
         /// Gets or sets a value indicating whether a user can zoom the media.
         /// </summary>
@@ -415,7 +453,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="ZoomButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty ZoomButtonContentProperty = DependencyProperty.Register(nameof(ZoomButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Expand)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Expand)));
         /// <summary>
         /// Gets or sets the aspect ratio button content
         /// </summary>
@@ -429,7 +467,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="CastButtonContent"/> dependency property
         /// </summary>
         public static readonly DependencyProperty CastButtonContentProperty = DependencyProperty.Register(nameof(CastButtonContent), typeof(object),
-            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateBrandsFontIcon(FontAwesomeIcons.Chromecast)));
+            typeof(PlaybackControlsBase), new PropertyMetadata(FontAwesome.CreateBrandsFontIcon(FontAwesomeIcons.Chromecast)));
         /// <summary>
         /// Gets or sets the cast button content
         /// </summary>
@@ -442,8 +480,8 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Identifies the <see cref="IsSeekBarVisible"/> dependency property
         /// </summary>
-        public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(MediaTransportControls),
-            new PropertyMetadata(true, (d, e) => ((MediaTransportControls)d).UpdateSeekBarVisibility()));
+        public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(PlaybackControls),
+            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekBarVisibility()));
         /// <summary>
         /// Gets or sets a value indicating whether the seek bar is shown
         /// </summary>
@@ -456,8 +494,8 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Identifies the <see cref="IsSeekBarEnabled"/> dependency property
         /// </summary>
-        public static DependencyProperty IsSeekBarEnabledProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarEnabled), typeof(bool), typeof(MediaTransportControls),
-            new PropertyMetadata(true, (d, e) => ((MediaTransportControls)d).UpdateSeekAvailability()));
+        public static DependencyProperty IsSeekBarEnabledProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarEnabled), typeof(bool), typeof(PlaybackControls),
+            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekAvailability()));
         /// <summary>
         /// Gets or sets a value indicating whether a user can use the seek bar to find a location in the media
         /// </summary>
@@ -483,11 +521,6 @@ namespace LibVLCSharp.Uno
 
             LeftSeparator = GetTemplateChild(nameof(LeftSeparator)) as FrameworkElement;
             RightSeparator = GetTemplateChild(nameof(RightSeparator)) as FrameworkElement;
-            MediaControlsCommandBar = GetTemplateChild(nameof(MediaControlsCommandBar)) as CommandBar;
-            if (MediaControlsCommandBar != null)
-            {
-                MediaControlsCommandBar.LayoutUpdated += MediaControlsCommandBar_LayoutUpdated;
-            }
             ErrorTextBlock = GetTemplateChild(nameof(ErrorTextBlock)) as TextBlock;
 
             ProgressSlider = GetTemplateChild(nameof(ProgressSlider)) as Slider;
@@ -539,30 +572,6 @@ namespace LibVLCSharp.Uno
 
             UpdateZoomButton();
             Reset();
-        }
-
-        /// <remarks>
-        /// Useful if the developper wants to use the default UWP MediaTransportControls style
-        /// </remarks>
-        private void MediaControlsCommandBar_LayoutUpdated(object sender, object e)
-        {
-            var leftSeparator = LeftSeparator;
-            var rightSeparator = RightSeparator;
-            if (leftSeparator == null || rightSeparator == null)
-            {
-                return;
-            }
-
-            var commandBar = MediaControlsCommandBar!;
-            var width = commandBar.PrimaryCommands
-                .Where(el => !(el is AppBarSeparator) && ((FrameworkElement)el).Visibility == Visibility.Visible)
-                .Sum(el => ((FrameworkElement)el).Width);
-            width = (commandBar.ActualWidth - width) / 2;
-            if (width >= 0 && leftSeparator.Width != width)
-            {
-                leftSeparator.Width = width;
-                rightSeparator.Width = width;
-            }
         }
 
         private void VolumeFlyout_Closed(object sender, object e)
@@ -1070,7 +1079,6 @@ namespace LibVLCSharp.Uno
             VisualStateManager.GoToState(this, statusState, true);
             UpdatePlayPauseState(playState);
             UpdateStopButton();
-            //UpdateKeepScreenOn();
         }
 
         private void UpdateSeekBarVisibility()
@@ -1151,7 +1159,7 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Hides the transport controls if they're shown
+        /// Hides the playback controls if they're shown
         /// </summary>
         public void Hide()
         {
@@ -1171,12 +1179,13 @@ namespace LibVLCSharp.Uno
 
         private void UpdatePlayPauseState(bool? playState)
         {
-            if (playState is bool play)
+            if (playState is bool isPaused)
             {
-                var playPauseToolTip = play ? "Play" : "Pause";
+                var playPauseToolTip = isPaused ? "Play" : "Pause";
                 SetToolTip(PlayPauseButton, playPauseToolTip);
                 SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
-                VisualStateManager.GoToState(this, play ? PlayState : PauseState, true);
+                VisualStateManager.GoToState(this, isPaused ? PlayState : PauseState, true);
+                MustKeepDeviceAwake = !isPaused;
             }
         }
 
@@ -1210,6 +1219,19 @@ namespace LibVLCSharp.Uno
             else
             {
                 Show(false);
+            }
+        }
+
+        private void OnKeepDeviceAwakePropertyChanged()
+        {
+            if (KeepDeviceAwake)
+            {
+                var state = MediaPlayer?.State;
+                MustKeepDeviceAwake = state == VLCState.Opening || state == VLCState.Playing;
+            }
+            else
+            {
+                MustKeepDeviceAwake = false;
             }
         }
 

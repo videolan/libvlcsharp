@@ -30,20 +30,6 @@ namespace LibVLCSharp.Uno
         private VideoView? VideoView { get; set; }
 
         /// <summary>
-        /// Identifies the <see cref="AreTransportControlsEnabled"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty AreTransportControlsEnabledProperty = DependencyProperty.Register(
-            nameof(AreTransportControlsEnabled), typeof(bool), typeof(MediaPlayerElement), new PropertyMetadata(false));
-        /// <summary>
-        /// Gets or sets a value that determines whether the standard transport controls are enabled
-        /// </summary>
-        public bool AreTransportControlsEnabled
-        {
-            get => (bool)GetValue(AreTransportControlsEnabledProperty);
-            set => SetValue(AreTransportControlsEnabledProperty, value);
-        }
-
-        /// <summary>
         /// Identifies the <see cref="LibVLC"/> dependency property
         /// </summary>
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
@@ -73,19 +59,19 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="TransportControls"/> dependency property
+        /// Identifies the <see cref="PlaybackControls"/> dependency property
         /// </summary>
-        private static readonly DependencyProperty TransportControlsProperty = DependencyProperty.Register(nameof(TransportControls),
-            typeof(MediaTransportControls), typeof(MediaPlayerElement),
-            new PropertyMetadata(new MediaTransportControls(),
-                (d, args) => ((MediaPlayerElement)d).OnTransportControlsChanged((MediaTransportControls)args.OldValue)));
+        private static readonly DependencyProperty PlaybackControlsProperty = DependencyProperty.Register(nameof(PlaybackControls),
+            typeof(PlaybackControls), typeof(MediaPlayerElement),
+            new PropertyMetadata(new PlaybackControls(),
+                (d, args) => ((MediaPlayerElement)d).OnPlaybackControlsChanged((PlaybackControls)args.OldValue)));
         /// <summary>
-        /// Gets or sets the transport controls for the media
+        /// Gets or sets the playback controls for the media
         /// </summary>
-        public MediaTransportControls? TransportControls
+        public PlaybackControls? PlaybackControls
         {
-            get => (MediaTransportControls)GetValue(TransportControlsProperty);
-            set => SetValue(TransportControlsProperty, value);
+            get => (PlaybackControls)GetValue(PlaybackControlsProperty);
+            set => SetValue(PlaybackControlsProperty, value);
         }
 
         /// <summary>
@@ -123,7 +109,7 @@ namespace LibVLCSharp.Uno
 
         private void OnPointerMoved(object sender, RoutedEventArgs e)
         {
-            TransportControls?.Show();
+            PlaybackControls?.Show();
         }
 
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
@@ -142,22 +128,22 @@ namespace LibVLCSharp.Uno
         private void OnMediaPlayerChanged()
         {
             OnStretchChanged();
-            OnTransportControlsChanged();
+            OnPlaybackControlsChanged();
         }
 
-        private void OnTransportControlsChanged(MediaTransportControls? oldValue = null)
+        private void OnPlaybackControlsChanged(PlaybackControls? oldValue = null)
         {
             if (oldValue != null)
             {
                 oldValue.VideoView = null;
             }
 
-            var transportControls = TransportControls;
-            if (transportControls != null)
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
             {
-                transportControls.VideoView = VideoView;
-                transportControls.LibVLC = LibVLC;
-                transportControls.MediaPlayer = MediaPlayer;
+                playbackControls.VideoView = VideoView;
+                playbackControls.LibVLC = LibVLC;
+                playbackControls.MediaPlayer = MediaPlayer;
             }
         }
 
