@@ -132,6 +132,15 @@
   <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
+  <data name="ShowAudioSelectionMenu" xml:space="preserve">
+    <value>Show audio selection menu</value>
+  </data>
+  <data name="ShowClosedCaptionMenu" xml:space="preserve">
+    <value>Show closed caption menu</value>
+  </data>
+  <data name="ShowVolumeMenu" xml:space="preserve">
+    <value>Show volume menu</value>
+  </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
   </data>

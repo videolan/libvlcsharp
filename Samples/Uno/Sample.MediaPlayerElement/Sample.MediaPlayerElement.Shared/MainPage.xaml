@@ -10,7 +10,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <vlc:MediaPlayerElement AreTransportControlsEnabled="True"
+       <vlc:MediaPlayerElement AreTransportControlsEnabled="True"
                                 LibVLC="{x:Bind ViewModel.LibVLC, Mode=OneWay}"
                                 MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}">
             

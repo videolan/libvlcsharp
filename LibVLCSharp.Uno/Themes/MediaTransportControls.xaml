@@ -3,9 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vlc="using:LibVLCSharp.Uno">
 
-    <FontFamily x:Key="FontAwesomeSolid">ms-appx:///Assets/Fonts/Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free</FontFamily>
-    <FontFamily x:Key="FontAwesomeBrands">ms-appx:///Assets/Fonts/Font Awesome 5 Brands-Regular-400.otf#Font Awesome 5 Free</FontFamily>
-
     <Style TargetType="vlc:MediaTransportControls">
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Background" Value="Transparent" />
@@ -402,11 +399,7 @@
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
 																	   Storyboard.TargetName="BufferingProgressBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Visible</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -414,11 +407,7 @@
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
 																	   Storyboard.TargetName="BufferingProgressBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Visible</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <DoubleAnimation Storyboard.TargetName="ProgressSlider"
 														 Storyboard.TargetProperty="Opacity"
@@ -432,11 +421,7 @@
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
 																	   Storyboard.TargetName="ErrorBorder">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Visible</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -451,32 +436,91 @@
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
 																	   Storyboard.TargetName="AudioTracksSelectionButton">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Visible</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="AudioSelectionUnavailable" />
                             </VisualStateGroup>
-                            <!--Video volume visibility states-->
+                            <!--Volume visibility states-->
+                            <VisualStateGroup x:Name="VolumeAvailablityStates">
+                                <VisualState x:Name="VolumeAvailable" />
+                                <VisualState x:Name="VolumeUnavailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VolumeMuteButton"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
                             <!--Closed Captioning Selection Button visibility states-->
                             <VisualStateGroup x:Name="CCSelectionAvailablityStates">
                                 <VisualState x:Name="CCSelectionAvailable">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
 																	   Storyboard.TargetName="CCSelectionButton">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Visible</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="CCSelectionUnavailable" />
+                            </VisualStateGroup>
+                            <!--Seek bar visibility states-->
+                            <VisualStateGroup x:Name="SeekBarAvailablityStates">
+                                <VisualState x:Name="SeekBarAvailable" />
+                                <VisualState x:Name="SeekBarUnvailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressSlider"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TimeTextGrid"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <!--Play/pause buttons visibility states-->
+                            <VisualStateGroup x:Name="PlayPauseAvailablityStates">
+                                <VisualState x:Name="PlayPauseAvailable" />
+                                <VisualState x:Name="PlayPauseUnavailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																	   Storyboard.TargetName="PlayPauseButton">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																	   Storyboard.TargetName="PlayPauseButtonOnLeft">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <!--Stop button visibility states-->
+                            <VisualStateGroup x:Name="StopAvailablityStates">
+                                <VisualState x:Name="StopAvailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="StopButton"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="StopUnavailable" />
+                            </VisualStateGroup>
+                            <!--Zoom button visibility states-->
+                            <VisualStateGroup x:Name="ZoomAvailablityStates">
+                                <VisualState x:Name="ZoomAvailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoomButton"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="ZoomUnavailable" />
                             </VisualStateGroup>
                             <!--Closed Captioning  visibility states-->
                             <!--Focus states-->
@@ -498,6 +542,10 @@
 																	   Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressSlider"
+																	   Storyboard.TargetProperty="Height">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Auto" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TimeTextGrid"
 																	   Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
@@ -516,11 +564,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseButton"
 																	   Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <Visibility>Collapsed</Visibility>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -530,13 +574,21 @@
                                 <VisualState x:Name="PlayState" />
                                 <VisualState x:Name="PauseState">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseSymbolLeft"
-																	   Storyboard.TargetProperty="Symbol">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Pause" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayButtonOnLeftContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseSymbol"
-																	   Storyboard.TargetProperty="Glyph">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xf04c;" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PauseButtonOnLeftContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PauseButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -546,13 +598,21 @@
                                 <VisualState x:Name="VolumeState" />
                                 <VisualState x:Name="MuteState">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AudioMuteSymbol"
-																	   Storyboard.TargetProperty="Glyph">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xf6a9;" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AudioButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VolumeMuteSymbol"
-																	   Storyboard.TargetProperty="Glyph">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xf6a9;" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AudioMuteButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VolumeButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VolumeMuteButtonContent"
+																	   Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -659,14 +719,20 @@
                                         Grid.Column="0"
                                         Grid.Row="1"
                                         Visibility="Collapsed">
-                                    <AppBarButton x:Name="PlayPauseButtonOnLeft"
-                                                  Margin="0"
-                                                  VerticalAlignment="Center"
-                                                  Style="{StaticResource MTC_ButtonStyle}">
-                                        <AppBarButton.Icon>
-                                            <SymbolIcon x:Name="PlayPauseSymbolLeft" Symbol="Play" />
-                                        </AppBarButton.Icon>
-                                    </AppBarButton>
+                                    <Grid>
+                                        <Button x:Name="PlayPauseButtonOnLeft"
+                                            Margin="0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MTC_ButtonStyle}">
+                                            <Grid>
+                                                <ContentPresenter x:Name="PlayButtonOnLeftContent"
+                                                                  Content="{TemplateBinding PlayButtonOnLeftContent}" />
+                                                <ContentPresenter x:Name="PauseButtonOnLeftContent"
+                                                                  Content="{TemplateBinding PauseButtonOnLeftContent}"
+                                                                  Visibility="Collapsed" />
+                                            </Grid>
+                                        </Button>
+                                    </Grid>
                                 </Border>
                                 <Border x:Name="MediaTransportControls_Command_Border"
                                         Grid.Column="1"
@@ -678,88 +744,109 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Orientation="Horizontal">
-                                            <Button x:Name='VolumeMuteButton'
-                                                    Style='{StaticResource MTC_ButtonStyle}'>
+                                            <Button x:Name="VolumeMuteButton"
+                                                    Style="{StaticResource MTC_ButtonStyle}">
                                                 <Button.Flyout>
                                                     <Flyout x:Name="VolumeFlyout" FlyoutPresenterStyle="{StaticResource MTC_FlyoutStyle}">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <Button x:Name='AudioMuteButton'
-                                                                    Style='{StaticResource MTC_ButtonStyle}'
-                                                                    VerticalAlignment='Center'
-                                                                    HorizontalAlignment='Center'
-                                                                    Margin='12'>
-                                                                <FontIcon x:Name="AudioMuteSymbol"
-                                                                          FontFamily="{StaticResource FontAwesomeSolid}"
-                                                                          Glyph="&#xf028;" />
+                                                            <Button x:Name="AudioMuteButton"
+                                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Center"
+                                                                    Margin="12">
+                                                                <Grid>
+                                                                    <ContentPresenter x:Name="AudioButtonContent"
+                                                                                      Content="{TemplateBinding AudioButtonContent}" />
+                                                                    <ContentPresenter x:Name="AudioMuteButtonContent"
+                                                                                      Content="{TemplateBinding AudioMuteButtonContent}" 
+                                                                                      Visibility="Collapsed" />
+                                                                </Grid>
                                                             </Button>
-                                                            <Slider x:Name='VolumeSlider'
-                                                                    Value='50'
-                                                                    IsThumbToolTipEnabled='False'
-                                                                    Width='{ThemeResource MTCHorizontalVolumeSliderWidth}'
-                                                                    VerticalAlignment='Center'
-                                                                    HorizontalAlignment='Center'
-                                                                    Margin='0'/>
-                                                            <TextBlock x:Name='VolumeValue'
-                                                                       Style='{StaticResource MediaTextBlockStyle}'
+                                                            <Slider x:Name="VolumeSlider"
+                                                                    Value="50"
+                                                                    IsThumbToolTipEnabled="False"
+                                                                    Width="{ThemeResource MTCHorizontalVolumeSliderWidth}"
+                                                                    VerticalAlignment="Center"
+                                                                    HorizontalAlignment="Center"
+                                                                    Margin="0"/>
+                                                            <TextBlock x:Name="VolumeValue"
+                                                                       Style="{StaticResource MediaTextBlockStyle}"
                                                                        Text="{Binding ElementName=VolumeSlider,Path=Value}"
-                                                                       HorizontalAlignment='Center'
-                                                                       VerticalAlignment='Center'
-                                                                       Width='24'
-                                                                       Margin='12'/>
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       Width="24"
+                                                                       Margin="12"/>
                                                         </StackPanel>
                                                     </Flyout>
                                                 </Button.Flyout>
-                                                <FontIcon x:Name="VolumeMuteSymbol" FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf028;" />
+                                                <Grid>
+                                                    <ContentPresenter x:Name="VolumeButtonContent" 
+                                                                      Content="{TemplateBinding VolumeButtonContent}" />
+                                                    <ContentPresenter x:Name="VolumeMuteButtonContent" 
+                                                                      Content="{TemplateBinding VolumeMuteButtonContent}" 
+                                                                      Visibility="Collapsed" />
+                                                </Grid>
                                             </Button>
-                                            <Button x:Name='CCSelectionButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
-                                                <FontIcon FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf20a;" />
-                                            </Button>
-                                            <Button x:Name='AudioTracksSelectionButton'
-                                                    Style='{StaticResource MTC_ButtonStyle}'
-                                                    Visibility='Collapsed'>
-                                                <FontIcon FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf1c7;" />
-                                            </Button>
+                                            <Button x:Name="CCSelectionButton"
+                                                    Style="{StaticResource MTC_ButtonStyle}" 
+                                                    Visibility="Collapsed"
+                                                    Content="{TemplateBinding CCSelectionButtonContent}" />
+                                            <Button x:Name="AudioTracksSelectionButton"
+                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                    Visibility="Collapsed"
+                                                    Content="{TemplateBinding AudioTracksSelectionButtonContent}" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-                                            <Button x:Name='StopButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
-                                                <FontIcon x:Name="StopSymbol" FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf04d;" />
-                                            </Button>
-                                            <Button x:Name='SkipBackwardButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="StopButton"
+                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                    Visibility="Collapsed"
+                                                    Content="{TemplateBinding StopButtonContent}" />
+                                            <Button x:Name="SkipBackwardButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <FontIcon Glyph="&#xED3C;" />
                                             </Button>
-                                            <Button x:Name='PreviousTrackButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
-                                                <SymbolIcon x:Name='PreviousTrackSymbol' Symbol='Previous' />
+                                            <Button x:Name="PreviousTrackButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
+                                                <SymbolIcon x:Name="PreviousTrackSymbol" Symbol="Previous" />
                                             </Button>
-                                            <Button x:Name='RewindButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="RewindButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <FontIcon Glyph="&#xEB9E;" />
                                             </Button>
-                                            <Button x:Name='PlayPauseButton' Style='{StaticResource MTC_ButtonStyle}'>
-                                                <FontIcon x:Name="PlayPauseSymbol" FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf04b;" />
+                                            <Button x:Name="PlayPauseButton" 
+                                                    Style="{StaticResource MTC_ButtonStyle}">
+                                                <Grid>
+                                                    <ContentPresenter x:Name="PlayButtonContent"
+                                                                  Content="{TemplateBinding PlayButtonContent}" />
+                                                    <ContentPresenter x:Name="PauseButtonContent"
+                                                                  Content="{TemplateBinding PauseButtonContent}"
+                                                                  Visibility="Collapsed" />
+                                                </Grid>
                                             </Button>
-                                            <Button x:Name='FastForwardButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="FastForwardButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <FontIcon Glyph="&#xEB9D;" />
                                             </Button>
-                                            <Button x:Name='NextTrackButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="NextTrackButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <SymbolIcon x:Name="NextTrackSymbol" Symbol="Next" />
                                             </Button>
-                                            <Button x:Name='SkipForwardButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="SkipForwardButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <FontIcon Glyph="&#xED3D;" />
                                             </Button>
-                                            <Button x:Name='PlaybackRateButton' Style='{StaticResource MTC_ButtonStyle}' Visibility='Collapsed'>
+                                            <Button x:Name="PlaybackRateButton" Style="{StaticResource MTC_ButtonStyle}" Visibility="Collapsed">
                                                 <FontIcon Glyph="&#xEC57;" />
                                             </Button>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Column="2">
-                                            <!--<ToggleButton x:Name='RepeatButton' Style='{StaticResource MTC_ToggleButtonStyle}' Visibility='Collapsed'>
+                                            <!--<ToggleButton x:Name="RepeatButton" Style="{StaticResource MTC_ToggleButtonStyle}" Visibility="Collapsed">
                                                 <SymbolIcon x:Name="RepeatSymbol" Symbol="RepeatAll" />
                                             </ToggleButton>-->
-                                            <Button x:Name='ZoomButton' Style='{StaticResource MTC_ButtonStyle}'>
-                                                <FontIcon FontFamily="{StaticResource FontAwesomeSolid}" Glyph="&#xf065;" />
-                                            </Button>
-                                            <Button x:Name='CastButton' Style='{StaticResource MTC_ButtonStyle}'>
-                                                <FontIcon FontFamily="{StaticResource FontAwesomeBrands}" Glyph="&#xf838;" />
-                                            </Button>
-                                            <Button x:Name='FullWindowButton' Style='{StaticResource MTC_ButtonStyle}'>
+                                            <Button x:Name="ZoomButton"
+                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                    Content="{TemplateBinding ZoomButtonContent}" />
+                                            <Button x:Name="CastButton" 
+                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                    Visibility="Collapsed"
+                                                    Content="{TemplateBinding CastButtonContent}" />
+                                            <Button x:Name="FullWindowButton" 
+                                                    Style="{StaticResource MTC_ButtonStyle}"
+                                                    Visibility="Collapsed">
                                                 <SymbolIcon x:Name="FullWindowSymbol" Symbol="FullScreen" />
                                             </Button>
                                         </StackPanel>

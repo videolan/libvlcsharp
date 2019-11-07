@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FontAwesome;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
@@ -25,6 +26,22 @@ namespace LibVLCSharp.Uno
         private const string BufferingState = "Buffering";
         private const string ControlPanelFadeInState = "ControlPanelFadeIn";
         private const string ControlPanelFadeOutState = "ControlPanelFadeOut";
+        private const string PlayPauseAvailableState = "PlayPauseAvailable";
+        private const string PlayPauseUnavailableState = "PlayPauseUnavailable";
+        private const string StopAvailableState = "StopAvailable";
+        private const string StopUnavailableState = "StopUnavailable";
+        private const string AudioSelectionAvailableState = "AudioSelectionAvailable";
+        private const string AudioSelectionUnavailableState = "AudioSelectionUnavailable";
+        private const string CCSelectionAvailableState = "CCSelectionAvailable";
+        private const string CCSelectionUnavailableState = "CCSelectionUnavailable";
+        private const string SeekBarAvailableState = "SeekBarAvailable";
+        private const string SeekBarUnavailableState = "SeekBarUnavailable";
+        private const string ZoomAvailableState = "ZoomAvailable";
+        private const string ZoomUnavailableState = "ZoomUnavailable";
+        private const string VolumeAvailableState = "VolumeAvailable";
+        private const string VolumeUnavailableState = "VolumeUnavailable";
+        private const string CompactModeState = "CompactMode";
+        private const string NormalModeState = "NormalMode";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaTransportControlsBase"/> class
@@ -49,17 +66,20 @@ namespace LibVLCSharp.Uno
 
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
+        private CommandBar? MediaControlsCommandBar { get; set; }
         private TextBlock? ErrorTextBlock { get; set; }
         private Slider? VolumeSlider { get; set; }
         private Slider? ProgressSlider { get; set; }
         private TextBlock? TimeElapsedElement { get; set; }
         private TextBlock? TimeRemainingElement { get; set; }
         private FrameworkElement? TimeTextGrid { get; set; }
+
+        private Control? VolumeMuteButton { get; set; }
         private FrameworkElement? PlayPauseButton { get; set; }
         private FrameworkElement? PlayPauseButtonOnLeft { get; set; }
-        private FrameworkElement? StopButton { get; set; }
+        private Control? StopButton { get; set; }
         private FrameworkElement? CastButton { get; set; }
-        private FrameworkElement? ZoomButton { get; set; }
+        private Control? ZoomButton { get; set; }
         private FrameworkElement? FullWindowButton { get; set; }
 
         /// <summary>
@@ -121,6 +141,51 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsCompact"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty IsCompactProperty = DependencyProperty.Register(nameof(IsCompact), typeof(bool),
+            typeof(MediaTransportControlsBase),
+            new PropertyMetadata(false, (d, args) => ((MediaTransportControlsBase)d).OnIsCompactPropertyChanged()));
+        /// <summary>
+        /// Gets or sets a value that indicates whether playback controls are shown on one row instead of two
+        /// </summary>
+        public bool IsCompact
+        {
+            get => (bool)GetValue(IsCompactProperty);
+            set => SetValue(IsCompactProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="CCSelectionButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CCSelectionButtonContentProperty = DependencyProperty.Register(nameof(CCSelectionButtonContent),
+            typeof(object), typeof(MediaTransportControlsBase),
+            new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.ClosedCaptioning)));
+        /// <summary>
+        /// Gets or sets the closed captions selection button content
+        /// </summary>
+        public object? CCSelectionButtonContent
+        {
+            get => GetValue(CCSelectionButtonContentProperty);
+            set => SetValue(CCSelectionButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="AudioTracksSelectionButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty AudioTracksSelectionButtonContentProperty = DependencyProperty.Register(
+            nameof(AudioTracksSelectionButtonContent), typeof(object), typeof(MediaTransportControlsBase),
+            new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.FileAudio)));
+        /// <summary>
+        /// Gets or sets the audio tracks selection button content
+        /// </summary>
+        public object? AudioTracksSelectionButtonContent
+        {
+            get => GetValue(AudioTracksSelectionButtonContentProperty);
+            set => SetValue(AudioTracksSelectionButtonContentProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsPlayPauseButtonVisible"/> dependency property
         /// </summary>
         public static readonly DependencyProperty IsPlayPauseButtonVisibleProperty = DependencyProperty.Register(nameof(IsPlayPauseButtonVisible),
@@ -133,6 +198,62 @@ namespace LibVLCSharp.Uno
         {
             get => (bool)GetValue(IsPlayPauseButtonVisibleProperty);
             set => SetValue(IsPlayPauseButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlayButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty PlayButtonContentProperty = DependencyProperty.Register(nameof(PlayButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
+        /// <summary>
+        /// Gets or sets the play button content
+        /// </summary>
+        public object? PlayButtonContent
+        {
+            get => GetValue(PlayButtonContentProperty);
+            set => SetValue(PlayButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PlayButtonOnLeftContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty PlayButtonOnLeftContentProperty = DependencyProperty.Register(nameof(PlayButtonOnLeftContent),
+            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Play)));
+        /// <summary>
+        /// Gets or sets the play button on left content
+        /// </summary>
+        public object? PlayButtonOnLeftContent
+        {
+            get => GetValue(PlayButtonOnLeftContentProperty);
+            set => SetValue(PlayButtonOnLeftContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PauseButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty PauseButtonContentProperty = DependencyProperty.Register(nameof(PauseButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
+        /// <summary>
+        /// Gets or sets the pause button content
+        /// </summary>
+        public object? PauseButtonContent
+        {
+            get => GetValue(PauseButtonContentProperty);
+            set => SetValue(PauseButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="PauseButtonOnLeftContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty PauseButtonOnLeftContentProperty = DependencyProperty.Register(nameof(PauseButtonOnLeftContent),
+            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Pause)));
+        /// <summary>
+        /// Gets or sets the pause button on left content
+        /// </summary>
+        public object? PauseButtonOnLeftContent
+        {
+            get => GetValue(PauseButtonOnLeftContentProperty);
+            set => SetValue(PauseButtonOnLeftContentProperty, value);
         }
 
         /// <summary>
@@ -164,6 +285,105 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
+        /// Identifies the <see cref="StopButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty StopButtonContentProperty = DependencyProperty.Register(nameof(StopButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Stop)));
+        /// <summary>
+        /// Gets or sets the font icon for stop
+        /// </summary>
+        public object? StopButtonContent
+        {
+            get => (FontIcon)GetValue(StopButtonContentProperty);
+            set => SetValue(StopButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsVolumeButtonVisible"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsVolumeButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsVolumeButtonVisible),
+            typeof(bool), typeof(MediaTransportControlsBase),
+            new PropertyMetadata(false, (d, e) => ((MediaTransportControlsBase)d).UpdateVolumeButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether the stop button is shown.
+        /// </summary>
+        public bool IsVolumeButtonVisible
+        {
+            get => (bool)GetValue(IsVolumeButtonVisibleProperty);
+            set => SetValue(IsVolumeButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsVolumeEnabled"/> dependency property.
+        /// </summary>
+        public static DependencyProperty IsVolumeEnabledProperty { get; } = DependencyProperty.Register(nameof(IsVolumeEnabled), typeof(bool),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(true, (d, e) => ((MediaTransportControlsBase)d).UpdateVolumeButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether a user can stop the media playback.
+        /// </summary>
+        public bool IsVolumeEnabled
+        {
+            get => (bool)GetValue(IsVolumeEnabledProperty);
+            set => SetValue(IsVolumeEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty VolumeButtonContentProperty = DependencyProperty.Register(nameof(VolumeButtonContent),
+            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
+        /// <summary>
+        /// Gets or sets the volume button content
+        /// </summary>
+        public object? VolumeButtonContent
+        {
+            get => GetValue(VolumeButtonContentProperty);
+            set => SetValue(VolumeButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="AudioButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty AudioButtonContentProperty = DependencyProperty.Register(nameof(AudioButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeUp)));
+        /// <summary>
+        /// Gets or sets the audio button content
+        /// </summary>
+        public object? AudioButtonContent
+        {
+            get => GetValue(AudioButtonContentProperty);
+            set => SetValue(AudioButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="VolumeMuteButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty VolumeMuteButtonContentProperty = DependencyProperty.Register(nameof(VolumeMuteButtonContent),
+            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
+        /// <summary>
+        /// Gets or sets the volume mute button content
+        /// </summary>
+        public object? VolumeMuteButtonContent
+        {
+            get => GetValue(VolumeMuteButtonContentProperty);
+            set => SetValue(VolumeMuteButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="AudioMuteButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty AudioMuteButtonContentProperty = DependencyProperty.Register(nameof(AudioMuteButtonContent),
+            typeof(object), typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.VolumeMute)));
+        /// <summary>
+        /// Gets or sets the audio mute button content
+        /// </summary>
+        public object? AudioMuteButtonContent
+        {
+            get => GetValue(AudioMuteButtonContentProperty);
+            set => SetValue(AudioMuteButtonContentProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
         /// </summary>
         public static DependencyProperty IsZoomButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsZoomButtonVisible), typeof(bool),
@@ -189,6 +409,34 @@ namespace LibVLCSharp.Uno
         {
             get => (bool)GetValue(IsZoomEnabledProperty);
             set => SetValue(IsZoomEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="ZoomButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty ZoomButtonContentProperty = DependencyProperty.Register(nameof(ZoomButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateSolidFontIcon(FontAwesomeIcons.Expand)));
+        /// <summary>
+        /// Gets or sets the aspect ratio button content
+        /// </summary>
+        public object? ZoomButtonContent
+        {
+            get => GetValue(ZoomButtonContentProperty);
+            set => SetValue(ZoomButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="CastButtonContent"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty CastButtonContentProperty = DependencyProperty.Register(nameof(CastButtonContent), typeof(object),
+            typeof(MediaTransportControlsBase), new PropertyMetadata(FontAwesome.CreateBrandsFontIcon(FontAwesomeIcons.Chromecast)));
+        /// <summary>
+        /// Gets or sets the cast button content
+        /// </summary>
+        public object? CastButtonContent
+        {
+            get => GetValue(CastButtonContentProperty);
+            set => SetValue(CastButtonContentProperty, value);
         }
 
         /// <summary>
@@ -233,29 +481,35 @@ namespace LibVLCSharp.Uno
             Tapped += OnPointerMoved;
             PointerExited += (sender, e) => Show();
 
-            LeftSeparator = GetTemplateChild("LeftSeparator") as FrameworkElement;
-            RightSeparator = GetTemplateChild("RightSeparator") as FrameworkElement;
-            ErrorTextBlock = GetTemplateChild("ErrorTextBlock") as TextBlock;
+            LeftSeparator = GetTemplateChild(nameof(LeftSeparator)) as FrameworkElement;
+            RightSeparator = GetTemplateChild(nameof(RightSeparator)) as FrameworkElement;
+            MediaControlsCommandBar = GetTemplateChild(nameof(MediaControlsCommandBar)) as CommandBar;
+            if (MediaControlsCommandBar != null)
+            {
+                MediaControlsCommandBar.LayoutUpdated += MediaControlsCommandBar_LayoutUpdated;
+            }
+            ErrorTextBlock = GetTemplateChild(nameof(ErrorTextBlock)) as TextBlock;
 
-            ProgressSlider = GetTemplateChild("ProgressSlider") as Slider;
+            ProgressSlider = GetTemplateChild(nameof(ProgressSlider)) as Slider;
             if (ProgressSlider != null)
             {
                 ProgressSlider.Minimum = 0;
                 ProgressSlider.Maximum = 100;
                 ProgressSlider.ValueChanged += ProgressSlider_ValueChanged;
             }
-            TimeElapsedElement = GetTemplateChild("TimeElapsedElement") as TextBlock;
-            TimeRemainingElement = GetTemplateChild("TimeRemainingElement") as TextBlock;
-            TimeTextGrid = GetTemplateChild("TimeTextGrid") as FrameworkElement;
+            TimeElapsedElement = GetTemplateChild(nameof(TimeElapsedElement)) as TextBlock;
+            TimeRemainingElement = GetTemplateChild(nameof(TimeRemainingElement)) as TextBlock;
+            TimeTextGrid = GetTemplateChild(nameof(TimeTextGrid)) as FrameworkElement;
 
-            PlayPauseButton = GetTemplateChild("PlayPauseButton") as FrameworkElement;
-            PlayPauseButtonOnLeft = GetTemplateChild("PlayPauseButtonOnLeft") as FrameworkElement;
-            StopButton = GetTemplateChild("StopButton") as FrameworkElement;
-            CastButton = GetTemplateChild("CastButton") as FrameworkElement;
-            ZoomButton = GetTemplateChild("ZoomButton") as FrameworkElement;
-            FullWindowButton = GetTemplateChild("FullWindowButton") as FrameworkElement;
+            VolumeMuteButton = GetTemplateChild(nameof(VolumeMuteButton)) as Control;
+            PlayPauseButton = GetTemplateChild(nameof(PlayPauseButton)) as FrameworkElement;
+            PlayPauseButtonOnLeft = GetTemplateChild(nameof(PlayPauseButtonOnLeft)) as FrameworkElement;
+            StopButton = GetTemplateChild(nameof(StopButton)) as Control;
+            CastButton = GetTemplateChild(nameof(CastButton)) as FrameworkElement;
+            ZoomButton = GetTemplateChild(nameof(ZoomButton)) as Control;
+            FullWindowButton = GetTemplateChild(nameof(FullWindowButton)) as FrameworkElement;
             var audioMuteButton = GetTemplateChild("AudioMuteButton");
-            VolumeSlider = GetTemplateChild("VolumeSlider") as Slider;
+            VolumeSlider = GetTemplateChild(nameof(VolumeSlider)) as Slider;
             if (VolumeSlider != null)
             {
                 VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
@@ -265,13 +519,10 @@ namespace LibVLCSharp.Uno
                 volumeFlyout.Opened += VolumeFlyout_Opened;
                 volumeFlyout.Closed += VolumeFlyout_Closed;
             }
-
-            AddTracksMenu("AudioTracksSelectionButton", TrackType.Audio, "AudioSelectionAvailable", "AudioSelectionUnavailable");
-            AddTracksMenu("CCSelectionButton", TrackType.Text, "CCSelectionAvailable", "CCSelectionUnavailable", true);
-
-            UpdateZoomButton();
-            UpdateControl(CastButton, false);
-            UpdateControl(FullWindowButton, false);
+            var audioTracksSelectionButton = GetTemplateChild("AudioTracksSelectionButton") as Button;
+            var ccSelectionButton = GetTemplateChild("CCSelectionButton") as Button;
+            AddTracksMenu(audioTracksSelectionButton, TrackType.Audio, AudioSelectionAvailableState, AudioSelectionUnavailableState);
+            AddTracksMenu(ccSelectionButton, TrackType.Text, CCSelectionAvailableState, CCSelectionUnavailableState, true);
 
             SetButtonClick(PlayPauseButton, PlayPauseButton_Click);
             SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
@@ -279,13 +530,39 @@ namespace LibVLCSharp.Uno
             SetButtonClick(ZoomButton, ZoomButton_Click);
             SetButtonClick(audioMuteButton, AudioMuteButton_Click);
 
-            SetToolTip(PlayPauseButton, "Play");
-            SetToolTip(PlayPauseButtonOnLeft, "Play");
             SetToolTip(StopButton, "Stop");
             SetToolTip(ZoomButton, "AspectRatio");
+            SetToolTip(VolumeMuteButton, "ShowVolumeMenu");
             SetToolTip(audioMuteButton, "Mute");
+            SetToolTip(audioTracksSelectionButton, "ShowAudioSelectionMenu");
+            SetToolTip(ccSelectionButton, "ShowClosedCaptionMenu");
 
+            UpdateZoomButton();
             Reset();
+        }
+
+        /// <remarks>
+        /// Useful if the developper wants to use the default UWP MediaTransportControls style
+        /// </remarks>
+        private void MediaControlsCommandBar_LayoutUpdated(object sender, object e)
+        {
+            var leftSeparator = LeftSeparator;
+            var rightSeparator = RightSeparator;
+            if (leftSeparator == null || rightSeparator == null)
+            {
+                return;
+            }
+
+            var commandBar = MediaControlsCommandBar!;
+            var width = commandBar.PrimaryCommands
+                .Where(el => !(el is AppBarSeparator) && ((FrameworkElement)el).Visibility == Visibility.Visible)
+                .Sum(el => ((FrameworkElement)el).Width);
+            width = (commandBar.ActualWidth - width) / 2;
+            if (width >= 0 && leftSeparator.Width != width)
+            {
+                leftSeparator.Width = width;
+                rightSeparator.Width = width;
+            }
         }
 
         private void VolumeFlyout_Closed(object sender, object e)
@@ -308,15 +585,11 @@ namespace LibVLCSharp.Uno
         /// <param name="args">an object array that contains zero or more objects to format</param>
         protected abstract void SetToolTip(DependencyObject? element, string resource, params string[] args);
 
-        private void UpdateControl(FrameworkElement? control, bool visible, bool enabled = true)
+        private void UpdateControl(Control? control, bool enabled)
         {
             if (control != null)
             {
-                control.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
-                if (control is Control)
-                {
-                    ((Control)control).IsEnabled = enabled;
-                }
+                control.IsEnabled = enabled;
             }
         }
 
@@ -369,13 +642,13 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void AddTracksMenu(string trackButtonName, TrackType trackType, string availableStateName, string unavailableStateName,
+        private void AddTracksMenu(Button? trackButton, TrackType trackType, string availableStateName, string unavailableStateName,
             bool addNoneItem = false)
         {
-            if (GetTemplateChild(trackButtonName) is Button button)
+            if (trackButton != null)
             {
                 var menuFlyout = new MenuFlyout();
-                button.Flyout = menuFlyout;
+                trackButton.Flyout = menuFlyout;
                 var tracksMenu = new TracksMenu(trackType, availableStateName, unavailableStateName, addNoneItem);
                 TracksMenus.Add(menuFlyout, tracksMenu);
                 if (addNoneItem)
@@ -515,6 +788,7 @@ namespace LibVLCSharp.Uno
             if (mediaPlayer != null)
             {
                 mediaPlayer.ToggleMute();
+                UpdateMuteState();
             }
         }
 
@@ -747,7 +1021,7 @@ namespace LibVLCSharp.Uno
         private void UpdateState(VLCState? state = null)
         {
             string statusState;
-            string? playPauseState;
+            bool? playState;
             state ??= MediaPlayer?.State ?? VLCState.NothingSpecial;
             switch (state)
             {
@@ -759,7 +1033,7 @@ namespace LibVLCSharp.Uno
                         goto case VLCState.Stopped;
                     }
                     statusState = ErrorState;
-                    playPauseState = PlayState;
+                    playState = true;
                     if (ErrorTextBlock != null)
                     {
                         ErrorTextBlock.Text = error;
@@ -779,36 +1053,29 @@ namespace LibVLCSharp.Uno
                         return;
                     }
                     statusState = DisabledState;
-                    playPauseState = PlayState;
+                    playState = true;
                     break;
                 case VLCState.Buffering:
                     statusState = BufferingState;
-                    playPauseState = null;
+                    playState = null;
                     break;
                 default:
                     HasError = false;
                     statusState = NormalState;
-                    playPauseState = PauseState;
+                    playState = false;
                     break;
             }
 
             Show();
             VisualStateManager.GoToState(this, statusState, true);
-            if (playPauseState != null)
-            {
-                var playPauseToolTip = playPauseState == PlayState ? "Play" : "Pause";
-                SetToolTip(PlayPauseButton, playPauseToolTip);
-                SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
-                VisualStateManager.GoToState(this, playPauseState, true);
-            }
+            UpdatePlayPauseState(playState);
             UpdateStopButton();
             //UpdateKeepScreenOn();
         }
 
         private void UpdateSeekBarVisibility()
         {
-            UpdateControl(ProgressSlider, IsSeekBarVisible);
-            UpdateControl(TimeTextGrid, IsSeekBarVisible);
+            VisualStateManager.GoToState(this, IsSeekBarVisible ? SeekBarAvailableState : SeekBarUnavailableState, true);
             UpdateSeekAvailability();
         }
 
@@ -848,16 +1115,23 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void UpdateVolumeButton()
+        {
+            VisualStateManager.GoToState(this, IsVolumeButtonVisible ? VolumeAvailableState : VolumeUnavailableState, true);
+            UpdateControl(VolumeMuteButton, IsVolumeEnabled);
+        }
+
         private void UpdateStopButton()
         {
             var state = MediaPlayer?.State;
-            UpdateControl(StopButton, IsStopButtonVisible && MediaPlayer?.Media != null,
-                IsStopEnabled && state != null && state != VLCState.Ended && state != VLCState.Stopped);
+            VisualStateManager.GoToState(this, IsStopButtonVisible && MediaPlayer?.Media != null ? StopAvailableState : StopUnavailableState, true);
+            UpdateControl(StopButton, IsStopEnabled && state != null && state != VLCState.Ended && state != VLCState.Stopped);
         }
 
         private void UpdateZoomButton()
         {
-            UpdateControl(ZoomButton, IsZoomButtonVisible, IsZoomEnabled);
+            VisualStateManager.GoToState(this, IsZoomButtonVisible ? ZoomAvailableState : ZoomUnavailableState, true);
+            UpdateControl(ZoomButton, IsZoomEnabled);
         }
 
         private void StartTimer()
@@ -895,15 +1169,36 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void UpdatePlayPauseState(bool? playState)
+        {
+            if (playState is bool play)
+            {
+                var playPauseToolTip = play ? "Play" : "Pause";
+                SetToolTip(PlayPauseButton, playPauseToolTip);
+                SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
+                VisualStateManager.GoToState(this, play ? PlayState : PauseState, true);
+            }
+        }
+
         private void UpdatePlayPauseAvailability(bool? pausable = null)
         {
             var mediaPlayer = MediaPlayer;
             var state = mediaPlayer?.State;
+            var stopped = state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering;
             var playPauseButtonVisible = IsPlayPauseButtonVisible && mediaPlayer != null && mediaPlayer.Media != null &&
-                ((pausable ?? mediaPlayer?.CanPause) != false ||
-                state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering);
-            UpdateControl(PlayPauseButton, playPauseButtonVisible);
-            UpdateControl(PlayPauseButtonOnLeft, playPauseButtonVisible);
+                (stopped || (pausable ?? mediaPlayer?.CanPause) == true);
+            var playPauseAvailableState = playPauseButtonVisible ? PlayPauseAvailableState : PlayPauseUnavailableState;
+            if (IsCompact || playPauseButtonVisible)
+            {
+                VisualStateManager.GoToState(this, playPauseAvailableState, true);
+                OnIsCompactPropertyChanged();
+            }
+            else
+            {
+                OnIsCompactPropertyChanged();
+                VisualStateManager.GoToState(this, playPauseAvailableState, true);
+            }
+            UpdatePlayPauseState(stopped);
         }
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
@@ -916,6 +1211,11 @@ namespace LibVLCSharp.Uno
             {
                 Show(false);
             }
+        }
+
+        private void OnIsCompactPropertyChanged()
+        {
+            VisualStateManager.GoToState(this, IsCompact ? CompactModeState : NormalModeState, true);
         }
 
         private void OnPointerMoved(object sender, RoutedEventArgs e)

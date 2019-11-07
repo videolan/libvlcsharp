@@ -637,7 +637,7 @@ namespace LibVLCSharp.Forms.Shared
                 ResetRendererDiscovery();
             }
         }
-        
+
         /// <summary>
         /// Identifies the <see cref="IsRewindButtonVisible"/> dependency property.
         /// </summary>s
@@ -740,7 +740,7 @@ namespace LibVLCSharp.Forms.Shared
         {
             ClearRenderer();
 
-            if(EnableRendererDiscovery)
+            if (EnableRendererDiscovery)
                 FindRenderers();
         }
 
@@ -974,7 +974,7 @@ namespace LibVLCSharp.Forms.Shared
                     case AspectRatio.Fill:
                         var videoSwapped = mediaTrack.Value.Data.Video.Orientation == VideoOrientation.LeftBottom ||
                             mediaTrack.Value.Data.Video.Orientation == VideoOrientation.RightTop;
-                        if(nextAspectRatio == AspectRatio.FitScreen)
+                        if (nextAspectRatio == AspectRatio.FitScreen)
                         {
                             var videoW = mediaTrack.Value.Data.Video.Width;
                             var videoH = mediaTrack.Value.Data.Video.Height;
@@ -1023,7 +1023,7 @@ namespace LibVLCSharp.Forms.Shared
                 CurrentAspectRatio = nextAspectRatio;
                 AspectRatioLabel.Text = AspectRatioLabels[CurrentAspectRatio];
                 await AspectRatioLabel.FadeTo(1);
-                await  AspectRatioLabel.FadeTo(0, 2000);
+                await AspectRatioLabel.FadeTo(0, 2000);
             }
             catch (Exception ex)
             {
@@ -1488,7 +1488,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void ClearRenderer()
         {
-            if(RendererDiscoverer != null)
+            if (RendererDiscoverer != null)
             {
                 RendererDiscoverer.Stop();
                 RendererDiscoverer.ItemAdded -= RendererDiscoverer_ItemAdded;
