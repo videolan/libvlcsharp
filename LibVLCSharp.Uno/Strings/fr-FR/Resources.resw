@@ -132,6 +132,15 @@
   <data name="Play" xml:space="preserve">
     <value>Lecture</value>
   </data>
+  <data name="ShowAudioSelectionMenu" xml:space="preserve">
+    <value>Afficher le menu de sélection audio</value>
+  </data>
+  <data name="ShowClosedCaptionMenu" xml:space="preserve">
+    <value>Afficher le menu des sous-titres</value>
+  </data>
+  <data name="ShowVolumeMenu" xml:space="preserve">
+    <value>Afficher le menu Volume</value>
+  </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
