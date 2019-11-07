@@ -10,9 +10,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-       <vlc:MediaPlayerElement AreTransportControlsEnabled="True"
-                                LibVLC="{x:Bind ViewModel.LibVLC, Mode=OneWay}"
-                                MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}">
+       <vlc:MediaPlayerElement LibVLC="{x:Bind ViewModel.LibVLC, Mode=OneWay}" MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}">
             
             <interactivity:Interaction.Behaviors>
                 <interactions:EventTriggerBehavior EventName="Initialized">
@@ -20,9 +18,9 @@
                 </interactions:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             
-            <vlc:MediaPlayerElement.TransportControls>
-                <vlc:MediaTransportControls IsStopButtonVisible="True" />
-            </vlc:MediaPlayerElement.TransportControls>
+            <vlc:MediaPlayerElement.PlaybackControls>
+                <vlc:PlaybackControls IsStopButtonVisible="True" />
+            </vlc:MediaPlayerElement.PlaybackControls>
             
         </vlc:MediaPlayerElement>
     </Grid>

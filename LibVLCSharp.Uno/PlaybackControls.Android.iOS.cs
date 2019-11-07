@@ -6,7 +6,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Represents the playback controls for a media player element
     /// </summary>
-    public partial class MediaTransportControls : MediaTransportControlsBase
+    public partial class PlaybackControls : PlaybackControlsBase
     {
         /// <summary>
         /// Sets the value of the <see cref="ToolTipService.ToolTipProperty"/> for an object
