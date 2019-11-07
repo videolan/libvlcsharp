@@ -41,27 +41,16 @@ namespace LibVLCSharp.Uno
             return orientation == VideoOrientation.LeftBottom || orientation == VideoOrientation.RightTop;
         }
 
-        private Stretch GetStretch(Shared.MediaPlayer mediaPlayer)
+        /// <summary>
+        /// Gets current stretch
+        /// </summary>
+        /// <param name="mediaPlayer">media player instance</param>
+        /// <returns>the current stretch</returns>
+        public Stretch GetStretch(Shared.MediaPlayer mediaPlayer)
         {
             return mediaPlayer.AspectRatio == null ?
-                (mediaPlayer.Scale == 0 ? Stretch.None : (mediaPlayer.Scale == 1 ? Stretch.Uniform : Stretch.UniformToFill)) :
+                (mediaPlayer.Scale == 0 ? Stretch.Uniform : (mediaPlayer.Scale == 1 ? Stretch.None : Stretch.UniformToFill)) :
                 Stretch.Fill;
-        }
-
-        /// <summary>
-        /// Toggle zoom
-        /// </summary>
-        /// <param name="videoView">video view instance</param>
-        /// <param name="mediaPlayer">media player instance</param>
-        public void ToggleZoom(FrameworkElement? videoView, Shared.MediaPlayer? mediaPlayer)
-        {
-            if (mediaPlayer == null)
-            {
-                return;
-            }
-            var stretch = GetStretch(mediaPlayer);
-            UpdateAspectRatio(videoView, mediaPlayer,
-                stretch == Stretch.None || stretch == Stretch.Uniform ? Stretch.UniformToFill : Stretch.Uniform);
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -81,12 +82,13 @@ namespace LibVLCSharp.Uno
         }
         private bool IsVolumeFlyoutOpen { get; set; }
         private bool HasError { get; set; }
+        private MenuFlyout? ZoomMenu { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
 
         /// <summary>
         /// Gets the <see cref="ResourceLoader"/>
         /// </summary>
-        protected ResourceLoader? ResourceLoader => ResourceLoader.GetForCurrentView("LibVLCSharp.Uno/Resources");
+        protected ResourceLoader ResourceLoader => ResourceLoader.GetForCurrentView("LibVLCSharp.Uno/Resources");
 
         private FrameworkElement? LeftSeparator { get; set; }
         private FrameworkElement? RightSeparator { get; set; }
@@ -102,7 +104,7 @@ namespace LibVLCSharp.Uno
         private FrameworkElement? PlayPauseButtonOnLeft { get; set; }
         private Control? StopButton { get; set; }
         private FrameworkElement? CastButton { get; set; }
-        private Control? ZoomButton { get; set; }
+        private Button? ZoomButton { get; set; }
         private FrameworkElement? FullWindowButton { get; set; }
 
         /// <summary>
@@ -539,7 +541,7 @@ namespace LibVLCSharp.Uno
             PlayPauseButtonOnLeft = GetTemplateChild(nameof(PlayPauseButtonOnLeft)) as FrameworkElement;
             StopButton = GetTemplateChild(nameof(StopButton)) as Control;
             CastButton = GetTemplateChild(nameof(CastButton)) as FrameworkElement;
-            ZoomButton = GetTemplateChild(nameof(ZoomButton)) as Control;
+            ZoomButton = GetTemplateChild(nameof(ZoomButton)) as Button;
             FullWindowButton = GetTemplateChild(nameof(FullWindowButton)) as FrameworkElement;
             var audioMuteButton = GetTemplateChild("AudioMuteButton");
             VolumeSlider = GetTemplateChild(nameof(VolumeSlider)) as Slider;
@@ -556,11 +558,11 @@ namespace LibVLCSharp.Uno
             var ccSelectionButton = GetTemplateChild("CCSelectionButton") as Button;
             AddTracksMenu(audioTracksSelectionButton, TrackType.Audio, AudioSelectionAvailableState, AudioSelectionUnavailableState);
             AddTracksMenu(ccSelectionButton, TrackType.Text, CCSelectionAvailableState, CCSelectionUnavailableState, true);
+            AddAspectRatioMenu(ZoomButton);
 
             SetButtonClick(PlayPauseButton, PlayPauseButton_Click);
             SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
             SetButtonClick(StopButton, StopButton_Click);
-            SetButtonClick(ZoomButton, ZoomButton_Click);
             SetButtonClick(audioMuteButton, AudioMuteButton_Click);
 
             SetToolTip(StopButton, "Stop");
@@ -651,6 +653,44 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void AddAspectRatioMenu(Button? zoomButton)
+        {
+            if (zoomButton != null)
+            {
+                var menuFlyout = new MenuFlyout();
+                ZoomMenu = menuFlyout;
+                zoomButton.Flyout = menuFlyout;
+                var menuItems = menuFlyout.Items;
+                var mediaPlayer = MediaPlayer;
+                foreach (var aspectRatio in Enum.GetValues(typeof(Stretch)))
+                {
+                    var menuItem = new ToggleMenuFlyoutItem()
+                    {
+                        Text = ResourceLoader.GetString($"{nameof(Stretch)}{aspectRatio}"),
+                        Tag = aspectRatio
+                    };
+                    menuItem.Click += AspectRatioMenuItem_Click;
+                    menuItems.Add(menuItem);
+                }
+            }
+        }
+
+        private void AspectRatioMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            CheckMenuItem(ZoomMenu!, sender);
+            AspectRatioManager.UpdateAspectRatio(VideoView, MediaPlayer, (Stretch)((FrameworkElement)sender).Tag);
+        }
+
+        private void UpdateAspectRatio()
+        {
+            if (ZoomMenu != null)
+            {
+                var mediaPlayer = MediaPlayer;
+                var stretch = mediaPlayer == null ? Stretch.Uniform : AspectRatioManager.GetStretch(mediaPlayer);
+                CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(stretch)));
+            }
+        }
+
         private void AddTracksMenu(Button? trackButton, TrackType trackType, string availableStateName, string unavailableStateName,
             bool addNoneItem = false)
         {
@@ -669,7 +709,7 @@ namespace LibVLCSharp.Uno
 
         private void AddNoneItem(MenuFlyout menuflyout)
         {
-            AddTrack(menuflyout, null, ResourceLoader?.GetString("None"));
+            AddTrack(menuflyout, null, ResourceLoader.GetString("None"));
         }
 
         private void AddTrack(MenuFlyout menuflyout, int? trackId, string? trackName, bool subTitle = false)
@@ -784,11 +824,6 @@ namespace LibVLCSharp.Uno
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             MediaPlayer?.Stop();
-        }
-
-        private void ZoomButton_Click(object sender, RoutedEventArgs e)
-        {
-            AspectRatioManager.ToggleZoom(VideoView, MediaPlayer);
         }
 
         private void AudioMuteButton_Click(object sender, RoutedEventArgs e)
@@ -987,6 +1022,7 @@ namespace LibVLCSharp.Uno
             UpdateSeekAvailability();
             UpdateMuteState();
             UpdateVolume();
+            UpdateAspectRatio();
 
             ClearTracksMenus();
             var mediaPlayer = MediaPlayer;
