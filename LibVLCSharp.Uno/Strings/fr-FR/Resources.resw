@@ -144,4 +144,16 @@
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
+  <data name="StretchFill" xml:space="preserve">
+    <value>Étiré</value>
+  </data>
+  <data name="StretchNone" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="StretchUniform" xml:space="preserve">
+    <value>Adapté à l'écran</value>
+  </data>
+  <data name="StretchUniformToFill" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
 </root>
