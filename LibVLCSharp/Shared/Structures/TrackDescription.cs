@@ -25,14 +25,14 @@ namespace LibVLCSharp.Shared.Structures
         /// <summary>
         /// Track description
         /// </summary>
-        public string Name { get; }
+        public string? Name { get; }
 
         /// <summary>
         /// TrackDescription constructor
         /// </summary>
         /// <param name="id">Track description Id</param>
         /// <param name="name">Track description</param>
-        internal TrackDescription(int id, string name)
+        internal TrackDescription(int id, string? name)
         {
             Id = id;
             Name = name;

@@ -14,7 +14,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="s">AudioOutputDescriptionStructure from interop</param>
         /// <returns>public AudioOutputDescription to be consumed by the user</returns>
         internal static AudioOutputDescription Build(this AudioOutputDescriptionStructure s) => 
-            new AudioOutputDescription(s.Name.FromUtf8()!, s.Description.FromUtf8()!);
+            new AudioOutputDescription(s.Name.FromUtf8(), s.Description.FromUtf8());
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
@@ -22,7 +22,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="s">AudioOutputDeviceStructure from interop</param>
         /// <returns>public AudioOutputDevice to be consumed by the user</returns>
         internal static AudioOutputDevice Build(this AudioOutputDeviceStructure s) =>
-            new AudioOutputDevice(s.DeviceIdentifier.FromUtf8()!, s.Description.FromUtf8()!);
+            new AudioOutputDevice(s.DeviceIdentifier.FromUtf8(), s.Description.FromUtf8());
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
@@ -38,7 +38,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="s">TrackDescriptionStructure from interop</param>
         /// <returns>public TrackDescription to be consumed by the user</returns>
         internal static TrackDescription Build(this TrackDescriptionStructure s) =>
-            new TrackDescription(s.Id, s.Name.FromUtf8()!);
+            new TrackDescription(s.Id, s.Name.FromUtf8());
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
@@ -46,7 +46,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <param name="s">MediaSlaveStructure from interop</param>
         /// <returns>public MediaSlave to be consumed by the user</returns>
         internal static MediaSlave Build(this MediaSlaveStructure s) => 
-            new MediaSlave(s.Uri.FromUtf8()!, s.Type, s.Priority);
+            new MediaSlave(s.Uri.FromUtf8(), s.Type, s.Priority);
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
