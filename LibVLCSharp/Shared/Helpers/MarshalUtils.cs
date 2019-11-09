@@ -68,6 +68,7 @@ namespace LibVLCSharp.Shared.Helpers
 #if APPLE
             return AppleLogCallback(format, args);
 #else
+
             // special marshalling is needed on Linux desktop 64 bits.
             if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
             {

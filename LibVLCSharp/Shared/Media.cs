@@ -337,7 +337,7 @@ namespace LibVLCSharp.Shared
 
         string? _mrl;
         /// <summary>Get the media resource locator (mrl) from a media descriptor object</summary>
-        public string Mrl
+        public string? Mrl
         {
             get
             {
@@ -346,7 +346,7 @@ namespace LibVLCSharp.Shared
                     var mrlPtr = Native.LibVLCMediaGetMrl(NativeReference);
                     _mrl = mrlPtr.FromUtf8(libvlcFree: true);
                 }
-                return _mrl!;
+                return _mrl;
             }
         }
 
