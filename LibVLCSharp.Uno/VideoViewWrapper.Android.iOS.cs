@@ -1,5 +1,6 @@
 ﻿using System;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.MediaPlayerElement;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,7 +10,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Video view
     /// </summary>
-    public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoView
+    public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoControl
         where TUnderlyingVideoView : class, IVideoView, IDisposable
     {
         /// <summary>
@@ -114,6 +115,30 @@ namespace LibVLCSharp.Uno
                     underlyingVideoView.MediaPlayer = mediaPlayer;
                 }
             }
+        }
+
+        double IVideoControl.Width => Border!.ActualWidth;
+        double IVideoControl.Height => Border!.ActualHeight;
+
+        private EventHandler? _sizeChangedHandler;
+        event EventHandler IVideoControl.SizeChanged
+        {
+            add
+            {
+                _sizeChangedHandler += value;
+                SizeChanged += VideoView_SizeChanged;
+            }
+
+            remove
+            {
+                _sizeChangedHandler -= value;
+                SizeChanged -= VideoView_SizeChanged;
+            }
+        }
+
+        private void VideoView_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        {
+            _sizeChangedHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

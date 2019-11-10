@@ -120,6 +120,24 @@
   <data name="AspectRatio" xml:space="preserve">
     <value>Proportions</value>
   </data>
+  <data name="AspectRatioBestFit" xml:space="preserve">
+    <value>Adapté à l'écran</value>
+  </data>
+  <data name="AspectRatioFill" xml:space="preserve">
+    <value>Étiré</value>
+  </data>
+  <data name="AspectRatioFitScreen" xml:space="preserve">
+    <value>Plein écran</value>
+  </data>
+  <data name="AspectRatioOriginal" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="AspectRatio_16_9" xml:space="preserve">
+    <value>16/9</value>
+  </data>
+  <data name="AspectRatio_4_3" xml:space="preserve">
+    <value>4/3</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>Muet</value>
   </data>
@@ -143,17 +161,5 @@
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
-  </data>
-  <data name="StretchFill" xml:space="preserve">
-    <value>Étiré</value>
-  </data>
-  <data name="StretchNone" xml:space="preserve">
-    <value>Original</value>
-  </data>
-  <data name="StretchUniform" xml:space="preserve">
-    <value>Adapté à l'écran</value>
-  </data>
-  <data name="StretchUniformToFill" xml:space="preserve">
-    <value>Plein écran</value>
   </data>
 </root>

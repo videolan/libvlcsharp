@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FontAwesome;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.MediaPlayerElement;
 using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
 using Windows.System.Display;
@@ -11,7 +12,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -51,11 +51,11 @@ namespace LibVLCSharp.Uno
         public PlaybackControlsBase()
         {
             DefaultStyleKey = typeof(PlaybackControls);
-            AspectRatioManager = new AspectRatioManager();
+            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
             Timer.Tick += (sender, e) => Hide();
         }
 
-        private AspectRatioManager AspectRatioManager { get; }
+        private MediaPlayerElementManager Manager { get; }
         private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
 
         private DisplayRequest? _displayRequest;
@@ -111,7 +111,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="VideoView"/> dependency property
         /// </summary>
         public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(FrameworkElement),
-            typeof(PlaybackControlsBase), new PropertyMetadata(null));
+            typeof(PlaybackControlsBase), new PropertyMetadata(null,
+                (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (VideoView)args.NewValue));
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
@@ -573,6 +574,7 @@ namespace LibVLCSharp.Uno
             SetToolTip(ccSelectionButton, "ShowClosedCaptionMenu");
 
             UpdateZoomButton();
+            Manager.Initialize();
             Reset();
         }
 
@@ -662,11 +664,11 @@ namespace LibVLCSharp.Uno
                 zoomButton.Flyout = menuFlyout;
                 var menuItems = menuFlyout.Items;
                 var mediaPlayer = MediaPlayer;
-                foreach (var aspectRatio in Enum.GetValues(typeof(Stretch)))
+                foreach (var aspectRatio in Enum.GetValues(typeof(AspectRatio)))
                 {
                     var menuItem = new ToggleMenuFlyoutItem()
                     {
-                        Text = ResourceLoader.GetString($"{nameof(Stretch)}{aspectRatio}"),
+                        Text = ResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
                         Tag = aspectRatio
                     };
                     menuItem.Click += AspectRatioMenuItem_Click;
@@ -678,7 +680,7 @@ namespace LibVLCSharp.Uno
         private void AspectRatioMenuItem_Click(object sender, RoutedEventArgs e)
         {
             CheckMenuItem(ZoomMenu!, sender);
-            AspectRatioManager.UpdateAspectRatio(VideoView, MediaPlayer, (Stretch)((FrameworkElement)sender).Tag);
+            Manager.Get<AspectRatioManager>().UpdateAspectRatio((AspectRatio)((FrameworkElement)sender).Tag);
         }
 
         private void UpdateAspectRatio()
@@ -686,7 +688,7 @@ namespace LibVLCSharp.Uno
             if (ZoomMenu != null)
             {
                 var mediaPlayer = MediaPlayer;
-                var stretch = mediaPlayer == null ? Stretch.Uniform : AspectRatioManager.GetStretch(mediaPlayer);
+                var stretch = mediaPlayer == null ? AspectRatio.BestFit : Manager.Get<AspectRatioManager>().GetAspectRatio(mediaPlayer);
                 CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(stretch)));
             }
         }
@@ -838,6 +840,8 @@ namespace LibVLCSharp.Uno
 
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
         {
+            Manager.MediaPlayer = newValue;
+
             if (oldValue != null)
             {
                 oldValue.Buffering -= MediaPlayer_BufferingAsync;

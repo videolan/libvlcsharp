@@ -1,9 +1,8 @@
 ﻿using System;
 using LibVLCSharp.Shared;
-using Windows.UI.Core;
+using LibVLCSharp.Shared.MediaPlayerElement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -23,17 +22,18 @@ namespace LibVLCSharp.Uno
         public MediaPlayerElement()
         {
             DefaultStyleKey = typeof(MediaPlayerElement);
-            SizeChanged += (sender, args) => AspectRatioManager.UpdateAspectRatio(VideoView, MediaPlayer);
+            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
         }
 
-        private AspectRatioManager AspectRatioManager { get; } = new AspectRatioManager();
+        private MediaPlayerElementManager Manager { get; }
+
         private VideoView? VideoView { get; set; }
 
         /// <summary>
         /// Identifies the <see cref="LibVLC"/> dependency property
         /// </summary>
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
-            typeof(MediaPlayerElement), new PropertyMetadata(null));
+            typeof(MediaPlayerElement), new PropertyMetadata(null, (d, args) => ((MediaPlayerElement)d).OnLibVLCChanged()));
         /// <summary>
         /// Gets or sets the <see cref="Shared.LibVLC"/> instance
         /// </summary>
@@ -47,8 +47,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
-            typeof(MediaPlayerElement), new PropertyMetadata(null, (d, args) =>
-                ((MediaPlayerElement)d).OnMediaPlayerChanged((Shared.MediaPlayer)args.OldValue, (Shared.MediaPlayer)args.NewValue)));
+            typeof(MediaPlayerElement), new PropertyMetadata(null, (d, args) => ((MediaPlayerElement)d).OnMediaPlayerChanged()));
         /// <summary>
         /// Gets the <see cref="Shared.MediaPlayer"/> instance
         /// </summary>
@@ -75,20 +74,6 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="Stretch"/> dependency property.
-        /// </summary>
-        public static DependencyProperty StretchProperty { get; } = DependencyProperty.Register(nameof(Stretch), typeof(Stretch),
-            typeof(MediaPlayerElement), new PropertyMetadata(Stretch.Uniform, (d, args) => ((MediaPlayerElement)d).OnStretchChanged()));
-        /// <summary>
-        /// Gets or sets a value that describes how a <see cref="MediaPlayerElement"/> should be stretched to fill the destination rectangle
-        /// </summary>
-        public Stretch Stretch
-        {
-            get => (Stretch)GetValue(StretchProperty);
-            set => SetValue(StretchProperty, value);
-        }
-
-        /// <summary>
         /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call <see cref="Control.ApplyTemplate"/>.
         /// In simplest terms, this means the method is called just before a UI element displays in your app
         /// </summary>
@@ -97,14 +82,18 @@ namespace LibVLCSharp.Uno
             base.OnApplyTemplate();
             VideoView = (VideoView)GetTemplateChild("VideoView");
             VideoView.Initialized += (sender, e) => Initialized?.Invoke(this, e);
+            Manager.VideoView = VideoView;
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
+            {
+                playbackControls.VideoView = VideoView;
+            }
             if (GetTemplateChild("ContentPresenter") is UIElement contentGrid)
             {
                 contentGrid.PointerEntered += OnPointerMoved;
                 contentGrid.PointerMoved += OnPointerMoved;
                 contentGrid.Tapped += OnPointerMoved;
             }
-            OnStretchChanged();
-            OnMediaPlayerChanged();
         }
 
         private void OnPointerMoved(object sender, RoutedEventArgs e)
@@ -112,23 +101,36 @@ namespace LibVLCSharp.Uno
             PlaybackControls?.Show();
         }
 
-        private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
+        /// <summary>
+        /// Raises the <see cref="Initialized"/> event
+        /// </summary>
+        /// <param name="initializedEventArgs">event args</param>
+        protected virtual void OnInitialized(InitializedEventArgs initializedEventArgs)
         {
-            if (oldValue != null)
+            Initialized?.Invoke(this, initializedEventArgs);
+        }
+
+        private void OnLibVLCChanged()
+        {
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
             {
-                oldValue.ESSelected -= MediaPlayer_ESSelectedAsync;
+                playbackControls.LibVLC = LibVLC;
             }
-            if (newValue != null)
-            {
-                newValue.ESSelected += MediaPlayer_ESSelectedAsync;
-            }
-            OnMediaPlayerChanged();
         }
 
         private void OnMediaPlayerChanged()
         {
-            OnStretchChanged();
-            OnPlaybackControlsChanged();
+            var playbackControls = PlaybackControls;
+            if (playbackControls != null)
+            {
+                playbackControls.MediaPlayer = MediaPlayer;
+            }
+        }
+
+        private void PlayControls_Initialized(object sender, InitializedEventArgs initializedEventArgs)
+        {
+            OnInitialized(initializedEventArgs);
         }
 
         private void OnPlaybackControlsChanged(PlaybackControls? oldValue = null)
@@ -145,16 +147,6 @@ namespace LibVLCSharp.Uno
                 playbackControls.LibVLC = LibVLC;
                 playbackControls.MediaPlayer = MediaPlayer;
             }
-        }
-
-        private async void MediaPlayer_ESSelectedAsync(object sender, MediaPlayerESSelectedEventArgs e)
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, OnStretchChanged);
-        }
-
-        private void OnStretchChanged()
-        {
-            AspectRatioManager.UpdateAspectRatio(VideoView, MediaPlayer, Stretch);
         }
     }
 }
