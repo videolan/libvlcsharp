@@ -8,12 +8,12 @@ namespace LibVLCSharp.WPF
 {
     internal partial class ForegroundWindow : Window
     {
-        Window _wndhost;
+        Window? _wndhost;
         readonly FrameworkElement _bckgnd;
-        UIElement _content;
+        UIElement? _content;
         readonly Point _zeroPoint = new Point(0, 0);
 
-        internal new UIElement Content
+        internal new UIElement? Content
         {
             get => _content;
             set
@@ -46,9 +46,12 @@ namespace LibVLCSharp.WPF
 
         void Background_Unloaded(object sender, RoutedEventArgs e)
         {
-            _wndhost.Closing -= Wndhost_Closing;
             _bckgnd.SizeChanged -= Wndhost_SizeChanged;
-            _wndhost.LocationChanged -= Wndhost_LocationChanged;
+            if (_wndhost != null)
+            {
+                _wndhost.Closing -= Wndhost_Closing;
+                _wndhost.LocationChanged -= Wndhost_LocationChanged;
+            }
 
             Hide();
         }
@@ -57,6 +60,10 @@ namespace LibVLCSharp.WPF
         {
             _wndhost = GetWindow(_bckgnd);
             Trace.Assert(_wndhost != null);
+            if (_wndhost == null)
+            {
+                return;
+            }
 
             Owner = _wndhost;
 
@@ -84,7 +91,7 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        void Wndhost_LocationChanged(object sender, EventArgs e)
+        void Wndhost_LocationChanged(object? sender, EventArgs e)
         {
             var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
@@ -114,7 +121,7 @@ namespace LibVLCSharp.WPF
         {
             if (e.Key == Key.System && e.SystemKey == Key.F4)
             {
-                _wndhost.Focus();
+                _wndhost?.Focus();
             }
         }
     }

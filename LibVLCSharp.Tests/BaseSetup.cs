@@ -8,7 +8,9 @@ namespace LibVLCSharp.Tests
 {
     public abstract class BaseSetup
     {
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable. It is initialized in the SetUp, so before the tests take place.
         protected LibVLC _libVLC;
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         [SetUp]
         public void SetUp()

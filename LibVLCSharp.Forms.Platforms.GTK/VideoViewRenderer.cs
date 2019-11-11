@@ -12,7 +12,7 @@ namespace LibVLCSharp.Forms.Platforms.GTK
     /// </summary>
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.GTK.VideoView>
     {
-        LibVLCSharp.GTK.VideoView _videoView;
+        LibVLCSharp.GTK.VideoView? _videoView;
 
         /// <summary>
         /// Native control management during lifecycle events
@@ -36,7 +36,7 @@ namespace LibVLCSharp.Forms.Platforms.GTK
             if (e.NewElement != null)
             {
                 e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
                 {
                     OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
                 }
