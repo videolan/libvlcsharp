@@ -58,8 +58,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         private static readonly DependencyProperty PlaybackControlsProperty = DependencyProperty.Register(nameof(PlaybackControls),
             typeof(PlaybackControls), typeof(MediaPlayerElement),
-            new PropertyMetadata(new PlaybackControls(),
-                (d, args) => ((MediaPlayerElement)d).OnPlaybackControlsChanged((PlaybackControls)args.OldValue)));
+            new PropertyMetadata(null, (d, args) => ((MediaPlayerElement)d).OnPlaybackControlsChanged((PlaybackControls)args.OldValue)));
         /// <summary>
         /// Gets or sets the playback controls for the media
         /// </summary>
@@ -79,9 +78,9 @@ namespace LibVLCSharp.Uno
             VideoView = (VideoView)GetTemplateChild("VideoView");
             VideoView.Initialized += (sender, e) => Initialized?.Invoke(this, e);
             var playbackControls = PlaybackControls;
-            if (playbackControls != null)
+            if (playbackControls == null)
             {
-                playbackControls.VideoView = VideoView;
+                PlaybackControls = new PlaybackControls();
             }
             if (GetTemplateChild("ContentPresenter") is UIElement contentGrid)
             {

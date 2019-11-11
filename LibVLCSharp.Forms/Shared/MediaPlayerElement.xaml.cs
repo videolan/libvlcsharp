@@ -240,9 +240,9 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private async void GestureRecognizedAsync(object sender, EventArgs e)
+        private void GestureRecognized(object sender, EventArgs e)
         {
-            await PlaybackControls.FadeInAsync();
+            PlaybackControls.Show();
         }
     }
 }

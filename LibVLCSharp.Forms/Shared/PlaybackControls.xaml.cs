@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Resources;
-using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Forms.Shared.Resources;
 using LibVLCSharp.Shared;
@@ -60,8 +59,19 @@ namespace LibVLCSharp.Forms.Shared
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
 
             RendererItems.CollectionChanged += RendererItems_CollectionChanged;
-            FadeOutTimer = new Timer(obj => FadeOut());
             Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation());
+            var autoHideManager = Manager.Get<AutoHideManager>();
+            autoHideManager.Shown += async (sender, e) => await FadeInAsync();
+            autoHideManager.Hidden += async (sender, e) => await FadeOutAsync();
+            autoHideManager.Enabled = ShowAndHideAutomatically;
+        }
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~PlaybackControls()
+        {
+            Manager.Dispose();
         }
 
         private void RendererItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -88,8 +98,6 @@ namespace LibVLCSharp.Forms.Shared
         private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
         private ISystemUI SystemUI => DependencyService.Get<ISystemUI>();
 
-        private Timer FadeOutTimer { get; }
-        private bool FadeOutEnabled { get; set; } = true;
         private const int SEEK_OFFSET = 2000;
         private bool RemoteRendering { get; set; } = false;
         private const string Disconnect = "Disconnect";
@@ -494,7 +502,8 @@ namespace LibVLCSharp.Forms.Shared
         /// Identifies the <see cref="ShowAndHideAutomatically"/> dependency property.
         /// </summary>
         public static readonly BindableProperty ShowAndHideAutomaticallyProperty = BindableProperty.Create(nameof(ShowAndHideAutomatically),
-            typeof(bool), typeof(PlaybackControls), true);
+            typeof(bool), typeof(PlaybackControls), true,
+            propertyChanged: (bindable, oldValue, newValue) => ((PlaybackControls)bindable).OnShowAndHideAutomaticallyPropertyChanged());
         /// <summary>
         /// Gets or sets a value that indicates whether the controls are shown and hidden automatically.
         /// </summary>
@@ -830,10 +839,10 @@ namespace LibVLCSharp.Forms.Shared
                 var mediaPlayer = MediaPlayer;
                 if (mediaPlayer != null)
                 {
-                    FadeOutEnabled = false;
+                    Manager.Get<AutoHideManager>().Enabled = false;
                     try
                     {
-                        _ = FadeInAsync();
+                        Show();
 
                         if (!RemoteRendering && RendererItems.Count == 1)
                         {
@@ -866,11 +875,11 @@ namespace LibVLCSharp.Forms.Shared
                     }
                     finally
                     {
-                        FadeOutEnabled = true;
+                        Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
                     }
                 }
             }
-            _ = FadeInAsync();
+            Show();
         }
 
         private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
@@ -887,7 +896,7 @@ namespace LibVLCSharp.Forms.Shared
                 return;
             }
 
-            _ = FadeInAsync();
+            Show();
             string playPauseState;
             switch (mediaPlayer.State)
             {
@@ -974,7 +983,7 @@ namespace LibVLCSharp.Forms.Shared
         {
             if (fadeIn)
             {
-                _ = FadeInAsync();
+                Show();
             }
 
             try
@@ -1242,7 +1251,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
         {
-            _ = FadeInAsync();
+            Show();
 
             UpdateTime();
             UpdateMediaPlayerPosition();
@@ -1361,7 +1370,6 @@ namespace LibVLCSharp.Forms.Shared
 
             Device.BeginInvokeOnMainThread(() =>
             {
-                _ = FadeInAsync();
                 BufferingProgress = 0;
                 var playPauseButton = PlayPauseButton;
                 if (playPauseButton != null)
@@ -1370,26 +1378,6 @@ namespace LibVLCSharp.Forms.Shared
                 }
             });
             UpdateKeepScreenOn();
-        }
-
-        private void FadeOut()
-        {
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                if (await ControlsPanel.FadeTo(0, 1000) && ControlsPanel.Opacity == 0)
-                {
-                    ControlsPanel.IsVisible = false;
-                }
-            });
-
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var systemUI = SystemUI;
-                if (systemUI != null)
-                {
-                    systemUI.HideSystemUI();
-                }
-            });
         }
 
         private void ClearRenderer()
@@ -1434,35 +1422,60 @@ namespace LibVLCSharp.Forms.Shared
                 ResourceManager.GetString(nameof(Strings.OK))));
         }
 
+        private void OnShowAndHideAutomaticallyPropertyChanged()
+        {
+            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
+        }
+
         /// <summary>
-        /// Controls fade in.
+        /// Shows the tranport controls if they're hidden
         /// </summary>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task FadeInAsync()
+        public void Show()
+        {
+            Manager.Get<AutoHideManager>().Show();
+        }
+
+        /// <summary>
+        /// Hides the playback controls if they're shown
+        /// </summary>
+        public void Hide()
+        {
+            Manager.Get<AutoHideManager>().Hide();
+        }
+
+        private async Task FadeInAsync()
         {
             var controlsPanel = ControlsPanel;
-            if (controlsPanel == null)
+            if (controlsPanel != null)
             {
-                return;
-            }
-
-            FadeOutTimer.Change(TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
-            controlsPanel.IsVisible = true;
-            if (controlsPanel.Opacity != 1)
-            {
-                Device.BeginInvokeOnMainThread(() =>
+                controlsPanel.IsVisible = true;
+                if (controlsPanel.Opacity != 1)
                 {
                     var systemUI = SystemUI;
                     if (systemUI != null)
                     {
                         systemUI.ShowSystemUI();
                     }
-                });
-                await controlsPanel.FadeTo(1);
+                    await controlsPanel.FadeTo(1);
+                }
             }
-            if (FadeOutEnabled && ShowAndHideAutomatically && MediaPlayer?.State == VLCState.Playing)
+        }
+
+        private async Task FadeOutAsync()
+        {
+            var controlsPanel = ControlsPanel;
+            if (controlsPanel != null)
             {
-                FadeOutTimer.Change(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(-1));
+                if (await controlsPanel.FadeTo(0, 1000) && controlsPanel.Opacity == 0)
+                {
+                    controlsPanel.IsVisible = false;
+                }
+            }
+
+            var systemUI = SystemUI;
+            if (systemUI != null)
+            {
+                systemUI.HideSystemUI();
             }
         }
     }

@@ -122,9 +122,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             if (Dispatcher == null)
             {
                 action();
-                var tcs = new TaskCompletionSource<int>();
-                tcs.SetResult(0);
-                return tcs.Task;
+                return Task.CompletedTask;
             }
             else
             {

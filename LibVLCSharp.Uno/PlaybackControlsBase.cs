@@ -53,11 +53,21 @@ namespace LibVLCSharp.Uno
             DefaultStyleKey = typeof(PlaybackControls);
             Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
             Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
-            Timer.Tick += (sender, e) => Hide();
+            var autoHideManager = Manager.Get<AutoHideManager>();
+            autoHideManager.Shown += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
+            autoHideManager.Hidden += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeOutState, true);
+            autoHideManager.Enabled = ShowAndHideAutomatically;
+        }
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~PlaybackControlsBase()
+        {
+            Manager.Dispose();
         }
 
         private MediaPlayerElementManager Manager { get; }
-        private DispatcherTimer Timer { get; set; } = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
 
         private DisplayRequest? _displayRequest;
         private DisplayRequest DisplayRequest => _displayRequest ?? (_displayRequest = new DisplayRequest());
@@ -81,7 +91,6 @@ namespace LibVLCSharp.Uno
                 }
             }
         }
-        private bool IsVolumeFlyoutOpen { get; set; }
         private bool HasError { get; set; }
         private MenuFlyout? ZoomMenu { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
@@ -578,16 +587,14 @@ namespace LibVLCSharp.Uno
             Reset();
         }
 
-        private void VolumeFlyout_Closed(object sender, object e)
-        {
-            IsVolumeFlyoutOpen = false;
-            Show(true);
-        }
-
         private void VolumeFlyout_Opened(object sender, object e)
         {
-            IsVolumeFlyoutOpen = true;
-            Show(false);
+            Manager.Get<AutoHideManager>().Enabled = false;
+        }
+
+        private void VolumeFlyout_Closed(object sender, object e)
+        {
+            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
         }
 
         /// <summary>
@@ -1120,7 +1127,6 @@ namespace LibVLCSharp.Uno
                     break;
             }
 
-            Show();
             VisualStateManager.GoToState(this, statusState, true);
             UpdatePlayPauseState(playState);
             UpdateStopButton();
@@ -1187,20 +1193,12 @@ namespace LibVLCSharp.Uno
             UpdateControl(ZoomButton, IsZoomEnabled);
         }
 
-        private void StartTimer()
-        {
-            if (ShowAndHideAutomatically && !IsVolumeFlyoutOpen && MediaPlayer?.State == VLCState.Playing)
-            {
-                Timer.Start();
-            }
-        }
-
         /// <summary>
         /// Shows the tranport controls if they're hidden
         /// </summary>
         public void Show()
         {
-            Show(true);
+            Manager.Get<AutoHideManager>().Show();
         }
 
         /// <summary>
@@ -1208,18 +1206,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public void Hide()
         {
-            Timer.Stop();
-            VisualStateManager.GoToState(this, ControlPanelFadeOutState, true);
-        }
-
-        private void Show(bool startTimer)
-        {
-            Timer.Stop();
-            VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
-            if (startTimer)
-            {
-                StartTimer();
-            }
+            Manager.Get<AutoHideManager>().Hide();
         }
 
         private void UpdatePlayPauseState(bool? playState)
@@ -1257,14 +1244,7 @@ namespace LibVLCSharp.Uno
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
         {
-            if (ShowAndHideAutomatically)
-            {
-                StartTimer();
-            }
-            else
-            {
-                Show(false);
-            }
+            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
         }
 
         private void OnKeepDeviceAwakePropertyChanged()
@@ -1287,7 +1267,7 @@ namespace LibVLCSharp.Uno
 
         private void OnPointerMoved(object sender, RoutedEventArgs e)
         {
-            Show(false);
+            Show();
         }
 
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
