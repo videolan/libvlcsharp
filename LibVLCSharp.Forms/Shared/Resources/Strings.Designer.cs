@@ -19,7 +19,7 @@ namespace LibVLCSharp.Forms.Shared.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -57,6 +57,60 @@ namespace LibVLCSharp.Forms.Shared.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 16:9.
+        /// </summary>
+        internal static string AspectRatio_16_9 {
+            get {
+                return ResourceManager.GetString("AspectRatio_16_9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4:3.
+        /// </summary>
+        internal static string AspectRatio_4_3 {
+            get {
+                return ResourceManager.GetString("AspectRatio_4_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best fit.
+        /// </summary>
+        internal static string AspectRatioBestFit {
+            get {
+                return ResourceManager.GetString("AspectRatioBestFit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        internal static string AspectRatioFill {
+            get {
+                return ResourceManager.GetString("AspectRatioFill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fit screen.
+        /// </summary>
+        internal static string AspectRatioFitScreen {
+            get {
+                return ResourceManager.GetString("AspectRatioFitScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original.
+        /// </summary>
+        internal static string AspectRatioOriginal {
+            get {
+                return ResourceManager.GetString("AspectRatioOriginal", resourceCulture);
             }
         }
         

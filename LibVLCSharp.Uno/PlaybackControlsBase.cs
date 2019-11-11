@@ -52,6 +52,7 @@ namespace LibVLCSharp.Uno
         {
             DefaultStyleKey = typeof(PlaybackControls);
             Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
+            Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
             Timer.Tick += (sender, e) => Hide();
         }
 
@@ -110,15 +111,15 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Identifies the <see cref="VideoView"/> dependency property
         /// </summary>
-        public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(FrameworkElement),
+        public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(IVideoControl),
             typeof(PlaybackControlsBase), new PropertyMetadata(null,
-                (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (VideoView)args.NewValue));
+                (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (IVideoControl)args.NewValue));
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
-        public FrameworkElement? VideoView
+        public IVideoControl? VideoView
         {
-            get => (FrameworkElement)GetValue(VideoViewProperty);
+            get => (IVideoControl)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
         }
 
@@ -567,7 +568,6 @@ namespace LibVLCSharp.Uno
             SetButtonClick(audioMuteButton, AudioMuteButton_Click);
 
             SetToolTip(StopButton, "Stop");
-            SetToolTip(ZoomButton, "AspectRatio");
             SetToolTip(VolumeMuteButton, "ShowVolumeMenu");
             SetToolTip(audioMuteButton, "Mute");
             SetToolTip(audioTracksSelectionButton, "ShowAudioSelectionMenu");
@@ -655,21 +655,27 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        #region AspectRatio
+
         private void AddAspectRatioMenu(Button? zoomButton)
         {
             if (zoomButton != null)
             {
+                SetToolTip(ZoomButton, "AspectRatio");
+
                 var menuFlyout = new MenuFlyout();
                 ZoomMenu = menuFlyout;
                 zoomButton.Flyout = menuFlyout;
                 var menuItems = menuFlyout.Items;
                 var mediaPlayer = MediaPlayer;
-                foreach (var aspectRatio in Enum.GetValues(typeof(AspectRatio)))
+                var currentAspectRatio = Manager.Get<AspectRatioManager>().AspectRatio;
+                foreach (AspectRatio aspectRatio in Enum.GetValues(typeof(AspectRatio)))
                 {
                     var menuItem = new ToggleMenuFlyoutItem()
                     {
                         Text = ResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
-                        Tag = aspectRatio
+                        Tag = aspectRatio,
+                        IsChecked = aspectRatio == currentAspectRatio
                     };
                     menuItem.Click += AspectRatioMenuItem_Click;
                     menuItems.Add(menuItem);
@@ -680,18 +686,18 @@ namespace LibVLCSharp.Uno
         private void AspectRatioMenuItem_Click(object sender, RoutedEventArgs e)
         {
             CheckMenuItem(ZoomMenu!, sender);
-            Manager.Get<AspectRatioManager>().UpdateAspectRatio((AspectRatio)((FrameworkElement)sender).Tag);
+            Manager.Get<AspectRatioManager>().AspectRatio = (AspectRatio)((FrameworkElement)sender).Tag;
         }
 
-        private void UpdateAspectRatio()
+        private void AspectRatioChanged(object sender, EventArgs e)
         {
             if (ZoomMenu != null)
             {
-                var mediaPlayer = MediaPlayer;
-                var stretch = mediaPlayer == null ? AspectRatio.BestFit : Manager.Get<AspectRatioManager>().GetAspectRatio(mediaPlayer);
-                CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(stretch)));
+                CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(((AspectRatioManager)sender).AspectRatio)));
             }
         }
+
+        #endregion
 
         private void AddTracksMenu(Button? trackButton, TrackType trackType, string availableStateName, string unavailableStateName,
             bool addNoneItem = false)
@@ -1026,7 +1032,6 @@ namespace LibVLCSharp.Uno
             UpdateSeekAvailability();
             UpdateMuteState();
             UpdateVolume();
-            UpdateAspectRatio();
 
             ClearTracksMenus();
             var mediaPlayer = MediaPlayer;

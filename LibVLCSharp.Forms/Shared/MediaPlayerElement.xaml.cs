@@ -60,6 +60,9 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(PlaybackControlsProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="VideoView"/> dependency property
+        /// </summary>
         private static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
          typeof(MediaPlayerElement), propertyChanged: VideoViewPropertyChanged);
         /// <summary>
@@ -83,7 +86,7 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(EnableRendererDiscoveryProperty, value);
         }
 
-       
+
         private void OnVideoViewChanged(VideoView videoView)
         {
             if (videoView != null)
@@ -102,7 +105,7 @@ namespace LibVLCSharp.Forms.Shared
             var playbackControls = PlaybackControls;
             if (playbackControls != null)
             {
-                playbackControls.LibVLC = LibVLC;
+                playbackControls.LibVLC = libVLC;
             }
         }
 
@@ -207,7 +210,7 @@ namespace LibVLCSharp.Forms.Shared
                         applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position"] = mediaPlayer.Position;
                         applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying"] = mediaPlayer.State == VLCState.Playing;
                         mediaPlayer.Stop();
-                    }                 
+                    }
                     VideoView = null;
                 });
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnResume", m =>
@@ -220,7 +223,7 @@ namespace LibVLCSharp.Forms.Shared
                         if (applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", out var play) && play is true)
                         {
                             mediaPlayer.Play();
-                            mediaPlayer.Position = applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position) 
+                            mediaPlayer.Position = applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position)
                                 && position is float p ? p : 0;
                         }
                     }
@@ -237,7 +240,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private async void GestureRecognized(object sender, EventArgs e)
+        private async void GestureRecognizedAsync(object sender, EventArgs e)
         {
             await PlaybackControls.FadeInAsync();
         }

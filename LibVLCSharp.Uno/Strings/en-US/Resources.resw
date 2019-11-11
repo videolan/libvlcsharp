@@ -133,10 +133,10 @@
     <value>Original</value>
   </data>
   <data name="AspectRatio_16_9" xml:space="preserve">
-    <value>16/9</value>
+    <value>16:9</value>
   </data>
   <data name="AspectRatio_4_3" xml:space="preserve">
-    <value>4/3</value>
+    <value>4:3</value>
   </data>
   <data name="Mute" xml:space="preserve">
     <value>Mute</value>

@@ -6,11 +6,11 @@
         <ControlTemplate>
             <Grid>
                 <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="GestureRecognized" />
-                    <ClickGestureRecognizer Clicked="GestureRecognized" />
-                    <PanGestureRecognizer PanUpdated="GestureRecognized" />
-                    <PinchGestureRecognizer PinchUpdated="GestureRecognized" />
-                    <SwipeGestureRecognizer Swiped="GestureRecognized" />
+                    <TapGestureRecognizer Tapped="GestureRecognizedAsync" />
+                    <ClickGestureRecognizer Clicked="GestureRecognizedAsync" />
+                    <PanGestureRecognizer PanUpdated="GestureRecognizedAsync" />
+                    <PinchGestureRecognizer PinchUpdated="GestureRecognizedAsync" />
+                    <SwipeGestureRecognizer Swiped="GestureRecognizedAsync" />
                 </Grid.GestureRecognizers>
 
                 <Grid.RowDefinitions>
