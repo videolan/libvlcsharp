@@ -1,6 +1,7 @@
-﻿using LibVLCSharp.Shared;
-using System;
+﻿using System;
 using System.Diagnostics;
+using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.MediaPlayerElement;
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
@@ -8,7 +9,7 @@ namespace LibVLCSharp.Forms.Shared
     /// <summary>
     /// Generic Xamarin.Forms VideoView
     /// </summary>
-    public class VideoView : View
+    public class VideoView : View, IVideoControl
     {
         /// <summary>
         /// Raised when a new MediaPlayer is set and will be attached to the view

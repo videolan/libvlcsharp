@@ -1,6 +1,5 @@
 ﻿using System;
 using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -22,10 +21,7 @@ namespace LibVLCSharp.Uno
         public MediaPlayerElement()
         {
             DefaultStyleKey = typeof(MediaPlayerElement);
-            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
         }
-
-        private MediaPlayerElementManager Manager { get; }
 
         private VideoView? VideoView { get; set; }
 
@@ -82,7 +78,6 @@ namespace LibVLCSharp.Uno
             base.OnApplyTemplate();
             VideoView = (VideoView)GetTemplateChild("VideoView");
             VideoView.Initialized += (sender, e) => Initialized?.Invoke(this, e);
-            Manager.VideoView = VideoView;
             var playbackControls = PlaybackControls;
             if (playbackControls != null)
             {
@@ -126,11 +121,6 @@ namespace LibVLCSharp.Uno
             {
                 playbackControls.MediaPlayer = MediaPlayer;
             }
-        }
-
-        private void PlayControls_Initialized(object sender, InitializedEventArgs initializedEventArgs)
-        {
-            OnInitialized(initializedEventArgs);
         }
 
         private void OnPlaybackControlsChanged(PlaybackControls? oldValue = null)

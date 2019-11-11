@@ -10,6 +10,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     public class AspectRatioManager : MediaPlayerElementManagerBase
     {
         /// <summary>
+        /// Occurs when <see cref="AspectRatio"/> property value changed
+        /// </summary>
+        public event EventHandler? AspectRatioChanged;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="AspectRatioManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
@@ -20,6 +25,16 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         }
 
         private IDisplayInformation DisplayInformation { get; }
+
+        private AspectRatio _aspectRatio = AspectRatio.BestFit;
+        /// <summary>
+        /// Gets the aspect ratio
+        /// </summary>
+        public AspectRatio AspectRatio
+        {
+            get => _aspectRatio;
+            set { UpdateAspectRatio(value); }
+        }
 
         /// <summary>
         /// Called when <see cref="MediaPlayerElementManagerBase.VideoView"/> property value changes
@@ -98,12 +113,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return orientation == VideoOrientation.LeftBottom || orientation == VideoOrientation.RightTop;
         }
 
-        /// <summary>
-        /// Gets current stretch
-        /// </summary>
-        /// <param name="mediaPlayer">media player instance</param>
-        /// <returns>the current stretch</returns>
-        public AspectRatio GetAspectRatio(Shared.MediaPlayer mediaPlayer)
+        private AspectRatio GetAspectRatio(Shared.MediaPlayer mediaPlayer)
         {
             var aspectRatio = mediaPlayer.AspectRatio;
             return aspectRatio == null ?
@@ -111,11 +121,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                 (aspectRatio == "4:3" ? AspectRatio._4_3 : aspectRatio == "16:9" ? AspectRatio._16_9 : AspectRatio.Fill);
         }
 
-        /// <summary>
-        /// Updates aspect ratio
-        /// </summary>
-        /// <param name="aspectRatio">aspect ratio to apply</param>
-        public void UpdateAspectRatio(AspectRatio? aspectRatio = null)
+        private void UpdateAspectRatio(AspectRatio? aspectRatio = null)
         {
             var mediaPlayer = MediaPlayer;
             var videoView = VideoView;
@@ -127,10 +133,6 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             if (aspectRatio == null)
             {
                 aspectRatio = GetAspectRatio(mediaPlayer);
-                if (aspectRatio == AspectRatio.Original || aspectRatio == AspectRatio.BestFit)
-                {
-                    return;
-                }
             }
             switch (aspectRatio)
             {
@@ -186,6 +188,12 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                     mediaPlayer.AspectRatio = "4:3";
                     mediaPlayer.Scale = 0;
                     break;
+            }
+
+            if (_aspectRatio != aspectRatio)
+            {
+                _aspectRatio = (AspectRatio)aspectRatio;
+                AspectRatioChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }

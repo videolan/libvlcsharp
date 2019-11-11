@@ -61,6 +61,60 @@ namespace LibVLCSharp.Forms.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 16:9.
+        /// </summary>
+        internal static string AspectRatio_16_9 {
+            get {
+                return ResourceManager.GetString("AspectRatio_16_9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4:3.
+        /// </summary>
+        internal static string AspectRatio_4_3 {
+            get {
+                return ResourceManager.GetString("AspectRatio_4_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best fit.
+        /// </summary>
+        internal static string AspectRatioBestFit {
+            get {
+                return ResourceManager.GetString("AspectRatioBestFit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        internal static string AspectRatioFill {
+            get {
+                return ResourceManager.GetString("AspectRatioFill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fit screen.
+        /// </summary>
+        internal static string AspectRatioFitScreen {
+            get {
+                return ResourceManager.GetString("AspectRatioFitScreen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original.
+        /// </summary>
+        internal static string AspectRatioOriginal {
+            get {
+                return ResourceManager.GetString("AspectRatioOriginal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Audio tracks.
         /// </summary>
         internal static string AudioTracks {

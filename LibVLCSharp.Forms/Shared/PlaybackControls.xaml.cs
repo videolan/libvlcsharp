@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp.Forms.Shared.Resources;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.MediaPlayerElement;
 using LibVLCSharp.Shared.Structures;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -61,12 +62,17 @@ namespace LibVLCSharp.Forms.Shared
 
             RendererItems.CollectionChanged += RendererItems_CollectionChanged;
             FadeOutTimer = new Timer(obj => FadeOut());
+            Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation());
         }
 
         private void RendererItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             UpdateCastAvailability();
         }
+
+        private MediaPlayerElementManager Manager { get; }
+        private ObservableCollection<RendererItem> RendererItems { get; } = new ObservableCollection<RendererItem>();
+        private RendererDiscoverer RendererDiscoverer { get; set; }
 
         private Button AudioTracksSelectionButton { get; set; }
         private Button CastButton { get; set; }
@@ -82,7 +88,6 @@ namespace LibVLCSharp.Forms.Shared
         private bool Initialized { get; set; }
         private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
         private ISystemUI SystemUI => DependencyService.Get<ISystemUI>();
-        private AspectRatio CurrentAspectRatio = AspectRatio.Original;
 
         private Timer FadeOutTimer { get; }
         private bool FadeOutEnabled { get; set; } = true;
@@ -90,16 +95,6 @@ namespace LibVLCSharp.Forms.Shared
         private bool RemoteRendering { get; set; } = false;
         private const string Disconnect = "Disconnect";
         private const string Cancel = "Cancel";
-
-        private readonly Dictionary<AspectRatio, string> AspectRatioLabels = new Dictionary<AspectRatio, string>
-        {
-            { AspectRatio.Original, "Original" },
-            { AspectRatio.FitScreen, "Fit Screen" },
-            { AspectRatio.BestFit, "Best Fit" },
-            { AspectRatio.Fill, "Fill" },
-            { AspectRatio._16_9, "16:9" },
-            { AspectRatio._4_3, "4:3" }
-        };
 
         /// <summary>
         /// Identifies the <see cref="IconFontFamily"/> dependency property.
@@ -328,16 +323,17 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Identifies the <see cref="VideoView"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
-            typeof(PlaybackControls), propertyChanged: null);
+        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(IVideoControl),
+            typeof(PlaybackControls),
+            propertyChanged: (bindable, oldValue, newValue) => ((PlaybackControls)bindable).Manager.VideoView = (IVideoControl)newValue);
 
         /// <summary>
         /// Gets or sets the associated <see cref="VideoView"/>.
         /// </summary>
         /// <remarks>It is only useful to set this property for the aspect ratio feature.</remarks>
-        public VideoView VideoView
+        public IVideoControl VideoView
         {
-            get => (VideoView)GetValue(VideoViewProperty);
+            get => (IVideoControl)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
         }
 
@@ -691,19 +687,20 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Initialized = true;
                 OnApplyTemplate();
+                Manager.Initialize();
                 Reset();
             }
         }
 
         private void OnApplyTemplate()
         {
-            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_Clicked, true);
-            CastButton = SetClickEventHandler(nameof(CastButton), CastButton_Clicked);
-            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_Clicked,
+            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_ClickedAsync, true);
+            CastButton = SetClickEventHandler(nameof(CastButton), CastButton_ClickedAsync);
+            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_ClickedAsync,
                 true);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
             SetClickEventHandler("StopButton", StopButton_Clicked, true);
-            SetClickEventHandler("AspectRatioButton", AspectRatioButton_Clicked, true);
+            SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync, true);
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -834,13 +831,13 @@ namespace LibVLCSharp.Forms.Shared
             UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
-        private async void AudioTracksSelectionButton_Clicked(object sender, EventArgs e)
+        private async void AudioTracksSelectionButton_ClickedAsync(object sender, EventArgs e)
         {
             await SelectTrackAsync(TrackType.Audio, ResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
                 (m, id) => m.SetAudioTrack(id));
         }
 
-        private async void CastButton_Clicked(object sender, EventArgs e)
+        private async void CastButton_ClickedAsync(object sender, EventArgs e)
         {
             var libVLC = LibVLC;
             if (libVLC != null)
@@ -891,7 +888,7 @@ namespace LibVLCSharp.Forms.Shared
             _ = FadeInAsync();
         }
 
-        private async void ClosedCaptionsSelectionButton_Clicked(object sender, EventArgs e)
+        private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
         {
             await SelectTrackAsync(TrackType.Text, ResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
                 true);
@@ -938,105 +935,15 @@ namespace LibVLCSharp.Forms.Shared
             MediaPlayer?.Stop();
         }
 
-        private async void AspectRatioButton_Clicked(object sender, EventArgs e)
+        private async void AspectRatioButton_ClickedAsync(object sender, EventArgs e)
         {
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer == null)
-            {
-                return;
-            }
-
             try
             {
-                var videoView = VideoView;
-                if (videoView == null)
-                {
-                    throw new NullReferenceException($"The {nameof(VideoView)} property must be set in order to use the aspect ratio feature.");
-                }
+                var aspectRatioManager = Manager.Get<AspectRatioManager>();
+                aspectRatioManager.AspectRatio = aspectRatioManager.AspectRatio == AspectRatio.Original ? AspectRatio.BestFit :
+                    aspectRatioManager.AspectRatio + 1;
 
-                MediaTrack? mediaTrack;
-                try
-                {
-                    mediaTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(x => x.TrackType == TrackType.Video);
-                }
-                catch (Exception)
-                {
-                    mediaTrack = null;
-                }
-                if (mediaTrack == null || !mediaTrack.HasValue)
-                {
-                    return;
-                }
-
-                AspectRatio nextAspectRatio;
-
-                if (CurrentAspectRatio == AspectRatio.Original)
-                    nextAspectRatio = AspectRatio.BestFit;
-                else
-                    nextAspectRatio = ++CurrentAspectRatio;
-
-                var scalingFactor = Device.Info.ScalingFactor;
-                var displayW = videoView.Width * scalingFactor;
-                var displayH = videoView.Height * scalingFactor;
-
-                switch (nextAspectRatio)
-                {
-                    case AspectRatio.BestFit:
-                        mediaPlayer.AspectRatio = string.Empty;
-                        mediaPlayer.Scale = 0;
-                        break;
-                    case AspectRatio.FitScreen:
-                    case AspectRatio.Fill:
-                        var videoSwapped = mediaTrack.Value.Data.Video.Orientation == VideoOrientation.LeftBottom ||
-                            mediaTrack.Value.Data.Video.Orientation == VideoOrientation.RightTop;
-                        if (nextAspectRatio == AspectRatio.FitScreen)
-                        {
-                            var videoW = mediaTrack.Value.Data.Video.Width;
-                            var videoH = mediaTrack.Value.Data.Video.Height;
-
-                            if (videoSwapped)
-                            {
-                                var swap = videoW;
-                                videoW = videoH;
-                                videoH = swap;
-                            }
-                            if (mediaTrack.Value.Data.Video.SarNum != mediaTrack.Value.Data.Video.SarDen)
-                                videoW = videoW * mediaTrack.Value.Data.Video.SarNum / mediaTrack.Value.Data.Video.SarDen;
-
-                            var ar = videoW / (float)videoH;
-                            var dar = displayW / (float)displayH;
-
-                            float scale;
-                            if (dar >= ar)
-                                scale = (float)displayW / videoW; /* horizontal */
-                            else
-                                scale = (float)displayH / videoH; /* vertical */
-
-                            mediaPlayer.Scale = scale;
-                            mediaPlayer.AspectRatio = string.Empty;
-                        }
-                        else
-                        {
-                            mediaPlayer.Scale = 0;
-                            mediaPlayer.AspectRatio = videoSwapped ? $"{displayH}:{displayW}" : $"{displayW}:{displayH}";
-                        }
-                        break;
-                    case AspectRatio._16_9:
-                        mediaPlayer.AspectRatio = "16:9";
-                        mediaPlayer.Scale = 0;
-                        break;
-                    case AspectRatio._4_3:
-                        mediaPlayer.AspectRatio = "4:3";
-                        mediaPlayer.Scale = 0;
-                        break;
-                    case AspectRatio.Original:
-                        mediaPlayer.AspectRatio = string.Empty;
-                        mediaPlayer.Scale = 1;
-                        break;
-                }
-
-                CurrentAspectRatio = nextAspectRatio;
-                AspectRatioLabel.Text = AspectRatioLabels[CurrentAspectRatio];
+                AspectRatioLabel.Text = Strings.ResourceManager.GetString($"{nameof(AspectRatio)}{aspectRatioManager.AspectRatio}");
                 await AspectRatioLabel.FadeTo(1);
                 await AspectRatioLabel.FadeTo(0, 2000);
             }
@@ -1097,6 +1004,8 @@ namespace LibVLCSharp.Forms.Shared
 
         private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer oldMediaPlayer, LibVLCSharp.Shared.MediaPlayer newMediaPlayer)
         {
+            Manager.MediaPlayer = newMediaPlayer;
+
             if (oldMediaPlayer != null)
             {
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
@@ -1498,9 +1407,6 @@ namespace LibVLCSharp.Forms.Shared
             });
         }
 
-        ObservableCollection<RendererItem> RendererItems = new ObservableCollection<RendererItem>();
-        RendererDiscoverer RendererDiscoverer;
-
         private void ClearRenderer()
         {
             if (RendererDiscoverer != null)
@@ -1524,6 +1430,7 @@ namespace LibVLCSharp.Forms.Shared
             var rendererDiscoverer = new RendererDiscoverer(LibVLC);
             rendererDiscoverer.ItemAdded += RendererDiscoverer_ItemAdded;
             rendererDiscoverer.ItemDeleted += RendererDiscoverer_ItemDeleted;
+            RendererDiscoverer = rendererDiscoverer;
             rendererDiscoverer.Start();
         }
 
@@ -1573,15 +1480,5 @@ namespace LibVLCSharp.Forms.Shared
                 FadeOutTimer.Change(TimeSpan.FromSeconds(3), TimeSpan.FromMilliseconds(-1));
             }
         }
-    }
-
-    internal enum AspectRatio
-    {
-        BestFit,
-        FitScreen,
-        Fill,
-        _16_9,
-        _4_3,
-        Original
     }
 }
