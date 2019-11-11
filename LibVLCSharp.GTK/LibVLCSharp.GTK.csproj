@@ -15,6 +15,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.GTK</RootNamespace>
     <Version>3.3.1</Version>
+    <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
     <PackageId>LibVLCSharp.GTK</PackageId>
     <Authors>VideoLAN</Authors>

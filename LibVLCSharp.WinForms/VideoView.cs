@@ -18,12 +18,12 @@ namespace LibVLCSharp.WinForms
             BackColor = System.Drawing.Color.Black;
         }
 
-        MediaPlayer _mp;
+        MediaPlayer? _mp;
 
         /// <summary>
         /// The MediaPlayer attached to this view (or null)
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
             get => _mp;
             set

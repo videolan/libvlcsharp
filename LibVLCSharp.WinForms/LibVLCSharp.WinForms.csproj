@@ -16,6 +16,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
     <Version>3.3.1</Version>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <PackageId>LibVLCSharp.WinForms</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>

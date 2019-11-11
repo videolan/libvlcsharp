@@ -37,7 +37,7 @@ namespace LibVLCSharp.WPF
         /// <summary>
         /// MediaPlayer property for this VideoView
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
             get { return GetValue(MediaPlayerProperty) as MediaPlayer; }
             set { SetValue(MediaPlayerProperty, value); }
@@ -56,9 +56,9 @@ namespace LibVLCSharp.WPF
         }
 
         private bool IsDesignMode => (bool)DesignerProperties.IsInDesignModeProperty.GetMetadata(typeof(DependencyObject)).DefaultValue;
-        private ForegroundWindow ForegroundWindow { get; set; }
+        private ForegroundWindow? ForegroundWindow { get; set; }
         private bool IsUpdatingContent { get; set; }
-        private UIElement ViewContent { get; set; }
+        private UIElement? ViewContent { get; set; }
         private IntPtr Hwnd { get; set; }
 
         /// <summary>

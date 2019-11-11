@@ -42,7 +42,7 @@ namespace LibVLCSharp.GTK
             internal static extern IntPtr gdk_quartz_window_get_nsview(IntPtr gdkWindow);
         }
 
-        private MediaPlayer _mediaPlayer;
+        private MediaPlayer? _mediaPlayer;
 
         /// <summary>
         /// GTK VideoView constructor
@@ -59,7 +59,7 @@ namespace LibVLCSharp.GTK
         /// <summary>
         /// The MediaPlayer property for that GTK VideoView
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
             get
             {
@@ -87,15 +87,15 @@ namespace LibVLCSharp.GTK
 
             if (PlatformHelper.IsWindows)
             {
-                MediaPlayer.Hwnd = Native.gdk_win32_drawable_get_handle(GdkWindow.Handle);
+                _mediaPlayer.Hwnd = Native.gdk_win32_drawable_get_handle(GdkWindow.Handle);
             }
             else if (PlatformHelper.IsLinux)
             {
-                MediaPlayer.XWindow = Native.gdk_x11_drawable_get_xid(GdkWindow.Handle);
+                _mediaPlayer.XWindow = Native.gdk_x11_drawable_get_xid(GdkWindow.Handle);
             }
             else if (PlatformHelper.IsMac)
             {
-                MediaPlayer.NsObject = Native.gdk_quartz_window_get_nsview(GdkWindow.Handle);
+                _mediaPlayer.NsObject = Native.gdk_quartz_window_get_nsview(GdkWindow.Handle);
             }
             else
             {
@@ -112,15 +112,15 @@ namespace LibVLCSharp.GTK
 
             if (PlatformHelper.IsWindows)
             {
-                MediaPlayer.Hwnd = IntPtr.Zero;
+                _mediaPlayer.Hwnd = IntPtr.Zero;
             }
             else if (PlatformHelper.IsLinux)
             {
-                MediaPlayer.XWindow = 0;
+                _mediaPlayer.XWindow = 0;
             }
             else if (PlatformHelper.IsMac)
             {
-                MediaPlayer.NsObject = IntPtr.Zero;
+                _mediaPlayer.NsObject = IntPtr.Zero;
             }
             else
             {

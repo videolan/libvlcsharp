@@ -32,7 +32,7 @@ namespace LibVLCSharp.Forms.Platforms.WPF
             if (e.NewElement != null)
             {
                 e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
                 {
                     OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
                 }
