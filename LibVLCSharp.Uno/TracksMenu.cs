@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Shared.MediaPlayerElement;
 
 namespace LibVLCSharp.Uno
 {
@@ -10,22 +10,22 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Initializes a new instance of <see cref="TracksMenu"/> class
         /// </summary>
-        /// <param name="trackType">track type</param>
+        /// <param name="manager">tracks manager</param>
         /// <param name="availableStateName">available state name</param>
         /// <param name="unavailableStateName">unavailable state name</param>
         /// <param name="hasNoneItem">value indicating whether the menu has a 'None' entry</param>
-        public TracksMenu(TrackType trackType, string availableStateName, string unavailableStateName, bool hasNoneItem)
+        public TracksMenu(TracksManager manager, string availableStateName, string unavailableStateName, bool hasNoneItem)
         {
-            TrackType = trackType;
+            Manager = manager;
             AvailableStateName = availableStateName;
             UnavailableStateName = unavailableStateName;
             HasNoneItem = hasNoneItem;
         }
 
         /// <summary>
-        /// Gets the track type
+        /// Gets the tracks manager
         /// </summary>
-        public TrackType TrackType { get; }
+        public TracksManager Manager { get; }
 
         /// <summary>
         /// Gets the available state name

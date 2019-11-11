@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using LibVLCSharp.Forms.Shared.Resources;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.MediaPlayerElement;
-using LibVLCSharp.Shared.Structures;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -65,6 +64,12 @@ namespace LibVLCSharp.Forms.Shared
             autoHideManager.Shown += async (sender, e) => await FadeInAsync();
             autoHideManager.Hidden += async (sender, e) => await FadeOutAsync();
             autoHideManager.Enabled = ShowAndHideAutomatically;
+            var audioTrackManager = Manager.Get<AudioTracksManager>();
+            audioTrackManager.TrackAdded += OnTracksChanged;
+            audioTrackManager.TrackDeleted += OnTracksChanged;
+            var subTitlesTrackManager = Manager.Get<SubtitlesTracksManager>();
+            subTitlesTrackManager.TrackAdded += OnTracksChanged;
+            subTitlesTrackManager.TrackDeleted += OnTracksChanged;
         }
 
         /// <summary>
@@ -833,7 +838,7 @@ namespace LibVLCSharp.Forms.Shared
             UpdateState(VLCState.Stopped);
         }
 
-        private void MediaPlayer_TracksChanged(object sender, EventArgs e)
+        private void OnTracksChanged(object sender, EventArgs e)
         {
             UpdateAudioTracksSelectionAvailability();
             UpdateClosedCaptionsTracksSelectionAvailability();
@@ -841,8 +846,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private async void AudioTracksSelectionButton_ClickedAsync(object sender, EventArgs e)
         {
-            await SelectTrackAsync(TrackType.Audio, ResourceManager.GetString(nameof(Strings.AudioTracks)), m => m.AudioTrack,
-                (m, id) => m.SetAudioTrack(id));
+            await SelectTrackAsync(Manager.Get<AudioTracksManager>(), ResourceManager.GetString(nameof(Strings.AudioTracks)));
         }
 
         private async void CastButton_ClickedAsync(object sender, EventArgs e)
@@ -898,8 +902,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
         {
-            await SelectTrackAsync(TrackType.Text, ResourceManager.GetString(nameof(Strings.ClosedCaptions)), m => m.Spu, (m, id) => m.SetSpu(id),
-                true);
+            await SelectTrackAsync(Manager.Get<SubtitlesTracksManager>(), ResourceManager.GetString(nameof(Strings.ClosedCaptions)), true);
         }
 
         private void PlayPauseButton_Clicked(object sender, EventArgs e)
@@ -1019,8 +1022,6 @@ namespace LibVLCSharp.Forms.Shared
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
                 oldMediaPlayer.EncounteredError -= MediaPlayer_EncounteredError;
                 oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
-                oldMediaPlayer.ESAdded -= MediaPlayer_TracksChanged;
-                oldMediaPlayer.ESDeleted -= MediaPlayer_TracksChanged;
                 oldMediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
                 oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
                 oldMediaPlayer.NothingSpecial -= MediaPlayer_NothingSpecial;
@@ -1036,8 +1037,6 @@ namespace LibVLCSharp.Forms.Shared
             {
                 newMediaPlayer.Buffering += MediaPlayer_Buffering;
                 newMediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
-                newMediaPlayer.ESAdded += MediaPlayer_TracksChanged;
-                newMediaPlayer.ESDeleted += MediaPlayer_TracksChanged;
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
                 newMediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
                 newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
@@ -1053,72 +1052,52 @@ namespace LibVLCSharp.Forms.Shared
             Reset();
         }
 
-        private IEnumerable<MediaTrack> GetMediaTracks(LibVLCSharp.Shared.MediaPlayer mediaPlayer, TrackType trackType)
-        {
-            try
-            {
-                return mediaPlayer?.Media?.Tracks.Where(t => t.TrackType == trackType);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         private string GetTrackName(string trackName, int trackId, int currentTrackId)
         {
             return trackId == currentTrackId ? $"{trackName} *" : trackName;
         }
 
-        private string GetTrackName(MediaTrack mediaTrack, int currentTrackId, int index)
+        private async Task SelectTrackAsync(TracksManager manager, string popupTitle, bool addDeactivateRow = false)
         {
-            var trackName = mediaTrack.Description ?? mediaTrack.Language ?? string.Format(ResourceManager.GetString(nameof(Strings.Track)), index);
-            return GetTrackName(trackName, mediaTrack.Id, currentTrackId);
-        }
-
-        private async Task SelectTrackAsync(TrackType trackType, string popupTitle, Func<LibVLCSharp.Shared.MediaPlayer, int> getCurrentTrackId,
-            Action<LibVLCSharp.Shared.MediaPlayer, int> setCurrentTrackId, bool addDeactivateRow = false)
-        {
-            var mediaPlayer = MediaPlayer;
-            var mediaTracks = GetMediaTracks(mediaPlayer, trackType);
-            if (mediaTracks == null)
+            var tracks = manager.Tracks;
+            if (tracks == null)
             {
                 return;
             }
 
             try
             {
-                var currentTrackId = getCurrentTrackId(mediaPlayer);
+                var currentTrackId = manager.CurrentTrackId;
                 var index = 0;
-                IEnumerable<string> mediaTracksNames = mediaTracks.Select(t =>
-                    {
-                        index += 1;
-                        return GetTrackName(t, currentTrackId, index);
-                    }).OrderBy(n => n);
+                IEnumerable<string> tracksNames = tracks.Select(t =>
+                {
+                    index += 1;
+                    return GetTrackName(t.Name, currentTrackId, index);
+                }).OrderBy(n => n);
                 if (addDeactivateRow)
                 {
-                    mediaTracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
-                    .Union(mediaTracksNames);
+                    tracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
+                        .Union(tracksNames);
                 }
 
-                var mediaTrack = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
-                if (mediaTrack != null)
+                var trackName = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
+                if (trackName != null)
                 {
                     var found = false;
                     index = 0;
-                    foreach (var mt in mediaTracks)
+                    foreach (var trackDescription in tracks)
                     {
                         index += 1;
-                        if (GetTrackName(mt, currentTrackId, index) == mediaTrack)
+                        if (GetTrackName(trackDescription.Name, currentTrackId, index) == trackName)
                         {
                             found = true;
-                            setCurrentTrackId(mediaPlayer, mt.Id);
+                            manager.CurrentTrackId = trackDescription.Id;
                             break;
                         }
                     }
                     if (!found)
                     {
-                        setCurrentTrackId(mediaPlayer, -1);
+                        manager.CurrentTrackId = -1;
                     }
                 }
             }
@@ -1136,28 +1115,26 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateTracksSelectionAvailability(LibVLCSharp.Shared.MediaPlayer mediaPlayer, Button tracksSelectionButton,
-            bool isTracksSelectionButtonVisible, Func<LibVLCSharp.Shared.MediaPlayer, IEnumerable<TrackDescription>> getTrackDescriptions,
-            string availableState, string unavailableState, int count)
+        private void UpdateTracksSelectionAvailability(TracksManager tracksManager, Button tracksSelectionButton,
+            bool isTracksSelectionButtonVisible, string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
             {
                 UpdateTracksSelectionButtonAvailability(tracksSelectionButton, isTracksSelectionButtonVisible &&
-                    mediaPlayer != null && getTrackDescriptions(mediaPlayer).Where(t => t.Id != -1).Count() >= count ?
-                    availableState : unavailableState);
+                    tracksManager.Tracks?.Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
             }
         }
 
         private void UpdateAudioTracksSelectionAvailability()
         {
-            UpdateTracksSelectionAvailability(MediaPlayer, AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
-                m => m.AudioTrackDescription, AudioSelectionAvailableState, AudioSelectionUnavailableState, 2);
+            UpdateTracksSelectionAvailability(Manager.Get<AudioTracksManager>(), AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
+                AudioSelectionAvailableState, AudioSelectionUnavailableState, 2);
         }
 
         private void UpdateClosedCaptionsTracksSelectionAvailability()
         {
-            UpdateTracksSelectionAvailability(MediaPlayer, ClosedCaptionsSelectionButton, IsClosedCaptionsSelectionButtonVisible,
-                m => m.SpuDescription, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
+            UpdateTracksSelectionAvailability(Manager.Get<SubtitlesTracksManager>(), ClosedCaptionsSelectionButton,
+                IsClosedCaptionsSelectionButtonVisible, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
         private void ShowError(string errorMessage)
