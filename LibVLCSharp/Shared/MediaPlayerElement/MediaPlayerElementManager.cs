@@ -17,7 +17,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public MediaPlayerElementManager(IDispatcher dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
         {
             SubManagers = new MediaPlayerElementManagerBase[] {
-               new AspectRatioManager(dispatcher, displayInformation)
+               new AspectRatioManager(dispatcher, displayInformation),
+               new AutoHideManager(dispatcher)
              };
         }
 
