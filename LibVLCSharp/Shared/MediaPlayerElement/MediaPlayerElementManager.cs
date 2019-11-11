@@ -14,11 +14,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayInformation">display information</param>
-        public MediaPlayerElementManager(IDispatcher dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
+        /// <param name="displayRequest">display request object</param>
+        public MediaPlayerElementManager(IDispatcher dispatcher, IDisplayInformation displayInformation, IDisplayRequest displayRequest)
+            : base(dispatcher)
         {
             SubManagers = new MediaPlayerElementManagerBase[] {
                new AspectRatioManager(dispatcher, displayInformation),
-               new AutoHideManager(dispatcher)
+               new AutoHideManager(dispatcher),
+               new DeviceAwakeningManager(dispatcher, displayRequest)
              };
         }
 

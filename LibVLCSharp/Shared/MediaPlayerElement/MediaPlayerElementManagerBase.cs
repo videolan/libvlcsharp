@@ -10,6 +10,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     public abstract class MediaPlayerElementManagerBase : IDisposable
     {
         /// <summary>
+        /// Occurs when <see cref="MediaPlayer"/> property changed or the controls are initialized
+        /// </summary>
+        protected EventHandler? Initialized;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="MediaPlayerElementManagerBase"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
@@ -110,6 +115,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         public virtual void Initialize()
         {
+            Initialized?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

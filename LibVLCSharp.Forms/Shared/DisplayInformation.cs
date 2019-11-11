@@ -6,7 +6,7 @@ namespace LibVLCSharp.Forms.Shared
     /// <summary>
     /// Monitors display-related information for an application view.
     /// </summary>
-    public class DisplayInformation : IDisplayInformation
+    internal class DisplayInformation : IDisplayInformation
     {
         /// <summary>
         /// Gets the scale factor
