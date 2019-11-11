@@ -7,7 +7,6 @@ using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.MediaPlayerElement;
 using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
-using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -51,7 +50,7 @@ namespace LibVLCSharp.Uno
         public PlaybackControlsBase()
         {
             DefaultStyleKey = typeof(PlaybackControls);
-            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation());
+            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation(), new DisplayRequestAdapter());
             Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
             var autoHideManager = Manager.Get<AutoHideManager>();
             autoHideManager.Shown += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
@@ -69,28 +68,6 @@ namespace LibVLCSharp.Uno
 
         private MediaPlayerElementManager Manager { get; }
 
-        private DisplayRequest? _displayRequest;
-        private DisplayRequest DisplayRequest => _displayRequest ?? (_displayRequest = new DisplayRequest());
-        private bool _mustKeepDeviceAwake;
-        private bool MustKeepDeviceAwake
-        {
-            get => _mustKeepDeviceAwake;
-            set
-            {
-                if (MustKeepDeviceAwake != value)
-                {
-                    _mustKeepDeviceAwake = value;
-                    if (value)
-                    {
-                        DisplayRequest.RequestActive();
-                    }
-                    else
-                    {
-                        DisplayRequest.RequestRelease();
-                    }
-                }
-            }
-        }
         private bool HasError { get; set; }
         private MenuFlyout? ZoomMenu { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
@@ -181,7 +158,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public static readonly DependencyProperty KeepDeviceAwakeProperty = DependencyProperty.Register(nameof(KeepDeviceAwake), typeof(bool),
             typeof(PlaybackControlsBase),
-            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).OnKeepDeviceAwakePropertyChanged()));
+            new PropertyMetadata(true, async (d, args) => await ((PlaybackControlsBase)d).OnKeepDeviceAwakePropertyChangedAsync()));
         /// <summary>
         /// Gets or sets a value indicating whether the device should be kept awake
         /// </summary>
@@ -587,16 +564,6 @@ namespace LibVLCSharp.Uno
             Reset();
         }
 
-        private void VolumeFlyout_Opened(object sender, object e)
-        {
-            Manager.Get<AutoHideManager>().Enabled = false;
-        }
-
-        private void VolumeFlyout_Closed(object sender, object e)
-        {
-            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
-        }
-
         /// <summary>
         /// Sets the value of the <see cref="ToolTipService.ToolTipProperty"/> for an object
         /// </summary>
@@ -662,7 +629,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        #region AspectRatio
+        #region Aspect ratio
 
         private void AddAspectRatioMenu(Button? zoomButton)
         {
@@ -702,6 +669,41 @@ namespace LibVLCSharp.Uno
             {
                 CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(((AspectRatioManager)sender).AspectRatio)));
             }
+        }
+
+        #endregion
+
+        #region Auto hide
+
+        private void VolumeFlyout_Opened(object sender, object e)
+        {
+            Manager.Get<AutoHideManager>().Enabled = false;
+        }
+
+        private void VolumeFlyout_Closed(object sender, object e)
+        {
+            OnShowAndHideAutomaticallyPropertyChanged();
+        }
+
+        private void OnShowAndHideAutomaticallyPropertyChanged()
+        {
+            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
+        }
+
+        /// <summary>
+        /// Shows the tranport controls if they're hidden
+        /// </summary>
+        public void Show()
+        {
+            Manager.Get<AutoHideManager>().Show();
+        }
+
+        /// <summary>
+        /// Hides the playback controls if they're shown
+        /// </summary>
+        public void Hide()
+        {
+            Manager.Get<AutoHideManager>().Hide();
         }
 
         #endregion
@@ -1193,22 +1195,6 @@ namespace LibVLCSharp.Uno
             UpdateControl(ZoomButton, IsZoomEnabled);
         }
 
-        /// <summary>
-        /// Shows the tranport controls if they're hidden
-        /// </summary>
-        public void Show()
-        {
-            Manager.Get<AutoHideManager>().Show();
-        }
-
-        /// <summary>
-        /// Hides the playback controls if they're shown
-        /// </summary>
-        public void Hide()
-        {
-            Manager.Get<AutoHideManager>().Hide();
-        }
-
         private void UpdatePlayPauseState(bool? playState)
         {
             if (playState is bool isPaused)
@@ -1217,7 +1203,6 @@ namespace LibVLCSharp.Uno
                 SetToolTip(PlayPauseButton, playPauseToolTip);
                 SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
                 VisualStateManager.GoToState(this, isPaused ? PlayState : PauseState, true);
-                MustKeepDeviceAwake = !isPaused;
             }
         }
 
@@ -1242,22 +1227,9 @@ namespace LibVLCSharp.Uno
             UpdatePlayPauseState(stopped);
         }
 
-        private void OnShowAndHideAutomaticallyPropertyChanged()
+        private Task OnKeepDeviceAwakePropertyChangedAsync()
         {
-            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
-        }
-
-        private void OnKeepDeviceAwakePropertyChanged()
-        {
-            if (KeepDeviceAwake)
-            {
-                var state = MediaPlayer?.State;
-                MustKeepDeviceAwake = state == VLCState.Opening || state == VLCState.Playing;
-            }
-            else
-            {
-                MustKeepDeviceAwake = false;
-            }
+            return Manager.Get<DeviceAwakeningManager>().KeepDeviceAwakeAsync(KeepDeviceAwake);
         }
 
         private void OnIsCompactPropertyChanged()

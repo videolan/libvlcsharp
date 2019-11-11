@@ -8,7 +8,7 @@ namespace LibVLCSharp.Forms.Shared
     /// <summary>
     /// Object that provides services for managing the queue of work items for a thread
     /// </summary>
-    public class Dispatcher : IDispatcher
+    internal class Dispatcher : IDispatcher
     {
         /// <summary>
         /// Schedules the provided callback on the UI thread from a worker threa

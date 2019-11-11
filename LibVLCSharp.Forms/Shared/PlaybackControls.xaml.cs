@@ -60,7 +60,7 @@ namespace LibVLCSharp.Forms.Shared
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
 
             RendererItems.CollectionChanged += RendererItems_CollectionChanged;
-            Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation());
+            Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation(), new DisplayRequest());
             var autoHideManager = Manager.Get<AutoHideManager>();
             autoHideManager.Shown += async (sender, e) => await FadeInAsync();
             autoHideManager.Hidden += async (sender, e) => await FadeOutAsync();
@@ -96,7 +96,6 @@ namespace LibVLCSharp.Forms.Shared
         private Slider SeekBar { get; set; }
 
         private bool Initialized { get; set; }
-        private IPowerManager PowerManager => DependencyService.Get<IPowerManager>();
         private ISystemUI SystemUI => DependencyService.Get<ISystemUI>();
 
         private const int SEEK_OFFSET = 2000;
@@ -475,7 +474,7 @@ namespace LibVLCSharp.Forms.Shared
         /// Identifies the <see cref="KeepScreenOn"/> dependency property.
         /// </summary>
         public static readonly BindableProperty KeepScreenOnProperty = BindableProperty.Create(nameof(KeepScreenOn), typeof(bool),
-            typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChanged);
+            typeof(PlaybackControls), true, propertyChanged: KeepScreenOnPropertyChangedAsync);
         /// <summary>
         /// Gets or sets a value indicating whether the screen must be kept on when playing.
         /// </summary>
@@ -744,9 +743,9 @@ namespace LibVLCSharp.Forms.Shared
             ((PlaybackControls)bindable).UpdateCastAvailability();
         }
 
-        private static void KeepScreenOnPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static async void KeepScreenOnPropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).UpdateKeepScreenOn((bool)newValue);
+            await ((PlaybackControls)bindable).UpdateKeepScreenOnAsync((bool)newValue);
         }
 
         private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -890,7 +889,7 @@ namespace LibVLCSharp.Forms.Shared
                     }
                     finally
                     {
-                        Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
+                        OnShowAndHideAutomaticallyPropertyChanged();
                     }
                 }
             }
@@ -1193,35 +1192,9 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateKeepScreenOn(bool? keepScreenOn = null)
+        private Task UpdateKeepScreenOnAsync(bool keepScreenOn)
         {
-            var letScreenOn = keepScreenOn ?? KeepScreenOn;
-            if (!letScreenOn)
-            {
-                return;
-            }
-
-            var powerManager = PowerManager;
-            if (powerManager == null)
-            {
-                return;
-            }
-
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                try
-                {
-                    var state = MediaPlayer?.State;
-                    letScreenOn = state == VLCState.Opening || state == VLCState.Buffering || state == VLCState.Playing;
-                    if (powerManager.KeepScreenOn != letScreenOn)
-                    {
-                        powerManager.KeepScreenOn = letScreenOn;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            });
+            return Manager.Get<DeviceAwakeningManager>().KeepDeviceAwakeAsync(keepScreenOn);
         }
 
         private void UpdatePauseAvailability(bool? canPause = null)
@@ -1392,7 +1365,6 @@ namespace LibVLCSharp.Forms.Shared
                     VisualStateManager.GoToState(playPauseButton, playPauseState);
                 }
             });
-            UpdateKeepScreenOn();
         }
 
         private void ClearRenderer()

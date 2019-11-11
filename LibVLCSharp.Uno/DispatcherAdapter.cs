@@ -8,7 +8,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Dispatcher adapter
     /// </summary>
-    public class DispatcherAdapter : IDispatcher
+    internal class DispatcherAdapter : IDispatcher
     {
         /// <summary>
         /// Initializes a new instance 
