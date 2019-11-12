@@ -10,8 +10,8 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Video view
     /// </summary>
-    public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoControl
-        where TUnderlyingVideoView : class, IVideoView, IDisposable
+    public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoView, IVideoControl
+        where TUnderlyingVideoView : class, Shared.IVideoView, IDisposable
     {
         /// <summary>
         /// Occurs when the <see cref="VideoView"/> is fully loaded

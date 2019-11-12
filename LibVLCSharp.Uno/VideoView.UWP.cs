@@ -7,7 +7,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// VideoView implementation for the UWP platform
     /// </summary>
-    public class VideoView : VideoView<InitializedEventArgs>, IVideoControl
+    public class VideoView : VideoView<InitializedEventArgs>, IVideoView, IVideoControl
     {
         /// <summary>
         /// Creates args for <see cref="VideoView{TInitializedEventArgs}.Initialized"/> event

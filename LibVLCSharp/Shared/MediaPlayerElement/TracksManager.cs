@@ -10,7 +10,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Tracks manager base class
     /// </summary>
-    public abstract class TracksManager : MediaPlayerElementManagerBase
+    internal abstract class TracksManager : MediaPlayerElementManagerBase
     {
         /// <summary>
         /// Occurs when tracks should be reinitialized

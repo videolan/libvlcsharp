@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Interface for video control
     /// </summary>
-    public interface IVideoControl : IVideoView
+    internal interface IVideoControl : IVideoView
     {
         /// <summary>
         /// Occurs when the size of the control changes

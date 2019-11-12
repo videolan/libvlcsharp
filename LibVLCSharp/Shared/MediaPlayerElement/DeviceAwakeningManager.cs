@@ -7,7 +7,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Manager to keep the device awake
     /// </summary>
-    public class DeviceAwakeningManager : MediaPlayerElementManagerBase
+    internal class DeviceAwakeningManager : MediaPlayerElementManagerBase
     {
         /// <summary>
         /// Initializes a new instance of <see cref="DeviceAwakeningManager"/> class

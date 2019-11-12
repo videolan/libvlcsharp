@@ -4,7 +4,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Describes how content is resized to fill its allocated space
     /// </summary>
-    public enum AspectRatio
+    internal enum AspectRatio
     {
         /// <summary>
         /// Best fit

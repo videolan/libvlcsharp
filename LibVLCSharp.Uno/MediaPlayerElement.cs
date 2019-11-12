@@ -82,6 +82,10 @@ namespace LibVLCSharp.Uno
             {
                 PlaybackControls = new PlaybackControls();
             }
+            else
+            {
+                playbackControls.VideoView = VideoView;
+            }
             if (GetTemplateChild("ContentPresenter") is UIElement contentGrid)
             {
                 contentGrid.PointerEntered += OnPointerMoved;

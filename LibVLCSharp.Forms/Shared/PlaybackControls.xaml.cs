@@ -335,17 +335,17 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Identifies the <see cref="VideoView"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(IVideoControl),
+        public static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
             typeof(PlaybackControls),
-            propertyChanged: (bindable, oldValue, newValue) => ((PlaybackControls)bindable).Manager.VideoView = (IVideoControl)newValue);
+            propertyChanged: (bindable, oldValue, newValue) => ((PlaybackControls)bindable).Manager.VideoView = (VideoView)newValue);
 
         /// <summary>
         /// Gets or sets the associated <see cref="VideoView"/>.
         /// </summary>
         /// <remarks>It is only useful to set this property for the aspect ratio feature.</remarks>
-        public IVideoControl VideoView
+        public VideoView VideoView
         {
-            get => (IVideoControl)GetValue(VideoViewProperty);
+            get => (VideoView)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
         }
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for display requests
     /// </summary>
-    public interface IDisplayRequest
+    internal interface IDisplayRequest
     {
         /// <summary>
         /// Activates a display request

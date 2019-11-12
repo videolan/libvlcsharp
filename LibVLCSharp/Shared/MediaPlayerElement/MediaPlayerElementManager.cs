@@ -1,13 +1,17 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("LibVLCSharp.Forms")]
+[assembly: InternalsVisibleTo("LibVLCSharp.Uno")]
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
     /// <summary>
     /// Media player element manager
     /// </summary>
-    public class MediaPlayerElementManager : MediaPlayerElementManagerBase
+    internal class MediaPlayerElementManager : MediaPlayerElementManagerBase
     {
         /// <summary>
         /// Initializes a new instance of <see cref="MediaPlayerElementManager"/> class
