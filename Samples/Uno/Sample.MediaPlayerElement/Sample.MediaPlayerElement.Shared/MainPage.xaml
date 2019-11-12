@@ -19,7 +19,7 @@
             </interactivity:Interaction.Behaviors>
             
             <vlc:MediaPlayerElement.PlaybackControls>
-                <vlc:PlaybackControls IsStopButtonVisible="True" />
+                <vlc:PlaybackControls IsStopButtonVisible="True" IsCastButtonVisible="True" />
             </vlc:MediaPlayerElement.PlaybackControls>
             
         </vlc:MediaPlayerElement>

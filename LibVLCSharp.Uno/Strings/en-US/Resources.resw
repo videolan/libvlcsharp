@@ -138,6 +138,9 @@
   <data name="AspectRatio_4_3" xml:space="preserve">
     <value>4:3</value>
   </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>Mute</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="ShowAudioSelectionMenu" xml:space="preserve">
     <value>Show audio selection menu</value>
+  </data>
+  <data name="ShowCastMenu" xml:space="preserve">
+    <value>Show Cast to device menu</value>
   </data>
   <data name="ShowClosedCaptionMenu" xml:space="preserve">
     <value>Show closed caption menu</value>

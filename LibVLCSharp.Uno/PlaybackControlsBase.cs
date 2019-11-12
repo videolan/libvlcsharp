@@ -39,6 +39,8 @@ namespace LibVLCSharp.Uno
         private const string SeekBarUnavailableState = "SeekBarUnavailable";
         private const string ZoomAvailableState = "ZoomAvailable";
         private const string ZoomUnavailableState = "ZoomUnavailable";
+        private const string CastAvailableState = "CastAvailable";
+        private const string CastUnavailableState = "CastUnavailable";
         private const string VolumeAvailableState = "VolumeAvailable";
         private const string VolumeUnavailableState = "VolumeUnavailable";
         private const string CompactModeState = "CompactMode";
@@ -66,6 +68,9 @@ namespace LibVLCSharp.Uno
             subTitlesTrackManager.TrackSelected += OnTrackSelected;
             subTitlesTrackManager.TrackAdded += OnTrackAdded;
             subTitlesTrackManager.TrackDeleted += OnTrackDeleted;
+            var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+            castRenderersDiscoverer.CastAvailableChanged += (sender, e) => UpdateCastButton();
+            castRenderersDiscoverer.Enabled = IsCastButtonVisible;
         }
 
         /// <summary>
@@ -425,12 +430,12 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property.
+        /// Identifies the <see cref="IsZoomButtonVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsZoomButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsZoomButtonVisible), typeof(bool),
             typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateZoomButton()));
         /// <summary>
-        /// Gets or sets a value indicating whether the zoom button is shown.
+        /// Gets or sets a value indicating whether the zoom button is shown
         /// </summary>
         public bool IsZoomButtonVisible
         {
@@ -439,12 +444,12 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsZoomEnabled"/> dependency property.
+        /// Identifies the <see cref="IsZoomEnabled"/> dependency property
         /// </summary>
         public static DependencyProperty IsZoomEnabledProperty { get; } = DependencyProperty.Register(nameof(IsZoomEnabled), typeof(bool),
             typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateZoomButton()));
         /// <summary>
-        /// Gets or sets a value indicating whether a user can zoom the media.
+        /// Gets or sets a value indicating whether a user can zoom the media
         /// </summary>
         public bool IsZoomEnabled
         {
@@ -464,6 +469,34 @@ namespace LibVLCSharp.Uno
         {
             get => GetValue(ZoomButtonContentProperty);
             set => SetValue(ZoomButtonContentProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsCastButtonVisible"/> dependency property
+        /// </summary>
+        public static DependencyProperty IsCastButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsCastButtonVisible), typeof(bool),
+            typeof(PlaybackControlsBase), new PropertyMetadata(false, (d, e) => ((PlaybackControlsBase)d).UpdateCastButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether the cast button is shown
+        /// </summary>
+        public bool IsCastButtonVisible
+        {
+            get => (bool)GetValue(IsCastButtonVisibleProperty);
+            set => SetValue(IsCastButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsCastEnabled"/> dependency property
+        /// </summary>
+        public static DependencyProperty IsCastEnabledProperty { get; } = DependencyProperty.Register(nameof(IsCastEnabledProperty), typeof(bool),
+            typeof(PlaybackControlsBase), new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateCastButton()));
+        /// <summary>
+        /// Gets or sets a value indicating whether a user can cast
+        /// </summary>
+        public bool IsCastEnabled
+        {
+            get => (bool)GetValue(IsCastEnabledProperty);
+            set => SetValue(IsCastEnabledProperty, value);
         }
 
         /// <summary>
@@ -565,12 +598,14 @@ namespace LibVLCSharp.Uno
             SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
             SetButtonClick(StopButton, StopButton_Click);
             SetButtonClick(audioMuteButton, AudioMuteButton_Click);
+            SetButtonClick(CastButton, CastButton_Click);
 
             SetToolTip(StopButton, "Stop");
             SetToolTip(VolumeMuteButton, "ShowVolumeMenu");
             SetToolTip(audioMuteButton, "Mute");
             SetToolTip(audioTracksSelectionButton, "ShowAudioSelectionMenu");
             SetToolTip(ccSelectionButton, "ShowClosedCaptionMenu");
+            SetToolTip(CastButton, "ShowCastMenu");
 
             UpdateZoomButton();
             Manager.Initialize();
@@ -950,6 +985,46 @@ namespace LibVLCSharp.Uno
             }
         }
 
+        private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string name, object? tag = null)
+        {
+            var menuItem = new MenuFlyoutItem() { Text = name, Tag = tag };
+            menuItem.Click += CastMenuItem_Click;
+            items.Add(menuItem);
+        }
+
+        private void CastButton_Click(object sender, RoutedEventArgs e)
+        {
+            var castMenu = new MenuFlyout();
+            var items = castMenu.Items;
+            var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+            var mediaPlayer = MediaPlayer;
+            foreach (var renderer in castRenderersDiscoverer.Renderers.OrderBy(r => r.Name))
+            {
+                AddCastMenuItem(items, renderer.Name);
+            }
+            AddCastMenuItem(items, ResourceLoader.GetString("Disconnect"), -1);
+            ((Button)sender).Flyout = castMenu;
+        }
+
+        private void CastMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = (MenuFlyoutItem)sender;
+            if ((-1).Equals(menuFlyoutItem.Tag))
+            {
+                MediaPlayer?.SetRenderer(null);
+            }
+            else
+            {
+                var rendererName = menuFlyoutItem.Text;
+                var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+                var rendererItem = castRenderersDiscoverer.Renderers.FirstOrDefault(r => r.Name == rendererName);
+                if (rendererItem != null)
+                {
+                    MediaPlayer?.SetRenderer(rendererItem);
+                }
+            }
+        }
+
         private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
         {
             Manager.MediaPlayer = newValue;
@@ -1172,6 +1247,14 @@ namespace LibVLCSharp.Uno
         private void UpdateZoomButton()
         {
             VisualStateManager.GoToState(this, IsZoomButtonVisible ? ZoomAvailableState : ZoomUnavailableState, true);
+            UpdateControl(ZoomButton, IsZoomEnabled);
+        }
+
+        private void UpdateCastButton()
+        {
+            var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+            castRenderersDiscoverer.Enabled = IsCastButtonVisible;
+            VisualStateManager.GoToState(this, castRenderersDiscoverer.CastAvailable ? CastAvailableState : CastUnavailableState, true);
             UpdateControl(ZoomButton, IsZoomEnabled);
         }
 
