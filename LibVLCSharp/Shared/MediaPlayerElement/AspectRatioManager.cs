@@ -7,6 +7,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Aspect ratio manager
     /// </summary>
+    /// <remarks>the <see cref="MediaPlayerElementManagerBase.VideoView"/> and <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> properties
+    /// need to be set in order to work</remarks>
     internal class AspectRatioManager : MediaPlayerElementManagerBase
     {
         /// <summary>

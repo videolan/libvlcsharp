@@ -127,6 +127,8 @@ namespace LibVLCSharp.Forms.Shared
         {
             if (playbackControls != null)
             {
+                playbackControls.IsCastButtonVisible = EnableRendererDiscovery;
+                playbackControls.LibVLC = LibVLC;
                 playbackControls.MediaPlayer = MediaPlayer;
                 playbackControls.VideoView = VideoView;
             }
@@ -137,7 +139,7 @@ namespace LibVLCSharp.Forms.Shared
             var playbackControls = PlaybackControls;
             if (playbackControls != null)
             {
-                playbackControls.EnableRendererDiscovery = enableRendererDiscovery;
+                playbackControls.IsCastButtonVisible = enableRendererDiscovery;
             }
         }
 
@@ -183,12 +185,10 @@ namespace LibVLCSharp.Forms.Shared
                 {
                     VideoView = new VideoView();
                 }
+
                 if (PlaybackControls == null)
                 {
-                    PlaybackControls = new PlaybackControls
-                    {
-                        EnableRendererDiscovery = EnableRendererDiscovery
-                    };
+                    PlaybackControls = new PlaybackControls();
                 }
 
                 var application = Application.Current;

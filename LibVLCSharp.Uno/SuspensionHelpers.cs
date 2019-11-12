@@ -4,9 +4,9 @@ using Windows.Storage;
 namespace LibVLCSharp.Uno
 {
     /// <summary>
-    /// Suspension manager
+    /// Suspension helpers methods
     /// </summary>
-    public static class SuspensionManager
+    public static class SuspensionHelpers
     {
         /// <summary>
         /// Saves the movie position
@@ -19,7 +19,7 @@ namespace LibVLCSharp.Uno
             {
                 return;
             }
-            identifier = identifier ?? string.Empty;
+            identifier ??= string.Empty;
             var values = ApplicationData.Current.LocalSettings.Values;
             values[$"{identifier}_VLC_MediaPlayer_Position"] = mediaPlayer.Position;
             values[$"{identifier}_VLC_MediaPlayer_IsPlaying"] = mediaPlayer.State == VLCState.Playing;
@@ -37,7 +37,7 @@ namespace LibVLCSharp.Uno
             {
                 return;
             }
-            identifier = identifier ?? string.Empty;
+            identifier ??= string.Empty;
             var values = ApplicationData.Current.LocalSettings.Values;
             if (values.TryGetValue($"{identifier}_VLC_MediaPlayer_Position", out var p) && p is float position)
             {

@@ -10,6 +10,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Tracks manager base class
     /// </summary>
+    /// <remarks>the <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property needs to be set in order to work</remarks>
     internal abstract class TracksManager : MediaPlayerElementManagerBase
     {
         /// <summary>

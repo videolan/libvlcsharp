@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
@@ -57,9 +56,8 @@ namespace LibVLCSharp.Forms.Shared
             RewindButtonStyle = Resources[nameof(RewindButtonStyle)] as Style;
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
 
-            RendererItems.CollectionChanged += RendererItems_CollectionChanged;
             Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation(), new DisplayRequest());
-            var autoHideManager = Manager.Get<AutoHideManager>();
+            var autoHideManager = Manager.Get<AutoHideNotifier>();
             autoHideManager.Shown += async (sender, e) => await FadeInAsync();
             autoHideManager.Hidden += async (sender, e) => await FadeOutAsync();
             autoHideManager.Enabled = ShowAndHideAutomatically;
@@ -69,6 +67,9 @@ namespace LibVLCSharp.Forms.Shared
             var subTitlesTrackManager = Manager.Get<SubtitlesTracksManager>();
             subTitlesTrackManager.TrackAdded += OnTracksChanged;
             subTitlesTrackManager.TrackDeleted += OnTracksChanged;
+            var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+            castRenderersDiscoverer.CastAvailableChanged += (sender, e) => UpdateCastAvailability();
+            castRenderersDiscoverer.Enabled = IsCastButtonVisible;
         }
 
         /// <summary>
@@ -79,15 +80,7 @@ namespace LibVLCSharp.Forms.Shared
             Manager.Dispose();
         }
 
-        private void RendererItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            UpdateCastAvailability();
-        }
-
         private MediaPlayerElementManager Manager { get; }
-        private ObservableCollection<RendererItem> RendererItems { get; } = new ObservableCollection<RendererItem>();
-        private RendererDiscoverer RendererDiscoverer { get; set; }
-
         private Button AudioTracksSelectionButton { get; set; }
         private Button CastButton { get; set; }
         private Button ClosedCaptionsSelectionButton { get; set; }
@@ -536,7 +529,7 @@ namespace LibVLCSharp.Forms.Shared
         /// Identifies the <see cref="IsCastButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsCastButtonVisibleProperty = BindableProperty.Create(nameof(IsCastButtonVisible), typeof(bool),
-            typeof(PlaybackControls), true, propertyChanged: IsCastButtonVisiblePropertyChanged);
+            typeof(PlaybackControls), true, propertyChanged: IsCastButtonVisiblePropertyChangedAsync);
         /// <summary>
         /// Gets or sets a value indicating whether the cast button is shown.
         /// </summary>
@@ -631,22 +624,6 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(IsAspectRatioButtonVisibleProperty, value);
         }
 
-        bool _enableRendererDiscovery = true;
-        /// <summary>
-        /// Enable or disable renderer discovery
-        /// </summary>
-        internal bool EnableRendererDiscovery
-        {
-            get => _enableRendererDiscovery;
-            set
-            {
-                _enableRendererDiscovery = value;
-                IsCastButtonVisible = _enableRendererDiscovery;
-                UpdateCastAvailability();
-                ResetRendererDiscovery();
-            }
-        }
-
         /// <summary>
         /// Identifies the <see cref="IsRewindButtonVisible"/> dependency property.
         /// </summary>s
@@ -728,30 +705,22 @@ namespace LibVLCSharp.Forms.Shared
             ((PlaybackControls)bindable).UpdatePauseAvailability();
         }
 
-        private static void IsCastButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void IsCastButtonVisiblePropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).UpdateCastAvailability();
+            var playbackControls = (PlaybackControls)bindable;
+            playbackControls.Manager.Get<CastRenderersDiscoverer>().Enabled = (bool)newValue;
         }
 
-        private static async void KeepScreenOnPropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
+        private static void KeepScreenOnPropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
         {
-            await ((PlaybackControls)bindable).UpdateKeepScreenOnAsync((bool)newValue);
+            ((PlaybackControls)bindable).UpdateKeepScreenOn((bool)newValue);
         }
 
         private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var playbackControls = (PlaybackControls)bindable;
-            playbackControls.UpdateCastAvailability();
+            playbackControls.Manager.LibVLC = (LibVLC)newValue;
             playbackControls.UpdateErrorMessage();
-            playbackControls.ResetRendererDiscovery();
-        }
-
-        private void ResetRendererDiscovery()
-        {
-            ClearRenderer();
-
-            if (EnableRendererDiscovery)
-                FindRenderers();
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -836,51 +805,46 @@ namespace LibVLCSharp.Forms.Shared
 
         private async void CastButton_ClickedAsync(object sender, EventArgs e)
         {
-            var libVLC = LibVLC;
-            if (libVLC != null)
+            Manager.Get<AutoHideNotifier>().Enabled = false;
+            try
             {
-                var mediaPlayer = MediaPlayer;
-                if (mediaPlayer != null)
-                {
-                    Manager.Get<AutoHideManager>().Enabled = false;
-                    try
-                    {
-                        Show();
+                Show();
 
-                        if (!RemoteRendering && RendererItems.Count == 1)
+                var renderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
+                var renderers = renderersDiscoverer.Renderers;
+                var mediaPlayer = MediaPlayer;
+                if (!RemoteRendering && renderers.Count() == 1)
+                {
+                    mediaPlayer.SetRenderer(renderers.First());
+                    RemoteRendering = true;
+                }
+                else
+                {
+                    var result = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
+                        Cancel, Disconnect, renderers.Select(r => r.Name).OrderBy(r => r).ToArray());
+                    if (result != null)
+                    {
+                        var rendererName = renderers.FirstOrDefault(r => r.Name == result);
+                        if (rendererName != null)
                         {
-                            mediaPlayer.SetRenderer(RendererItems.First());
+                            mediaPlayer.SetRenderer(rendererName);
                             RemoteRendering = true;
                         }
-                        else
+                        else if (result == Disconnect)
                         {
-                            var result = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
-                                Cancel, Disconnect, RendererItems.Select(r => r.Name).OrderBy(r => r).ToArray());
-                            if (result != null)
-                            {
-                                var rendererName = RendererItems.FirstOrDefault(r => r.Name == result);
-                                if (rendererName != null)
-                                {
-                                    mediaPlayer.SetRenderer(rendererName);
-                                    RemoteRendering = true;
-                                }
-                                else if (result == Disconnect)
-                                {
-                                    mediaPlayer.SetRenderer(null);
-                                    RemoteRendering = false;
-                                }
-                            }
+                            mediaPlayer.SetRenderer(null);
+                            RemoteRendering = false;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        ShowErrorMessageBox(ex);
-                    }
-                    finally
-                    {
-                        OnShowAndHideAutomaticallyPropertyChanged();
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
+            finally
+            {
+                OnShowAndHideAutomaticallyPropertyChanged();
             }
             Show();
         }
@@ -1154,9 +1118,9 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private Task UpdateKeepScreenOnAsync(bool keepScreenOn)
+        private void UpdateKeepScreenOn(bool keepScreenOn)
         {
-            return Manager.Get<DeviceAwakeningManager>().KeepDeviceAwakeAsync(keepScreenOn);
+            Manager.Get<DeviceAwakeningManager>().KeepDeviceAwake = keepScreenOn;
         }
 
         private void UpdatePauseAvailability(bool? canPause = null)
@@ -1193,8 +1157,8 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    VisualStateManager.GoToState(castButton, IsCastButtonVisible && LibVLC != null && EnableRendererDiscovery && RendererItems.Any()
-                        ? CastAvailableState : CastUnavailableState);
+                    VisualStateManager.GoToState(castButton, Manager.Get<CastRenderersDiscoverer>().CastAvailable ?
+                        CastAvailableState : CastUnavailableState);
                 });
             }
         }
@@ -1329,37 +1293,6 @@ namespace LibVLCSharp.Forms.Shared
             });
         }
 
-        private void ClearRenderer()
-        {
-            if (RendererDiscoverer != null)
-            {
-                RendererDiscoverer.Stop();
-                RendererDiscoverer.ItemAdded -= RendererDiscoverer_ItemAdded;
-                RendererDiscoverer.ItemDeleted -= RendererDiscoverer_ItemDeleted;
-                RendererDiscoverer.Dispose();
-                RendererDiscoverer = null;
-            }
-        }
-
-        private void FindRenderers()
-        {
-            if (LibVLC == null)
-                return;
-
-            if (!EnableRendererDiscovery)
-                return;
-
-            var rendererDiscoverer = new RendererDiscoverer(LibVLC);
-            rendererDiscoverer.ItemAdded += RendererDiscoverer_ItemAdded;
-            rendererDiscoverer.ItemDeleted += RendererDiscoverer_ItemDeleted;
-            RendererDiscoverer = rendererDiscoverer;
-            rendererDiscoverer.Start();
-        }
-
-        private void RendererDiscoverer_ItemDeleted(object sender, RendererDiscovererItemDeletedEventArgs e) => RendererItems.Remove(e.RendererItem);
-
-        private void RendererDiscoverer_ItemAdded(object sender, RendererDiscovererItemAddedEventArgs e) => RendererItems.Add(e.RendererItem);
-
         /// <summary>
         /// Show an error message box.
         /// </summary>
@@ -1373,7 +1306,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
         {
-            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
+            Manager.Get<AutoHideNotifier>().Enabled = ShowAndHideAutomatically;
         }
 
         /// <summary>
@@ -1381,7 +1314,7 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         public void Show()
         {
-            Manager.Get<AutoHideManager>().Show();
+            Manager.Get<AutoHideNotifier>().Show();
         }
 
         /// <summary>
@@ -1389,7 +1322,7 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         public void Hide()
         {
-            Manager.Get<AutoHideManager>().Hide();
+            Manager.Get<AutoHideNotifier>().Hide();
         }
 
         private async Task FadeInAsync()

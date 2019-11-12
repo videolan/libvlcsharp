@@ -6,6 +6,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Subtitles tracks manager
     /// </summary>
+    /// <remarks>the <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property needs to be set in order to work</remarks>
     internal class SubtitlesTracksManager : TracksManager
     {
         /// <summary>

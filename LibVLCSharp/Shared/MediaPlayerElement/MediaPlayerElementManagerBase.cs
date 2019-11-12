@@ -15,6 +15,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         protected EventHandler? Initialized;
 
         /// <summary>
+        /// Occurs when <see cref="LibVLC"/> property changed
+        /// </summary>
+        protected EventHandler? LibVLCChanged;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="MediaPlayerElementManagerBase"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
@@ -40,7 +45,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         public IVideoControl? VideoView
         {
-            get => _videoView!;
+            get => _videoView;
             set
             {
                 if (_videoView != value)
@@ -48,6 +53,24 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                     var oldValue = _videoView;
                     _videoView = value;
                     OnVideoViewChanged(oldValue, value);
+                }
+            }
+        }
+
+        private LibVLC? _libVLC;
+        /// <summary>
+        /// Gets or sets the <see cref="LibVLC"/> instance
+        /// </summary>
+        public LibVLC? LibVLC
+        {
+            get => _libVLC;
+            set
+            {
+                if (_libVLC != value)
+                {
+                    var oldValue = _libVLC;
+                    _libVLC = value;
+                    OnLibVLCChanged(oldValue, value);
                 }
             }
         }
@@ -84,6 +107,16 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="newValue">new value</param>
         protected virtual void OnVideoViewChanged(IVideoControl? oldValue, IVideoControl? newValue)
         {
+        }
+
+        /// <summary>
+        /// Called when <see cref="LibVLC"/> property value changes
+        /// </summary>
+        /// <param name="oldValue">old value</param>
+        /// <param name="newValue">new value</param>
+        protected virtual void OnLibVLCChanged(LibVLC? oldValue, LibVLC? newValue)
+        {
+            LibVLCChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -147,6 +180,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             }
             VideoView = null;
             MediaPlayer = null;
+            LibVLC = null;
         }
     }
 }

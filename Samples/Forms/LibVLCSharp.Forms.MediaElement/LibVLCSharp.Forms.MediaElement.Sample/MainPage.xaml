@@ -9,6 +9,6 @@
         <local:MainViewModel />
     </ContentPage.BindingContext>
 
-    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" />
+    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" EnableRendererDiscovery="True" />
 
 </ContentPage>

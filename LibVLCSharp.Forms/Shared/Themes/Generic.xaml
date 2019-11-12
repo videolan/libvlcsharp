@@ -3,7 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:converters="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
                     xmlns:effects="clr-namespace:LibVLCSharp.Forms.Shared.Effects"
-                    xmlns:fontawesome="clr-namespace:FontAwesome"
+                    xmlns:fontawesome="clr-namespace:FontAwesome;assembly=LibVLCSharp"
                     x:Class="LibVLCSharp.Forms.Shared.Themes.Generic">
     <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
