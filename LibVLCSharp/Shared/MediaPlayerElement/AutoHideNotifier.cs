@@ -5,9 +5,10 @@ using System.Threading;
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
     /// <summary>
-    /// Manage the playback controls auto hide feature
+    /// Notifies when the playback controls should be shown or hidden
     /// </summary>
-    internal class AutoHideManager : MediaPlayerElementManagerBase
+    /// <remarks>the <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property needs to be set in order to work</remarks>
+    internal class AutoHideNotifier : MediaPlayerElementManagerBase
     {
         /// <summary>
         /// Occurs whenever the playback controls should be shown
@@ -19,10 +20,10 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public event EventHandler? Hidden;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="AutoHideManager"/> class
+        /// Initializes a new instance of <see cref="AutoHideNotifier"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public AutoHideManager(IDispatcher dispatcher) : base(dispatcher)
+        public AutoHideNotifier(IDispatcher dispatcher) : base(dispatcher)
         {
             Timer = new Timer(obj => Hide(), null, Timeout.Infinite, Timeout.Infinite);
         }

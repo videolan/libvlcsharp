@@ -1,12 +1,12 @@
 ﻿#nullable enable
 using System;
-using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
     /// <summary>
     /// Manager to keep the device awake
     /// </summary>
+    /// <remarks>the <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property needs to be set in order to work</remarks>
     internal class DeviceAwakeningManager : MediaPlayerElementManagerBase
     {
         /// <summary>
@@ -24,57 +24,56 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
         private bool DeviceActive { get; set; }
 
-        private bool KeepDeviceAwake { get; set; } = true;
-
+        private bool _keepDeviceAwake = true;
         /// <summary>
-        ///Sets a value indicating whether the device should be kept awake
+        /// Gets or sets a value indicating whether the device should be kept awake
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public async Task KeepDeviceAwakeAsync(bool value)
+        public bool KeepDeviceAwake
         {
-            if (KeepDeviceAwake != value)
+            get => _keepDeviceAwake;
+
+            set
             {
-                KeepDeviceAwake = value;
-                if (value)
+                if (_keepDeviceAwake != value)
                 {
-                    await UpdateStateAsync();
-                }
-                else
-                {
-                    await SetDeviceActiveAsync(false);
+                    _keepDeviceAwake = value;
+                    if (value)
+                    {
+                        UpdateState();
+                    }
+                    else
+                    {
+                        SetDeviceActive(false);
+                    }
                 }
             }
         }
 
-        private async Task SetDeviceActiveAsync(bool value)
+        private void SetDeviceActive(bool value)
         {
             if (DeviceActive != value)
             {
                 DeviceActive = value;
-                await DispatcherInvokeAsync(() =>
+                if (value)
                 {
-                    if (value)
-                    {
-                        DisplayRequest.RequestActive();
-                    }
-                    else
-                    {
-                        DisplayRequest.RequestRelease();
-                    }
-                });
+                    DisplayRequest.RequestActive();
+                }
+                else
+                {
+                    DisplayRequest.RequestRelease();
+                }
             }
         }
 
-        private async Task UpdateStateAsync()
+        private void UpdateState()
         {
             var state = MediaPlayer?.State;
-            await SetDeviceActiveAsync(KeepDeviceAwake && (state == VLCState.Opening || state == VLCState.Playing));
+            SetDeviceActive(KeepDeviceAwake && (state == VLCState.Opening || state == VLCState.Playing));
         }
 
         private async void OnStateChangedAsync(object sender, EventArgs e)
         {
-            await UpdateStateAsync();
+            await DispatcherInvokeAsync(UpdateState);
         }
 
         /// <summary>

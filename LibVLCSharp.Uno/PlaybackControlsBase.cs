@@ -52,7 +52,7 @@ namespace LibVLCSharp.Uno
             DefaultStyleKey = typeof(PlaybackControls);
             Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation(), new DisplayRequestAdapter());
             Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
-            var autoHideManager = Manager.Get<AutoHideManager>();
+            var autoHideManager = Manager.Get<AutoHideNotifier>();
             autoHideManager.Shown += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
             autoHideManager.Hidden += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeOutState, true);
             autoHideManager.Enabled = ShowAndHideAutomatically;
@@ -125,7 +125,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="LibVLC"/> dependency property
         /// </summary>
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
-            typeof(PlaybackControlsBase), new PropertyMetadata(null));
+            typeof(PlaybackControlsBase), new PropertyMetadata(null,
+                (d, args) => ((PlaybackControlsBase)d).Manager.LibVLC = (LibVLC)args.NewValue));
         /// <summary>
         /// Gets or sets the <see cref="Shared.LibVLC"/> instance
         /// </summary>
@@ -170,7 +171,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public static readonly DependencyProperty KeepDeviceAwakeProperty = DependencyProperty.Register(nameof(KeepDeviceAwake), typeof(bool),
             typeof(PlaybackControlsBase),
-            new PropertyMetadata(true, async (d, args) => await ((PlaybackControlsBase)d).OnKeepDeviceAwakePropertyChangedAsync()));
+            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).OnKeepDeviceAwakePropertyChanged()));
         /// <summary>
         /// Gets or sets a value indicating whether the device should be kept awake
         /// </summary>
@@ -689,7 +690,7 @@ namespace LibVLCSharp.Uno
 
         private void VolumeFlyout_Opened(object sender, object e)
         {
-            Manager.Get<AutoHideManager>().Enabled = false;
+            Manager.Get<AutoHideNotifier>().Enabled = false;
         }
 
         private void VolumeFlyout_Closed(object sender, object e)
@@ -704,7 +705,7 @@ namespace LibVLCSharp.Uno
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
         {
-            Manager.Get<AutoHideManager>().Enabled = ShowAndHideAutomatically;
+            Manager.Get<AutoHideNotifier>().Enabled = ShowAndHideAutomatically;
         }
 
         /// <summary>
@@ -712,7 +713,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public void Show()
         {
-            Manager.Get<AutoHideManager>().Show();
+            Manager.Get<AutoHideNotifier>().Show();
         }
 
         /// <summary>
@@ -720,16 +721,16 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public void Hide()
         {
-            Manager.Get<AutoHideManager>().Hide();
+            Manager.Get<AutoHideNotifier>().Hide();
         }
 
         #endregion
 
         #region Device awakening
 
-        private Task OnKeepDeviceAwakePropertyChangedAsync()
+        private void OnKeepDeviceAwakePropertyChanged()
         {
-            return Manager.Get<DeviceAwakeningManager>().KeepDeviceAwakeAsync(KeepDeviceAwake);
+            Manager.Get<DeviceAwakeningManager>().KeepDeviceAwake = KeepDeviceAwake;
         }
 
         #endregion

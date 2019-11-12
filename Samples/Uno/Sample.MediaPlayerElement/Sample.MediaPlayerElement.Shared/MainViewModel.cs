@@ -72,7 +72,7 @@ namespace Sample.MediaPlayerElement
             MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
-            SuspensionManager.Restore(MediaPlayer);
+            SuspensionHelpers.Restore(MediaPlayer);
         }
 
         /// <summary>

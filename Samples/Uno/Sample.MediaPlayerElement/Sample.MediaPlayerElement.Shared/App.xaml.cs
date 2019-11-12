@@ -91,7 +91,7 @@ namespace Sample.MediaPlayerElement
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            SuspensionManager.Save(((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel?.MediaPlayer);
+            SuspensionHelpers.Save(((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel?.MediaPlayer);
             deferral.Complete();
         }
     }
