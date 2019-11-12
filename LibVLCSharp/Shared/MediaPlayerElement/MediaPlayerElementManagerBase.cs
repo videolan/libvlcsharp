@@ -7,7 +7,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Base class for managers used by MediaPlayerElement or PlaybackControls
     /// </summary>
-    public abstract class MediaPlayerElementManagerBase : IDisposable
+    internal abstract class MediaPlayerElementManagerBase : IDisposable
     {
         /// <summary>
         /// Occurs when <see cref="MediaPlayer"/> property changed or the controls are initialized

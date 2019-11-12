@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Subtitles tracks manager
     /// </summary>
-    public class SubtitlesTracksManager : TracksManager
+    internal class SubtitlesTracksManager : TracksManager
     {
         /// <summary>
         /// Initialized a new instance of <see cref="SubtitlesTracksManager"/> class

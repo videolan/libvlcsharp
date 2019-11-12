@@ -104,18 +104,20 @@ namespace LibVLCSharp.Uno
         private Button? ZoomButton { get; set; }
         private FrameworkElement? FullWindowButton { get; set; }
 
+        // I don't understand why there is an exception in UWP when I define the property like this : public LibVLCSharp.Uno.VideoView? VideoView
+        // I introduced an useless LibVLCSharp.Uno.IVideoView interface as a workaround and it works, it's very strange...
         /// <summary>
         /// Identifies the <see cref="VideoView"/> dependency property
         /// </summary>
-        public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(IVideoControl),
+        public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(IVideoView),
             typeof(PlaybackControlsBase), new PropertyMetadata(null,
                 (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (IVideoControl)args.NewValue));
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
-        public IVideoControl? VideoView
+        public IVideoView? VideoView
         {
-            get => (IVideoControl)GetValue(VideoViewProperty);
+            get => (IVideoView)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
         }
 

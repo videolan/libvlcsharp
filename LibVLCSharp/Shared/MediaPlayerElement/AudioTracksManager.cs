@@ -6,7 +6,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Audio tracks manager
     /// </summary>
-    public class AudioTracksManager : TracksManager
+    internal class AudioTracksManager : TracksManager
     {
         /// <summary>
         /// Initialized a new instance of <see cref="AudioTracksManager"/> class

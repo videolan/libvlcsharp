@@ -7,7 +7,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     /// <summary>
     /// Manage the playback controls auto hide feature
     /// </summary>
-    public class AutoHideManager : MediaPlayerElementManagerBase
+    internal class AutoHideManager : MediaPlayerElementManagerBase
     {
         /// <summary>
         /// Occurs whenever the playback controls should be shown
