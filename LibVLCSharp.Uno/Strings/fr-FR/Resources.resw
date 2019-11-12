@@ -138,6 +138,9 @@
   <data name="AspectRatio_4_3" xml:space="preserve">
     <value>4/3</value>
   </data>
+  <data name="Disconnect" xml:space="preserve">
+    <value>Déconnecter</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>Muet</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="ShowAudioSelectionMenu" xml:space="preserve">
     <value>Afficher le menu de sélection audio</value>
+  </data>
+  <data name="ShowCastMenu" xml:space="preserve">
+    <value>Afficher le menu Diffuser sur un appareil</value>
   </data>
   <data name="ShowClosedCaptionMenu" xml:space="preserve">
     <value>Afficher le menu des sous-titres</value>

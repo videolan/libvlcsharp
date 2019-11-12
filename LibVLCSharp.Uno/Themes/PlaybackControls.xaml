@@ -522,6 +522,18 @@
                                 </VisualState>
                                 <VisualState x:Name="ZoomUnavailable" />
                             </VisualStateGroup>
+                            <!--Cast button visibility states-->
+                            <VisualStateGroup x:Name="CastAvailablityStates">
+                                <VisualState x:Name="CastAvailable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CastButton"
+                                                                       Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CastUnavailable" />
+                            </VisualStateGroup>
                             <!--Closed Captioning  visibility states-->
                             <!--Focus states-->
                             <VisualStateGroup x:Name="FocusStates">

@@ -11,7 +11,7 @@ namespace LibVLCSharp.Uno
         private static FontFamily Solid { get; } =
             new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free");
         private static FontFamily Brands { get; } =
-            new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Brands-Regular-400.otf#Font Awesome 5 Free");
+            new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Brands-Regular-400.otf#Font Awesome 5 Brands");
 
         /// <summary>
         /// Creates a solid font icon
