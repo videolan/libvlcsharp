@@ -71,6 +71,9 @@ namespace LibVLCSharp.Forms.Shared
             var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
             castRenderersDiscoverer.CastAvailableChanged += (sender, e) => UpdateCastAvailability();
             castRenderersDiscoverer.Enabled = IsCastButtonVisible;
+            var seekBarManager = Manager.Get<SeekBarManager>();
+            seekBarManager.PositionChanged += (sender, e) => UpdateTime();
+            seekBarManager.SeekableChanged += (sender, e) => UpdateSeekAvailability();
         }
 
         /// <summary>
@@ -700,8 +703,12 @@ namespace LibVLCSharp.Forms.Shared
 
             if (SeekBar != null)
             {
+                Manager.Get<SeekBarManager>().SeekBarMaximum = SeekBar.Maximum;
                 SeekBar.ValueChanged += SeekBar_ValueChanged;
             }
+
+            UpdateSeekAvailability();
+            UpdateTime();
         }
 
         private static void IsAudioTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -761,11 +768,6 @@ namespace LibVLCSharp.Forms.Shared
             UpdateState(VLCState.Ended);
         }
 
-        private void MediaPlayer_LengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
-        {
-            UpdateTime(MediaPlayer?.Position);
-        }
-
         private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
         {
             Reset();
@@ -789,16 +791,6 @@ namespace LibVLCSharp.Forms.Shared
         private void MediaPlayer_Playing(object sender, EventArgs e)
         {
             UpdateState(VLCState.Playing);
-        }
-
-        private void MediaPlayer_PositionChanged(object sender, MediaPlayerPositionChangedEventArgs e)
-        {
-            UpdatePosition(e.Position);
-        }
-
-        private void MediaPlayer_SeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
-        {
-            UpdateSeekAvailability(e.Seekable == 1);
         }
 
         private void MediaPlayer_Stopped(object sender, EventArgs e)
@@ -985,14 +977,11 @@ namespace LibVLCSharp.Forms.Shared
                 oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
                 oldMediaPlayer.EncounteredError -= MediaPlayer_EncounteredError;
                 oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
-                oldMediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
                 oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
                 oldMediaPlayer.NothingSpecial -= MediaPlayer_NothingSpecial;
                 oldMediaPlayer.PausableChanged -= MediaPlayer_PausableChanged;
                 oldMediaPlayer.Paused -= MediaPlayer_Paused;
                 oldMediaPlayer.Playing -= MediaPlayer_Playing;
-                oldMediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
-                oldMediaPlayer.SeekableChanged -= MediaPlayer_SeekableChanged;
                 oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
             }
 
@@ -1001,14 +990,11 @@ namespace LibVLCSharp.Forms.Shared
                 newMediaPlayer.Buffering += MediaPlayer_Buffering;
                 newMediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
-                newMediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
                 newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
                 newMediaPlayer.NothingSpecial += MediaPlayer_NothingSpecial;
                 newMediaPlayer.PausableChanged += MediaPlayer_PausableChanged;
                 newMediaPlayer.Paused += MediaPlayer_Paused;
                 newMediaPlayer.Playing += MediaPlayer_Playing;
-                newMediaPlayer.PositionChanged += MediaPlayer_PositionChanged;
-                newMediaPlayer.SeekableChanged += MediaPlayer_SeekableChanged;
                 newMediaPlayer.Stopped += MediaPlayer_Stopped;
             }
 
@@ -1110,9 +1096,7 @@ namespace LibVLCSharp.Forms.Shared
             UpdateState();
             UpdateAudioTracksSelectionAvailability();
             UpdateClosedCaptionsTracksSelectionAvailability();
-            UpdatePosition();
             UpdatePauseAvailability();
-            UpdateSeekAvailability();
             UpdateErrorMessage();
         }
 
@@ -1154,13 +1138,13 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateSeekAvailability(bool? canSeek = null)
+        private void UpdateSeekAvailability()
         {
             var seekBar = SeekBar;
             if (seekBar != null)
             {
                 Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar, IsSeekEnabled &&
-                    (canSeek ?? MediaPlayer?.IsSeekable == true) ? SeekAvailableState : SeekUnavailableState));
+                    Manager.Get<SeekBarManager>().Seekable ? SeekAvailableState : SeekUnavailableState));
             }
         }
 
@@ -1180,93 +1164,39 @@ namespace LibVLCSharp.Forms.Shared
         private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
         {
             Show();
-
-            UpdateTime();
-            UpdateMediaPlayerPosition();
+            Manager.Get<SeekBarManager>().SetSeekBarPosition(e.NewValue);
         }
 
-        private void UpdateMediaPlayerPosition()
+        private void UpdateTime()
         {
             try
             {
-                var mediaPlayer = MediaPlayer;
-                if (mediaPlayer != null)
+                var position = Manager.Get<SeekBarManager>().Position;
+                if (SeekBar != null)
                 {
-                    mediaPlayer.Position = (float)(SeekBar.Value / SeekBar.Maximum);
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex);
-            }
-        }
-
-        private void UpdatePosition(float? position = null)
-        {
-            try
-            {
-                var mediaPlayer = MediaPlayer;
-                var pos = position ?? mediaPlayer?.Position ?? 0;
-                var timeSpanPosition = TimeSpan.FromMilliseconds((mediaPlayer?.Length ?? 0) * pos);
-                var elapsedTime = (timeSpanPosition - Position).TotalMilliseconds;
-                if (position != null && elapsedTime > 0 && elapsedTime < 750)
-                {
-                    return;
-                }
-
-                UpdateSeekBar(timeSpanPosition, pos);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex);
-            }
-        }
-
-        private void UpdateTime(double? position = null)
-        {
-            if (RemainingTimeLabel == null || ElapsedTimeLabel == null)
-            {
-                return;
-            }
-
-            try
-            {
-                var mediaPlayer = MediaPlayer;
-                var state = mediaPlayer?.State;
-                var length = mediaPlayer == null || state == VLCState.Ended || state == VLCState.Error || state == VLCState.NothingSpecial ||
-                    state == VLCState.Stopped ? 0 : mediaPlayer.Length;
-                var time = position ?? (SeekBar.Value * length / SeekBar.Maximum);
-                var timeRemaining = $"- {TimeSpan.FromMilliseconds(length - time).ToShortString()}";
-                var timeElapsed = TimeSpan.FromMilliseconds(time).ToShortString();
-                if (RemainingTimeLabel.Text != timeRemaining)
-                {
-                    Device.BeginInvokeOnMainThread(() =>
+                    SeekBar.ValueChanged -= SeekBar_ValueChanged;
+                    try
                     {
-                        RemainingTimeLabel.Text = timeRemaining;
-                        ElapsedTimeLabel.Text = timeElapsed;
-                    });
+                        SeekBar.Value = position.SeekBarPosition;
+                    }
+                    finally
+                    {
+                        SeekBar.ValueChanged += SeekBar_ValueChanged;
+                    }
+                }
+                if (RemainingTimeLabel != null)
+                {
+                    RemainingTimeLabel.Text = position.RemainingTimeText;
+                }
+                if (ElapsedTimeLabel != null)
+                {
+                    ElapsedTimeLabel.Text = position.ElapsedTimeText;
                 }
             }
             catch (Exception ex)
             {
                 ShowErrorMessageBox(ex);
             }
-        }
-
-        private void UpdateSeekBar(TimeSpan timeSpan, float position = 0)
-        {
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                Position = timeSpan;
-                var seekBar = SeekBar;
-                if (seekBar != null)
-                {
-                    seekBar.ValueChanged -= SeekBar_ValueChanged;
-                    seekBar.Value = position * seekBar.Maximum;
-                    seekBar.ValueChanged += SeekBar_ValueChanged;
-                }
-            });
-            UpdateTime(timeSpan.TotalMilliseconds);
         }
 
         private void UpdateState(VLCState? state = null)
@@ -1281,9 +1211,7 @@ namespace LibVLCSharp.Forms.Shared
                 case VLCState.Stopped:
                 case VLCState.Ended:
                 case VLCState.NothingSpecial:
-                    UpdateSeekBar(TimeSpan.Zero);
                     UpdatePauseAvailability(true);
-                    UpdateSeekAvailability(false);
                     UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
                     UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsSelectionUnavailableState);
                     goto case VLCState.Paused;

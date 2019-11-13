@@ -78,11 +78,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private async Task ShowAsync()
         {
             StopTimer();
-            var shown = Shown;
-            if (shown != null)
-            {
-                await DispatcherInvokeAsync(() => shown(this, EventArgs.Empty));
-            }
+            await DispatcherInvokeEventHandlerAsync(Shown);
             StartTimer();
         }
 

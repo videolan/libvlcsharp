@@ -10,17 +10,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     internal class VolumeManager : MediaPlayerElementManagerBase
     {
         /// <summary>
-        /// Occurs when <see cref="Enabled"/> property value changed
+        /// Occurs when <see cref="Enabled"/> property value changes
         /// </summary>
         public event EventHandler? EnabledChanged;
 
         /// <summary>
-        /// Occurs when <see cref="Volume"/> property value changed
+        /// Occurs when <see cref="Volume"/> property value changes
         /// </summary>
         public event EventHandler? VolumeChanged;
 
         /// <summary>
-        /// Occurs when <see cref="Mute"/> property value changed
+        /// Occurs when <see cref="Mute"/> property value changes
         /// </summary>
         public event EventHandler? MuteChanged;
 
@@ -113,11 +113,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
         private async void MediaPlayer_MuteChangedAsync(object sender, EventArgs e)
         {
-            var muteChanged = MuteChanged;
-            if (muteChanged != null)
-            {
-                await DispatcherInvokeAsync(() => muteChanged(this, EventArgs.Empty));
-            }
+            await DispatcherInvokeEventHandlerAsync(MuteChanged);
         }
 
         /// <summary>

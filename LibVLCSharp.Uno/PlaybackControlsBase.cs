@@ -76,6 +76,9 @@ namespace LibVLCSharp.Uno
             volumeManager.EnabledChanged += (sender, e) => UpdateVolumeButton();
             volumeManager.VolumeChanged += (sender, e) => UpdateVolumeSlider();
             volumeManager.MuteChanged += (sender, e) => UpdateMuteState();
+            var seekBarManager = Manager.Get<SeekBarManager>();
+            seekBarManager.SeekableChanged += (sender, e) => UpdateSeekBarAvailability();
+            seekBarManager.PositionChanged += (sender, e) => UpdateTime();
         }
 
         /// <summary>
@@ -522,7 +525,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsSeekBarVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsSeekBarVisibleProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarVisible), typeof(bool), typeof(PlaybackControls),
-            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekBarVisibility()));
+            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekBarAvailability()));
         /// <summary>
         /// Gets or sets a value indicating whether the seek bar is shown
         /// </summary>
@@ -536,7 +539,7 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsSeekBarEnabled"/> dependency property
         /// </summary>
         public static DependencyProperty IsSeekBarEnabledProperty { get; } = DependencyProperty.Register(nameof(IsSeekBarEnabled), typeof(bool), typeof(PlaybackControls),
-            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekAvailability()));
+            new PropertyMetadata(true, (d, e) => ((PlaybackControls)d).UpdateSeekBarAvailability()));
         /// <summary>
         /// Gets or sets a value indicating whether a user can use the seek bar to find a location in the media
         /// </summary>
@@ -569,6 +572,7 @@ namespace LibVLCSharp.Uno
             {
                 ProgressSlider.Minimum = 0;
                 ProgressSlider.Maximum = 100;
+                Manager.Get<SeekBarManager>().SeekBarMaximum = 100;
                 ProgressSlider.ValueChanged += ProgressSlider_ValueChanged;
             }
             TimeElapsedElement = GetTemplateChild(nameof(TimeElapsedElement)) as TextBlock;
@@ -615,6 +619,8 @@ namespace LibVLCSharp.Uno
             UpdateVolumeButton();
             UpdateMuteState();
             UpdateVolumeSlider();
+            UpdateSeekBarAvailability();
+            UpdateTime();
             Reset();
         }
 
@@ -644,55 +650,6 @@ namespace LibVLCSharp.Uno
             if (control != null)
             {
                 control.IsEnabled = enabled;
-            }
-        }
-
-        private void ProgressSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            var progressSlider = (Slider)sender;
-            var position = (float)(progressSlider.Value / progressSlider.Maximum);
-            UpdateTime(position);
-            MediaPlayer!.Position = position;
-        }
-
-        private void UpdateSeekBarPosition(float position = 0)
-        {
-            UpdateTime(position);
-            if (ProgressSlider != null)
-            {
-                ProgressSlider.ValueChanged -= ProgressSlider_ValueChanged;
-                try
-                {
-                    ProgressSlider.Value = position * ProgressSlider.Maximum;
-                }
-                finally
-                {
-                    ProgressSlider.ValueChanged += ProgressSlider_ValueChanged;
-                }
-            }
-        }
-
-        private void UpdateTime(float position = 0)
-        {
-            if (TimeRemainingElement == null && TimeElapsedElement == null)
-            {
-                return;
-            }
-
-            var mediaPlayer = MediaPlayer;
-            var state = mediaPlayer?.State;
-            var length = mediaPlayer == null || state == VLCState.Ended || state == VLCState.Error || state == VLCState.NothingSpecial ||
-                state == VLCState.Stopped ? 0 : mediaPlayer.Length;
-            var time = position * length;
-            var timeRemaining = TimeSpan.FromMilliseconds(length - time).ToShortString();
-            var timeElapsed = TimeSpan.FromMilliseconds(time).ToShortString();
-            if (TimeRemainingElement?.Text != timeRemaining)
-            {
-                TimeRemainingElement!.Text = timeRemaining;
-            }
-            if (TimeElapsedElement?.Text != timeElapsed)
-            {
-                TimeElapsedElement!.Text = timeElapsed;
             }
         }
 
@@ -950,6 +907,49 @@ namespace LibVLCSharp.Uno
 
         #endregion
 
+        #region Seek bar
+
+        private void ProgressSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Manager.Get<SeekBarManager>().SetSeekBarPosition(e.NewValue);
+        }
+
+        private void UpdateTime()
+        {
+            var position = Manager.Get<SeekBarManager>().Position;
+            if (ProgressSlider != null)
+            {
+                ProgressSlider.ValueChanged -= ProgressSlider_ValueChanged;
+                try
+                {
+                    ProgressSlider.Value = position.SeekBarPosition;
+                }
+                finally
+                {
+                    ProgressSlider.ValueChanged += ProgressSlider_ValueChanged;
+                }
+            }
+            if (TimeRemainingElement != null)
+            {
+                TimeRemainingElement.Text = position.RemainingTimeText;
+            }
+            if (TimeElapsedElement != null)
+            {
+                TimeElapsedElement.Text = position.ElapsedTimeText;
+            }
+        }
+
+        private void UpdateSeekBarAvailability()
+        {
+            VisualStateManager.GoToState(this, IsSeekBarVisible ? SeekBarAvailableState : SeekBarUnavailableState, true);
+            if (ProgressSlider != null)
+            {
+                ProgressSlider.IsEnabled = IsSeekBarEnabled && Manager.Get<SeekBarManager>().Seekable;
+            }
+        }
+
+        #endregion
+
         private void SetButtonClick(DependencyObject? dependencyObject, RoutedEventHandler eventHandler)
         {
             if (dependencyObject is ButtonBase button)
@@ -1053,14 +1053,11 @@ namespace LibVLCSharp.Uno
                 oldValue.Buffering -= MediaPlayer_BufferingAsync;
                 oldValue.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
                 oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
-                oldValue.LengthChanged -= MediaPlayer_LengthChangedAsync;
                 oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
                 oldValue.NothingSpecial -= MediaPlayer_UpdateStateAsync;
                 oldValue.PausableChanged -= MediaPlayer_PausableChangedAsync;
                 oldValue.Paused -= MediaPlayer_UpdateStateAsync;
                 oldValue.Playing -= MediaPlayer_UpdateStateAsync;
-                oldValue.PositionChanged -= MediaPlayer_PositionChangedAsync;
-                oldValue.SeekableChanged -= MediaPlayer_SeekableChangedAsync;
                 oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
             }
 
@@ -1069,14 +1066,11 @@ namespace LibVLCSharp.Uno
                 newValue.Buffering += MediaPlayer_BufferingAsync;
                 newValue.EncounteredError += MediaPlayer_EncounteredErrorAsync;
                 newValue.EndReached += MediaPlayer_UpdateStateAsync;
-                newValue.LengthChanged += MediaPlayer_LengthChangedAsync;
                 newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
                 newValue.NothingSpecial += MediaPlayer_UpdateStateAsync;
                 newValue.PausableChanged += MediaPlayer_PausableChangedAsync;
                 newValue.Paused += MediaPlayer_UpdateStateAsync;
                 newValue.Playing += MediaPlayer_UpdateStateAsync;
-                newValue.PositionChanged += MediaPlayer_PositionChangedAsync;
-                newValue.SeekableChanged += MediaPlayer_SeekableChangedAsync;
                 newValue.Stopped += MediaPlayer_UpdateStateAsync;
             }
 
@@ -1093,11 +1087,6 @@ namespace LibVLCSharp.Uno
             await DispatcherRunAsync(() => UpdateState(VLCState.Error));
         }
 
-        private async void MediaPlayer_LengthChangedAsync(object sender, MediaPlayerLengthChangedEventArgs e)
-        {
-            await DispatcherRunAsync(() => UpdateTime(MediaPlayer!.Position));
-        }
-
         private async void MediaPlayer_MediaChangedAsync(object sender, MediaPlayerMediaChangedEventArgs e)
         {
             await DispatcherRunAsync(Reset);
@@ -1106,16 +1095,6 @@ namespace LibVLCSharp.Uno
         private async void MediaPlayer_PausableChangedAsync(object sender, MediaPlayerPausableChangedEventArgs e)
         {
             await DispatcherRunAsync(() => UpdatePlayPauseAvailability(e.Pausable == 1));
-        }
-
-        private async void MediaPlayer_PositionChangedAsync(object sender, MediaPlayerPositionChangedEventArgs e)
-        {
-            await DispatcherRunAsync(() => UpdateSeekBarPosition(e.Position));
-        }
-
-        private async void MediaPlayer_SeekableChangedAsync(object sender, MediaPlayerSeekableChangedEventArgs e)
-        {
-            await DispatcherRunAsync(() => UpdateSeekAvailability(e.Seekable == 1));
         }
 
         private async void MediaPlayer_UpdateStateAsync(object sender, EventArgs e)
@@ -1127,10 +1106,8 @@ namespace LibVLCSharp.Uno
         {
             HasError = false;
             UpdateState();
-            UpdateSeekBarPosition();
             UpdatePlayPauseAvailability();
             UpdateStopButton();
-            UpdateSeekAvailability();
         }
 
         private async Task DispatcherRunAsync(DispatchedHandler handler)
@@ -1163,8 +1140,6 @@ namespace LibVLCSharp.Uno
                 case VLCState.Ended:
                 case VLCState.NothingSpecial:
                     UpdatePlayPauseAvailability(true);
-                    UpdateSeekBarPosition();
-                    UpdateSeekAvailability(false);
                     goto case VLCState.Paused;
                 case VLCState.Paused:
                     if (HasError)
@@ -1188,20 +1163,6 @@ namespace LibVLCSharp.Uno
             VisualStateManager.GoToState(this, statusState, true);
             UpdatePlayPauseState(playState);
             UpdateStopButton();
-        }
-
-        private void UpdateSeekBarVisibility()
-        {
-            VisualStateManager.GoToState(this, IsSeekBarVisible ? SeekBarAvailableState : SeekBarUnavailableState, true);
-            UpdateSeekAvailability();
-        }
-
-        private void UpdateSeekAvailability(bool? seekable = null)
-        {
-            if (ProgressSlider != null)
-            {
-                ProgressSlider.IsEnabled = IsSeekBarEnabled && (seekable ?? MediaPlayer?.IsSeekable == true);
-            }
         }
 
         private void UpdateMuteState()

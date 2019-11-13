@@ -28,7 +28,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="MediaPlayerElementManagerBase"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public MediaPlayerElementManagerBase(IDispatcher? dispatcher = null)
+        public MediaPlayerElementManagerBase(IDispatcher? dispatcher)
         {
             Dispatcher = dispatcher;
         }
@@ -148,6 +148,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="mediaPlayer">media player</param>
         protected virtual void UnsubscribeEvents(Shared.MediaPlayer mediaPlayer)
         {
+        }
+
+        protected async Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler, EventArgs? eventArgs = null)
+        {
+            if (eventHandler != null)
+            {
+                await DispatcherInvokeAsync(() => eventHandler(this, eventArgs ?? EventArgs.Empty));
+            }
         }
 
         /// <summary>
