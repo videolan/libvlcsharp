@@ -73,6 +73,8 @@ namespace LibVLCSharp.Forms.Shared
             var seekBarManager = Manager.Get<SeekBarManager>();
             seekBarManager.PositionChanged += (sender, e) => UpdateTime();
             seekBarManager.SeekableChanged += (sender, e) => UpdateSeekAvailability();
+            var bufferingProgressNotifier = Manager.Get<BufferingProgressNotifier>();
+            bufferingProgressNotifier.Buffering += (sender, e) => OnBuffering();
         }
 
         /// <summary>
@@ -694,6 +696,7 @@ namespace LibVLCSharp.Forms.Shared
 
             UpdateSeekAvailability();
             UpdateTime();
+            OnBuffering();
         }
 
         private static void IsAudioTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -734,13 +737,9 @@ namespace LibVLCSharp.Forms.Shared
             ((PlaybackControls)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)oldValue, (LibVLCSharp.Shared.MediaPlayer)newValue);
         }
 
-        private void MediaPlayer_Buffering(object sender, MediaPlayerBufferingEventArgs e)
+        private void OnBuffering()
         {
-            var value = (int)e.Cache / 100.0d;
-            if (BufferingProgress != value)
-            {
-                Device.BeginInvokeOnMainThread(() => BufferingProgress = value);
-            }
+            BufferingProgress = Manager.Get<BufferingProgressNotifier>().BufferingProgress;
         }
 
         private void MediaPlayer_EncounteredError(object sender, EventArgs e)
@@ -959,7 +958,6 @@ namespace LibVLCSharp.Forms.Shared
 
             if (oldMediaPlayer != null)
             {
-                oldMediaPlayer.Buffering -= MediaPlayer_Buffering;
                 oldMediaPlayer.EncounteredError -= MediaPlayer_EncounteredError;
                 oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
                 oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
@@ -972,7 +970,6 @@ namespace LibVLCSharp.Forms.Shared
 
             if (newMediaPlayer != null)
             {
-                newMediaPlayer.Buffering += MediaPlayer_Buffering;
                 newMediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
                 newMediaPlayer.EndReached += MediaPlayer_EndReached;
                 newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
@@ -1045,7 +1042,7 @@ namespace LibVLCSharp.Forms.Shared
         {
             if (tracksSelectionButton != null)
             {
-                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(tracksSelectionButton, state));
+                VisualStateManager.GoToState(tracksSelectionButton, state);
             }
         }
 
@@ -1128,8 +1125,8 @@ namespace LibVLCSharp.Forms.Shared
             var seekBar = SeekBar;
             if (seekBar != null)
             {
-                Device.BeginInvokeOnMainThread(() => VisualStateManager.GoToState(seekBar, IsSeekEnabled &&
-                    Manager.Get<SeekBarManager>().Seekable ? SeekAvailableState : SeekUnavailableState));
+                VisualStateManager.GoToState(seekBar, IsSeekEnabled &&
+                    Manager.Get<SeekBarManager>().Seekable ? SeekAvailableState : SeekUnavailableState);
             }
         }
 
@@ -1138,11 +1135,8 @@ namespace LibVLCSharp.Forms.Shared
             var castButton = CastButton;
             if (castButton != null)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    VisualStateManager.GoToState(castButton, Manager.Get<CastRenderersDiscoverer>().CastAvailable ?
-                        CastAvailableState : CastUnavailableState);
-                });
+                VisualStateManager.GoToState(castButton,
+                    Manager.Get<CastRenderersDiscoverer>().CastAvailable ? CastAvailableState : CastUnavailableState);
             }
         }
 
@@ -1211,7 +1205,6 @@ namespace LibVLCSharp.Forms.Shared
 
             Device.BeginInvokeOnMainThread(() =>
             {
-                BufferingProgress = 0;
                 var playPauseButton = PlayPauseButton;
                 if (playPauseButton != null)
                 {

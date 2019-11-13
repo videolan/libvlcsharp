@@ -79,6 +79,8 @@ namespace LibVLCSharp.Uno
             var seekBarManager = Manager.Get<SeekBarManager>();
             seekBarManager.SeekableChanged += (sender, e) => UpdateSeekBarAvailability();
             seekBarManager.PositionChanged += (sender, e) => UpdateTime();
+            var bufferingManager = Manager.Get<BufferingProgressNotifier>();
+            bufferingManager.IsBufferingChanged += (sender, e) => OnIsBufferingChanged();
         }
 
         /// <summary>
@@ -621,6 +623,7 @@ namespace LibVLCSharp.Uno
             UpdateVolumeSlider();
             UpdateSeekBarAvailability();
             UpdateTime();
+            OnIsBufferingChanged();
             Reset();
         }
 
@@ -652,8 +655,6 @@ namespace LibVLCSharp.Uno
                 control.IsEnabled = enabled;
             }
         }
-
-        #region Aspect ratio
 
         private void AddAspectRatioMenu(Button? zoomButton)
         {
@@ -695,10 +696,6 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        #endregion
-
-        #region Auto hide
-
         private void Flyout_Opened(object sender, object e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
@@ -735,18 +732,10 @@ namespace LibVLCSharp.Uno
             Manager.Get<AutoHideNotifier>().Hide();
         }
 
-        #endregion
-
-        #region Device awakening
-
         private void OnKeepDeviceAwakePropertyChanged()
         {
             Manager.Get<DeviceAwakeningManager>().KeepDeviceAwake = KeepDeviceAwake;
         }
-
-        #endregion
-
-        #region Audio / Subtitles tracks
 
         private void AddTracksMenu(Button? trackButton, TracksManager manager, string availableStateName, string unavailableStateName,
             bool addNoneItem = false)
@@ -905,10 +894,6 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        #endregion
-
-        #region Seek bar
-
         private void ProgressSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             Manager.Get<SeekBarManager>().SetSeekBarPosition(e.NewValue);
@@ -947,8 +932,6 @@ namespace LibVLCSharp.Uno
                 ProgressSlider.IsEnabled = IsSeekBarEnabled && Manager.Get<SeekBarManager>().Seekable;
             }
         }
-
-        #endregion
 
         private void SetButtonClick(DependencyObject? dependencyObject, RoutedEventHandler eventHandler)
         {
@@ -1050,7 +1033,6 @@ namespace LibVLCSharp.Uno
 
             if (oldValue != null)
             {
-                oldValue.Buffering -= MediaPlayer_BufferingAsync;
                 oldValue.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
                 oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
                 oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
@@ -1063,7 +1045,6 @@ namespace LibVLCSharp.Uno
 
             if (newValue != null)
             {
-                newValue.Buffering += MediaPlayer_BufferingAsync;
                 newValue.EncounteredError += MediaPlayer_EncounteredErrorAsync;
                 newValue.EndReached += MediaPlayer_UpdateStateAsync;
                 newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
@@ -1075,11 +1056,6 @@ namespace LibVLCSharp.Uno
             }
 
             Reset();
-        }
-
-        private async void MediaPlayer_BufferingAsync(object sender, MediaPlayerBufferingEventArgs e)
-        {
-            await DispatcherRunAsync(() => UpdateState(e.Cache == 100 ? (VLCState?)null : VLCState.Buffering));
         }
 
         private async void MediaPlayer_EncounteredErrorAsync(object sender, EventArgs e)
@@ -1148,10 +1124,6 @@ namespace LibVLCSharp.Uno
                     }
                     statusState = DisabledState;
                     playState = true;
-                    break;
-                case VLCState.Buffering:
-                    statusState = BufferingState;
-                    playState = null;
                     break;
                 default:
                     HasError = false;
@@ -1236,6 +1208,11 @@ namespace LibVLCSharp.Uno
                 VisualStateManager.GoToState(this, playPauseAvailableState, true);
             }
             UpdatePlayPauseState(stopped);
+        }
+
+        private void OnIsBufferingChanged()
+        {
+            VisualStateManager.GoToState(this, Manager.Get<BufferingProgressNotifier>().IsBuffering ? BufferingState : NormalState, true);
         }
 
         private void OnIsCompactPropertyChanged()
