@@ -74,7 +74,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             get
             {
                 var volume = MediaPlayer?.Volume;
-                return (volume == null || volume < 0) ? 0 : (int)volume;
+                return (volume == null || volume < float.Epsilon) ? 0 : (int)volume;
             }
             set
             {
@@ -89,7 +89,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private void UpdateEnabled()
         {
             var mediaPlayer = MediaPlayer;
-            Enabled = mediaPlayer != null && mediaPlayer.Volume >= 0;
+            Enabled = mediaPlayer != null && mediaPlayer.Volume > float.Epsilon;
         }
 
         private async void OnMediaPlayerChangedAsync(object sender, EventArgs e)

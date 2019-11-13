@@ -150,11 +150,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         {
         }
 
-        protected async Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler, EventArgs? eventArgs = null)
+        protected async Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler)
         {
             if (eventHandler != null)
             {
-                await DispatcherInvokeAsync(() => eventHandler(this, eventArgs ?? EventArgs.Empty));
+                await DispatcherInvokeAsync(() => eventHandler(this, EventArgs.Empty));
             }
         }
 

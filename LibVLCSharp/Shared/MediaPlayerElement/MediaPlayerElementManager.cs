@@ -30,6 +30,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                new AspectRatioManager(dispatcher, displayInformation),
                new AudioTracksManager(dispatcher),
                new AutoHideNotifier(dispatcher),
+               new BufferingProgressNotifier(dispatcher),
                new CastRenderersDiscoverer(dispatcher),
                new DeviceAwakeningManager(dispatcher, displayRequest),
                new SeekBarManager(dispatcher),
