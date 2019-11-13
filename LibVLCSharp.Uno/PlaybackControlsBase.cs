@@ -11,6 +11,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 namespace LibVLCSharp.Uno
 {
@@ -554,10 +555,10 @@ namespace LibVLCSharp.Uno
         {
             base.OnApplyTemplate();
 
-            PointerEntered += OnPointerMoved;
-            PointerMoved += OnPointerMoved;
-            Tapped += OnPointerMoved;
-            PointerExited += (sender, e) => Show();
+            AddHandler(PointerEnteredEvent, new PointerEventHandler(OnPointerMoved), true);
+            AddHandler(PointerMovedEvent, new PointerEventHandler(OnPointerMoved), true);
+            AddHandler(TappedEvent, new TappedEventHandler(OnPointerMoved), true);
+            AddHandler(PointerExitedEvent, new PointerEventHandler((sender, e) => Show()), true);
 
             LeftSeparator = GetTemplateChild(nameof(LeftSeparator)) as FrameworkElement;
             RightSeparator = GetTemplateChild(nameof(RightSeparator)) as FrameworkElement;
@@ -589,8 +590,7 @@ namespace LibVLCSharp.Uno
             }
             if (GetTemplateChild("VolumeFlyout") is Flyout volumeFlyout)
             {
-                volumeFlyout.Opened += VolumeFlyout_Opened;
-                volumeFlyout.Closed += VolumeFlyout_Closed;
+                SubscribeFlyoutOpenedClosedEvents(volumeFlyout);
             }
             var audioTracksSelectionButton = GetTemplateChild("AudioTracksSelectionButton") as Button;
             var ccSelectionButton = GetTemplateChild("CCSelectionButton") as Button;
@@ -625,6 +625,19 @@ namespace LibVLCSharp.Uno
         /// <param name="resource">resource string</param>
         /// <param name="args">an object array that contains zero or more objects to format</param>
         protected abstract void SetToolTip(DependencyObject? element, string resource, params string[] args);
+
+        private void SubscribeFlyoutOpenedClosedEvents(FlyoutBase flyout)
+        {
+            flyout.Opened += Flyout_Opened;
+            flyout.Closed += Flyout_Closed;
+        }
+
+        private MenuFlyout CreateMenuFlyout()
+        {
+            var menuFlyout = new MenuFlyout();
+            SubscribeFlyoutOpenedClosedEvents(menuFlyout);
+            return menuFlyout;
+        }
 
         private void UpdateControl(Control? control, bool enabled)
         {
@@ -691,7 +704,7 @@ namespace LibVLCSharp.Uno
             {
                 SetToolTip(ZoomButton, "AspectRatio");
 
-                var menuFlyout = new MenuFlyout();
+                var menuFlyout = CreateMenuFlyout();
                 ZoomMenu = menuFlyout;
                 zoomButton.Flyout = menuFlyout;
                 var menuItems = menuFlyout.Items;
@@ -729,19 +742,19 @@ namespace LibVLCSharp.Uno
 
         #region Auto hide
 
-        private void VolumeFlyout_Opened(object sender, object e)
+        private void Flyout_Opened(object sender, object e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
         }
 
-        private void VolumeFlyout_Closed(object sender, object e)
+        private void Flyout_Closed(object sender, object e)
         {
             OnShowAndHideAutomaticallyPropertyChanged();
         }
 
         private void OnPointerMoved(object sender, RoutedEventArgs e)
         {
-            Show();
+            Manager.Get<AutoHideNotifier>().Show(true);
         }
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
@@ -783,7 +796,7 @@ namespace LibVLCSharp.Uno
         {
             if (trackButton != null)
             {
-                var menuFlyout = new MenuFlyout();
+                var menuFlyout = CreateMenuFlyout();
                 trackButton.Flyout = menuFlyout;
                 var tracksMenu = new TracksMenu(manager, availableStateName, unavailableStateName, addNoneItem);
                 TracksMenus.Add(menuFlyout, tracksMenu);
@@ -1000,7 +1013,7 @@ namespace LibVLCSharp.Uno
 
         private void CastButton_Click(object sender, RoutedEventArgs e)
         {
-            var castMenu = new MenuFlyout();
+            var castMenu = CreateMenuFlyout();
             var items = castMenu.Items;
             var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
             var mediaPlayer = MediaPlayer;
