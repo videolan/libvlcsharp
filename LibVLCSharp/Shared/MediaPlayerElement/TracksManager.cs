@@ -38,7 +38,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public TracksManager(IDispatcher dispatcher, TrackType trackType) : base(dispatcher)
         {
             TrackType = trackType;
-            Initialized += async (sender, e) => await InitializeAsync();
+            MediaPlayerChanged += async (sender, e) => await InitializeAsync();
         }
 
         private TrackType TrackType { get; }

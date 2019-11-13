@@ -17,7 +17,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public DeviceAwakeningManager(IDispatcher dispatcher, IDisplayRequest displayRequest) : base(dispatcher)
         {
             DisplayRequest = displayRequest;
-            Initialized += OnStateChangedAsync;
+            MediaPlayerChanged += OnStateChangedAsync;
         }
 
         private IDisplayRequest DisplayRequest { get; }

@@ -662,7 +662,6 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Initialized = true;
                 OnApplyTemplate();
-                Manager.Initialize();
                 Reset();
             }
         }

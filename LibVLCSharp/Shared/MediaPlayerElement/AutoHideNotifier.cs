@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
@@ -25,7 +26,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="dispatcher">dispatcher</param>
         public AutoHideNotifier(IDispatcher dispatcher) : base(dispatcher)
         {
-            Timer = new Timer(obj => Hide(), null, Timeout.Infinite, Timeout.Infinite);
+            MediaPlayerChanged += async (sender, e) => await ShowAsync();
+            Timer = new Timer(async obj => await HideAsync(), null, Timeout.Infinite, Timeout.Infinite);
         }
 
         private bool _enabled = true;
@@ -66,11 +68,18 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private void OnShown()
         {
             StopTimer();
+            Shown?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task ShowAsync()
+        {
+            StopTimer();
             var shown = Shown;
             if (shown != null)
             {
-                DispatcherInvokeAsync(() => shown(this, EventArgs.Empty));
+                await DispatcherInvokeAsync(() => shown(this, EventArgs.Empty));
             }
+            StartTimer();
         }
 
         /// <summary>
@@ -79,11 +88,13 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public void Hide()
         {
             StopTimer();
-            var hidden = Hidden;
-            if (hidden != null)
-            {
-                DispatcherInvokeAsync(() => hidden(this, EventArgs.Empty));
-            }
+            Hidden?.Invoke(this, EventArgs.Empty);
+        }
+
+        private Task HideAsync()
+        {
+            StopTimer();
+            return DispatcherInvokeAsync(() => Hidden?.Invoke(this, EventArgs.Empty));
         }
 
         private void StartTimer()
@@ -99,9 +110,9 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             Timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
-        private void OnStateChanged(object sender, EventArgs e)
+        private async void OnStateChangedAsync(object sender, EventArgs e)
         {
-            Show();
+            await ShowAsync();
         }
 
         /// <summary>
@@ -111,13 +122,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         protected override void SubscribeEvents(MediaPlayer mediaPlayer)
         {
             base.SubscribeEvents(mediaPlayer);
-            mediaPlayer.Buffering += OnStateChanged;
-            mediaPlayer.EncounteredError += OnStateChanged;
-            mediaPlayer.EndReached += OnStateChanged;
-            mediaPlayer.NothingSpecial += OnStateChanged;
-            mediaPlayer.Paused += OnStateChanged;
-            mediaPlayer.Playing += OnStateChanged;
-            mediaPlayer.Stopped += OnStateChanged;
+            mediaPlayer.MediaChanged += OnStateChangedAsync;
+            mediaPlayer.Buffering += OnStateChangedAsync;
+            mediaPlayer.EncounteredError += OnStateChangedAsync;
+            mediaPlayer.EndReached += OnStateChangedAsync;
+            mediaPlayer.NothingSpecial += OnStateChangedAsync;
+            mediaPlayer.Paused += OnStateChangedAsync;
+            mediaPlayer.Playing += OnStateChangedAsync;
+            mediaPlayer.Stopped += OnStateChangedAsync;
         }
 
         /// <summary>
@@ -127,22 +139,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         protected override void UnsubscribeEvents(MediaPlayer mediaPlayer)
         {
             base.UnsubscribeEvents(mediaPlayer);
-            mediaPlayer.Buffering -= OnStateChanged;
-            mediaPlayer.EncounteredError -= OnStateChanged;
-            mediaPlayer.EndReached -= OnStateChanged;
-            mediaPlayer.NothingSpecial -= OnStateChanged;
-            mediaPlayer.Paused -= OnStateChanged;
-            mediaPlayer.Playing -= OnStateChanged;
-            mediaPlayer.Stopped -= OnStateChanged;
-        }
-
-        /// <summary>
-        /// Initialization method called when <see cref="MediaPlayer"/> property changed or the controls are initialized
-        /// </summary>
-        public override void Initialize()
-        {
-            base.Initialize();
-            Show();
+            mediaPlayer.MediaChanged -= OnStateChangedAsync;
+            mediaPlayer.Buffering -= OnStateChangedAsync;
+            mediaPlayer.EncounteredError -= OnStateChangedAsync;
+            mediaPlayer.EndReached -= OnStateChangedAsync;
+            mediaPlayer.NothingSpecial -= OnStateChangedAsync;
+            mediaPlayer.Paused -= OnStateChangedAsync;
+            mediaPlayer.Playing -= OnStateChangedAsync;
+            mediaPlayer.Stopped -= OnStateChangedAsync;
         }
 
         /// <summary>

@@ -1289,7 +1289,6 @@ namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
 			global::LibVLCSharp.Forms.Resource.String.abc_shareactionprovider_share_with_application = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.abc_shareactionprovider_share_with_application;
 			global::LibVLCSharp.Forms.Resource.String.abc_toolbar_collapse_description = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.abc_toolbar_collapse_description;
 			global::LibVLCSharp.Forms.Resource.String.appbar_scrolling_view_behavior = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.appbar_scrolling_view_behavior;
-			global::LibVLCSharp.Forms.Resource.String.app_name = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.app_name;
 			global::LibVLCSharp.Forms.Resource.String.bottom_sheet_behavior = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.bottom_sheet_behavior;
 			global::LibVLCSharp.Forms.Resource.String.character_counter_pattern = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.character_counter_pattern;
 			global::LibVLCSharp.Forms.Resource.String.mr_button_content_description = global::LibVLCSharp.Forms.MediaPlayerElement.Sample.Android.Resource.String.mr_button_content_description;

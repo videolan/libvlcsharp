@@ -32,7 +32,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                new AutoHideNotifier(dispatcher),
                new CastRenderersDiscoverer(dispatcher),
                new DeviceAwakeningManager(dispatcher, displayRequest),
-               new SubtitlesTracksManager(dispatcher)
+               new SubtitlesTracksManager(dispatcher),
+               new VolumeManager(dispatcher)
              };
         }
 
@@ -48,7 +49,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             base.OnVideoViewChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)
             {
-                subManager.VideoView = VideoView;
+                subManager.VideoView = newValue;
             }
         }
 
@@ -62,19 +63,19 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             base.OnLibVLCChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)
             {
-                subManager.LibVLC = LibVLC;
+                subManager.LibVLC = newValue;
             }
         }
 
         /// <summary>
-        /// Called when <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property value changes
+        /// Called when <see cref="MediaPlayer"/> property value changes
         /// </summary>
-        protected override void OnMediaPlayerChanged()
+        protected override void OnMediaPlayerChanged(MediaPlayer? oldValue, MediaPlayer? newValue)
         {
-            base.OnMediaPlayerChanged();
+            base.OnMediaPlayerChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)
             {
-                subManager.MediaPlayer = MediaPlayer;
+                subManager.MediaPlayer = newValue;
             }
         }
 
