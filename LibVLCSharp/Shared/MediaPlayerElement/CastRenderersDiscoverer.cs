@@ -15,7 +15,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     internal class CastRenderersDiscoverer : MediaPlayerElementManagerBase
     {
         /// <summary>
-        /// Occurs when <see cref="CastAvailable"/> property value changed
+        /// Occurs when <see cref="CastAvailable"/> property value changes
         /// </summary>
         public event EventHandler? CastAvailableChanged;
 

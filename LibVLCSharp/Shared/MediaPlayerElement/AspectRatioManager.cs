@@ -12,7 +12,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     internal class AspectRatioManager : MediaPlayerElementManagerBase
     {
         /// <summary>
-        /// Occurs when <see cref="AspectRatio"/> property value changed
+        /// Occurs when <see cref="AspectRatio"/> property value changes
         /// </summary>
         public event EventHandler? AspectRatioChanged;
 

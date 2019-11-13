@@ -32,6 +32,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                new AutoHideNotifier(dispatcher),
                new CastRenderersDiscoverer(dispatcher),
                new DeviceAwakeningManager(dispatcher, displayRequest),
+               new SeekBarManager(dispatcher),
                new SubtitlesTracksManager(dispatcher),
                new VolumeManager(dispatcher)
              };

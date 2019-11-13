@@ -50,7 +50,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
             LibVLC = new LibVLC();
 
             var media = new Media(LibVLC,
-                "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation);
 
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
