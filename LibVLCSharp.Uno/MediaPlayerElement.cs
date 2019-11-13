@@ -2,6 +2,7 @@
 using LibVLCSharp.Shared;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace LibVLCSharp.Uno
 {
@@ -88,9 +89,9 @@ namespace LibVLCSharp.Uno
             }
             if (GetTemplateChild("ContentPresenter") is UIElement contentGrid)
             {
-                contentGrid.PointerEntered += OnPointerMoved;
-                contentGrid.PointerMoved += OnPointerMoved;
-                contentGrid.Tapped += OnPointerMoved;
+                contentGrid.AddHandler(PointerEnteredEvent, new PointerEventHandler(OnPointerMoved), true);
+                contentGrid.AddHandler(PointerMovedEvent, new PointerEventHandler(OnPointerMoved), true);
+                contentGrid.AddHandler(TappedEvent, new TappedEventHandler(OnPointerMoved), true);
             }
         }
 

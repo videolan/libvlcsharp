@@ -57,12 +57,16 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private Timer Timer { get; }
 
         /// <summary>
-        /// Shows the playback controls if they're hidden
+        ///  Shows the playback controls if they're hidden
         /// </summary>
-        public void Show()
+        /// <param name="pointerIsOnPlaybackControls">true if the pointer is on playback controls, false otherwise</param>
+        public void Show(bool pointerIsOnPlaybackControls = false)
         {
             OnShown();
-            StartTimer();
+            if (!pointerIsOnPlaybackControls)
+            {
+                StartTimer();
+            }
         }
 
         private void OnShown()
