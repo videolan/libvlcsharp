@@ -10,14 +10,19 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
     internal abstract class MediaPlayerElementManagerBase : IDisposable
     {
         /// <summary>
-        /// Occurs when <see cref="MediaPlayer"/> property changed or the controls are initialized
+        /// Occurs when <see cref="VideoView"/> property changed
         /// </summary>
-        protected EventHandler? Initialized;
+        protected EventHandler? VideoViewChanged;
 
         /// <summary>
         /// Occurs when <see cref="LibVLC"/> property changed
         /// </summary>
         protected EventHandler? LibVLCChanged;
+
+        /// <summary>
+        /// Occurs when <see cref="MediaPlayer"/> property changed
+        /// </summary>
+        protected EventHandler? MediaPlayerChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MediaPlayerElementManagerBase"/> class
@@ -86,16 +91,9 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             {
                 if (_mediaPlayer != value)
                 {
-                    if (_mediaPlayer != null)
-                    {
-                        UnsubscribeEvents(_mediaPlayer);
-                    }
+                    var oldValue = _mediaPlayer;
                     _mediaPlayer = value;
-                    if (value != null)
-                    {
-                        SubscribeEvents(value);
-                    }
-                    OnMediaPlayerChanged();
+                    OnMediaPlayerChanged(oldValue, value);
                 }
             }
         }
@@ -107,6 +105,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="newValue">new value</param>
         protected virtual void OnVideoViewChanged(IVideoControl? oldValue, IVideoControl? newValue)
         {
+            VideoViewChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -122,9 +121,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Called when <see cref="MediaPlayer"/> property value changes
         /// </summary>
-        protected virtual void OnMediaPlayerChanged()
+        protected virtual void OnMediaPlayerChanged(MediaPlayer? oldValue, MediaPlayer? newValue)
         {
-            Initialize();
+            if (oldValue != null)
+            {
+                UnsubscribeEvents(oldValue);
+            }
+            if (newValue != null)
+            {
+                SubscribeEvents(newValue);
+            }
+            MediaPlayerChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -141,14 +148,6 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="mediaPlayer">media player</param>
         protected virtual void UnsubscribeEvents(Shared.MediaPlayer mediaPlayer)
         {
-        }
-
-        /// <summary>
-        /// Initialization method called when <see cref="MediaPlayer"/> property changed or the controls are initialized
-        /// </summary>
-        public virtual void Initialize()
-        {
-            Initialized?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

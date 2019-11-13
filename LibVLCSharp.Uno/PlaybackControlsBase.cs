@@ -71,6 +71,10 @@ namespace LibVLCSharp.Uno
             var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
             castRenderersDiscoverer.CastAvailableChanged += (sender, e) => UpdateCastButton();
             castRenderersDiscoverer.Enabled = IsCastButtonVisible;
+            var volumeManager = Manager.Get<VolumeManager>();
+            volumeManager.EnabledChanged += (sender, e) => UpdateVolumeButton();
+            volumeManager.VolumeChanged += (sender, e) => UpdateVolumeSlider();
+            volumeManager.MuteChanged += (sender, e) => UpdateMuteState();
         }
 
         /// <summary>
@@ -349,7 +353,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public static DependencyProperty IsVolumeButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsVolumeButtonVisible),
             typeof(bool), typeof(PlaybackControlsBase),
-            new PropertyMetadata(false, (d, e) => ((PlaybackControlsBase)d).UpdateVolumeButton()));
+            new PropertyMetadata(true, (d, e) => ((PlaybackControlsBase)d).UpdateVolumeButton()));
         /// <summary>
         /// Gets or sets a value indicating whether the stop button is shown.
         /// </summary>
@@ -608,7 +612,9 @@ namespace LibVLCSharp.Uno
             SetToolTip(CastButton, "ShowCastMenu");
 
             UpdateZoomButton();
-            Manager.Initialize();
+            UpdateVolumeButton();
+            UpdateMuteState();
+            UpdateVolumeSlider();
             Reset();
         }
 
@@ -1043,9 +1049,6 @@ namespace LibVLCSharp.Uno
                 oldValue.PositionChanged -= MediaPlayer_PositionChangedAsync;
                 oldValue.SeekableChanged -= MediaPlayer_SeekableChangedAsync;
                 oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
-                oldValue.VolumeChanged -= MediaPlayer_VolumeChanged;
-                oldValue.Muted -= MediaPlayer_MuteChanged;
-                oldValue.Unmuted -= MediaPlayer_MuteChanged;
             }
 
             if (newValue != null)
@@ -1062,22 +1065,9 @@ namespace LibVLCSharp.Uno
                 newValue.PositionChanged += MediaPlayer_PositionChangedAsync;
                 newValue.SeekableChanged += MediaPlayer_SeekableChangedAsync;
                 newValue.Stopped += MediaPlayer_UpdateStateAsync;
-                newValue.VolumeChanged += MediaPlayer_VolumeChanged;
-                newValue.Muted += MediaPlayer_MuteChanged;
-                newValue.Unmuted += MediaPlayer_MuteChanged;
             }
 
             Reset();
-        }
-
-        private void MediaPlayer_MuteChanged(object sender, EventArgs e)
-        {
-            UpdateMuteState();
-        }
-
-        private void MediaPlayer_VolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
-        {
-            UpdateVolume();
         }
 
         private async void MediaPlayer_BufferingAsync(object sender, MediaPlayerBufferingEventArgs e)
@@ -1128,8 +1118,6 @@ namespace LibVLCSharp.Uno
             UpdatePlayPauseAvailability();
             UpdateStopButton();
             UpdateSeekAvailability();
-            UpdateMuteState();
-            UpdateVolume();
         }
 
         private async Task DispatcherRunAsync(DispatchedHandler handler)
@@ -1205,36 +1193,22 @@ namespace LibVLCSharp.Uno
 
         private void UpdateMuteState()
         {
-            VisualStateManager.GoToState(this, MediaPlayer?.Mute == true ? "MuteState" : "VolumeState", true);
+            VisualStateManager.GoToState(this, Manager.Get<VolumeManager>().Mute ? "MuteState" : "VolumeState", true);
         }
 
-        private void UpdateVolume()
+        private void UpdateVolumeSlider()
         {
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer == null)
-            {
-                return;
-            }
             var volumeSlider = VolumeSlider;
-            if (volumeSlider == null)
+            if (volumeSlider != null)
             {
-                return;
-            }
-            volumeSlider.ValueChanged -= VolumeSlider_ValueChanged;
-            try
-            {
-                volumeSlider.Value = mediaPlayer.Volume;
-            }
-            finally
-            {
-                volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
+                volumeSlider.Value = Manager.Get<VolumeManager>().Volume;
             }
         }
 
         private void UpdateVolumeButton()
         {
             VisualStateManager.GoToState(this, IsVolumeButtonVisible ? VolumeAvailableState : VolumeUnavailableState, true);
-            UpdateControl(VolumeMuteButton, IsVolumeEnabled);
+            UpdateControl(VolumeMuteButton, IsVolumeEnabled && Manager.Get<VolumeManager>().Enabled);
         }
 
         private void UpdateStopButton()
@@ -1297,15 +1271,7 @@ namespace LibVLCSharp.Uno
 
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            if (MediaPlayer != null)
-            {
-                var mute = MediaPlayer.Mute;
-                MediaPlayer.Volume = (int)e.NewValue;
-                if (mute)
-                {
-                    MediaPlayer.Mute = mute;
-                }
-            }
+            Manager.Get<VolumeManager>().Volume = (int)e.NewValue;
         }
     }
 }
