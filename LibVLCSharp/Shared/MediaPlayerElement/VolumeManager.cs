@@ -86,17 +86,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             }
         }
 
-        private void UpdateEnabled()
-        {
-            var mediaPlayer = MediaPlayer;
-            Enabled = mediaPlayer != null && mediaPlayer.Volume > float.Epsilon;
-        }
-
         private async void OnMediaPlayerChangedAsync(object sender, EventArgs e)
         {
             await DispatcherInvokeAsync(() =>
             {
-                UpdateEnabled();
+                Enabled = MediaPlayer != null;
                 MuteChanged?.Invoke(this, EventArgs.Empty);
                 VolumeChanged?.Invoke(this, EventArgs.Empty);
             });
@@ -104,11 +98,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
         private async void MediaPlayer_VolumeChangedAsync(object sender, EventArgs e)
         {
-            await DispatcherInvokeAsync(() =>
-            {
-                UpdateEnabled();
-                VolumeChanged?.Invoke(this, EventArgs.Empty);
-            });
+            await DispatcherInvokeEventHandlerAsync(VolumeChanged);
         }
 
         private async void MediaPlayer_MuteChangedAsync(object sender, EventArgs e)

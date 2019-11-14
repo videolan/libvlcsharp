@@ -6,7 +6,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Helper class to create Font Awesome icons
     /// </summary>
-    public static class FontAwesome
+    internal static class FontAwesome
     {
         private static FontFamily Solid { get; } =
             new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free");
