@@ -494,7 +494,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="IsCastButtonVisible"/> dependency property
         /// </summary>
         public static DependencyProperty IsCastButtonVisibleProperty { get; } = DependencyProperty.Register(nameof(IsCastButtonVisible), typeof(bool),
-            typeof(PlaybackControlsBase), new PropertyMetadata(false, (d, e) => ((PlaybackControlsBase)d).CastButtonAvailabilityCommand?.Update()));
+            typeof(PlaybackControlsBase), new PropertyMetadata(false,
+                (d, e) => ((PlaybackControlsBase)d).Manager.Get<CastRenderersDiscoverer>().Enabled = (bool)e.NewValue));
         /// <summary>
         /// Gets or sets a value indicating whether the cast button is shown
         /// </summary>
@@ -683,26 +684,26 @@ namespace LibVLCSharp.Uno
                     var menuItem = new ToggleMenuFlyoutItem()
                     {
                         Text = ResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
-                        Tag = aspectRatio,
                         IsChecked = aspectRatio == currentAspectRatio
                     };
-                    menuItem.Click += AspectRatioMenuItem_Click;
+                    menuItem.Command = new ActionCommand<AspectRatio>(AspectRatioMenuItemClick);
+                    menuItem.CommandParameter = aspectRatio;
                     menuItems.Add(menuItem);
                 }
             }
         }
 
-        private void AspectRatioMenuItem_Click(object sender, RoutedEventArgs e)
+        private void AspectRatioMenuItemClick(AspectRatio aspectRatio)
         {
-            CheckMenuItem(ZoomMenu!, sender);
-            Manager.Get<AspectRatioManager>().AspectRatio = (AspectRatio)((FrameworkElement)sender).Tag;
+            Manager.Get<AspectRatioManager>().AspectRatio = aspectRatio;
         }
 
         private void AspectRatioChanged(object sender, EventArgs e)
         {
             if (ZoomMenu != null)
             {
-                CheckMenuItem(ZoomMenu, ZoomMenu.Items.First(i => i.Tag.Equals(((AspectRatioManager)sender).AspectRatio)));
+                var aspectRatio = ((AspectRatioManager)sender).AspectRatio;
+                CheckMenuItem(ZoomMenu, ZoomMenu.Items.OfType<ToggleMenuFlyoutItem>().First(i => (AspectRatio)i.CommandParameter == aspectRatio));
             }
         }
 
@@ -768,7 +769,7 @@ namespace LibVLCSharp.Uno
             AddTrack(menuflyout, null, ResourceLoader.GetString("None"));
         }
 
-        private void AddTrack(MenuFlyout menuflyout, int? trackId, string? trackName, bool subTitle = false)
+        private void AddTrack(MenuFlyout menuflyout, int? trackId, string trackName)
         {
             if (menuflyout == null)
             {
@@ -776,56 +777,41 @@ namespace LibVLCSharp.Uno
             }
 
             var menuItems = menuflyout.Items;
-            if (trackId == null && menuItems.Any(i => i.Tag == null) || trackId != null && menuItems.Any(i => trackId.Equals(i.Tag)))
+            var toggleMenuFlyoutItems = menuItems.OfType<ToggleMenuFlyoutItem>();
+            if (trackId == null && toggleMenuFlyoutItems.Any(i => i.CommandParameter == null) ||
+                trackId != null && toggleMenuFlyoutItems.Any(i => trackId.Equals(i.CommandParameter)))
             {
                 return;
             }
 
-            var menuItem = new ToggleMenuFlyoutItem()
-            {
-                Text = trackName,
-                Tag = trackId
-            };
-            menuItem.Click += TrackMenuItem_Click;
+            var menuItem = new ToggleMenuFlyoutItem() { Text = trackName };
+            menuItem.Command = new ActionCommand<int?>(TrackMenuItemClick);
+            menuItem.CommandParameter = trackId;
             menuItems.Add(menuItem);
 
             if (menuItems.Count == 2)
             {
-                var firstMenuItem = (menuItems.FirstOrDefault() as ToggleMenuFlyoutItem);
-                if (subTitle || firstMenuItem?.Tag != null)
-                {
-                    firstMenuItem!.IsChecked = true;
-                }
-                else
-                {
-                    menuItem.IsChecked = true;
-                }
+                toggleMenuFlyoutItems.FirstOrDefault(i => i.CommandParameter != null).IsChecked = true;
                 VisualStateManager.GoToState(this, TracksMenus[menuflyout].AvailableStateName, true);
             }
         }
 
-        private void CheckMenuItem(MenuFlyout menuFlyout, object menuItem)
+        private void CheckMenuItem(MenuFlyout menuFlyout, ToggleMenuFlyoutItem menuItem)
         {
-            foreach (var item in menuFlyout.Items)
+            foreach (var item in menuFlyout.Items.OfType<ToggleMenuFlyoutItem>())
             {
-                if (item is ToggleMenuFlyoutItem toggleMenuFlyoutItem)
-                {
-                    var isChecked = (item == menuItem);
-                    if (toggleMenuFlyoutItem.IsChecked != isChecked)
-                    {
-                        toggleMenuFlyoutItem.IsChecked = isChecked;
-                    }
-                }
+                item.IsChecked = item == menuItem;
             }
         }
 
-        private void TrackMenuItem_Click(object sender, RoutedEventArgs e)
+        private void TrackMenuItemClick(int? trackId)
         {
-            var menu = TracksMenus.FirstOrDefault(kvp => kvp.Key.Items.Contains(sender));
-            if (!menu.Equals(default(KeyValuePair<MenuFlyout, TracksMenu>)))
+            var menu = TracksMenus.SelectMany(kvp => kvp.Key.Items.OfType<ToggleMenuFlyoutItem>().Where(i => ((int?)i.CommandParameter) == trackId)
+                .Select(i => new { Menu = kvp, MenuItem = i })).FirstOrDefault();
+            if (menu != null)
             {
-                CheckMenuItem(menu.Key, sender);
-                menu.Value.Manager.CurrentTrackId = ((int?)((MenuFlyoutItemBase)sender).Tag) ?? -1;
+                CheckMenuItem(menu.Menu.Key, menu.MenuItem);
+                menu.Menu.Value.Manager.CurrentTrackId = trackId ?? -1;
             }
         }
 
@@ -852,16 +838,16 @@ namespace LibVLCSharp.Uno
             {
                 foreach (var track in tracks)
                 {
-                    AddTrack(menuFlyout, manager, track);
+                    AddTrack(menuFlyout, track);
                 }
             }
         }
 
-        private void AddTrack(MenuFlyout menuFlyout, TracksManager manager, TrackDescription? trackDescription)
+        private void AddTrack(MenuFlyout menuFlyout, TrackDescription? trackDescription)
         {
-            if (!string.IsNullOrWhiteSpace(trackDescription?.Name))
+            if (trackDescription is TrackDescription td && !string.IsNullOrWhiteSpace(td.Name))
             {
-                AddTrack(menuFlyout, trackDescription?.Id, trackDescription?.Name, manager == Manager.Get<SubtitlesTracksManager>());
+                AddTrack(menuFlyout, trackDescription?.Id, td.Name);
             }
         }
 
@@ -869,13 +855,17 @@ namespace LibVLCSharp.Uno
         {
             var menuFlyout = GetTracksMenu(sender).Key;
             var id = e.Id;
-            CheckMenuItem(menuFlyout, menuFlyout.Items.FirstOrDefault(mi => id == -1 && mi.Tag == null || id.Equals(mi.Tag)));
+            CheckMenuItem(menuFlyout, menuFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi =>
+            {
+                var trackId = (int?)mi.CommandParameter;
+                return id == -1 && trackId == null || id.Equals(trackId);
+            }));
         }
 
         private void OnTrackAdded(object sender, MediaPlayerESAddedEventArgs e)
         {
             var manager = (TracksManager)sender;
-            AddTrack(GetTracksMenu(manager).Key, manager, manager.GetTrackDescription(e.Id));
+            AddTrack(GetTracksMenu(manager).Key, manager.GetTrackDescription(e.Id));
         }
 
         private void OnTrackDeleted(object sender, MediaPlayerESDeletedEventArgs e)
@@ -888,7 +878,7 @@ namespace LibVLCSharp.Uno
             }
 
             var menuItems = menuFlyout.Items;
-            var menuItem = menuItems.FirstOrDefault(mi => e.Id.Equals(mi.Tag));
+            var menuItem = menuItems.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi => e.Id.Equals(mi.CommandParameter));
             if (menuItem != null)
             {
                 var isChecked = menuItem is ToggleMenuFlyoutItem toggleMenuFlyoutItem && toggleMenuFlyoutItem.IsChecked;
@@ -973,10 +963,11 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string name, object? tag = null)
+        private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string name, bool disconnectItem = false)
         {
-            var menuItem = new MenuFlyoutItem() { Text = name, Tag = tag };
-            menuItem.Click += CastMenuItem_Click;
+            var menuItem = new MenuFlyoutItem() { Text = name };
+            menuItem.Command = new ActionCommand<string>(CastMenuItemClick);
+            menuItem.CommandParameter = disconnectItem ? null : name;
             items.Add(menuItem);
         }
 
@@ -990,20 +981,18 @@ namespace LibVLCSharp.Uno
             {
                 AddCastMenuItem(items, renderer.Name);
             }
-            AddCastMenuItem(items, ResourceLoader.GetString("Disconnect"), -1);
+            AddCastMenuItem(items, ResourceLoader.GetString("Disconnect"), true);
             ((Button)sender).Flyout = castMenu;
         }
 
-        private void CastMenuItem_Click(object sender, RoutedEventArgs e)
+        private void CastMenuItemClick(string? rendererName)
         {
-            var menuFlyoutItem = (MenuFlyoutItem)sender;
-            if ((-1).Equals(menuFlyoutItem.Tag))
+            if (rendererName == null)
             {
                 MediaPlayer?.SetRenderer(null);
             }
             else
             {
-                var rendererName = menuFlyoutItem.Text;
                 var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
                 var rendererItem = castRenderersDiscoverer.Renderers.FirstOrDefault(r => r.Name == rendererName);
                 if (rendererItem != null)
