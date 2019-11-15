@@ -18,7 +18,7 @@ namespace LibVLCSharp.Uno
         /// <param name="unavailableState">unavailable state name</param>
         /// <param name="control">control to update </param>
         /// <param name="isEnabled">function to get a value indicating whether the control should be enabled</param>
-        public AvailabilityCommand(Control parentControl, Func<bool> isAvailable, string availableState, string unavailableState,
+        public AvailabilityCommand(Control parentControl, Func<bool> isAvailable, string availableState, string? unavailableState,
             Control? control, Func<bool>? isEnabled = null)
         {
             ParentControl = parentControl;
@@ -27,8 +27,6 @@ namespace LibVLCSharp.Uno
             AvailableState = availableState;
             UnavailableState = unavailableState;
             IsEnabled = isEnabled;
-
-            Update();
         }
 
         private Control ParentControl { get; }
@@ -40,7 +38,7 @@ namespace LibVLCSharp.Uno
 
         private Func<bool> IsAvailable { get; }
 
-        private string? AvailableState { get; }
+        private string AvailableState { get; }
 
         private string? UnavailableState { get; }
 
@@ -51,7 +49,11 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public void Update()
         {
-            VisualStateManager.GoToState(ParentControl, IsAvailable() ? AvailableState : UnavailableState, true);
+            var available = IsAvailable();
+            if (available || UnavailableState != null)
+            {
+                VisualStateManager.GoToState(ParentControl, available ? AvailableState : UnavailableState, true);
+            }
             if (IsEnabled != null && Control != null)
             {
                 Control.IsEnabled = IsEnabled();

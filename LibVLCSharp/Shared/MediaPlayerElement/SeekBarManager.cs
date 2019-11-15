@@ -24,7 +24,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="SeekBarManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public SeekBarManager(IDispatcher dispatcher) : base(dispatcher)
+        public SeekBarManager(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await UpdateSeekableAndPositionAsync();
         }
@@ -51,19 +51,23 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         public double SeekBarMaximum { get; set; }
 
-        private float LastPosition { get; set; }
-
         private long Length
         {
             get
             {
                 var mediaPlayer = MediaPlayer;
-                var state = mediaPlayer?.State;
-                return mediaPlayer == null || state == VLCState.Error || state == VLCState.Stopped ? 0 : mediaPlayer.Length;
+                return mediaPlayer == null ? 0 : mediaPlayer.Length;
             }
         }
 
-        private float MediaPlayerPosition => MediaPlayer?.Position ?? 0;
+        private bool ErrorOrEnded
+        {
+            get
+            {
+                var mediaPlayer = MediaPlayer;
+                return mediaPlayer == null ? true : mediaPlayer.State == VLCState.Error || mediaPlayer.State == VLCState.Ended;
+            }
+        }
 
         /// <summary>
         /// Gets elapsed and remaining time
@@ -73,8 +77,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         {
             get
             {
-                var mediaPlayerPosition = MediaPlayerPosition;
-                return new MediaPosition(MediaPlayerPosition, mediaPlayerPosition * SeekBarMaximum, Length);
+                var mediaPlayerPosition = ErrorOrEnded ? 0 : MediaPlayer!.Position;
+                return new MediaPosition(mediaPlayerPosition, mediaPlayerPosition * SeekBarMaximum, Length);
             }
         }
 
@@ -100,14 +104,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             SetPosition((float)(position / SeekBarMaximum));
         }
 
-        private async Task UpdateSeekableAsync()
+        private Task UpdateSeekableAsync()
         {
-            await DispatcherInvokeAsync(() => Seekable = MediaPlayer?.IsSeekable == true);
+            return DispatcherInvokeAsync(() =>
+            {
+                Seekable = !ErrorOrEnded && MediaPlayer!.IsSeekable == true;
+            });
         }
 
-        private async Task OnPositionChangedAsync()
+        private Task OnPositionChangedAsync()
         {
-            await DispatcherInvokeEventHandlerAsync(PositionChanged);
+            return DispatcherInvokeEventHandlerAsync(PositionChanged);
         }
 
         private async Task UpdateSeekableAndPositionAsync()

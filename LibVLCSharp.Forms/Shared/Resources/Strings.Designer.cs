@@ -160,6 +160,15 @@ namespace LibVLCSharp.Forms.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error with media {0}.
+        /// </summary>
+        internal static string ErrorWithMedia {
+            get {
+                return ResourceManager.GetString("ErrorWithMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         internal static string OK {

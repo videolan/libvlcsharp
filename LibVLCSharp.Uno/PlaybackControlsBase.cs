@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FontAwesome;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.MediaPlayerElement;
 using LibVLCSharp.Shared.Structures;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,11 +16,10 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Represents the playback controls for a media player element
     /// </summary>
-    public abstract partial class PlaybackControlsBase : Control
+    public abstract partial class PlaybackControlsBase : ContentControl
     {
         private const string PlayState = "PlayState";
         private const string PauseState = "PauseState";
-        private const string DisabledState = "Disabled";
         private const string NormalState = "Normal";
         private const string ErrorState = "Error";
         private const string BufferingState = "Buffering";
@@ -84,6 +81,12 @@ namespace LibVLCSharp.Uno
             seekBarManager.PositionChanged += (sender, e) => UpdateTime();
             var bufferingManager = Manager.Get<BufferingProgressNotifier>();
             bufferingManager.IsBufferingChanged += (sender, e) => IsBufferingCommand?.Update();
+            var stateManager = Manager.Get<StateManager>();
+            stateManager.ErrorOccured += (sender, e) => ShowError();
+            stateManager.Playing += (sender, e) => OnPlaying();
+            stateManager.Paused += (sender, e) => OnPaused();
+            stateManager.Stopped += (sender, e) => OnStopped();
+            stateManager.PlayPauseAvailableChanged += (sender, e) => PlayPauseAvailabilityCommand?.Update();
 
             AddHandler(PointerEnteredEvent, new PointerEventHandler(OnPointerMoved), true);
             AddHandler(PointerMovedEvent, new PointerEventHandler(OnPointerMoved), true);
@@ -101,7 +104,6 @@ namespace LibVLCSharp.Uno
 
         private MediaPlayerElementManager Manager { get; }
 
-        private bool HasError { get; set; }
         private MenuFlyout? ZoomMenu { get; set; }
         private IDictionary<MenuFlyout, TracksMenu> TracksMenus { get; } = new Dictionary<MenuFlyout, TracksMenu>();
 
@@ -112,15 +114,15 @@ namespace LibVLCSharp.Uno
 
         private TextBlock? ErrorTextBlock { get; set; }
         private Slider? VolumeSlider { get; set; }
-        private AvailabilityCommand? SeekBarAvailabilityCommand { get; set; }
         private Slider? ProgressSlider { get; set; }
         private TextBlock? TimeElapsedElement { get; set; }
         private TextBlock? TimeRemainingElement { get; set; }
-        private FrameworkElement? TimeTextGrid { get; set; }
+        private DependencyObject? PlayPauseButton { get; set; }
+        private DependencyObject? PlayPauseButtonOnLeft { get; set; }
+        private AvailabilityCommand? SeekBarAvailabilityCommand { get; set; }
         private AvailabilityCommand? VolumeMuteButtonAvailabilityCommand { get; set; }
         private AvailabilityCommand? MuteStateCommand { get; set; }
-        private FrameworkElement? PlayPauseButton { get; set; }
-        private FrameworkElement? PlayPauseButtonOnLeft { get; set; }
+        private AvailabilityCommand? PlayPauseAvailabilityCommand { get; set; }
         private AvailabilityCommand? StopButtonAvailabilityCommand { get; set; }
         private AvailabilityCommand? CastButtonAvailabilityCommand { get; set; }
         private AvailabilityCommand? ZoomButtonAvailabilityCommand { get; set; }
@@ -133,8 +135,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="VideoView"/> dependency property
         /// </summary>
         public static readonly DependencyProperty VideoViewProperty = DependencyProperty.Register(nameof(VideoView), typeof(IVideoView),
-            typeof(PlaybackControlsBase), new PropertyMetadata(null,
-                (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (IVideoControl)args.NewValue));
+            typeof(PlaybackControlsBase),
+            new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.VideoView = (IVideoControl)args.NewValue));
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
@@ -148,8 +150,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="LibVLC"/> dependency property
         /// </summary>
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
-            typeof(PlaybackControlsBase), new PropertyMetadata(null,
-                (d, args) => ((PlaybackControlsBase)d).Manager.LibVLC = (LibVLC)args.NewValue));
+            typeof(PlaybackControlsBase),
+            new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.LibVLC = (LibVLC)args.NewValue));
         /// <summary>
         /// Gets or sets the <see cref="Shared.LibVLC"/> instance
         /// </summary>
@@ -163,8 +165,8 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
-            typeof(PlaybackControlsBase), new PropertyMetadata(null, (d, args) =>
-            ((PlaybackControlsBase)d).OnMediaPlayerChanged((Shared.MediaPlayer)args.OldValue, (Shared.MediaPlayer)args.NewValue)));
+            typeof(PlaybackControlsBase),
+            new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.MediaPlayer = (Shared.MediaPlayer)args.NewValue));
         /// <summary>
         /// Gets or sets the <see cref="Shared.MediaPlayer"/> instance
         /// </summary>
@@ -254,7 +256,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         public static readonly DependencyProperty IsPlayPauseButtonVisibleProperty = DependencyProperty.Register(nameof(IsPlayPauseButtonVisible),
             typeof(bool), typeof(PlaybackControlsBase),
-            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).UpdatePlayPauseAvailability()));
+            new PropertyMetadata(true, (d, args) => ((PlaybackControlsBase)d).PlayPauseAvailabilityCommand?.Update()));
         /// <summary>
         /// Gets or sets a value indicating whether the play/pause button is shown
         /// </summary>
@@ -574,10 +576,7 @@ namespace LibVLCSharp.Uno
 
             TimeElapsedElement = GetTemplateChild(nameof(TimeElapsedElement)) as TextBlock;
             TimeRemainingElement = GetTemplateChild(nameof(TimeRemainingElement)) as TextBlock;
-            TimeTextGrid = GetTemplateChild(nameof(TimeTextGrid)) as FrameworkElement;
 
-            PlayPauseButton = GetTemplateChild(nameof(PlayPauseButton)) as FrameworkElement;
-            PlayPauseButtonOnLeft = GetTemplateChild(nameof(PlayPauseButtonOnLeft)) as FrameworkElement;
             VolumeSlider = GetTemplateChild(nameof(VolumeSlider)) as Slider;
             if (VolumeSlider != null)
             {
@@ -592,20 +591,16 @@ namespace LibVLCSharp.Uno
             AddTracksMenu(audioTracksSelectionButton, Manager.Get<AudioTracksManager>(), AudioSelectionAvailableState, AudioSelectionUnavailableState);
             AddTracksMenu(ccSelectionButton, Manager.Get<SubtitlesTracksManager>(), CCSelectionAvailableState, CCSelectionUnavailableState, true);
 
-            SetButtonClick(PlayPauseButton, PlayPauseButton_Click);
-            SetButtonClick(PlayPauseButtonOnLeft, PlayPauseButton_Click);
-
+            PlayPauseAvailabilityCommand = Initialize(() => IsPlayPauseButtonVisible && Manager.Get<StateManager>().PlayPauseAvailable,
+                PlayPauseAvailableState, PlayPauseUnavailableState, "PlayPauseButton", null, "Play", PlayPauseButton_Click);
+            PlayPauseButton = PlayPauseAvailabilityCommand!.Control;
+            PlayPauseButtonOnLeft = Initialize(nameof(PlayPauseButtonOnLeft), "Play", PlayPauseButton_Click);
             IsBufferingCommand = Initialize(() => Manager.Get<BufferingProgressNotifier>().IsBuffering, BufferingState, NormalState);
             IsCompactCommand = Initialize(() => IsCompact, CompactModeState, NormalModeState);
             CastButtonAvailabilityCommand = Initialize(() => Manager.Get<CastRenderersDiscoverer>().CastAvailable, CastAvailableState,
                 CastUnavailableState, "CastButton", () => IsCastEnabled, "ShowCastMenu", CastButton_Click);
-            StopButtonAvailabilityCommand = Initialize(() => IsStopButtonVisible && MediaPlayer?.Media != null,
-                StopAvailableState, StopUnavailableState, "StopButton",
-                () =>
-                {
-                    var state = MediaPlayer?.State;
-                    return IsStopEnabled && state != null && state != VLCState.Ended && state != VLCState.Stopped;
-                }, "Stop", (sender, e) => MediaPlayer?.Stop());
+            StopButtonAvailabilityCommand = Initialize(() => IsStopButtonVisible, StopAvailableState, StopUnavailableState, "StopButton",
+                () => IsStopEnabled && Manager.Get<StateManager>().IsPlayingOrPaused, "Stop", (sender, e) => Manager.Get<StateManager>().Stop());
             Initialize("AudioMuteButton", "Mute", (sender, e) => MediaPlayer?.ToggleMute());
             VolumeMuteButtonAvailabilityCommand = Initialize(() => IsVolumeButtonVisible, VolumeAvailableState, VolumeUnavailableState,
                 "VolumeMuteButton", () => IsVolumeEnabled && Manager.Get<VolumeManager>().Enabled, "ShowVolumeMenu");
@@ -624,9 +619,9 @@ namespace LibVLCSharp.Uno
                 ProgressSlider.ValueChanged += ProgressSlider_ValueChanged;
             }
 
+            VisualStateManager.GoToState(this, Manager.Get<StateManager>().IsPlaying ? PauseState : PlayState, true);
             UpdateVolumeSlider();
             UpdateTime();
-            Reset();
         }
 
         private DependencyObject? Initialize(string? controlName, string? toolTip = null, RoutedEventHandler? clickEventHandler = null)
@@ -636,16 +631,21 @@ namespace LibVLCSharp.Uno
                 return null;
             }
             var control = GetTemplateChild(controlName) as DependencyObject;
-            SetButtonClick(control, clickEventHandler);
+            if (clickEventHandler != null && control is ButtonBase button)
+            {
+                button.Click += clickEventHandler;
+            }
             SetToolTip(control, toolTip);
             return control;
         }
 
-        private AvailabilityCommand? Initialize(Func<bool> isAvailable, string availableState, string unavailableState,
+        private AvailabilityCommand? Initialize(Func<bool> isAvailable, string availableState, string? unavailableState = null,
             string? controlName = null, Func<bool>? isEnabled = null, string? toolTip = null, RoutedEventHandler? clickEventHandler = null)
         {
-            return new AvailabilityCommand(this, isAvailable, availableState, unavailableState,
+            var command = new AvailabilityCommand(this, isAvailable, availableState, unavailableState,
                 Initialize(controlName, toolTip, clickEventHandler) as Control, isEnabled);
+            command.Update();
+            return command;
         }
 
         /// <summary>
@@ -924,43 +924,9 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void SetButtonClick(DependencyObject? dependencyObject, RoutedEventHandler? eventHandler)
-        {
-            if (eventHandler != null && dependencyObject is ButtonBase button)
-            {
-                button.Click += eventHandler;
-            }
-        }
-
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
-            var mediaPlayer = MediaPlayer!;
-            var state = mediaPlayer.State;
-            string playPauseState;
-            switch (state)
-            {
-                case VLCState.Ended:
-                    mediaPlayer.Stop();
-                    goto case VLCState.Stopped;
-                case VLCState.Paused:
-                case VLCState.Stopped:
-                case VLCState.Error:
-                case VLCState.NothingSpecial:
-                    playPauseState = PauseState;
-                    break;
-                default:
-                    playPauseState = PlayState;
-                    break;
-            }
-            VisualStateManager.GoToState(this, playPauseState, true);
-            if (playPauseState == PauseState)
-            {
-                mediaPlayer.Play();
-            }
-            else
-            {
-                mediaPlayer.Pause();
-            }
+            Manager.Get<StateManager>().TogglePause();
         }
 
         private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string name, bool disconnectItem = false)
@@ -1002,114 +968,34 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void OnMediaPlayerChanged(Shared.MediaPlayer oldValue, Shared.MediaPlayer newValue)
+        private void OnPlaying()
         {
-            Manager.MediaPlayer = newValue;
-
-            if (oldValue != null)
-            {
-                oldValue.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
-                oldValue.EndReached -= MediaPlayer_UpdateStateAsync;
-                oldValue.MediaChanged -= MediaPlayer_MediaChangedAsync;
-                oldValue.NothingSpecial -= MediaPlayer_UpdateStateAsync;
-                oldValue.PausableChanged -= MediaPlayer_PausableChangedAsync;
-                oldValue.Paused -= MediaPlayer_UpdateStateAsync;
-                oldValue.Playing -= MediaPlayer_UpdateStateAsync;
-                oldValue.Stopped -= MediaPlayer_UpdateStateAsync;
-            }
-
-            if (newValue != null)
-            {
-                newValue.EncounteredError += MediaPlayer_EncounteredErrorAsync;
-                newValue.EndReached += MediaPlayer_UpdateStateAsync;
-                newValue.MediaChanged += MediaPlayer_MediaChangedAsync;
-                newValue.NothingSpecial += MediaPlayer_UpdateStateAsync;
-                newValue.PausableChanged += MediaPlayer_PausableChangedAsync;
-                newValue.Paused += MediaPlayer_UpdateStateAsync;
-                newValue.Playing += MediaPlayer_UpdateStateAsync;
-                newValue.Stopped += MediaPlayer_UpdateStateAsync;
-            }
-
-            Reset();
+            VisualStateManager.GoToState(this, NormalState, true);
+            UpdatePlayPauseState("Pause", PauseState);
         }
 
-        private async void MediaPlayer_EncounteredErrorAsync(object sender, EventArgs e)
+        private void OnPaused()
         {
-            await DispatcherRunAsync(() => UpdateState(VLCState.Error));
+            VisualStateManager.GoToState(this, NormalState, true);
+            GoToPauseState();
         }
 
-        private async void MediaPlayer_MediaChangedAsync(object sender, MediaPlayerMediaChangedEventArgs e)
+        private void GoToPauseState()
         {
-            await DispatcherRunAsync(Reset);
+            UpdatePlayPauseState("Play", PlayState);
         }
 
-        private async void MediaPlayer_PausableChangedAsync(object sender, MediaPlayerPausableChangedEventArgs e)
+        private void UpdatePlayPauseState(string tooltip, string state)
         {
-            await DispatcherRunAsync(() => UpdatePlayPauseAvailability(e.Pausable == 1));
-        }
-
-        private async void MediaPlayer_UpdateStateAsync(object sender, EventArgs e)
-        {
-            await DispatcherRunAsync(() => UpdateState());
-        }
-
-        private void Reset()
-        {
-            HasError = false;
-            UpdateState();
-            UpdatePlayPauseAvailability();
+            SetToolTip(PlayPauseButton, tooltip);
+            SetToolTip(PlayPauseButtonOnLeft, tooltip);
+            VisualStateManager.GoToState(this, state, true);
             StopButtonAvailabilityCommand?.Update();
         }
 
-        private async Task DispatcherRunAsync(DispatchedHandler handler)
+        private void OnStopped()
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, handler);
-        }
-
-        private void UpdateState(VLCState? state = null)
-        {
-            string statusState;
-            bool? playState;
-            state ??= MediaPlayer?.State ?? VLCState.NothingSpecial;
-            switch (state)
-            {
-                case VLCState.Error:
-                    var error = LibVLC?.LastLibVLCError ?? string.Empty;
-                    HasError = !string.IsNullOrWhiteSpace(error);
-                    if (!HasError)
-                    {
-                        goto case VLCState.Stopped;
-                    }
-                    statusState = ErrorState;
-                    playState = true;
-                    if (ErrorTextBlock != null)
-                    {
-                        ErrorTextBlock.Text = error;
-                    }
-                    break;
-                case VLCState.Stopped:
-                case VLCState.Ended:
-                case VLCState.NothingSpecial:
-                    UpdatePlayPauseAvailability(true);
-                    goto case VLCState.Paused;
-                case VLCState.Paused:
-                    if (HasError)
-                    {
-                        return;
-                    }
-                    statusState = DisabledState;
-                    playState = true;
-                    break;
-                default:
-                    HasError = false;
-                    statusState = NormalState;
-                    playState = false;
-                    break;
-            }
-
-            VisualStateManager.GoToState(this, statusState, true);
-            UpdatePlayPauseState(playState);
-            StopButtonAvailabilityCommand?.Update();
+            GoToPauseState();
         }
 
         private void UpdateVolumeSlider()
@@ -1121,36 +1007,14 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void UpdatePlayPauseState(bool? playState)
+        private void ShowError()
         {
-            if (playState is bool isPaused)
+            var errorTextBlock = ErrorTextBlock;
+            if (errorTextBlock != null)
             {
-                var playPauseToolTip = isPaused ? "Play" : "Pause";
-                SetToolTip(PlayPauseButton, playPauseToolTip);
-                SetToolTip(PlayPauseButtonOnLeft, playPauseToolTip);
-                VisualStateManager.GoToState(this, isPaused ? PlayState : PauseState, true);
+                errorTextBlock.Text = string.Format(ResourceLoader.GetString("Error"), Manager.Get<StateManager>().MediaResourceLocator);
+                VisualStateManager.GoToState(this, ErrorState, true);
             }
-        }
-
-        private void UpdatePlayPauseAvailability(bool? pausable = null)
-        {
-            var mediaPlayer = MediaPlayer;
-            var state = mediaPlayer?.State;
-            var stopped = state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering;
-            var playPauseButtonVisible = IsPlayPauseButtonVisible && mediaPlayer != null && mediaPlayer.Media != null &&
-                (stopped || (pausable ?? mediaPlayer?.CanPause) == true);
-            var playPauseAvailableState = playPauseButtonVisible ? PlayPauseAvailableState : PlayPauseUnavailableState;
-            if (IsCompact || playPauseButtonVisible)
-            {
-                VisualStateManager.GoToState(this, playPauseAvailableState, true);
-                IsCompactCommand?.Update();
-            }
-            else
-            {
-                IsCompactCommand?.Update();
-                VisualStateManager.GoToState(this, playPauseAvailableState, true);
-            }
-            UpdatePlayPauseState(stopped);
         }
 
         private void VolumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
