@@ -1,6 +1,5 @@
 ﻿using System;
 using LibVLCSharp.Shared;
-using LibVLCSharp.Uno;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -24,7 +23,10 @@ namespace Sample.MediaPlayerElement
 
             InitializeComponent();
             Suspending += OnSuspending;
+            Resuming += OnResuming;
         }
+
+        private MainViewModel ViewModel => ((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel;
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -91,8 +93,13 @@ namespace Sample.MediaPlayerElement
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            SuspensionHelpers.Save(((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel?.MediaPlayer);
+            ViewModel.Suspend();
             deferral.Complete();
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            ViewModel.Resume();
         }
     }
 }

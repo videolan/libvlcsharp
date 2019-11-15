@@ -47,13 +47,27 @@ namespace Sample.MediaPlayerElement
             private set => Set(nameof(LibVLC), ref _libVLC, value);
         }
 
+        private bool _isSuspended;
+        private bool IsSuspended
+        {
+            get => _isSuspended;
+            set
+            {
+                if (_isSuspended != value)
+                {
+                    _isSuspended = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MediaPlayer)));
+                }
+            }
+        }
+
         private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
         /// <summary>
         /// Gets the media player
         /// </summary>
         public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
-            get => _mediaPlayer;
+            get => IsSuspended ? null : _mediaPlayer;
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
         }
 
@@ -72,7 +86,24 @@ namespace Sample.MediaPlayerElement
             MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
-            SuspensionHelpers.Restore(MediaPlayer);
+        }
+
+        /// <summary>
+        /// Suspension
+        /// </summary>
+        public void Suspend()
+        {
+            SuspensionHelper.Save(MediaPlayer);
+            IsSuspended = true;
+        }
+
+        /// <summary>
+        /// Resuming
+        /// </summary>
+        public void Resume()
+        {
+            IsSuspended = false;
+            SuspensionHelper.Restore(MediaPlayer);
         }
 
         /// <summary>

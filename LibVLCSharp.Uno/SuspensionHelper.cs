@@ -6,7 +6,7 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Suspension helpers methods
     /// </summary>
-    public static class SuspensionHelpers
+    public static class SuspensionHelper
     {
         /// <summary>
         /// Saves the movie position
@@ -39,13 +39,13 @@ namespace LibVLCSharp.Uno
             }
             identifier ??= string.Empty;
             var values = ApplicationData.Current.LocalSettings.Values;
-            if (values.TryGetValue($"{identifier}_VLC_MediaPlayer_Position", out var p) && p is float position)
-            {
-                mediaPlayer.Position = position;
-            }
             if (values.TryGetValue($"{identifier}_VLC_MediaPlayer_IsPlaying", out var play) && play is true)
             {
                 mediaPlayer.Play();
+            }
+            if (values.TryGetValue($"{identifier}_VLC_MediaPlayer_Position", out var p) && p is float position)
+            {
+                mediaPlayer.Position = position;
             }
         }
     }
