@@ -41,7 +41,6 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             Dispose();
         }
 
-
         private IDispatcher? Dispatcher { get; }
 
         private IVideoControl? _videoView;
@@ -150,12 +149,36 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         {
         }
 
-        protected async Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler)
+        /// <summary>
+        /// Fires an event using dispatcher
+        /// </summary>
+        /// <param name="eventHandler">event handler</param>
+        /// <returns>The task object representing the asynchronous operation</returns>
+        protected Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler)
         {
-            if (eventHandler != null)
+            if (eventHandler == null)
             {
-                await DispatcherInvokeAsync(() => eventHandler(this, EventArgs.Empty));
+                return Task.CompletedTask;
             }
+            return DispatcherInvokeAsync(() => eventHandler(this, EventArgs.Empty));
+        }
+
+        /// <summary>
+        /// Fires an event using dispatcher
+        /// </summary>
+        /// <typeparam name="TEventArgs">event args type</typeparam>
+        /// <param name="eventHandler">event handler</param>
+        /// <param name="eventArgs">event args</param>
+        /// <returns>The task object representing the asynchronous operation</returns>
+        protected Task DispatcherInvokeEventHandlerAsync<TEventArgs>(EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
+            where TEventArgs : EventArgs
+        {
+            if (eventHandler == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return DispatcherInvokeAsync(() => eventHandler(this, eventArgs));
         }
 
         /// <summary>

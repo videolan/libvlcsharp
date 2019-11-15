@@ -35,7 +35,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="trackType">track type</param>
-        public TracksManager(IDispatcher dispatcher, TrackType trackType) : base(dispatcher)
+        public TracksManager(IDispatcher? dispatcher, TrackType trackType) : base(dispatcher)
         {
             TrackType = trackType;
             MediaPlayerChanged += async (sender, e) => await InitializeAsync();
@@ -85,19 +85,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return Tracks.FirstOrDefault(t => t.Id == trackId);
         }
 
-        private Task OnTrackChangedAsync<TEventArgs>(EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
-            where TEventArgs : EventArgs
-        {
-            return DispatcherInvokeAsync(() => eventHandler?.Invoke(this, eventArgs));
-        }
-
-        private async Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
+        private Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
             where TEventArgs : EventArgs
         {
             if (TrackType == trackType)
             {
-                await OnTrackChangedAsync(eventHandler, eventArgs);
+                return DispatcherInvokeEventHandlerAsync(eventHandler, eventArgs);
             }
+            return Task.CompletedTask;
         }
 
         private async void OnTrackSelectedAsync(object sender, MediaPlayerESSelectedEventArgs e)
@@ -113,6 +108,21 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private async void OnTrackDeletedAsync(object sender, MediaPlayerESDeletedEventArgs e)
         {
             await OnTrackChangedAsync(e.Type, TrackDeleted, e);
+        }
+
+        private async void OnStoppedAsync(object sender, EventArgs e)
+        {
+            await OnTracksClearedAsync();
+        }
+
+        private Task OnTracksClearedAsync()
+        {
+            return DispatcherInvokeEventHandlerAsync(TracksCleared);
+        }
+
+        private Task InitializeAsync()
+        {
+            return OnTracksClearedAsync();
         }
 
         /// <summary>
@@ -141,21 +151,6 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             mediaPlayer.ESSelected -= OnTrackSelectedAsync;
             mediaPlayer.ESAdded -= OnTrackAddedAsync;
             mediaPlayer.ESDeleted -= OnTrackDeletedAsync;
-        }
-
-        private async void OnStoppedAsync(object sender, EventArgs e)
-        {
-            await OnTracksClearedAsync();
-        }
-
-        private Task OnTracksClearedAsync()
-        {
-            return DispatcherInvokeAsync(() => TracksCleared?.Invoke(this, EventArgs.Empty));
-        }
-
-        private Task InitializeAsync()
-        {
-            return OnTracksClearedAsync();
         }
     }
 }

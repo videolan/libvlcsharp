@@ -21,7 +21,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayInformation">display information</param>
-        public AspectRatioManager(IDispatcher dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
+        public AspectRatioManager(IDispatcher? dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
         {
             DisplayInformation = displayInformation;
         }
@@ -115,8 +115,13 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return orientation == VideoOrientation.LeftBottom || orientation == VideoOrientation.RightTop;
         }
 
-        private AspectRatio GetAspectRatio(Shared.MediaPlayer mediaPlayer)
+        private AspectRatio GetAspectRatio(Shared.MediaPlayer? mediaPlayer)
         {
+            if (mediaPlayer == null)
+            {
+                return AspectRatio.BestFit;
+            }
+
             var aspectRatio = mediaPlayer.AspectRatio;
             return aspectRatio == null ?
                 (mediaPlayer.Scale == 0 ? AspectRatio.BestFit : (mediaPlayer.Scale == 1 ? AspectRatio.Original : AspectRatio.FitScreen)) :
@@ -127,69 +132,67 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         {
             var mediaPlayer = MediaPlayer;
             var videoView = VideoView;
-            if (videoView == null || mediaPlayer == null)
-            {
-                return;
-            }
-
             if (aspectRatio == null)
             {
                 aspectRatio = GetAspectRatio(mediaPlayer);
             }
-            switch (aspectRatio)
+            if (videoView != null && mediaPlayer != null)
             {
-                case AspectRatio.Original:
-                    mediaPlayer.AspectRatio = null;
-                    mediaPlayer.Scale = 1;
-                    break;
-                case AspectRatio.Fill:
-                    var videoTrack = GetVideoTrack(mediaPlayer);
-                    if (videoTrack == null)
-                    {
-                        return;
-                    }
-                    mediaPlayer.Scale = 0;
-                    mediaPlayer.AspectRatio = IsVideoSwapped((VideoTrack)videoTrack) ? $"{videoView.Height}:{videoView.Width}" :
-                        $"{videoView.Width}:{videoView.Height}";
-                    break;
-                case AspectRatio.BestFit:
-                    mediaPlayer.AspectRatio = null;
-                    mediaPlayer.Scale = 0;
-                    break;
-                case AspectRatio.FitScreen:
-                    videoTrack = GetVideoTrack(mediaPlayer);
-                    if (videoTrack == null)
-                    {
-                        return;
-                    }
-                    var track = (VideoTrack)videoTrack;
-                    var videoSwapped = IsVideoSwapped(track);
-                    var videoWidth = videoSwapped ? track.Height : track.Width;
-                    var videoHeigth = videoSwapped ? track.Width : track.Height;
-                    if (track.SarNum != track.SarDen)
-                    {
-                        videoWidth = videoWidth * track.SarNum / track.SarDen;
-                    }
+                switch (aspectRatio)
+                {
+                    case AspectRatio.Original:
+                        mediaPlayer.AspectRatio = null;
+                        mediaPlayer.Scale = 1;
+                        break;
+                    case AspectRatio.Fill:
+                        var videoTrack = GetVideoTrack(mediaPlayer);
+                        if (videoTrack == null)
+                        {
+                            break;
+                        }
+                        mediaPlayer.Scale = 0;
+                        mediaPlayer.AspectRatio = IsVideoSwapped((VideoTrack)videoTrack) ? $"{videoView.Height}:{videoView.Width}" :
+                            $"{videoView.Width}:{videoView.Height}";
+                        break;
+                    case AspectRatio.BestFit:
+                        mediaPlayer.AspectRatio = null;
+                        mediaPlayer.Scale = 0;
+                        break;
+                    case AspectRatio.FitScreen:
+                        videoTrack = GetVideoTrack(mediaPlayer);
+                        if (videoTrack == null)
+                        {
+                            break;
+                        }
+                        var track = (VideoTrack)videoTrack;
+                        var videoSwapped = IsVideoSwapped(track);
+                        var videoWidth = videoSwapped ? track.Height : track.Width;
+                        var videoHeigth = videoSwapped ? track.Width : track.Height;
+                        if (track.SarNum != track.SarDen)
+                        {
+                            videoWidth = videoWidth * track.SarNum / track.SarDen;
+                        }
 
-                    var ar = videoWidth / (double)videoHeigth;
-                    var videoViewWidth = videoView.Width;
-                    var videoViewHeight = videoView.Height;
-                    var dar = videoViewWidth / videoViewHeight;
+                        var ar = videoWidth / (double)videoHeigth;
+                        var videoViewWidth = videoView.Width;
+                        var videoViewHeight = videoView.Height;
+                        var dar = videoViewWidth / videoViewHeight;
 
-                    var rawPixelsPerViewPixel = DisplayInformation.ScalingFactor;
-                    var displayWidth = videoViewWidth * rawPixelsPerViewPixel;
-                    var displayHeight = videoViewHeight * rawPixelsPerViewPixel;
-                    mediaPlayer.Scale = (float)(dar >= ar ? (displayWidth / videoWidth) : (displayHeight / videoHeigth));
-                    mediaPlayer.AspectRatio = null;
-                    break;
-                case AspectRatio._16_9:
-                    mediaPlayer.AspectRatio = "16:9";
-                    mediaPlayer.Scale = 0;
-                    break;
-                case AspectRatio._4_3:
-                    mediaPlayer.AspectRatio = "4:3";
-                    mediaPlayer.Scale = 0;
-                    break;
+                        var rawPixelsPerViewPixel = DisplayInformation.ScalingFactor;
+                        var displayWidth = videoViewWidth * rawPixelsPerViewPixel;
+                        var displayHeight = videoViewHeight * rawPixelsPerViewPixel;
+                        mediaPlayer.Scale = (float)(dar >= ar ? (displayWidth / videoWidth) : (displayHeight / videoHeigth));
+                        mediaPlayer.AspectRatio = null;
+                        break;
+                    case AspectRatio._16_9:
+                        mediaPlayer.AspectRatio = "16:9";
+                        mediaPlayer.Scale = 0;
+                        break;
+                    case AspectRatio._4_3:
+                        mediaPlayer.AspectRatio = "4:3";
+                        mediaPlayer.Scale = 0;
+                        break;
+                }
             }
 
             if (_aspectRatio != aspectRatio)

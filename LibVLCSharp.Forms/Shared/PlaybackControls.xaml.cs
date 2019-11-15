@@ -63,11 +63,13 @@ namespace LibVLCSharp.Forms.Shared
             autoHideManager.Hidden += async (sender, e) => await FadeOutAsync();
             autoHideManager.Enabled = ShowAndHideAutomatically;
             var audioTrackManager = Manager.Get<AudioTracksManager>();
-            audioTrackManager.TrackAdded += OnTracksChanged;
-            audioTrackManager.TrackDeleted += OnTracksChanged;
+            audioTrackManager.TrackAdded += OnAudioTracksChanged;
+            audioTrackManager.TrackDeleted += OnAudioTracksChanged;
+            audioTrackManager.TracksCleared += OnAudioTracksChanged;
             var subTitlesTrackManager = Manager.Get<SubtitlesTracksManager>();
-            subTitlesTrackManager.TrackAdded += OnTracksChanged;
-            subTitlesTrackManager.TrackDeleted += OnTracksChanged;
+            subTitlesTrackManager.TrackAdded += OnSubtitlesTracksChanged;
+            subTitlesTrackManager.TrackDeleted += OnSubtitlesTracksChanged;
+            subTitlesTrackManager.TracksCleared += OnSubtitlesTracksChanged;
             var castRenderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
             castRenderersDiscoverer.CastAvailableChanged += (sender, e) => UpdateCastAvailability();
             castRenderersDiscoverer.Enabled = IsCastButtonVisible;
@@ -76,6 +78,13 @@ namespace LibVLCSharp.Forms.Shared
             seekBarManager.SeekableChanged += (sender, e) => UpdateSeekAvailability();
             var bufferingProgressNotifier = Manager.Get<BufferingProgressNotifier>();
             bufferingProgressNotifier.Buffering += (sender, e) => OnBuffering();
+            var stateManager = Manager.Get<StateManager>();
+            stateManager.ErrorOccured += (sender, e) => ShowError();
+            stateManager.ErrorCleared += (sender, e) => ErrorMessage = null;
+            stateManager.Playing += (sender, e) => OnPlaying();
+            stateManager.Paused += (sender, e) => OnStoppedOrPaused();
+            stateManager.Stopped += (sender, e) => OnStoppedOrPaused();
+            stateManager.PlayPauseAvailableChanged += (sender, e) => UpdatePauseAvailability();
         }
 
         /// <summary>
@@ -682,19 +691,17 @@ namespace LibVLCSharp.Forms.Shared
             {
                 Initialized = true;
                 OnApplyTemplate();
-                Reset();
             }
         }
 
         private void OnApplyTemplate()
         {
-            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_ClickedAsync, true);
+            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_ClickedAsync);
             CastButton = SetClickEventHandler(nameof(CastButton), CastButton_ClickedAsync);
-            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_ClickedAsync,
-                true);
+            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_ClickedAsync);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
-            SetClickEventHandler("StopButton", StopButton_Clicked, true);
-            SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync, true);
+            SetClickEventHandler("StopButton", StopButton_Clicked);
+            SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync);
             ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
             SeekBar = this.FindChild<Slider>(nameof(SeekBar));
             RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
@@ -709,7 +716,11 @@ namespace LibVLCSharp.Forms.Shared
                 SeekBar.ValueChanged += SeekBar_ValueChanged;
             }
 
+            VisualStateManager.GoToState(PlayPauseButton, Manager.Get<StateManager>().IsPlaying ? PauseState : PlayState);
             UpdateSeekAvailability();
+            UpdateAudioTracksSelectionAvailability();
+            UpdateClosedCaptionsTracksSelectionAvailability();
+            UpdatePauseAvailability();
             UpdateTime();
             OnBuffering();
         }
@@ -742,14 +753,12 @@ namespace LibVLCSharp.Forms.Shared
 
         private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var playbackControls = (PlaybackControls)bindable;
-            playbackControls.Manager.LibVLC = (LibVLC)newValue;
-            playbackControls.UpdateErrorMessage();
+            ((PlaybackControls)bindable).Manager.LibVLC = (LibVLC)newValue;
         }
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)oldValue, (LibVLCSharp.Shared.MediaPlayer)newValue);
+            ((PlaybackControls)bindable).Manager.MediaPlayer = (LibVLCSharp.Shared.MediaPlayer)newValue;
         }
 
         private void OnBuffering()
@@ -757,49 +766,13 @@ namespace LibVLCSharp.Forms.Shared
             BufferingProgress = Manager.Get<BufferingProgressNotifier>().BufferingProgress;
         }
 
-        private void MediaPlayer_EncounteredError(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.Error);
-        }
-
-        private void MediaPlayer_EndReached(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.Ended);
-        }
-
-        private void MediaPlayer_MediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
-        {
-            Reset();
-        }
-
-        private void MediaPlayer_NothingSpecial(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.NothingSpecial);
-        }
-
-        private void MediaPlayer_PausableChanged(object sender, MediaPlayerPausableChangedEventArgs e)
-        {
-            UpdatePauseAvailability(e.Pausable == 1);
-        }
-
-        private void MediaPlayer_Paused(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.Paused);
-        }
-
-        private void MediaPlayer_Playing(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.Playing);
-        }
-
-        private void MediaPlayer_Stopped(object sender, EventArgs e)
-        {
-            UpdateState(VLCState.Stopped);
-        }
-
-        private void OnTracksChanged(object sender, EventArgs e)
+        private void OnAudioTracksChanged(object sender, EventArgs e)
         {
             UpdateAudioTracksSelectionAvailability();
+        }
+
+        private void OnSubtitlesTracksChanged(object sender, EventArgs e)
+        {
             UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
@@ -813,8 +786,6 @@ namespace LibVLCSharp.Forms.Shared
             Manager.Get<AutoHideNotifier>().Enabled = false;
             try
             {
-                Show();
-
                 var renderersDiscoverer = Manager.Get<CastRenderersDiscoverer>();
                 var renderers = renderersDiscoverer.Renderers;
                 var mediaPlayer = MediaPlayer;
@@ -861,43 +832,12 @@ namespace LibVLCSharp.Forms.Shared
 
         private void PlayPauseButton_Clicked(object sender, EventArgs e)
         {
-            var mediaPlayer = MediaPlayer;
-            if (mediaPlayer == null)
-            {
-                return;
-            }
-
-            Show();
-            string playPauseState;
-            switch (mediaPlayer.State)
-            {
-                case VLCState.Ended:
-                    mediaPlayer.Stop();
-                    goto case VLCState.Stopped;
-                case VLCState.Error:
-                case VLCState.Paused:
-                case VLCState.Stopped:
-                case VLCState.NothingSpecial:
-                    playPauseState = PauseState;
-                    break;
-                default:
-                    playPauseState = PlayState;
-                    break;
-            }
-            VisualStateManager.GoToState((VisualElement)sender, playPauseState);
-            if (playPauseState == PauseState)
-            {
-                mediaPlayer.Play();
-            }
-            else
-            {
-                mediaPlayer.Pause();
-            }
+            Manager.Get<StateManager>().TogglePause();
         }
 
         private void StopButton_Clicked(object sender, EventArgs e)
         {
-            MediaPlayer?.Stop();
+            Manager.Get<StateManager>().Stop();
         }
 
         private async void AspectRatioButton_ClickedAsync(object sender, EventArgs e)
@@ -940,22 +880,19 @@ namespace LibVLCSharp.Forms.Shared
             mediaPlayer.Time += SEEK_OFFSET;
         }
 
-        private Button SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
+        private Button SetClickEventHandler(string name, EventHandler eventHandler)
         {
             var button = this.FindChild<Button>(name);
             if (button != null)
             {
-                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler, fadeIn);
+                button.Clicked += (sender, e) => OnButtonClicked(sender, e, eventHandler);
             }
             return button;
         }
 
-        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler, bool fadeIn = false)
+        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler)
         {
-            if (fadeIn)
-            {
-                Show();
-            }
+            Show();
 
             try
             {
@@ -967,35 +904,14 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer oldMediaPlayer, LibVLCSharp.Shared.MediaPlayer newMediaPlayer)
+        private void OnPlaying()
         {
-            Manager.MediaPlayer = newMediaPlayer;
+            VisualStateManager.GoToState(PlayPauseButton, PauseState);
+        }
 
-            if (oldMediaPlayer != null)
-            {
-                oldMediaPlayer.EncounteredError -= MediaPlayer_EncounteredError;
-                oldMediaPlayer.EndReached -= MediaPlayer_EndReached;
-                oldMediaPlayer.MediaChanged -= MediaPlayer_MediaChanged;
-                oldMediaPlayer.NothingSpecial -= MediaPlayer_NothingSpecial;
-                oldMediaPlayer.PausableChanged -= MediaPlayer_PausableChanged;
-                oldMediaPlayer.Paused -= MediaPlayer_Paused;
-                oldMediaPlayer.Playing -= MediaPlayer_Playing;
-                oldMediaPlayer.Stopped -= MediaPlayer_Stopped;
-            }
-
-            if (newMediaPlayer != null)
-            {
-                newMediaPlayer.EncounteredError += MediaPlayer_EncounteredError;
-                newMediaPlayer.EndReached += MediaPlayer_EndReached;
-                newMediaPlayer.MediaChanged += MediaPlayer_MediaChanged;
-                newMediaPlayer.NothingSpecial += MediaPlayer_NothingSpecial;
-                newMediaPlayer.PausableChanged += MediaPlayer_PausableChanged;
-                newMediaPlayer.Paused += MediaPlayer_Paused;
-                newMediaPlayer.Playing += MediaPlayer_Playing;
-                newMediaPlayer.Stopped += MediaPlayer_Stopped;
-            }
-
-            Reset();
+        private void OnStoppedOrPaused()
+        {
+            VisualStateManager.GoToState(PlayPauseButton, PlayState);
         }
 
         private string GetTrackName(string trackName, int trackId, int currentTrackId)
@@ -1066,6 +982,7 @@ namespace LibVLCSharp.Forms.Shared
         {
             if (tracksSelectionButton != null)
             {
+                var c = tracksManager.Tracks?.Where(t => t.Id != -1).Count();
                 UpdateTracksSelectionButtonAvailability(tracksSelectionButton, isTracksSelectionButtonVisible &&
                     tracksManager.Tracks?.Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
             }
@@ -1083,34 +1000,9 @@ namespace LibVLCSharp.Forms.Shared
                 IsClosedCaptionsSelectionButtonVisible, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
-        private void ShowError(string errorMessage)
+        private void ShowError()
         {
-            Device.BeginInvokeOnMainThread(() => ErrorMessage = errorMessage);
-        }
-
-        private void Reset()
-        {
-            UpdateState();
-            UpdateAudioTracksSelectionAvailability();
-            UpdateClosedCaptionsTracksSelectionAvailability();
-            UpdatePauseAvailability();
-            UpdateErrorMessage();
-        }
-
-        private void UpdateErrorMessage(VLCState? state = null)
-        {
-            try
-            {
-                state = state ?? MediaPlayer?.State;
-                if (state == VLCState.Error || state == VLCState.Ended)
-                {
-                    ShowError(LibVLC?.LastLibVLCError);
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex);
-            }
+            ErrorMessage = string.Format(ResourceManager.GetString(nameof(Strings.ErrorWithMedia)), Manager.Get<StateManager>().MediaResourceLocator);
         }
 
         private void UpdateKeepScreenOn(bool keepScreenOn)
@@ -1118,20 +1010,13 @@ namespace LibVLCSharp.Forms.Shared
             Manager.Get<DeviceAwakeningManager>().KeepDeviceAwake = keepScreenOn;
         }
 
-        private void UpdatePauseAvailability(bool? canPause = null)
+        private void UpdatePauseAvailability()
         {
             var playPauseButton = PlayPauseButton;
             if (playPauseButton != null)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    var mediaPlayer = MediaPlayer;
-                    var state = mediaPlayer?.State;
-                    VisualStateManager.GoToState(playPauseButton, IsPlayPauseButtonVisible && mediaPlayer?.Media != null &&
-                        ((canPause ?? mediaPlayer?.CanPause) != false ||
-                        state != VLCState.Opening && state != VLCState.Playing && state != VLCState.Buffering) ?
-                        PauseAvailableState : PauseUnavailableState);
-                });
+                VisualStateManager.GoToState(playPauseButton, IsPlayPauseButtonVisible &&
+                    Manager.Get<StateManager>().PlayPauseAvailable ? PauseAvailableState : PauseUnavailableState);
             }
         }
 
@@ -1191,41 +1076,6 @@ namespace LibVLCSharp.Forms.Shared
             {
                 ShowErrorMessageBox(ex);
             }
-        }
-
-        private void UpdateState(VLCState? state = null)
-        {
-            state = state ?? MediaPlayer?.State ?? VLCState.NothingSpecial;
-            string playPauseState;
-            switch (state)
-            {
-                case VLCState.Error:
-                    UpdateErrorMessage(state);
-                    goto case VLCState.Stopped;
-                case VLCState.Stopped:
-                case VLCState.Ended:
-                case VLCState.NothingSpecial:
-                    UpdatePauseAvailability(true);
-                    UpdateTracksSelectionButtonAvailability(AudioTracksSelectionButton, AudioSelectionUnavailableState);
-                    UpdateTracksSelectionButtonAvailability(ClosedCaptionsSelectionButton, ClosedCaptionsSelectionUnavailableState);
-                    goto case VLCState.Paused;
-                case VLCState.Paused:
-                    playPauseState = PlayState;
-                    break;
-                default:
-                    ShowError(null);
-                    playPauseState = PauseState;
-                    break;
-            }
-
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                var playPauseButton = PlayPauseButton;
-                if (playPauseButton != null)
-                {
-                    VisualStateManager.GoToState(playPauseButton, playPauseState);
-                }
-            });
         }
 
         /// <summary>

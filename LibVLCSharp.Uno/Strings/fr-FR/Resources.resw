@@ -141,6 +141,9 @@
   <data name="Disconnect" xml:space="preserve">
     <value>Déconnecter</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur avec le média {0}</value>
+  </data>
   <data name="Mute" xml:space="preserve">
     <value>Muet</value>
   </data>

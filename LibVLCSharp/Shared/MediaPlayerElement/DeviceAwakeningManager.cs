@@ -14,7 +14,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayRequest">display request object</param>
-        public DeviceAwakeningManager(IDispatcher dispatcher, IDisplayRequest displayRequest) : base(dispatcher)
+        public DeviceAwakeningManager(IDispatcher? dispatcher, IDisplayRequest displayRequest) : base(dispatcher)
         {
             DisplayRequest = displayRequest;
             MediaPlayerChanged += OnStateChangedAsync;
@@ -67,8 +67,9 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
         private void UpdateState()
         {
-            var state = MediaPlayer?.State;
-            SetDeviceActive(KeepDeviceAwake && (state == VLCState.Opening || state == VLCState.Playing));
+            var mediaPlayer = MediaPlayer;
+            SetDeviceActive(KeepDeviceAwake && mediaPlayer != null &&
+                (mediaPlayer.State == VLCState.Playing || mediaPlayer.State == VLCState.Opening));
         }
 
         private async void OnStateChangedAsync(object sender, EventArgs e)
@@ -87,6 +88,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             mediaPlayer.EndReached += OnStateChangedAsync;
             mediaPlayer.NothingSpecial += OnStateChangedAsync;
             mediaPlayer.Paused += OnStateChangedAsync;
+            mediaPlayer.Opening += OnStateChangedAsync;
             mediaPlayer.Playing += OnStateChangedAsync;
             mediaPlayer.Stopped += OnStateChangedAsync;
         }
@@ -102,6 +104,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             mediaPlayer.EndReached -= OnStateChangedAsync;
             mediaPlayer.NothingSpecial -= OnStateChangedAsync;
             mediaPlayer.Paused -= OnStateChangedAsync;
+            mediaPlayer.Opening += OnStateChangedAsync;
             mediaPlayer.Playing -= OnStateChangedAsync;
             mediaPlayer.Stopped -= OnStateChangedAsync;
         }

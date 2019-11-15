@@ -162,12 +162,12 @@
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="ClosedCaptionsSelectionAvailabilityStates">
-                    <VisualState x:Name="ClosedCaptionsSelectionAvailable">
+                    <VisualState x:Name="ClosedCaptionsSelectionAvailable" />
+                    <VisualState x:Name="ClosedCaptionsSelectionUnavailable">
                         <VisualState.Setters>
-                            <Setter Property="IsVisible" Value="True" />
+                            <Setter Property="IsVisible" Value="False" />
                         </VisualState.Setters>
                     </VisualState>
-                    <VisualState x:Name="ClosedCaptionsSelectionUnavailable" />
                 </VisualStateGroup>
             </VisualStateGroupList>
         </Setter>

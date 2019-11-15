@@ -24,7 +24,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="AutoHideNotifier"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public AutoHideNotifier(IDispatcher dispatcher) : base(dispatcher)
+        public AutoHideNotifier(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await ShowAsync();
             Timer = new Timer(async obj => await HideAsync(), null, Timeout.Infinite, Timeout.Infinite);
@@ -94,7 +94,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         private Task HideAsync()
         {
             StopTimer();
-            return DispatcherInvokeAsync(() => Hidden?.Invoke(this, EventArgs.Empty));
+            return DispatcherInvokeEventHandlerAsync(Hidden);
         }
 
         private void StartTimer()
@@ -128,6 +128,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             mediaPlayer.EndReached += OnStateChangedAsync;
             mediaPlayer.NothingSpecial += OnStateChangedAsync;
             mediaPlayer.Paused += OnStateChangedAsync;
+            mediaPlayer.Opening += OnStateChangedAsync;
             mediaPlayer.Playing += OnStateChangedAsync;
             mediaPlayer.Stopped += OnStateChangedAsync;
         }
@@ -145,6 +146,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             mediaPlayer.EndReached -= OnStateChangedAsync;
             mediaPlayer.NothingSpecial -= OnStateChangedAsync;
             mediaPlayer.Paused -= OnStateChangedAsync;
+            mediaPlayer.Opening += OnStateChangedAsync;
             mediaPlayer.Playing -= OnStateChangedAsync;
             mediaPlayer.Stopped -= OnStateChangedAsync;
         }

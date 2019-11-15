@@ -150,6 +150,9 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="ErrorWithMedia" xml:space="preserve">
+    <value>Error with media {0}</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>

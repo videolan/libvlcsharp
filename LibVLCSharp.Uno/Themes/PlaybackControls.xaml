@@ -403,20 +403,6 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Loading">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
-																	   Storyboard.TargetName="BufferingProgressBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <DoubleAnimation Storyboard.TargetName="ProgressSlider"
-														 Storyboard.TargetProperty="Opacity"
-														 To="0" Duration="0" />
-                                        <DoubleAnimation Storyboard.TargetName="PlaybackControlsCommandBar"
-														 Storyboard.TargetProperty="Opacity"
-														 To="0" Duration="0" />
-                                    </Storyboard>
-                                </VisualState>
                                 <VisualState x:Name="Error">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
@@ -424,9 +410,6 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard />
                                 </VisualState>
                             </VisualStateGroup>
                             <!--Media state visual states-->
@@ -676,14 +659,14 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Border x:Name="ErrorBorder"
-                                        Width="320"
                                         Height="96"
+                                        Margin="12,0,12,0"
                                         Grid.ColumnSpan="3"
-                                        HorizontalAlignment="Center"
                                         Background="{ThemeResource SystemControlPageBackgroundAltMediumBrush}"
                                         Visibility="Collapsed">
                                     <TextBlock x:Name="ErrorTextBlock"
                                                TextWrapping="WrapWholeWords"
+                                               HorizontalTextAlignment="Center"
                                                Margin="12" />
                                 </Border>
                                 <Border x:Name="PlaybackControls_Timeline_Border" Grid.Column="1" Grid.Row="1">
@@ -846,6 +829,7 @@
                                             </Button>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Column="2">
+                                            <ContentPresenter Content="{TemplateBinding Content}" />
                                             <!--<ToggleButton x:Name="RepeatButton" Style="{StaticResource MTC_ToggleButtonStyle}" Visibility="Collapsed">
                                                 <SymbolIcon x:Name="RepeatSymbol" Symbol="RepeatAll" />
                                             </ToggleButton>-->

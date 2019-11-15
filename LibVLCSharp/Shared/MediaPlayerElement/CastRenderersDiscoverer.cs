@@ -23,7 +23,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="CastRenderersDiscoverer"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public CastRenderersDiscoverer(IDispatcher dispatcher) : base(dispatcher)
+        public CastRenderersDiscoverer(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await UpdateHasRenderersPropertyValueAsync();
             LibVLCChanged += async (sender, e) => await OnLibVLCChangedAsync();

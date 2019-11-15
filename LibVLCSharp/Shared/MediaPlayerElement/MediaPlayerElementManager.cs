@@ -1,10 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("LibVLCSharp.Forms")]
-[assembly: InternalsVisibleTo("LibVLCSharp.Uno")]
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
@@ -23,7 +19,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayInformation">display information</param>
         /// <param name="displayRequest">display request object</param>
-        public MediaPlayerElementManager(IDispatcher dispatcher, IDisplayInformation displayInformation, IDisplayRequest displayRequest)
+        public MediaPlayerElementManager(IDispatcher? dispatcher, IDisplayInformation displayInformation, IDisplayRequest displayRequest)
             : base(dispatcher)
         {
             SubManagers = new MediaPlayerElementManagerBase[] {
@@ -34,6 +30,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                new CastRenderersDiscoverer(dispatcher),
                new DeviceAwakeningManager(dispatcher, displayRequest),
                new SeekBarManager(dispatcher),
+               new StateManager(dispatcher),
                new SubtitlesTracksManager(dispatcher),
                new VolumeManager(dispatcher)
              };

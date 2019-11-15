@@ -28,7 +28,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="VolumeManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public VolumeManager(IDispatcher dispatcher) : base(dispatcher)
+        public VolumeManager(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += OnMediaPlayerChangedAsync;
         }
@@ -74,7 +74,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             get
             {
                 var volume = MediaPlayer?.Volume;
-                return (volume == null || volume < float.Epsilon) ? 0 : (int)volume;
+                return (volume == null || volume < 0) ? 0 : (int)volume;
             }
             set
             {
@@ -82,6 +82,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                 if (mediaPlayer != null)
                 {
                     mediaPlayer.Volume = value;
+                    Mute = value == 0;
                 }
             }
         }

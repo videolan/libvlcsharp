@@ -22,7 +22,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initializes a new instance of <see cref="BufferingProgressNotifier"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public BufferingProgressNotifier(IDispatcher dispatcher) : base(dispatcher)
+        public BufferingProgressNotifier(IDispatcher? dispatcher) : base(dispatcher)
         {
         }
 
