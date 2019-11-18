@@ -15,6 +15,7 @@ namespace LibVLCSharp.Uno
         {
             var underlyingVideoView = new Platforms.iOS.VideoView();
             Border!.Child = underlyingVideoView;
+            underlyingVideoView.Frame = Border.Frame;
             return underlyingVideoView;
         }
     }
