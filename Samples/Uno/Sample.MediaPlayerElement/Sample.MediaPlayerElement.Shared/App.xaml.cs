@@ -26,7 +26,7 @@ namespace Sample.MediaPlayerElement
             Resuming += OnResuming;
         }
 
-        private MainViewModel ViewModel => ((Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel;
+        private MainViewModel ViewModel => ((Windows.UI.Xaml.Window.Current.Content as Frame)?.Content as MainPage)?.ViewModel;
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
