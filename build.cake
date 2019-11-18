@@ -1,0 +1,65 @@
+//////////////////////////////////////////////////////////////////////
+// ARGUMENTS
+//////////////////////////////////////////////////////////////////////
+
+var target = Argument("target", "Default");
+var configuration = Argument("configuration", "Release");
+var solutionName = "LibVLCSharp";
+
+//////////////////////////////////////////////////////////////////////
+// PREPARATION
+//////////////////////////////////////////////////////////////////////
+
+// Define directories.
+var buildDir = Directory("./build") + Directory(configuration);
+
+//////////////////////////////////////////////////////////////////////
+// TASKS
+//////////////////////////////////////////////////////////////////////
+
+Task("Clean")
+    .Does(() =>
+{
+    CleanDirectory(buildDir);
+});
+
+Task("Restore-NuGet-Packages")
+    .IsDependentOn("Clean")
+    .Does(() =>
+{
+    NuGetRestore("LibVLCSharp.sln");
+});
+
+Task("Build")
+    .IsDependentOn("Restore-NuGet-Packages")
+    .Does(() =>
+{
+    if(IsRunningOnWindows())
+    {
+        MSBuild($"{solutionName}.sln", settings => settings.SetConfiguration(configuration));
+    }
+    else
+    {
+        XBuild($"{solutionName}.sln", settings => settings.SetConfiguration(configuration));
+    }
+});
+
+Task("CopyNugets")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    CopyFiles(GetFiles("./**/bin/Release/*.nupkg"), buildDir);
+});
+
+//////////////////////////////////////////////////////////////////////
+// TASK TARGETS
+//////////////////////////////////////////////////////////////////////
+
+Task("Default")
+    .IsDependentOn("Build");
+
+//////////////////////////////////////////////////////////////////////
+// EXECUTION
+//////////////////////////////////////////////////////////////////////
+
+RunTarget(target);
