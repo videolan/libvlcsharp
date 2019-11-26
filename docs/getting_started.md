@@ -2,6 +2,8 @@
 
 Make sure you have the proper SDK installed for your target platform. The **Xamarin** workloads, the .NET desktop components, the GTK# one, etc. depending on your needs.
 
+[Back](home.md)
+
 # Getting started
 
 Clone https://code.videolan.org/mfkl/libvlcsharp-samples to get started and explore the samples.
@@ -70,7 +72,7 @@ new LibVLC(VideoView.GetSwapChainOptions());
 Detailed explanation:
 In UWP here are mandatory options to be given to the LibVLC constructor. These options tells libvlc (and more precisely the DirectX plugin) where to output the video, using a so-called "swap chain".
 
-This initialization step will disappear in libvlc 4, but for now, you will need to have a code similar to [this one](Samples/LibVLCSharp.UWP.Sample/MainPage.xaml.cs)
+This initialization step will disappear in libvlc 4, but for now, you will need to have a code similar to [this one](../Samples/LibVLCSharp.UWP.Sample/MainPage.xaml.cs)
 
 
 ### Automatic audio output module selection
