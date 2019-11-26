@@ -18,6 +18,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
   - [Supported platforms](#Supported-platforms)
   - [Installation](#Installation)
   - [Getting started](#Getting-started)
+  - [Documentation](#Documentation)
   - [Samples](#Samples)
   - [Quick API overview](#Quick-API-overview)
   - [Roadmap](#Roadmap)
@@ -167,7 +168,11 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 
 ## Getting started
 
-Follow the [Getting started guide](GETTING-STARTED.md). Make sure you read it since it contains platform-specific caveats
+Follow the [Getting started guide](docs/getting_started.md). Make sure you read it since it contains platform-specific caveats
+
+## Documentation
+
+Our [Documentation](docs/home.md) includes [best practices](docs/best_practices.md), [Q&A guide](docs/how_do_I_do_X.md), [libvlc specific information](docs/libvlc_documentation.md) and [tutorials](docs/tutorials.md).
 
 ## Samples
 
