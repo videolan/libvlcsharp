@@ -54,6 +54,10 @@ Pretty similarly to how you would do it from the CLI. Read https://wiki.videolan
 
 ## How do I enable/disable hardware decoding?
 
+```csharp
+MediaPlayer.EnableHardwareDecoding = true
+```
+
 ## How do I play a YouTube video?
 
 Like this, for example:
@@ -75,6 +79,8 @@ using(var libVLC = new LibVLC())
 
 # Subtitles
 
+Full list commands and arguments https://wiki.videolan.org/VLC_command-line_help/
+
 ## How do I set subtitles?
 
 ```csharp
@@ -92,9 +98,23 @@ using(var libVLC = new LibVLC())
 }
 ```
 
-## How do I change the subtitle font?
+## How do I change the subtitle font size?
+
+```csharp
+media.AddOption(":freetype-rel-fontsize=10"); // Usually 10, 13, 16 or 19
+```
+
 ## How do I change the subtitle color?
+
+```csharp
+media.AddOption(":freetype-color=16711680"); // Red
+```
+
 ## How do I change the subtitle encoding?
+
+```csharp
+media.AddOption(":subsdec-encoding=Windows-125");
+```
 
 # How do I change aspect ratio?
 
