@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using LibVLCSharp.Uno;
+using Windows.UI.Xaml.Controls;
 
 namespace Sample.MediaPlayerElement
 {
@@ -20,5 +21,10 @@ namespace Sample.MediaPlayerElement
         /// Gets the main view model
         /// </summary>
         public MainViewModel ViewModel { get; }
+
+        private void MediaPlayerElement_Initialized(object sender, InitializedEventArgs e)
+        {
+            ViewModel.InitializedCommand.Execute(e.SwapChainOptions);
+        }
     }
 }

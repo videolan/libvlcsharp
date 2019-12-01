@@ -59,7 +59,7 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Gets the <see cref="Shared.MediaPlayer"/> instance.
         /// </summary>
-        public Shared.MediaPlayer MediaPlayer
+        public Shared.MediaPlayer? MediaPlayer
         {
             get => (Shared.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
@@ -136,7 +136,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void VideoView_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void VideoView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             _sizeChangedHandler?.Invoke(this, EventArgs.Empty);
         }
