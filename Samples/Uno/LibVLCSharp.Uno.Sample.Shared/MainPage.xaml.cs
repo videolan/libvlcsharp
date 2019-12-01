@@ -20,5 +20,10 @@ namespace LibVLCSharp.Uno.Sample
         /// Gets the main view model
         /// </summary>
         public MainViewModel ViewModel { get; }
+
+        private void VideoView_Initialized(object sender, InitializedEventArgs e)
+        {
+            ViewModel.InitializedCommand.Execute(e.SwapChainOptions);
+        }
     }
 }

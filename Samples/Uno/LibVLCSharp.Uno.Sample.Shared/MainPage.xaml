@@ -3,19 +3,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vlc="using:LibVLCSharp.Uno"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <vlc:VideoView MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}">
-            <interactivity:Interaction.Behaviors>
-                <interactions:EventTriggerBehavior EventName="Initialized">
-                    <interactions:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}"/>
-                </interactions:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </vlc:VideoView>
+        <vlc:VideoView MediaPlayer="{x:Bind ViewModel.MediaPlayer, Mode=OneWay}" Initialized="VideoView_Initialized" />
     </Grid>
 </Page>

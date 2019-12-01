@@ -20,7 +20,7 @@ namespace LibVLCSharp.Uno.Sample
         /// </summary>
         public MainViewModel()
         {
-            InitializedCommand = new RelayCommand<InitializedEventArgs>(Initialize);
+            InitializedCommand = new RelayCommand<string[]>(Initialize);
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace LibVLCSharp.Uno.Sample
             }
         }
 
-        private void Initialize(InitializedEventArgs eventArgs)
+        private void Initialize(string[] swapChainOptions)
         {
-            LibVLC = new LibVLC(eventArgs.SwapChainOptions);
+            LibVLC = new LibVLC(swapChainOptions);
             MediaPlayer = new Shared.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
