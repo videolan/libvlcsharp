@@ -23,7 +23,7 @@ namespace LibVLCSharp.Shared
 #if UWP
             [DllImport(Constants.Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
             internal static extern IntPtr LoadPackagedLibrary(string dllToLoad, uint reserved = 0);
-#elif NET || NETSTANDARD
+#elif NETFRAMEWORK || NETSTANDARD
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
@@ -49,12 +49,13 @@ namespace LibVLCSharp.Shared
             internal static extern IntPtr LibVLCVersion();
         }
 
-#if NET || NETSTANDARD
-#if !UWP
-        static IntPtr _libvlccoreHandle;
-#endif // !UWP
+
+#if NETFRAMEWORK || NETSTANDARD || UWP
         static IntPtr _libvlcHandle;
-#endif // NET || NETSTANDARD
+#endif
+#if !UWP && NETFRAMEWORK || NETSTANDARD
+        static IntPtr _libvlccoreHandle;
+#endif
 
         /// <summary>
         /// Load the native libvlc library (if necessary, depending on platform)
@@ -73,7 +74,7 @@ namespace LibVLCSharp.Shared
             InitializeAndroid();
 #elif UWP
             InitializeUWP();
-#elif NET || NETSTANDARD
+#elif NETFRAMEWORK || NETSTANDARD
             DisableMessageErrorBox();
             InitializeDesktop(libvlcDirectoryPath);
 #endif
@@ -114,7 +115,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-#elif NET || NETSTANDARD
+#elif NETFRAMEWORK || NETSTANDARD
         /// <summary>
         /// Disable error dialogs in case of dll loading failures on older Windows versions.
         /// <para/>
@@ -280,7 +281,7 @@ namespace LibVLCSharp.Shared
 
             return handle != IntPtr.Zero;
         }
-#endif // NET || NETSTANDARD
+#endif // NETFRAMEWORK || NETSTANDARD
     }
 
     internal static class Constants
