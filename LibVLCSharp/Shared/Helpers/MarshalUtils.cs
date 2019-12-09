@@ -9,7 +9,7 @@ namespace LibVLCSharp.Shared.Helpers
     {
         internal readonly struct Native
         {
-#if NET || NETSTANDARD
+#if NETFRAMEWORK || NETSTANDARD
             #region Windows
 
             [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -499,7 +499,7 @@ namespace LibVLCSharp.Shared.Helpers
 #endif
         }
 
-#if NET || NETSTANDARD
+#if NETFRAMEWORK || NETSTANDARD
         /// <summary>
         /// Crossplatform dlopen
         /// </summary>
