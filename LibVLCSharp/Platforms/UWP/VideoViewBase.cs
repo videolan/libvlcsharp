@@ -37,7 +37,6 @@ namespace LibVLCSharp.Platforms.UWP
 
             if (!DesignMode.DesignModeEnabled)
             {
-                Loaded += (s, e) => CreateSwapChain();
                 Unloaded += (s, e) => DestroySwapChain();
 
                 Application.Current.Suspending += (s, e) => { Trim(); };
@@ -54,24 +53,31 @@ namespace LibVLCSharp.Platforms.UWP
             base.OnApplyTemplate();
             _panel = (SwapChainPanel)GetTemplateChild(PartSwapChainPanelName);
 
-            if (!DesignMode.DesignModeEnabled)
-            {
-                _panel.SizeChanged += (s, eventArgs) =>
-                {
-                    if (_loaded)
-                    {
-                        UpdateSize();
-                    }
-                };
+            if (DesignMode.DesignModeEnabled)
+                return;
 
-                _panel.CompositionScaleChanged += (s, eventArgs) =>
+            DestroySwapChain();
+
+            _panel.SizeChanged += (s, eventArgs) =>
+            {
+                if (_loaded)
                 {
-                    if (_loaded)
-                    {
-                        UpdateScale();
-                    }
-                };
-            }
+                    UpdateSize();
+                }
+                else
+                {
+                    CreateSwapChain();
+                }
+            };
+
+            _panel.CompositionScaleChanged += (s, eventArgs) =>
+            {
+                if (_loaded)
+                {
+                    UpdateScale();
+                }
+            };
+
         }
 
         /// <summary>
@@ -108,6 +114,10 @@ namespace LibVLCSharp.Platforms.UWP
         /// </summary>
         void CreateSwapChain()
         {
+            // Do not create the swapchain when the VideoView is collapsed.
+            if (_panel == null || _panel.ActualHeight == 0)
+                return;
+
             SharpDX.DXGI.Factory2 dxgiFactory = null;
             try
             {
@@ -230,6 +240,8 @@ namespace LibVLCSharp.Platforms.UWP
 
             _d3D11Device?.Dispose();
             _d3D11Device = null;
+
+            _loaded = false;
         }
 
         readonly Guid SWAPCHAIN_WIDTH = new Guid(0xf1b59347, 0x1643, 0x411a, 0xad, 0x6b, 0xc7, 0x80, 0x17, 0x7a, 0x6, 0xb6);
