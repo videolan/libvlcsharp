@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
 {
@@ -24,4 +23,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         double Height { get; }
     }
 }
-#nullable restore

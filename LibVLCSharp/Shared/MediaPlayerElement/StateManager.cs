@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
@@ -225,4 +224,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         }
     }
 }
-#nullable restore

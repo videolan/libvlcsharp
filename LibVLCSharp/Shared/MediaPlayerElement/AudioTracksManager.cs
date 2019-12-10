@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LibVLCSharp.Shared.Structures;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
@@ -34,4 +33,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public override IEnumerable<TrackDescription>? Tracks => MediaPlayer?.AudioTrackDescription;
     }
 }
-#nullable restore
