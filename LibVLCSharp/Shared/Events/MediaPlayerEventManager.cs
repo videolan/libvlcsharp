@@ -661,7 +661,8 @@ namespace LibVLCSharp.Shared
                 new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
         }
 
-        private static LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
+        [MonoPInvokeCallback(typeof(EventCallback))]
+        static LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
         {
             return RetrieveEvent(ptr).Union.EsChanged;
         }
@@ -844,7 +845,7 @@ namespace LibVLCSharp.Shared
                 new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
         }
 
-        private LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
+        LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)
         {
             return RetrieveEvent(ptr).Union.EsChanged;
         }
