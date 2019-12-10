@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace LibVLCSharp.Shared.MediaPlayerElement
+﻿namespace LibVLCSharp.Shared.MediaPlayerElement
 {
     /// <summary>
     /// Describes how content is resized to fill its allocated space
@@ -32,4 +31,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         Original
     }
 }
-#nullable restore

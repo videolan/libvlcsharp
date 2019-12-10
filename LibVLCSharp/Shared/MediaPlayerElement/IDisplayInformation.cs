@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace LibVLCSharp.Shared.MediaPlayerElement
+﻿namespace LibVLCSharp.Shared.MediaPlayerElement
 {
     /// <summary>
     /// Interface to get display-related information for an application view
@@ -12,4 +11,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         public double ScalingFactor { get; }
     }
 }
-#nullable restore

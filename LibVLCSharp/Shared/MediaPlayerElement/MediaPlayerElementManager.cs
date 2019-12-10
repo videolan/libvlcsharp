@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace LibVLCSharp.Shared.MediaPlayerElement
@@ -101,4 +100,3 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         }
     }
 }
-#nullable restore
