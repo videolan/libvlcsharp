@@ -42,7 +42,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             get => _enabled;
             private set
             {
-                if (_enabled = value)
+                if (_enabled != value)
                 {
                     _enabled = value;
                     EnabledChanged?.Invoke(this, EventArgs.Empty);
