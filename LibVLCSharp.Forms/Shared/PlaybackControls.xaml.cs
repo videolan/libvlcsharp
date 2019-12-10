@@ -96,7 +96,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         private MediaPlayerElementManager Manager { get; }
-        private Button AudioTracksSelectionButton { get; set; }
+        private Button? AudioTracksSelectionButton { get; set; }
         private Button? CastButton { get; set; }
         private Button? ClosedCaptionsSelectionButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
@@ -796,8 +796,13 @@ namespace LibVLCSharp.Forms.Shared
                 }
                 else
                 {
-                    var result = await this.FindAncestor<Page>()?.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
+                    var page = this.FindAncestor<Page>();
+                    if (page == null)
+                        return;
+
+                    var result = await page.DisplayActionSheet(ResourceManager.GetString(nameof(Strings.CastTo)),
                         Cancel, Disconnect, renderers.Select(r => r.Name).OrderBy(r => r).ToArray());
+
                     if (result != null)
                     {
                         var rendererName = renderers.FirstOrDefault(r => r.Name == result);
@@ -850,6 +855,9 @@ namespace LibVLCSharp.Forms.Shared
                 var aspectRatioManager = Manager.Get<AspectRatioManager>();
                 aspectRatioManager.AspectRatio = aspectRatioManager.AspectRatio == AspectRatio.Original ? AspectRatio.BestFit :
                     aspectRatioManager.AspectRatio + 1;
+
+                if (AspectRatioLabel == null)
+                    return;
 
                 AspectRatioLabel.Text = Strings.ResourceManager.GetString($"{nameof(AspectRatio)}{aspectRatioManager.AspectRatio}");
                 await AspectRatioLabel.FadeTo(1);
@@ -918,7 +926,7 @@ namespace LibVLCSharp.Forms.Shared
             VisualStateManager.GoToState(PlayPauseButton, PlayState);
         }
 
-        private string GetTrackName(string trackName, int trackId, int currentTrackId)
+        private string? GetTrackName(string? trackName, int trackId, int currentTrackId)
         {
             return trackId == currentTrackId ? $"{trackName} *" : trackName;
         }
@@ -935,7 +943,7 @@ namespace LibVLCSharp.Forms.Shared
             {
                 var currentTrackId = manager.CurrentTrackId;
                 var index = 0;
-                IEnumerable<string> tracksNames = tracks.Select(t =>
+                IEnumerable<string?> tracksNames = tracks.Select(t =>
                 {
                     index += 1;
                     return GetTrackName(t.Name, currentTrackId, index);
@@ -946,10 +954,12 @@ namespace LibVLCSharp.Forms.Shared
                         .Union(tracksNames);
                 }
 
-                var trackName = await this.FindAncestor<Page>()?.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
+                var page = this.FindAncestor<Page>();
+                if (page == null) return;
+
+                var trackName = await page.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
                 if (trackName != null)
                 {
-                    var mediaTrack = await ancestorPage.DisplayActionSheet(popupTitle, null, null, mediaTracksNames.ToArray());
                     var found = false;
                     index = 0;
                     foreach (var trackDescription in tracks)
@@ -982,7 +992,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void UpdateTracksSelectionAvailability(TracksManager tracksManager, Button tracksSelectionButton,
+        private void UpdateTracksSelectionAvailability(TracksManager tracksManager, Button? tracksSelectionButton,
             bool isTracksSelectionButtonVisible, string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
@@ -1005,7 +1015,7 @@ namespace LibVLCSharp.Forms.Shared
                 IsClosedCaptionsSelectionButtonVisible, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
-        private void ShowError(string? errorMessage)
+        private void ShowError()
         {
             Device.BeginInvokeOnMainThread(() => ErrorMessage = string.Format(ResourceManager.GetString(nameof(Strings.ErrorWithMedia)), Manager.Get<StateManager>().MediaResourceLocator));
         }
