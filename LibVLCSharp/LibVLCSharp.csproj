@@ -36,7 +36,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>3.3.1</Version>
+    <Version>3.4.0</Version>
     <PackageId>LibVLCSharp</PackageId>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
