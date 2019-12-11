@@ -1,3 +1,12 @@
+LibVLCSharp version 3.4.0
+=========================
+* Logging interop: Fix libvlc logging for Apple platforms
+* Documentation: Markdown pages are now part of the git repo
+* Adds MediaPlayerElement for Uno Platform: https://github.com/videolan/libvlcsharp/pull/77 by @kakone
+* Build: Remove unnecessary defines
+* Enable C# 8 nullable support for all libvlcsharp projects: https://github.com/videolan/libvlcsharp/pull/75 by @jeremyVignelles
+* UWP: Fix crash when VideoView is created Collapsed and allow swapchain creation after the videoview is created (when visibility changes) https://code.videolan.org/videolan/LibVLCSharp/issues/261
+
 LibVLCSharp version 3.3.1
 =========================
 * Add support for the Uno Platform by @kakone https://github.com/videolan/libvlcsharp/pull/76 Fixes https://code.videolan.org/videolan/LibVLCSharp/issues/232
