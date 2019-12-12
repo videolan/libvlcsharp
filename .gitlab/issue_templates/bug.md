@@ -34,6 +34,11 @@ Please also provide the functional steps to reproduce the behavior (if necessary
 
 <!-- What you should see instead -->
 
+### Does it work on other plaforms? Does it work with the official VLC apps?
+
+<!-- Paste any relevant logs - please use code blocks (```) to format console output,
+logs, and code as it's very hard to read otherwise. -->
+
 ### Relevant logs and/or screenshots
 
 <!-- Paste any relevant logs - please use code blocks (```) to format console output,
