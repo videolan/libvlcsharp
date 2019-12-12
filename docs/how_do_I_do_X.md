@@ -118,10 +118,24 @@ media.AddOption(":subsdec-encoding=Windows-125");
 
 # How do I change aspect ratio?
 
+If you are using the `MediaPlayerElement`, then it is built-in in the UI.
+
+If not, you should play with the `Scale` and `AspectRatio` MediaPlayer properties.
+
+See https://code.videolan.org/videolan/LibVLCSharp/blob/3.x/LibVLCSharp/Shared/MediaPlayerElement/AspectRatioManager.cs#L130
+
 # How do I change the movie play rate?
+
+```csharp
+MediaPlayer.SetRate(float rate)
+```
 
 # How do I turn deinterlacing on/off?
 
 # How do I take a snapshot of the video?
+
+```csharp
+MediaPlayer.TakeSnapshot(uint num, string? filePath, uint width, uint height)
+```
 
 # How do I enable loopback playback?
