@@ -74,7 +74,7 @@ namespace LibVLCSharp.Uno
             castRenderersDiscoverer.Enabled = IsCastButtonVisible;
             var volumeManager = Manager.Get<VolumeManager>();
             volumeManager.EnabledChanged += (sender, e) => VolumeMuteButtonAvailabilityCommand?.Update();
-            volumeManager.VolumeChanged += (sender, e) => UpdateVolumeSlider();
+            //volumeManager.VolumeChanged += (sender, e) => UpdateVolumeSlider();
             volumeManager.MuteChanged += (sender, e) => MuteStateCommand?.Update();
             var seekBarManager = Manager.Get<SeekBarManager>();
             seekBarManager.SeekableChanged += (sender, e) => SeekBarAvailabilityCommand?.Update();
@@ -584,6 +584,7 @@ namespace LibVLCSharp.Uno
             }
             if (GetTemplateChild("VolumeFlyout") is Flyout volumeFlyout)
             {
+                volumeFlyout.Opening += (sender, e) => UpdateVolumeSlider();
                 SubscribeFlyoutOpenedClosedEvents(volumeFlyout);
             }
             var audioTracksSelectionButton = Initialize("AudioTracksSelectionButton", "ShowAudioSelectionMenu") as Button;

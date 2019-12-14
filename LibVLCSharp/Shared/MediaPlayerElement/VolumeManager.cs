@@ -13,10 +13,10 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         public event EventHandler? EnabledChanged;
 
-        /// <summary>
-        /// Occurs when <see cref="Volume"/> property value changes
-        /// </summary>
-        public event EventHandler? VolumeChanged;
+        ///// <summary>
+        ///// Occurs when <see cref="Volume"/> property value changes
+        ///// </summary>
+        //public event EventHandler? VolumeChanged;
 
         /// <summary>
         /// Occurs when <see cref="Mute"/> property value changes
@@ -92,14 +92,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             {
                 Enabled = MediaPlayer != null;
                 MuteChanged?.Invoke(this, EventArgs.Empty);
-                VolumeChanged?.Invoke(this, EventArgs.Empty);
+                //VolumeChanged?.Invoke(this, EventArgs.Empty);
             });
         }
 
-        private async void MediaPlayer_VolumeChangedAsync(object sender, EventArgs e)
-        {
-            await DispatcherInvokeEventHandlerAsync(VolumeChanged);
-        }
+        //private async void MediaPlayer_VolumeChangedAsync(object sender, EventArgs e)
+        //{
+        //    await DispatcherInvokeEventHandlerAsync(VolumeChanged);
+        //}
 
         private async void MediaPlayer_MuteChangedAsync(object sender, EventArgs e)
         {
@@ -113,7 +113,8 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         protected override void SubscribeEvents(MediaPlayer mediaPlayer)
         {
             base.SubscribeEvents(mediaPlayer);
-            mediaPlayer.VolumeChanged += MediaPlayer_VolumeChangedAsync;
+            // Subscribe to the VolumeChanged event causes a bug when the media player is stopped
+            //mediaPlayer.VolumeChanged += MediaPlayer_VolumeChangedAsync;
             mediaPlayer.Muted += MediaPlayer_MuteChangedAsync;
             mediaPlayer.Unmuted += MediaPlayer_MuteChangedAsync;
         }
@@ -125,7 +126,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         protected override void UnsubscribeEvents(MediaPlayer mediaPlayer)
         {
             base.UnsubscribeEvents(mediaPlayer);
-            mediaPlayer.VolumeChanged -= MediaPlayer_VolumeChangedAsync;
+            //mediaPlayer.VolumeChanged -= MediaPlayer_VolumeChangedAsync;
             mediaPlayer.Muted -= MediaPlayer_MuteChangedAsync;
             mediaPlayer.Unmuted -= MediaPlayer_MuteChangedAsync;
         }
