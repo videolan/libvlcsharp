@@ -103,7 +103,7 @@ namespace LibVLCSharp.Shared
         static void InitializeAndroid()
         {
             var initLibvlc = Native.JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
-            if(initLibvlc == 0)
+            if(initLibvlc == -1)
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
