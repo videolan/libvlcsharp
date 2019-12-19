@@ -47,7 +47,7 @@ Some of the [features](https://www.videolan.org/vlc/features.html) include:
 - Stream to distant renderers, like Chromecast.
 - 360 video and 3D audio playback with viewpoint change.
 - Support for Ambisonics audio and more than 8 audio channels.
-- Subtitles size modification live.
+- Subtitles size live modification.
 - Hardware and software decoding on all platforms.
 - DVD playback and menu navigation.
 - Equalizer support.
@@ -78,7 +78,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - .NET Standard 1.1 and 2.0
 - .NET Framework 4.0 and later
 - .NET Core (including ASP.NET Core)
-- [Unity](https://code.videolan.org/mfkl/vlc-unity)
+- [Unity3D](https://code.videolan.org/mfkl/vlc-unity)
   - Windows Classic
 
 ## Installation
@@ -186,7 +186,7 @@ For more advanced samples, have a look at [libvlcsharp-samples](https://code.vid
 - [PulseMusic UX sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/PulseMusic): A stylish music player UX example using Skia on iOS and Android.
 - [Gestures sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/Gestures/Gestures): Cross-platform touch gestures and 360 videos on iOS and Android.
 - [LocalNetwork sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/LocalNetwork): Cross-platform local network browsing and playback with network shares (SMB, UPnP) on Android, iOS and WPF.
-- [MediaPlayerElement sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/MediaElement): Minimal iOS/Android showing how to get started with the crossplatform MediaPlayerElement control from LibVLCSharp.Forms.
+- [MediaPlayerElement sample](https://code.videolan.org/mfkl/libvlcsharp-samples/tree/master/MediaElement): Minimal iOS/Android sample showing how to get started with the crossplatform MediaPlayerElement control from LibVLCSharp.Forms.
 
 Feel free to suggest and contribute new samples.
 
