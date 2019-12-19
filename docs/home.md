@@ -8,6 +8,7 @@ LibVLCSharp is a cross-platform audio and video API for .NET platforms based on 
     - [LibVLC](#LibVLC)
     - [LibVLCSharp](#LibVLCSharp)
   - [How do I do X?](#How-do-I-do-X?)
+  - [MediaPlayerElement](#MediaPlayerElement)
   - [General usage guidelines and best practices](#General-usage-guidelines-and-best-practices)
   - [LibVLC documentation](#libvlc-documentation)
   - [Tutorials](#tutorials)
@@ -39,6 +40,12 @@ Read and follow https://code.videolan.org/videolan/libvlc-nuget
 # How do I do X?
 
 Check out our [How Do I Do X](how_do_I_do_X.md) page.
+
+# MediaPlayerElement
+
+For Xamarin.Forms and Uno platforms, we provide a ready-to-use integrated video control.
+
+Learn what it can do and our future plans for it [here](media_player_element.md).
 
 # General usage guidelines and best practices
 
