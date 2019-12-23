@@ -531,6 +531,14 @@ namespace LibVLCSharp.Shared
 
         #region DialogManagement
 
+        private static readonly DisplayErrorCallback InternalErrorCallback = Error;
+        private static readonly DisplayLoginCallback InternalLoginCallback = Login;
+        private static readonly DisplayQuestionCallback InternalQuestionCallback = Question;
+        private static readonly DisplayProgressCallback InternalDisplayProgressCallback = DisplayProgress;
+        private static readonly CancelCallback InternalCancelCallback = Cancel;
+        private static readonly UpdateProgressCallback InternalUpdateProgressCallback = UpdateProgress;
+        private static readonly DialogCallbacks DialogCbs = new DialogCallbacks(InternalErrorCallback, InternalLoginCallback, InternalQuestionCallback, InternalDisplayProgressCallback, InternalCancelCallback, InternalUpdateProgressCallback);
+
         /// <summary>
         /// Register callbacks in order to handle VLC dialogs. 
         /// LibVLC 3.0.0 and later.
@@ -551,8 +559,7 @@ namespace LibVLCSharp.Shared
             _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
             _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
-            _dialogCbs = new DialogCallbacks(Error, Login, Question, DisplayProgress, Cancel, UpdateProgress);
-            Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbs, IntPtr.Zero);
+            Native.LibVLCDialogSetCallbacks(NativeReference, DialogCbs, IntPtr.Zero);
         }
 
         /// <summary>
@@ -562,8 +569,7 @@ namespace LibVLCSharp.Shared
         {
             if (DialogHandlersSet)
             {
-                _dialogCbs = default;
-                Native.LibVLCDialogSetCallbacks(NativeReference, _dialogCbs, IntPtr.Zero);
+                Native.LibVLCDialogSetCallbacks(NativeReference, default, IntPtr.Zero);
                 _error = null;
                 _login = null;
                 _question = null;
@@ -575,9 +581,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// True if dialog handlers are set
         /// </summary>
-        public bool DialogHandlersSet => _dialogCbs.DisplayLogin != IntPtr.Zero;
-
-        DialogCallbacks _dialogCbs;
+        public bool DialogHandlersSet => _error != null;
         static DisplayError _error;
         static DisplayLogin _login;
         static DisplayQuestion _question;
