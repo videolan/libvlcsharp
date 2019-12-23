@@ -994,6 +994,12 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success, false otherwise.</returns>
         public bool UnsetEqualizer() => Native.LibVLCMediaPlayerSetEqualizer(NativeReference, IntPtr.Zero) == 0;
 
+        private LibVLCAudioPlayCb _audioPlayCb;
+        private LibVLCAudioPauseCb _audioPauseCb;
+        private LibVLCAudioResumeCb _audioResumeCb;
+        private LibVLCAudioFlushCb _audioFlushCb;
+        private LibVLCAudioDrainCb _audioDrainCb;
+
         /// <summary>
         /// Sets callbacks and private data for decoded audio. 
         /// Use libvlc_audio_set_format() or libvlc_audio_set_format_callbacks() to configure the decoded audio format.
@@ -1008,8 +1014,16 @@ namespace LibVLCSharp.Shared
             LibVLCAudioResumeCb resumeCb, LibVLCAudioFlushCb flushCb,
             LibVLCAudioDrainCb drainCb)
         {
+            _audioPlayCb = playCb;
+            _audioPauseCb = pauseCb;
+            _audioResumeCb = resumeCb;
+            _audioFlushCb = flushCb;
+            _audioDrainCb = drainCb;
+
             Native.LibVLCAudioSetCallbacks(NativeReference, playCb, pauseCb, resumeCb, flushCb, drainCb, IntPtr.Zero);
         }
+
+        private LibVLCVolumeCb _audioVolumeCb;
 
         /// <summary>
         /// Set callbacks and private data for decoded audio. 
@@ -1019,8 +1033,12 @@ namespace LibVLCSharp.Shared
         /// <param name="volumeCb">callback to apply audio volume, or NULL to apply volume in software</param>
         public void SetVolumeCallback(LibVLCVolumeCb volumeCb)
         {
+            _audioVolumeCb = volumeCb;
             Native.LibVLCAudioSetVolumeCallback(NativeReference, volumeCb);
         }
+
+        private LibVLCAudioSetupCb _setupCb;
+        private LibVLCAudioCleanupCb _cleanupCb;
 
         /// <summary>
         /// Sets decoded audio format via callbacks. 
@@ -1030,6 +1048,8 @@ namespace LibVLCSharp.Shared
         /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
         public void SetAudioFormatCallback(LibVLCAudioSetupCb setupCb, LibVLCAudioCleanupCb cleanupCb)
         {
+            _setupCb = setupCb;
+            _cleanupCb = cleanupCb;
             Native.LibVLCAudioSetFormatCallbacks(NativeReference, setupCb, cleanupCb);
         }
 
@@ -1224,6 +1244,10 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success, false on error </returns>
         public bool SetAudioDelay(long delay) => Native.LibVLCAudioSetDelay(NativeReference, delay) == 0;
 
+        private LibVLCVideoLockCb _videoLockCb;
+        private LibVLCVideoUnlockCb _videoUnlockCb;
+        private LibVLCVideoDisplayCb _videoDisplayCb;
+
         /// <summary>
         /// Set callbacks and private data to render decoded video to a custom area in memory.
         /// Use libvlc_video_set_format() or libvlc_video_set_format_callbacks() to configure the decoded format.
@@ -1246,6 +1270,9 @@ namespace LibVLCSharp.Shared
         public void SetVideoCallbacks(LibVLCVideoLockCb lockCb, LibVLCVideoUnlockCb unlockCb,
             LibVLCVideoDisplayCb displayCb)
         {
+            _videoLockCb = lockCb;
+            _videoUnlockCb = unlockCb;
+            _videoDisplayCb = displayCb;
             Native.LibVLCVideoSetCallbacks(NativeReference, lockCb, unlockCb, displayCb, IntPtr.Zero);
         }
 
@@ -1267,6 +1294,9 @@ namespace LibVLCSharp.Shared
                 chromaUtf8);
         }
 
+        private LibVLCVideoFormatCb _videoFormatCb;
+        private LibVLCVideoCleanupCb _videoCleanupCb;
+
         /// <summary>
         /// Set decoded video chroma and dimensions. 
         /// This only works in combination with libvlc_video_set_callbacks().
@@ -1275,6 +1305,8 @@ namespace LibVLCSharp.Shared
         /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
         public void SetVideoFormatCallbacks(LibVLCVideoFormatCb formatCb, LibVLCVideoCleanupCb cleanupCb)
         {
+            _videoFormatCb = formatCb;
+            _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, formatCb, cleanupCb);
         }
 
