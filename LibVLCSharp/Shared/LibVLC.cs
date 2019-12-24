@@ -38,7 +38,6 @@ namespace LibVLCSharp.Shared
             return Equals((LibVLC) obj);
         }
 
-        LogCallback _logCallback;
         readonly object _logLock = new object();
 
         /// <summary>
@@ -49,6 +48,12 @@ namespace LibVLCSharp.Shared
 #if NETFRAMEWORK || NETSTANDARD
         IntPtr _logFileHandle;
 #endif
+        
+        /// <summary>
+        /// The GCHandle to be passed to callbacks as userData
+        /// </summary>
+        GCHandle _gcHandle;
+
         /// <summary>
         /// Returns the hashcode for this libvlc instance
         /// </summary>
@@ -100,7 +105,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_set")]
-            internal static extern void LibVLCLogSet(IntPtr libVLC, LogCallback cb, IntPtr data);
+            internal static extern void LibVLCLogSet(IntPtr libVLC, InternalLogCallback cb, IntPtr data);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_module_description_list_release")]
@@ -223,6 +228,7 @@ namespace LibVLCSharp.Shared
         public LibVLC(params string[] options)
             : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options), Native.LibVLCNew), Native.LibVLCRelease)
         {
+            _gcHandle = GCHandle.Alloc(this);
         }
 
         /// <summary>
@@ -251,7 +257,10 @@ namespace LibVLCSharp.Shared
             if (disposing)
             {
                 UnsetDialogHandlers();
-                UnsetLog();
+                Native.LibVLCLogUnset(NativeReference);
+                _gcHandle.Free();
+                _exitCallback = null;
+                _log = null;
             }
 
             base.Dispose(disposing);
@@ -291,6 +300,9 @@ namespace LibVLCSharp.Shared
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
         }
 #endif
+
+        internal ExitCallback _exitCallback;
+
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
         /// <para>the VLC playlist and/or at least one interface are started with</para>
@@ -302,17 +314,26 @@ namespace LibVLCSharp.Shared
         /// <para>callback to invoke when LibVLC wants to exit,</para>
         /// <para>or NULL to disable the exit handler (as by default)</para>
         /// </param>
-        /// <param name="opaque">data pointer for the callback</param>
         /// <remarks>
         /// <para>This function should be called before the playlist or interface are</para>
         /// <para>started. Otherwise, there is a small race condition: the exit event could</para>
         /// <para>be raised before the handler is registered.</para>
         /// <para>This function and libvlc_wait() cannot be used at the same time.</para>
         /// </remarks>
-        public void SetExitHandler(ExitCallback cb, IntPtr opaque)
+        public void SetExitHandler(ExitCallback cb)
         {
-            var cbFunctionPointer = cb == null ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(cb);
-            Native.LibVLCSetExitHandler(NativeReference, cbFunctionPointer, opaque);
+            _exitCallback = cb;
+            if (cb == null)
+            {
+                Native.LibVLCSetExitHandler(NativeReference, IntPtr.Zero, IntPtr.Zero);
+            }
+            else
+            {
+                Native.LibVLCSetExitHandler(
+                    NativeReference,
+                    Marshal.GetFunctionPointerForDelegate(ExitCallbackHandle),
+                    GCHandle.ToIntPtr(_gcHandle));
+            }
         }
 
         /// <summary>
@@ -385,28 +406,6 @@ namespace LibVLCSharp.Shared
             return filePtr;
         }
 #endif
-        GCHandle _libvlcGcHandle;
-        void SetLog(LogCallback cb)
-        {
-            _logCallback = cb ?? throw new ArgumentException(nameof(cb));
-
-            _libvlcGcHandle = GCHandle.Alloc(this, GCHandleType.Normal);
-
-            Native.LibVLCLogSet(NativeReference, cb, GCHandle.ToIntPtr(_libvlcGcHandle));
-        }
-
-        void UnsetLog()
-        {
-            if (_logCallback == null) return;
-
-            if (_libvlcGcHandle.IsAllocated)
-            {
-                _libvlcGcHandle.Free();
-            }
-
-            _logCallback = null;
-            Native.LibVLCLogUnset(NativeReference);
-        }
 
         int _logSubscriberCount = 0;
         /// <summary>
@@ -420,8 +419,12 @@ namespace LibVLCSharp.Shared
                 lock (_logLock)
                 {
                     _log += value;
-                    if(_logSubscriberCount == 0)
-                        SetLog(OnLogInternal);
+                    if (_logSubscriberCount == 0)
+                    {
+                        // First subscriber, registering log handler
+                        Native.LibVLCLogSet(NativeReference, LogCallbackHandle, GCHandle.ToIntPtr(_gcHandle));
+                    }
+
                     _logSubscriberCount++;
                 }
             }
@@ -437,7 +440,7 @@ namespace LibVLCSharp.Shared
                     }
                     if (_logSubscriberCount == 0)
                     {
-                        UnsetLog();
+                        Native.LibVLCLogUnset(NativeReference);
                     }
                 }
             }
@@ -531,13 +534,6 @@ namespace LibVLCSharp.Shared
 
         #region DialogManagement
 
-        private static readonly DisplayErrorCallback InternalErrorCallback = Error;
-        private static readonly DisplayLoginCallback InternalLoginCallback = Login;
-        private static readonly DisplayQuestionCallback InternalQuestionCallback = Question;
-        private static readonly DisplayProgressCallback InternalDisplayProgressCallback = DisplayProgress;
-        private static readonly CancelCallback InternalCancelCallback = Cancel;
-        private static readonly UpdateProgressCallback InternalUpdateProgressCallback = UpdateProgress;
-        private static readonly DialogCallbacks DialogCbs = new DialogCallbacks(InternalErrorCallback, InternalLoginCallback, InternalQuestionCallback, InternalDisplayProgressCallback, InternalCancelCallback, InternalUpdateProgressCallback);
 
         /// <summary>
         /// Register callbacks in order to handle VLC dialogs. 
@@ -559,7 +555,7 @@ namespace LibVLCSharp.Shared
             _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
             _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
-            Native.LibVLCDialogSetCallbacks(NativeReference, DialogCbs, IntPtr.Zero);
+            Native.LibVLCDialogSetCallbacks(NativeReference, DialogCb, GCHandle.ToIntPtr(_gcHandle));
         }
 
         /// <summary>
@@ -582,21 +578,19 @@ namespace LibVLCSharp.Shared
         /// True if dialog handlers are set
         /// </summary>
         public bool DialogHandlersSet => _error != null;
-        static DisplayError _error;
-        static DisplayLogin _login;
-        static DisplayQuestion _question;
-        static DisplayProgress _displayProgress;
-        static UpdateProgress _updateProgress;
-        static readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
+        DisplayError _error;
+        DisplayLogin _login;
+        DisplayQuestion _question;
+        DisplayProgress _displayProgress;
+        UpdateProgress _updateProgress;
+        readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
 
-        [MonoPInvokeCallback(typeof(DisplayErrorCallback))]
-        static void Error(IntPtr data, string title, string text)
+        void OnDisplayError(string title, string text)
         {
             _error?.Invoke(title, text);
         }
 
-        [MonoPInvokeCallback(typeof(DisplayLoginCallback))]
-        static void Login(IntPtr data, IntPtr dialogId, string title, string text, string defaultUsername, bool askStore)
+        void OnDisplayLogin(IntPtr dialogId, string title, string text, string defaultUsername, bool askStore)
         {
             if (_login == null) return;
 
@@ -606,8 +600,7 @@ namespace LibVLCSharp.Shared
             _login(dlg, title, text, defaultUsername, askStore, cts.Token);
         }
         
-        [MonoPInvokeCallback(typeof(DisplayQuestionCallback))]
-        static void Question(IntPtr data, IntPtr dialogId, string title, string text, DialogQuestionType type, 
+        void OnDisplayQuestion(IntPtr dialogId, string title, string text, DialogQuestionType type, 
             string cancelText, string firstActionText, string secondActionText)
         {
             if (_question == null) return;
@@ -618,8 +611,7 @@ namespace LibVLCSharp.Shared
             _question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
         }
 
-        [MonoPInvokeCallback(typeof(DisplayProgressCallback))]
-        static void DisplayProgress(IntPtr data, IntPtr dialogId, string title, string text, bool indeterminate, float position, string cancelText)
+        void OnDisplayProgress(IntPtr dialogId, string title, string text, bool indeterminate, float position, string cancelText)
         {
             if (_displayProgress == null) return;
 
@@ -629,8 +621,7 @@ namespace LibVLCSharp.Shared
             _displayProgress(dlg, title, text, indeterminate, position, cancelText, cts.Token);
         }
 
-        [MonoPInvokeCallback(typeof(CancelCallback))]
-        static void Cancel(IntPtr data, IntPtr dialogId)
+        void OnCancel(IntPtr dialogId)
         {
             if (_cts.TryGetValue(dialogId, out var token))
             {
@@ -639,8 +630,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        [MonoPInvokeCallback(typeof(UpdateProgressCallback))]
-        static void UpdateProgress(IntPtr data, IntPtr dialogId, float position, string text)
+        void OnUpdateProgress(IntPtr dialogId, float position, string text)
         {
             if (_updateProgress == null) return;
 
@@ -660,34 +650,6 @@ namespace LibVLCSharp.Shared
             m => m.Build(),
             Native.LibVLCRendererDiscovererReleaseList);
 
-        [MonoPInvokeCallback(typeof(LogCallback))]
-        static void OnLogInternal(IntPtr data, LogLevel level, IntPtr ctx, IntPtr format, IntPtr args)
-        {
-            if (data == IntPtr.Zero)
-                return;
-
-            var gch = GCHandle.FromIntPtr(data);
-
-            if (!gch.IsAllocated || !(gch.Target is LibVLC libvlc) || libvlc.IsDisposed)
-                return;
-
-            try
-            {
-                var message = MarshalUtils.GetLogMessage(format, args);
-
-                GetLogContext(ctx, out var module, out var file, out var line);
-#if NET40
-                Task.Factory.StartNew(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
-#else
-                Task.Run(() => libvlc._log?.Invoke(null, new LogEventArgs(level, message, module, file, line)));
-#endif
-            }
-            // Silently catching OOM exceptions and others as this is not critical if it fails
-            catch
-            {
-            }
-        }
-
         /// <summary>
         /// Gets log message debug infos.
         ///
@@ -699,7 +661,7 @@ namespace LibVLCSharp.Shared
         /// The returned module name and file name will be NULL if unknown.
         /// The returned line number will similarly be zero if unknown.
         /// </summary>
-        /// <param name="logContext">The log message context (as passed to the <see cref="LogCallback"/>)</param>
+        /// <param name="logContext">The log message context (as passed to the <see cref="InternalLogCallback"/>)</param>
         /// <param name="module">The module name storage.</param>
         /// <param name="file">The source code file name storage.</param>
         /// <param name="line">The source code file line number storage.</param>
@@ -741,6 +703,174 @@ namespace LibVLCSharp.Shared
         /// Example: "gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)"
         /// </summary>
         public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8();
+
+        #region Exit
+
+        static readonly InternalExitCallback ExitCallbackHandle = ExitCallback;
+
+        [MonoPInvokeCallback(typeof(InternalExitCallback))]
+        private static void ExitCallback(IntPtr libVLCHandle)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?._exitCallback?.Invoke();
+        }
+        #endregion
+
+        #region Log
+        static readonly InternalLogCallback LogCallbackHandle = LogCallback;
+
+        [MonoPInvokeCallback(typeof(InternalLogCallback))]
+        private static void LogCallback(IntPtr libVLCHandle, LogLevel logLevel, IntPtr logContext, IntPtr format, IntPtr args)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+
+            try
+            {
+                var message = MarshalUtils.GetLogMessage(format, args);
+
+                GetLogContext(logContext, out var module, out var file, out var line);
+
+                void logAction() => libVLC._log?.Invoke(null, new LogEventArgs(logLevel, message, module, file, line));
+#if NET40
+                Task.Factory.StartNew(logAction);
+#else
+                Task.Run(logAction);
+#endif
+            }
+            catch
+            {
+                // Silently catching OOM exceptions and others as this is not critical if it fails
+            }
+        }
+        #endregion
+
+        #region Dialogs
+
+        private static readonly InternalDisplayErrorCallback DisplayErrorCallbackHandle = DisplayErrorCallback;
+        private static readonly InternalDisplayLoginCallback DisplayLoginCallbackHandle = DisplayLoginCallback;
+        private static readonly InternalDisplayQuestionCallback DisplayQuestionCallbackHandle = DisplayQuestionCallback;
+        private static readonly InternalDisplayProgressCallback DisplayProgressCallbackHandle = DisplayProgressCallback;
+        private static readonly InternalCancelCallback CancelCallbackHandle = CancelCallback;
+        private static readonly InternalUpdateProgressCallback UpdateProgressCallbackHandle = UpdateProgressCallback;
+
+        private static readonly DialogCallbacks DialogCb = new DialogCallbacks(
+            DisplayErrorCallbackHandle,
+            DisplayLoginCallbackHandle,
+            DisplayQuestionCallbackHandle,
+            DisplayProgressCallbackHandle,
+            CancelCallbackHandle,
+            UpdateProgressCallbackHandle);
+
+        [MonoPInvokeCallback(typeof(InternalDisplayErrorCallback))]
+        static void DisplayErrorCallback(IntPtr libVLCHandle, IntPtr title, IntPtr text)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnDisplayError(title.FromUtf8(), text.FromUtf8());
+        }
+
+        [MonoPInvokeCallback(typeof(InternalDisplayLoginCallback))]
+        static void DisplayLoginCallback(IntPtr libVLCHandle, IntPtr dialogId, IntPtr title, IntPtr text, IntPtr defaultUsername, bool askStore)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnDisplayLogin(dialogId, title.FromUtf8(), text.FromUtf8(), defaultUsername.FromUtf8(), askStore);
+        }
+
+        [MonoPInvokeCallback(typeof(InternalDisplayQuestionCallback))]
+        static void DisplayQuestionCallback(IntPtr libVLCHandle, IntPtr dialogId, IntPtr title, IntPtr text, DialogQuestionType type,
+            IntPtr cancelText, IntPtr firstActionText, IntPtr secondActionText)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnDisplayQuestion(dialogId, title.FromUtf8(), text.FromUtf8(), type, cancelText.FromUtf8(), firstActionText.FromUtf8(), secondActionText.FromUtf8());
+        }
+
+        [MonoPInvokeCallback(typeof(InternalDisplayProgressCallback))]
+        static void DisplayProgressCallback(IntPtr libVLCHandle, IntPtr dialogId, IntPtr title, IntPtr text, bool indeterminate, float position, IntPtr cancelText)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnDisplayProgress(dialogId, title.FromUtf8(), text.FromUtf8(), indeterminate, position, cancelText.FromUtf8());
+        }
+
+        [MonoPInvokeCallback(typeof(InternalCancelCallback))]
+        static void CancelCallback(IntPtr libVLCHandle, IntPtr dialogId)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnCancel(dialogId);
+        }
+
+        [MonoPInvokeCallback(typeof(InternalUpdateProgressCallback))]
+        static void UpdateProgressCallback(IntPtr libVLCHandle, IntPtr dialogId, float position, IntPtr text)
+        {
+            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
+            libVLC?.OnUpdateProgress(dialogId, position, text.FromUtf8());
+        }
+        #endregion
+
+        #region internal callbacks
+
+        /// <summary>
+        /// Registers a callback for the LibVLC exit event. 
+        /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play() 
+        /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalExitCallback(IntPtr libVLCHandle);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalLogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext, IntPtr format, IntPtr args);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalDisplayErrorCallback(IntPtr data, IntPtr title, IntPtr text);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalDisplayLoginCallback(IntPtr data, IntPtr dialogId, IntPtr title, IntPtr text,
+            IntPtr defaultUsername, bool askStore);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalDisplayQuestionCallback(IntPtr data, IntPtr dialogId, IntPtr title, IntPtr text,
+            DialogQuestionType type, IntPtr cancelText, IntPtr firstActionText, IntPtr secondActionText);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalDisplayProgressCallback(IntPtr data, IntPtr dialogId, IntPtr title, IntPtr text,
+            bool indeterminate, float position, IntPtr cancelText);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalCancelCallback(IntPtr data, IntPtr dialogId);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalUpdateProgressCallback(IntPtr data, IntPtr dialogId, float position, IntPtr text);
+
+        #endregion
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct DialogCallbacks
+        {
+            internal DialogCallbacks(InternalDisplayErrorCallback displayError,
+                InternalDisplayLoginCallback displayLogin,
+                InternalDisplayQuestionCallback displayQuestion,
+                InternalDisplayProgressCallback displayProgress,
+                InternalCancelCallback cancel,
+                InternalUpdateProgressCallback updateProgress)
+            {
+                DisplayError = Marshal.GetFunctionPointerForDelegate(displayError);
+                DisplayLogin = Marshal.GetFunctionPointerForDelegate(displayLogin);
+                DisplayQuestion = Marshal.GetFunctionPointerForDelegate(displayQuestion);
+                DisplayProgress = Marshal.GetFunctionPointerForDelegate(displayProgress);
+                Cancel = Marshal.GetFunctionPointerForDelegate(cancel);
+                UpdateProgress = Marshal.GetFunctionPointerForDelegate(updateProgress);
+            }
+
+            internal readonly IntPtr DisplayError;
+
+            internal readonly IntPtr DisplayLogin;
+
+            internal readonly IntPtr DisplayQuestion;
+
+            internal readonly IntPtr DisplayProgress;
+
+            internal readonly IntPtr Cancel;
+
+            internal readonly IntPtr UpdateProgress;
+        }
     }
 
     /// <summary>Logging messages level.</summary>
@@ -757,8 +887,9 @@ namespace LibVLCSharp.Shared
         Error = 4
     }
 
-#region Callbacks
+    #region Callbacks
 
+    
     /// <summary>
     /// Registers a callback for the LibVLC exit event. 
     /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play() 
@@ -766,9 +897,5 @@ namespace LibVLCSharp.Shared
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ExitCallback();
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void LogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext, IntPtr format, IntPtr args);
-
-#endregion
+    #endregion
 }

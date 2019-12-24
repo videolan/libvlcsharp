@@ -98,7 +98,7 @@ namespace LibVLCSharp.Tests
                 called = true;
             });
 
-            _libVLC.SetExitHandler(exitCb, IntPtr.Zero);
+            _libVLC.SetExitHandler(exitCb);
 
             _libVLC.Dispose();
 
