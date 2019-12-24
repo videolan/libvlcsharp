@@ -7,21 +7,21 @@ namespace LibVLCSharp.Shared
     {
         readonly object _lock = new object();
 #if APPLE
-        static EventHandler<MediaMetaChangedEventArgs>? _mediaMetaChanged;
-        static EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
-        static EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
-        static EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
-        static EventHandler<MediaFreedEventArgs>? _mediaFreed;
-        static EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
-        static EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
+        static EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
+        static EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
+        static EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
+        static EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
+        static EventHandler<MediaFreedEventArgs> _mediaFreed;
+        static EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
+        static EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
 #else
-        EventHandler<MediaMetaChangedEventArgs>? _mediaMetaChanged;
-        EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
-        EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
-        EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
-        EventHandler<MediaFreedEventArgs>? _mediaFreed;
-        EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
-        EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
+        EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
+        EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
+        EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
+        EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
+        EventHandler<MediaFreedEventArgs> _mediaFreed;
+        EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
+        EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
 #endif
 
         int _mediaMetaChangedRegistrationCount;
@@ -32,13 +32,13 @@ namespace LibVLCSharp.Shared
         int _mediaStateChangedRegistrationCount;
         int _mediaSubitemTreeAddedRegistrationCount;
 
-        EventCallback? _mediaMetaChangedCallback;
-        EventCallback? _mediaParsedChangedCallback;
-        EventCallback? _mediaSubItemChangedCallback;
-        EventCallback? _mediaDurationChangedCallback;
-        EventCallback? _mediaFreedCallback;
-        EventCallback? _mediaStateChangedCallback;
-        EventCallback? _mediaSubitemTreeAddedCallback;
+        EventCallback _mediaMetaChangedCallback;
+        EventCallback _mediaParsedChangedCallback;
+        EventCallback _mediaSubItemChangedCallback;
+        EventCallback _mediaDurationChangedCallback;
+        EventCallback _mediaFreedCallback;
+        EventCallback _mediaStateChangedCallback;
+        EventCallback _mediaSubitemTreeAddedCallback;
 
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {

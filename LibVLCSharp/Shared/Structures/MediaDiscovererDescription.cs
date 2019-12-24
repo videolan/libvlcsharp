@@ -21,7 +21,7 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public readonly struct MediaDiscovererDescription
     {
-        internal MediaDiscovererDescription(string? name, string? longName, MediaDiscovererCategory category)
+        internal MediaDiscovererDescription(string name, string longName, MediaDiscovererCategory category)
         {
             Name = name;
             LongName = longName;
@@ -31,12 +31,12 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Media discoverer description name
         /// </summary>
-        public string? Name { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Media discoverer description long name
         /// </summary>
-        public string? LongName { get; }
+        public string LongName { get; }
 
         /// <summary>
         /// Media discoverer category

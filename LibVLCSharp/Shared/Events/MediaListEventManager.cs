@@ -7,17 +7,17 @@ namespace LibVLCSharp.Shared
     {
         readonly object _lock = new object();
 #if APPLE
-        static EventHandler<MediaListItemAddedEventArgs>? _mediaListItemAdded;
-        static EventHandler<MediaListWillAddItemEventArgs>? _mediaListWillAddItem;
-        static EventHandler<MediaListItemDeletedEventArgs>? _mediaListItemDeleted;
-        static EventHandler<MediaListWillDeleteItemEventArgs>? _mediaListWillDeleteItem;
-        static EventHandler<EventArgs>? _mediaListEndReached;
+        static EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
+        static EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
+        static EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
+        static EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
+        static EventHandler<EventArgs> _mediaListEndReached;
 #else
-        EventHandler<MediaListItemAddedEventArgs>? _mediaListItemAdded;
-        EventHandler<MediaListWillAddItemEventArgs>? _mediaListWillAddItem;
-        EventHandler<MediaListItemDeletedEventArgs>? _mediaListItemDeleted;
-        EventHandler<MediaListWillDeleteItemEventArgs>? _mediaListWillDeleteItem;
-        EventHandler<EventArgs>? _mediaListEndReached;
+        EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
+        EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
+        EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
+        EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
+        EventHandler<EventArgs> _mediaListEndReached;
 
 #endif
 
@@ -27,11 +27,11 @@ namespace LibVLCSharp.Shared
         int _mediaListWillDeleteItemRegistrationCount;
         int _mediaListEndReachedRegistrationCount;
 
-        EventCallback? _mediaListItemAddedCallback;
-        EventCallback? _mediaListWillAddItemdCallback;
-        EventCallback? _mediaListItemDeletedCallback;
-        EventCallback? _mediaListWillDeleteItemCallback;
-        EventCallback? _mediaListEndReachedCallback;
+        EventCallback _mediaListItemAddedCallback;
+        EventCallback _mediaListWillAddItemdCallback;
+        EventCallback _mediaListItemDeletedCallback;
+        EventCallback _mediaListWillDeleteItemCallback;
+        EventCallback _mediaListEndReachedCallback;
 
         public MediaListEventManager(IntPtr ptr) : base(ptr)
         {

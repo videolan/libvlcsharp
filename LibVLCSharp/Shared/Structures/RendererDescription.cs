@@ -22,14 +22,14 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Renderer Name
         /// </summary>
-        public string? Name { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Renderer long name
         /// </summary>
-        public string? LongName { get; }
+        public string LongName { get; }
 
-        internal RendererDescription(string? name, string? longName)
+        internal RendererDescription(string name, string longName)
         {
             Name = name;
             LongName = longName;
