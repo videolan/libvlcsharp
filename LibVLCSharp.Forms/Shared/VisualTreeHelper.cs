@@ -15,7 +15,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <typeparam name="T">Element type to find.</typeparam>
         /// <param name="parent">The parent element.</param>
         /// <returns>The child element, or null if not found.</returns>
-        internal static T FindChild<T>(this Element parent) where T : Element?
+        internal static T FindChild<T>(this Element parent) where T : Element
         {
             if (parent is Layout layout)
             {
@@ -25,15 +25,15 @@ namespace LibVLCSharp.Forms.Shared
                     {
                         return result;
                     }
-                    var childResult = child.FindChild<T>();
-                    if (childResult != null)
+                    result = child.FindChild<T>();
+                    if (result != null)
                     {
-                        return childResult;
+                        return result;
                     }
                 }
             }
 
-            return default!;
+            return null;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <param name="parent">The parent element.</param>
         /// <param name="name">The searched name</param>
         /// <returns>The child element, or null if not found.</returns>
-        internal static T FindChild<T>(this Element parent, string name) where T : Element?
+        internal static T FindChild<T>(this Element parent, string name) where T : Element
         {
             var result = parent.FindByName<T>(name);
             if (result != null)
@@ -63,7 +63,7 @@ namespace LibVLCSharp.Forms.Shared
                 }
             }
 
-            return default!;
+            return null;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <typeparam name="T">Ancestor element type.</typeparam>
         /// <param name="element">The element.</param>
         /// <returns>The ancestor element of the given type, or null if not found.</returns>
-        internal static T FindAncestor<T>(this Element element) where T : Element?
+        internal static T FindAncestor<T>(this Element element) where T : Element
         {
             if (element != null)
             {
@@ -86,7 +86,7 @@ namespace LibVLCSharp.Forms.Shared
                     element = element.Parent;
                 }
             }
-            return default!;
+            return null;
         }
     }
 }

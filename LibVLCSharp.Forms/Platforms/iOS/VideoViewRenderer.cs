@@ -30,9 +30,9 @@ namespace LibVLCSharp.Forms.Platforms.iOS
                     SetNativeControl(new LibVLCSharp.Platforms.iOS.VideoView());
 
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                    if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
+                    if (Control.MediaPlayer != e.NewElement.MediaPlayer)
                     {
-                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control!.MediaPlayer, e.NewElement.MediaPlayer));
+                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
                     }
                 }
             }
