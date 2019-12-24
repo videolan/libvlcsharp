@@ -13,7 +13,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// Initialized a new instance of <see cref="SubtitlesTracksManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public SubtitlesTracksManager(IDispatcher? dispatcher) : base(dispatcher, TrackType.Text)
+        public SubtitlesTracksManager(IDispatcher dispatcher) : base(dispatcher, TrackType.Text)
         {
         }
 
@@ -30,6 +30,6 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Gets the tracks descriptions
         /// </summary>
-        public override IEnumerable<TrackDescription>? Tracks => MediaPlayer?.SpuDescription;
+        public override IEnumerable<TrackDescription> Tracks => MediaPlayer?.SpuDescription;
     }
 }

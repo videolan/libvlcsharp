@@ -11,23 +11,23 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="VideoView"/> property changed
         /// </summary>
-        protected EventHandler? VideoViewChanged;
+        protected EventHandler VideoViewChanged;
 
         /// <summary>
         /// Occurs when <see cref="LibVLC"/> property changed
         /// </summary>
-        protected EventHandler? LibVLCChanged;
+        protected EventHandler LibVLCChanged;
 
         /// <summary>
         /// Occurs when <see cref="MediaPlayer"/> property changed
         /// </summary>
-        protected EventHandler? MediaPlayerChanged;
+        protected EventHandler MediaPlayerChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MediaPlayerElementManagerBase"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public MediaPlayerElementManagerBase(IDispatcher? dispatcher)
+        public MediaPlayerElementManagerBase(IDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
         }
@@ -40,13 +40,13 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             Dispose();
         }
 
-        private IDispatcher? Dispatcher { get; }
+        private IDispatcher Dispatcher { get; }
 
-        private IVideoControl? _videoView;
+        private IVideoControl _videoView;
         /// <summary>
         /// Gets or sets the video view
         /// </summary>
-        public IVideoControl? VideoView
+        public IVideoControl VideoView
         {
             get => _videoView;
             set
@@ -60,11 +60,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             }
         }
 
-        private LibVLC? _libVLC;
+        private LibVLC _libVLC;
         /// <summary>
         /// Gets or sets the <see cref="LibVLC"/> instance
         /// </summary>
-        public LibVLC? LibVLC
+        public LibVLC LibVLC
         {
             get => _libVLC;
             set
@@ -78,11 +78,11 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             }
         }
 
-        private Shared.MediaPlayer? _mediaPlayer;
+        private Shared.MediaPlayer _mediaPlayer;
         /// <summary>
         /// Gets or sets the media player
         /// </summary>
-        public Shared.MediaPlayer? MediaPlayer
+        public Shared.MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
             set
@@ -101,7 +101,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="oldValue">old value</param>
         /// <param name="newValue">new value</param>
-        protected virtual void OnVideoViewChanged(IVideoControl? oldValue, IVideoControl? newValue)
+        protected virtual void OnVideoViewChanged(IVideoControl oldValue, IVideoControl newValue)
         {
             VideoViewChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -111,7 +111,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="oldValue">old value</param>
         /// <param name="newValue">new value</param>
-        protected virtual void OnLibVLCChanged(LibVLC? oldValue, LibVLC? newValue)
+        protected virtual void OnLibVLCChanged(LibVLC oldValue, LibVLC newValue)
         {
             LibVLCChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -119,7 +119,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Called when <see cref="MediaPlayer"/> property value changes
         /// </summary>
-        protected virtual void OnMediaPlayerChanged(MediaPlayer? oldValue, MediaPlayer? newValue)
+        protected virtual void OnMediaPlayerChanged(MediaPlayer oldValue, MediaPlayer newValue)
         {
             if (oldValue != null)
             {
@@ -153,7 +153,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="eventHandler">event handler</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        protected Task DispatcherInvokeEventHandlerAsync(EventHandler? eventHandler)
+        protected Task DispatcherInvokeEventHandlerAsync(EventHandler eventHandler)
         {
             if (eventHandler == null)
             {
@@ -169,7 +169,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="eventHandler">event handler</param>
         /// <param name="eventArgs">event args</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        protected Task DispatcherInvokeEventHandlerAsync<TEventArgs>(EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
+        protected Task DispatcherInvokeEventHandlerAsync<TEventArgs>(EventHandler<TEventArgs> eventHandler, TEventArgs eventArgs)
             where TEventArgs : EventArgs
         {
             if (eventHandler == null)
