@@ -40,7 +40,7 @@ Task("Build")
     }
     else
     {
-        XBuild($"{solutionName}.sln", settings => settings.SetConfiguration(configuration));
+        XBuild($"{solutionName}.Mac.sln", settings => settings.SetConfiguration(configuration));
     }
 });
 
