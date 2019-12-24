@@ -18,7 +18,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayInformation">display information</param>
         /// <param name="displayRequest">display request object</param>
-        public MediaPlayerElementManager(IDispatcher? dispatcher, IDisplayInformation displayInformation, IDisplayRequest displayRequest)
+        public MediaPlayerElementManager(IDispatcher dispatcher, IDisplayInformation displayInformation, IDisplayRequest displayRequest)
             : base(dispatcher)
         {
             SubManagers = new MediaPlayerElementManagerBase[] {
@@ -42,7 +42,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="oldValue">old value</param>
         /// <param name="newValue">new value</param>
-        protected override void OnVideoViewChanged(IVideoControl? oldValue, IVideoControl? newValue)
+        protected override void OnVideoViewChanged(IVideoControl oldValue, IVideoControl newValue)
         {
             base.OnVideoViewChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)
@@ -56,7 +56,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="oldValue">old value</param>
         /// <param name="newValue">new value</param>
-        protected override void OnLibVLCChanged(LibVLC? oldValue, LibVLC? newValue)
+        protected override void OnLibVLCChanged(LibVLC oldValue, LibVLC newValue)
         {
             base.OnLibVLCChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)
@@ -68,7 +68,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Called when <see cref="MediaPlayer"/> property value changes
         /// </summary>
-        protected override void OnMediaPlayerChanged(MediaPlayer? oldValue, MediaPlayer? newValue)
+        protected override void OnMediaPlayerChanged(MediaPlayer oldValue, MediaPlayer newValue)
         {
             base.OnMediaPlayerChanged(oldValue, newValue);
             foreach (var subManager in SubManagers)

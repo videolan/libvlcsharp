@@ -13,38 +13,38 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when an error is encountered
         /// </summary>
-        public event EventHandler? ErrorOccured;
+        public event EventHandler ErrorOccured;
 
         /// <summary>
         /// Occurs when the error message should be cleared
         /// </summary>
-        public event EventHandler? ErrorCleared;
+        public event EventHandler ErrorCleared;
 
         /// <summary>
         /// Occurs when the <see cref="PlayPauseAvailable"/> property value changes
         /// </summary>
-        public event EventHandler? PlayPauseAvailableChanged;
+        public event EventHandler PlayPauseAvailableChanged;
 
         /// <summary>
         /// Occurs when the media player started playing a media
         /// </summary>
-        public event EventHandler? Playing;
+        public event EventHandler Playing;
 
         /// <summary>
         /// Occurs when the media player paused playback
         /// </summary>
-        public event EventHandler? Paused;
+        public event EventHandler Paused;
 
         /// <summary>
         /// Occurs when the media player paused playback
         /// </summary>
-        public event EventHandler? Stopped;
+        public event EventHandler Stopped;
 
         /// <summary>
         /// Initializes a new instance of <see cref="StateManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public StateManager(IDispatcher? dispatcher) : base(dispatcher)
+        public StateManager(IDispatcher dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += OnMediaPlayerChangedAsync;
         }
@@ -54,7 +54,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Gets the media resource locator
         /// </summary>
-        public string? MediaResourceLocator => MediaPlayer?.Media?.Mrl;
+        public string MediaResourceLocator => MediaPlayer?.Media?.Mrl;
 
         /// <summary>
         /// Gets a value indicating whether the playback is playing
@@ -130,7 +130,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return Task.CompletedTask;
         }
 
-        private async Task PlayingOrPausedAsync(EventHandler? eventHandler)
+        private async Task PlayingOrPausedAsync(EventHandler eventHandler)
         {
             if (HasError)
             {

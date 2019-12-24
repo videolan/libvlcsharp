@@ -11,17 +11,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="IsBuffering"/> property value changes
         /// </summary>
-        public event EventHandler? IsBufferingChanged;
+        public event EventHandler IsBufferingChanged;
         /// <summary>
         /// Occurs when buffering
         /// </summary>
-        public event EventHandler? Buffering;
+        public event EventHandler Buffering;
 
         /// <summary>
         /// Initializes a new instance of <see cref="BufferingProgressNotifier"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public BufferingProgressNotifier(IDispatcher? dispatcher) : base(dispatcher)
+        public BufferingProgressNotifier(IDispatcher dispatcher) : base(dispatcher)
         {
         }
 

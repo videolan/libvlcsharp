@@ -16,19 +16,19 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="CastAvailable"/> property value changes
         /// </summary>
-        public event EventHandler? CastAvailableChanged;
+        public event EventHandler CastAvailableChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CastRenderersDiscoverer"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public CastRenderersDiscoverer(IDispatcher? dispatcher) : base(dispatcher)
+        public CastRenderersDiscoverer(IDispatcher dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await UpdateHasRenderersPropertyValueAsync();
             LibVLCChanged += async (sender, e) => await OnLibVLCChangedAsync();
         }
 
-        private RendererDiscoverer? RendererDiscoverer { get; set; }
+        private RendererDiscoverer RendererDiscoverer { get; set; }
 
         private bool _castAvailable;
         /// <summary>
@@ -78,7 +78,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
         private IList<RendererItem> RenderersList { get; } = new List<RendererItem>();
 
-        private IEnumerable<RendererItem>? _renderers;
+        private IEnumerable<RendererItem> _renderers;
         /// <summary>
         /// Gets the renderers list
         /// </summary>
