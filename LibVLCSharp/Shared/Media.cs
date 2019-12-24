@@ -15,9 +15,6 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class Media : Internal
     {
-        static readonly ConcurrentDictionary<IntPtr, StreamData> DicStreams = new ConcurrentDictionary<IntPtr, StreamData>();
-        static int _streamIndex;
-        
         internal struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -46,7 +43,8 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
-            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, IntPtr openCb, IntPtr readCb, IntPtr seekCb, IntPtr closeCb, IntPtr opaque);
+            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, InternalOpenMedia openCb, InternalReadMedia readCb, 
+                InternalSeekMedia seekCb, InternalCloseMedia closeCb, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option")]
@@ -232,14 +230,15 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Create a media from a .NET Stream
+        /// Create a media from a MediaInput
         /// requires libvlc 3.0 or higher
         /// </summary>
         /// <param name="libVLC">the libvlc instance</param>
-        /// <param name="stream">the .NET Stream to be used by libvlc. LibVLCSharp will NOT dispose or close it.</param>
+        /// <param name="input">the media to be used by libvlc. LibVLCSharp will NOT dispose or close it. 
+        /// Use <see cref="StreamMediaInput"/> or implement your own.</param>
         /// <param name="options">the libvlc options</param>
-        public Media(LibVLC libVLC, Stream stream, params string[] options)
-            : base(() => CtorFromCallbacks(libVLC, stream), Native.LibVLCMediaRelease)
+        public Media(LibVLC libVLC, MediaInput input, params string[] options)
+            : base(() => CtorFromInput(libVLC, input), Native.LibVLCMediaRelease)
         {
             foreach(var option in options)
             {
@@ -249,27 +248,17 @@ namespace LibVLCSharp.Shared
             }
         }
         
-        static IntPtr CtorFromCallbacks(LibVLC libVLC, Stream stream)
+        static IntPtr CtorFromInput(LibVLC libVLC, MediaInput input)
         {
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-
-            var openMedia = new OpenMedia(CallbackOpenMedia);
-            var readMedia = new ReadMedia(CallbackReadMedia);
-            var seekMedia = new SeekMedia(CallbackSeekMedia);
-            var closeMedia = new CloseMedia(CallbackCloseMedia);
-
-            var opaque = AddStream(stream, openMedia, readMedia, seekMedia, closeMedia);
-
-            if (opaque == IntPtr.Zero)
-                throw new InvalidOperationException("Cannot create opaque parameter");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
-                Marshal.GetFunctionPointerForDelegate(openMedia),
-                Marshal.GetFunctionPointerForDelegate(readMedia),
-                Marshal.GetFunctionPointerForDelegate(seekMedia),
-                Marshal.GetFunctionPointerForDelegate(closeMedia),
-                opaque);
+                OpenMediaCallbackHandle,
+                ReadMediaCallbackHandle,
+                SeekMediaCallbackHandle,
+                CloseMediaCallbackHandle,
+                GCHandle.ToIntPtr(input.GcHandle));
         }
 
         internal Media(IntPtr mediaPtr)
@@ -588,143 +577,6 @@ namespace LibVLCSharp.Shared
             return NativeReference.GetHashCode();
         }
 
-        internal class StreamData
-        {
-            internal IntPtr Handle { get; set; }
-            internal Stream Stream { get; set; }
-            internal byte[] Buffer { get; set; }
-            internal OpenMedia OpenMedia { get; set; }
-            internal ReadMedia ReadMedia { get; set; }
-            internal SeekMedia SeekMedia { get; set; }
-            internal CloseMedia CloseMedia { get; set; }
-        }
-
-        #region private
-
-        [MonoPInvokeCallback(typeof(OpenMedia))]
-        static int CallbackOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size)
-        {
-            data = opaque;
-
-            try
-            {
-                var streamData = GetStream(opaque);
-                try
-                {
-                    size = (ulong)streamData.Stream.Length;
-                }
-                catch (Exception)
-                {
-                    // byte length of the bitstream or UINT64_MAX if unknown
-                    size = ulong.MaxValue;
-                }
-
-                if (streamData.Stream.CanSeek)
-                {
-                    streamData.Stream.Seek(0L, SeekOrigin.Begin);
-                }
-
-                return 0;
-            }
-            catch (Exception)
-            {
-                size = 0UL;
-                return -1;
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(ReadMedia))]
-        static int CallbackReadMedia(IntPtr opaque, IntPtr buf, uint len)
-        {
-            try
-            {
-                var streamData = GetStream(opaque);
-                int read;
-
-                lock (streamData)
-                {
-                    var canRead = Math.Min((int)len, streamData.Buffer.Length);
-                    read = streamData.Stream.Read(streamData.Buffer, 0, canRead);
-                    Marshal.Copy(streamData.Buffer, 0, buf, read);
-                }
-
-                return read;
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(SeekMedia))]
-        static int CallbackSeekMedia(IntPtr opaque, ulong offset)
-        {
-            try
-            {
-                var streamData = GetStream(opaque);
-                streamData.Stream.Seek((long)offset, SeekOrigin.Begin);
-                return 0;
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(CloseMedia))]
-        static void CallbackCloseMedia(IntPtr opaque)
-        {
-            try
-            {
-                var streamData = GetStream(opaque);
-
-                if (streamData.Stream.CanSeek)
-                    streamData.Stream.Seek(0, SeekOrigin.Begin);
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-        }
-
-        static IntPtr AddStream(Stream stream, OpenMedia openMedia, ReadMedia readMedia, SeekMedia seekMedia, CloseMedia closeMedia)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            IntPtr handle;
-
-            lock (DicStreams)
-            {
-                _streamIndex++;
-
-                handle = new IntPtr(_streamIndex);
-                DicStreams[handle] = new StreamData
-                {
-                    Buffer = new byte[0x4000],
-                    Handle = handle,
-                    Stream = stream,
-                    OpenMedia = openMedia,
-                    ReadMedia = readMedia,
-                    SeekMedia = seekMedia,
-                    CloseMedia = closeMedia
-                };
-            }
-            return handle;
-        }
-
-        static StreamData GetStream(IntPtr handle)
-        {
-            return !DicStreams.TryGetValue(handle, out var result) ? null : result;
-        }
-
-        static void RemoveStream(IntPtr handle)
-        {
-            DicStreams.TryRemove(handle, out var result);
-        }
-
         /// <summary>Increments the native reference counter for the media</summary>
         internal void Retain()
         {
@@ -732,6 +584,116 @@ namespace LibVLCSharp.Shared
                 Native.LibVLCMediaRetain(NativeReference);
         }
 
+        #region MediaFromStream
+
+        static readonly InternalOpenMedia OpenMediaCallbackHandle = OpenMediaCallback;
+        static readonly InternalReadMedia ReadMediaCallbackHandle = ReadMediaCallback;
+        static readonly InternalSeekMedia SeekMediaCallbackHandle = SeekMediaCallback;
+        static readonly InternalCloseMedia CloseMediaCallbackHandle = CloseMediaCallback;
+
+        [MonoPInvokeCallback(typeof(InternalOpenMedia))]
+        static int OpenMediaCallback(IntPtr opaque, ref IntPtr data, out ulong size)
+        {
+            data = opaque;
+            var input = MarshalUtils.GetInstance<MediaInput>(opaque);
+            if (input == null)
+            {
+                size = 0UL;
+                return -1;
+            }
+
+            return input.Open(out size) ? 0 : -1;
+        }
+
+        [MonoPInvokeCallback(typeof(InternalReadMedia))]
+        static int ReadMediaCallback(IntPtr opaque, IntPtr buf, uint len)
+        {
+            var input = MarshalUtils.GetInstance<MediaInput>(opaque);
+            if (input == null)
+            {
+                return -1;
+            }
+            return input.Read(buf, len);
+        }
+
+        [MonoPInvokeCallback(typeof(InternalSeekMedia))]
+        static int SeekMediaCallback(IntPtr opaque, ulong offset)
+        {
+            var input = MarshalUtils.GetInstance<MediaInput>(opaque);
+            if (input == null)
+            {
+                return -1;
+            }
+            return input.Seek(offset) ? 0 : -1;
+        }
+
+        [MonoPInvokeCallback(typeof(InternalCloseMedia))]
+        static void CloseMediaCallback(IntPtr opaque)
+        {
+            var input = MarshalUtils.GetInstance<MediaInput>(opaque);
+            input?.Close();
+        }
+
+        #endregion
+
+        #region MediaFromCallbacks
+
+        /// <summary>
+        /// <para>It consists of a media location and various optional meta data.</para>
+        /// <para>@{</para>
+        /// <para></para>
+        /// <para>LibVLC media item/descriptor external API</para>
+        /// </summary>
+        /// <summary>Callback prototype to open a custom bitstream input media.</summary>
+        /// <param name="opaque">private pointer as passed to libvlc_media_new_callbacks()</param>
+        /// <param name="data">storage space for a private data pointer [OUT]</param>
+        /// <param name="size">byte length of the bitstream or UINT64_MAX if unknown [OUT]</param>
+        /// <returns>
+        /// <para>0 on success, non-zero on error. In case of failure, the other</para>
+        /// <para>callbacks will not be invoked and any value stored in *datap and *sizep is</para>
+        /// <para>discarded.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>The same media item can be opened multiple times. Each time, this callback</para>
+        /// <para>is invoked. It should allocate and initialize any instance-specific</para>
+        /// <para>resources, then store them in *datap. The instance resources can be freed</para>
+        /// <para>in the</para>
+        /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
+        /// </remarks>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int InternalOpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
+
+        /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
+        /// <param name="opaque">private pointer as set by the</param>
+        /// <param name="buf">start address of the buffer to read data into</param>
+        /// <param name="len">bytes length of the buffer</param>
+        /// <returns>
+        /// <para>strictly positive number of bytes read, 0 on end-of-stream,</para>
+        /// <para>or -1 on non-recoverable error</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>callback</para>
+        /// <para>If no data is immediately available, then the callback should sleep.</para>
+        /// <para>The application is responsible for avoiding deadlock situations.</para>
+        /// <para>In particular, the callback should return an error if playback is stopped;</para>
+        /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
+        /// </remarks>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int InternalReadMedia(IntPtr opaque, IntPtr buf, uint len);
+
+        /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
+        /// <param name="opaque">private pointer as set by the</param>
+        /// <param name="offset">absolute byte offset to seek to</param>
+        /// <returns>0 on success, -1 on error.</returns>
+        /// <remarks>callback</remarks>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int InternalSeekMedia(IntPtr opaque, ulong offset);
+
+        /// <summary>Callback prototype to close a custom bitstream input media.</summary>
+        /// <param name="opaque">private pointer as set by the</param>
+        /// <remarks>callback</remarks>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalCloseMedia(IntPtr opaque);
         #endregion
 
         #region Events
@@ -813,67 +775,6 @@ namespace LibVLCSharp.Shared
             base.Dispose(disposing);
         }
     }
-
-    #region Callbacks
-
-    /// <summary>
-    /// <para>It consists of a media location and various optional meta data.</para>
-    /// <para>@{</para>
-    /// <para></para>
-    /// <para>LibVLC media item/descriptor external API</para>
-    /// </summary>
-    /// <summary>Callback prototype to open a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as passed to libvlc_media_new_callbacks()</param>
-    /// <param name="data">storage space for a private data pointer [OUT]</param>
-    /// <param name="size">byte length of the bitstream or UINT64_MAX if unknown [OUT]</param>
-    /// <returns>
-    /// <para>0 on success, non-zero on error. In case of failure, the other</para>
-    /// <para>callbacks will not be invoked and any value stored in *datap and *sizep is</para>
-    /// <para>discarded.</para>
-    /// </returns>
-    /// <remarks>
-    /// <para>The same media item can be opened multiple times. Each time, this callback</para>
-    /// <para>is invoked. It should allocate and initialize any instance-specific</para>
-    /// <para>resources, then store them in *datap. The instance resources can be freed</para>
-    /// <para>in the</para>
-    /// <para>For convenience, *datap is initially NULL and *sizep is initially 0.</para>
-    /// </remarks>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int OpenMedia(IntPtr opaque, ref IntPtr data, out ulong size);
-
-    /// <summary>Callback prototype to read data from a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <param name="buf">start address of the buffer to read data into</param>
-    /// <param name="len">bytes length of the buffer</param>
-    /// <returns>
-    /// <para>strictly positive number of bytes read, 0 on end-of-stream,</para>
-    /// <para>or -1 on non-recoverable error</para>
-    /// </returns>
-    /// <remarks>
-    /// <para>callback</para>
-    /// <para>If no data is immediately available, then the callback should sleep.</para>
-    /// <para>The application is responsible for avoiding deadlock situations.</para>
-    /// <para>In particular, the callback should return an error if playback is stopped;</para>
-    /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
-    /// </remarks>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int ReadMedia(IntPtr opaque, IntPtr buf, uint len);
-
-    /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <param name="offset">absolute byte offset to seek to</param>
-    /// <returns>0 on success, -1 on error.</returns>
-    /// <remarks>callback</remarks>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int SeekMedia(IntPtr opaque, ulong offset);
-
-    /// <summary>Callback prototype to close a custom bitstream input media.</summary>
-    /// <param name="opaque">private pointer as set by the</param>
-    /// <remarks>callback</remarks>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void CloseMedia(IntPtr opaque);
-
-    #endregion
 
     #region enums
 

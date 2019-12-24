@@ -629,6 +629,27 @@ namespace LibVLCSharp.Shared.Helpers
 #endif
         }
 
+        /// <summary>
+        /// Gets the instance represented by the given handle.
+        /// This must be a GCHandle.
+        /// </summary>
+        /// <typeparam name="T">The type of instance to retrieve</typeparam>
+        /// <param name="handle">The handle given back by libvlc</param>
+        /// <returns>null if it is not a valid handle, the instance otherwise</returns>
+        internal static T GetInstance<T>(IntPtr handle) where T : class
+        {
+            if (handle == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            var gch = GCHandle.FromIntPtr(handle);
+            if (!gch.IsAllocated || !(gch.Target is T instance))
+                return null;
+
+            return instance;
+        }
+
         private static void Free(params IntPtr[] ptrs)
         {
             foreach (var ptr in ptrs)

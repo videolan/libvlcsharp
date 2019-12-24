@@ -14,7 +14,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMedia()
         {
-            var media = new Media(_libVLC, Path.GetTempFileName());
+            using var media = new Media(_libVLC, Path.GetTempFileName());
 
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
@@ -39,14 +39,18 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromStream()
         {
-            var media = new Media(_libVLC, new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate));
+            using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate);
+            using var input = new StreamMediaInput(stream);
+            using var media = new Media(_libVLC, input);
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
         [Test]
         public void AddOption()
         {
-            var media = new Media(_libVLC, new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate));
+            using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate);
+            using var input = new StreamMediaInput(stream);
+            using var media = new Media(_libVLC, input);
             media.AddOption("-sout-all");
         }
 
@@ -69,7 +73,9 @@ namespace LibVLCSharp.Tests
         [Test]
         public void Duplicate()
         {
-            var media = new Media(_libVLC, new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate));
+            using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate);
+            using var input = new StreamMediaInput(stream);
+            using var media = new Media(_libVLC, input);
             var duplicate = media.Duplicate();
             Assert.AreNotEqual(duplicate.NativeReference, media.NativeReference);
         }
@@ -77,14 +83,16 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromFileStream()
         {
-            var media = new Media(_libVLC, new FileStream(RealMp3Path, FileMode.Open, FileAccess.Read, FileShare.Read));
+            using var stream = new FileStream(RealMp3Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var input = new StreamMediaInput(stream);
+            using var media = new Media(_libVLC, input);
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
         [Test]
         public void SetMetadata()
         {
-            var media = new Media(_libVLC, Path.GetTempFileName());
+            using var media = new Media(_libVLC, Path.GetTempFileName());
             const string test = "test";
             media.SetMeta(MetadataType.ShowName, test);
             Assert.True(media.SaveMeta());
@@ -94,7 +102,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task GetTracks()
         {
-            var media = new Media(_libVLC, RealMp3Path);
+            using var media = new Media(_libVLC, RealMp3Path);
             await media.Parse();
             Assert.AreEqual(media.Tracks.Single().Data.Audio.Channels, 2);
             Assert.AreEqual(media.Tracks.Single().Data.Audio.Rate, 44100);
@@ -123,19 +131,19 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateMediaFromStreamMultiplePlay()
         {
-            using(var mp = new MediaPlayer(_libVLC))
-            {
-                var media = new Media(_libVLC, await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4"));
-                mp.Play(media);
+            using var mp = new MediaPlayer(_libVLC);
+            using var stream = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var mediaInput = new StreamMediaInput(stream);
+            using var media = new Media(_libVLC, mediaInput);
+            mp.Play(media);
 
-                await Task.Delay(1000);
+            await Task.Delay(1000);
 
-                mp.Time = 60000;
+            mp.Time = 60000;
 
-                await Task.Delay(10000); // end reached, rewind stream
+            await Task.Delay(10000); // end reached, rewind stream
 
-                mp.Play(media);
-            }
+            mp.Play(media);
         }
 
         [Test]
@@ -147,8 +155,19 @@ namespace LibVLCSharp.Tests
             var mp1 = new MediaPlayer(libVLC1);
             var mp2 = new MediaPlayer(libVLC2);
 
-            mp1.Play(new Media(libVLC1, await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4")));
-            mp2.Play(new Media(libVLC2, await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3")));
+            using var s1 = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var s2 = await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3");
+
+            using var i1 = new StreamMediaInput(s1);
+            using var i2 = new StreamMediaInput(s2);
+
+            var m1 = new Media(libVLC1, i1);
+            var m2 = new Media(libVLC2, i2);
+
+            mp1.Play(m1);
+            m1.Dispose();
+            mp2.Play(m2);
+            m2.Dispose();
 
             await Task.Delay(10000);
         }
@@ -156,7 +175,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void ParseShouldThrowIfCancelledOperation()
         {
-            var media = new Media(_libVLC, RealMp3Path);
+            using var media = new Media(_libVLC, RealMp3Path);
             var cancellationToken = new CancellationToken(canceled: true);
             Assert.ThrowsAsync<TaskCanceledException>(async () => await media.Parse(cancellationToken: cancellationToken));
         }
@@ -164,7 +183,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldTimeoutWith1MillisecondLimit()
         {
-            var media = new Media(_libVLC, RealMp3Path);
+            using var media = new Media(_libVLC, RealMp3Path);
             var parseResult = await media.Parse(timeout: 1);
             Assert.AreEqual(MediaParsedStatus.Timeout, parseResult);
         }
@@ -172,7 +191,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldSucceed()
         {
-            var media = new Media(_libVLC, RealMp3Path);
+            using var media = new Media(_libVLC, RealMp3Path);
             var parseResult = await media.Parse();
             Assert.AreEqual(MediaParsedStatus.Done, parseResult);
         }
@@ -180,7 +199,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldFailIfNotMediaFile()
         {
-            var media = new Media(_libVLC, Path.GetTempFileName());
+            using var media = new Media(_libVLC, Path.GetTempFileName());
             var parseResult = await media.Parse();
             Assert.AreEqual(MediaParsedStatus.Failed, parseResult);
         }
@@ -188,14 +207,14 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldBeSkippedIfLocalParseSpecifiedAndRemoteUrlProvided()
         {
-            var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation);
+            using var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation);
             var parseResult = await media.Parse(MediaParseOptions.ParseLocal);
             Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
         }
 
         private async Task<Stream> GetStreamFromUrl(string url)
         {
-            byte[] imageData = null;
+            byte[] imageData;
 
             using (var client = new System.Net.Http.HttpClient())
                 imageData = await client.GetByteArrayAsync(url);

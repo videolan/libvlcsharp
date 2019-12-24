@@ -609,6 +609,11 @@ namespace LibVLCSharp.Shared
 
         MediaPlayerEventManager _eventManager;
 
+        /// <summary>
+        /// The GCHandle to be passed to callbacks as userData
+        /// </summary>
+        GCHandle _gcHandle;
+
         /// <summary>Create an empty Media Player object</summary>
         /// <param name="libVLC">
         /// <para>the libvlc instance in which the Media Player</para>
@@ -627,6 +632,7 @@ namespace LibVLCSharp.Shared
 #endif
             Native.LibVLCMediaPlayerRelease)
         {
+            _gcHandle = GCHandle.Alloc(this);
         }
 
 #if !UNITY_ANDROID
@@ -639,6 +645,7 @@ namespace LibVLCSharp.Shared
         public MediaPlayer(Media media)
             : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
+            _gcHandle = GCHandle.Alloc(this);
         }
 #endif
         /// <summary>
@@ -994,11 +1001,12 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success, false otherwise.</returns>
         public bool UnsetEqualizer() => Native.LibVLCMediaPlayerSetEqualizer(NativeReference, IntPtr.Zero) == 0;
 
-        private LibVLCAudioPlayCb _audioPlayCb;
-        private LibVLCAudioPauseCb _audioPauseCb;
-        private LibVLCAudioResumeCb _audioResumeCb;
-        private LibVLCAudioFlushCb _audioFlushCb;
-        private LibVLCAudioDrainCb _audioDrainCb;
+        LibVLCAudioPlayCb _audioPlayCb;
+        LibVLCAudioPauseCb _audioPauseCb;
+        LibVLCAudioResumeCb _audioResumeCb;
+        LibVLCAudioFlushCb _audioFlushCb;
+        LibVLCAudioDrainCb _audioDrainCb;
+        IntPtr _audioUserData = IntPtr.Zero;
 
         /// <summary>
         /// Sets callbacks and private data for decoded audio. 
@@ -1020,10 +1028,17 @@ namespace LibVLCSharp.Shared
             _audioFlushCb = flushCb;
             _audioDrainCb = drainCb;
 
-            Native.LibVLCAudioSetCallbacks(NativeReference, playCb, pauseCb, resumeCb, flushCb, drainCb, IntPtr.Zero);
+            Native.LibVLCAudioSetCallbacks(
+                NativeReference,
+                AudioPlayCallbackHandle,
+                (pauseCb == null) ? null : AudioPauseCallbackHandle,
+                (resumeCb == null) ? null : AudioResumeCallbackHandle,
+                (flushCb == null) ? null : AudioFlushCallbackHandle,
+                (drainCb == null) ? null : AudioDrainCallbackHandle,
+                GCHandle.ToIntPtr(_gcHandle));
         }
 
-        private LibVLCVolumeCb _audioVolumeCb;
+        LibVLCVolumeCb _audioVolumeCb;
 
         /// <summary>
         /// Set callbacks and private data for decoded audio. 
@@ -1034,11 +1049,11 @@ namespace LibVLCSharp.Shared
         public void SetVolumeCallback(LibVLCVolumeCb volumeCb)
         {
             _audioVolumeCb = volumeCb;
-            Native.LibVLCAudioSetVolumeCallback(NativeReference, volumeCb);
+            Native.LibVLCAudioSetVolumeCallback(NativeReference, (volumeCb == null) ? null : AudioVolumeCallbackHandle);
         }
 
-        private LibVLCAudioSetupCb _setupCb;
-        private LibVLCAudioCleanupCb _cleanupCb;
+        LibVLCAudioSetupCb _setupCb;
+        LibVLCAudioCleanupCb _cleanupCb;
 
         /// <summary>
         /// Sets decoded audio format via callbacks. 
@@ -1050,7 +1065,9 @@ namespace LibVLCSharp.Shared
         {
             _setupCb = setupCb;
             _cleanupCb = cleanupCb;
-            Native.LibVLCAudioSetFormatCallbacks(NativeReference, setupCb, cleanupCb);
+            Native.LibVLCAudioSetFormatCallbacks(NativeReference,
+                                                 (setupCb == null) ? null : AudioSetupCallbackHandle,
+                                                 (cleanupCb == null) ? null : AudioCleanupCallbackHandle);
         }
 
         /// <summary>
@@ -1244,9 +1261,9 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success, false on error </returns>
         public bool SetAudioDelay(long delay) => Native.LibVLCAudioSetDelay(NativeReference, delay) == 0;
 
-        private LibVLCVideoLockCb _videoLockCb;
-        private LibVLCVideoUnlockCb _videoUnlockCb;
-        private LibVLCVideoDisplayCb _videoDisplayCb;
+        LibVLCVideoLockCb _videoLockCb;
+        LibVLCVideoUnlockCb _videoUnlockCb;
+        LibVLCVideoDisplayCb _videoDisplayCb;
 
         /// <summary>
         /// Set callbacks and private data to render decoded video to a custom area in memory.
@@ -1273,7 +1290,11 @@ namespace LibVLCSharp.Shared
             _videoLockCb = lockCb;
             _videoUnlockCb = unlockCb;
             _videoDisplayCb = displayCb;
-            Native.LibVLCVideoSetCallbacks(NativeReference, lockCb, unlockCb, displayCb, IntPtr.Zero);
+            Native.LibVLCVideoSetCallbacks(NativeReference,
+                                           VideoLockCallbackHandle,
+                                           (unlockCb == null)? null : VideoUnlockCallbackHandle,
+                                           (displayCb == null)? null : VideoDisplayCallbackHandle,
+                                           GCHandle.ToIntPtr(_gcHandle));
         }
 
         /// <summary>
@@ -1294,8 +1315,9 @@ namespace LibVLCSharp.Shared
                 chromaUtf8);
         }
 
-        private LibVLCVideoFormatCb _videoFormatCb;
-        private LibVLCVideoCleanupCb _videoCleanupCb;
+        LibVLCVideoFormatCb _videoFormatCb;
+        LibVLCVideoCleanupCb _videoCleanupCb;
+        IntPtr _videoUserData = IntPtr.Zero;
 
         /// <summary>
         /// Set decoded video chroma and dimensions. 
@@ -1307,7 +1329,8 @@ namespace LibVLCSharp.Shared
         {
             _videoFormatCb = formatCb;
             _videoCleanupCb = cleanupCb;
-            Native.LibVLCVideoSetFormatCallbacks(NativeReference, formatCb, cleanupCb);
+            Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
+                (cleanupCb == null)? null : VideoCleanupCallbackHandle);
         }
 
         /// <summary>
@@ -1767,6 +1790,156 @@ namespace LibVLCSharp.Shared
 #endif
 
         #region Callbacks
+
+        static readonly LibVLCVideoLockCb VideoLockCallbackHandle = VideoLockCallback;
+        static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
+        static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
+        static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
+        static readonly LibVLCVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
+        private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoLockCb != null)
+            {
+                return mediaPlayer._videoLockCb(mediaPlayer._videoUserData, planes);
+            }
+            return IntPtr.Zero;
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoUnlockCb))]
+        private static void VideoUnlockCallback(IntPtr opaque, IntPtr picture, IntPtr planes)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoUnlockCb != null)
+            {
+                mediaPlayer._videoUnlockCb(mediaPlayer._videoUserData, picture, planes);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoDisplayCb))]
+        private static void VideoDisplayCallback(IntPtr opaque, IntPtr picture)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoDisplayCb != null)
+            {
+                mediaPlayer._videoDisplayCb(mediaPlayer._videoUserData, picture);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoFormatCb))]
+        private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, ref uint pitches, ref uint lines)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoFormatCb != null)
+            {
+                return mediaPlayer._videoFormatCb(ref mediaPlayer._videoUserData, chroma, ref width, ref height, ref pitches, ref lines);
+            }
+
+            return 0;
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoCleanupCb))]
+        private static void VideoCleanupCallback(ref IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoCleanupCb != null)
+            {
+                mediaPlayer._videoCleanupCb(ref mediaPlayer._videoUserData);
+            }
+        }
+
+        static readonly LibVLCAudioPlayCb AudioPlayCallbackHandle = AudioPlayCallback;
+        static readonly LibVLCAudioPauseCb AudioPauseCallbackHandle = AudioPauseCallback;
+        static readonly LibVLCAudioResumeCb AudioResumeCallbackHandle = AudioResumeCallback;
+        static readonly LibVLCAudioFlushCb AudioFlushCallbackHandle = AudioFlushCallback;
+        static readonly LibVLCAudioDrainCb AudioDrainCallbackHandle = AudioDrainCallback;
+        static readonly LibVLCVolumeCb AudioVolumeCallbackHandle = AudioVolumeCallback;
+        static readonly LibVLCAudioSetupCb AudioSetupCallbackHandle = AudioSetupCallback;
+        static readonly LibVLCAudioCleanupCb AudioCleanupCallbackHandle = AudioCleanupCallback;
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioPlayCb))]
+        private static void AudioPlayCallback(IntPtr data, IntPtr samples, uint count, long pts)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioPlayCb != null)
+            {
+                mediaPlayer._audioPlayCb(mediaPlayer._audioUserData, samples, count, pts);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioPauseCb))]
+        private static void AudioPauseCallback(IntPtr data, long pts)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioPauseCb != null)
+            {
+                mediaPlayer._audioPauseCb(mediaPlayer._audioUserData, pts);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioResumeCb))]
+        private static void AudioResumeCallback(IntPtr data, long pts)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioResumeCb != null)
+            {
+                mediaPlayer._audioResumeCb(mediaPlayer._audioUserData, pts);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioFlushCb))]
+        private static void AudioFlushCallback(IntPtr data, long pts)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioFlushCb != null)
+            {
+                mediaPlayer._audioFlushCb(mediaPlayer._audioUserData, pts);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioDrainCb))]
+        private static void AudioDrainCallback(IntPtr data)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioDrainCb != null)
+            {
+                mediaPlayer._audioDrainCb(mediaPlayer._audioUserData);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVolumeCb))]
+        private static void AudioVolumeCallback(IntPtr data, float volume, bool mute)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(data);
+            if (mediaPlayer?._audioVolumeCb != null)
+            {
+                mediaPlayer._audioVolumeCb(mediaPlayer._audioUserData, volume, mute);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioSetupCb))]
+        private static int AudioSetupCallback(ref IntPtr opaque, ref IntPtr format, ref uint rate, ref uint channels)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._setupCb != null)
+            {
+                return mediaPlayer._setupCb(ref mediaPlayer._audioUserData, ref format, ref rate, ref channels);
+            }
+
+            return -1;
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCAudioCleanupCb))]
+        private static void AudioCleanupCallback(IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._cleanupCb != null)
+            {
+                mediaPlayer._cleanupCb(mediaPlayer._audioUserData);
+            }
+        }
 
         /// <summary>
         /// <para>A LibVLC media player plays one media (usually in a custom drawable).</para>
@@ -2264,6 +2437,8 @@ namespace LibVLCSharp.Shared
                 {
                     Media.Dispose();
                 }
+
+                _gcHandle.Free();
             }
             
             base.Dispose(disposing);
