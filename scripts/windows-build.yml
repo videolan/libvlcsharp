@@ -15,9 +15,3 @@ steps:
   inputs:
     targetType: filePath
     filePath: 'build.ps1'
-
-- task: MSBuild@1
-  displayName: 'Build LibVLCSharp.Tests'
-  inputs:
-    solution: LibVLCSharp.Tests/LibVLCSharp.Tests.csproj
-    msbuildArguments: '/t:restore,clean,build'
