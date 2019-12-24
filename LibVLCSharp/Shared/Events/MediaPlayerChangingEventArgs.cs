@@ -12,7 +12,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="oldMediaPlayer">The previous mediaplayer (if any)</param>
         /// <param name="newMediaPlayer">The new mediaplayer (if any)</param>
-        public MediaPlayerChangingEventArgs(MediaPlayer? oldMediaPlayer, MediaPlayer? newMediaPlayer)
+        public MediaPlayerChangingEventArgs(MediaPlayer oldMediaPlayer, MediaPlayer newMediaPlayer)
         {
             OldMediaPlayer = oldMediaPlayer;
             NewMediaPlayer = newMediaPlayer;
@@ -21,11 +21,11 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// The previous mediaplayer (if any)
         /// </summary>
-        public MediaPlayer? OldMediaPlayer { get; }
+        public MediaPlayer OldMediaPlayer { get; }
 
         /// <summary>
         /// The new mediaplayer (if any)
         /// </summary>
-        public MediaPlayer? NewMediaPlayer { get; }
+        public MediaPlayer NewMediaPlayer { get; }
     }
 }

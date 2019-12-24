@@ -9,8 +9,8 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class MediaDiscoverer : Internal
     {
-        MediaDiscovererEventManager? _eventManager;
-        MediaList? _mediaList;
+        MediaDiscovererEventManager _eventManager;
+        MediaList _mediaList;
 
         readonly struct Native
         {
@@ -78,13 +78,13 @@ namespace LibVLCSharp.Shared
         /// Get media service discover object its localized name.
         /// under v3 only
         /// </summary>
-        public string? LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
+        public string LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
 
         /// <summary>
         /// Get event manager from media service discover object.
         /// under v3 only
         /// </summary>
-        MediaDiscovererEventManager? EventManager
+        MediaDiscovererEventManager EventManager
         {
             get
             {
@@ -101,12 +101,14 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Query if media service discover object is running.
         /// </summary>
-        public bool IsRunning => NativeReference != IntPtr.Zero && Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0;
+        public bool IsRunning => NativeReference != IntPtr.Zero ? 
+            Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0 
+            : false;
 
         /// <summary>
         /// The MediaList attached to this MediaDiscoverer
         /// </summary>
-        public MediaList? MediaList
+        public MediaList MediaList
         {
             get
             {
@@ -129,8 +131,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public event EventHandler<EventArgs> Started
         {
-            add => EventManager?.AttachEvent(EventType.MediaDiscovererStarted, value);
-            remove => EventManager?.DetachEvent(EventType.MediaDiscovererStarted, value);
+            add => EventManager.AttachEvent(EventType.MediaDiscovererStarted, value);
+            remove => EventManager.DetachEvent(EventType.MediaDiscovererStarted, value);
         }
 
         /// <summary>
@@ -138,8 +140,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public event EventHandler<EventArgs> Stopped
         {
-            add => EventManager?.AttachEvent(EventType.MediaDiscovererStopped, value);
-            remove => EventManager?.DetachEvent(EventType.MediaDiscovererStopped, value);
+            add => EventManager.AttachEvent(EventType.MediaDiscovererStopped, value);
+            remove => EventManager.DetachEvent(EventType.MediaDiscovererStopped, value);
         }
 
         #endregion
