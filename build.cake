@@ -5,6 +5,7 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var solutionName = "LibVLCSharp";
+var solutionFile = IsRunningOnWindows() ? $"{solutionName}.sln" : $"{solutionName}.Mac.sln";
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -27,21 +28,14 @@ Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    NuGetRestore("LibVLCSharp.sln");
+    NuGetRestore(solutionFile);
 });
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-    if(IsRunningOnWindows())
-    {
-        MSBuild($"{solutionName}.sln", settings => settings.SetConfiguration(configuration));
-    }
-    else
-    {
-        XBuild($"{solutionName}.Mac.sln", settings => settings.SetConfiguration(configuration));
-    }
+    MSBuild(solutionFile, settings => settings.SetConfiguration(configuration));
 });
 
 Task("CopyNugets")
