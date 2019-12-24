@@ -13,14 +13,14 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="AspectRatio"/> property value changes
         /// </summary>
-        public event EventHandler AspectRatioChanged;
+        public event EventHandler? AspectRatioChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AspectRatioManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="displayInformation">display information</param>
-        public AspectRatioManager(IDispatcher dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
+        public AspectRatioManager(IDispatcher? dispatcher, IDisplayInformation displayInformation) : base(dispatcher)
         {
             DisplayInformation = displayInformation;
         }
@@ -42,7 +42,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         /// <param name="oldValue">old value</param>
         /// <param name="newValue">new value</param>
-        protected override void OnVideoViewChanged(IVideoControl oldValue, IVideoControl newValue)
+        protected override void OnVideoViewChanged(IVideoControl? oldValue, IVideoControl? newValue)
         {
             base.OnVideoViewChanged(oldValue, newValue);
             if (oldValue != null)
@@ -114,7 +114,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return orientation == VideoOrientation.LeftBottom || orientation == VideoOrientation.RightTop;
         }
 
-        private AspectRatio GetAspectRatio(Shared.MediaPlayer mediaPlayer)
+        private AspectRatio GetAspectRatio(Shared.MediaPlayer? mediaPlayer)
         {
             if (mediaPlayer == null)
             {

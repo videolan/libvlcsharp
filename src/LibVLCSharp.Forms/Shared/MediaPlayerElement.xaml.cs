@@ -68,7 +68,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Gets or sets the video view.
         /// </summary>
-        public VideoView VideoView
+        public VideoView? VideoView
         {
             get => (VideoView)GetValue(VideoViewProperty);
             private set => SetValue(VideoViewProperty, value);
@@ -199,7 +199,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void PageAppearing(object sender, Page e)
         {
-            if (e == this.FindAncestor<Page>())
+            if (e == this.FindAncestor<Page?>())
             {
                 MessagingCenter.Subscribe<LifecycleMessage>(this, "OnSleep", m =>
                 {
@@ -233,7 +233,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private void PageDisappearing(object sender, Page e)
         {
-            if (e == this.FindAncestor<Page>())
+            if (e == this.FindAncestor<Page?>())
             {
                 MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnSleep");
                 MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnResume");

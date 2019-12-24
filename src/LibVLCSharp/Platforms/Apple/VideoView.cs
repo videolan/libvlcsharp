@@ -25,12 +25,12 @@ namespace LibVLCSharp.Platforms.Mac
     public class VideoView : NSView, IVideoView
 #endif
     {
-        Shared.MediaPlayer _mediaPlayer;
+        Shared.MediaPlayer? _mediaPlayer;
 
         /// <summary>
         /// The MediaPlayer object attached to this VideoView. Use this to manage playback and more
         /// </summary>
-        public Shared.MediaPlayer MediaPlayer
+        public Shared.MediaPlayer? MediaPlayer
         {
             get => _mediaPlayer;
             set

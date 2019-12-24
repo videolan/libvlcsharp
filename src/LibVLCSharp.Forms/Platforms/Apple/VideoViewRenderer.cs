@@ -46,9 +46,9 @@ namespace LibVLCSharp.Forms.Platforms.Mac
                     SetNativeControl(new LibVLCSharp.Platforms.Mac.VideoView());
 #endif
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
-                    if (Control.MediaPlayer != e.NewElement.MediaPlayer)
+                    if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
                     {
-                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control.MediaPlayer, e.NewElement.MediaPlayer));
+                        OnMediaPlayerChanging(this, new MediaPlayerChangingEventArgs(Control!.MediaPlayer, e.NewElement.MediaPlayer));
                     }
                 }
             }

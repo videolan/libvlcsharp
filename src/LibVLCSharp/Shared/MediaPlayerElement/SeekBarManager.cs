@@ -12,18 +12,18 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when the media position changes
         /// </summary>
-        public event EventHandler PositionChanged;
+        public event EventHandler? PositionChanged;
 
         /// <summary>
         /// Occurs when the <see cref="Seekable"/> property value changes
         /// </summary>
-        public event EventHandler SeekableChanged;
+        public event EventHandler? SeekableChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="SeekBarManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public SeekBarManager(IDispatcher dispatcher) : base(dispatcher)
+        public SeekBarManager(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await UpdateSeekableAndPositionAsync();
         }

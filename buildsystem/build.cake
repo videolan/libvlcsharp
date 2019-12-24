@@ -7,6 +7,7 @@ var configuration = Argument("configuration", "Release");
 var solutionName = "LibVLCSharp";
 var solutionFile = IsRunningOnWindows() ? $"{solutionName}.sln" : $"{solutionName}.Mac.sln";
 var solutionPath = $"../src/{solutionFile}";
+var packagesDir = "../packages";
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -24,6 +25,13 @@ Task("Clean")
 {
     DeleteFiles("./**/bin/Release/*.nupkg");
     CleanDirectory(buildDir);
+    if(DirectoryExists(packagesDir))
+    {
+        DeleteDirectory(packagesDir, new DeleteDirectorySettings 
+        {
+            Recursive = true,
+        });
+    }
 });
 
 Task("Restore-NuGet-Packages")
@@ -31,7 +39,7 @@ Task("Restore-NuGet-Packages")
     .Does(() =>
 {
     NuGetRestore(solutionPath);
-    MoveDirectory("../src/packages", "../packages");
+    MoveDirectory("../src/packages", packagesDir);
 });
 
 Task("Build")

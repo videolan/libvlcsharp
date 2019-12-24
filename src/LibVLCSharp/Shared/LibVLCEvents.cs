@@ -959,7 +959,7 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public sealed class LogEventArgs : EventArgs
     {
-        internal LogEventArgs(LogLevel level, string message, string module, string sourceFile, uint? sourceLine)
+        internal LogEventArgs(LogLevel level, string message, string? module, string? sourceFile, uint? sourceLine)
         {
             Level = level;
             Message = message;
@@ -982,13 +982,13 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// The name of the module that emitted the message
         /// </summary>
-        public string Module { get; }
+        public string? Module { get; }
 
         /// <summary>
         /// The source file that emitted the message.
         /// This may be <see langword="null"/> if that info is not available, i.e. always if you are using a release version of VLC.
         /// </summary>
-        public string SourceFile { get; }
+        public string? SourceFile { get; }
 
         /// <summary>
         /// The line in the <see cref="SourceFile"/> at which the message was emitted.

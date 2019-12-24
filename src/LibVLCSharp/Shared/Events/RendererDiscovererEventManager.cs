@@ -4,8 +4,8 @@ namespace LibVLCSharp.Shared
 {
     internal class RendererDiscovererEventManager : EventManager
     {
-        EventHandler<RendererDiscovererItemAddedEventArgs> _itemAdded;
-        EventHandler<RendererDiscovererItemDeletedEventArgs> _itemDeleted;
+        EventHandler<RendererDiscovererItemAddedEventArgs>? _itemAdded;
+        EventHandler<RendererDiscovererItemDeletedEventArgs>? _itemDeleted;
 
         internal RendererDiscovererEventManager(IntPtr ptr) : base(ptr)
         {
@@ -55,7 +55,7 @@ namespace LibVLCSharp.Shared
 
         void OnItemAdded(IntPtr args)
         {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;           
+            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;
             _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem.item)));
         }
     }

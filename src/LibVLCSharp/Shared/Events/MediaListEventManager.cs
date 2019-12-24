@@ -5,11 +5,11 @@ namespace LibVLCSharp.Shared
 {
     internal class MediaListEventManager : EventManager
     {
-        EventHandler<MediaListItemAddedEventArgs> _mediaListItemAdded;
-        EventHandler<MediaListWillAddItemEventArgs> _mediaListWillAddItem;
-        EventHandler<MediaListItemDeletedEventArgs> _mediaListItemDeleted;
-        EventHandler<MediaListWillDeleteItemEventArgs> _mediaListWillDeleteItem;
-        EventHandler<EventArgs> _mediaListEndReached;
+        EventHandler<MediaListItemAddedEventArgs>? _mediaListItemAdded;
+        EventHandler<MediaListWillAddItemEventArgs>? _mediaListWillAddItem;
+        EventHandler<MediaListItemDeletedEventArgs>? _mediaListItemDeleted;
+        EventHandler<MediaListWillDeleteItemEventArgs>? _mediaListWillDeleteItem;
+        EventHandler<EventArgs>? _mediaListEndReached;
 
         public MediaListEventManager(IntPtr ptr) : base(ptr)
         {
