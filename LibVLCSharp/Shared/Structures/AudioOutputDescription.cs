@@ -21,7 +21,7 @@ namespace LibVLCSharp.Shared.Structures
         /// </summary>
         /// <param name="name">Audio output name</param>
         /// <param name="description">Audio output description</param>
-        internal AudioOutputDescription(string? name, string? description)
+        internal AudioOutputDescription(string name, string description)
         {
             Name = name;
             Description = description;
@@ -30,11 +30,11 @@ namespace LibVLCSharp.Shared.Structures
         /// <summary>
         /// Audio output name
         /// </summary>
-        public readonly string? Name;
+        public readonly string Name;
 
         /// <summary>
         /// Audio output description
         /// </summary>
-        public readonly string? Description;
+        public readonly string Description;
     }
 }
