@@ -636,7 +636,7 @@ namespace LibVLCSharp.Shared
         static void OnSnapshotTaken(IntPtr ptr)
         {
             var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
-            _mediaPlayerSnapshotTaken?.Invoke(null, new MediaPlayerSnapshotTakenEventArgs(filenamePtr.FromUtf8()));
+            _mediaPlayerSnapshotTaken?.Invoke(null, new MediaPlayerSnapshotTakenEventArgs(filenamePtr.FromUtf8()!));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
@@ -691,7 +691,7 @@ namespace LibVLCSharp.Shared
         static void OnAudioDevice(IntPtr ptr)
         {
             var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
-            _mediaPlayerAudioDevice?.Invoke(null, new MediaPlayerAudioDeviceEventArgs(deviceNamePtr.FromUtf8()));
+            _mediaPlayerAudioDevice?.Invoke(null, new MediaPlayerAudioDeviceEventArgs(deviceNamePtr.FromUtf8()!));
         }
 
         [MonoPInvokeCallback(typeof(EventCallback))]
@@ -821,7 +821,7 @@ namespace LibVLCSharp.Shared
         void OnSnapshotTaken(IntPtr ptr)
         {
             var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
-            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filenamePtr.FromUtf8()));
+            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filenamePtr.FromUtf8()!));
         }
 
         void OnLengthChanged(IntPtr ptr)
@@ -868,7 +868,7 @@ namespace LibVLCSharp.Shared
         void OnAudioDevice(IntPtr ptr)
         {
             var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
-            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceNamePtr.FromUtf8()));
+            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceNamePtr.FromUtf8()!));
         }
 
         void OnCorked(IntPtr ptr)

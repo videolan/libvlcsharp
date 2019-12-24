@@ -21,7 +21,7 @@ namespace LibVLCSharp.Shared.Structures
         /// </summary>
         /// <param name="deviceIdentifier">Device identifier string</param>
         /// <param name="description">User-friendly device description</param>
-        internal AudioOutputDevice(string? deviceIdentifier, string? description)
+        internal AudioOutputDevice(string deviceIdentifier, string description)
         {
             DeviceIdentifier = deviceIdentifier;
             Description = description;
@@ -30,11 +30,11 @@ namespace LibVLCSharp.Shared.Structures
         /// <summary>
         /// Device identifier string.
         /// </summary>
-        public readonly string? DeviceIdentifier;
+        public readonly string DeviceIdentifier;
         
         /// <summary>
         /// User-friendly device description.
         /// </summary>
-        public readonly string? Description;
+        public readonly string Description;
     }
 }

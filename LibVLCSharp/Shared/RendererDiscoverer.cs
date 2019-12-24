@@ -163,12 +163,12 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Name of the renderer item
         /// </summary>
-        public string? Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8();
+        public string Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8()!;
 
         /// <summary>
         /// Type of the renderer item
         /// </summary>
-        public string? Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8();
+        public string Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8()!;
 
         /// <summary>
         /// IconUri of the renderer item
