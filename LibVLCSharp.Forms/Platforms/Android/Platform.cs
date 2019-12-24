@@ -12,12 +12,12 @@ namespace LibVLCSharp.Forms.Platforms.Android
     {
         private class ActivityLifecycleContextListener : Java.Lang.Object, IActivityLifecycleCallbacks
         {
-            private WeakReference<Activity?> CurrentActivity { get; } = new WeakReference<Activity?>(null);
+            private WeakReference<Activity> CurrentActivity { get; } = new WeakReference<Activity>(null);
 
             /// <summary>
             /// Gets or sets the current activity
             /// </summary>
-            public Activity? Activity
+            public Activity Activity
             {
                 get => CurrentActivity.TryGetTarget(out var a) ? a : null;
                 set => CurrentActivity.SetTarget(value);
@@ -55,12 +55,12 @@ namespace LibVLCSharp.Forms.Platforms.Android
             }
         }
 
-        private static ActivityLifecycleContextListener? LifecycleListener { get; set; }
+        private static ActivityLifecycleContextListener LifecycleListener { get; set; }
 
         /// <summary>
         /// Gets the current activity.
         /// </summary>
-        internal static Activity? Activity => LifecycleListener?.Activity;
+        internal static Activity Activity => LifecycleListener?.Activity;
 
         /// <summary>
         /// Sets the activity.
