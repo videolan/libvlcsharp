@@ -10,13 +10,13 @@ using LibVLCSharp.Shared.Structures;
 namespace LibVLCSharp.Shared
 {
     /// <summary>
-    /// Main LibVLC API object representing a libvlc instance in native code. 
+    /// Main LibVLC API object representing a libvlc instance in native code.
     /// Note: You may create multiple mediaplayers from a single LibVLC instance
     /// </summary>
     public class LibVLC : Internal
     {
         /// <summary>
-        /// Determines whether two object instances are equal. 
+        /// Determines whether two object instances are equal.
         /// </summary>
         /// <param name="other">other libvlc instance to compare with</param>
         /// <returns>true if same instance, false otherwise</returns>
@@ -26,11 +26,11 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Determines whether two object instances are equal. 
+        /// Determines whether two object instances are equal.
         /// </summary>
         /// <param name="obj">other libvlc instance to compare with</param>
         /// <returns>true if same instance, false otherwise</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -43,12 +43,12 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// The real log event handlers.
         /// </summary>
-        EventHandler<LogEventArgs> _log;
+        EventHandler<LogEventArgs>? _log;
 
 #if NETFRAMEWORK || NETSTANDARD
         IntPtr _logFileHandle;
 #endif
-        
+
         /// <summary>
         /// The GCHandle to be passed to callbacks as userData
         /// </summary>
@@ -246,7 +246,7 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
-        /// Dipose of this libvlc instance
+        /// Dispose of this libvlc instance
         /// </summary>
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
@@ -272,7 +272,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libvlc1">1st instance of libvlc</param>
         /// <param name="libvlc2">2nd instance of libvlc</param>
         /// <returns></returns>
-        public static bool operator ==(LibVLC libvlc1, LibVLC libvlc2)
+        public static bool operator ==(LibVLC? libvlc1, LibVLC? libvlc2)
         {
             return libvlc1?.NativeReference == libvlc2?.NativeReference;
         }
@@ -283,7 +283,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libvlc1">1st instance of libvlc</param>
         /// <param name="libvlc2">2nd instance of libvlc</param>
         /// <returns></returns>
-        public static bool operator !=(LibVLC libvlc1, LibVLC libvlc2)
+        public static bool operator !=(LibVLC? libvlc1, LibVLC? libvlc2)
         {
             return libvlc1?.NativeReference != libvlc2?.NativeReference;
         }
@@ -292,16 +292,16 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Try to start a user interface for the libvlc instance.
         /// </summary>
-        /// <param name="name">interface name, or empty string for default</param>
+        /// <param name="name">interface name, or null for default</param>
         /// <returns>True if successful, false otherwise</returns>
-        public bool AddInterface(string name)
+        public bool AddInterface(string? name)
         {
             var namePtr = name.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
         }
 #endif
 
-        internal ExitCallback _exitCallback;
+        internal ExitCallback? _exitCallback;
 
         /// <summary>
         /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
@@ -359,7 +359,7 @@ namespace LibVLCSharp.Shared
         /// <param name="version">application version numbers, e.g. &quot;1.2.3&quot;</param>
         /// <param name="icon">application icon name, e.g. &quot;foobar&quot;</param>
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
-        public void SetAppId(string id, string version, string icon)
+        public void SetAppId(string? id, string? version, string? icon)
         {
             var idUtf8 = id.ToUtf8();
             var versionUtf8 = version.ToUtf8();
@@ -458,7 +458,7 @@ namespace LibVLCSharp.Shared
         public ModuleDescription[] AudioFilters => MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
             MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
             s => s.Build(),
-            module => module.Next, 
+            module => module.Next,
             Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Returns a list of video filters that are available.</summary>
@@ -473,7 +473,7 @@ namespace LibVLCSharp.Shared
         public ModuleDescription[] VideoFilters => MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
             MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
             s => s.Build(),
-            module => module.Next, 
+            module => module.Next,
             Native.LibVLCModuleDescriptionListRelease);
 
         /// <summary>Gets the list of available audio output modules.</summary>
@@ -483,10 +483,10 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference), 
+        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
             ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
-            s => s.Build(), 
-            s => s.Next, 
+            s => s.Build(),
+            s => s.Next,
             Native.LibVLCAudioOutputListRelease);
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
@@ -509,24 +509,24 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) => 
-            MarshalUtils.Retrieve(() => 
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) =>
+            MarshalUtils.Retrieve(() =>
             {
                 var audioOutputNameUtf8 = audioOutputName.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
+                return MarshalUtils.PerformInteropAndFree(() =>
                     Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
-            }, 
+            },
             MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
-            s => s.Build(), 
-            device => device.Next, 
+            s => s.Build(),
+            device => device.Next,
             Native.LibVLCAudioOutputDeviceListRelease);
-        
+
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
         public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) =>
-            MarshalUtils.Retrieve(NativeReference, discovererCategory, 
+            MarshalUtils.Retrieve(NativeReference, discovererCategory,
                 (IntPtr nativeRef, MediaDiscovererCategory enumType, out IntPtr array) => Native.LibVLCMediaDiscovererListGet(nativeRef, enumType, out array),
             MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
             m => m.Build(),
@@ -536,7 +536,7 @@ namespace LibVLCSharp.Shared
 
 
         /// <summary>
-        /// Register callbacks in order to handle VLC dialogs. 
+        /// Register callbacks in order to handle VLC dialogs.
         /// LibVLC 3.0.0 and later.
         /// </summary>
         /// <param name="error">Called when an error message needs to be displayed.</param>
@@ -578,19 +578,19 @@ namespace LibVLCSharp.Shared
         /// True if dialog handlers are set
         /// </summary>
         public bool DialogHandlersSet => _error != null;
-        DisplayError _error;
-        DisplayLogin _login;
-        DisplayQuestion _question;
-        DisplayProgress _displayProgress;
-        UpdateProgress _updateProgress;
+        DisplayError? _error;
+        DisplayLogin? _login;
+        DisplayQuestion? _question;
+        DisplayProgress? _displayProgress;
+        UpdateProgress? _updateProgress;
         readonly Dictionary<IntPtr, CancellationTokenSource> _cts = new Dictionary<IntPtr, CancellationTokenSource>();
 
-        void OnDisplayError(string title, string text)
+        void OnDisplayError(string? title, string? text)
         {
             _error?.Invoke(title, text);
         }
 
-        void OnDisplayLogin(IntPtr dialogId, string title, string text, string defaultUsername, bool askStore)
+        void OnDisplayLogin(IntPtr dialogId, string? title, string? text, string? defaultUsername, bool askStore)
         {
             if (_login == null) return;
 
@@ -599,9 +599,9 @@ namespace LibVLCSharp.Shared
             _cts[dialogId] = cts;
             _login(dlg, title, text, defaultUsername, askStore, cts.Token);
         }
-        
-        void OnDisplayQuestion(IntPtr dialogId, string title, string text, DialogQuestionType type, 
-            string cancelText, string firstActionText, string secondActionText)
+
+        void OnDisplayQuestion(IntPtr dialogId, string? title, string? text, DialogQuestionType type,
+            string? cancelText, string? firstActionText, string? secondActionText)
         {
             if (_question == null) return;
 
@@ -611,7 +611,7 @@ namespace LibVLCSharp.Shared
             _question(dlg, title, text, type, cancelText, firstActionText, secondActionText, cts.Token);
         }
 
-        void OnDisplayProgress(IntPtr dialogId, string title, string text, bool indeterminate, float position, string cancelText)
+        void OnDisplayProgress(IntPtr dialogId, string? title, string? text, bool indeterminate, float position, string? cancelText)
         {
             if (_displayProgress == null) return;
 
@@ -630,7 +630,7 @@ namespace LibVLCSharp.Shared
             }
         }
 
-        void OnUpdateProgress(IntPtr dialogId, float position, string text)
+        void OnUpdateProgress(IntPtr dialogId, float position, string? text)
         {
             if (_updateProgress == null) return;
 
@@ -639,12 +639,12 @@ namespace LibVLCSharp.Shared
         }
 
         #endregion
-        
+
         /// <summary>
         /// List of available renderers used to create RendererDiscoverer objects
         /// Note: LibVLC 3.0.0 and later
-        /// </summary>       
-        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference, 
+        /// </summary>
+        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference,
             (IntPtr nativeRef, out IntPtr array) => Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
             MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
             m => m.Build(),
@@ -665,7 +665,7 @@ namespace LibVLCSharp.Shared
         /// <param name="module">The module name storage.</param>
         /// <param name="file">The source code file name storage.</param>
         /// <param name="line">The source code file line number storage.</param>
-        static void GetLogContext(IntPtr logContext, out string module, out string file, out uint? line)
+        static void GetLogContext(IntPtr logContext, out string? module, out string? file, out uint? line)
         {
             Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
 
@@ -678,18 +678,18 @@ namespace LibVLCSharp.Shared
         internal void Retain() => Native.LibVLCRetain(NativeReference);
 
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string Version => Native.LibVLCVersion().FromUtf8();
+        public string Version => Native.LibVLCVersion().FromUtf8()!;
 
         /// <summary>The changeset of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string Changeset => Native.LibVLCChangeset().FromUtf8();
+        public string Changeset => Native.LibVLCChangeset().FromUtf8()!;
 
         /// <summary>
         /// A human-readable error message for the last LibVLC error in the calling
         /// thread. The resulting string is valid until another error occurs (at least
-        /// until the next LibVLC call). 
+        /// until the next LibVLC call).
         /// <para/> Null if no error.
         /// </summary>
-        public string LastLibVLCError => Native.LibVLCErrorMessage().FromUtf8();
+        public string? LastLibVLCError => Native.LibVLCErrorMessage().FromUtf8();
 
         /// <summary>
         /// Clears the LibVLC error status for the current thread. This is optional.
@@ -702,7 +702,7 @@ namespace LibVLCSharp.Shared
         /// Retrieve the libvlc compiler version.
         /// Example: "gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)"
         /// </summary>
-        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8();
+        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8()!;
 
         #region Exit
 
@@ -730,7 +730,7 @@ namespace LibVLCSharp.Shared
 
                 GetLogContext(logContext, out var module, out var file, out var line);
 
-                void logAction() => libVLC._log?.Invoke(null, new LogEventArgs(logLevel, message, module, file, line));
+                void logAction() => libVLC?._log?.Invoke(null, new LogEventArgs(logLevel, message, module, file, line));
 #if NET40
                 Task.Factory.StartNew(logAction);
 #else
@@ -808,8 +808,8 @@ namespace LibVLCSharp.Shared
         #region internal callbacks
 
         /// <summary>
-        /// Registers a callback for the LibVLC exit event. 
-        /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play() 
+        /// Registers a callback for the LibVLC exit event.
+        /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play()
         /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
         /// </summary>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -889,10 +889,10 @@ namespace LibVLCSharp.Shared
 
     #region Callbacks
 
-    
+
     /// <summary>
-    /// Registers a callback for the LibVLC exit event. 
-    /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play() 
+    /// Registers a callback for the LibVLC exit event.
+    /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play()
     /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

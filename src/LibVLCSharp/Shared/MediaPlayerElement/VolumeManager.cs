@@ -11,7 +11,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="Enabled"/> property value changes
         /// </summary>
-        public event EventHandler EnabledChanged;
+        public event EventHandler? EnabledChanged;
 
         ///// <summary>
         ///// Occurs when <see cref="Volume"/> property value changes
@@ -21,13 +21,13 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when <see cref="Mute"/> property value changes
         /// </summary>
-        public event EventHandler MuteChanged;
+        public event EventHandler? MuteChanged;
 
         /// <summary>
         /// Initializes a new instance of <see cref="VolumeManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public VolumeManager(IDispatcher dispatcher) : base(dispatcher)
+        public VolumeManager(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += OnMediaPlayerChangedAsync;
         }

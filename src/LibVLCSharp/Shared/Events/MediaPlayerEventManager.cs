@@ -5,36 +5,36 @@ namespace LibVLCSharp.Shared
 {
     internal class MediaPlayerEventManager : EventManager
     {
-        EventHandler<MediaPlayerPositionChangedEventArgs> _mediaPlayerPositionChanged;
-        EventHandler<MediaPlayerMediaChangedEventArgs> _mediaPlayerMediaChanged;
-        EventHandler<EventArgs> _mediaPlayerNothingSpecial;
-        EventHandler<EventArgs> _mediaPlayerOpening;
-        EventHandler<MediaPlayerBufferingEventArgs> _mediaPlayerBuffering;
-        EventHandler<EventArgs> _mediaPlayerPlaying;
-        EventHandler<EventArgs> _mediaPlayerPaused;
-        EventHandler<EventArgs> _mediaPlayerStopped;
-        EventHandler<EventArgs> _mediaPlayerForward;
-        EventHandler<EventArgs> _mediaPlayerBackward;
-        EventHandler<EventArgs> _mediaPlayerEndReached;
-        EventHandler<EventArgs> _mediaPlayerEncounteredError;
-        EventHandler<MediaPlayerTimeChangedEventArgs> _mediaPlayerTimeChanged;
-        EventHandler<MediaPlayerSeekableChangedEventArgs> _mediaPlayerSeekableChanged;
-        EventHandler<MediaPlayerPausableChangedEventArgs> _mediaPlayerPausableChanged;
-        EventHandler<MediaPlayerTitleChangedEventArgs> _mediaPlayerTitleChanged;
-        EventHandler<MediaPlayerChapterChangedEventArgs> _mediaPlayerChapterChanged; //vlc 3
-        EventHandler<MediaPlayerSnapshotTakenEventArgs> _mediaPlayerSnapshotTaken;
-        EventHandler<MediaPlayerLengthChangedEventArgs> _mediaPlayerLengthChanged;
-        EventHandler<MediaPlayerVoutEventArgs> _mediaPlayerVout;
-        EventHandler<MediaPlayerScrambledChangedEventArgs> _mediaPlayerScrambledChanged;
-        EventHandler<MediaPlayerESAddedEventArgs> _mediaPlayerESAdded; // vlc 3
-        EventHandler<MediaPlayerESDeletedEventArgs> _mediaPlayerESDeleted; // vlc 3
-        EventHandler<MediaPlayerESSelectedEventArgs> _mediaPlayerESSelected; // vlc 3
-        EventHandler<MediaPlayerAudioDeviceEventArgs> _mediaPlayerAudioDevice; // vlc 3
-        EventHandler<EventArgs> _mediaPlayerCorked; // vlc 2.2
-        EventHandler<EventArgs> _mediaPlayerUncorked; // vlc 2.2
-        EventHandler<EventArgs> _mediaPlayerMuted; // vlc 2.2
-        EventHandler<EventArgs> _mediaPlayerUnmuted; // vlc 2.2
-        EventHandler<MediaPlayerVolumeChangedEventArgs> _mediaPlayerVolumeChanged; // vlc 2.2
+        EventHandler<MediaPlayerPositionChangedEventArgs>? _mediaPlayerPositionChanged;
+        EventHandler<MediaPlayerMediaChangedEventArgs>? _mediaPlayerMediaChanged;
+        EventHandler<EventArgs>? _mediaPlayerNothingSpecial;
+        EventHandler<EventArgs>? _mediaPlayerOpening;
+        EventHandler<MediaPlayerBufferingEventArgs>? _mediaPlayerBuffering;
+        EventHandler<EventArgs>? _mediaPlayerPlaying;
+        EventHandler<EventArgs>? _mediaPlayerPaused;
+        EventHandler<EventArgs>? _mediaPlayerStopped;
+        EventHandler<EventArgs>? _mediaPlayerForward;
+        EventHandler<EventArgs>? _mediaPlayerBackward;
+        EventHandler<EventArgs>? _mediaPlayerEndReached;
+        EventHandler<EventArgs>? _mediaPlayerEncounteredError;
+        EventHandler<MediaPlayerTimeChangedEventArgs>? _mediaPlayerTimeChanged;
+        EventHandler<MediaPlayerSeekableChangedEventArgs>? _mediaPlayerSeekableChanged;
+        EventHandler<MediaPlayerPausableChangedEventArgs>? _mediaPlayerPausableChanged;
+        EventHandler<MediaPlayerTitleChangedEventArgs>? _mediaPlayerTitleChanged;
+        EventHandler<MediaPlayerChapterChangedEventArgs>? _mediaPlayerChapterChanged; //vlc 3
+        EventHandler<MediaPlayerSnapshotTakenEventArgs>? _mediaPlayerSnapshotTaken;
+        EventHandler<MediaPlayerLengthChangedEventArgs>? _mediaPlayerLengthChanged;
+        EventHandler<MediaPlayerVoutEventArgs>? _mediaPlayerVout;
+        EventHandler<MediaPlayerScrambledChangedEventArgs>? _mediaPlayerScrambledChanged;
+        EventHandler<MediaPlayerESAddedEventArgs>? _mediaPlayerESAdded; // vlc 3
+        EventHandler<MediaPlayerESDeletedEventArgs>? _mediaPlayerESDeleted; // vlc 3
+        EventHandler<MediaPlayerESSelectedEventArgs>? _mediaPlayerESSelected; // vlc 3
+        EventHandler<MediaPlayerAudioDeviceEventArgs>? _mediaPlayerAudioDevice; // vlc 3
+        EventHandler<EventArgs>? _mediaPlayerCorked; // vlc 2.2
+        EventHandler<EventArgs>? _mediaPlayerUncorked; // vlc 2.2
+        EventHandler<EventArgs>? _mediaPlayerMuted; // vlc 2.2
+        EventHandler<EventArgs>? _mediaPlayerUnmuted; // vlc 2.2
+        EventHandler<MediaPlayerVolumeChangedEventArgs>? _mediaPlayerVolumeChanged; // vlc 2.2
         public MediaPlayerEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -395,8 +395,7 @@ namespace LibVLCSharp.Shared
         void OnSnapshotTaken(IntPtr ptr)
         {
             var filenamePtr = RetrieveEvent(ptr).Union.MediaPlayerSnapshotTaken.Filename;
-            var filename = filenamePtr.FromUtf8();
-            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filename));
+            _mediaPlayerSnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filenamePtr.FromUtf8()!));
         }
 
         void OnLengthChanged(IntPtr ptr)
@@ -443,8 +442,7 @@ namespace LibVLCSharp.Shared
         void OnAudioDevice(IntPtr ptr)
         {
             var deviceNamePtr = RetrieveEvent(ptr).Union.AudioDeviceChanged.Device;
-            var deviceName = deviceNamePtr.FromUtf8();
-            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceName));
+            _mediaPlayerAudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(deviceNamePtr.FromUtf8()!));
         }
 
         void OnCorked(IntPtr ptr)

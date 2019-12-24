@@ -15,26 +15,26 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs when tracks should be reinitialized
         /// </summary>
-        public event EventHandler TracksCleared;
+        public event EventHandler? TracksCleared;
         /// <summary>
         /// Occurs when a track is selected
         /// </summary>
-        public event EventHandler<MediaPlayerESSelectedEventArgs> TrackSelected;
+        public event EventHandler<MediaPlayerESSelectedEventArgs>? TrackSelected;
         /// <summary>
         /// Occurs when a track is added
         /// </summary>
-        public event EventHandler<MediaPlayerESAddedEventArgs> TrackAdded;
+        public event EventHandler<MediaPlayerESAddedEventArgs>? TrackAdded;
         /// <summary>
         /// Occurs when a track is deleted
         /// </summary>
-        public event EventHandler<MediaPlayerESDeletedEventArgs> TrackDeleted;
+        public event EventHandler<MediaPlayerESDeletedEventArgs>? TrackDeleted;
 
         /// <summary>
         /// Initializes a new instance of <see cref="TracksManager"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
         /// <param name="trackType">track type</param>
-        public TracksManager(IDispatcher dispatcher, TrackType trackType) : base(dispatcher)
+        public TracksManager(IDispatcher? dispatcher, TrackType trackType) : base(dispatcher)
         {
             TrackType = trackType;
             MediaPlayerChanged += async (sender, e) => await InitializeAsync();
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Gets the tracks descriptions
         /// </summary>
-        public abstract IEnumerable<TrackDescription> Tracks { get; }
+        public abstract IEnumerable<TrackDescription>? Tracks { get; }
 
         /// <summary>
         /// Gets the current track identifier
@@ -84,7 +84,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             return Tracks.FirstOrDefault(t => t.Id == trackId);
         }
 
-        private Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs> eventHandler, TEventArgs eventArgs)
+        private Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
             where TEventArgs : EventArgs
         {
             if (TrackType == trackType)

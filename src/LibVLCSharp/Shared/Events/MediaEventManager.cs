@@ -4,13 +4,13 @@ namespace LibVLCSharp.Shared
 {
     internal class MediaEventManager : EventManager
     {
-        EventHandler<MediaMetaChangedEventArgs> _mediaMetaChanged;
-        EventHandler<MediaParsedChangedEventArgs> _mediaParsedChanged;
-        EventHandler<MediaSubItemAddedEventArgs> _mediaSubItemAdded;
-        EventHandler<MediaDurationChangedEventArgs> _mediaDurationChanged;
-        EventHandler<MediaFreedEventArgs> _mediaFreed;
-        EventHandler<MediaStateChangedEventArgs> _mediaStateChanged;
-        EventHandler<MediaSubItemTreeAddedEventArgs> _mediaSubItemTreeAdded;
+        EventHandler<MediaMetaChangedEventArgs>? _mediaMetaChanged;
+        EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
+        EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
+        EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
+        EventHandler<MediaFreedEventArgs>? _mediaFreed;
+        EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
+        EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
 
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {
@@ -101,23 +101,23 @@ namespace LibVLCSharp.Shared
         void OnMediaStateChanged(IntPtr ptr)
         {
             _mediaStateChanged?.Invoke(this,
-                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));    
+                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
         }
-        
+
         void OnMediaFreed(IntPtr ptr)
         {
-            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));    
+            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
         }
 
         void OnDurationChanged(IntPtr ptr)
         {
-            _mediaDurationChanged?.Invoke(this, 
-                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));    
+            _mediaDurationChanged?.Invoke(this,
+                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
         }
 
         void OnSubItemAdded(IntPtr ptr)
         {
-            _mediaSubItemAdded?.Invoke(this, 
+            _mediaSubItemAdded?.Invoke(this,
                 new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
         }
 

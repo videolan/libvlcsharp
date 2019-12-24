@@ -13,17 +13,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Occurs whenever the playback controls should be shown
         /// </summary>
-        public event EventHandler Shown;
+        public event EventHandler? Shown;
         /// <summary>
         /// Occurs whenever the playback controls should be hidden
         /// </summary>
-        public event EventHandler Hidden;
+        public event EventHandler? Hidden;
 
         /// <summary>
         /// Initializes a new instance of <see cref="AutoHideNotifier"/> class
         /// </summary>
         /// <param name="dispatcher">dispatcher</param>
-        public AutoHideNotifier(IDispatcher dispatcher) : base(dispatcher)
+        public AutoHideNotifier(IDispatcher? dispatcher) : base(dispatcher)
         {
             MediaPlayerChanged += async (sender, e) => await ShowAsync();
             Timer = new Timer(async obj => await HideAsync(), null, Timeout.Infinite, Timeout.Infinite);

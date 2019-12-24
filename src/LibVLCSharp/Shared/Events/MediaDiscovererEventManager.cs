@@ -4,8 +4,8 @@ namespace LibVLCSharp.Shared
 {
     internal class MediaDiscovererEventManager : EventManager
     {
-        EventHandler<EventArgs> _mediaDiscovererStarted;
-        EventHandler<EventArgs> _mediaDiscovererStopped;
+        EventHandler<EventArgs>? _mediaDiscovererStarted;
+        EventHandler<EventArgs>? _mediaDiscovererStopped;
 
         public MediaDiscovererEventManager(IntPtr ptr) : base(ptr)
         {
