@@ -712,10 +712,10 @@ namespace LibVLCSharp.Shared
         internal void Retain() => Native.LibVLCRetain(NativeReference);
 
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string? Version => Native.LibVLCVersion().FromUtf8();
+        public string Version => Native.LibVLCVersion().FromUtf8()!;
 
         /// <summary>The changeset of the LibVLC engine currently used by LibVLCSharp</summary>
-        public string? Changeset => Native.LibVLCChangeset().FromUtf8();
+        public string Changeset => Native.LibVLCChangeset().FromUtf8()!;
 
         /// <summary>
         /// A human-readable error message for the last LibVLC error in the calling
@@ -736,7 +736,7 @@ namespace LibVLCSharp.Shared
         /// Retrieve the libvlc compiler version.
         /// Example: "gcc version 4.2.3 (Ubuntu 4.2.3-2ubuntu6)"
         /// </summary>
-        public string? LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8();
+        public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8()!;
     }
 
     /// <summary>Logging messages level.</summary>

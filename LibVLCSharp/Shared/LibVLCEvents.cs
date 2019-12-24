@@ -691,9 +691,9 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Filename of the newly taken snapshot
         /// </summary>
-        public readonly string? Filename;
+        public readonly string Filename;
 
-        internal MediaPlayerSnapshotTakenEventArgs(string? filename)
+        internal MediaPlayerSnapshotTakenEventArgs(string filename)
         {
             Filename = filename;
         }
@@ -821,9 +821,9 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// String describing the audio device
         /// </summary>
-        public readonly string? AudioDevice;
+        public readonly string AudioDevice;
 
-        internal MediaPlayerAudioDeviceEventArgs(string? audioDevice)
+        internal MediaPlayerAudioDeviceEventArgs(string audioDevice)
         {
             AudioDevice = audioDevice;
         }

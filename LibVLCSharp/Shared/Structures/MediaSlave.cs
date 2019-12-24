@@ -20,7 +20,7 @@ namespace LibVLCSharp.Shared
     /// <remarks>libvlc_media_slaves_get</remarks>
     public readonly struct MediaSlave
     {
-        internal MediaSlave(string? uri, MediaSlaveType type, uint priority)
+        internal MediaSlave(string uri, MediaSlaveType type, uint priority)
         {
             Uri = uri;
             Type = type;
@@ -30,7 +30,7 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Media slave URI
         /// </summary>
-        public readonly string? Uri;
+        public readonly string Uri;
 
         /// <summary>
         /// Media slave type
