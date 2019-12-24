@@ -14,8 +14,7 @@ steps:
   displayName: 'Build all'
   inputs:
     targetType: filePath
-    filePath: 'scripts\build-and-package-all.ps1'
-    workingDirectory: scripts
+    filePath: 'build.ps1'
 
 - task: MSBuild@1
   displayName: 'Build LibVLCSharp.Tests'
