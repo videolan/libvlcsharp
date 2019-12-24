@@ -27,24 +27,22 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-            [DllImport(Constants.LibSystem)]
-#pragma warning disable IDE1006 // Naming Styles. the entry point is named dlopen with that casing.
+            [DllImport(Constants.libSystem)]
             internal static extern IntPtr dlopen(string libraryPath, int mode = 1);
-#pragma warning restore IDE1006 // Naming Styles
 
             /// <summary>
             /// Initializes the X threading system
             /// </summary>
             /// <remarks>Linux X11 only</remarks>
             /// <returns>non-zero on success, zero on failure</returns>
-            [DllImport(Constants.LibX11, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int XInitThreads();
 
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
 #elif ANDROID
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
-            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default);
+            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
@@ -53,10 +51,10 @@ namespace LibVLCSharp.Shared
 
 
 #if NETFRAMEWORK || NETSTANDARD || UWP
-        static IntPtr LibvlcHandle;
+        static IntPtr _libvlcHandle;
 #endif
 #if !UWP && NETFRAMEWORK || NETSTANDARD
-        static IntPtr LibvlccoreHandle;
+        static IntPtr _libvlccoreHandle;
 #endif
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace LibVLCSharp.Shared
         /// No need to specify unless running netstandard 1.1, or using custom location for libvlc
         /// <para/> This parameter is NOT supported on Linux, use LD_LIBRARY_PATH instead.
         /// </param>
-        public static void Initialize(string? libvlcDirectoryPath = null)
+        public static void Initialize(string libvlcDirectoryPath = null)
         {
 #if ANDROID
             InitializeAndroid();
@@ -92,7 +90,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         static void EnsureVersionsMatch()
         {
-            var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8()?.Split('.').FirstOrDefault() ?? "0");
+            var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8().Split('.').First());
             var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
             if(libvlcMajorVersion != libvlcsharpMajorVersion)
                 throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
@@ -103,15 +101,15 @@ namespace LibVLCSharp.Shared
         static void InitializeAndroid()
         {
             var initLibvlc = Native.JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
-            if(initLibvlc == -1)
+            if(initLibvlc == 0)
                 throw new VLCException("failed to initialize libvlc with JniOnLoad " +
                                        $"{nameof(JniRuntime.CurrentRuntime.InvocationPointer)}: {JniRuntime.CurrentRuntime.InvocationPointer}");
         }
 #elif UWP
         static void InitializeUWP()
         {
-            LibvlcHandle = Native.LoadPackagedLibrary(Constants.LibraryName);
-            if (LibvlcHandle == IntPtr.Zero)
+            _libvlcHandle = Native.LoadPackagedLibrary(Constants.LibraryName);
+            if (_libvlcHandle == IntPtr.Zero)
             {
                 throw new VLCException($"Failed to load {Constants.LibraryName}{Constants.WindowsLibraryExtension}, error {Marshal.GetLastWin32Error()}. Please make sure that this library, {Constants.CoreLibraryName}{Constants.WindowsLibraryExtension} and the plugins are copied to the `AppX` folder. For that, you can reference the `VideoLAN.LibVLC.WindowsRT` NuGet package.");
             }
@@ -136,7 +134,7 @@ namespace LibVLCSharp.Shared
             Native.SetErrorMode(oldMode | ErrorModes.SEM_FAILCRITICALERRORS | ErrorModes.SEM_NOOPENFILEERRORBOX);
         }
 
-        static void InitializeDesktop(string? libvlcDirectoryPath = null)
+        static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
             if(PlatformHelper.IsLinux)
             {
@@ -161,8 +159,8 @@ namespace LibVLCSharp.Shared
                 bool loadResult;
                 if(PlatformHelper.IsWindows)
                 {
-                    var libvlccorePath = LibVLCCorePath(libvlcDirectoryPath!);
-                    loadResult = LoadNativeLibrary(libvlccorePath, out LibvlccoreHandle);
+                    var libvlccorePath = LibVLCCorePath(libvlcDirectoryPath);
+                    loadResult = LoadNativeLibrary(libvlccorePath, out _libvlccoreHandle);
                     if(!loadResult)
                     {
                         Log($"Failed to load required native libraries at {libvlccorePath}");
@@ -170,8 +168,8 @@ namespace LibVLCSharp.Shared
                     }
                 }
 
-                var libvlcPath = LibVLCPath(libvlcDirectoryPath!);
-                loadResult = LoadNativeLibrary(libvlcPath, out LibvlcHandle);
+                var libvlcPath = LibVLCPath(libvlcDirectoryPath);
+                loadResult = LoadNativeLibrary(libvlcPath, out _libvlcHandle);
                 if(!loadResult)
                     Log($"Failed to load required native libraries at {libvlcPath}");
                 return;
@@ -184,9 +182,9 @@ namespace LibVLCSharp.Shared
             {
                 if (PlatformHelper.IsWindows)
                 {
-                    LoadNativeLibrary(path.libvlccore, out LibvlccoreHandle);
+                    LoadNativeLibrary(path.libvlccore, out _libvlccoreHandle);
                 }
-                var loadResult = LoadNativeLibrary(path.libvlc, out LibvlcHandle);
+                var loadResult = LoadNativeLibrary(path.libvlc, out _libvlcHandle);
                 if (loadResult) break;
             }
 
@@ -215,7 +213,7 @@ namespace LibVLCSharp.Shared
             var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
-            var libvlccorePath1 = string.Empty;
+            string libvlccorePath1 = string.Empty;
             if (PlatformHelper.IsWindows)
             {
                 libvlccorePath1 = LibVLCCorePath(libvlcDirPath1);
@@ -228,7 +226,7 @@ namespace LibVLCSharp.Shared
             var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
-            var libvlccorePath2 = string.Empty;
+            string libvlccorePath2 = string.Empty;
             if(PlatformHelper.IsWindows)
             {
                 libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
@@ -249,7 +247,7 @@ namespace LibVLCSharp.Shared
 
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
 
-        static bool Loaded => LibvlcHandle != IntPtr.Zero;
+        static bool Loaded => _libvlcHandle != IntPtr.Zero;
 
         static void Log(string message)
         {
@@ -310,9 +308,9 @@ namespace LibVLCSharp.Shared
 
         internal const string Msvcrt = "msvcrt";
         internal const string Libc = "libc";
-        internal const string LibSystem = "libSystem";
+        internal const string libSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
-        internal const string LibX11 = "libX11";
+        internal const string libX11 = "libX11";
         internal const string WindowsLibraryExtension = ".dll";
         internal const string MacLibraryExtension = ".dylib";
     }

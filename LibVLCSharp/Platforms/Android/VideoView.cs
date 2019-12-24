@@ -16,9 +16,9 @@ namespace LibVLCSharp.Platforms.Android
     /// </summary>
     public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView, AWindow.ISurfaceCallback
     {
-        MediaPlayer? _mediaPlayer;
-        AWindow? _awindow;
-        LayoutChangeListener? _layoutListener;
+        MediaPlayer _mediaPlayer;
+        AWindow _awindow;
+        LayoutChangeListener _layoutListener;
 
         #region ctors
 
@@ -75,7 +75,7 @@ namespace LibVLCSharp.Platforms.Android
         /// <summary>
         /// The MediaPlayer object attached to this VideoView. Use this to manage playback and more
         /// </summary>
-        public MediaPlayer? MediaPlayer
+        public MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
             set

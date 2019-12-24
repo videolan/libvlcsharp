@@ -48,13 +48,15 @@ namespace LibVLCSharp.Shared
         /// <param name="password">valid string</param>
         /// <param name="store">if true stores the credentials</param>
         /// <returns></returns>
-        public bool PostLogin(string? username, string? password, bool store)
+        public bool PostLogin(string username, string password, bool store)
         {
             if (_id == IntPtr.Zero)
                 throw new VLCException("Calling method on dismissed Dialog instance");
 
-            username ??= string.Empty;
-            password ??= string.Empty;
+            if (username == null)
+                username = string.Empty;
+            if (password == null)
+                password = string.Empty;
 
             var usernamePtr = username.ToUtf8();
             var passwordPtr = password.ToUtf8();
@@ -149,7 +151,7 @@ namespace LibVLCSharp.Shared
     /// <param name="defaultUsername">user name that should be set on the user form</param>
     /// <param name="askStore">if true, ask the user if he wants to save the credentials</param>
     /// <param name="token">Use token to cancel operation</param>
-    public delegate Task DisplayLogin(Dialog dialog, string title, string text, string? defaultUsername, bool askStore, CancellationToken token);
+    public delegate Task DisplayLogin(Dialog dialog, string title, string text, string defaultUsername, bool askStore, CancellationToken token);
 
     /// <summary>
     /// Called when a question dialog needs to be displayed. 
@@ -164,7 +166,7 @@ namespace LibVLCSharp.Shared
     /// <param name="secondActionText">text of the second button, if NULL, don't display this button</param>
     /// <param name="token">Use token to cancel operation</param>
     public delegate Task DisplayQuestion(Dialog dialog, string title, string text, DialogQuestionType type, string cancelText,
-        string? firstActionText, string? secondActionText, CancellationToken token);
+        string firstActionText, string secondActionText, CancellationToken token);
 
     /// <summary>
     /// Called when a progress dialog needs to be displayed. 
@@ -177,7 +179,7 @@ namespace LibVLCSharp.Shared
     /// <param name="position">initial position of the progress bar (between 0.0 and 1.0)</param>
     /// <param name="cancelText">text of the cancel button, if NULL the dialog is not cancellable</param>
     /// <param name="token">Use token to cancel operation</param>
-    public delegate Task DisplayProgress(Dialog dialog, string title, string text, bool indeterminate, float position, string? cancelText, CancellationToken token);
+    public delegate Task DisplayProgress(Dialog dialog, string title, string text, bool indeterminate, float position, string cancelText, CancellationToken token);
 
     /// <summary>
     /// Called when a progress dialog needs to be updated. 
@@ -196,11 +198,11 @@ namespace LibVLCSharp.Shared
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void DisplayQuestionCallback(IntPtr data, IntPtr dialogId, string title, string text,
-        DialogQuestionType type, string cancelText, string? firstActionText, string? secondActionText);
+        DialogQuestionType type, string cancelText, string firstActionText, string secondActionText);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void DisplayProgressCallback(IntPtr data, IntPtr dialogId, string title, string text,
-        bool indeterminate, float position, string? cancelText);
+        bool indeterminate, float position, string cancelText);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void CancelCallback(IntPtr data, IntPtr dialogId);

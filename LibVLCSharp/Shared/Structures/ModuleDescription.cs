@@ -25,7 +25,7 @@ namespace LibVLCSharp.Shared.Structures
         /// <param name="shortName">Module short name</param>
         /// <param name="longName">Module long name</param>
         /// <param name="help">Module help</param>
-        internal ModuleDescription(string? name, string? shortName, string? longName, string? help)
+        internal ModuleDescription(string name, string shortName, string longName, string help)
         {
             Name = name;
             ShortName = shortName;
@@ -36,21 +36,21 @@ namespace LibVLCSharp.Shared.Structures
         /// <summary>
         /// Module name
         /// </summary>
-        public readonly string? Name;
+        public readonly string Name;
 
         /// <summary>
         /// Module short name
         /// </summary>
-        public readonly string? ShortName;
+        public readonly string ShortName;
 
         /// <summary>
         /// Module long name
         /// </summary>
-        public readonly string? LongName;
+        public readonly string LongName;
 
         /// <summary>
         /// Module help
         /// </summary>
-        public readonly string? Help;
+        public readonly string Help;
     }
 }

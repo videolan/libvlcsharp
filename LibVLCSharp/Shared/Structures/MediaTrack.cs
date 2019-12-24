@@ -108,14 +108,14 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public readonly struct SubtitleTrack
     {
-        internal SubtitleTrack(string? encoding)
+        internal SubtitleTrack(string encoding)
         {
             Encoding = encoding;
         }
         /// <summary>
         /// Subtitle encoding
         /// </summary>
-        public readonly string? Encoding;
+        public readonly string Encoding;
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ namespace LibVLCSharp.Shared
     public readonly struct MediaTrack
     {
         internal MediaTrack(uint codec, uint originalFourcc, int id, TrackType trackType, int profile, 
-            int level, MediaTrackData data, uint bitrate, string? language, string? description)
+            int level, MediaTrackData data, uint bitrate, string language, string description)
         {
             Codec = codec;
             OriginalFourcc = originalFourcc;
@@ -180,11 +180,11 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Media track language
         /// </summary>
-        public readonly string? Language;
+        public readonly string Language;
 
         /// <summary>
         /// Media track description
         /// </summary>
-        public readonly string? Description;
+        public readonly string Description;
     }
 }

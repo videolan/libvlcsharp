@@ -10,7 +10,7 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public class RendererDiscoverer : Internal
     {
-        RendererDiscovererEventManager? _eventManager;
+        RendererDiscovererEventManager _eventManager;
         const string Bonjour = "Bonjour_renderer";
         const string Mdns = "microdns_renderer";
 
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Shared
         /// The service discovery protocol name depending on platform. Use <see cref="LibVLC.RendererList"/> to find the one for your platform,
         /// or let libvlcsharp find it for you
         /// </param>
-        public RendererDiscoverer(LibVLC libVLC, string? name = null)
+        public RendererDiscoverer(LibVLC libVLC, string name = null)
             : base(() =>
             {
                 if(string.IsNullOrEmpty(name))
@@ -163,17 +163,17 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Name of the renderer item
         /// </summary>
-        public string Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8()!;
+        public string Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8();
 
         /// <summary>
         /// Type of the renderer item
         /// </summary>
-        public string Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8()!;
+        public string Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8();
 
         /// <summary>
         /// IconUri of the renderer item
         /// </summary>
-        public string? IconUri => Native.LibVLCRendererItemIconUri(NativeReference).FromUtf8();
+        public string IconUri => Native.LibVLCRendererItemIconUri(NativeReference).FromUtf8();
 
         /// <summary>
         /// true if the renderer item can render video
