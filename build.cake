@@ -21,6 +21,7 @@ var buildDir = Directory("./build") + Directory(configuration);
 Task("Clean")
     .Does(() =>
 {
+    DeleteFiles("./**/bin/Release/*.nupkg");
     CleanDirectory(buildDir);
 });
 
