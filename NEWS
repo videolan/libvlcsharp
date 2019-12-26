@@ -1,3 +1,11 @@
+LibVLCSharp version 3.4.1
+=========================
+* Android: Fix initialization error code check
+* VolumeChanged event bug workaround https://github.com/videolan/libvlcsharp/pull/83
+* Revert part of the C# 8 Nullable support PR to fix https://code.videolan.org/videolan/LibVLCSharp/issues/269
+* CI: Move to Cake and enable sample build
+* Fix callback interop https://github.com/videolan/libvlcsharp/pull/84
+
 LibVLCSharp version 3.4.0
 =========================
 * Logging interop: Fix libvlc logging for Apple platforms
