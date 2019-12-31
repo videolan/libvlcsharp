@@ -71,6 +71,9 @@ namespace LibVLCSharp.Shared
         public static void Initialize(string libvlcDirectoryPath = null)
         {
 #if ANDROID
+            if(Android.OS.Build.VERSION.SdkInt <= Android.OS.BuildVersionCodes.JellyBeanMr1)
+                LoadLibCpp();
+
             InitializeAndroid();
 #elif UWP
             InitializeUWP();
@@ -98,6 +101,17 @@ namespace LibVLCSharp.Shared
         }
 #endif
 #if ANDROID
+        static void LoadLibCpp()
+        {
+            try
+            {               
+                Java.Lang.JavaSystem.LoadLibrary("c++_shared");
+            }
+            catch(Java.Lang.UnsatisfiedLinkError exception)
+            {
+                throw new VLCException($"failed to load libc++_shared {nameof(exception)} {exception.Message}");
+            }
+        }
         static void InitializeAndroid()
         {
             var initLibvlc = Native.JniOnLoad(JniRuntime.CurrentRuntime.InvocationPointer);
