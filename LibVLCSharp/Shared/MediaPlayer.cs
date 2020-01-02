@@ -64,7 +64,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerPause(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_stop")]
+                EntryPoint = "libvlc_media_player_stop_async")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
 #if APPLE || NETFRAMEWORK || NETSTANDARD
