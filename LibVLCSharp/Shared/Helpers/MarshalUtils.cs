@@ -32,10 +32,10 @@ namespace LibVLCSharp.Shared.Helpers
 
             #region Mac
 
-            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
+            [DllImport(Constants.LibSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fopen", SetLastError = true)]
             public static extern IntPtr fopenMac(string path, string mode = Write);
 
-            [DllImport(Constants.libSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
+            [DllImport(Constants.LibSystem, CallingConvention = CallingConvention.Cdecl, EntryPoint = "fclose", SetLastError = true)]
             public static extern int fcloseMac(IntPtr file);
 
             #endregion
@@ -45,7 +45,7 @@ namespace LibVLCSharp.Shared.Helpers
 
             const string Write = "w";
 
-            [DllImport(Constants.libSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.LibSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vasprintf_apple(ref IntPtr buffer, IntPtr format, IntPtr args);
 
             [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
