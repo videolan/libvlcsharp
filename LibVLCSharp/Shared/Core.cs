@@ -27,22 +27,22 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-            [DllImport(Constants.libSystem)]
-            internal static extern IntPtr dlopen(string libraryPath, int mode = 1);
+            [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
+            internal static extern IntPtr Dlopen(string libraryPath, int mode = 1);
 
             /// <summary>
             /// Initializes the X threading system
             /// </summary>
             /// <remarks>Linux X11 only</remarks>
             /// <returns>non-zero on success, zero on failure</returns>
-            [DllImport(Constants.libX11, CallingConvention = CallingConvention.Cdecl)]
+            [DllImport(Constants.LibX11, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int XInitThreads();
 
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
 #elif ANDROID
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
-            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default(IntPtr));
+            internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default);
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
@@ -213,7 +213,7 @@ namespace LibVLCSharp.Shared
             var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
-            string libvlccorePath1 = string.Empty;
+            var libvlccorePath1 = string.Empty;
             if (PlatformHelper.IsWindows)
             {
                 libvlccorePath1 = LibVLCCorePath(libvlcDirPath1);
@@ -226,7 +226,7 @@ namespace LibVLCSharp.Shared
             var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation), 
                 Constants.LibrariesRepositoryFolderName, arch);
 
-            string libvlccorePath2 = string.Empty;
+            var libvlccorePath2 = string.Empty;
             if(PlatformHelper.IsWindows)
             {
                 libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
@@ -272,7 +272,7 @@ namespace LibVLCSharp.Shared
 #endif
             if(PlatformHelper.IsMac)
             {
-                handle = Native.dlopen(nativeLibraryPath);
+                handle = Native.Dlopen(nativeLibraryPath);
             }
             else
             {
@@ -308,9 +308,9 @@ namespace LibVLCSharp.Shared
 
         internal const string Msvcrt = "msvcrt";
         internal const string Libc = "libc";
-        internal const string libSystem = "libSystem";
+        internal const string LibSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
-        internal const string libX11 = "libX11";
+        internal const string LibX11 = "libX11";
         internal const string WindowsLibraryExtension = ".dll";
         internal const string MacLibraryExtension = ".dylib";
     }

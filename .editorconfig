@@ -75,7 +75,7 @@ dotnet_naming_symbols.constant_fields.applicable_kinds   = field
 dotnet_naming_symbols.constant_fields.required_modifiers = const
 
 # static fields should not have prefix
-dotnet_naming_rule.static_fields_should_have_prefix.severity = error
+dotnet_naming_rule.static_fields_should_have_prefix.severity = 
 dotnet_naming_rule.static_fields_should_have_prefix.symbols  = static_fields
 dotnet_naming_rule.static_fields_should_have_prefix.style    = static_prefix_style
 
@@ -88,7 +88,7 @@ dotnet_naming_style.static_prefix_style.capitalization = pascal_case
 # async methods end in Async
 dotnet_naming_rule.async_methods_end_in_async.symbols  = any_async_methods
 dotnet_naming_rule.async_methods_end_in_async.style    = end_in_async
-dotnet_naming_rule.async_methods_end_in_async.severity = error
+dotnet_naming_rule.async_methods_end_in_async.severity = 
 
 dotnet_naming_symbols.any_async_methods.applicable_kinds           = method
 dotnet_naming_symbols.any_async_methods.applicable_accessibilities = *
