@@ -38,14 +38,12 @@ Task("BuildUnity")
     DotNetCoreBuild($"{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
     {
         Configuration = configuration,
-        Framework = "netstandard2.0",
         ArgumentCustomization = args => args.Append("/p:UNITY=true"),
     });
 });
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("BuildUnity")
     .Does(() =>
 {
     MSBuild(solutionFile, settings => settings.SetConfiguration(configuration));
@@ -63,7 +61,8 @@ Task("CopyNugets")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Build");
+    .IsDependentOn("Build")
+    .IsDependentOn("BuildUnity");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

@@ -17,4 +17,12 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <DefineConstants>$(DefineConstants);UWP10_0</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="$(UNITY)=='true'">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);UNITY</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(UNITY_ANDROID)=='true'">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);UNITY;UNITY_ANDROID</DefineConstants>
+  </PropertyGroup>
 </Project>

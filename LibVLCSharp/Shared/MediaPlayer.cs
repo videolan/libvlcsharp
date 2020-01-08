@@ -13,12 +13,19 @@ namespace LibVLCSharp.Shared
     {
         readonly struct Native
         {
+#if UNITY
+            [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_unity_media_player_new")]
+            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
 
+            [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_unity_get_texture")]
+            internal static extern IntPtr GetTexture(IntPtr mediaPlayer, out bool updated);
+#else
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new")]
             internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
-
-
+#endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_release")]
             internal static extern void LibVLCMediaPlayerRelease(IntPtr mediaPlayer);
@@ -592,18 +599,9 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_retain")]
             internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
 #if ANDROID
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
-#endif
-
-#if UNITY_ANDROID
-            [DllImport(Constants.UnityPlugin)]
-            internal static extern IntPtr CreateAndInitMediaPlayer(IntPtr libvlc);
-
-            [DllImport(Constants.UnityPlugin, EntryPoint = "getVideoFrameVLC")]
-            internal static extern IntPtr GetFrame(IntPtr mediaPlayer, out bool updated);
 #endif
         }
 
@@ -621,21 +619,12 @@ namespace LibVLCSharp.Shared
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
         public MediaPlayer(LibVLC libVLC)
-            : base(() =>
-#if UNITY_ANDROID
-            /// This is a helper method to ease creating and configuring a MediaPlayer on Unity.Android.
-            /// By just passing it a LibVLC object, it handles JNI_OnLoad, AWindow creation for off screen HW and setting the 
-            /// Android Context. The C# JNI bindings from Xamarin.Android (Java.Interop) differ from the Unity.Android way.
-            Native.CreateAndInitMediaPlayer(libVLC.NativeReference),
-#else
-            Native.LibVLCMediaPlayerNew(libVLC.NativeReference),
-#endif
-            Native.LibVLCMediaPlayerRelease)
+            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
             _gcHandle = GCHandle.Alloc(this);
         }
 
-#if !UNITY_ANDROID
+#if !UNITY
         /// <summary>Create a Media Player object from a Media</summary>
         /// <param name="media">
         /// <para>the media. Afterwards the p_md can be safely</para>
@@ -1781,17 +1770,17 @@ namespace LibVLCSharp.Shared
 
         MediaConfiguration Configuration = new MediaConfiguration();
 
-#if UNITY_ANDROID
+#if UNITY
         /// <summary>
-        /// Retrieve a video frame from the Unity plugin.
+        /// Retrieve a video frame from the Unity plugin as a texture.
         /// </summary>
         /// <param name="updated">True if the video frame has been updated</param>
         /// <returns>A decoded texture</returns>
-        public IntPtr GetFrame(out bool updated)
+        public IntPtr GetTexture(out bool updated)
         {
-            var frame = Native.GetFrame(NativeReference, out bool isUpdated);
+            var texture = Native.GetTexture(NativeReference, out bool isUpdated);
             updated = isUpdated;
-            return frame;
+            return texture;
         }
 #endif
 
