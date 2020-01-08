@@ -598,7 +598,7 @@ namespace LibVLCSharp.Shared
             internal static extern void LibVLCMediaPlayerSetAndroidContext(IntPtr mediaPlayer, IntPtr aWindow);
 #endif
 
-#if UNITY_ANDROID
+#if UNITY
             [DllImport(Constants.UnityPlugin)]
             internal static extern IntPtr CreateAndInitMediaPlayer(IntPtr libvlc);
 
@@ -622,10 +622,7 @@ namespace LibVLCSharp.Shared
         /// <returns>a new media player object, or NULL on error.</returns>
         public MediaPlayer(LibVLC libVLC)
             : base(() =>
-#if UNITY_ANDROID
-            /// This is a helper method to ease creating and configuring a MediaPlayer on Unity.Android.
-            /// By just passing it a LibVLC object, it handles JNI_OnLoad, AWindow creation for off screen HW and setting the 
-            /// Android Context. The C# JNI bindings from Xamarin.Android (Java.Interop) differ from the Unity.Android way.
+#if UNITY
             Native.CreateAndInitMediaPlayer(libVLC.NativeReference),
 #else
             Native.LibVLCMediaPlayerNew(libVLC.NativeReference),
@@ -635,7 +632,7 @@ namespace LibVLCSharp.Shared
             _gcHandle = GCHandle.Alloc(this);
         }
 
-#if !UNITY_ANDROID
+#if !UNITY
         /// <summary>Create a Media Player object from a Media</summary>
         /// <param name="media">
         /// <para>the media. Afterwards the p_md can be safely</para>
@@ -1775,7 +1772,7 @@ namespace LibVLCSharp.Shared
 
         MediaConfiguration Configuration = new MediaConfiguration();
 
-#if UNITY_ANDROID
+#if UNITY
         /// <summary>
         /// Retrieve a video frame from the Unity plugin.
         /// </summary>

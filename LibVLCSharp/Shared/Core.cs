@@ -302,12 +302,12 @@ namespace LibVLCSharp.Shared
     {
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
-#elif UNITY_ANDROID
+#elif UNITY
         /// <summary>
         /// The vlc-unity C++ plugin which handles rendering (opengl/d3d) libvlc callbacks
         /// </summary>
-        internal const string UnityPlugin = "VlcUnityWrapper";
-        internal const string LibraryName = "libvlcjni";
+        internal const string UnityPlugin = "RenderingPlugin";
+        internal const string LibraryName = "libvlc";
 #elif TVOS
         internal const string LibraryName = "@rpath/DynamicTVVLCKit.framework/DynamicTVVLCKit";
 #else
