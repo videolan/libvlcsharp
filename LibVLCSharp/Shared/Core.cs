@@ -40,6 +40,12 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
+
+            [DllImport(Constants.UnityPlugin)]
+            internal static extern void SetPluginPath(string path);
+            
+            [DllImport(Constants.UnityPlugin)]
+            internal static extern void Print(string toPrint);
 #elif ANDROID
             [DllImport(Constants.LibraryName, EntryPoint = "JNI_OnLoad")]
             internal static extern int JniOnLoad(IntPtr javaVm, IntPtr reserved = default);
@@ -150,7 +156,17 @@ namespace LibVLCSharp.Shared
 
         static void InitializeDesktop(string libvlcDirectoryPath = null)
         {
-            if(PlatformHelper.IsLinux)
+#if UNITY
+            if(string.IsNullOrEmpty(libvlcDirectoryPath))
+            {
+                throw new VLCException("Please provide UnityEngine.Application.dataPath to Core.Initialize for proper initialization.");
+            }
+
+            Native.SetPluginPath(libvlcDirectoryPath);
+
+            libvlcDirectoryPath = $"{libvlcDirectoryPath}\\Plugins";
+#endif
+            if (PlatformHelper.IsLinux)
             {
                 if (!string.IsNullOrEmpty(libvlcDirectoryPath))
                 {
@@ -302,18 +318,13 @@ namespace LibVLCSharp.Shared
     {
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
-#elif UNITY
-        /// <summary>
-        /// The vlc-unity C++ plugin which handles rendering (opengl/d3d) libvlc callbacks
-        /// </summary>
-        internal const string UnityPlugin = "RenderingPlugin";
-        internal const string LibraryName = "libvlc";
 #elif TVOS
         internal const string LibraryName = "@rpath/DynamicTVVLCKit.framework/DynamicTVVLCKit";
 #else
         internal const string LibraryName = "libvlc";
 #endif
         internal const string CoreLibraryName = "libvlccore";
+        internal const string UnityPlugin = "VLCUnityPlugin";
 
         /// <summary>
         /// The name of the folder that contains the per-architecture folders

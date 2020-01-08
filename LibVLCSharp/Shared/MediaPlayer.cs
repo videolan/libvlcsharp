@@ -602,8 +602,8 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.UnityPlugin)]
             internal static extern IntPtr CreateAndInitMediaPlayer(IntPtr libvlc);
 
-            [DllImport(Constants.UnityPlugin, EntryPoint = "getVideoFrameVLC")]
-            internal static extern IntPtr GetFrame(IntPtr mediaPlayer, out bool updated);
+            [DllImport(Constants.UnityPlugin, EntryPoint = "getTexture")]
+            internal static extern IntPtr GetTexture(IntPtr mediaPlayer, out bool updated);
 #endif
         }
 
@@ -1774,15 +1774,15 @@ namespace LibVLCSharp.Shared
 
 #if UNITY
         /// <summary>
-        /// Retrieve a video frame from the Unity plugin.
+        /// Retrieve a video frame from the Unity plugin as a texture.
         /// </summary>
         /// <param name="updated">True if the video frame has been updated</param>
         /// <returns>A decoded texture</returns>
-        public IntPtr GetFrame(out bool updated)
+        public IntPtr GetTexture(out bool updated)
         {
-            var frame = Native.GetFrame(NativeReference, out bool isUpdated);
+            var texture = Native.GetTexture(NativeReference, out bool isUpdated);
             updated = isUpdated;
-            return frame;
+            return texture;
         }
 #endif
 
