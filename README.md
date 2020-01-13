@@ -37,20 +37,20 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 
 ## Features
 
-Check out [libvlc-nuget](https://code.videolan.org/videolan/libvlc-nuget) to get a basic understanding of how `libvlc` works, what it can offer and how to install it with NuGet. 
+Check out [libvlc-nuget](https://code.videolan.org/videolan/libvlc-nuget) to get a basic understanding of how `libvlc` works, what it can offer and how to install it with NuGet.
 
 Some of the [features](https://www.videolan.org/vlc/features.html) include:
 
-- Plays all [formats](https://en.wikipedia.org/wiki/VLC_media_player#Format_support)
-- Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...).
-- HDMI pass-through for Audio HD codecs, like E-AC3, TrueHD or DTS-HD.
-- Stream to distant renderers, like Chromecast.
-- 360 video and 3D audio playback with viewpoint change.
-- Support for Ambisonics audio and more than 8 audio channels.
-- Subtitles size live modification.
-- Hardware and software decoding on all platforms.
-- DVD playback and menu navigation.
-- Equalizer support.
+- Play every media file formats, every codec and every streaming protocols
+- Run on every platform, from desktop (Windows, Linux, Mac) to mobile (Android, iOS) and TVs
+- Hardware and efficient decoding on every platform, up to 8K
+- Network browsing for distant filesystems (SMB, FTP, SFTP, NFS...) and servers (UPnP, DLNA)
+- Playback of Audio CD, DVD and Bluray with menu navigation
+- Support for HDR, including tonemapping for SDR streams
+- Audio passthrough with SPDIF and HDMI, including for Audio HD codecs, like DD+, TrueHD or DTS-HD
+- Support for video and audio filters
+- Support for 360 video and 3D audio playback, including Ambisonics
+- Able to cast and stream to distant renderers, like Chromecast and UPnP renderers.
 
 Most things you can achieve with the regular VLC desktop app, you can also achieve using `libvlc`.
 
