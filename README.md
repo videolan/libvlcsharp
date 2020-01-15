@@ -78,7 +78,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - .NET Standard 1.1 and 2.0
 - .NET Framework 4.0 and later
 - .NET Core (including ASP.NET Core)
-- [Unity3D](https://code.videolan.org/mfkl/vlc-unity)
+- [Unity3D](https://code.videolan.org/videolan/vlc-unity)
   - Windows Classic
 
 ## Installation
