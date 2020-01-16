@@ -18,6 +18,8 @@ namespace LibVLCSharp.WPF
         private const string PART_PlayerHost = "PART_PlayerHost";
         private const string PART_PlayerView = "PART_PlayerView";
 
+        private WindowsFormsHost? WindowsFormsHost => Template.FindName(PART_PlayerHost, this) as WindowsFormsHost;
+
         /// <summary>
         /// WPF VideoView constructor
         /// </summary>
@@ -70,7 +72,7 @@ namespace LibVLCSharp.WPF
 
             if (!IsDesignMode)
             {
-                var windowsFormsHost = Template.FindName(PART_PlayerHost, this) as FrameworkElement;
+                var windowsFormsHost = WindowsFormsHost;
                 if (windowsFormsHost != null)
                 {
                     ForegroundWindow = new ForegroundWindow(windowsFormsHost)
@@ -144,11 +146,13 @@ namespace LibVLCSharp.WPF
                     {
                         MediaPlayer.Hwnd = IntPtr.Zero;
                     }
+
+                    WindowsFormsHost?.Dispose();
+                    ForegroundWindow?.Close();
                 }
 
                 ViewContent = null;
                 ForegroundWindow = null;
-
                 disposedValue = true;
             }
         }

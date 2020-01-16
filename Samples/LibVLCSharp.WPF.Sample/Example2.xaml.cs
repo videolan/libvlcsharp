@@ -1,4 +1,5 @@
-﻿using LibVLCSharp.Shared;
+﻿using System;
+using LibVLCSharp.Shared;
 
 using System.Windows;
 using System.Windows.Controls;
@@ -47,6 +48,11 @@ namespace LibVLCSharp.WPF.Sample
                 VideoView.MediaPlayer.Play(new Media(_libVLC,
                     "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
             }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            VideoView.Dispose();
         }
     }
 }
