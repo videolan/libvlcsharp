@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace LibVLCSharp.WPF.Sample
 {
@@ -12,6 +13,11 @@ namespace LibVLCSharp.WPF.Sample
 
             _controls = new Controls(this);
             VideoView.Content = _controls;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            VideoView.Dispose();
         }
     }
 }
