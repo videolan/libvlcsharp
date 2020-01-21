@@ -10,7 +10,7 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
-    <Version>0.0.2-alpha1</Version>
+    <Version>0.0.2-alpha2</Version>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
 
