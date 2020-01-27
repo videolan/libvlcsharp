@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets the scale factor
         /// </summary>
-        public double ScalingFactor { get; }
+        double ScalingFactor { get; }
     }
 }
