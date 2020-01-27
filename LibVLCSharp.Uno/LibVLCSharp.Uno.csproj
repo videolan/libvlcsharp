@@ -10,7 +10,7 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
-    <Version>0.0.2-alpha2</Version>
+    <Version>3.4.2</Version>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
 
@@ -58,7 +58,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.iOS.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios')) or $(TargetFramework.StartsWith('monoandroid'))">
-    <PackageReference Include="Uno.UI" Version="2.0.512-dev.4178" />
+    <PackageReference Include="Uno.UI" Version="2.0.532" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="**\*.UWP.*cs" />
