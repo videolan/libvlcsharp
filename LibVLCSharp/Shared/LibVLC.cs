@@ -66,8 +66,8 @@ namespace LibVLCSharp.Shared
         [StructLayout(LayoutKind.Explicit, Size = 0)]
         internal struct Native
         {
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_new")]
+            [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "CreateLibVLCUnity")]
             internal static extern IntPtr LibVLCNew(int argc, IntPtr[] argv);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
