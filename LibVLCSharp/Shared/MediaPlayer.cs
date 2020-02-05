@@ -104,7 +104,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_time")]
-            internal static extern void LibVLCMediaPlayerSetTime(IntPtr mediaPlayer, long time);
+            internal static extern int LibVLCMediaPlayerSetTime(IntPtr mediaPlayer, long time, bool fast);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -114,7 +114,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_position")]
-            internal static extern void LibVLCMediaPlayerSetPosition(IntPtr mediaPlayer, float position);
+            internal static extern int LibVLCMediaPlayerSetPosition(IntPtr mediaPlayer, float position, bool fast);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -777,29 +777,34 @@ namespace LibVLCSharp.Shared
         public long Length => Native.LibVLCMediaPlayerGetLength(NativeReference);
 
         /// <summary>
-        /// Set the movie time (in ms). This has no effect if no media is being
-        /// played. Not all formats and protocols support this.
-        /// <para></para>
+        /// Set the movie time (in ms). This has no effect if no media is being played.
+        /// Not all formats and protocols support this.
+        /// </summary>
+        /// <param name="time">the movie time (in ms)</param>
+        /// <param name="fast">prefer fast seeking or precise seeking</param>
+        /// <returns>true on success, false otherwise</returns>
+        public bool SetTime(long time, bool fast = false) => Native.LibVLCMediaPlayerSetTime(NativeReference, time, fast) == 0;
+        
+        /// <summary>
         /// Get the movie time (in ms), or -1 if there is no media.
         /// </summary>
-        public long Time
-        {
-            get => Native.LibVLCMediaPlayerGetTime(NativeReference);
-            set => Native.LibVLCMediaPlayerSetTime(NativeReference, value);
-        }
+        public long Time => Native.LibVLCMediaPlayerGetTime(NativeReference);
 
         /// <summary>
-        /// Set movie position as percentage between 0.0 and 1.0. This has no
-        /// effect if playback is not enabled. This might not work depending on
-        /// the underlying input format and protocol.
-        /// <para></para>
-        /// Get movie position as percentage between 0.0 and 1.0.
+        /// Set movie position as percentage between 0.0 and 1.0.
+        /// This has no effect if playback is not enabled.
+        /// This might not work depending on the underlying input format and protocol.
         /// </summary>
-        public float Position
-        {
-            get => Native.LibVLCMediaPlayerGetPosition(NativeReference);
-            set => Native.LibVLCMediaPlayerSetPosition(NativeReference, value);
-        }
+        /// <param name="position">the position</param>
+        /// <param name="fast">prefer fast seeking or precise seeking</param>
+        /// <returns>true on success, false otherwise</returns>
+        public bool SetPosition(float position, bool fast = false) => Native.LibVLCMediaPlayerSetPosition(NativeReference, position, fast) == 0;
+
+        /// <summary>
+        /// Get movie position as percentage between 0.0 and 1.0.
+        /// Returns movie position, or -1. in case of error
+        /// </summary>
+        public float Position => Native.LibVLCMediaPlayerGetPosition(NativeReference);
 
         /// <summary>
         /// Set movie chapter (if applicable).
