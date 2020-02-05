@@ -139,7 +139,7 @@ namespace LibVLCSharp.Tests
 
             await Task.Delay(1000);
 
-            mp.Time = 60000;
+            mp.SetTime(60000);
 
             await Task.Delay(10000); // end reached, rewind stream
 

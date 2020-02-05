@@ -866,7 +866,7 @@ namespace LibVLCSharp.Forms.Shared
                 return;
             }
 
-            mediaPlayer.Time -= SEEK_OFFSET;
+            mediaPlayer.SetTime(mediaPlayer.Time - SEEK_OFFSET);
         }
 
         private void SeekButton_Clicked(object sender, EventArgs e)
@@ -877,7 +877,7 @@ namespace LibVLCSharp.Forms.Shared
                 return;
             }
 
-            mediaPlayer.Time += SEEK_OFFSET;
+            mediaPlayer.SetTime(mediaPlayer.Time + SEEK_OFFSET);
         }
 
         private Button SetClickEventHandler(string name, EventHandler eventHandler)

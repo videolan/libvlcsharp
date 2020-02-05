@@ -223,8 +223,8 @@ namespace LibVLCSharp.Forms.Shared
                         if (applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", out var play) && play is true)
                         {
                             mediaPlayer.Play();
-                            mediaPlayer.Position = applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position)
-                                && position is float p ? p : 0;
+                            mediaPlayer.SetPosition(applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position)
+                                && position is float p ? p : 0);
                         }
                     }
                 });

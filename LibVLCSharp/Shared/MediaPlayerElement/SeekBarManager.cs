@@ -90,7 +90,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer != null)
             {
-                mediaPlayer.Position = position;
+                mediaPlayer.SetPosition(position);
             }
         }
 

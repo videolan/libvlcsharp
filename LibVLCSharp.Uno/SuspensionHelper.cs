@@ -45,7 +45,7 @@ namespace LibVLCSharp.Uno
             }
             if (values.TryGetValue($"{identifier}_VLC_MediaPlayer_Position", out var p) && p is float position)
             {
-                mediaPlayer.Position = position;
+                mediaPlayer.SetPosition(position);
             }
         }
     }
