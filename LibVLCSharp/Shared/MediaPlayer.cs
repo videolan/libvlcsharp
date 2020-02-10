@@ -65,7 +65,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_stop_async")]
-            internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
+            internal static extern int LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
 #if APPLE || NETFRAMEWORK || NETSTANDARD
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -704,12 +704,13 @@ namespace LibVLCSharp.Shared
         public void Pause() => Native.LibVLCMediaPlayerPause(NativeReference);
 
         /// <summary>
-        /// Stop the playback (no effect if there is no media)
-        /// warning:
-        /// This is synchronous, and will block until all VLC threads have been joined.
-        /// Calling this from a VLC callback is a bound to cause a deadlock.
+        /// Stop asynchronously (no effect if there is no media)
+        /// This function is asynchronous. In case of success, the user should
+        /// wait for the MediaPlayer.Stopped event to know when the stop is
+        /// actually finished.
         /// </summary>
-        public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
+        /// <returns>true if the player is being stopped, false otherwise</returns>
+        public bool Stop() => Native.LibVLCMediaPlayerStop(NativeReference) == 0;
 
 #if APPLE || NETFRAMEWORK || NETSTANDARD
         /// <summary>
