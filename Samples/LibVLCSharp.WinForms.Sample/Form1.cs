@@ -12,6 +12,8 @@ namespace LibVLCSharp.WinForms.Sample
         public RotateFlipType RotateFlipType { get; set; } = RotateFlipType.RotateNoneFlipNone;
 
         public LibVLC LibVlc;
+        
+        
         public MediaPlayer Mp;
 
         public long Duration = 0;
