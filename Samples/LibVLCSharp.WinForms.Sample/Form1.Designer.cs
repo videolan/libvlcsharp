@@ -16,8 +16,8 @@
             if (disposing && (components != null))
             {
                 components.Dispose();
-                this._mp?.Dispose();
-                this._libVLC?.Dispose();
+                this.Mp?.Dispose();
+                this.LibVlc?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -30,9 +30,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.videoView1 = new LibVLCSharp.WinForms.VideoView();
             ((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 10000;
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // videoView1
             // 
@@ -53,6 +61,7 @@
             this.Name = "Form1";
             this.Text = "LibVLCSharp.WinForms";
             ((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
 
         }
@@ -60,5 +69,6 @@
         #endregion
 
         private VideoView videoView1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
