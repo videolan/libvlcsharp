@@ -1,4 +1,10 @@
 steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK'
+  inputs:
+    packageType: sdk
+    version: 2.1.804
+
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
