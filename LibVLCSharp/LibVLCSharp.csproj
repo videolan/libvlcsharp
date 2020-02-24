@@ -93,7 +93,10 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="Platforms\UWP\**\*.cs" />
-    <Page Include="Themes\Generic.xaml" />
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
   </ItemGroup>
