@@ -16,7 +16,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>3.4.2</Version>
+    <Version>3.4.3</Version>
     <PackageId>LibVLCSharp.WPF</PackageId>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
