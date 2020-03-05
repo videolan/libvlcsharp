@@ -1,3 +1,10 @@
+LibVLCSharp version 3.4.3
+* Fix build for older C# compilers
+* Centralize and simplify static callbacks management, and introduce new Media constructor with MediaInput abstraction https://github.com/videolan/libvlcsharp/pull/87
+* Always load libcpp on Android https://github.com/videolan/libvlcsharp/pull/92
+* Align features description in the csproj with the readme.
+* Align msbuild sdk extras usage in Uno project with the rest of the solution.
+
 LibVLCSharp version 3.4.2
 =========================
 * Android: Fix libvlc loading failure on Android < 17 https://code.videolan.org/videolan/LibVLCSharp/issues/280
