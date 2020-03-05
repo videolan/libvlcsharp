@@ -3,7 +3,7 @@ steps:
   displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 2.1.804
+    version: 3.0.103
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
