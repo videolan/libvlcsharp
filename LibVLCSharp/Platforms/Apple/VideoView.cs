@@ -2,14 +2,28 @@
 
 using LibVLCSharp.Shared;
 
+#if IOS || TVOS
 using UIKit;
+#elif MAC
+using AppKit;
+#endif
 
+#if IOS
 namespace LibVLCSharp.Platforms.iOS
+#elif TVOS
+namespace LibVLCSharp.Platforms.tvOS
+#elif MAC
+namespace LibVLCSharp.Platforms.Mac
+#endif
 {
     /// <summary>
-    /// VideoView implementation for the iOS platform
+    /// VideoView implementation for the Apple platform
     /// </summary>
+#if IOS || TVOS
     public class VideoView : UIView, IVideoView
+#elif MAC
+    public class VideoView : NSView, IVideoView
+#endif
     {
         Shared.MediaPlayer _mediaPlayer;
 

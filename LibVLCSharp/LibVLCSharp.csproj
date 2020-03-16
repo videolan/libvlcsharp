@@ -72,14 +72,8 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <Compile Include="Platforms\Android\**\*.cs" />
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
-    <Compile Include="Platforms\iOS\**\*.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
-    <Compile Include="Platforms\Mac\**\*.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
-    <Compile Include="Platforms\tvOS\**\*.cs" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin'))">
+    <Compile Include="Platforms\Apple\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
     <Compile Remove="Shared\MediaPlayerElement\*.*" />
