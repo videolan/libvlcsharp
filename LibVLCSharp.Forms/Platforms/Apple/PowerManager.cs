@@ -1,4 +1,5 @@
-﻿using LibVLCSharp.Forms.Platforms.iOS;
+﻿#if IOS
+using LibVLCSharp.Forms.Platforms.iOS;
 using LibVLCSharp.Forms.Shared;
 using UIKit;
 using Xamarin.Forms;
@@ -21,3 +22,4 @@ namespace LibVLCSharp.Forms.Platforms.iOS
         }
     }
 }
+#endif
