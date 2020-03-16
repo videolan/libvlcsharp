@@ -1,4 +1,5 @@
-﻿namespace LibVLCSharp.Forms.Platforms.iOS
+﻿#if IOS
+namespace LibVLCSharp.Forms.Platforms.iOS
 {
     /// <summary>
     /// Empty shell used to load the custom renderer assembly.
@@ -13,3 +14,4 @@
         }
     }
 }
+#endif
