@@ -128,10 +128,12 @@ from the main (upstream) repository:
 ## Coding
 
 ### Developer Environment
-- Visual Studio 2017 (with latest patches/updates), with the following workloads/components
+- Visual Studio 2019 (with latest patches/updates), with the following workloads/components
     - .NET desktop development workload
     - Mobile development with .NET workload
     - .NET Core cross-platform development
+
+You will need to install GTK if you want to work on LibVLCSharp.GTK.
 
 ### <a name="rules"></a> Coding Rules
 
