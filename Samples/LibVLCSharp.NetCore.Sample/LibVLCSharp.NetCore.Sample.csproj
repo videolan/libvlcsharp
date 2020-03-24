@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <RuntimeIdentifiers>win7-x64;win7-x86;osx-x64</RuntimeIdentifiers>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />

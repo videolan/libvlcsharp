@@ -9,16 +9,11 @@ namespace LibVLCSharp.NetCore.Sample
         {
             Core.Initialize();
 
-            using(var libVLC = new LibVLC())
-            {
-                var media = new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
-                using (var mp = new MediaPlayer(media))
-                {
-                    media.Dispose();
-                    mp.Play();
-                    Console.ReadKey();
-                }
-            }
+            using var libVLC = new LibVLC();
+            using var media = new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
+            using var mp = new MediaPlayer(media);
+            mp.Play();
+            Console.ReadKey();
         }
     }
 }
