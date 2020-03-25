@@ -5,8 +5,8 @@ steps:
     packageType: sdk
     version: 3.0.103
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+- task: Bash@3
+  displayName: 'Build all'
   inputs:
-    projects: LibVLCSharp/LibVLCSharp.csproj
-    arguments: '/p:NETSTANDARD_ONLY=true -c Release'
+    targetType: filePath
+    filePath: ./build.sh
