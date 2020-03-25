@@ -37,6 +37,8 @@ Read and follow https://code.videolan.org/videolan/libvlc-nuget
 - [LibVLCSharp.WinForms](../LibVLCSharp.WinForms/README.md)
 - [LibVLCSharp.Uno](../LibVLCSharp.Uno/README.md)
 
+For Android specific things, head over to [Android](android.md).
+
 # How do I do X?
 
 Check out our [How Do I Do X](how_do_I_do_X.md) page.
