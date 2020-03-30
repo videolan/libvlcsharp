@@ -32,8 +32,20 @@ Task("Restore-NuGet-Packages")
     NuGetRestore(solutionFile);
 });
 
+Task("BuildUnity")
+    .Does(() =>
+{
+    DotNetCoreBuild($"{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
+    {
+        Configuration = configuration,
+        Framework = "netstandard2.0",
+        ArgumentCustomization = args => args.Append("/p:UNITY=true"),
+    });
+});
+
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("BuildUnity")
     .Does(() =>
 {
     MSBuild(solutionFile, settings => settings.SetConfiguration(configuration));
