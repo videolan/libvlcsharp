@@ -203,7 +203,9 @@ namespace LibVLCSharp.Shared
 
             if (!Loaded)
             {
-                throw new VLCException($"Failed to load required native libraries. Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
+                throw new VLCException("Failed to load required native libraries. " +
+                    $"{Environment.NewLine}Have you installed the latest LibVLC package from nuget for your target platform?" +
+                    $"{Environment.NewLine}Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
             }
 #endif
         }

@@ -199,7 +199,8 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="options">libvlc options, an UTF16 string array turned to UTF8 string pointer array</param>
         /// <param name="create">the create function call</param>
-        /// <returns></returns>
+        /// <returns>the result of the create function</returns>
+        /// <exception cref="VLCException">Thrown when libvlc could not be created</exception>
         internal static IntPtr CreateWithOptions(string[] options, Func<int, IntPtr[], IntPtr> create)
         {
             var utf8Args = default(IntPtr[]);
@@ -207,6 +208,13 @@ namespace LibVLCSharp.Shared.Helpers
             {
                 utf8Args = options.ToUtf8();
                 return create(utf8Args.Length, utf8Args);
+            }
+            catch (DllNotFoundException ex)
+            {
+                throw new VLCException("LibVLC could not be created. Make sure that you have done the following:" +
+                    $"{Environment.NewLine}- Installed latest LibVLC from nuget for your target platform." +
+                    $"{Environment.NewLine}- Called LibVLCSharp.Shared.Core.Initialize() before creating any LibVLCSharp object." +
+                    $"{Environment.NewLine}{ex.Message} {ex.StackTrace}");
             }
             finally
             {
