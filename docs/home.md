@@ -12,6 +12,7 @@ LibVLCSharp is a cross-platform audio and video API for .NET platforms based on 
   - [General usage guidelines and best practices](#General-usage-guidelines-and-best-practices)
   - [LibVLC documentation](#libvlc-documentation)
   - [Tutorials](#tutorials)
+  - [Community projects](made_with_libvlcsharp.md)
   - [Get Help](#get-help)
   - [Contribute](#contribute)
   - [Resources](#resources)
