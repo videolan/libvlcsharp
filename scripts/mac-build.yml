@@ -1,9 +1,9 @@
 steps:
 - task: UseDotNet@2
-  displayName: 'Use .NET Core SDK'
+  displayName: 'Use .NET Core SDK 3.1.201'
   inputs:
     packageType: sdk
-    version: 3.1.x
+    version: 3.1.201
 
 - bash: |
    #!/bin/bash
