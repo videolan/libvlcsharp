@@ -108,7 +108,7 @@
     <InterfaceDefinition Include="Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
+    <ProjectReference Include="..\..\..\src\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
       <Project>{06814458-C8B4-4D50-86E2-904E6A9E3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>

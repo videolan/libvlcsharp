@@ -89,7 +89,7 @@
     <Folder Include="Resources\mipmap-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj">
+    <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>

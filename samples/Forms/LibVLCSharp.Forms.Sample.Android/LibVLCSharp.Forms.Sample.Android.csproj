@@ -95,7 +95,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
+    <ProjectReference Include="..\..\..\src\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj">
       <Project>{06814458-c8b4-4d50-86e2-904e6a9e3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>

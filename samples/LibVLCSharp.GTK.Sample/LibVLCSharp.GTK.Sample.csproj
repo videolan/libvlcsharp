@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp.GTK\LibVLCSharp.GTK.csproj" />
+    <ProjectReference Include="..\..\src\LibVLCSharp.GTK\LibVLCSharp.GTK.csproj" />
   </ItemGroup>
 
   <!-- GTK# creators don't provide a ready-to-use nuget package yet...

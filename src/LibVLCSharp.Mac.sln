@@ -11,29 +11,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{799A84A2-2161-4676-878B-5610E3586137}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "..\samples", "{799A84A2-2161-4676-878B-5610E3586137}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms", "LibVLCSharp.Forms\LibVLCSharp.Forms.csproj", "{06814458-C8B4-4D50-86E2-904E6A9E3499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Android.Sample", "Samples\LibVLCSharp.Android.Sample\LibVLCSharp.Android.Sample.csproj", "{00419085-4455-45D4-84A0-0A80D6174D25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Android.Sample", "..\samples\LibVLCSharp.Android.Sample\LibVLCSharp.Android.Sample.csproj", "{00419085-4455-45D4-84A0-0A80D6174D25}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Forms", "Forms", "{FC68D8B7-758E-4164-945B-9F922FA883F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.Sample", "Samples\Forms\LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample.csproj", "{A7F1B21F-CA82-4FC7-871F-2BE5B9D6DA70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.Sample", "..\samples\Forms\LibVLCSharp.Forms.Sample\LibVLCSharp.Forms.Sample.csproj", "{A7F1B21F-CA82-4FC7-871F-2BE5B9D6DA70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.Android", "Samples\Forms\LibVLCSharp.Forms.Sample.Android\LibVLCSharp.Forms.Sample.Android.csproj", "{C77C28DD-A2B2-403C-A907-76184BD5D11E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.Android", "..\samples\Forms\LibVLCSharp.Forms.Sample.Android\LibVLCSharp.Forms.Sample.Android.csproj", "{C77C28DD-A2B2-403C-A907-76184BD5D11E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.iOS", "Samples\Forms\LibVLCSharp.Forms.Sample.iOS\LibVLCSharp.Forms.Sample.iOS.csproj", "{D2486BCF-A218-4181-B1F8-E6D46DCADCDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.iOS", "..\samples\Forms\LibVLCSharp.Forms.Sample.iOS\LibVLCSharp.Forms.Sample.iOS.csproj", "{D2486BCF-A218-4181-B1F8-E6D46DCADCDC}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LibVLCSharp.FSharp.Sample", "Samples\LibVLCSharp.FSharp.Sample\LibVLCSharp.FSharp.Sample.fsproj", "{1B4B0B6A-C57C-4926-B0E8-B2D31C72A324}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LibVLCSharp.FSharp.Sample", "..\samples\LibVLCSharp.FSharp.Sample\LibVLCSharp.FSharp.Sample.fsproj", "{1B4B0B6A-C57C-4926-B0E8-B2D31C72A324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.iOS.Sample", "Samples\LibVLCSharp.iOS.Sample\LibVLCSharp.iOS.Sample.csproj", "{76840EFA-235B-46D8-8274-3240E1BBED5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.iOS.Sample", "..\samples\LibVLCSharp.iOS.Sample\LibVLCSharp.iOS.Sample.csproj", "{76840EFA-235B-46D8-8274-3240E1BBED5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Mac.Sample", "Samples\LibVLCSharp.Mac.Sample\LibVLCSharp.Mac.Sample.csproj", "{D6CC442B-C774-4D7C-B8BA-71FF885FCCC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Mac.Sample", "..\samples\LibVLCSharp.Mac.Sample\LibVLCSharp.Mac.Sample.csproj", "{D6CC442B-C774-4D7C-B8BA-71FF885FCCC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.NetCore.Sample", "Samples\LibVLCSharp.NetCore.Sample\LibVLCSharp.NetCore.Sample.csproj", "{E9858A83-E619-4515-AF14-A87A4C658924}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.NetCore.Sample", "..\samples\LibVLCSharp.NetCore.Sample\LibVLCSharp.NetCore.Sample.csproj", "{E9858A83-E619-4515-AF14-A87A4C658924}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.Mac", "Samples\Forms\LibVLCSharp.Forms.Sample.Mac\LibVLCSharp.Forms.Sample.Mac.csproj", "{8771EDCF-0DA5-4AF8-80CE-5D3DC4999C7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.Mac", "..\samples\Forms\LibVLCSharp.Forms.Sample.Mac\LibVLCSharp.Forms.Sample.Mac.csproj", "{8771EDCF-0DA5-4AF8-80CE-5D3DC4999C7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Tests", "LibVLCSharp.Tests\LibVLCSharp.Tests.csproj", "{AD3A4C86-1839-4C42-9EB6-24CDA0DE30F9}"
 EndProject
@@ -45,32 +45,32 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.GTK", "LibVLCSh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediaElement", "MediaElement", "{5E512888-485B-438A-AA4A-1B1EF50FD49F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.MediaElement.Sample", "Samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample\LibVLCSharp.Forms.MediaElement.Sample.csproj", "{537A70A3-6565-41E2-8C65-5198E0F4EB45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.MediaElement.Sample", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample\LibVLCSharp.Forms.MediaElement.Sample.csproj", "{537A70A3-6565-41E2-8C65-5198E0F4EB45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.Android", "Samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.Android\LibVLCSharp.Forms.MediaElement.Sample.Android.csproj", "{315BB606-A490-4CFB-8DFC-313563C330AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.Android", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.Android\LibVLCSharp.Forms.MediaElement.Sample.Android.csproj", "{315BB606-A490-4CFB-8DFC-313563C330AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.iOS", "Samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.iOS\LibVLCSharp.Forms.MediaElement.Sample.iOS.csproj", "{6C9DE381-A32F-41CB-BCDA-551BE90B5A60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.iOS", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.iOS\LibVLCSharp.Forms.MediaElement.Sample.iOS.csproj", "{6C9DE381-A32F-41CB-BCDA-551BE90B5A60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Uno", "LibVLCSharp.Uno\LibVLCSharp.Uno.csproj", "{82AB6F00-B0CC-4B88-8D09-CD95789E6C38}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{AF7576D5-F1E9-4E7B-93CE-538BBBB4442E}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LibVLCSharp.Uno.Sample.Shared", "Samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LibVLCSharp.Uno.Sample.Shared", "..\samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.shproj", "{6279C845-92F8-4333-AB99-3D213163593C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Uno.Sample.iOS", "Samples\Uno\LibVLCSharp.Uno.Sample.iOS\LibVLCSharp.Uno.Sample.iOS.csproj", "{F2D3699A-9C73-4569-8E74-73442C8116B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Uno.Sample.iOS", "..\samples\Uno\LibVLCSharp.Uno.Sample.iOS\LibVLCSharp.Uno.Sample.iOS.csproj", "{F2D3699A-9C73-4569-8E74-73442C8116B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediaPlayerElement", "MediaPlayerElement", "{A5558B4F-67BD-4FDC-82F5-D82A6564CD7B}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.MediaPlayerElement.Shared", "Samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.shproj", "{7C954316-4FCC-4FF4-B86A-7640DD857842}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.MediaPlayerElement.Shared", "..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.shproj", "{7C954316-4FCC-4FF4-B86A-7640DD857842}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MediaPlayerElement.iOS", "Samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.iOS\Sample.MediaPlayerElement.iOS.csproj", "{EF68D2A7-067D-427C-9690-5E0F0DD06F2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MediaPlayerElement.iOS", "..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.iOS\Sample.MediaPlayerElement.iOS.csproj", "{EF68D2A7-067D-427C-9690-5E0F0DD06F2B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
-		Samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems*{7c954316-4fcc-4ff4-b86a-7640dd857842}*SharedItemsImports = 13
-		Samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems*{ef68d2a7-067d-427c-9690-5e0f0dd06f2b}*SharedItemsImports = 4
-		Samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems*{f2d3699a-9c73-4569-8e74-73442c8116b8}*SharedItemsImports = 4
+		..\samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
+		..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems*{7c954316-4fcc-4ff4-b86a-7640dd857842}*SharedItemsImports = 13
+		..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.Shared\Sample.MediaPlayerElement.Shared.projitems*{ef68d2a7-067d-427c-9690-5e0f0dd06f2b}*SharedItemsImports = 4
+		..\samples\Uno\LibVLCSharp.Uno.Sample.Shared\LibVLCSharp.Uno.Sample.Shared.projitems*{f2d3699a-9c73-4569-8e74-73442c8116b8}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

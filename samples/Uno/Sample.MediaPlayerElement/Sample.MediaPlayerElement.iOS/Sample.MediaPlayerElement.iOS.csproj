@@ -149,11 +149,11 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
+    <ProjectReference Include="..\..\..\..\src\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj">
       <Project>{82ab6f00-b0cc-4b88-8d09-cd95789e6c38}</Project>
       <Name>LibVLCSharp.Uno</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\LibVLCSharp\LibVLCSharp.csproj">
+    <ProjectReference Include="..\..\..\..\src\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
