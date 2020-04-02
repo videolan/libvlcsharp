@@ -34,7 +34,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\Assets\icon.png">
+    <None Include="..\assets\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

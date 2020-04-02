@@ -28,7 +28,7 @@ Xamarin.Forms support for other platforms are in different packages (namely LibV
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\Assets\icon.png">
+    <None Include="..\assets\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

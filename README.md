@@ -1,5 +1,5 @@
 <h3 align="center">
-    <img src="Assets/banner.png"/>
+    <img src="src/assets/banner.png"/>
 </h3>
 
 # LibVLCSharp
@@ -59,7 +59,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android).
 
 <h3 align="center">
-  <img src="Assets/media-element.png"/>
+  <img src="src/assets/media-element.png"/>
 </h3>
 
 ## Supported platforms
@@ -272,5 +272,5 @@ Note: the .NET4.0 LibVLCSharp build references a nuget package that may indicate
 
 <br/>
 <h3 align="center">
-    <a href="https://code.videolan.org/videolan/LibVLCSharp"><img src="Assets/icon.png"/></a>
+    <a href="https://code.videolan.org/videolan/LibVLCSharp"><img src="src/assets/icon.png"/></a>
 </h3>
