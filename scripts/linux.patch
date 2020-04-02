@@ -1,0 +1,10 @@
+diff --git a/LibVLCSharp/LibVLCSharp.csproj b/LibVLCSharp/LibVLCSharp.csproj
+index be7cd94..c19dbe1 100644
+--- a/LibVLCSharp/LibVLCSharp.csproj
++++ b/LibVLCSharp/LibVLCSharp.csproj
+@@ -1,4 +1,4 @@
+-﻿<Project Sdk="MSBuild.Sdk.Extras">
++﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <Title>LibVLCSharp</Title>
+     <Summary>The official .NET wrapper around LibVLC.</Summary>
