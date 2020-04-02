@@ -11,16 +11,16 @@ jobs:
   pool:
     vmImage: 'ubuntu-18.04'
   steps:
-  - template: scripts/linux-build.yml
+  - template: linux-build.yml
 
 - job: macOS
   pool:
     vmImage: 'macOS-10.15'
   steps:
-  - template: scripts/mac-build.yml
+  - template: mac-build.yml
 
 - job: Windows
   pool:
     vmImage: 'windows-2019'
   steps:
-  - template: scripts/windows-build.yml
+  - template: windows-build.yml
