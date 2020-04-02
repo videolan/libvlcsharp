@@ -59,7 +59,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <None Include="..\Assets\icon.png">
+    <None Include="..\assets\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

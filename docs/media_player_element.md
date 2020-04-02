@@ -1,7 +1,7 @@
 # MediaPlayerElement
 
 <h3 align="center">
-  <img src="/Assets/media-element.png"/>
+  <img src="/src/assets/media-element.png"/>
 </h3>
 
 ## What's available out of the box?

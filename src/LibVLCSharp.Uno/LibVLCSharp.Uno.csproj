@@ -31,7 +31,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
   <ItemGroup>
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <PRIResource Include="Strings\**\*.resw" />
-    <None Include="..\Assets\icon.png">
+    <None Include="..\assets\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
