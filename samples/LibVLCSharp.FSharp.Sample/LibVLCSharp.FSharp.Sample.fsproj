@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
 
 </Project>

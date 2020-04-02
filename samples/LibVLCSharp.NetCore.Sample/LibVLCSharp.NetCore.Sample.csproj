@@ -11,6 +11,6 @@
     <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.1.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
 </Project>

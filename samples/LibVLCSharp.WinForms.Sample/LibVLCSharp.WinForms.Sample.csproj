@@ -10,6 +10,6 @@
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
+    <ProjectReference Include="..\..\src\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
   </ItemGroup>
 </Project>

@@ -171,7 +171,7 @@
     <InterfaceDefinition Include="Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LibVLCSharp\LibVLCSharp.csproj">
+    <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj">
       <Project>{D1C3B7C4-713B-46B2-B33A-E9298C819921}</Project>
       <Name>LibVLCSharp</Name>
     </ProjectReference>
