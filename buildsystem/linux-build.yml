@@ -7,12 +7,12 @@ steps:
 
 - bash: |
    #!/bin/bash
-   set -ex   
-   patch -p1 ../src/LibVLCSharp/LibVLCSharp.csproj ./linux.patch
+   set -ex
+   git apply buildsystem/linux.patch
   displayName: 'Update csproj for linux'
  
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
-    projects: LibVLCSharp/LibVLCSharp.csproj
+    projects: src/LibVLCSharp/LibVLCSharp.csproj
     arguments: '/p:NETSTANDARD_ONLY=true -c Release'
