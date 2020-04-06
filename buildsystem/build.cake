@@ -37,7 +37,7 @@ Task("Restore-NuGet-Packages")
 Task("BuildUnity")
     .Does(() =>
 {
-    DotNetCoreBuild($"{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
+    DotNetCoreBuild($"../src/{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
     {
         Configuration = configuration,
         ArgumentCustomization = args => args.Append("/p:UNITY=true"),
