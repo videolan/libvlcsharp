@@ -8,7 +8,7 @@ steps:
 - bash: |
    #!/bin/bash
    set -ex   
-   patch -p1 LibVLCSharp/LibVLCSharp.csproj scripts/linux.patch
+   patch -p1 ../src/LibVLCSharp/LibVLCSharp.csproj ./linux.patch
   displayName: 'Update csproj for linux'
  
 - task: DotNetCoreCLI@2
