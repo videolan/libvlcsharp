@@ -19,8 +19,8 @@ steps:
    msbuild /version
   displayName: 'Update mono'
 
-- task: Bash@3
+- script: |
+   chmod +x build.sh
+   ./build.sh
+  workingDirectory: buildsystem
   displayName: 'Build all'
-  inputs:
-    targetType: filePath
-    filePath: ./build.sh

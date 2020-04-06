@@ -31,6 +31,7 @@ Task("Restore-NuGet-Packages")
     .Does(() =>
 {
     NuGetRestore(solutionPath);
+    MoveDirectory("../src/packages", "../packages");
 });
 
 Task("BuildUnity")
