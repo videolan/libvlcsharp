@@ -184,6 +184,7 @@ Our [Documentation](docs/home.md) is part of this repository.
 Feel free to browse it and if you see something missing, you can improve it by sending a PR.
 
 It includes helpful documents such as:
+
 ### [Best practices](docs/best_practices.md)
 
 This document details how to use LibVLCSharp in a correct way, notably taking into consideration the native interop part.
@@ -191,6 +192,10 @@ This document details how to use LibVLCSharp in a correct way, notably taking in
 ### [Q&A guide](docs/how_do_I_do_X.md)
 
 This is a Q&A document which I compiled from all the questions I got asked regarding LibVLC and LibVLCSharp. Continously updated.
+
+### [Troubleshooting issues](docs/debugging.md)
+
+When you encounter an issue with LibVLC/LibVLCSharp, identifying the cause is not always straightforward. This document gives you clues on how to go about it.
 
 ### [Libvlc specific information](docs/libvlc_documentation.md)
 
