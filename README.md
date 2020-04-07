@@ -200,6 +200,10 @@ This page focuses on the core native library and contains information regarding 
 
 This page indexes all available tutorial materials about LibVLCSharp. There are currently videos, talks, blogposts and code samples.
 
+### [Community projects](docs/made_with_libvlcsharp.md)
+
+Here we list several interesting projects made by the community using LibVLCSharp. Feel free to send a PR to yours!
+
 ## Samples
 
 For more advanced samples, have a look at [libvlcsharp-samples](https://code.videolan.org/mfkl/libvlcsharp-samples). It currently includes:
