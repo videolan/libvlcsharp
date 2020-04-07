@@ -16,3 +16,9 @@ steps:
   inputs:
     projects: src/LibVLCSharp/LibVLCSharp.csproj
     arguments: '/p:NETSTANDARD_ONLY=true -c Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: src/LibVLCSharp/LibVLCSharp.csproj
+    arguments: '/p:UNITY=true -c Release'
