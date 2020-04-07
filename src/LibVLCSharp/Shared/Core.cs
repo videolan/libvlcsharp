@@ -162,7 +162,7 @@ namespace LibVLCSharp.Shared
                 throw new VLCException("Please provide UnityEngine.Application.dataPath to Core.Initialize for proper initialization.");
             }
 
-            Native.SetPluginPath(libvlcDirectoryPath);
+            Native.SetPluginPath(libvlcDirectoryPath!);
 
             libvlcDirectoryPath = $"{libvlcDirectoryPath}\\Plugins";
 #endif
