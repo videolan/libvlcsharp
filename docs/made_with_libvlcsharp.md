@@ -49,3 +49,9 @@ https://github.com/LagradOst/CloudStream-2
 Desktop software for TikTok
 
 https://github.com/ShiiroSan/TikTokForWindows
+
+## Unjammit
+
+Multi-platform JCF player
+
+https://github.com/hyvart/Unjammit
