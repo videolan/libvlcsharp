@@ -244,7 +244,7 @@ If you have a request or question regarding the roadmap, feel free to open an [i
 
 ## Versioning
 
-As this is a libvlc binding, we try to follow the libvlc versioning scheme as much as possible. The versioning strategy is explained in the [VERSIONING](VERSIONING.md) document.
+As this is a libvlc binding, we try to follow the libvlc versioning scheme as much as possible. The versioning strategy is explained in the [versioning](docs/versioning.md) document.
 
 ## Release Notes
 
