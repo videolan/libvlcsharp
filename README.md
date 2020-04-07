@@ -179,7 +179,26 @@ Follow the [Getting started guide](docs/getting_started.md). Make sure you read 
 
 ## Documentation
 
-Our [Documentation](docs/home.md) includes [best practices](docs/best_practices.md), [Q&A guide](docs/how_do_I_do_X.md), [libvlc specific information](docs/libvlc_documentation.md) and [tutorials](docs/tutorials.md).
+Our [Documentation](docs/home.md) is part of this repository.
+
+Feel free to browse it and if you see something missing, you can improve it by sending a PR.
+
+It includes helpful documents such as:
+### [Best practices](docs/best_practices.md)
+
+This document details how to use LibVLCSharp in a correct way, notably taking into consideration the native interop part.
+
+### [Q&A guide](docs/how_do_I_do_X.md)
+
+This is a Q&A document which I compiled from all the questions I got asked regarding LibVLC and LibVLCSharp. Continously updated.
+
+### [Libvlc specific information](docs/libvlc_documentation.md)
+
+This page focuses on the core native library and contains information regarding advanced libvlc configuration and its versioning strategy by VideoLAN.
+
+### [Tutorials](docs/tutorials.md)
+
+This page indexes all available tutorial materials about LibVLCSharp. There are currently videos, talks, blogposts and code samples.
 
 ## Samples
 
