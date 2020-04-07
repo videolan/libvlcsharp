@@ -20,14 +20,7 @@ Some advanced customizations and features are only accessible through LibVLC opt
 
 The list of such LibVLC string options can be found here https://wiki.videolan.org/VLC_command-line_help/
 
-## LibVLC versions and current status
 
-LibVLC 2.x not supported by VideoLAN, security issues, does not work with LibVLCSharp.
+## LibVLC Versioning
 
-LibVLC 3.x current stable version.
-
-LibVLC 4.x current nightly version.
-
-## Relation to LibVLCSharp versioning
-
-Check out our [versioning docs](../versioning.md).
+Check out our [versioning docs](versioning.md).
