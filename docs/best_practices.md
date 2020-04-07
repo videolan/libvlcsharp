@@ -10,6 +10,21 @@ Since LibVLCSharp is a binding over native libvlc, LibVLCSharp types implement `
 
 see https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/using-objects for more info.
 
+## Do not call LibVLC from a LibVLC event without switching thread first
+
+Doing this
+```csharp
+mediaPlayer.EndReached += (sender, args) => mediaPlayer.Play(nextMedia);
+```
+
+Might freeze your app. 
+
+If you need to call back into LibVLCSharp from an event, you need to switch thread. This is an example of how to do it:
+
+```csharp
+mediaPlayer.EndReached += (sender, args) => ThreadPool.QueueUserWorkItem(_ => mediaPlayer.Play(nextMedia);
+```
+
 ## Check how official VLC apps do it
 
 VLC for iOS and VLC for Android are the biggest libvlc consumer out there. They use libvlc just like anyone using LibVLCSharp uses libvlc to make their app.
