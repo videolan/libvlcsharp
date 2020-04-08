@@ -81,7 +81,7 @@ namespace LibVLCSharp.Shared
             InitializeAndroid();
 #elif UWP
             InitializeUWP();
-#elif (NETFRAMEWORK || NETSTANDARD) && !UNITY_ANDROID
+#elif (NETFRAMEWORK || NETSTANDARD)
             DisableMessageErrorBox();
             InitializeDesktop(libvlcDirectoryPath);
 #endif
