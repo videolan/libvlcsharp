@@ -73,12 +73,12 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <Compile Include="Platforms\Apple\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-    <Compile Remove="Shared\MediaPlayerElement\*.*" />
-    <None Include="Shared\MediaPlayerElement\*.*" />
+    <Compile Remove="MediaPlayerElement\*.*" />
+    <None Include="MediaPlayerElement\*.*" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Compile Remove="Shared\MediaPlayerElement\*.*" />
-    <None Include="Shared\MediaPlayerElement\*.*" />
+    <Compile Remove="MediaPlayerElement\*.*" />
+    <None Include="MediaPlayerElement\*.*" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>

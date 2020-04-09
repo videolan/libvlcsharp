@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;

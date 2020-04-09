@@ -1,6 +1,6 @@
 ﻿using System;
 
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 #if IOS || TVOS
 using UIKit;
@@ -25,12 +25,12 @@ namespace LibVLCSharp.Platforms.Mac
     public class VideoView : NSView, IVideoView
 #endif
     {
-        Shared.MediaPlayer? _mediaPlayer;
+        MediaPlayer? _mediaPlayer;
 
         /// <summary>
         /// The MediaPlayer object attached to this VideoView. Use this to manage playback and more
         /// </summary>
-        public Shared.MediaPlayer? MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
             get => _mediaPlayer;
             set

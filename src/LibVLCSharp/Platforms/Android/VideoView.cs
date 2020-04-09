@@ -5,7 +5,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 using Org.Videolan.Libvlc;
 
