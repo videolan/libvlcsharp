@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FontAwesome;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
-using LibVLCSharp.Shared.Structures;
+using LibVLCSharp.MediaPlayerElement;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -153,7 +151,7 @@ namespace LibVLCSharp.Uno
             typeof(PlaybackControlsBase),
             new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.LibVLC = (LibVLC)args.NewValue));
         /// <summary>
-        /// Gets or sets the <see cref="Shared.LibVLC"/> instance
+        /// Gets or sets the <see cref="LibVLC"/> instance
         /// </summary>
         public LibVLC? LibVLC
         {
@@ -164,15 +162,15 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
-        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
+        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(MediaPlayer),
             typeof(PlaybackControlsBase),
-            new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.MediaPlayer = (Shared.MediaPlayer)args.NewValue));
+            new PropertyMetadata(null, (d, args) => ((PlaybackControlsBase)d).Manager.MediaPlayer = (MediaPlayer)args.NewValue));
         /// <summary>
-        /// Gets or sets the <see cref="Shared.MediaPlayer"/> instance
+        /// Gets or sets the <see cref="MediaPlayer"/> instance
         /// </summary>
-        public Shared.MediaPlayer? MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
-            get => (Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -564,7 +562,7 @@ namespace LibVLCSharp.Uno
         }
 
         /// <summary>
-        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate. 
+        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate.
         /// In simplest terms, this means the method is called just before a UI element displays in your app.
         /// Override this method to influence the default post-template logic of a class.
         /// </summary>

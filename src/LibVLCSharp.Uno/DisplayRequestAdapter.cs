@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared.MediaPlayerElement;
+﻿using LibVLCSharp.MediaPlayerElement;
 using Windows.System.Display;
 
 namespace LibVLCSharp.Uno

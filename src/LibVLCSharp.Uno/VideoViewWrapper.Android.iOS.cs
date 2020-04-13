@@ -1,6 +1,5 @@
 ﻿using System;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp.MediaPlayerElement;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,7 +10,7 @@ namespace LibVLCSharp.Uno
     /// Video view
     /// </summary>
     public abstract partial class VideoViewWrapper<TUnderlyingVideoView> : Control, IVideoView, IVideoControl
-        where TUnderlyingVideoView : class, Shared.IVideoView, IDisposable
+        where TUnderlyingVideoView : class, LibVLCSharp.IVideoView, IDisposable
     {
         /// <summary>
         /// Occurs when the <see cref="VideoView"/> is fully loaded
@@ -55,13 +54,13 @@ namespace LibVLCSharp.Uno
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer),
-            typeof(Shared.MediaPlayer), typeof(VideoView), new PropertyMetadata(new PropertyChangedCallback(OnMediaPlayerPropertyChanged)));
+            typeof(MediaPlayer), typeof(VideoView), new PropertyMetadata(new PropertyChangedCallback(OnMediaPlayerPropertyChanged)));
         /// <summary>
-        /// Gets the <see cref="Shared.MediaPlayer"/> instance.
+        /// Gets the <see cref="MediaPlayer"/> instance.
         /// </summary>
-        public Shared.MediaPlayer? MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
-            get => (Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 

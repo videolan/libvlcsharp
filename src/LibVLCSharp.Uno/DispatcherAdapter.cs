@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp.MediaPlayerElement;
 using Windows.UI.Core;
 
 namespace LibVLCSharp.Uno

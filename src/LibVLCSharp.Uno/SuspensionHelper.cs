@@ -1,5 +1,4 @@
-﻿using LibVLCSharp.Shared;
-using Windows.Storage;
+﻿using Windows.Storage;
 
 namespace LibVLCSharp.Uno
 {
@@ -13,7 +12,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         /// <param name="mediaPlayer">media player</param>
         /// <param name="identifier">optional identifier</param>
-        public static void Save(Shared.MediaPlayer mediaPlayer, string? identifier = null)
+        public static void Save(MediaPlayer mediaPlayer, string? identifier = null)
         {
             if (mediaPlayer == null)
             {
@@ -31,7 +30,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         /// <param name="mediaPlayer">media player</param>
         /// <param name="identifier">optional identifier</param>
-        public static void Restore(Shared.MediaPlayer mediaPlayer, string? identifier = null)
+        public static void Restore(MediaPlayer mediaPlayer, string? identifier = null)
         {
             if (mediaPlayer == null)
             {

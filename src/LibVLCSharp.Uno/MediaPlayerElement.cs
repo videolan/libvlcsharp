@@ -1,5 +1,5 @@
 ﻿using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Input;
 namespace LibVLCSharp.Uno
 {
     /// <summary>
-    /// Represents an object that uses a <see cref="Shared.MediaPlayer"/> to render audio and video to the display
+    /// Represents an object that uses a <see cref="MediaPlayer"/> to render audio and video to the display
     /// </summary>
     public partial class MediaPlayerElement : ContentControl
     {
@@ -32,7 +32,7 @@ namespace LibVLCSharp.Uno
         public static readonly DependencyProperty LibVLCProperty = DependencyProperty.Register(nameof(LibVLC), typeof(LibVLC),
             typeof(MediaPlayerElement), new PropertyMetadata(null, (d, args) => ((MediaPlayerElement)d).OnLibVLCChanged()));
         /// <summary>
-        /// Gets or sets the <see cref="Shared.LibVLC"/> instance
+        /// Gets or sets the <see cref="LibVLC"/> instance
         /// </summary>
         public LibVLC? LibVLC
         {
@@ -43,14 +43,14 @@ namespace LibVLCSharp.Uno
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property
         /// </summary>
-        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(Shared.MediaPlayer),
+        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(nameof(MediaPlayer), typeof(MediaPlayer),
             typeof(MediaPlayerElement), new PropertyMetadata(null, (d, args) => ((MediaPlayerElement)d).OnMediaPlayerChanged()));
         /// <summary>
-        /// Gets the <see cref="Shared.MediaPlayer"/> instance
+        /// Gets the <see cref="MediaPlayer"/> instance
         /// </summary>
-        public Shared.MediaPlayer? MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
-            get => (Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
