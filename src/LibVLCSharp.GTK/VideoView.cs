@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Gdk;
 using Gtk;
-using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.GTK
 {
