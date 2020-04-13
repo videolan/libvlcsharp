@@ -1,6 +1,5 @@
-﻿using LibVLCSharp.Forms.Platforms.WPF;
-using LibVLCSharp.Forms.Shared;
-using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Forms;
+using LibVLCSharp.Forms.Platforms.WPF;
 using Xamarin.Forms.Platform.WPF;
 
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]

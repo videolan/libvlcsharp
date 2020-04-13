@@ -1,16 +1,16 @@
 ﻿using LibVLCSharp.Forms.Platforms.GTK;
-using LibVLCSharp.Forms.Shared;
-using LibVLCSharp.Shared;
+using LibVLCSharp.Forms;
+using LibVLCSharp;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.GTK;
 
-[assembly: ExportRenderer(typeof(LibVLCSharp.Forms.Shared.VideoView), typeof(VideoViewRenderer))]
+[assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 namespace LibVLCSharp.Forms.Platforms.GTK
 {
     /// <summary>
     /// Xamarin.Forms renderer for the VideoView on GTK
     /// </summary>
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.GTK.VideoView>
+    public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.GTK.VideoView>
     {
         LibVLCSharp.GTK.VideoView? _videoView;
 

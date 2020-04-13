@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using LibVLCSharp.Forms.Platforms.WPF;
-using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Forms;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PowerManager))]
