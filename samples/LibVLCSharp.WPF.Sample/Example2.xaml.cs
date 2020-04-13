@@ -1,10 +1,10 @@
 ﻿using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
+using MediaPlayer = LibVLCSharp.MediaPlayer;
 
 namespace LibVLCSharp.WPF.Sample
 {
@@ -32,7 +32,7 @@ namespace LibVLCSharp.WPF.Sample
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
         }
-        
+
         void StopButton_Click(object sender, RoutedEventArgs e)
         {
             if (VideoView.MediaPlayer.IsPlaying)

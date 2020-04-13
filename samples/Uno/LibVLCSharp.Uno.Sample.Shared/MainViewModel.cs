@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.Uno.Sample
 {

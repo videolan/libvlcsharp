@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 {

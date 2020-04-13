@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Forms.Shared;
+﻿using LibVLCSharp.Forms;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

@@ -1,5 +1,5 @@
 ﻿using LibVLCSharp.Platforms.iOS;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 using UIKit;
 

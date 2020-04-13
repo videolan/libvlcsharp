@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using LibVLCSharp.Uno;
 
 namespace Sample.MediaPlayerElement

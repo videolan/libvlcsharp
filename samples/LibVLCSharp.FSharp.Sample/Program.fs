@@ -1,5 +1,5 @@
 ﻿open System
-open LibVLCSharp.Shared
+open LibVLCSharp
 
 [<EntryPoint>]
 let main argv =

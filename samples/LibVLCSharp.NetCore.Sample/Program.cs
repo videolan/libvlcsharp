@@ -1,5 +1,5 @@
 ﻿using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.NetCore.Sample
 {

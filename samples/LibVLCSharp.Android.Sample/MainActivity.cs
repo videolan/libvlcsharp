@@ -2,7 +2,7 @@
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using VideoView = LibVLCSharp.Platforms.Android.VideoView;
 
 namespace LibVLCSharp.Android.Sample

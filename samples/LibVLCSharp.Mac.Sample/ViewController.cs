@@ -4,7 +4,7 @@ using AppKit;
 using Foundation;
 
 using LibVLCSharp.Platforms.Mac;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.Mac.Sample
 {

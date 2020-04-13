@@ -1,6 +1,6 @@
 ﻿using System;
-using LibVLCSharp.Forms.Shared;
-using LibVLCSharp.Shared;
+using LibVLCSharp.Forms;
+using LibVLCSharp;
 using Xamarin.Forms.Platform.GTK;
 
 namespace LibVLCSharp.Forms.Sample.GTK

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.WPF.Sample
 {

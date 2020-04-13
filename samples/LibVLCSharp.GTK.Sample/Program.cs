@@ -1,5 +1,5 @@
 ﻿using Gtk;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.GTK.Sample
 {

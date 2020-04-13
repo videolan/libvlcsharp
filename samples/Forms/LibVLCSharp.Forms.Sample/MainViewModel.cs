@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;

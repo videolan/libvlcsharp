@@ -25,7 +25,7 @@ namespace LibVLCSharp.Forms.Sample.Mac
 
         public override void DidFinishLaunching(NSNotification notification)
         {
-            Shared.LibVLCSharpFormsRenderer.Init();
+            LibVLCSharpFormsRenderer.Init();
             Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
             base.DidFinishLaunching(notification);

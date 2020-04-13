@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
-using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Forms;
 using UIKit;
 
 namespace LibVLCSharp.Forms.Sample.iOS

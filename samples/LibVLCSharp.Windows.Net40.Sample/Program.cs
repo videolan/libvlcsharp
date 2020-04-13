@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp;
 using System;
 
 namespace LibVLCSharp.Windows.Net40.Sample

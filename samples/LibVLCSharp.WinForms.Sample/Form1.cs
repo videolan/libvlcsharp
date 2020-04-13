@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.WinForms.Sample
 {

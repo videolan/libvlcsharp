@@ -1,5 +1,5 @@
 ﻿using LibVLCSharp.Forms.Platforms.WPF;
-using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Forms;
 using System.Collections.Generic;
 using System.Reflection;
 using Xamarin.Forms.Platform.WPF;
