@@ -1,7 +1,7 @@
-﻿using LibVLCSharp.Shared.MediaPlayerElement;
+﻿using LibVLCSharp.MediaPlayerElement;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.Shared
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Monitors display-related information for an application view.

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.Shared
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Provides utility methods that can be used to traverse object relationships (along child-object or parent-object axes) 

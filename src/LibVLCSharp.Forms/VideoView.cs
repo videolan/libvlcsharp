@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp.MediaPlayerElement;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.Shared
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Generic Xamarin.Forms VideoView
@@ -25,7 +24,7 @@ namespace LibVLCSharp.Forms.Shared
         /// Xamarin.Forms MediaPlayer databinded property
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
-                typeof(LibVLCSharp.Shared.MediaPlayer),
+                typeof(LibVLCSharp.MediaPlayer),
                 typeof(VideoView),
                 propertyChanging: OnMediaPlayerChanging,
                 propertyChanged: OnMediaPlayerChanged);
@@ -33,9 +32,9 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// The MediaPlayer object attached to this view
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer? MediaPlayer
+        public LibVLCSharp.MediaPlayer? MediaPlayer
         {
-            get { return GetValue(MediaPlayerProperty) as LibVLCSharp.Shared.MediaPlayer; }
+            get { return GetValue(MediaPlayerProperty) as LibVLCSharp.MediaPlayer; }
             set { SetValue(MediaPlayerProperty, value); }
         }
 
@@ -43,14 +42,14 @@ namespace LibVLCSharp.Forms.Shared
         {
             var videoView = (VideoView)bindable;
             Debug.WriteLine("OnMediaPlayerChanging");
-            videoView.MediaPlayerChanging?.Invoke(videoView, new MediaPlayerChangingEventArgs(oldValue as LibVLCSharp.Shared.MediaPlayer, newValue as LibVLCSharp.Shared.MediaPlayer));
+            videoView.MediaPlayerChanging?.Invoke(videoView, new MediaPlayerChangingEventArgs(oldValue as LibVLCSharp.MediaPlayer, newValue as LibVLCSharp.MediaPlayer));
         }
 
         private static void OnMediaPlayerChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var videoView = (VideoView)bindable;
             Debug.WriteLine("OnMediaPlayerChanged");
-            videoView.MediaPlayerChanged?.Invoke(videoView, new MediaPlayerChangedEventArgs(oldValue as LibVLCSharp.Shared.MediaPlayer, newValue as LibVLCSharp.Shared.MediaPlayer));
+            videoView.MediaPlayerChanged?.Invoke(videoView, new MediaPlayerChangedEventArgs(oldValue as LibVLCSharp.MediaPlayer, newValue as LibVLCSharp.MediaPlayer));
         }
     }
 }

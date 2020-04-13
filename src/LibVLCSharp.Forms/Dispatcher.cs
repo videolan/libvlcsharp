@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp.MediaPlayerElement;
 using Xamarin.Forms;
 
-namespace LibVLCSharp.Forms.Shared
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Object that provides services for managing the queue of work items for a thread

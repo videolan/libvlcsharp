@@ -1,12 +1,12 @@
 ﻿using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace LibVLCSharp.Forms.Shared
+namespace LibVLCSharp.Forms
 {
     /// <summary>
-    /// Represents an object that uses a <see cref="LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
+    /// Represents an object that uses a <see cref="LibVLCSharp.MediaPlayer"/> to render audio and video to the display.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MediaPlayerElement : ContentView
@@ -27,7 +27,7 @@ namespace LibVLCSharp.Forms.Shared
         public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC),
             typeof(MediaPlayerElement), propertyChanged: LibVLCPropertyChanged);
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// Gets the <see cref="LibVLCSharp.LibVLC"/> instance.
         /// </summary>
         public LibVLC LibVLC
         {
@@ -39,13 +39,13 @@ namespace LibVLCSharp.Forms.Shared
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
-            typeof(LibVLCSharp.Shared.MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
+            typeof(MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
+        /// Gets the <see cref="LibVLCSharp.MediaPlayer"/> instance.
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
+        public MediaPlayer MediaPlayer
         {
-            get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -109,7 +109,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer mediaPlayer)
+        private void OnMediaPlayerChanged(MediaPlayer mediaPlayer)
         {
             var videoView = VideoView;
             if (videoView != null)
@@ -155,7 +155,7 @@ namespace LibVLCSharp.Forms.Shared
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)newValue);
+            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((MediaPlayer)newValue);
         }
 
         private static void PlaybackControlsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -169,7 +169,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Invoked whenever the <see cref="Element.Parent"/> of an element is set. 
+        /// Invoked whenever the <see cref="Element.Parent"/> of an element is set.
         /// Implement this method in order to add behavior when the element is added to a parent.
         /// </summary>
         /// <remarks>Implementors must call the base method.</remarks>

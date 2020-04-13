@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Forms;
 
 #if IOS
 using LibVLCSharp.Forms.Platforms.iOS;
@@ -11,7 +11,7 @@ using Xamarin.Forms.Platform.MacOS;
 using Xamarin.Forms;
 using Foundation;
 
-[assembly: ExportRenderer(typeof(LibVLCSharp.Forms.Shared.VideoView), typeof(VideoViewRenderer))]
+[assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
 #if IOS
 namespace LibVLCSharp.Forms.Platforms.iOS
 #elif MAC
@@ -23,16 +23,16 @@ namespace LibVLCSharp.Forms.Platforms.Mac
     /// </summary>
     [Preserve(AllMembers = true)]
 #if IOS
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
+    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
 #elif MAC
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Mac.VideoView>
+    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.VideoView, LibVLCSharp.Platforms.Mac.VideoView>
 #endif
     {
         /// <summary>
         /// Native control management during lifecycle events
         /// </summary>
         /// <param name="e">lifecycle event</param>
-        protected override void OnElementChanged(ElementChangedEventArgs<LibVLCSharp.Forms.Shared.VideoView> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<VideoView> e)
         {
             base.OnElementChanged(e);
 

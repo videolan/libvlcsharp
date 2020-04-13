@@ -1,4 +1,4 @@
-﻿namespace LibVLCSharp.Forms.Shared
+﻿namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Empty shell used to load the custom renderer assembly

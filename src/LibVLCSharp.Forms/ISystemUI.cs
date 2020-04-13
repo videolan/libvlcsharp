@@ -1,4 +1,4 @@
-﻿namespace LibVLCSharp.Forms.Shared
+﻿namespace LibVLCSharp.Forms
 {
     internal interface ISystemUI
     {

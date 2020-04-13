@@ -1,6 +1,5 @@
 ﻿using Android.Views;
 using LibVLCSharp.Forms.Platforms.Android;
-using LibVLCSharp.Forms.Shared;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PowerManager))]

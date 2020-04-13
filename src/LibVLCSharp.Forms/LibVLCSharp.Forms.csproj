@@ -54,14 +54,14 @@ Xamarin.Forms support for GTK and WPF are in separate packages. LibVLC needs to 
     <Compile Include="Platforms\Apple\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Shared\Resources\Strings.Designer.cs">
+    <Compile Update="Resources\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Shared\Resources\Strings.resx">
+    <EmbeddedResource Update="Resources\Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>

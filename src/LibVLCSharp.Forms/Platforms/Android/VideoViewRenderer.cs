@@ -1,8 +1,7 @@
 ﻿using Android.Content;
 
-using LibVLCSharp.Shared;
+using LibVLCSharp.Forms;
 using LibVLCSharp.Forms.Platforms.Android;
-using LibVLCSharp.Forms.Shared;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -13,7 +12,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
     /// <summary>
     /// Xamarin.Forms custom renderer for the Android VideoView
     /// </summary>
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Android.VideoView>
+    public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.Platforms.Android.VideoView>
     {
         /// <summary>
         /// Main constructor (empty)
@@ -48,7 +47,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
             if (e.OldElement != null)
             {
                 e.OldElement.MediaPlayerChanging -= OnMediaPlayerChanging;
-            }            
+            }
         }
 
         private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
