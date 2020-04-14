@@ -166,6 +166,16 @@ namespace LibVLCSharp.Shared
         {
         }
 
+        /// <summary>
+        /// Media Constructs a libvlc Media instance
+        /// </summary>
+        /// <param name="libVLC">A libvlc instance</param>
+        /// <param name="uri">The absolute URI of the resource.</param>
+        public Media(LibVLC libVLC, Uri uri)
+            : base(() => SelectNativeCtor(libVLC, uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation), Native.LibVLCMediaRelease)
+        {
+        }
+
         static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
         {
             if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));

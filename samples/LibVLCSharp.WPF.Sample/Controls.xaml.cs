@@ -1,5 +1,5 @@
 ﻿using LibVLCSharp.Shared;
-
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -43,8 +43,8 @@ namespace LibVLCSharp.WPF.Sample
         {
             if (!parent.VideoView.MediaPlayer.IsPlaying)
             {
-                parent.VideoView.MediaPlayer.Play(new Media(_libVLC,
-                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+                var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
+                parent.VideoView.MediaPlayer.Play(new Media(_libVLC, uri));
             }
         }
     }
