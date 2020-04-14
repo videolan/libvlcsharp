@@ -12,7 +12,7 @@ namespace LibVLCSharp.Mac.Sample
     {
         VideoView _videoView;
         LibVLC _libVLC;
-        Shared.MediaPlayer _mediaPlayer;
+        MediaPlayer _mediaPlayer;
 
         public ViewController(IntPtr handle) : base(handle)
         {
@@ -25,7 +25,7 @@ namespace LibVLCSharp.Mac.Sample
             Core.Initialize();
 
             _libVLC = new LibVLC();
-            _mediaPlayer = new Shared.MediaPlayer(_libVLC);
+            _mediaPlayer = new MediaPlayer(_libVLC);
 
             _videoView = new VideoView { MediaPlayer = _mediaPlayer };
 

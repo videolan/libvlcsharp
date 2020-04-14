@@ -22,7 +22,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 
         private LibVLC _libVLC;
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// Gets the <see cref="LibVLCSharp.LibVLC"/> instance.
         /// </summary>
         public LibVLC LibVLC
         {
@@ -32,7 +32,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 
         private MediaPlayer _mediaPlayer;
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
+        /// Gets the <see cref="LibVLCSharp.MediaPlayer"/> instance.
         /// </summary>
         public MediaPlayer MediaPlayer
         {

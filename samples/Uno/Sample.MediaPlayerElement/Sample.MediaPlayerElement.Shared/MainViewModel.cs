@@ -39,7 +39,7 @@ namespace Sample.MediaPlayerElement
 
         private LibVLC _libVLC;
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance
+        /// Gets the <see cref="LibVLCSharp.LibVLC"/> instance
         /// </summary>
         public LibVLC LibVLC
         {
@@ -61,11 +61,11 @@ namespace Sample.MediaPlayerElement
             }
         }
 
-        private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
+        private LibVLCSharp.MediaPlayer _mediaPlayer;
         /// <summary>
         /// Gets the media player
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
+        public LibVLCSharp.MediaPlayer MediaPlayer
         {
             get => IsSuspended ? null : _mediaPlayer;
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
@@ -83,7 +83,7 @@ namespace Sample.MediaPlayerElement
         private void Initialize(string[] swapChainOptions)
         {
             LibVLC = new LibVLC(swapChainOptions);
-            MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
+            MediaPlayer = new LibVLCSharp.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
         }

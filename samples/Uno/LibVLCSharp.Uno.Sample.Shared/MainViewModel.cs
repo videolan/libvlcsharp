@@ -38,11 +38,11 @@ namespace LibVLCSharp.Uno.Sample
 
         private LibVLC LibVLC { get; set; }
 
-        private Shared.MediaPlayer _mediaPlayer;
+        private MediaPlayer _mediaPlayer;
         /// <summary>
         /// Gets the media player
         /// </summary>
-        public Shared.MediaPlayer MediaPlayer
+        public MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
@@ -60,7 +60,7 @@ namespace LibVLCSharp.Uno.Sample
         private void Initialize(string[] swapChainOptions)
         {
             LibVLC = new LibVLC(swapChainOptions);
-            MediaPlayer = new Shared.MediaPlayer(LibVLC);
+            MediaPlayer = new MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
         }

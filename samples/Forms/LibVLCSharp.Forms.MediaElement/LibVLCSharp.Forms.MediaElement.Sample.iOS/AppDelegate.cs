@@ -1,6 +1,6 @@
 ﻿using Foundation;
 using LibVLCSharp.Forms.Sample.MediaPlayerElement;
-using LibVLCSharp.Forms.Shared;
+using LibVLCSharp.Forms;
 using UIKit;
 
 namespace LibVLCSharp.Forms.MediaElement.Sample.iOS

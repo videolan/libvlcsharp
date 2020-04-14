@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp;
 using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Sample
