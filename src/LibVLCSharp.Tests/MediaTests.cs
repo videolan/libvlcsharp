@@ -20,10 +20,19 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void CreateMediaFromUri()
+        {
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute));
+            Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
+        }
+
+        [Test]
         public void CreateMediaFail()
         {
             Assert.Throws<ArgumentNullException>(() => new Media(null, Path.GetTempFileName()));
             Assert.Throws<ArgumentNullException>(() => new Media(_libVLC, string.Empty));
+            Assert.Throws<InvalidOperationException>(() => new Media(_libVLC, new Uri("/hello.mp4", UriKind.Relative)));
+            Assert.Throws<ArgumentNullException>(() => new Media(_libVLC, uri: null));
         }
 
         [Test]
@@ -58,6 +67,22 @@ namespace LibVLCSharp.Tests
         public async Task CreateRealMedia()
         {
             using (var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation))
+            {
+                Assert.NotZero(media.Duration);
+                using (var mp = new MediaPlayer(media))
+                {
+                    Assert.True(mp.Play());
+                    await Task.Delay(4000); // have to wait a bit for statistics to populate
+                    Assert.Greater(media.Statistics.DemuxBitrate, 0);
+                    mp.Stop();
+                }
+            }
+        }
+
+        [Test]
+        public async Task CreateRealMediaFromUri()
+        {
+            using (var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute)))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
