@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:shared="clr-namespace:LibVLCSharp.Forms.Shared;assembly=LibVLCSharp.Forms"
+             xmlns:shared="clr-namespace:LibVLCSharp.Forms;assembly=LibVLCSharp.Forms"
              xmlns:local="clr-namespace:LibVLCSharp.Forms.Sample"
              x:Class="LibVLCSharp.Forms.Sample.MainPage">
     <ContentPage.BindingContext>
         <local:MainViewModel />
     </ContentPage.BindingContext>
-    
+
     <shared:VideoView MediaPlayer="{Binding MediaPlayer}" MediaPlayerChanged="VideoView_MediaPlayerChanged" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
 </ContentPage>

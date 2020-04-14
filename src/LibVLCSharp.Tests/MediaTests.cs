@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests

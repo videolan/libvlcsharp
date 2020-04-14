@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests

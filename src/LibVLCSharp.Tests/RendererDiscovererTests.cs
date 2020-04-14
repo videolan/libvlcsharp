@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using NUnit.Framework;
 using static System.Diagnostics.Debug;
 using Assert = NUnit.Framework.Assert;

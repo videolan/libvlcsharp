@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests
