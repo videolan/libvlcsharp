@@ -11,7 +11,7 @@ namespace LibVLCSharp.Forms.Sample
 
         public MainViewModel()
         {
-            Task.Run((Action)Initialize);
+            Initialize();
         }
 
         private LibVLC LibVLC { get; set; }
