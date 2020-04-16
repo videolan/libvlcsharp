@@ -14,7 +14,8 @@ var packagesDir = "../packages";
 //////////////////////////////////////////////////////////////////////
 
 // Define directories.
-var buildDir = Directory("./build") + Directory(configuration);
+var artifacts = Directory("./build") + Directory(configuration);
+var builds = "../src/**/bin/Release/*.nupkg";
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -23,8 +24,8 @@ var buildDir = Directory("./build") + Directory(configuration);
 Task("Clean")
     .Does(() =>
 {
-    DeleteFiles("./**/bin/Release/*.nupkg");
-    CleanDirectory(buildDir);
+    DeleteFiles(builds);
+    CleanDirectory(artifacts);
     if(DirectoryExists(packagesDir))
     {
         DeleteDirectory(packagesDir, new DeleteDirectorySettings 
@@ -56,14 +57,14 @@ Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
 {
-    MSBuild(solutionPath, settings => settings.SetConfiguration(configuration));
+    MSBuild(solutionPath, settings => settings.SetConfiguration(configuration));    
 });
 
 Task("CopyNugets")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    CopyFiles(GetFiles("./**/bin/Release/*.nupkg"), buildDir);
+    CopyFiles(GetFiles(builds), artifacts);
 });
 
 //////////////////////////////////////////////////////////////////////
