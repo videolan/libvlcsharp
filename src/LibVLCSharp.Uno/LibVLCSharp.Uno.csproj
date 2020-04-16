@@ -5,7 +5,7 @@
     <Summary>Uno integration for LibVLCSharp</Summary>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TargetFrameworks>xamarinios10;monoandroid81</TargetFrameworks>
+    <TargetFrameworks>Xamarin.iOS10;MonoAndroid81</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Authors>VideoLAN</Authors>
@@ -57,20 +57,23 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.Android.xaml" />
     <None Include="**\*.iOS.xaml" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios')) or $(TargetFramework.StartsWith('monoandroid'))">
-    <PackageReference Include="Uno.UI" Version="2.0.532" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS')) or $(TargetFramework.StartsWith('MonoAndroid'))">
+    <PackageReference Include="Uno.UI" Version="2.0.527" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="**\*.UWP.*cs" />
     <Page Include="**\*.UWP.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('monoandroid'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" />
     <Compile Include="**\*.Android.*cs" />
     <Page Include="**\*.Android.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarinios'))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
     <Compile Include="**\*.iOS.*cs" />
     <Page Include="**\*.iOS.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
+  <Target Name="_BeforeGenerateProjectPriFileCore" BeforeTargets="_GenerateProjectPriFileCore" Condition=" '$(Configuration)'=='Release' ">
+    <Copy SourceFiles="$(ProjectDir)\filtered.layout.resfiles" DestinationFolder="$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework)" />
+  </Target>
 </Project>

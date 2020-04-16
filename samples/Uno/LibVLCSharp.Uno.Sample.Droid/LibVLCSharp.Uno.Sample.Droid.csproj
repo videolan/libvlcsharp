@@ -65,9 +65,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="2.0.512-dev.4178" />
+    <PackageReference Include="Uno.UI" Version="2.0.527" />
     <PackageReference Include="VideoLAN.LibVLC.Android">
-      <Version>3.1.2.1</Version>
+      <Version>3.2.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
