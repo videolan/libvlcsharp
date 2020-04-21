@@ -193,7 +193,7 @@ This document details how to use LibVLCSharp in a correct way, notably taking in
 
 This is a Q&A document which I compiled from all the questions I got asked regarding LibVLC and LibVLCSharp. Continously updated.
 
-### [Troubleshooting issues](docs/debugging.md)
+### [Troubleshooting issues](docs/troubleshooting.md)
 
 When you encounter an issue with LibVLC/LibVLCSharp, identifying the cause is not always straightforward. This document gives you clues on how to go about it.
 
