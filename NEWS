@@ -1,4 +1,13 @@
+LibVLCSharp version 3.4.4
+=========================
+* Core: Improve LibVLC loading error messages
+* Core: Remove dead Unity code
+* Core: Bring back C#8 support, nullables, .netstandard2.1 target. Work by @jeremyVignelles, users need an up to date Xamarin.Android build otherwise their linker will freeze. https://code.videolan.org/videolan/LibVLCSharp/-/issues/78
+* Core: Add new constructor to media that accepts a URI, by new contributor @mhmd_azeez https://code.videolan.org/videolan/LibVLCSharp/-/merge_requests/12
+* Uno.UWP: Customize LibVLCSharp.Uno.pri file generation by @kakone, fixes Uno UWP support https://code.videolan.org/videolan/LibVLCSharp/-/issues/294
+
 LibVLCSharp version 3.4.3
+=========================
 * Fix build for older C# compilers
 * Centralize and simplify static callbacks management, and introduce new Media constructor with MediaInput abstraction https://github.com/videolan/libvlcsharp/pull/87
 * Always load libcpp on Android https://github.com/videolan/libvlcsharp/pull/92
