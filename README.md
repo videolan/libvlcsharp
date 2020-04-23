@@ -226,13 +226,13 @@ Feel free to suggest and contribute new samples.
 
 ## Quick API overview
 
-- [`LibVLC.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code.
-- [`MediaPlayer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView` with data-binding support.
-- [`Media.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
+- [`LibVLC.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code.
+- [`MediaPlayer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView` with data-binding support.
+- [`Media.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/Media.cs): Class representing and providing information about a media such as a video or audio file or stream.
 - `VideoView.cs`: Custom native view which holds a `MediaPlayer` object.
-- [`MediaDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/MediaDiscoverer.cs): This object should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
-- [`RendererDiscoverer.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
-- [`Dialog.cs`](https://github.com/videolan/libvlcsharp/blob/master/LibVLCSharp/Shared/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
+- [`MediaDiscoverer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/MediaDiscoverer.cs): This object should be used to find media on NAS and any SMB/UPnP-enabled device on your local network.
+- [`RendererDiscoverer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
+- [`Dialog.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
 The [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md) package features a `MediaPlayerElement` Xamarin.Forms control, similar to the ones provided by the .NET Framework on WPF and UWP. It currently supports iOS and Android.
 
