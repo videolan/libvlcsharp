@@ -26,7 +26,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp/tree/master/LibVLCSharp.GTK</RepositoryUrl>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;gtk-sharp;linux;windows;cross-platform</PackageTags>

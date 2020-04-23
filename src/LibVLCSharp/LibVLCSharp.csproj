@@ -46,7 +46,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp/tree/master/LibVLCSharp</RepositoryUrl>
+    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>

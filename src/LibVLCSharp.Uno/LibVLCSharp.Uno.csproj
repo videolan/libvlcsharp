@@ -16,7 +16,6 @@
 
 It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iOS)</Description>
     <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;mediaelement;mediaplayerelement;codec;ffmpeg;graphics;ios;android;windows;cross-platform;uno</PackageTags>
-    <PackageProjectUrl>https://code.videolan.org/videolan/LibVLCSharp</PackageProjectUrl>
     <RootNamespace>LibVLCSharp.Uno</RootNamespace>
     <PackageId>LibVLCSharp.Uno</PackageId>
     <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
