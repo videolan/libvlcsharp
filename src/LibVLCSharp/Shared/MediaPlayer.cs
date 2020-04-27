@@ -865,14 +865,10 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public VLCState State => Native.LibVLCMediaPlayerGetState(NativeReference);
 
-        float _fps;
         /// <summary>
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
-        public float Fps
-        {
-            get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
-        }
+        public float Fps => Native.LibVLCMediaPlayerGetFps(NativeReference);
 
         /// <summary>
         /// Get the number of video outputs
