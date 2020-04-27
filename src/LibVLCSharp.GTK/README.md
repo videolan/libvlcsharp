@@ -46,4 +46,4 @@ You can also create a true cross-platform application with Xamarin.Forms, and us
 In that case, you would need the [LibVLCSharp.Forms.Platforms.GTK](../LibVLCSharp.Forms.Platforms.GTK) package instead,
 which internally references this one.
 
-For other platforms, see the [main documentation](../README.md)
+For other platforms, see the [main documentation](../../README.md)

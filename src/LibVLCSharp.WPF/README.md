@@ -65,4 +65,4 @@ If you want to create a video application using WPF and any supported .NET langu
 You can also create a true cross-platform application with Xamarin.Forms, and use the WPF backend.
 In that case, you would need the [LibVLCSharp.Forms.Platforms.WPF](../LibVLCSharp.Forms.Platforms.WPF) package instead, which internally references this one.
 
-For other platforms, see the [main documentation](../README.md).
+For other platforms, see the [main documentation](../../README.md).

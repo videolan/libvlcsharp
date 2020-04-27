@@ -25,10 +25,10 @@ NOTE: This package does not currently support WebAssembly on Uno! It will when l
 
 ## Getting started
 
-The best way to get started is to clone this repository and start one of the [Uno samples](../Samples/Uno).
+The best way to get started is to clone this repository and start one of the [Uno samples](../../samples/Uno).
 
 ## Why should I reference this package in my project?
 
 If you want to create a video application using the Uno Platform and the power of VLC, this package is made for you.
 
-For other platforms, see the [main documentation](../README.md).
+For other platforms, see the [main documentation](../../README.md).

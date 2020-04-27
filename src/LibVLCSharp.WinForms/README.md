@@ -23,4 +23,4 @@ Supported platform:
 
 If you want to create a video application using Windows Forms and any supported .NET language, this package is made for you.
 
-For other platforms, see the [main documentation](../README.md).
+For other platforms, see the [main documentation](../../README.md).
