@@ -966,6 +966,7 @@ namespace LibVLCSharp.Shared
             Module = module;
             SourceFile = sourceFile;
             SourceLine = sourceLine;
+            FormattedLog = $"{module} {level}: {message}";
         }
 
         /// <summary>
@@ -995,5 +996,10 @@ namespace LibVLCSharp.Shared
         /// This may be <see langword="null"/> if that info is not available, i.e. always if you are using a release version of VLC.
         /// </summary>
         public uint? SourceLine { get; }
+
+        /// <summary>
+        /// Helper property with already formatted log message
+        /// </summary>
+        public string FormattedLog { get; }
     }
 }
