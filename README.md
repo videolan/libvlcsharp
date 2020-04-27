@@ -55,7 +55,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 
 ### MediaPlayerElement
 
-Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android).
+Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android) and Uno platform (iOS/Android/UWP).
 
 <h3 align="center">
   <img src="src/assets/media-element.png"/>
