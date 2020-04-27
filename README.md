@@ -104,16 +104,16 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 
 | Platform          | LibVLCSharp Package                             | NuGet                                             |
 | ----------------- | ----------------------------------------------- | ------------------------------------------------- |
-| .NET Standard     | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Android   | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.iOS       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.tvOS      | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Mac       | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| UWP               | [LibVLCSharp](LibVLCSharp/README.md)            | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| Xamarin.Forms     | [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md)| [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
-| WPF               | [LibVLCSharp.WPF](LibVLCSharp.WPF/README.md)    | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
+| .NET Standard     | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Android   | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.iOS       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.tvOS      | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Mac       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| UWP               | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| Xamarin.Forms     | [LibVLCSharp.Forms][RLibVLCSharpForms]          | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
+| WPF               | [LibVLCSharp.WPF][RLibVLCSharpWPF]              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
 | Xamarin.Forms.WPF | [LibVLCSharp.Forms.WPF][RLibVLCSharpFormsWPF]   | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
-| GTK               | [LibVLCSharp.GTK](LibVLCSharp.GTK/README.md)    | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
+| GTK               | [LibVLCSharp.GTK][RLibVLCSharpGTK]              | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
 | Xamarin.Forms.GTK | [LibVLCSharp.Forms.GTK][RLibVLCSharpFormsGTK]   | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
@@ -121,10 +121,13 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
 
-[RLibVLCSharpFormsWPF]: LibVLCSharp.Forms.Platforms.WPF/README.md
-[RLibVLCSharpFormsGTK]: LibVLCSharp.Forms.Platforms.GTK/README.md
-[RLibVLCSharpWinForms]: LibVLCSharp.WinForms/README.md
-[RLibVLCSharpUno]: LibVLCSharp.Uno/README.md
+[RLibVLCSharpForms]: src/LibVLCSharp.Forms/README.md
+[RLibVLCSharpWPF]: src/LibVLCSharp.WPF/README.md
+[RLibVLCSharpFormsWPF]: src/LibVLCSharp.Forms.Platforms.WPF/README.md
+[RLibVLCSharpGTK]: src/LibVLCSharp.GTK/README.md
+[RLibVLCSharpFormsGTK]: src/LibVLCSharp.Forms.Platforms.GTK/README.md
+[RLibVLCSharpWinForms]: src/LibVLCSharp.WinForms/README.md
+[RLibVLCSharpUno]: src/LibVLCSharp.Uno/README.md
 [RVLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
@@ -233,7 +236,7 @@ Feel free to suggest and contribute new samples.
 - [`RendererDiscoverer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
 - [`Dialog.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
-The [LibVLCSharp.Forms](LibVLCSharp.Forms/README.md) package features a `MediaPlayerElement` Xamarin.Forms control, similar to the ones provided by the .NET Framework on WPF and UWP. It currently supports iOS and Android.
+The [LibVLCSharp.Forms](src/LibVLCSharp.Forms/README.md) and [Uno](src/LibVLCSharp.Uno/README.md) packages features a `MediaPlayerElement` control, similar to the ones provided by the .NET Framework on WPF and UWP. It currently supports iOS, Android and UWP (Uno only).
 
 ## Roadmap
 
