@@ -187,12 +187,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_player_get_state")]
             internal static extern VLCState LibVLCMediaPlayerGetState(IntPtr mediaPlayer);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_get_fps")]
-            internal static extern float LibVLCMediaPlayerGetFps(IntPtr mediaPlayer);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_has_vout")]
             internal static extern uint LibVLCMediaPlayerHasVout(IntPtr mediaPlayer);
@@ -876,15 +870,6 @@ namespace LibVLCSharp
         /// Get the current state of the media player (playing, paused, ...)
         /// </summary>
         public VLCState State => Native.LibVLCMediaPlayerGetState(NativeReference);
-
-        float _fps;
-        /// <summary>
-        /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
-        /// </summary>
-        public float Fps
-        {
-            get { _fps = Native.LibVLCMediaPlayerGetFps(NativeReference); return _fps; }
-        }
 
         /// <summary>
         /// Get the number of video outputs
