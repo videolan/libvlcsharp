@@ -130,8 +130,18 @@ See https://code.videolan.org/videolan/LibVLCSharp/blob/3.x/LibVLCSharp/Shared/M
 MediaPlayer.SetRate(float rate)
 ```
 
-# How do I turn deinterlacing on/off?
+# How do I change deblocking filter settings?
 
+```csharp
+new LibVLC("--avcodec-skiploopfilter=2")
+```
+```
+ --avcodec-skiploopfilter={0 (None), 1 (Non-ref), 2 (Bidir), 3 (Non-key), 4 (All)} 
+                                 Skip the loop filter for H.264 decoding
+          Skipping the loop filter (aka deblocking) usually has a detrimental
+          effect on quality. However it provides a big speedup for high
+          definition streams.
+```
 # How do I take a snapshot of the video?
 
 ```csharp
@@ -139,3 +149,36 @@ MediaPlayer.TakeSnapshot(uint num, string? filePath, uint width, uint height)
 ```
 
 # How do I enable loopback playback?
+
+```csharp
+new LibVLC("--input-repeat=2")
+```
+https://stackoverflow.com/questions/56487740/how-to-achieve-looping-playback-with-libvlcsharp
+
+# How do I retrieve Video/Audio/Subtitle track information?
+
+```csharp
+using var libVLC = new LibVLC();
+using var media = new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
+
+await media.Parse(MediaParseOptions.ParseNetwork);
+
+foreach(var track in media.Tracks)
+{
+    switch(track.TrackType)
+    {
+        case TrackType.Audio:
+            Debug.WriteLine("Audio track");
+            Debug.WriteLine($"{nameof(track.Data.Audio.Channels)}: {track.Data.Audio.Channels}");
+            Debug.WriteLine($"{nameof(track.Data.Audio.Rate)}: {track.Data.Audio.Rate}");
+            break;
+        case TrackType.Video:
+            Debug.WriteLine("Video track");
+            Debug.WriteLine($"{nameof(track.Data.Video.FrameRateNum)}: {track.Data.Video.FrameRateNum}");
+            Debug.WriteLine($"{nameof(track.Data.Video.FrameRateDen)}: {track.Data.Video.FrameRateDen}");
+            Debug.WriteLine($"{nameof(track.Data.Video.Height)}: {track.Data.Video.Height}");
+            Debug.WriteLine($"{nameof(track.Data.Video.Width)}: {track.Data.Video.Width}");
+            break;
+    }
+}
+```
