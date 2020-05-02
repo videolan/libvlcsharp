@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vlc="using:LibVLCSharp.Uno">
@@ -368,6 +368,10 @@
                             <VisualStateGroup x:Name="ControlPanelVisibilityStates">
                                 <VisualState x:Name="ControlPanelFadeIn">
                                     <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																	   Storyboard.TargetName="ControlPanel_ControlPanelVisibilityStates_Border">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
 														 Storyboard.TargetName="ControlPanelGrid"
 														 From="50" To="0.5" Duration="0:0:0.3" />
@@ -388,6 +392,10 @@
                                         <DoubleAnimation Storyboard.TargetProperty="Opacity"
 														 Storyboard.TargetName="ControlPanel_ControlPanelVisibilityStates_Border"
 														 From="1" To="0" Duration="0:0:0.7" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+																	   Storyboard.TargetName="ControlPanel_ControlPanelVisibilityStates_Border">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="Collapsed" />
+                                        </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -452,7 +460,7 @@
                             <!--Seek bar visibility states-->
                             <VisualStateGroup x:Name="SeekBarAvailablityStates">
                                 <VisualState x:Name="SeekBarAvailable" />
-                                <VisualState x:Name="SeekBarUnvailable">
+                                <VisualState x:Name="SeekBarUnavailable">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProgressSlider"
                                                                        Storyboard.TargetProperty="Visibility">
