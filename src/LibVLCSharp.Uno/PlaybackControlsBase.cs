@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FontAwesome;
@@ -696,16 +696,27 @@ namespace LibVLCSharp.Uno
 
         private void AspectRatioMenuItemClick(AspectRatio aspectRatio)
         {
-            Manager.Get<AspectRatioManager>().AspectRatio = aspectRatio;
+            var aspectRatioManager = Manager.Get<AspectRatioManager>();
+            var currentAspectRatio = aspectRatioManager.AspectRatio;
+            aspectRatioManager.AspectRatio = aspectRatio;
+            if (currentAspectRatio == aspectRatio)
+            {
+                // To prevent the menu item from being unchecked
+                UpdateZoomMenu(aspectRatio);
+            }
+        }
+
+        private void UpdateZoomMenu(AspectRatio aspectRatio)
+        {
+            if (ZoomMenu != null)
+            {
+                CheckMenuItem(ZoomMenu, ZoomMenu.Items.OfType<ToggleMenuFlyoutItem>().First(i => (AspectRatio)i.CommandParameter == aspectRatio));
+            }
         }
 
         private void AspectRatioChanged(object sender, EventArgs e)
         {
-            if (ZoomMenu != null)
-            {
-                var aspectRatio = ((AspectRatioManager)sender).AspectRatio;
-                CheckMenuItem(ZoomMenu, ZoomMenu.Items.OfType<ToggleMenuFlyoutItem>().First(i => (AspectRatio)i.CommandParameter == aspectRatio));
-            }
+            UpdateZoomMenu(((AspectRatioManager)sender).AspectRatio);
         }
 
         private void Flyout_Opened(object sender, object e)
