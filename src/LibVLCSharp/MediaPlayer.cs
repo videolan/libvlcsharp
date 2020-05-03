@@ -452,7 +452,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_full_chapter_descriptions")]
-            internal static extern int LibVLCMediaPlayerGetFullChapterDescriptions(IntPtr mediaPlayer, int titleIndex, ref IntPtr chapters);
+            internal static extern int LibVLCMediaPlayerGetFullChapterDescriptions(IntPtr mediaPlayer, int titleIndex, out IntPtr chapters);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1444,6 +1444,22 @@ namespace LibVLCSharp
             t => t.Build(),
             t => t.Next,
             Native.LibVLCTrackDescriptionListRelease);
+
+        /// <summary>
+        /// Get the full description of available chapters.
+        /// </summary>
+        /// <param name="titleIndex">Index of the title to query for chapters (uses current title if set to -1)</param>
+        /// <returns>Array of chapter descriptions.</returns>
+        public ChapterDescription[] FullChapterDescriptions(int titleIndex = -1) => MarshalUtils.Retrieve(NativeReference,
+            (IntPtr nativeRef, out IntPtr array) =>
+            {
+                var count = Native.LibVLCMediaPlayerGetFullChapterDescriptions(nativeRef, titleIndex, out array);
+                // the number of chapters (-1 on error)
+                return count < 0 ? 0 : (uint)count;
+            },
+            MarshalUtils.PtrToStructure<ChapterDescriptionStructure>,
+            t => t.Build(),
+            Native.LibVLCChapterDescriptionsRelease);
 
         /// <summary>
         /// Get the description of available chapters for specific title.

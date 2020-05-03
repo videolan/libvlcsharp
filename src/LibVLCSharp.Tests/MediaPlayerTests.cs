@@ -49,6 +49,26 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public async Task ChapterDescriptions()
+        {
+            var mp = new MediaPlayer(_libVLC);
+            var media = new Media(_libVLC, "https://auphonic.com/media/blog/auphonic_chapters_demo.m4a", FromType.FromLocation);
+            var tcs = new TaskCompletionSource<bool>();
+
+            mp.Media = media;
+            mp.Play();
+            mp.Playing += (sender, args) =>
+            {
+                var chapters = mp.FullChapterDescriptions(-1);
+                Assert.IsNotEmpty(chapters);
+                Assert.AreEqual(chapters.Length, mp.ChapterCount);
+                tcs.SetResult(true);
+            };
+            await tcs.Task;
+            Assert.True(tcs.Task.Result);
+        }
+
+        [Test]
         public async Task Play()
         {
             var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
