@@ -43,6 +43,14 @@ namespace LibVLCSharp.Shared.Helpers
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
+        /// <param name="s">ChapterDescriptionStructure from interop</param>
+        /// <returns>public ChapterDescription to be consumed by the user</returns>
+        internal static ChapterDescription Build(this ChapterDescriptionStructure s) =>
+            new ChapterDescription(s.TimeOffset, s.Duration, s.Name.FromUtf8());
+
+        /// <summary>
+        /// Helper method that creates a user friendly type from the internal interop structure.
+        /// </summary>
         /// <param name="s">MediaSlaveStructure from interop</param>
         /// <returns>public MediaSlave to be consumed by the user</returns>
         internal static MediaSlave Build(this MediaSlaveStructure s) => 
