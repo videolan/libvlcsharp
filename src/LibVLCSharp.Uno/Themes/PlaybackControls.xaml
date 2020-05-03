@@ -503,15 +503,15 @@
                             </VisualStateGroup>
                             <!--Zoom button visibility states-->
                             <VisualStateGroup x:Name="ZoomAvailablityStates">
-                                <VisualState x:Name="ZoomAvailable">
+                                <VisualState x:Name="ZoomAvailable" />
+                                <VisualState x:Name="ZoomUnavailable">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ZoomButton"
                                                                        Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="ZoomUnavailable" />
                             </VisualStateGroup>
                             <!--Cast button visibility states-->
                             <VisualStateGroup x:Name="CastAvailablityStates">
