@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace LibVLCSharp.MediaPlayerElement
@@ -27,13 +27,13 @@ namespace LibVLCSharp.MediaPlayerElement
 
         private IDisplayInformation DisplayInformation { get; }
 
-        private AspectRatio _aspectRatio = AspectRatio.BestFit;
+        private AspectRatio? _aspectRatio = null;
         /// <summary>
         /// Gets the aspect ratio
         /// </summary>
         public AspectRatio AspectRatio
         {
-            get => _aspectRatio;
+            get => _aspectRatio ?? AspectRatio.BestFit;
             set { UpdateAspectRatio(value); }
         }
 
@@ -114,11 +114,11 @@ namespace LibVLCSharp.MediaPlayerElement
             return orientation == VideoOrientation.LeftBottom || orientation == VideoOrientation.RightTop;
         }
 
-        private AspectRatio GetAspectRatio(MediaPlayer? mediaPlayer)
+        private AspectRatio? GetAspectRatio(MediaPlayer? mediaPlayer)
         {
             if (mediaPlayer == null)
             {
-                return AspectRatio.BestFit;
+                return null;
             }
 
             var aspectRatio = mediaPlayer.AspectRatio;
@@ -133,7 +133,11 @@ namespace LibVLCSharp.MediaPlayerElement
             var videoView = VideoView;
             if (aspectRatio == null)
             {
-                aspectRatio = GetAspectRatio(mediaPlayer);
+                aspectRatio = _aspectRatio ?? GetAspectRatio(mediaPlayer);
+                if (aspectRatio == null)
+                {
+                    return;
+                }
             }
             if (videoView != null && mediaPlayer != null)
             {
@@ -167,20 +171,27 @@ namespace LibVLCSharp.MediaPlayerElement
                         var videoSwapped = IsVideoSwapped(track);
                         var videoWidth = videoSwapped ? track.Height : track.Width;
                         var videoHeigth = videoSwapped ? track.Width : track.Height;
-                        if (track.SarNum != track.SarDen)
+                        if (videoWidth == 0 || videoHeigth == 0)
                         {
-                            videoWidth = videoWidth * track.SarNum / track.SarDen;
+                            mediaPlayer.Scale = 0;
                         }
+                        else
+                        {
+                            if (track.SarNum != track.SarDen)
+                            {
+                                videoWidth = videoWidth * track.SarNum / track.SarDen;
+                            }
 
-                        var ar = videoWidth / (double)videoHeigth;
-                        var videoViewWidth = videoView.Width;
-                        var videoViewHeight = videoView.Height;
-                        var dar = videoViewWidth / videoViewHeight;
+                            var ar = videoWidth / (double)videoHeigth;
+                            var videoViewWidth = videoView.Width;
+                            var videoViewHeight = videoView.Height;
+                            var dar = videoViewWidth / videoViewHeight;
 
-                        var rawPixelsPerViewPixel = DisplayInformation.ScalingFactor;
-                        var displayWidth = videoViewWidth * rawPixelsPerViewPixel;
-                        var displayHeight = videoViewHeight * rawPixelsPerViewPixel;
-                        mediaPlayer.Scale = (float)(dar >= ar ? (displayWidth / videoWidth) : (displayHeight / videoHeigth));
+                            var rawPixelsPerViewPixel = DisplayInformation.ScalingFactor;
+                            var displayWidth = videoViewWidth * rawPixelsPerViewPixel;
+                            var displayHeight = videoViewHeight * rawPixelsPerViewPixel;
+                            mediaPlayer.Scale = (float)(dar >= ar ? (displayWidth / videoWidth) : (displayHeight / videoHeigth));
+                        }
                         mediaPlayer.AspectRatio = null;
                         break;
                     case AspectRatio._16_9:
@@ -196,7 +207,7 @@ namespace LibVLCSharp.MediaPlayerElement
 
             if (_aspectRatio != aspectRatio)
             {
-                _aspectRatio = (AspectRatio)aspectRatio;
+                _aspectRatio = aspectRatio;
                 AspectRatioChanged?.Invoke(this, EventArgs.Empty);
             }
         }
