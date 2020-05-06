@@ -152,14 +152,25 @@ namespace LibVLCSharp
             internal static extern IntPtr LibvlcMediaGetCodecDescription(TrackType type, uint codec);
         }
 
+        Media(Func<IntPtr> create, Action<IntPtr> release, params string[] options)
+            : base(create, release)
+        {
+            if(options == null) return;
+
+            foreach(var optionUtf8 in options.ToUtf8())
+                if(optionUtf8 != IntPtr.Zero)
+                    MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
+        }
+
         /// <summary>
         /// Media Constructs a libvlc Media instance
         /// </summary>
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument.</param>
-        public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath)
-            : base(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease)
+        /// <param name="options">the libvlc options</param>
+        public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath, params string[] options)
+            : this(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, options)
         {
         }
 
@@ -168,15 +179,71 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="uri">The absolute URI of the resource.</param>
-        public Media(LibVLC libVLC, Uri uri)
-            : base(() => SelectNativeCtor(libVLC, uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation), Native.LibVLCMediaRelease)
+        /// <param name="options">the libvlc options</param>
+        public Media(LibVLC libVLC, Uri uri, params string[] options)
+            : this(() => SelectNativeCtor(libVLC, uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation),
+                  Native.LibVLCMediaRelease,
+                  options)
+        {
+        }
+
+        /// <summary>
+        /// Create a media for an already open file descriptor.
+        /// The file descriptor shall be open for reading(or reading and writing).
+        ///
+        /// Regular file descriptors, pipe read descriptors and character device
+        /// descriptors(including TTYs) are supported on all platforms.
+        /// Block device descriptors are supported where available.
+        /// Directory descriptors are supported on systems that provide fdopendir().
+        /// Sockets are supported on all platforms where they are file descriptors,
+        /// i.e.all except Windows.
+        ///
+        /// \note This library will <b>not</b> automatically close the file descriptor
+        /// under any circumstance.Nevertheless, a file descriptor can usually only be
+        /// rendered once in a media player.To render it a second time, the file
+        /// descriptor should probably be rewound to the beginning with lseek().
+        /// </summary>
+        /// <param name="libVLC">A libvlc instance</param>
+        /// <param name="fd">open file descriptor</param>
+        /// <param name="options">the libvlc options</param>
+        public Media(LibVLC libVLC, int fd, params string[] options)
+            : this(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease, options)
+        {
+        }
+
+        /// <summary>
+        /// Create a media from a media list
+        /// </summary>
+        /// <param name="mediaList">media list to create media from</param>
+        public Media(MediaList mediaList)
+            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
+        {
+        }
+
+        /// <summary>
+        /// Create a media from a MediaInput
+        /// requires libvlc 3.0 or higher
+        /// </summary>
+        /// <param name="libVLC">the libvlc instance</param>
+        /// <param name="input">the media to be used by libvlc. LibVLCSharp will NOT dispose or close it.
+        /// Use <see cref="StreamMediaInput"/> or implement your own.</param>
+        /// <param name="options">the libvlc options</param>
+        public Media(LibVLC libVLC, MediaInput input, params string[] options)
+            : this(() => CtorFromInput(libVLC, input), Native.LibVLCMediaRelease, options)
+        {
+        }
+
+        internal Media(IntPtr mediaPtr)
+            : base(() => mediaPtr, Native.LibVLCMediaRelease)
         {
         }
 
         static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
         {
-            if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
-            if (string.IsNullOrEmpty(mrl)) throw new ArgumentNullException(nameof(mrl));
+            if (libVLC == null)
+                throw new ArgumentNullException(nameof(libVLC));
+            if (string.IsNullOrEmpty(mrl))
+                throw new ArgumentNullException(nameof(mrl));
 
             var mrlPtr = mrl.ToUtf8();
             if (mrlPtr == IntPtr.Zero)
@@ -204,61 +271,12 @@ namespace LibVLCSharp
             return result;
         }
 
-        /// <summary>
-        /// Create a media for an already open file descriptor.
-        /// The file descriptor shall be open for reading(or reading and writing).
-        ///
-        /// Regular file descriptors, pipe read descriptors and character device
-        /// descriptors(including TTYs) are supported on all platforms.
-        /// Block device descriptors are supported where available.
-        /// Directory descriptors are supported on systems that provide fdopendir().
-        /// Sockets are supported on all platforms where they are file descriptors,
-        /// i.e.all except Windows.
-        ///
-        /// \note This library will <b>not</b> automatically close the file descriptor
-        /// under any circumstance.Nevertheless, a file descriptor can usually only be
-        /// rendered once in a media player.To render it a second time, the file
-        /// descriptor should probably be rewound to the beginning with lseek().
-        /// </summary>
-        /// <param name="libVLC">A libvlc instance</param>
-        /// <param name="fd">open file descriptor</param>
-        public Media(LibVLC libVLC, int fd)
-            : base(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease)
-        {
-        }
-
-        /// <summary>
-        /// Create a media from a media list
-        /// </summary>
-        /// <param name="mediaList">media list to create media from</param>
-        public Media(MediaList mediaList)
-            : base(() => Native.LibVLCMediaListMedia(mediaList.NativeReference), Native.LibVLCMediaRelease)
-        {
-        }
-
-        /// <summary>
-        /// Create a media from a MediaInput
-        /// requires libvlc 3.0 or higher
-        /// </summary>
-        /// <param name="libVLC">the libvlc instance</param>
-        /// <param name="input">the media to be used by libvlc. LibVLCSharp will NOT dispose or close it.
-        /// Use <see cref="StreamMediaInput"/> or implement your own.</param>
-        /// <param name="options">the libvlc options</param>
-        public Media(LibVLC libVLC, MediaInput input, params string[] options)
-            : base(() => CtorFromInput(libVLC, input), Native.LibVLCMediaRelease)
-        {
-            foreach(var option in options)
-            {
-                var optionUtf8 = option.ToUtf8();
-
-                MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
-            }
-        }
-
         static IntPtr CtorFromInput(LibVLC libVLC, MediaInput input)
         {
-            if (libVLC == null) throw new ArgumentNullException(nameof(libVLC));
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (libVLC == null)
+                throw new ArgumentNullException(nameof(libVLC));
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
             return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
                 OpenMediaCallbackHandle,
@@ -266,11 +284,6 @@ namespace LibVLCSharp
                 SeekMediaCallbackHandle,
                 CloseMediaCallbackHandle,
                 GCHandle.ToIntPtr(input.GcHandle));
-        }
-
-        internal Media(IntPtr mediaPtr)
-            : base(() => mediaPtr, Native.LibVLCMediaRelease)
-        {
         }
 
         /// <summary>Add an option to the media.</summary>
