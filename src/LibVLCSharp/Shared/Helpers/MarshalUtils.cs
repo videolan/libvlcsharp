@@ -154,9 +154,10 @@ namespace LibVLCSharp.Shared.Helpers
 
         static void UseStructurePointer<T>(T structure, Action<IntPtr> action)
         {
-            var structurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
+            var structurePointer = IntPtr.Zero;
             try
             {
+                structurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(structure));
                 Marshal.StructureToPtr(structure, structurePointer, false);
                 action(structurePointer);
             }

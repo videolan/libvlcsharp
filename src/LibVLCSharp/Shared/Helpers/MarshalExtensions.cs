@@ -127,9 +127,10 @@ namespace LibVLCSharp.Shared.Helpers
                 return IntPtr.Zero;
 
             var bytes = Encoding.UTF8.GetBytes(str);
-            var nativeString = Marshal.AllocHGlobal(bytes.Length + 1);
+            var nativeString = IntPtr.Zero;
             try
             {
+                nativeString = Marshal.AllocHGlobal(bytes.Length + 1);
                 Marshal.Copy(bytes, 0, nativeString, bytes.Length);
                 Marshal.WriteByte(nativeString, bytes.Length, 0);
             }
