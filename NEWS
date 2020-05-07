@@ -1,3 +1,11 @@
+LibVLCSharp version 3.4.5
+=========================
+* Uno.Android: Fix android packaging import by @kakone. One additional Xamarin.Android tooling issue is still blocking Uno.Android support though.
+* MediaPlayer: Add full chapter descriptions by new contributor @igor-rif-shevchenko
+* Uno / UWP MediaElement: Various fixes by @kakone
+* Core: Add FormattedLog helper.
+* Media: Add libvlc option extra ctor param for convenience.
+
 LibVLCSharp version 3.4.4
 =========================
 * Core: Improve LibVLC loading error messages
