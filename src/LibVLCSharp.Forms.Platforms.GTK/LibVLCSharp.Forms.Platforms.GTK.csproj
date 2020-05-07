@@ -10,7 +10,7 @@ Xamarin.Forms support for other platforms are in different packages (namely LibV
     </Description>
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.Forms.Platforms.GTK</RootNamespace>
-    <Version>3.4.4</Version>
+    <Version>3.4.5</Version>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <PackageId>LibVLCSharp.Forms.GTK</PackageId>
