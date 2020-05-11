@@ -18,18 +18,21 @@ namespace LibVLCSharp
             internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
 
             [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_unity_media_player_release")]
+            internal static extern void LibVLCMediaPlayerRelease(IntPtr mediaPlayer);
+
+            [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_unity_get_texture")]
             internal static extern IntPtr GetTexture(IntPtr mediaPlayer, out bool updated);
 #else
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new")]
             internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
-#endif
+
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_release")]
             internal static extern void LibVLCMediaPlayerRelease(IntPtr mediaPlayer);
-
-
+#endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new_from_media")]
             internal static extern IntPtr LibVLCMediaPlayerNewFromMedia(IntPtr media);
