@@ -18,6 +18,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Documentation](#documentation)
+- [Migrating from Vlc.DotNet](docs/migrating_from_Vlc.DotNet.md)
 - [Samples](#samples)
 - [Quick API overview](#quick-api-overview)
 - [Roadmap](#roadmap)
