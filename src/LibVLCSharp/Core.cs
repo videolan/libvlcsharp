@@ -131,7 +131,9 @@ namespace LibVLCSharp
             LibvlcHandle = Native.LoadPackagedLibrary(Constants.LibraryName);
             if (LibvlcHandle == IntPtr.Zero)
             {
-                throw new VLCException($"Failed to load {Constants.LibraryName}{Constants.WindowsLibraryExtension}, error {Marshal.GetLastWin32Error()}. Please make sure that this library, {Constants.CoreLibraryName}{Constants.WindowsLibraryExtension} and the plugins are copied to the `AppX` folder. For that, you can reference the `VideoLAN.LibVLC.WindowsRT` NuGet package.");
+                throw new VLCException($"Failed to load {Constants.LibraryName}{Constants.WindowsLibraryExtension}, error {Marshal.GetLastWin32Error()}." +
+                    $"Please make sure that this library, {Constants.CoreLibraryName}{Constants.WindowsLibraryExtension} and the plugins are copied to the `AppX` folder." +
+                    "For that, you can reference the `VideoLAN.LibVLC.UWP` NuGet package.");
             }
         }
 
