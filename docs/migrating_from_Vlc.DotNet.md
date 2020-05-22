@@ -13,7 +13,7 @@
 
 VideoLAN never created an official .NET libvlc binding so some dotnet folks created several over the years, some more complete and maintained than others. One of the main one is [Vlc.DotNet](https://github.com/ZeBobo5/Vlc.DotNet).
 
-The first commit by [ZeBobo5](https://github.com/ZeBobo5) of [Vlc.DotNet](https://github.com/ZeBobo5/Vlc.DotNet) dates back to 2015, though it was not the first version.
+The first commit by [ZeBobo5](https://github.com/ZeBobo5) of [Vlc.DotNet](https://github.com/ZeBobo5/Vlc.DotNet) dates back to march 2009, though it was not the first version.
 
 Later, [Jérémy](https://github.com/jeremyVignelles) became the de factor maintainer of Vlc.DotNet as ZeBobo5 had less time to spend on the project.
 
