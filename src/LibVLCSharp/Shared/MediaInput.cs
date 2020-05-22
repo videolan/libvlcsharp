@@ -24,6 +24,11 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
+        /// A value indicating whether this Media input can be seeked in.
+        /// </summary>
+        public bool CanSeek { get; protected set; } = true;
+
+        /// <summary>
         /// LibVLC calls this method when it wants to open the media
         /// </summary>
         /// <param name="size">This value must be filled with the length of the media (or ulong.MaxValue if unknown)</param>
