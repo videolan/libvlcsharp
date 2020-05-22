@@ -21,6 +21,7 @@ namespace LibVLCSharp
         public StreamMediaInput(Stream stream)
         {
             _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            CanSeek = stream.CanSeek;
         }
 
         /// <summary>

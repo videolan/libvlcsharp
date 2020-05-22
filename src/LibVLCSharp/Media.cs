@@ -41,7 +41,7 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
             internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, InternalOpenMedia openCb, InternalReadMedia readCb,
-                InternalSeekMedia seekCb, InternalCloseMedia closeCb, IntPtr opaque);
+                InternalSeekMedia? seekCb, InternalCloseMedia closeCb, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option")]
@@ -295,7 +295,7 @@ namespace LibVLCSharp
             return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
                 OpenMediaCallbackHandle,
                 ReadMediaCallbackHandle,
-                SeekMediaCallbackHandle,
+                input.CanSeek ? SeekMediaCallbackHandle : null,
                 CloseMediaCallbackHandle,
                 GCHandle.ToIntPtr(input.GcHandle));
         }
