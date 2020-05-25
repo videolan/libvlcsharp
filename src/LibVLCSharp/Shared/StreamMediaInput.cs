@@ -65,7 +65,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="buf">The buffer where read data must be written</param>
         /// <param name="len">The buffer length</param>
-        /// <returns>The number of bytes actually read, -1 on error</returns>
+        /// <returns>strictly positive number of bytes read, 0 on end-of-stream, or -1 on non-recoverable error</returns>
         public unsafe override int Read(IntPtr buf, uint len)
         {
             try
