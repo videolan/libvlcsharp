@@ -67,6 +67,11 @@ namespace LibVLCSharp
         {
             try
             {
+                if(_stream.CanSeek)
+                {
+                    if (_stream.Position == _stream.Length)
+                        return 0;
+                }
                 return _stream.Read(new Span<byte>(buf.ToPointer(), (int)Math.Min(len, int.MaxValue)));
             }
             catch (Exception)
