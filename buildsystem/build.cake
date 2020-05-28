@@ -43,7 +43,7 @@ Task("Restore-NuGet-Packages")
     MoveDirectory("../src/packages", packagesDir);
 });
 
-Task("BuildUnity")
+Task("unity")
     .Does(() =>
 {
     DotNetCoreBuild($"../src/{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
@@ -73,7 +73,7 @@ Task("CopyNugets")
 
 Task("Default")
     .IsDependentOn("Build")
-    .IsDependentOn("BuildUnity");
+    .IsDependentOn("unity");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
