@@ -240,6 +240,8 @@ namespace LibVLCSharp.Shared
         {
 #if UWP
             return options.Concat(new[] {"--aout=winstore"}).ToArray();
+#elif ANDROID
+            return options.Concat(new[] {"--audio-resampler=soxr"}).ToArray();
 #else
             return options;
 #endif
