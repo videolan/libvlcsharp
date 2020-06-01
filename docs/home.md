@@ -70,7 +70,7 @@ Post on the [developers LibVLC section](https://forum.videolan.org/viewforum.php
 
 Post on [StackOverflow](https://stackoverflow.com/questions/tagged/libvlcsharp).
 
-Chat on our [Gitter](https://gitter.im/libvlcsharp/Lobby) or open a [GitLab issue](https://code.videolan.org/videolan/LibVLCSharp/issues).
+Chat on our [Discord](https://discord.gg/3h3K3JF) or open a [GitLab issue](https://code.videolan.org/videolan/LibVLCSharp/issues).
 
 # Contribute
 

@@ -5,7 +5,7 @@
 # LibVLCSharp
 
 [![Build Status](https://videolan.visualstudio.com/LibVLCSharp/_apis/build/status/videolan.libvlcsharp?branchName=master)](https://videolan.visualstudio.com/LibVLCSharp/_build/latest?definitionId=22&branchName=master)
-[![Join the chat at https://gitter.im/libvlcsharp/Lobby](https://badges.gitter.im/libvlcsharp/Lobby.svg)](https://gitter.im/libvlcsharp/Lobby)
+[![Join the chat at https://discord.gg/3h3K3JF](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/3h3K3JF)
 
 LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library.
 It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio as well as encode and stream.
@@ -286,7 +286,7 @@ You will always find someone from the VLC team on IRC, __#videolan__ channel on 
 
 If you don't have an IRC client, you can always use the [freenode webchat](https://webchat.freenode.net/).
 
-We are also on Gitter [![Join the chat at https://gitter.im/libvlcsharp/Lobby](https://badges.gitter.im/libvlcsharp/Lobby.svg)](https://gitter.im/libvlcsharp/Lobby)
+We are also on [![Join the chat at https://discord.gg/3h3K3JF](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/3h3K3JF)
 
 ### StackOverflow
 

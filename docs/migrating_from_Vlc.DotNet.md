@@ -7,7 +7,9 @@
 - [API differences](#api-differences)
 - [LibVLC nuget vs VLC local installation](#LibVLC-nuget-vs-VLC-local-installation)
 - [WPF control intricacies](#wpf-control-intricacies)
-- Link to other docs
+- [More documentation links](#documentation)
+
+Feel free to join us on [![Join the chat at https://discord.gg/3h3K3JF](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/3h3K3JF)
 
 ## Context
 
