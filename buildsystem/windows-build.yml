@@ -6,9 +6,9 @@ steps:
     installPackageId: gtksharp
 
 - task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3.1.201'
+  displayName: 'Use .NET Core SDK 3.1.300'
   inputs:
-    version: 3.1.201
+    version: 3.1.300
 
 - task: PowerShell@2
   displayName: 'Build all'
