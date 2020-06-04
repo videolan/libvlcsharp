@@ -15,4 +15,4 @@ steps:
   displayName: 'dotnet build'
   inputs:
     projects: src/LibVLCSharp/LibVLCSharp.csproj
-    arguments: '/p:NETSTANDARD_ONLY=true -c Release'
+    arguments: '-c Release'
