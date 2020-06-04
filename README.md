@@ -27,11 +27,11 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
 - [Contribute](#contribute)
   - [Pull request](#pull-request)
   - [Gitlab issues](#gitlab-issues)
-- [Communication](#communication)
-  - [Forum](#forum)
-  - [Issues](#issues)
-  - [IRC](#irc)
+- [Questions and Support](#questions-and-support)
+  - [Bug trackers](#bug-trackers)
+  - [Discord](#discord)
   - [StackOverflow](#stackoverflow)
+  - [Commercial Support](#commercial-support)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 
@@ -264,33 +264,39 @@ Pull requests are more than welcome! If you do submit one, please make sure to r
 
 You can look through issues we currently have on the [VideoLAN Gitlab](https://code.videolan.org/videolan/LibVLCSharp). Please pick one of our GitLab issue templates so we can assist you better.
 
-## Communication
+## Questions and Support
+
+### Bug trackers
+
+You have encountered an issue and wish to report it to the VLC dev team?
+
+You can create one on our [Gitlab](https://code.videolan.org/videolan/LibVLCSharp/issues) (using an issue template) for .NET related questions/problems.
+
+_For LibVLC/VLC specific issues, usually native code, trac is our [bug tracker](https://trac.videolan.org/vlc/)._
+
+Before creating an issue or ticket, please double check for duplicates!
+
+### Discord
+
+We are on [![Join the chat at https://discord.gg/3h3K3JF](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/3h3K3JF)
+
+### StackOverflow
+
+We regularly monitor the `libvlcsharp` tag on [![stackoverflow](https://img.shields.io/stackexchange/stackoverflow/t/libvlcsharp.svg?label=stackoverflow&style=flat)](https://stackoverflow.com/questions/tagged/libvlcsharp)
 
 ### Forum
 
 If you have any question or if you're not sure it's actually an issue, please visit our [forum](https://forum.videolan.org/).
 
-### Issues
+### Commercial support
 
-You have encountered an issue and wish to report it to the VLC dev team?
+If you would like VLC developers to provide you with
+- customization on LibVLC and/or LibVLCSharp, 
+- training,
+- priority support,
+- other multimedia services.
 
-You can create one on our [Gitlab](https://code.videolan.org/videolan/LibVLCSharp/issues) or on our [bug tracker](https://trac.videolan.org/vlc/).
-
-Before creating an issue or ticket, please double check for duplicates!
-
-### IRC
-
-Want to quickly get in touch with us for a question, or even just to talk?
-
-You will always find someone from the VLC team on IRC, __#videolan__ channel on the freenode network.
-
-If you don't have an IRC client, you can always use the [freenode webchat](https://webchat.freenode.net/).
-
-We are also on [![Join the chat at https://discord.gg/3h3K3JF](https://img.shields.io/discord/716939396464508958?label=discord)](https://discord.gg/3h3K3JF)
-
-### StackOverflow
-
-We regularly monitor the `libvlcsharp` tag on [![stackoverflow](https://img.shields.io/stackexchange/stackoverflow/t/libvlcsharp.svg?label=stackoverflow&style=flat)](https://stackoverflow.com/questions/tagged/libvlcsharp)
+Feel free to [contact us](https://videolabs.io/#contact).
 
 ## Code of Conduct
 
