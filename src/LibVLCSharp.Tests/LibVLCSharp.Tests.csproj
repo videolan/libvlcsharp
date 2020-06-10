@@ -5,6 +5,7 @@
     <GenerateProgramFile>false</GenerateProgramFile>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
     <DebugType>full</DebugType>
@@ -15,7 +16,7 @@
     <PackageReference Include="NUnit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.12.0" />
     <PackageReference Include="NUnitLite" Version="3.11.0" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0.20200403" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
