@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.WPF.Sample", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.NetCore.Sample", "..\samples\LibVLCSharp.NetCore.Sample\LibVLCSharp.NetCore.Sample.csproj", "{E9858A83-E619-4515-AF14-A87A4C658924}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Windows.Net40.Sample", "..\samples\LibVLCSharp.Windows.Net40.Sample\LibVLCSharp.Windows.Net40.Sample.csproj", "{DAFCBC34-7847-4EF9-ACC0-E025D6E3FBA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Windows.Net45.Sample", "..\samples\LibVLCSharp.Windows.Net45.Sample\LibVLCSharp.Windows.Net45.Sample.csproj", "{DAFCBC34-7847-4EF9-ACC0-E025D6E3FBA4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.Mac", "..\samples\Forms\LibVLCSharp.Forms.Sample.Mac\LibVLCSharp.Forms.Sample.Mac.csproj", "{8771EDCF-0DA5-4AF8-80CE-5D3DC4999C7B}"
 EndProject

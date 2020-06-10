@@ -1,7 +1,7 @@
 ﻿using LibVLCSharp;
 using System;
 
-namespace LibVLCSharp.Windows.Net40.Sample
+namespace LibVLCSharp.Windows.Net45.Sample
 {
     class Program
     {

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>LibVLCSharp.WinForms.Sample</Title>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net40;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp3.0</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms.Sample</RootNamespace>
   </PropertyGroup>
