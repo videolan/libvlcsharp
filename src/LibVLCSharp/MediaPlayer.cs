@@ -239,12 +239,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_get_fullscreen")]
             internal static extern int LibVLCGetFullscreen(IntPtr mediaPlayer);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_toggle_teletext")]
-            internal static extern void LibVLCToggleTeletext(IntPtr mediaPlayer);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_equalizer")]
             internal static extern int LibVLCMediaPlayerSetEqualizer(IntPtr mediaPlayer, IntPtr equalizer);
@@ -431,22 +425,9 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_video_set_spu_delay")]
             internal static extern int LibVLCVideoSetSpuDelay(IntPtr mediaPlayer, long delay);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_title_description")]
-            internal static extern IntPtr LibVLCVideoGetTitleDescription(IntPtr mediaPlayer);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_full_title_descriptions")]
             internal static extern int LibVLCMediaPlayerGetFullTitleDescriptions(IntPtr mediaPlayer, IntPtr titles);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_chapter_description")]
-            internal static extern IntPtr LibVLCVideoGetChapterDescription(IntPtr mediaPlayer,
-                int title);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_title_descriptions_release")]
@@ -504,15 +485,11 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_deinterlace")]
-            internal static extern void LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, IntPtr mode);
+            internal static extern void LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, int deinterlace, IntPtr deinterlaceType);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_int")]
             internal static extern int LibVLCVideoGetMarqueeInt(IntPtr mediaPlayer, VideoMarqueeOption option);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_marquee_string")]
-            internal static extern IntPtr LibVLCVideoGetMarqueeString(IntPtr mediaPlayer, VideoMarqueeOption option);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_marquee_int")]
@@ -589,6 +566,23 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_retain")]
             internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_crop_ratio")]
+            internal static extern void LibVLCVideoSetCropRatio(IntPtr mediaplayer, uint num, uint den);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_crop_window")]
+            internal static extern void LibVLCVideoSetCropWindow(IntPtr mediaplayer, uint x, uint y, uint width, uint height);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_crop_border")]
+            internal static extern void LibVLCVideoSetCropBorder(IntPtr mediaplayer, uint left, uint right, uint top, uint bottom);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_spu_text_scale")]
+            internal static extern void LibVLCVideoSetSpuTextScale(IntPtr mediaplayer, float scale);
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -952,11 +946,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Toggle teletext transparent status on video output.
-        /// </summary>
-        public void ToggleTeletext() => Native.LibVLCToggleTeletext(NativeReference);
-
-        /// <summary>
         /// Apply new equalizer settings to a media player.
         /// The equalizer is first created by invoking libvlc_audio_equalizer_new() or libvlc_audio_equalizer_new_from_preset().
         /// It is possible to apply new equalizer settings to a media player whether the media player is currently playing media or not.
@@ -1236,9 +1225,58 @@ namespace LibVLCSharp
         /// <returns>true on success, false on error </returns>
         public bool SetAudioDelay(long delay) => Native.LibVLCAudioSetDelay(NativeReference, delay) == 0;
 
+        /// <summary>
+        /// Set/unset the video crop ratio.
+        /// This function forces a crop ratio on any and all video tracks rendered by
+        /// the media player. If the display aspect ratio of a video does not match the
+        /// crop ratio, either the top and bottom, or the left and right of the video
+        /// will be cut out to fit the crop ratio.
+        /// For instance, a ratio of 1:1 will force the video to a square shape.
+        /// To disable video crop, set a crop ratio with zero as denominator.
+        /// A call to this function overrides any previous call to any of
+        /// libvlc_video_set_crop_ratio(), libvlc_video_set_crop_border() and/or
+        /// libvlc_video_set_crop_window().
+        /// </summary>
+        /// <param name="num">crop ratio numerator (ignored if denominator is 0)</param>
+        /// <param name="den">crop ratio denominator (or 0 to unset the crop ratio)</param>
+        public void CropRatio(uint num, uint den) => Native.LibVLCVideoSetCropRatio(NativeReference, num, den);
+
+        /// <summary>
+        /// Set the video crop window.
+        /// This function selects a sub-rectangle of video to show. Any pixels outside
+        /// the rectangle will not be shown.
+        /// To unset the video crop window, use libvlc_video_set_crop_ratio() or
+        /// libvlc_video_set_crop_border().
+        /// A call to this function overrides any previous call to any of
+        /// libvlc_video_set_crop_ratio(), libvlc_video_set_crop_border() and/or
+        /// libvlc_video_set_crop_window().
+        /// </summary>
+        /// <param name="x">abscissa (i.e. leftmost sample column offset) of the crop window</param>
+        /// <param name="y">ordinate (i.e. topmost sample row offset) of the crop window</param>
+        /// <param name="width">sample width of the crop window (cannot be zero)</param>
+        /// <param name="height">sample height of the crop window (cannot be zero)</param>
+        public void CropWindow(uint x, uint y, uint width, uint height)
+            => Native.LibVLCVideoSetCropWindow(NativeReference, x, y, width, height);
+
+        /// <summary>
+        /// Set the video crop borders.
+        /// This function selects the size of video edges to be cropped out.
+        /// To unset the video crop borders, set all borders to zero.
+        /// A call to this function overrides any previous call to any of
+        /// libvlc_video_set_crop_ratio(), libvlc_video_set_crop_border() and/or
+        /// libvlc_video_set_crop_window().
+        /// </summary>
+        /// <param name="left">number of sample columns to crop on the left</param>
+        /// <param name="right">number of sample columns to crop on the right</param>
+        /// <param name="top">number of sample rows to crop on the top</param>
+        /// <param name="bottom">number of sample rows to corp on the bottom</param>
+        public void CropBorder(uint left, uint right, uint top, uint bottom)
+            => Native.LibVLCVideoSetCropBorder(NativeReference, left, right, top, bottom);
+
         LibVLCVideoLockCb? _videoLockCb;
         LibVLCVideoUnlockCb? _videoUnlockCb;
         LibVLCVideoDisplayCb? _videoDisplayCb;
+
 
         /// <summary>
         /// Set callbacks and private data to render decoded video to a custom area in memory.
@@ -1384,6 +1422,19 @@ namespace LibVLCSharp
         }
 
         /// <summary>
+        /// Set the subtitle text scale.
+        /// The scale factor is expressed as a percentage of the default size, where 1.0 represents 100 percent.
+        /// A value of 0.5 would result in text half the normal size, and a value of 2.0 would result in text twice the normal size.
+        /// The minimum acceptable value for the scale factor is 0.1.
+        /// The maximum is 5.0 (five times normal size).
+        /// LibVLC 4.0.0 or later
+        /// </summary>
+        public float SpuTextScale
+        {
+            set => Native.LibVLCVideoSetSpuTextScale(NativeReference, value);
+        }
+
+        /// <summary>
         /// Get/set current video aspect ratio.
         /// Set to null to reset to default
         /// Invalid aspect ratios are ignored.
@@ -1440,15 +1491,6 @@ namespace LibVLCSharp
         public bool SetSpuDelay(long delay) => Native.LibVLCVideoSetSpuDelay(NativeReference, delay) == 0;
 
         /// <summary>
-        /// Get the description of available titles.
-        /// </summary>
-        public TrackDescription[] TitleDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTitleDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
         /// Get the full description of available chapters.
         /// </summary>
         /// <param name="titleIndex">Index of the title to query for chapters (uses current title if set to -1)</param>
@@ -1463,17 +1505,6 @@ namespace LibVLCSharp
             MarshalUtils.PtrToStructure<ChapterDescriptionStructure>,
             t => t.Build(),
             Native.LibVLCChapterDescriptionsRelease);
-
-        /// <summary>
-        /// Get the description of available chapters for specific title.
-        /// </summary>
-        /// <param name="titleIndex">selected title</param>
-        /// <returns>chapter descriptions</returns>
-        public TrackDescription[] ChapterDescription(int titleIndex) => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
 
         /// <summary>
         /// Get/Set current crop filter geometry.
@@ -1546,14 +1577,15 @@ namespace LibVLCSharp
         /// <summary>
         /// Enable or disable deinterlace filter
         /// </summary>
-        /// <param name="deinterlaceMode">type of deinterlace filter, null to disable</param>
-        public void SetDeinterlace(string? deinterlaceMode)
+        /// <param name="deinterlace">deinterlace state -1: auto (default), 0: disabled, 1: enabled</param>
+        /// <param name="deinterlaceType">type of deinterlace filter, empty string to disable</param>
+        public void SetDeinterlace(int deinterlace, string deinterlaceType = "")
         {
-            var deinterlaceModeUtf8 = deinterlaceMode.ToUtf8();
+            var deinterlaceTypeUtf8 = deinterlaceType.ToUtf8();
 
             MarshalUtils.PerformInteropAndFree(() =>
-                Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlaceModeUtf8),
-                deinterlaceModeUtf8);
+                Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlace, deinterlaceTypeUtf8),
+                deinterlaceTypeUtf8);
         }
 
         /// <summary>
@@ -1562,17 +1594,6 @@ namespace LibVLCSharp
         /// <param name="option">marq option to get</param>
         /// <returns></returns>
         public int MarqueeInt(VideoMarqueeOption option) => Native.LibVLCVideoGetMarqueeInt(NativeReference, option);
-
-        /// <summary>
-        /// Get a string marquee option value
-        /// </summary>
-        /// <param name="option">marq option to get</param>
-        /// <returns></returns>
-        public string? MarqueeString(VideoMarqueeOption option)
-        {
-            var marqueeStrPtr = Native.LibVLCVideoGetMarqueeString(NativeReference, option);
-            return marqueeStrPtr.FromUtf8(libvlcFree: true);
-        }
 
         /// <summary>
         /// Enable, disable or set an integer marquee option

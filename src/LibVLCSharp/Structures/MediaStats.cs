@@ -67,20 +67,5 @@ namespace LibVLCSharp
         /// The number of buffers lost
         /// </summary>
         public readonly int LostAudioBuffers;
-
-        /// <summary>
-        /// The number of packets sent
-        /// </summary>
-        public readonly int SentPackets;
-
-        /// <summary>
-        /// The number of bytes sent
-        /// </summary>
-        public readonly int SentBytes;
-
-        /// <summary>
-        /// The bitrate used to send
-        /// </summary>
-        public readonly float SendBitrate;
     }
 }

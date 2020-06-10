@@ -25,12 +25,12 @@ This package also contains the views for the following platforms:
 - tvOS
 - UWP
 
-If you need Xamarin.Forms support, see LibVLCSharp.Forms. 
+If you need Xamarin.Forms support, see LibVLCSharp.Forms.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299;net40;net471</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299;net45;net471</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <NeutralLanguage>en</NeutralLanguage>
@@ -71,12 +71,12 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
     <Compile Remove="MediaPlayerElement\*.*" />
     <None Include="MediaPlayerElement\*.*" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Compile Remove="MediaPlayerElement\*.*" />
     <None Include="MediaPlayerElement\*.*" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="Platforms\UWP\**\*.cs" />

@@ -730,11 +730,8 @@ namespace LibVLCSharp
                 GetLogContext(logContext, out var module, out var file, out var line);
 
                 void logAction() => libVLC?._log?.Invoke(null, new LogEventArgs(logLevel, message, module, file, line));
-#if NET40
-                Task.Factory.StartNew(logAction);
-#else
+
                 Task.Run(logAction);
-#endif
             }
             catch
             {

@@ -13,6 +13,7 @@ namespace LibVLCSharp
         MediaFreed = 4,
         MediaStateChanged = 5,
         MediaSubItemTreeAdded = 6,
+        MediaThumbnailGenerated = 7,
         MediaPlayerMediaChanged = 256,
         MediaPlayerNothingSpecial = 257,
         MediaPlayerOpening = 258,
@@ -55,18 +56,6 @@ namespace LibVLCSharp
         MediaListPlayerPlayed = 1024,
         MediaListPlayerNextItemSet = 1025,
         MediaListPlayerStopped = 1026,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_start()</para>
-        /// </remarks>
-        MediaDiscovererStarted = 1280,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        MediaDiscovererStopped = 1281,
 
         /// <remarks>
         /// <para>Useless event, it will be triggered only when calling</para>
@@ -182,6 +171,8 @@ namespace LibVLCSharp
             [FieldOffset(0)]
             internal readonly MediaStateChanged MediaStateChanged;
             [FieldOffset(0)]
+            internal readonly MediaThumbnailGenerated MediaThumbnailGenerated;
+            [FieldOffset(0)]
             internal readonly MediaSubItemTreeAdded MediaSubItemTreeAdded;
 
             // mediaplayer
@@ -221,8 +212,6 @@ namespace LibVLCSharp
             internal readonly MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
             [FieldOffset(0)]
             internal readonly MediaPlayerLengthChanged MediaPlayerLengthChanged;
-            [FieldOffset(0)]
-            internal readonly VlmMediaEvent VlmMediaEvent;
             [FieldOffset(0)]
             internal readonly MediaPlayerMediaChanged MediaPlayerMediaChanged;
             [FieldOffset(0)]
@@ -274,6 +263,12 @@ namespace LibVLCSharp
         internal readonly struct MediaStateChanged
         {
             internal readonly VLCState NewState;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct MediaThumbnailGenerated
+        {
+            internal readonly IntPtr Thumbnail;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -418,13 +413,6 @@ namespace LibVLCSharp
         #endregion MediaList
 
         [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct VlmMediaEvent
-        {
-            internal readonly IntPtr MediaName;
-            internal readonly IntPtr InstanceName;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
         internal readonly struct RendererDiscovererItemAdded
         {
             internal readonly IntPtr item;
@@ -532,6 +520,22 @@ namespace LibVLCSharp
         internal MediaStateChangedEventArgs(VLCState state)
         {
             State = state;
+        }
+    }
+
+    /// <summary>
+    /// A new thumbnail picture was generated
+    /// </summary>
+    public class MediaThumbnailGeneratedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// New thumbnail
+        /// </summary>
+        public readonly Picture? Thumbnail;
+
+        internal MediaThumbnailGeneratedEventArgs(IntPtr thumbnailPtr)
+        {
+            Thumbnail = thumbnailPtr == IntPtr.Zero ? null : new Picture(thumbnailPtr);
         }
     }
 

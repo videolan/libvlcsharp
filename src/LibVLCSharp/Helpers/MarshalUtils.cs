@@ -255,7 +255,7 @@ namespace LibVLCSharp.Helpers
                 nativeRef = getRef();
                 if (nativeRef == IntPtr.Zero)
                 {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
                     return new TU[0];
 #else
                     return Array.Empty<TU>();
@@ -311,7 +311,7 @@ namespace LibVLCSharp.Helpers
                 count = getRef(nativeRef, out arrayPtr);
                 if(count == 0)
                 {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
                     return new TU[0];
 #else
                     return Array.Empty<TU>();
@@ -375,7 +375,7 @@ namespace LibVLCSharp.Helpers
 
                 if (count == 0)
                 {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
                     return new TU[0];
 #else
                     return Array.Empty<TU>();
@@ -443,7 +443,7 @@ namespace LibVLCSharp.Helpers
 
                 if (count == 0)
                 {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
                     return new TU[0];
 #else
                     return Array.Empty<TU>();
@@ -497,14 +497,14 @@ namespace LibVLCSharp.Helpers
 
         /// <summary>
         /// Marshal a pointer to a struct
-        /// Helper with netstandard1.1 and net40 support
+        /// Helper with netstandard1.1 and net45 support
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ptr"></param>
         /// <returns></returns>
         internal static T PtrToStructure<T>(IntPtr ptr)
         {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
 #else
             return Marshal.PtrToStructure<T>(ptr);
@@ -519,7 +519,7 @@ namespace LibVLCSharp.Helpers
         internal static bool Open(string filename, out IntPtr fileHandle)
         {
             fileHandle = IntPtr.Zero;
-#if NET40
+#if NET45
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.MacOSX:
@@ -555,7 +555,7 @@ namespace LibVLCSharp.Helpers
         /// <returns>true if successful</returns>
         internal static bool Close(IntPtr fileHandle)
         {
-#if NET40
+#if NET45
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.MacOSX:
@@ -634,7 +634,7 @@ namespace LibVLCSharp.Helpers
 
         internal static int SizeOf<T>(T structure)
         {
-#if NETSTANDARD1_1 || NET40
+#if NETSTANDARD1_1 || NET45
             return Marshal.SizeOf(typeof(T));
 #else
             return Marshal.SizeOf<T>(structure);

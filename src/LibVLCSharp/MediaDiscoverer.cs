@@ -9,7 +9,6 @@ namespace LibVLCSharp
     /// </summary>
     public class MediaDiscoverer : Internal
     {
-        MediaDiscovererEventManager? _eventManager;
         MediaList? _mediaList;
 
         readonly struct Native
@@ -33,10 +32,6 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_localized_name")]
             internal static extern IntPtr LibVLCMediaDiscovererLocalizedName(IntPtr mediaDiscoverer);
-            
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_discoverer_event_manager")]
-            internal static extern IntPtr LibVLCMediaDiscovererEventManager(IntPtr mediaDiscoverer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_discoverer_is_running")]
@@ -46,17 +41,17 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_discoverer_media_list")]
             internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
         }
-        
+
         /// <summary>
         /// Media discoverer constructor
         /// </summary>
         /// <param name="libVLC">libvlc instance this will be attached to</param>
         /// <param name="name">name from one of LibVLC.MediaDiscoverers</param>
-        public MediaDiscoverer(LibVLC libVLC, string name) 
+        public MediaDiscoverer(LibVLC libVLC, string name)
             : base(() =>
             {
                 var nameUtf8 = name.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
+                return MarshalUtils.PerformInteropAndFree(() =>
                     Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
             }, Native.LibVLCMediaDiscovererRelease)
         {
@@ -81,24 +76,6 @@ namespace LibVLCSharp
         public string? LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
 
         /// <summary>
-        /// Get event manager from media service discover object.
-        /// under v3 only
-        /// </summary>
-        MediaDiscovererEventManager? EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var ptr = Native.LibVLCMediaDiscovererEventManager(NativeReference);
-                    if (ptr == IntPtr.Zero) return null;
-                    _eventManager = new MediaDiscovererEventManager(ptr);
-                }
-                return _eventManager;
-            }
-        }
-
-        /// <summary>
         /// Query if media service discover object is running.
         /// </summary>
         public bool IsRunning => NativeReference != IntPtr.Zero && Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0;
@@ -121,28 +98,6 @@ namespace LibVLCSharp
                 return _mediaList;
             }
         }
-
-        #region Events
-
-        /// <summary>
-        /// Media discovery has been started for this media discoverer
-        /// </summary>
-        public event EventHandler<EventArgs> Started
-        {
-            add => EventManager?.AttachEvent(EventType.MediaDiscovererStarted, value);
-            remove => EventManager?.DetachEvent(EventType.MediaDiscovererStarted, value);
-        }
-
-        /// <summary>
-        /// Media discovery has been stopped for this media discoverer
-        /// </summary>
-        public event EventHandler<EventArgs> Stopped
-        {
-            add => EventManager?.AttachEvent(EventType.MediaDiscovererStopped, value);
-            remove => EventManager?.DetachEvent(EventType.MediaDiscovererStopped, value);
-        }
-
-        #endregion
 
         /// <summary>
         /// Dispose of this media discoverer

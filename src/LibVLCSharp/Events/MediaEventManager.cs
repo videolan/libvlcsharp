@@ -11,6 +11,7 @@ namespace LibVLCSharp
         EventHandler<MediaFreedEventArgs>? _mediaFreed;
         EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
         EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
+        EventHandler<MediaThumbnailGeneratedEventArgs>? _mediaThumbnailGenerated;
 
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {
@@ -48,6 +49,10 @@ namespace LibVLCSharp
                     _mediaSubItemTreeAdded += eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
                     Attach(eventType, OnSubItemTreeAdded);
                     break;
+                case EventType.MediaThumbnailGenerated:
+                    _mediaThumbnailGenerated += eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
+                    Attach(eventType, OnThumbnailGenerated);
+                    break;
                 default:
                     OnEventUnhandled(this, eventType);
                     break;
@@ -84,6 +89,10 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaSubItemTreeAdded:
                     _mediaSubItemTreeAdded -= eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaThumbnailGenerated:
+                    _mediaThumbnailGenerated -= eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
                     Detach(eventType);
                     break;
                 default:
@@ -131,6 +140,12 @@ namespace LibVLCSharp
         {
             _mediaMetaChanged?.Invoke(this,
                 new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
+        }
+
+        void OnThumbnailGenerated(IntPtr ptr)
+        {
+            _mediaThumbnailGenerated?.Invoke(this,
+                new MediaThumbnailGeneratedEventArgs(RetrieveEvent(ptr).Union.MediaThumbnailGenerated.Thumbnail));
         }
     }
 }
