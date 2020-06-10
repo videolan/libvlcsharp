@@ -76,7 +76,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Xamarin.Forms
 - Uno Platform (UWP, Android, iOS)
 - .NET Standard 1.1 and 2.0
-- .NET Framework 4.0 and later
+- .NET Framework 4.5 and later
 - .NET Core (including ASP.NET Core)
 - [Unity3D](https://code.videolan.org/videolan/vlc-unity)
   - Windows Classic
@@ -305,8 +305,6 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 ## License
 
 LibVLCSharp is under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)).
-
-Note: the .NET4.0 LibVLCSharp build references a nuget package that may indicate its license as the .NET Library license but it's actually [opensource](https://github.com/Microsoft/referencesource/commit/6952d2c3923d30a4d88bf57120688b9532bbe1d8) under MIT.
 
 <br/>
 <div align="center">
