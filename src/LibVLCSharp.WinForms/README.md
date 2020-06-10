@@ -12,7 +12,7 @@ This package depends on [LibVLCSharp](../LibVLCSharp/README.md).
 
 Supported frameworks:
 
-- net40+
+- net45+
 - netcoreapp3.0
 
 Supported platform:
