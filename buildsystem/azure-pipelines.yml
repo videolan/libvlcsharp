@@ -6,21 +6,51 @@ pr:
 - master
 - 3.x
 
-jobs:
-- job: Linux
-  pool:
-    vmImage: 'ubuntu-18.04'
-  steps:
-  - template: linux-build.yml
+stages:
+- stage: Build
+  variables:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
-- job: macOS
-  pool:
-    vmImage: 'macOS-10.15'
-  steps:
-  - template: mac-build.yml
+  jobs:
+  - job: Linux
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - template: linux-build.yml
 
-- job: Windows
-  pool:
-    vmImage: 'windows-latest'
-  steps:
-  - template: windows-build.yml
+  - job: macOS
+    pool:
+      vmImage: 'macOS-10.15'
+    steps:
+    - template: mac-build.yml
+
+  - job: Windows
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - template: windows-build.yml
+
+- stage: Deploy
+  dependsOn: Build
+  condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
+
+  jobs:
+  - job: feedz
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          artifactName: 'nugets'
+          itemPattern: '**/*.nupkg'
+          downloadPath: $(Build.Repository.LocalPath)
+      - task: PowerShell@2
+        displayName: 'Deploy'
+        env:
+          FEEDZ: $(FEEDZ)
+        inputs:
+          targetType: filePath
+          filePath: ./buildsystem/build.ps1
+          arguments: -target CIDeploy
+          workingDirectory: buildsystem
