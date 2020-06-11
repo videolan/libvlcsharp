@@ -18,6 +18,7 @@
     <DefineConstants>$(DefineConstants);UWP10_0</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>3.4.5</Version>
+    <VersionPrefix>3.4.5</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 </Project>

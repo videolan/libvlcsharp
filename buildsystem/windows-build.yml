@@ -14,5 +14,10 @@ steps:
   displayName: 'Build all'
   inputs:
     targetType: filePath
-    filePath: ./buildsystem/build.ps1
+    filePath: ./buildsystem/build.ps1 
     workingDirectory: buildsystem
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: 'nugets'
+    artifactName: 'nugets'
