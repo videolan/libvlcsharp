@@ -2,6 +2,8 @@
 
 [Back](home.md)
 
+In addition  to [official samples](https://github.com/mfkl/libvlcsharp-samples), you may explore the following opensource projects made by GitHub users:
+
 ## TwitchBot 
 
 Custom C# chat bot for Twitch TV

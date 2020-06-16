@@ -18,7 +18,7 @@ Some advanced customizations and features are only accessible through LibVLC opt
 
 > Note: Some options only work with the LibVLC constructor and some options only work with the `media.AddOption` API.
 
-The list of such LibVLC string options can be found here https://wiki.videolan.org/VLC_command-line_help/
+### The list of such LibVLC string options can be found here https://wiki.videolan.org/VLC_command-line_help/
 
 
 ## LibVLC Versioning

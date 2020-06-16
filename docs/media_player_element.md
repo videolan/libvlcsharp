@@ -17,7 +17,6 @@
 - Cast button
 - Errors display
 - Lifecycle management
-- Do an unique MediaTransportControls.xaml template
 - Buttons content dependency properties
 - Compact mode
 - Keep screen on
