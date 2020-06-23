@@ -4,6 +4,12 @@
   <img src="/src/assets/media-element.png"/>
 </h3>
 
+## Getting started
+
+The best way to get started is to use the samples https://code.videolan.org/videolan/LibVLCSharp/-/tree/3.x/samples/Forms/LibVLCSharp.Forms.MediaElement
+
+It already has the fonts (that are needed for icons) and necessary setup for custom renderers.
+
 ## What's available out of the box?
 
 - Show/Hide playback controls automatically
