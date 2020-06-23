@@ -17,6 +17,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
   - [MediaPlayerElement](#mediaplayerelement)
 - [Supported platforms](#supported-platforms)
 - [Installation](#installation)
+  - [Preview builds](#Pre-release-versions)
 - [Getting started](#getting-started)
 - [Documentation](#documentation)
 - [Migrating from Vlc.DotNet](docs/migrating_from_Vlc.DotNet.md)
@@ -86,6 +87,8 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 
 1. Install **LibVLC** in your platform specific project.
 
+LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
+
 | Platform          | LibVLC Package                      | NuGet                                  | Minimum OS Version |
 | ----------------- | ----------------------------------- | -------------------------------------- |--------------------|
 | Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] | Windows XP         |
@@ -100,9 +103,9 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 dotnet add package VideoLAN.LibVLC.[Windows|UWP|Android|iOS|Mac|tvOS]
 ```
 
-LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your target platform. More information [here](https://code.videolan.org/videolan/libvlc-nuget).
-
 2. Install **LibVLCSharp** _or_ **LibVLCSharp.Forms** (if you plan on using Xamarin.Forms)
+
+LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
 
 | Platform          | LibVLCSharp Package                             | NuGet                                             |
 | ----------------- | ----------------------------------------------- | ------------------------------------------------- |
@@ -121,7 +124,19 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 | Unity3D - Windows | [VLC for Unity (Windows)][RVLCUnityWindows]     | [![VLCUnityWindowsBadge]][VLCUnityWindows]        |
 
-LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
+### Pre-release versions
+
+LibVLCSharp 4 preview and LibVLC 4 nightly builds are distributed using https://feedz.io/ for now. To pull pre-release versions into your project, use the following `NuGet.config` file:
+```
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="videolan-preview" value="https://f.feedz.io/videolan/preview/nuget/index.json" />
+  </packageSources>
+</configuration>
+```
+
+See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [RLibVLCSharpForms]: src/LibVLCSharp.Forms/README.md
 [RLibVLCSharpWPF]: src/LibVLCSharp.WPF/README.md
@@ -243,7 +258,8 @@ The [LibVLCSharp.Forms](src/LibVLCSharp.Forms/README.md) and [Uno](src/LibVLCSha
 
 ## Roadmap
 
-- Game engines (Unity, Unreal, Godot)
+- Game engines ([Unity](https://code.videolan.org/videolan/vlc-unity), [Unreal](https://code.videolan.org/videolan/LibVLCSharp/-/issues/357), Godot)
+- [LibVLC 4 support](docs/libvlc_preview.md)
 
 If you have a request or question regarding the roadmap, feel free to open an [issue](https://code.videolan.org/videolan/LibVLCSharp/issues) (using an issue template) or [PR](https://github.com/videolan/libvlcsharp/pulls).
 
