@@ -122,7 +122,7 @@ If you are using the `MediaPlayerElement`, then it is built-in in the UI.
 
 If not, you should play with the `Scale` and `AspectRatio` MediaPlayer properties.
 
-See https://code.videolan.org/videolan/LibVLCSharp/blob/3.x/LibVLCSharp/Shared/MediaPlayerElement/AspectRatioManager.cs#L130
+See https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/MediaPlayerElement/AspectRatioManager.cs
 
 # How do I change the movie play rate?
 
@@ -159,7 +159,7 @@ https://stackoverflow.com/questions/56487740/how-to-achieve-looping-playback-wit
 
 ```csharp
 using var libVLC = new LibVLC();
-using var media = new Media(libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
+using var media = new Media(libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
 
 await media.Parse(MediaParseOptions.ParseNetwork);
 
