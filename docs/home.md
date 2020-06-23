@@ -7,6 +7,7 @@ LibVLCSharp is a cross-platform audio and video API for .NET platforms based on 
   - [Installation steps](#Installation-steps).
     - [LibVLC](#LibVLC)
     - [LibVLCSharp](#LibVLCSharp)
+    - [Preview versions](libvlc_preview.md)
   - [Migrating from Vlc.Dotnet](migrating_from_Vlc.DotNet.md)
   - [How do I do X?](#How-do-I-do-X?)
   - [Troubleshooting](troubleshooting.md)
@@ -25,9 +26,13 @@ Follow our [Getting Started](getting_started.md) guide.
 
 # Installation steps
 
+Stable builds can be pulled from nuget.org, while pre-release builds are on feedz.io.
+
 ### LibVLC
 
-Read and follow https://code.videolan.org/videolan/libvlc-nuget
+You may download them from [NuGet](https://www.nuget.org/profiles/videolan).
+
+Please read and follow https://code.videolan.org/videolan/libvlc-nuget.
 
 ### LibVLCSharp
 
@@ -41,6 +46,20 @@ Read and follow https://code.videolan.org/videolan/libvlc-nuget
 - [LibVLCSharp.Uno](../LibVLCSharp.Uno/README.md)
 
 For Android specific things, head over to [Android](android.md).
+
+### Stable versions
+
+LibVLC 3.x and LibVLCSharp 3.x versions are the current _stable_ libvlc and libvlcsharp versions. Stable builds are recommended for production releases.
+
+Please read and follow https://code.videolan.org/videolan/libvlc-nuget.
+
+### Preview versions
+
+LibVLC 4.x and LibVLCSharp 4.x versions are the current _preview_ libvlc and libvlcsharp versions. Be aware, these builds may be unstable and APIs may change at any time.
+
+LibVLCSharp 3.x nightly builds are also available through feedz.
+
+You may download them from feedz.io. For more details, see [LibVLC preview](libvlc_preview.md).
 
 # How do I do X?
 
