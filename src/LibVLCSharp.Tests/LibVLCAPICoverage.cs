@@ -117,6 +117,8 @@ namespace LibVLCSharp.Tests
                 }
             }
 
+            var unusedDllImports = dllImports.Except(libvlcSymbols);
+
             var missingApis = libvlcSymbols
                 .Where(symbol => !exclude.Any(excludeSymbol => symbol.StartsWith(excludeSymbol))) // Filters out excluded symbols
                 .Except(dllImports)
@@ -132,7 +134,15 @@ namespace LibVLCSharp.Tests
                 Debug.WriteLine(miss);
             }
 
+            var unusedDllImportsCount = unusedDllImports.Count();
+            Debug.WriteLine($"{unusedDllImportsCount} unused DllImports implementation");
+            foreach (var unused in unusedDllImports)
+            {
+                Debug.WriteLine(unused);
+            }
+
             Assert.Zero(missingApisCount);
+            Assert.Zero(unusedDllImportsCount);
         }
     }
 }
