@@ -30,10 +30,6 @@ namespace LibVLCSharp
             internal static extern void LibVLCMediaDiscovererRelease(IntPtr mediaDiscoverer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_discoverer_localized_name")]
-            internal static extern IntPtr LibVLCMediaDiscovererLocalizedName(IntPtr mediaDiscoverer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_discoverer_is_running")]
             internal static extern int LibVLCMediaDiscovererIsRunning(IntPtr mediaDiscoverer);
 
@@ -68,12 +64,6 @@ namespace LibVLCSharp
         /// Stop media discovery.
         /// </summary>
         public void Stop() => Native.LibVLCMediaDiscovererStop(NativeReference);
-
-        /// <summary>
-        /// Get media service discover object its localized name.
-        /// under v3 only
-        /// </summary>
-        public string? LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
 
         /// <summary>
         /// Query if media service discover object is running.

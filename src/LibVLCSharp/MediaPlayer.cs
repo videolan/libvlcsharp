@@ -140,12 +140,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_player_get_chapter_count")]
             internal static extern int LibVLCMediaPlayerGetChapterCount(IntPtr mediaPlayer);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_will_play")]
-            internal static extern int LibVLCMediaPlayerWillPlay(IntPtr mediaPlayer);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_chapter_count_for_title")]
             internal static extern int LibVLCMediaPlayerGetChapterCountForTitle(IntPtr mediaPlayer, int title);
@@ -442,15 +436,6 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_chapter_descriptions_release")]
             internal static extern void LibVLCChapterDescriptionsRelease(IntPtr chapters, uint count);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_crop_geometry")]
-            internal static extern IntPtr LibVLCVideoGetCropGeometry(IntPtr mediaPlayer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_set_crop_geometry")]
-            internal static extern void LibVLCVideoSetCropGeometry(IntPtr mediaPlayer, IntPtr geometry);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_teletext")]
@@ -796,11 +781,6 @@ namespace LibVLCSharp
         /// Get the number of chapters in movie, or -1.
         /// </summary>
         public int ChapterCount => Native.LibVLCMediaPlayerGetChapterCount(NativeReference);
-
-        /// <summary>
-        /// True if the player is able to play
-        /// </summary>
-        public bool WillPlay => Native.LibVLCMediaPlayerWillPlay(NativeReference) != 0;
 
         /// <summary>
         /// Get the number of chapters in title, or -1
@@ -1505,20 +1485,6 @@ namespace LibVLCSharp
             MarshalUtils.PtrToStructure<ChapterDescriptionStructure>,
             t => t.Build(),
             Native.LibVLCChapterDescriptionsRelease);
-
-        /// <summary>
-        /// Get/Set current crop filter geometry.
-        /// Empty string to unset
-        /// </summary>
-        public string? CropGeometry
-        {
-            get => Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8(libvlcFree: true);
-            set
-            {
-                var cropGeometryUtf8 = value.ToUtf8();
-                MarshalUtils.PerformInteropAndFree(() => Native.LibVLCVideoSetCropGeometry(NativeReference, cropGeometryUtf8), cropGeometryUtf8);
-            }
-        }
 
         /// <summary>
         /// Get current teletext page requested.
