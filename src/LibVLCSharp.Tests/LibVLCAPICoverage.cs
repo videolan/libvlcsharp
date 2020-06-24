@@ -13,19 +13,19 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class LibVLCAPICoverage
     {
-        const string LibVLCSym3URL = "https://raw.githubusercontent.com/videolan/vlc-3.0/3.0.0/lib/libvlc.sym";
-        const string LibVLCDeprecatedSymUrl = "https://raw.githubusercontent.com/videolan/vlc-3.0/master/include/vlc/deprecated.h";
+        const string LibVLCSymURL = "https://raw.githubusercontent.com/videolan/vlc/master/lib/libvlc.sym";
+        const string LibVLCDeprecatedSymUrl = "https://raw.githubusercontent.com/videolan/vlc/master/include/vlc/deprecated.h";
 
         [Test]
         public async Task CheckLibVLCCoverage()
         {
-            string[] libvlc3Symbols;
-            string[] libvlc3deprecatedSym;
+            string[] libvlcSymbols;
+            string[] libvlcdeprecatedSym;
 
             using (var httpClient = new HttpClient())
             {
-                libvlc3Symbols = (await httpClient.GetStringAsync(LibVLCSym3URL)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                libvlc3deprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                libvlcSymbols = (await httpClient.GetStringAsync(LibVLCSymURL)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                libvlcdeprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
             }
 
             List<string> dllImports = new List<string>();
@@ -36,7 +36,7 @@ namespace LibVLCSharp.Tests
                 .PropertyType
                 .BaseType;
 
-            List<Type> libvlcTypes = new List<Type>
+            var libvlcTypes = new List<Type>
             {
                 typeof(LibVLC),
                 typeof(MediaPlayer),
@@ -47,17 +47,18 @@ namespace LibVLCSharp.Tests
                 typeof(Dialog),
                 typeof(MediaList),
                 typeof(Equalizer),
+                typeof(Picture),
                 eventManager
             };
 
             var deprecatedSymbolsLine = new List<string>();
 
-            for (var i = 0; i < libvlc3deprecatedSym.Count(); i++)
+            for (var i = 0; i < libvlcdeprecatedSym.Count(); i++)
             {
-                var currentLine = libvlc3deprecatedSym[i];
+                var currentLine = libvlcdeprecatedSym[i];
                 if(currentLine.StartsWith("LIBVLC_DEPRECATED"))
                 {
-                    deprecatedSymbolsLine.Add(libvlc3deprecatedSym[i + 1]);
+                    deprecatedSymbolsLine.Add(libvlcdeprecatedSym[i + 1]);
                 }
             }
 
@@ -83,12 +84,6 @@ namespace LibVLCSharp.Tests
                 "libvlc_free" // hidden in internal type
             };
 
-            // these symbols are internal, should not be in libvlc.sym and have been removed in libvlc 4+
-            List<string> internalSymbolsThatShouldNotBeThere = new List<string>
-            {
-                "libvlc_get_input_thread", "libvlc_media_new_from_input_item", "libvlc_media_set_state"
-            };
-
             // not implemented symbols for lack of use case or user interest
             List<string> notImplementedOnPurpose = new List<string>
             {
@@ -98,7 +93,6 @@ namespace LibVLCSharp.Tests
 
             List<string> exclude = new List<string>();
             exclude.AddRange(implementedButHidden);
-            exclude.AddRange(internalSymbolsThatShouldNotBeThere);
             exclude.AddRange(notImplementedOnPurpose);
 
             foreach (var libvlcType in libvlcTypes)
@@ -123,7 +117,7 @@ namespace LibVLCSharp.Tests
                 }
             }
 
-            var missingApis = libvlc3Symbols
+            var missingApis = libvlcSymbols
                 .Where(symbol => !exclude.Any(excludeSymbol => symbol.StartsWith(excludeSymbol))) // Filters out excluded symbols
                 .Except(dllImports)
                 .Except(deprecatedSymbols);
