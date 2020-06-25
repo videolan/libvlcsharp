@@ -22,7 +22,7 @@ namespace LibVLCSharp.iOS.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
         }
     }
 }

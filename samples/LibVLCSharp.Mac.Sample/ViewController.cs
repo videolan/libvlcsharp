@@ -31,7 +31,7 @@ namespace LibVLCSharp.Mac.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4", FromType.FromLocation));
+            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4")));
         }
 
         public override NSObject RepresentedObject

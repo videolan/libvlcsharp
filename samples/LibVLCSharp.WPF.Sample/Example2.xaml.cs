@@ -46,7 +46,7 @@ namespace LibVLCSharp.WPF.Sample
             if (!VideoView.MediaPlayer.IsPlaying)
             {
                 VideoView.MediaPlayer.Play(new Media(_libVLC,
-                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+                    new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
             }
         }
 

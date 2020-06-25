@@ -1,5 +1,6 @@
 ﻿using Gtk;
 using LibVLCSharp;
+using System;
 
 namespace LibVLCSharp.GTK.Sample
 {
@@ -28,8 +29,7 @@ namespace LibVLCSharp.GTK.Sample
 
             //Starts playing
             using var media = new Media(libvlc,
-                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                FromType.FromLocation);
+                new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
             mediaPlayer.Play(media);
 

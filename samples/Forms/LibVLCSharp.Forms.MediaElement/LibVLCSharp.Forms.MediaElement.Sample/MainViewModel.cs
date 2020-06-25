@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using LibVLCSharp;
 
 namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
@@ -49,9 +50,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 
             LibVLC = new LibVLC();
 
-            var media = new Media(LibVLC,
-                "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                FromType.FromLocation);
+            var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
             MediaPlayer.Play();
