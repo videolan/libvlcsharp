@@ -32,7 +32,7 @@ namespace LibVLCSharp.WPF.Sample
             // we need the VideoView to be fully loaded before setting a MediaPlayer on it.
             VideoView.Loaded += (sender, e) => VideoView.MediaPlayer = _mediaPlayer;
         }
-        
+
         void StopButton_Click(object sender, RoutedEventArgs e)
         {
             if (VideoView.MediaPlayer.IsPlaying)
@@ -46,7 +46,7 @@ namespace LibVLCSharp.WPF.Sample
             if (!VideoView.MediaPlayer.IsPlaying)
             {
                 VideoView.MediaPlayer.Play(new Media(_libVLC,
-                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+                    new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
             }
         }
 

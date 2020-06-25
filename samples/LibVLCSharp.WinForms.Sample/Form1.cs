@@ -25,7 +25,7 @@ namespace LibVLCSharp.WinForms.Sample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _mp.Play(new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+            _mp.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
         }
     }
 }

@@ -42,9 +42,7 @@ namespace LibVLCSharp.Forms.Sample
             LibVLC = new LibVLC();
             MediaPlayer = new MediaPlayer(LibVLC)
             {
-                Media = new Media(LibVLC,
-                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                    FromType.FromLocation)
+                Media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
             };
         }
 

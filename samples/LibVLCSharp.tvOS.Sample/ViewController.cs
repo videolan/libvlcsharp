@@ -1,6 +1,6 @@
 ﻿using LibVLCSharp.Platforms.tvOS;
 using LibVLCSharp.Shared;
-
+using System;
 using UIKit;
 
 namespace LibVLCSharp.tvOS.Sample
@@ -22,7 +22,7 @@ namespace LibVLCSharp.tvOS.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation));
+            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
         }
     }
 }
