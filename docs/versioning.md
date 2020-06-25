@@ -17,6 +17,8 @@ LibVLC 4.x is the current nightly engine version. LibVLCSharp 4 support is under
 ### We will follow its major version (i.e. libvlc 3.x -> LibVLCSharp 3.x and so on)
 This makes it easier for people to understand and use the wrapper with libvlc, on all platforms.
 
+So LibVLCSharp 3.x is only guaranteed to work properly with LibVLC 3.x builds, and LibVLCSharp 4.x with LibVLC 4.x. A project where LibVLCSharp and LibVLC have different major versions is not supported.
+
 #### 0.x versions
 
 Initial LibVLCSharp releases were 0.x versions and targetted libvlc 3. 
