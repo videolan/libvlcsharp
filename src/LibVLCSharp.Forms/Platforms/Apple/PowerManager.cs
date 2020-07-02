@@ -1,10 +1,10 @@
 ﻿#if IOS
-using LibVLCSharp.Forms.Platforms.iOS;
+using LibVLCSharp.Forms;
 using UIKit;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PowerManager))]
-namespace LibVLCSharp.Forms.Platforms.iOS
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Power manager.

@@ -1,5 +1,4 @@
-﻿using LibVLCSharp.Platforms.tvOS;
-using LibVLCSharp;
+﻿using LibVLCSharp;
 using System;
 using UIKit;
 

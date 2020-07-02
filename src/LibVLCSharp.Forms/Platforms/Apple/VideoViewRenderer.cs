@@ -1,10 +1,8 @@
 ﻿using LibVLCSharp.Forms;
 
 #if IOS
-using LibVLCSharp.Forms.Platforms.iOS;
 using Xamarin.Forms.Platform.iOS;
 #elif MAC
-using LibVLCSharp.Forms.Platforms.Mac;
 using Xamarin.Forms.Platform.MacOS;
 #endif
 
@@ -12,21 +10,13 @@ using Xamarin.Forms;
 using Foundation;
 
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
-#if IOS
-namespace LibVLCSharp.Forms.Platforms.iOS
-#elif MAC
-namespace LibVLCSharp.Forms.Platforms.Mac
-#endif
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Xamarin.Forms custom renderer for the Apple VideoView
     /// </summary>
     [Preserve(AllMembers = true)]
-#if IOS
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.VideoView, LibVLCSharp.Platforms.iOS.VideoView>
-#elif MAC
-    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.VideoView, LibVLCSharp.Platforms.Mac.VideoView>
-#endif
+    public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.VideoView, LibVLCSharp.VideoView>
     {
         /// <summary>
         /// Native control management during lifecycle events
@@ -40,11 +30,8 @@ namespace LibVLCSharp.Forms.Platforms.Mac
             {
                 if (Control == null)
                 {
-#if IOS
-                    SetNativeControl(new LibVLCSharp.Platforms.iOS.VideoView());
-#elif MAC
-                    SetNativeControl(new LibVLCSharp.Platforms.Mac.VideoView());
-#endif
+                    SetNativeControl(new LibVLCSharp.VideoView());
+
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
                     if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
                     {

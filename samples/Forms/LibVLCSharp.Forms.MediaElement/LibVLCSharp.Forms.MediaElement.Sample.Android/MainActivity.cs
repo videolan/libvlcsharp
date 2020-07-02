@@ -1,8 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Sample.MediaPlayerElement;
+using LibVLCSharp.Forms;
 
 namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
 {
@@ -19,7 +19,7 @@ namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
         /// <summary>
         /// Called when the activity is starting.
         /// </summary>
-        /// <param name="savedInstanceState">If the activity is being re-initialized after previously being shut down then this Bundle contains the 
+        /// <param name="savedInstanceState">If the activity is being re-initialized after previously being shut down then this Bundle contains the
         /// data it most recently supplied in <see cref="Activity.OnSaveInstanceState(Bundle)"/></param>
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -33,7 +33,7 @@ namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
         }
 
         /// <summary>
-        /// Called after <see cref="Activity.OnRestoreInstanceState(Bundle)"/>, <see cref="Activity.OnRestart"/>, or <see cref=" Activity.OnPause"/>, 
+        /// Called after <see cref="Activity.OnRestoreInstanceState(Bundle)"/>, <see cref="Activity.OnRestart"/>, or <see cref=" Activity.OnPause"/>,
         /// for your activity to start interacting with the user.
         /// </summary>
         protected override void OnResume()

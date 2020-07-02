@@ -3,7 +3,7 @@ using Android.App;
 using Android.OS;
 using static Android.App.Application;
 
-namespace LibVLCSharp.Forms.Platforms.Android
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// To get the current activity.

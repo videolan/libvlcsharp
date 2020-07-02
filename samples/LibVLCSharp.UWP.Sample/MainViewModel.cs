@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp;
 
 namespace LibVLCSharp.UWP.Sample

@@ -1,11 +1,11 @@
 ﻿using Android.App;
 using Android.Views;
 using Java.Lang;
-using LibVLCSharp.Forms.Platforms.Android;
+using LibVLCSharp.Forms;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(SystemUI))]
-namespace LibVLCSharp.Forms.Platforms.Android
+namespace LibVLCSharp.Forms
 {
     internal class SystemUI : ISystemUI
     {

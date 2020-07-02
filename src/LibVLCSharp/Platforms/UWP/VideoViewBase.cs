@@ -9,7 +9,7 @@ using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace LibVLCSharp.Platforms.UWP
+namespace LibVLCSharp
 {
     /// <summary>
     /// VideoView base class for the UWP platform

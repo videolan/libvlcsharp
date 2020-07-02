@@ -1,7 +1,7 @@
 ﻿using Android.Views;
 using Org.Videolan.Libvlc;
 
-namespace LibVLCSharp.Platforms.Android
+namespace LibVLCSharp
 {
     /// <summary>
     /// LayoutChangeListener is a Java type necessary for interop with libvlc android

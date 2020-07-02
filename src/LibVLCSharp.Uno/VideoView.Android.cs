@@ -6,15 +6,15 @@ namespace LibVLCSharp.Uno
     /// <summary>
     /// Video view
     /// </summary>
-    public partial class VideoView : VideoViewWrapper<Platforms.Android.VideoView>
+    public partial class VideoView : VideoViewWrapper<LibVLCSharp.VideoView>
     {
         /// <summary>
         /// Creates the underlying video view and set the <see cref="Border.Child"/> property value
         /// </summary>
         /// <returns>the created underlying video view</returns>
-        protected override Platforms.Android.VideoView CreateUnderlyingVideoView()
+        protected override LibVLCSharp.VideoView CreateUnderlyingVideoView()
         {
-            var underlyingVideoView = new Platforms.Android.VideoView(ContextHelper.Current);
+            var underlyingVideoView = new LibVLCSharp.VideoView(ContextHelper.Current);
             Border!.Child = underlyingVideoView;
             return underlyingVideoView;
         }

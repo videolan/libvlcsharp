@@ -1,18 +1,17 @@
 ﻿using Android.Content;
 
 using LibVLCSharp.Forms;
-using LibVLCSharp.Forms.Platforms.Android;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(VideoView), typeof(VideoViewRenderer))]
-namespace LibVLCSharp.Forms.Platforms.Android
+namespace LibVLCSharp.Forms
 {
     /// <summary>
     /// Xamarin.Forms custom renderer for the Android VideoView
     /// </summary>
-    public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.Platforms.Android.VideoView>
+    public class VideoViewRenderer : ViewRenderer<VideoView, LibVLCSharp.VideoView>
     {
         /// <summary>
         /// Main constructor (empty)
@@ -34,7 +33,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
             {
                 if (Control == null)
                 {
-                    SetNativeControl(new LibVLCSharp.Platforms.Android.VideoView(Context));
+                    SetNativeControl(new LibVLCSharp.VideoView(Context));
 
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
                     if (Control!.MediaPlayer != e.NewElement.MediaPlayer)

@@ -4,7 +4,6 @@ using Android.Views;
 using Android.Widget;
 using LibVLCSharp;
 using System;
-using VideoView = LibVLCSharp.Platforms.Android.VideoView;
 
 namespace LibVLCSharp.Android.Sample
 {

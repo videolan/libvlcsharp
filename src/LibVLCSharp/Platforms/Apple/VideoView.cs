@@ -9,11 +9,11 @@ using AppKit;
 #endif
 
 #if IOS
-namespace LibVLCSharp.Platforms.iOS
+namespace LibVLCSharp
 #elif TVOS
-namespace LibVLCSharp.Platforms.tvOS
+namespace LibVLCSharp
 #elif MAC
-namespace LibVLCSharp.Platforms.Mac
+namespace LibVLCSharp
 #endif
 {
     /// <summary>

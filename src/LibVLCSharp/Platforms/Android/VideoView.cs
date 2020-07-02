@@ -5,11 +5,9 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 
-using LibVLCSharp;
-
 using Org.Videolan.Libvlc;
 
-namespace LibVLCSharp.Platforms.Android
+namespace LibVLCSharp
 {
     /// <summary>
     /// VideoView implementation for the Android platform
@@ -65,7 +63,7 @@ namespace LibVLCSharp.Platforms.Android
         /// <param name="attrs">collection of attributes</param>
         /// <param name="defStyleAttr">style definition attribute</param>
         /// <param name="defStyleRes">style resolution attribute</param>
-        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) 
+        public VideoView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes)
             : base(context, attrs, defStyleAttr, defStyleRes)
         {
         }
@@ -128,7 +126,7 @@ namespace LibVLCSharp.Platforms.Android
         /// This is to workaround the first layout change not being raised when VideoView is behind a Xamarin.Forms custom renderer on Android.
         /// </summary>
         public void TriggerLayoutChangeListener() => _awindow?.SetWindowSize(Width, Height);
-        
+
         /// <summary>
         /// Callback when surfaces are created
         /// </summary>
