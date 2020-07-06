@@ -288,12 +288,14 @@ We regularly monitor the `libvlcsharp` tag on [![stackoverflow](https://img.shie
 
 If you have any question or if you're not sure it's actually an issue, please visit our [forum](https://forum.videolan.org/).
 
-### Commercial support
+### Commercial services
 
-If you would like VLC developers to provide you with
-- customization on LibVLC and/or LibVLCSharp, 
-- training,
-- priority support,
+If you would like VLC developers to provide you with:
+- custom development on LibVLC and/or LibVLCSharp, 
+- training and workshops,
+- commercial licenses,
+- support services,
+- consulting services,
 - other multimedia services.
 
 Feel free to [contact us](https://videolabs.io/#contact).
@@ -304,7 +306,7 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 
 ## License
 
-LibVLCSharp is under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)).
+LibVLCSharp is released under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)) and is also available under a [commercial license](https://videolabs.io/#contact).
 
 <br/>
 <div align="center">
