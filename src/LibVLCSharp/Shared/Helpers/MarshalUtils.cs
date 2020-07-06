@@ -65,6 +65,8 @@ namespace LibVLCSharp.Shared.Helpers
 
         internal static string GetLogMessage(IntPtr format, IntPtr args)
         {
+            if(PlatformHelper.IsMac)
+                return AppleLogCallback(format, args);
 #if APPLE
             return AppleLogCallback(format, args);
 #else
