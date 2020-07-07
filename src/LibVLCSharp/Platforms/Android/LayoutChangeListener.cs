@@ -31,7 +31,7 @@ namespace LibVLCSharp.Platforms.Android
         /// <param name="oldTop">previous top</param>
         /// <param name="oldRight">previous right</param>
         /// <param name="oldBottom">previous bottom</param>
-        public void OnLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+        public void OnLayoutChange(View? v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
             int oldBottom)
         {
             if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom)
