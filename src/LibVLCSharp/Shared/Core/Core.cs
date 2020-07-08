@@ -18,15 +18,17 @@ namespace LibVLCSharp.Shared
         partial struct Native
         {
 #if !UWP10_0 && !NETSTANDARD1_1
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+            [DllImport("@rpath/libvlc.dylib", CallingConvention = CallingConvention.Cdecl, //works too
+            //[DllImport("libvlc/osx-x64/lib/libvlc", CallingConvention = CallingConvention.Cdecl, // works
+            //[DllImport("libvlc/osx-x64/lib/libvlc", CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
 #endif
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-            [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
-            internal static extern IntPtr Dlopen(string libraryPath, int mode = 1);
+            [DllImport("libdl", EntryPoint = "dlopen")]
+            internal static extern IntPtr Dlopen(string libraryPath, int mode = 0x002);
         }
 
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -37,6 +39,7 @@ namespace LibVLCSharp.Shared
         static void EnsureVersionsMatch()
         {
             var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8()?.Split('.').FirstOrDefault() ?? "0");
+            Console.Out.WriteLine("dlsym OK <=============");
             var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
             if (libvlcMajorVersion != libvlcsharpMajorVersion)
                 throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
@@ -44,8 +47,8 @@ namespace LibVLCSharp.Shared
         }
 
 #endif
-        static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
-        static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
+        static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibVLC}{LibraryExtension}");
+        static string LibVLCCorePath(string dir) => Path.Combine(dir, $"libvlccore{LibraryExtension}");
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
 #if !NETSTANDARD1_1
         static void PluginPath(string pluginPath) => Environment.SetEnvironmentVariable(Constants.VLCPLUGINPATH, pluginPath);
@@ -59,7 +62,7 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-#if (MAC || NETFRAMEWORK || NETSTANDARD) && !NETSTANDARD1_1
+#if (MAC || NETFRAMEWORK || NETSTANDARD || NETCOREAPP) && !NETSTANDARD1_1
         static bool Loaded => LibvlcHandle != IntPtr.Zero;
         static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
         {

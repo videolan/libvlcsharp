@@ -11,9 +11,9 @@ namespace LibVLCSharp.Shared
 #elif MAC
         internal const string LibraryName = "@executable_path/../MonoBundle/lib/libvlc.dylib";
 #else
-        internal const string LibraryName = "libvlc";
+        internal const string LibraryName = "@rpath/libvlc.dylib";
 #endif
-        internal const string CoreLibraryName = "libvlccore";
+        internal const string CoreLibraryName = "@rpath/libvlccore.dylib";
 
         /// <summary>
         /// The name of the folder that contains the per-architecture folders
