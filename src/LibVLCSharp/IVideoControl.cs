@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibVLCSharp.MediaPlayerElement
+namespace LibVLCSharp
 {
     /// <summary>
     /// Interface for video control

@@ -1,5 +1,4 @@
 ﻿using System;
-using LibVLCSharp.MediaPlayerElement;
 
 namespace LibVLCSharp.Uno
 {
