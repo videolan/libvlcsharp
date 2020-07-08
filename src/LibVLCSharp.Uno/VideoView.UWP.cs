@@ -1,6 +1,6 @@
 ﻿using System;
 using LibVLCSharp.Platforms.UWP;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.Uno
 {
