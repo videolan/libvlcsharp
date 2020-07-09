@@ -1,3 +1,12 @@
+LibVLCSharp version 3.4.6
+=========================
+* documentation updates
+* android: set audio resampler automatically by @encrypt0r
+* core: 
+- fix libvlc log interop for macOS netcore target
+- refactoring libvlc loading.
+* fix WPF xamarin.forms support https://code.videolan.org/videolan/LibVLCSharp/-/issues/364
+
 LibVLCSharp version 3.4.5
 =========================
 * Uno.Android: Fix android packaging import by @kakone. One additional Xamarin.Android tooling issue is still blocking Uno.Android support though.
