@@ -93,10 +93,6 @@ namespace LibVLCSharp.Tests
             });
 
             _libVLC.SetExitHandler(exitCb);
-
-            _libVLC.Dispose();
-
-            Assert.IsTrue(called);
         }
 
         [Test]
