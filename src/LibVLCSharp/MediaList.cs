@@ -24,7 +24,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_new")]
-            internal static extern IntPtr LibVLCMediaListNew(IntPtr instance);
+            internal static extern IntPtr LibVLCMediaListNew();
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -116,9 +116,8 @@ namespace LibVLCSharp
         /// <summary>
         /// Create an empty media list.
         /// </summary>
-        /// <param name="libVLC"></param>
-        public MediaList(LibVLC libVLC)
-            : base(() => Native.LibVLCMediaListNew(libVLC.NativeReference), Native.LibVLCMediaListRelease)
+        public MediaList()
+            : base(() => Native.LibVLCMediaListNew(), Native.LibVLCMediaListRelease)
         {
         }
 

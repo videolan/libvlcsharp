@@ -11,7 +11,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void AddAndRemoveMediaFromMediaList()
         {
-            var mediaList = new MediaList(_libVLC);
+            var mediaList = new MediaList();
             var media = new Media(_libVLC, Path.GetTempFileName());
             var itemAdded = false;
             var itemDeleted = false;
@@ -30,7 +30,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeMediaList()
         {
-            var mediaList = new MediaList(_libVLC);
+            var mediaList = new MediaList();
             mediaList.Dispose();
             Assert.AreEqual(IntPtr.Zero, mediaList.NativeReference);
         }
