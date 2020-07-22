@@ -19,12 +19,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void AddInterface()
-        {
-            Assert.True(_libVLC.AddInterface(string.Empty));
-        }
-
-        [Test]
         public void AudioFilters()
         {
             var audioFilters = _libVLC.AudioFilters;
