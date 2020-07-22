@@ -13,7 +13,6 @@ namespace LibVLCSharp.Tests
 
         [Test]
         [Retry(3)]
-        [Ignore("requires network calls that may fail when run from CI")]
         public async Task PostLogin()
         {
             var tcs = new TaskCompletionSource<bool>();
@@ -44,7 +43,6 @@ namespace LibVLCSharp.Tests
 
         [Test]
         [Retry(3)]
-        [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldThrowIfPostLoginsTwice()
         {
             var tcs = new TaskCompletionSource<bool>();
@@ -74,7 +72,6 @@ namespace LibVLCSharp.Tests
 
         [Test]
         [Retry(3)]
-        [Ignore("requires network calls that may fail when run from CI")]
         public async Task ShouldNotThrowAndReturnFalseIfDimissingTwice()
         {
             var tcs = new TaskCompletionSource<bool>();
