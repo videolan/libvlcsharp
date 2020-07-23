@@ -8,6 +8,7 @@ var solutionName = "LibVLCSharp";
 var solutionFile = IsRunningOnWindows() ? $"{solutionName}.sln" : $"{solutionName}.Mac.sln";
 var solutionPath = $"../src/{solutionFile}";
 var libvlcsharpCsproj = "../src/libvlcsharp/libvlcsharp.csproj";
+var testCsproj = "../src/libvlcsharp.tests/libvlcsharp.tests.csproj";
 
 var packagesDir = "../packages";
 var isCiBuild = BuildSystem.IsRunningOnAzurePipelines || BuildSystem.IsRunningOnAzurePipelinesHosted;
@@ -73,6 +74,17 @@ Task("Build-only-libvlcsharp")
     .Does(() =>
 {
     Build(libvlcsharpCsproj);
+});
+
+Task("Test")
+    .Does(() =>
+{
+    var settings = new DotNetCoreTestSettings
+    {
+        Logger = "console;verbosity=detailed"
+    };
+
+     DotNetCoreTest(testCsproj, settings);
 });
 
 Task("CIDeploy")
