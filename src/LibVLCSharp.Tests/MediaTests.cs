@@ -157,7 +157,7 @@ namespace LibVLCSharp.Tests
         public async Task CreateMediaFromStreamMultiplePlay()
         {
             using var mp = new MediaPlayer(_libVLC);
-            using var stream = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var stream = await GetStreamFromUrl(RealStreamMediaPath);
             using var mediaInput = new StreamMediaInput(stream);
             using var media = new Media(_libVLC, mediaInput);
             mp.Play(media);
@@ -180,8 +180,8 @@ namespace LibVLCSharp.Tests
             var mp1 = new MediaPlayer(libVLC1);
             var mp2 = new MediaPlayer(libVLC2);
 
-            using var s1 = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
-            using var s2 = await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3");
+            using var s1 = await GetStreamFromUrl(RealStreamMediaPath);
+            using var s2 = await GetStreamFromUrl(RealStreamMediaPath);
 
             using var i1 = new StreamMediaInput(s1);
             using var i2 = new StreamMediaInput(s2);
