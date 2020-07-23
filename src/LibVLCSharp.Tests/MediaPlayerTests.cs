@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath));
             var tcs = new TaskCompletionSource<bool>();
             
             mp.Media = media;
