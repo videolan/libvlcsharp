@@ -30,6 +30,23 @@ stages:
     steps:
     - template: windows-build.yml
 
+- stage: Test
+  dependsOn: Build
+  condition: succeeded('Build')
+
+  jobs:
+    - job: test
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: PowerShell@2
+          displayName: 'Test'
+          inputs:
+            targetType: filePath
+            filePath: ./buildsystem/build.ps1
+            arguments: -target Test
+            workingDirectory: buildsystem
+
 - stage: Deploy
   dependsOn: Build
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
