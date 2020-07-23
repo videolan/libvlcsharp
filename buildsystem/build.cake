@@ -8,7 +8,7 @@ var solutionName = "LibVLCSharp";
 var solutionFile = IsRunningOnWindows() ? $"{solutionName}.sln" : $"{solutionName}.Mac.sln";
 var solutionPath = $"../src/{solutionFile}";
 var libvlcsharpCsproj = "../src/libvlcsharp/libvlcsharp.csproj";
-var testCsproj = "../src/libvlcsharp.tests/libvlcsharp.tests.csproj";
+var testCsproj = "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj";
 
 var packagesDir = "../packages";
 var isCiBuild = BuildSystem.IsRunningOnAzurePipelines || BuildSystem.IsRunningOnAzurePipelinesHosted;
@@ -74,7 +74,7 @@ Task("Test")
         Logger = "console;verbosity=detailed"
     };
 
-     DotNetCoreTest(testCsproj, settings);
+    DotNetCoreTest(testCsproj, settings);
 });
 
 Task("CIDeploy")
