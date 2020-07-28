@@ -444,10 +444,10 @@ namespace LibVLCSharp.Shared
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
         /// <returns>the parse status of the media</returns>
-        public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        public Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             var tcs = new TaskCompletionSource<MediaParsedStatus>();
             var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
@@ -469,7 +469,7 @@ namespace LibVLCSharp.Shared
                     tcs.TrySetResult(MediaParsedStatus.Failed);
                 }
 
-                return await tcs.Task.ConfigureAwait(false);
+                return tcs.Task;
             }
             finally
             {
