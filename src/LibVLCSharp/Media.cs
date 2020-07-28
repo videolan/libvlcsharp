@@ -455,7 +455,7 @@ namespace LibVLCSharp
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
         /// <returns>the parse status of the media</returns>
-        public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        public Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -480,7 +480,7 @@ namespace LibVLCSharp
                     tcs.TrySetResult(MediaParsedStatus.Failed);
                 }
 
-                return await tcs.Task.ConfigureAwait(false);
+                return tcs.Task;
             }
             finally
             {
@@ -596,10 +596,10 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public async Task<Picture> GenerateThumbnail(long time, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnail(long time, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return await ThumbnailRequestInternal(() =>
+            return ThumbnailRequestInternal(() =>
                             Native.LibVLCMediaThumbnailRequestByTime(NativeReference, time, speed, width, height, crop, pictureType, timeout),
                             cancellationToken);
         }
@@ -615,15 +615,15 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public async Task<Picture> GenerateThumbnail(float position, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnail(float position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return await ThumbnailRequestInternal(() =>
+            return ThumbnailRequestInternal(() =>
                 Native.LibVLCMediaThumbnailRequestByPosition(NativeReference, position, speed, width, height, crop, pictureType, timeout),
                 cancellationToken);
         }
 
-        async Task<Picture> ThumbnailRequestInternal(Func<IntPtr> nativeCall, CancellationToken cancellationToken = default)
+        Task<Picture> ThumbnailRequestInternal(Func<IntPtr> nativeCall, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThumbnailerRequest request = default;
@@ -652,7 +652,7 @@ namespace LibVLCSharp
                 var result = nativeCall();
                 request = new ThumbnailerRequest(result);
 
-                return await tcs.Task.ConfigureAwait(false);
+                return tcs.Task;
             }
             finally
             {
