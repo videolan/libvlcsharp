@@ -144,7 +144,7 @@ namespace LibVLCSharp.Tests
                 using (var mp = new MediaPlayer(media))
                 {
                     Assert.True(mp.Play());
-                    await Task.Delay(10000);
+                    await Task.Delay(1000);
                     mp.Stop();
                 }
             }
