@@ -21,4 +21,4 @@ steps:
   displayName: 'dotnet build'
   inputs:
     projects: src/LibVLCSharp/LibVLCSharp.csproj
-    arguments: '/p:UNITY=true -c Release'
+    arguments: '/p:UNITY_DESKTOP=true -c Release'

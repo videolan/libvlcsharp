@@ -17,9 +17,13 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <DefineConstants>$(DefineConstants);UWP10_0</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(UNITY)=='true'">
+  <PropertyGroup Condition="$(UNITY_DESKTOP)=='true'">
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);UNITY</DefineConstants>
+    <DefineConstants>$(DefineConstants);UNITY;UNITY_DESKTOP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(UNITY_UWP)=='true'">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);UNITY;UWP;UNITY_UWP</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>4.0.0</VersionPrefix>

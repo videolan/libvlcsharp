@@ -50,14 +50,22 @@ Task("Restore-NuGet-Packages")
     MoveDirectory("../src/packages", packagesDir);
 });
 
-Task("unity")
+Task("unity-all")
     .Does(() =>
 {
-    DotNetCoreBuild($"../src/{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
-    {
-        Configuration = configuration,
-        ArgumentCustomization = args => args.Append("/p:UNITY=true"),
-    });
+    BuildUnityAll();
+});
+
+Task("unity-desktop")
+    .Does(() =>
+{
+    BuildUnity("UNITY_DESKTOP");
+});
+
+Task("unity-uwp")
+    .Does(() =>
+{
+    BuildUnity("UNITY_UWP");
 });
 
 Task("Build")
@@ -104,13 +112,28 @@ void Build(string project)
     MSBuild(project, settings => settings.SetConfiguration(configuration).WithProperty("PackageOutputPath", MakeAbsolute(artifactsDir).FullPath));
 }
 
+void BuildUnityAll()
+{
+    RunTarget("unity-desktop");
+    RunTarget("unity-uwp");
+}
+
+void BuildUnity(string unityPlatform)
+{
+    DotNetCoreBuild($"../src/{solutionName}/{solutionName}.csproj", new DotNetCoreBuildSettings()
+    {
+        Configuration = configuration,
+        ArgumentCustomization = args => args.Append($"/p:{unityPlatform}=true"),
+    });
+}
+
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
     .IsDependentOn("Build")
-    .IsDependentOn("unity");
+    .IsDependentOn("unity-all");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

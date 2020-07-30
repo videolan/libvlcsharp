@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK || NETSTANDARD
+﻿#if (NETFRAMEWORK || NETSTANDARD || UNITY_DESKTOP) && !UNITY_UWP
 using System;
 using System.Diagnostics;
 using System.IO;
