@@ -933,7 +933,10 @@ namespace LibVLCSharp.Shared
 
         /// <summary>
         /// Enable or disable fullscreen.
-        /// Warning
+        /// Warning, TL;DR version : Unless you know what you're doing, don't use this.
+        /// Put your VideoView inside a fullscreen control instead, refer to your platform documentation.
+        /// <para></para>
+        /// Warning, long version :
         /// With most window managers, only a top-level windows can be in full-screen mode.
         /// Hence, this function will not operate properly if libvlc_media_player_set_xwindow() was used to embed the video in a non-top-level window.
         /// In that case, the embedding window must be reparented to the root window before fullscreen mode is enabled.
