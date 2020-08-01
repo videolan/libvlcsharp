@@ -13,14 +13,15 @@
                     <SwipeGestureRecognizer Swiped="GestureRecognized" />
                 </Grid.GestureRecognizers>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <ContentPresenter Grid.RowSpan="2" Content="{TemplateBinding VideoView}" />
-                <ContentPresenter Content="{TemplateBinding Content}" />
-                <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
+                <ContentPresenter Content="{TemplateBinding VideoView}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                    <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
+                </Grid>
             </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>
