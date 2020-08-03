@@ -63,3 +63,9 @@ https://github.com/hyvart/Unjammit
 Beautiful WPF Control UI
 
 https://github.com/aduskin/AduSkin
+
+## Lively 
+
+Animated Wallpaper System
+
+https://github.com/rocksdanister/lively
