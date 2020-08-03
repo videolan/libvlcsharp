@@ -22,7 +22,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromUri()
         {
-            var media = new Media(_libVLC, new Uri(RemoteAudioStream, UriKind.Absolute));
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute));
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
@@ -64,7 +64,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMedia()
         {
-            using (var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation))
+            using (var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
@@ -80,7 +80,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMediaFromUri()
         {
-            using (var media = new Media(_libVLC, new Uri(RemoteAudioStream, UriKind.Absolute)))
+            using (var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute)))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
@@ -229,7 +229,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldBeSkippedIfLocalParseSpecifiedAndRemoteUrlProvided()
         {
-            using var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation);
+            using var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation);
             var parseResult = await media.Parse(MediaParseOptions.ParseLocal);
             Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
         }
