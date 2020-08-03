@@ -136,8 +136,6 @@ namespace LibVLCSharp.Tests
         {
             using (var media = new Media(_libVLC, LocalAudioFileSpecialCharacter, FromType.FromPath))
             {
-                Assert.AreEqual(MediaParsedStatus.Skipped, media.ParsedStatus);
-
                 await media.Parse();
                 await Task.Delay(5000);
                 Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);
