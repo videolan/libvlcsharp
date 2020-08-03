@@ -5,7 +5,6 @@
     <GenerateProgramFile>false</GenerateProgramFile>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
     <DebugType>full</DebugType>
