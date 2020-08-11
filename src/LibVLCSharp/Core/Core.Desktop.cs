@@ -78,6 +78,9 @@ namespace LibVLCSharp
         static void InitializeDesktop(string? libvlcDirectoryPath = null)
         {
 #if UNITY
+            // early return for unity android, allows us to share the same libvlcsharp unity dll
+            if(!PlatformHelper.IsWindows) return;
+
             if(string.IsNullOrEmpty(libvlcDirectoryPath))
             {
                 throw new VLCException("Please provide UnityEngine.Application.dataPath to Core.Initialize for proper initialization.");
