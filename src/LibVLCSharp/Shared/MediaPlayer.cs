@@ -2405,11 +2405,10 @@ namespace LibVLCSharp.Shared
             if(disposing)
             {
                 if(IsPlaying)
-                {
                     Stop();
-                }
 
-                Media?.Dispose();
+                if (_gcHandle.IsAllocated)
+                    _gcHandle.Free();
             }
 
             base.Dispose(disposing);
