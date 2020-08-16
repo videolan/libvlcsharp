@@ -28,7 +28,7 @@ This package also contains the views for the following platforms:
 If you need Xamarin.Forms support, see LibVLCSharp.Forms.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299;net45;net471</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
@@ -49,6 +49,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -60,6 +61,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <Compile Include="Platforms\Android\**\*.cs" />
@@ -86,7 +88,13 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     </Page>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
+   <ItemGroup Condition="$(TargetFramework.StartsWith('net4')) Or '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+
+  </ItemGroup>
+
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ItemGroup>
       <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
