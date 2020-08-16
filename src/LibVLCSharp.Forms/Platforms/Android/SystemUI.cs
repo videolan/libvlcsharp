@@ -1,6 +1,4 @@
-﻿using Android.App;
-using Android.Views;
-using Java.Lang;
+﻿using Android.Views;
 using LibVLCSharp.Forms.Platforms.Android;
 using LibVLCSharp.Forms.Shared;
 using Xamarin.Forms;
@@ -12,21 +10,23 @@ namespace LibVLCSharp.Forms.Platforms.Android
     {
         public void ShowSystemUI()
         {
-            if (Platform.Activity == null)
+            var decorView = Platform.Activity?.Window?.DecorView;
+            if (decorView == null)
                 return;
 
-            Platform.Activity.Window.DecorView.SystemUiVisibility =
+            decorView.SystemUiVisibility =
                 (StatusBarVisibility)(SystemUiFlags.LayoutStable |
                 SystemUiFlags.LayoutFullscreen);
         }
 
         public void HideSystemUI()
         {
-            if (Platform.Activity == null)
+            var decorView = Platform.Activity?.Window?.DecorView;
+            if (decorView == null)
                 return;
 
-            Platform.Activity.Window.DecorView.SystemUiVisibility = 
-               Platform.Activity.Window.DecorView.SystemUiVisibility |
+            decorView.SystemUiVisibility = 
+               decorView.SystemUiVisibility |
                (StatusBarVisibility)(SystemUiFlags.ImmersiveSticky | 
                SystemUiFlags.Fullscreen | 
                SystemUiFlags.HideNavigation |

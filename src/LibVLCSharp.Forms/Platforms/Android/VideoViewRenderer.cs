@@ -35,7 +35,7 @@ namespace LibVLCSharp.Forms.Platforms.Android
             {
                 if (Control == null)
                 {
-                    SetNativeControl(new LibVLCSharp.Platforms.Android.VideoView(Context));
+                    SetNativeControl(new LibVLCSharp.Platforms.Android.VideoView(Context!));
 
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
                     if (Control!.MediaPlayer != e.NewElement.MediaPlayer)

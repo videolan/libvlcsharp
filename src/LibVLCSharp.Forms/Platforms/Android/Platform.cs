@@ -23,34 +23,34 @@ namespace LibVLCSharp.Forms.Platforms.Android
                 set => CurrentActivity.SetTarget(value);
             }
 
-            public void OnActivityCreated(Activity activity, Bundle savedInstanceState)
+            public void OnActivityCreated(Activity? activity, Bundle? savedInstanceState)
             {
                 Activity = activity;
             }
 
-            public void OnActivityDestroyed(Activity activity)
+            public void OnActivityDestroyed(Activity? activity)
             {
             }
 
-            public void OnActivityPaused(Activity activity)
-            {
-                Activity = activity;
-            }
-
-            public void OnActivityResumed(Activity activity)
+            public void OnActivityPaused(Activity? activity)
             {
                 Activity = activity;
             }
 
-            public void OnActivitySaveInstanceState(Activity activity, Bundle outState)
+            public void OnActivityResumed(Activity? activity)
+            {
+                Activity = activity;
+            }
+
+            public void OnActivitySaveInstanceState(Activity? activity, Bundle? outState)
             {
             }
 
-            public void OnActivityStarted(Activity activity)
+            public void OnActivityStarted(Activity? activity)
             {
             }
 
-            public void OnActivityStopped(Activity activity)
+            public void OnActivityStopped(Activity? activity)
             {
             }
         }
@@ -73,7 +73,13 @@ namespace LibVLCSharp.Forms.Platforms.Android
             {
                 lifecycleListener = new ActivityLifecycleContextListener();
                 LifecycleListener = lifecycleListener;
-                activity.Application.RegisterActivityLifecycleCallbacks(lifecycleListener);
+                var app = activity.Application;
+                if (app is null)
+                {
+                    throw new InvalidOperationException("The given activity is not linked to an Application instance (activity.Application is null)");
+                }
+
+                app.RegisterActivityLifecycleCallbacks(lifecycleListener);
             }
             lifecycleListener.Activity = activity;
         }
