@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath));
             var tcs = new TaskCompletionSource<bool>();
             
             mp.Media = media;
@@ -71,7 +71,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task Play()
         {
-            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath));
             var mp = new MediaPlayer(media);
             var called = false;
             mp.Playing += (sender, args) =>
@@ -92,12 +92,10 @@ namespace LibVLCSharp.Tests
         {
             try
             {
-                var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+                var media = new Media(_libVLC, new Uri(RealStreamMediaPath));
                 var mp = new MediaPlayer(media);
                 
-
                 mp.Playing += Mp_Playing;
-
                 mp.Playing += Mp_Playing1;
 
                 Debug.WriteLine("first play");
@@ -140,8 +138,6 @@ namespace LibVLCSharp.Tests
 
                 Assert.AreEqual(callCountRegisterOne, 0);
                 Assert.AreEqual(callCountRegisterTwo, 0);
-
-                
             }
             catch (Exception ex)
             {
@@ -167,7 +163,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
 
-            mp.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+            mp.Play(new Media(_libVLC, new Uri(RealStreamMediaPath)));
 
             await Task.Delay(1000);
 
@@ -200,17 +196,17 @@ namespace LibVLCSharp.Tests
         public void GetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
         }
 
         [Test]
         public void SetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
-
-            Assert.True(mp.SetRole(MediaPlayerRole.Video));
             Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+
+            Assert.True(mp.SetRole(MediaPlayerRole.None));
+            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
         }
     }
 }

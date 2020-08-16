@@ -23,7 +23,7 @@ namespace LibVLCSharp.Tests
             media.SetMeta(MetadataType.Description, "test");
             Assert.True(eventHandlerCalled);
         }
-        
+
         public void DurationChanged()
         {
             var media = new Media(_libVLC, LocalAudioFile);
@@ -75,8 +75,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(media);
             mp.Play();
-            await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            await Task.Delay(1000);
             Assert.True(openingCalled);
         }
     }

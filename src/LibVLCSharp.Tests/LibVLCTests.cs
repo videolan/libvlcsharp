@@ -19,12 +19,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void AddInterface()
-        {
-            Assert.True(_libVLC.AddInterface(string.Empty));
-        }
-
-        [Test]
         public void AudioFilters()
         {
             var audioFilters = _libVLC.AudioFilters;
@@ -99,10 +93,6 @@ namespace LibVLCSharp.Tests
             });
 
             _libVLC.SetExitHandler(exitCb);
-
-            _libVLC.Dispose();
-
-            Assert.IsTrue(called);
         }
 
         [Test]
@@ -135,7 +125,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void LibVLCVersion()
         {
-            Assert.True(_libVLC.Version.StartsWith("3"));
+            Assert.AreEqual(typeof(LibVLC).Assembly.GetName()?.Version?.Major, int.Parse(_libVLC.Version.First().ToString()));
         }
 
         [Test]

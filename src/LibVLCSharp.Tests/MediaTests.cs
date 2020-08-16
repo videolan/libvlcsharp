@@ -22,7 +22,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromUri()
         {
-            var media = new Media(_libVLC, new Uri(RemoteAudioStream, UriKind.Absolute));
+            var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute));
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
@@ -64,7 +64,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMedia()
         {
-            using (var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation))
+            using (var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
@@ -80,7 +80,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMediaFromUri()
         {
-            using (var media = new Media(_libVLC, new Uri(RemoteAudioStream, UriKind.Absolute)))
+            using (var media = new Media(_libVLC, new Uri(RealStreamMediaPath, UriKind.Absolute)))
             {
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(media))
@@ -136,15 +136,13 @@ namespace LibVLCSharp.Tests
         {
             using (var media = new Media(_libVLC, LocalAudioFileSpecialCharacter, FromType.FromPath))
             {
-                Assert.AreEqual(MediaParsedStatus.Skipped, media.ParsedStatus);
-
                 await media.Parse();
                 await Task.Delay(5000);
                 Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);
                 using (var mp = new MediaPlayer(media))
                 {
                     Assert.True(mp.Play());
-                    await Task.Delay(10000);
+                    await Task.Delay(1000);
                     mp.Stop();
                 }
             }
@@ -154,7 +152,7 @@ namespace LibVLCSharp.Tests
         public async Task CreateMediaFromStreamMultiplePlay()
         {
             using var mp = new MediaPlayer(_libVLC);
-            using var stream = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var stream = await GetStreamFromUrl(RealStreamMediaPath);
             using var mediaInput = new StreamMediaInput(stream);
             using var media = new Media(_libVLC, mediaInput);
             mp.Play(media);
@@ -177,8 +175,8 @@ namespace LibVLCSharp.Tests
             var mp1 = new MediaPlayer(libVLC1);
             var mp2 = new MediaPlayer(libVLC2);
 
-            using var s1 = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
-            using var s2 = await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3");
+            using var s1 = await GetStreamFromUrl(RealStreamMediaPath);
+            using var s2 = await GetStreamFromUrl(RealStreamMediaPath);
 
             using var i1 = new StreamMediaInput(s1);
             using var i2 = new StreamMediaInput(s2);
@@ -229,7 +227,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task ParseShouldBeSkippedIfLocalParseSpecifiedAndRemoteUrlProvided()
         {
-            using var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation);
+            using var media = new Media(_libVLC, RealStreamMediaPath, FromType.FromLocation);
             var parseResult = await media.Parse(MediaParseOptions.ParseLocal);
             Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
         }

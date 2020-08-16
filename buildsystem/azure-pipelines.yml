@@ -10,7 +10,7 @@ stages:
 - stage: Build
   variables:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
   jobs:
   - job: Linux
     pool:
@@ -30,9 +30,29 @@ stages:
     steps:
     - template: windows-build.yml
 
-- stage: Deploy
+- stage: Test
   dependsOn: Build
-  condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
+  condition: succeeded('Build')
+  variables:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  jobs:
+    - job: test
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - task: PowerShell@2
+          displayName: 'Test'
+          inputs:
+            targetType: filePath
+            filePath: ./buildsystem/build.ps1 
+            arguments: -target Test
+            workingDirectory: buildsystem
+
+- stage: Deploy
+  dependsOn: Test
+  condition: and(succeeded('Test'), not(eq(variables['build.reason'], 'PullRequest')))
 
   jobs:
   - job: feedz

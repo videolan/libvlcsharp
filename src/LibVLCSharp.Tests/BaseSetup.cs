@@ -19,8 +19,7 @@ namespace LibVLCSharp.Tests
             _libVLC = new LibVLC("--no-audio"/*, "--no-video"*/, "--verbose=2");
         }
 
-        protected string RemoteAudioStream => "http://streams.videolan.org/streams/mp3/Owner-MPEG2.5.mp3";
-
+        protected string RealStreamMediaPath => "http://streams.videolan.org/streams/mp3/Owner-MPEG2.5.mp3";
         protected string RemoteVideoStream => "https://streams.videolan.org/streams/mp4/Jago-Youtube.mp4";
 
         protected string LocalAudioFile => Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, "sample.mp3");
