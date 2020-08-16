@@ -33,7 +33,7 @@ namespace LibVLCSharp.Forms
             {
                 if (Control == null)
                 {
-                    SetNativeControl(new LibVLCSharp.VideoView(Context));
+                    SetNativeControl(new LibVLCSharp.VideoView(Context!));
 
                     e.NewElement.MediaPlayerChanging += OnMediaPlayerChanging;
                     if (Control!.MediaPlayer != e.NewElement.MediaPlayer)
