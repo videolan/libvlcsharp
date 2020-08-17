@@ -2,9 +2,8 @@
 using Android.Content.PM;
 using Android.OS;
 using LibVLCSharp.Forms.Sample.MediaPlayerElement;
-using LibVLCSharp.Forms;
 
-namespace LibVLCSharp.Forms.MediaPlayerElement.Sample.Android
+namespace LibVLCSharp.Forms.Sample.MediaPlayerElement.Android
 {
     /// <summary>
     /// Represents the main activity.

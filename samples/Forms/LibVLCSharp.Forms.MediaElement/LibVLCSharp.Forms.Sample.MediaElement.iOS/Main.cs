@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace LibVLCSharp.Forms.MediaElement.Sample.iOS
+namespace LibVLCSharp.Forms.Sample.MediaElement.iOS
 {
     public class Application
     {

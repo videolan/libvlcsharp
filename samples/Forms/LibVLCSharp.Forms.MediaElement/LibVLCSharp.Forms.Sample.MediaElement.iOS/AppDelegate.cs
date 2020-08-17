@@ -3,7 +3,7 @@ using LibVLCSharp.Forms.Sample.MediaPlayerElement;
 using LibVLCSharp.Forms;
 using UIKit;
 
-namespace LibVLCSharp.Forms.MediaElement.Sample.iOS
+namespace LibVLCSharp.Forms.Sample.MediaElement.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
     // User Interface of the application, as well as listening (and optionally responding) to 

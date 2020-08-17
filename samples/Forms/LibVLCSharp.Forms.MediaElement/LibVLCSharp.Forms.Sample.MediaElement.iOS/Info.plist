@@ -23,7 +23,7 @@
 	<key>MinimumOSVersion</key>
 	<string>11.3</string>
 	<key>CFBundleDisplayName</key>
-	<string>LibVLCSharp.Forms.MediaElement.Sample</string>
+	<string>LibVLCSharp.Forms.Sample.MediaElement</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.yourcompany.LibVLCSharp.Forms.MediaElement.Sample</string>
 	<key>CFBundleVersion</key>
