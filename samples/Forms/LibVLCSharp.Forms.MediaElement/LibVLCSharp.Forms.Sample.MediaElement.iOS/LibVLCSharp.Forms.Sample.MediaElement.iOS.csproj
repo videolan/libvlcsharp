@@ -136,9 +136,9 @@
       <Project>{06814458-c8b4-4d50-86e2-904e6a9e3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibVLCSharp.Forms.MediaElement.Sample\LibVLCSharp.Forms.MediaElement.Sample.csproj">
+    <ProjectReference Include="..\LibVLCSharp.Forms.Sample.MediaElement\LibVLCSharp.Forms.Sample.MediaElement.csproj">
       <Project>{537a70a3-6565-41e2-8c65-5198e0f4eb45}</Project>
-      <Name>LibVLCSharp.Forms.MediaElement.Sample</Name>
+      <Name>LibVLCSharp.Forms.Sample.MediaElement</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

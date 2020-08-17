@@ -7,8 +7,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>LibVLCSharp.Forms.MediaPlayerElement.Sample.Android</RootNamespace>
-    <AssemblyName>LibVLCSharp.Forms.MediaPlayerElement.Sample.Android</AssemblyName>
+    <RootNamespace>LibVLCSharp.Forms.Sample.MediaPlayerElement.Android</RootNamespace>
+    <AssemblyName>LibVLCSharp.Forms.Sample.MediaPlayerElement.Android</AssemblyName>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -36,6 +36,7 @@
     <EnableLLVM>false</EnableLLVM>
     <BundleAssemblies>false</BundleAssemblies>
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -109,9 +110,9 @@
       <Project>{06814458-c8b4-4d50-86e2-904e6a9e3499}</Project>
       <Name>LibVLCSharp.Forms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LibVLCSharp.Forms.MediaElement.Sample\LibVLCSharp.Forms.MediaElement.Sample.csproj">
+    <ProjectReference Include="..\LibVLCSharp.Forms.Sample.MediaElement\LibVLCSharp.Forms.Sample.MediaElement.csproj">
       <Project>{537a70a3-6565-41e2-8c65-5198e0f4eb45}</Project>
-      <Name>LibVLCSharp.Forms.MediaElement.Sample</Name>
+      <Name>LibVLCSharp.Forms.Sample.MediaElement</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

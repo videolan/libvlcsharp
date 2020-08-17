@@ -67,11 +67,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.UWP.Sample", ".
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MediaElement", "MediaElement", "{5E512888-485B-438A-AA4A-1B1EF50FD49F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.MediaElement.Sample", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample\LibVLCSharp.Forms.MediaElement.Sample.csproj", "{537A70A3-6565-41E2-8C65-5198E0F4EB45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Forms.Sample.MediaElement", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.Sample.MediaElement\LibVLCSharp.Forms.Sample.MediaElement.csproj", "{537A70A3-6565-41E2-8C65-5198E0F4EB45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.Android", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.Android\LibVLCSharp.Forms.MediaElement.Sample.Android.csproj", "{315BB606-A490-4CFB-8DFC-313563C330AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.MediaElement.Android", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.Sample.MediaElement.Android\LibVLCSharp.Forms.Sample.MediaElement.Android.csproj", "{315BB606-A490-4CFB-8DFC-313563C330AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.MediaElement.Sample.iOS", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.MediaElement.Sample.iOS\LibVLCSharp.Forms.MediaElement.Sample.iOS.csproj", "{6C9DE381-A32F-41CB-BCDA-551BE90B5A60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Forms.Sample.MediaElement.iOS", "..\samples\Forms\LibVLCSharp.Forms.MediaElement\LibVLCSharp.Forms.Sample.MediaElement.iOS\LibVLCSharp.Forms.Sample.MediaElement.iOS.csproj", "{6C9DE381-A32F-41CB-BCDA-551BE90B5A60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Uno", "LibVLCSharp.Uno\LibVLCSharp.Uno.csproj", "{82AB6F00-B0CC-4B88-8D09-CD95789E6C38}"
 EndProject

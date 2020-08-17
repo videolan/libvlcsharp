@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>LibVLCSharp.Forms.MediaPlayerElement.Sample</RootNamespace>
-    <AssemblyName>LibVLCSharp.Forms.MediaPlayerElement.Sample</AssemblyName>
+    <RootNamespace>LibVLCSharp.Forms.Sample.MediaPlayerElement</RootNamespace>
+    <AssemblyName>LibVLCSharp.Forms.Sample.MediaPlayerElement</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
