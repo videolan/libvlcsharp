@@ -265,6 +265,8 @@ Pull requests are more than welcome! If you do submit one, please make sure to r
 
 You can look through issues we currently have on the [VideoLAN Gitlab](https://code.videolan.org/videolan/LibVLCSharp). Please pick one of our GitLab issue templates so we can assist you better.
 
+There are [up for grabs tickets](https://code.videolan.org/videolan/LibVLCSharp/-/issues?label_name%5B%5D=up-for-grabs) as well if you would like to start contributing.
+
 ## Questions and Support
 
 ### Bug trackers
