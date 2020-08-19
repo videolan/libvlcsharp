@@ -7,7 +7,7 @@
     <RootNamespace>LibVLCSharp.WinForms.Sample</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20200819" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
