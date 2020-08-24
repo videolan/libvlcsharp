@@ -54,6 +54,11 @@ namespace LibVLCSharp
         public readonly int DisplayedPictures;
 
         /// <summary>
+        /// The number of late frames
+        /// </summary>
+        public readonly int LatePictures;
+
+        /// <summary>
         /// The number of frames lost
         /// </summary>
         public readonly int LostPictures;
