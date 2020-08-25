@@ -23,15 +23,14 @@ MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Position, 8);
 //            ^
 //            | Y axis
 //            | 
-//            | 
-//            | 
 //            |50x      
 //            |--------*                          
+//            |        | 
 //            |        | 90y
-// <----------|------------------------>
+//            |        | 
+//            |        | 
+// <----------|------------------>
 //            |                   X axis
-//            |
-//            |
 //            |
 // symbol "*" shows your text. It will be appears like in diagram if you do set axis like below
 MediaPlayer.SetMarqueeInt(VideoMarqueeOption.X, 50); // X offset, from the left screen edge. default_value=0
