@@ -182,3 +182,79 @@ foreach(var track in media.Tracks)
     }
 }
 ```
+# How do I use marquee ?
+### Enable
+1 to enable marquee displaying. Marquee can be seen. 
+
+0 to disable marquee displaying. Marquee will not be visible.
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Enable, 1); 
+```
+### Size
+Font size in pixels. The default value is 0.
+
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Size, 32); 
+```
+### Position
+<h3 align="center">
+  <img src="http://wiki.videolan.org/images/Marq_demonstration_-_VLC_3.0.6_Linux.png"/>
+</h3>
+
+Marquee position: 0=center, 1=left, 2=right, 4=top, 8=bottom 
+ 
+You can also use combinations of these values, like 6 = top-right. The default value is 0.
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Position, 8); 
+```
+
+### Y and X axis
+```
+            ^
+            | Y axis
+            | 
+            |50x      
+            |--------*                          
+            |        | 
+            |        | 90y
+            |        | 
+            |        | 
+ <----------|------------------>
+            |                   X axis
+            |
+```		
+
+The symbol "*" shows your text position, it will be appear like in diagram above if you set axis like below:
+
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.X, 50);  //X offset, from the left screen edge. default_value=0
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Y, 90);  //Y offset, down from the top. default_value=0
+```
+### Opacity
+ 
+Value should be within this range `[0-255]`.
+
+0 = transparent, 255 = totally opaque. 
+
+default value: 255
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Opacity, 100); 
+```
+### Text
+Text to be displayed as marquee text
+ 
+```csharp
+MediaPlayer.SetMarqueeString(VideoMarqueeOption.Text, "my text"); //Text to display
+```
+### Color
+Set color in decimal (hex will not work).
+
+Use [Hex2Dec](http://www.mathsisfun.com/hexadecimal-decimal-colors.html) to convert hex to decimal.
+
+The default value is 16777215 (white). 
+
+Example usage for red. 
+```csharp
+MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Color, 16711680); // red
+```
+More Advance options here [wiki.videolan.org](http://wiki.videolan.org/Documentation:Modules/marq)
