@@ -197,7 +197,7 @@ MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Size, 32);
 ```
 ## Position
 <h3 align="center">
-  <img src="https:wiki.videolan.org/images/Marq_demonstration_-_VLC_3.0.6_Linux.png"/>
+  <img src="https://wiki.videolan.org/images/Marq_demonstration_-_VLC_3.0.6_Linux.png"/>
 </h3>
  Marquee position: 0=center, 1=left, 2=right, 4=top, 8=bottom 
  You can also use combinations of these values, eg 6 = top-right. default_value=0
