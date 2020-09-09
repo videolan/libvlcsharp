@@ -69,3 +69,15 @@ https://github.com/aduskin/AduSkin
 Animated Wallpaper System
 
 https://github.com/rocksdanister/lively
+
+## RaceControl
+
+Race Control is a standalone, open source F1TV client for Windows, written in C# on the .NET Core platform.
+
+https://github.com/robvdpol/RaceControl
+
+## JukeCore
+
+Playing audio books triggred by a RFID card powered by .NET Core running on a Raspberry Pi!
+
+https://github.com/selmaohneh/JukeCore
