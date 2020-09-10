@@ -11,7 +11,10 @@ namespace LibVLCSharp.Shared
 #elif MAC
         internal const string LibraryName = "@executable_path/../MonoBundle/lib/libvlc.dylib";
 #else
-        internal const string LibraryName = "@rpath/libvlc.dylib";
+        internal const string LibraryName = "libvlc";
+        // for netcore on mac, this is needed.
+        // but this case can't be determined at build time, so we might need LibraryName to be a variable
+        //internal const string LibraryName = "libvlc/osx-x64/lib/libvlc"; 
 #endif
         internal const string CoreLibraryName = "@rpath/libvlccore.dylib";
 

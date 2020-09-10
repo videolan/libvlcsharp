@@ -61,11 +61,8 @@ namespace LibVLCSharp.Shared
                 return;
             }
 
-            PluginPath(Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.Plugins));
-
-            //var pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), "plugins");
-            //Debug.WriteLine($"VLC_PLUGIN_PATH: {pluginPath}");
-            //Environment.SetEnvironmentVariable("VLC_PLUGIN_PATH", pluginPath);
+            var pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location));
+            PluginPath(pluginPath);
 
            LoadLibVLC();
         }

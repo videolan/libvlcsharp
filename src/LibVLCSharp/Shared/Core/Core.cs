@@ -18,9 +18,7 @@ namespace LibVLCSharp.Shared
         partial struct Native
         {
 #if !UWP10_0 && !NETSTANDARD1_1
-            [DllImport("@rpath/libvlc.dylib", CallingConvention = CallingConvention.Cdecl, //works too
-            //[DllImport("libvlc/osx-x64/lib/libvlc", CallingConvention = CallingConvention.Cdecl, // works
-            //[DllImport("libvlc/osx-x64/lib/libvlc", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
 #endif
@@ -29,6 +27,9 @@ namespace LibVLCSharp.Shared
 
             [DllImport("libdl", EntryPoint = "dlopen")]
             internal static extern IntPtr Dlopen(string libraryPath, int mode = 0x002);
+
+            [DllImport(Constants.Libc)]
+            internal static extern int setenv(string name, string value, int overwrite = 1);
         }
 
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -39,7 +40,6 @@ namespace LibVLCSharp.Shared
         static void EnsureVersionsMatch()
         {
             var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8()?.Split('.').FirstOrDefault() ?? "0");
-            Console.Out.WriteLine("dlsym OK <=============");
             var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
             if (libvlcMajorVersion != libvlcsharpMajorVersion)
                 throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
@@ -51,7 +51,7 @@ namespace LibVLCSharp.Shared
         static string LibVLCCorePath(string dir) => Path.Combine(dir, $"libvlccore{LibraryExtension}");
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
 #if !NETSTANDARD1_1
-        static void PluginPath(string pluginPath) => Environment.SetEnvironmentVariable(Constants.VLCPLUGINPATH, pluginPath);
+        static void PluginPath(string pluginPath) => Native.setenv(Constants.VLCPLUGINPATH, pluginPath);
 #endif
         static void Log(string message)
         {
