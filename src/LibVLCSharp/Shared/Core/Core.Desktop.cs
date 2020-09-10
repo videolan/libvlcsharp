@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK || NETSTANDARD || NETCOREAPP
+﻿#if NETFRAMEWORK || NETSTANDARD
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -100,7 +100,7 @@ namespace LibVLCSharp.Shared
                 {
                     pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.Plugins);
                 }
-                
+
                 Console.Out.WriteLine("PluginPath: " + pluginPath);
                 PluginPath(pluginPath);
 #endif
