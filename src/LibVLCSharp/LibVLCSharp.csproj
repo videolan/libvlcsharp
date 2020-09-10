@@ -49,6 +49,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageIcon>icon.png</PackageIcon>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
@@ -71,6 +72,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
     <Compile Remove="Shared\MediaPlayerElement\*.*" />
     <None Include="Shared\MediaPlayerElement\*.*" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Compile Remove="Shared\MediaPlayerElement\*.*" />
@@ -86,6 +88,10 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     </Page>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
     <ItemGroup>

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+#if !APPLE && !ANDROID && !NETSTANDARD2_1 && !NET40
+ using LibVLCSharp.Shared.Helpers;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -10,8 +13,9 @@ namespace LibVLCSharp.Shared
     public class StreamMediaInput : MediaInput
     {
         private readonly Stream _stream;
+#if NET40
         private readonly byte[] _readBuffer = new byte[0x4000];
-
+#endif
         /// <summary>
         /// Initializes a new instance of <see cref="StreamMediaInput"/>, which reads from the given .NET stream.
         /// </summary>
@@ -61,14 +65,17 @@ namespace LibVLCSharp.Shared
         /// <param name="buf">The buffer where read data must be written</param>
         /// <param name="len">The buffer length</param>
         /// <returns>The number of bytes actually read, -1 on error</returns>
-        public override int Read(IntPtr buf, uint len)
+        public unsafe override int Read(IntPtr buf, uint len)
         {
             try
             {
+#if NET40
                 var read = _stream.Read(_readBuffer, 0, Math.Min((int)len, _readBuffer.Length));
                 Marshal.Copy(_readBuffer, 0, buf, read);
-
                 return read;
+#else
+                return _stream.Read(new Span<byte>(buf.ToPointer(), (int)Math.Min(len, int.MaxValue)));
+#endif
             }
             catch (Exception)
             {
