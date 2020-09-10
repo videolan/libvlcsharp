@@ -6,8 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory | DllImportSearchPath.ApplicationDirectory | DllImportSearchPath.SafeDirectories)]
-
 namespace LibVLCSharp.Shared
 {
     /// <summary>
@@ -112,38 +110,6 @@ namespace LibVLCSharp.Shared
             LoadLibVLC(libvlcDirectoryPath);
 #endif
         }
-
-#if NETCOREAPP2_0
-    internal class CustomMacAssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
-    {
-        public CustomMacAssemblyLoadContext()
-        {
-            Default.Resolving += OnResolving;
-        }
-
-        [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
-        internal static extern IntPtr Dlopen(string libraryPath, int mode = 1);
-
-        public void LoadLibVLC(string libvlc) => LoadUnmanagedDll(libvlc);
-
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
-        {
-            Console.Out.WriteLine("LoadUnmanagedDll called with " + unmanagedDllName);
-            return Dlopen(unmanagedDllName);
-        }
-
-        Assembly OnResolving(System.Runtime.Loader.AssemblyLoadContext context, AssemblyName name)
-        {
-            Console.Out.WriteLine("OnResolving called ===========");
-            return Load(name);
-        }
-    }
-#endif
     }
 
 }

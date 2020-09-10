@@ -25,7 +25,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-            [DllImport("libdl", EntryPoint = "dlopen")]
+            [DllImport(Constants.Libdl, EntryPoint = "dlopen")]
             internal static extern IntPtr Dlopen(string libraryPath, int mode = 0x002);
 
             [DllImport(Constants.Libc)]

@@ -16,6 +16,7 @@ namespace LibVLCSharp.Shared
         // but this case can't be determined at build time, so we might need LibraryName to be a variable
         //internal const string LibraryName = "libvlc/osx-x64/lib/libvlc"; 
 #endif
+        // TODO: fix
         internal const string CoreLibraryName = "@rpath/libvlccore.dylib";
 
         /// <summary>
@@ -25,6 +26,7 @@ namespace LibVLCSharp.Shared
 
         internal const string Msvcrt = "msvcrt";
         internal const string Libc = "libc";
+        internal const string Libdl = "libdl";
         internal const string LibSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
         internal const string LibX11 = "libX11";

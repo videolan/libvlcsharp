@@ -48,6 +48,7 @@ namespace LibVLCSharp.Shared
             EnsureVersionsMatch();
         }
 
+        // TODO: is this still called?
         private static void InitializeMac(string? libvlcDirectoryPath)
         {
             if (!string.IsNullOrEmpty(libvlcDirectoryPath))
