@@ -64,5 +64,12 @@ namespace LibVLCSharp.Shared
         /// Returns true if running in 64bit process, false otherwise
         /// </summary>
         public static bool IsX64BitProcess => IntPtr.Size == 8;
+
+#if !NET40 && !UWP10_0
+        /// <summary>
+        /// Returns true if running on dotnet, false otherwise (such as on Mono)
+        /// </summary>
+        public static bool IsDotNet => RuntimeInformation.FrameworkDescription.StartsWith(".NET");
+#endif
     }
 }

@@ -89,15 +89,15 @@ namespace LibVLCSharp.Shared
             if (PlatformHelper.IsMac)
             {
 #if !NETSTANDARD1_1 && !NET40
-                var framework = RuntimeInformation.FrameworkDescription;
                 var pluginPath = string.Empty;
-                if(framework.StartsWith(".NET"))
+                if(PlatformHelper.IsDotNet)
                 {
                     pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.LibVLC,
                         ArchitectureNames.MacOS64, Constants.Plugins);
                 }
                 else
                 {
+                    // in this case, we have a real macOS app bundle thanks to Mono integration with cocoa
                     pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.Plugins);
                 }
 
