@@ -88,7 +88,7 @@ namespace LibVLCSharp.Shared
 
             if (PlatformHelper.IsMac)
             {
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !NET40
                 var framework = RuntimeInformation.FrameworkDescription;
                 var pluginPath = string.Empty;
                 if(framework.StartsWith(".NET"))
