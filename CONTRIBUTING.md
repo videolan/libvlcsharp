@@ -72,7 +72,7 @@ Before you submit your pull request consider the following guidelines:
     git commit -a
     ```
   Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
-
+* Make sure you use a distinctive commit author name.
 * Push your branch to GitHub:
 
     ```shell
