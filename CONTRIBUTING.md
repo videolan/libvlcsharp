@@ -26,7 +26,7 @@ submitting an issue to our [GitLab](https://code.videolan.org/videolan/LibVLCSha
 You can request a new feature by submitting an issue to our [GitLab](https://code.videolan.org/videolan/LibVLCSharp) Repository.  If you
 would like to implement a new feature then consider what kind of change it is:
 
-* **Major Changes** that you wish to contribute to the project should be discussed first on [Discord]https://discord.gg/3h3K3JF) so that we can better coordinate our efforts,
+* **Major Changes** that you wish to contribute to the project should be discussed first on [Discord](https://discord.gg/3h3K3JF) so that we can better coordinate our efforts,
   prevent duplication of work, and help you to craft the change so that it is successfully accepted
   into the project.
 * **Small Changes** can be crafted and submitted to the [GitLab](https://code.videolan.org/videolan/LibVLCSharp) or [GitHub](https://github.com/videolan/libvlcsharp/pulls) Repository as a Pull
