@@ -2409,9 +2409,6 @@ namespace LibVLCSharp
 
             if(disposing)
             {
-                if(IsPlaying)
-                    Stop();
-
                 if (_gcHandle.IsAllocated)
                     _gcHandle.Free();
             }
