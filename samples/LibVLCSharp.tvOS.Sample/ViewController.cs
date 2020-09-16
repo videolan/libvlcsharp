@@ -15,7 +15,7 @@ namespace LibVLCSharp.tvOS.Sample
         {
             base.ViewDidLoad();
 
-            _libVLC = new LibVLC();
+            _libVLC = new LibVLC(enableDebugLogs: true);
             _mediaPlayer = new Shared.MediaPlayer(_libVLC);
 
             _videoView = new VideoView { MediaPlayer = _mediaPlayer };

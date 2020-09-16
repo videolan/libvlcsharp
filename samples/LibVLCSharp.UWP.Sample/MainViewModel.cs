@@ -60,7 +60,7 @@ namespace LibVLCSharp.UWP.Sample
 
         private void Initialize(InitializedEventArgs eventArgs)
         {
-            LibVLC = new LibVLC(eventArgs.SwapChainOptions);
+            LibVLC = new LibVLC(enableDebugLogs: true, eventArgs.SwapChainOptions);
             MediaPlayer = new MediaPlayer(LibVLC);
             using var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
             MediaPlayer.Play(media);

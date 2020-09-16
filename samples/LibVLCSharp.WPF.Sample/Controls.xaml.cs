@@ -33,7 +33,7 @@ namespace LibVLCSharp.WPF.Sample
 
         private void VideoView_Loaded(object sender, RoutedEventArgs e)
         {
-            _libVLC = new LibVLC();
+            _libVLC = new LibVLC(enableDebugLogs: true);
             _mediaPlayer = new MediaPlayer(_libVLC);
 
             parent.VideoView.MediaPlayer = _mediaPlayer;

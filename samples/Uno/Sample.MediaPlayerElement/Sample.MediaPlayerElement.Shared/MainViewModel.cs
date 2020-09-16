@@ -82,7 +82,7 @@ namespace Sample.MediaPlayerElement
 
         private void Initialize(string[] swapChainOptions)
         {
-            LibVLC = new LibVLC(swapChainOptions);
+            LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
             MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
