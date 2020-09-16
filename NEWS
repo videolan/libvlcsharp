@@ -1,3 +1,11 @@
+LibVLCSharp version 3.4.8
+=========================
+* documentation improvements
+* Fix memory leak https://code.videolan.org/videolan/LibVLCSharp/-/issues/367
+* Core: Avoid copy in StreamMediaInput by @jeremyVignelles
+* Core: Remove Mediaplayer.Stop() call in Mediaplayer.Dispose() by @mct62
+* Enable nightly build continuous deployment on feedz for 3.x branch
+
 LibVLCSharp version 3.4.7
 =========================
 * documentation updates
