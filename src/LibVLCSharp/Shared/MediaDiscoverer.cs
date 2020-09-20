@@ -55,6 +55,8 @@ namespace LibVLCSharp.Shared
         public MediaDiscoverer(LibVLC libVLC, string name) 
             : base(() =>
             {
+                if (libVLC.NativeReference == IntPtr.Zero)
+                    throw new ObjectDisposedException(nameof(libVLC));
                 var nameUtf8 = name.ToUtf8();
                 return MarshalUtils.PerformInteropAndFree(() => 
                     Native.LibVLCMediaDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
@@ -67,18 +69,36 @@ namespace LibVLCSharp.Shared
         /// To stop it, call MediaDiscover::stop() or destroy the object directly.
         /// </summary>
         /// <returns>false in case of error, true otherwise</returns>
-        public bool Start() => Native.LibVLCMediaDiscovererStart(NativeReference) == 0;
+        public bool Start()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return false;
+            return Native.LibVLCMediaDiscovererStart(NativeReference) == 0;
+        }
 
         /// <summary>
         /// Stop media discovery.
         /// </summary>
-        public void Stop() => Native.LibVLCMediaDiscovererStop(NativeReference);
+        public void Stop()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaDiscovererStop(NativeReference);
+        }
 
         /// <summary>
         /// Get media service discover object its localized name.
         /// under v3 only
         /// </summary>
-        public string? LocalizedName => Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
+        public string? LocalizedName
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return null;
+                return Native.LibVLCMediaDiscovererLocalizedName(NativeReference).FromUtf8();
+            }
+        }
 
         /// <summary>
         /// Get event manager from media service discover object.
@@ -90,6 +110,8 @@ namespace LibVLCSharp.Shared
             {
                 if (_eventManager == null)
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        return null;
                     var ptr = Native.LibVLCMediaDiscovererEventManager(NativeReference);
                     if (ptr == IntPtr.Zero) return null;
                     _eventManager = new MediaDiscovererEventManager(ptr);

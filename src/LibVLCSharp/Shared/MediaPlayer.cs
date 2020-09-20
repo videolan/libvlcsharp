@@ -635,16 +635,23 @@ namespace LibVLCSharp.Shared
         {
             get
             {
+                if (NativeReference == IntPtr.Zero)
+                    return null;
                 var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
                 return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
             }
-            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+            }
         }
 
         /// <summary>
         /// return true if the media player is playing, false otherwise
         /// </summary>
-        public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
+        public bool IsPlaying => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
 
         /// <summary>
         /// Start playback with Media that is set
@@ -653,6 +660,8 @@ namespace LibVLCSharp.Shared
         /// <returns>true if successful</returns>
         public bool Play()
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             Media?.AddOption(Configuration);
             return Native.LibVLCMediaPlayerPlay(NativeReference) == 0;
         }
@@ -673,12 +682,22 @@ namespace LibVLCSharp.Shared
         /// version LibVLC 1.1.1 or later
         /// </summary>
         /// <param name="pause">play/resume if true, pause if false</param>
-        public void SetPause(bool pause) => Native.LibVLCMediaPlayerSetPause(NativeReference, pause);
+        public void SetPause(bool pause)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaPlayerSetPause(NativeReference, pause);
+        }
 
         /// <summary>
         /// Toggle pause (no effect if there is no media)
         /// </summary>
-        public void Pause() => Native.LibVLCMediaPlayerPause(NativeReference);
+        public void Pause()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaPlayerPause(NativeReference);
+        }
 
         /// <summary>
         /// Stop the playback (no effect if there is no media)
@@ -686,7 +705,12 @@ namespace LibVLCSharp.Shared
         /// This is synchronous, and will block until all VLC threads have been joined.
         /// Calling this from a VLC callback is a bound to cause a deadlock.
         /// </summary>
-        public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
+        public void Stop()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaPlayerStop(NativeReference);
+        }
 
 #if APPLE || NETFRAMEWORK || NETSTANDARD
         /// <summary>
@@ -709,8 +733,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public IntPtr NsObject
         {
-            get => Native.LibVLCMediaPlayerGetNsobject(NativeReference);
-            set => Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? IntPtr.Zero : Native.LibVLCMediaPlayerGetNsobject(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetNsobject(NativeReference, value);
+            }
         }
 #endif
 
@@ -731,8 +760,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public uint XWindow
         {
-            get => Native.LibVLCMediaPlayerGetXwindow(NativeReference);
-            set => Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCMediaPlayerGetXwindow(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetXwindow(NativeReference, value);
+            }
         }
 
         /// <summary>
@@ -744,14 +778,19 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public IntPtr Hwnd
         {
-            get => Native.LibVLCMediaPlayerGetHwnd(NativeReference);
-            set => Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? IntPtr.Zero : Native.LibVLCMediaPlayerGetHwnd(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetHwnd(NativeReference, value);
+            }
         }
 #endif
         /// <summary>
         /// The movie length (in ms), or -1 if there is no media.
         /// </summary>
-        public long Length => Native.LibVLCMediaPlayerGetLength(NativeReference);
+        public long Length => (NativeReference == IntPtr.Zero) ? -1 : Native.LibVLCMediaPlayerGetLength(NativeReference);
 
         /// <summary>
         /// Set the movie time (in ms). This has no effect if no media is being
@@ -761,8 +800,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public long Time
         {
-            get => Native.LibVLCMediaPlayerGetTime(NativeReference);
-            set => Native.LibVLCMediaPlayerSetTime(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? -1 : Native.LibVLCMediaPlayerGetTime(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetTime(NativeReference, value);
+            }
         }
 
         /// <summary>
@@ -774,8 +818,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public float Position
         {
-            get => Native.LibVLCMediaPlayerGetPosition(NativeReference);
-            set => Native.LibVLCMediaPlayerSetPosition(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCMediaPlayerGetPosition(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetPosition(NativeReference, value);
+            }
         }
 
         /// <summary>
@@ -785,26 +834,36 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public int Chapter
         {
-            get => Native.LibVLCMediaPlayerGetChapter(NativeReference);
-            set => Native.LibVLCMediaPlayerSetChapter(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? -1 : Native.LibVLCMediaPlayerGetChapter(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetChapter(NativeReference, value);
+            }
         }
 
         /// <summary>
         /// Get the number of chapters in movie, or -1.
         /// </summary>
-        public int ChapterCount => Native.LibVLCMediaPlayerGetChapterCount(NativeReference);
+        public int ChapterCount => (NativeReference == IntPtr.Zero) ? -1 : Native.LibVLCMediaPlayerGetChapterCount(NativeReference);
 
         /// <summary>
         /// True if the player is able to play
         /// </summary>
-        public bool WillPlay => Native.LibVLCMediaPlayerWillPlay(NativeReference) != 0;
+        public bool WillPlay => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerWillPlay(NativeReference) != 0;
 
         /// <summary>
         /// Get the number of chapters in title, or -1
         /// </summary>
         /// <param name="title"></param>
         /// <returns></returns>
-        public int ChapterCountForTitle(int title) => Native.LibVLCMediaPlayerGetChapterCountForTitle(NativeReference, title);
+        public int ChapterCountForTitle(int title)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return -1;
+            return Native.LibVLCMediaPlayerGetChapterCountForTitle(NativeReference, title);
+        }
 
         /// <summary>
         /// Set movie title number to play
@@ -813,20 +872,40 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public int Title
         {
-            get => Native.LibVLCMediaPlayerGetTitle(NativeReference);
-            set => Native.LibVLCMediaPlayerSetTitle(NativeReference, value);
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return -1;
+                return Native.LibVLCMediaPlayerGetTitle(NativeReference);
+            }
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCMediaPlayerSetTitle(NativeReference, value);
+            }
         }
 
         /// <summary>
         /// The title number count, or -1
         /// </summary>
-        public int TitleCount => Native.LibVLCMediaPlayerGetTitleCount(NativeReference);
+        public int TitleCount
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return -1;
+                return Native.LibVLCMediaPlayerGetTitleCount(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Set previous chapter (if applicable)
         /// </summary>
         public void PreviousChapter()
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCMediaPlayerPreviousChapter(NativeReference);
         }
 
@@ -835,6 +914,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void NextChapter()
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCMediaPlayerNextChapter(NativeReference);
         }
 
@@ -845,7 +926,15 @@ namespace LibVLCSharp.Shared
         /// Depending on the underlying media, the requested rate may be
         /// different from the real playback rate.
         /// </summary>
-        public float Rate => Native.LibVLCMediaPlayerGetRate(NativeReference);
+        public float Rate
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return 1;
+                return Native.LibVLCMediaPlayerGetRate(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Set movie play rate
@@ -857,46 +946,50 @@ namespace LibVLCSharp.Shared
         /// </returns>
         public int SetRate(float rate)
         {
+            if (NativeReference == IntPtr.Zero)
+                return -1;
             return Native.LibVLCMediaPlayerSetRate(NativeReference, rate);
         }
 
         /// <summary>
         /// Get the current state of the media player (playing, paused, ...)
         /// </summary>
-        public VLCState State => Native.LibVLCMediaPlayerGetState(NativeReference);
+        public VLCState State => (NativeReference == IntPtr.Zero) ? VLCState.NothingSpecial : Native.LibVLCMediaPlayerGetState(NativeReference);
 
         /// <summary>
         /// Get the frames per second (fps) for this playing movie, or 0 if unspecified
         /// </summary>
-        public float Fps => Native.LibVLCMediaPlayerGetFps(NativeReference);
+        public float Fps => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCMediaPlayerGetFps(NativeReference);
 
         /// <summary>
         /// Get the number of video outputs
         /// </summary>
-        public uint VoutCount => Native.LibVLCMediaPlayerHasVout(NativeReference);
+        public uint VoutCount => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCMediaPlayerHasVout(NativeReference);
 
         /// <summary>
         /// True if the media player can seek
         /// </summary>
-        public bool IsSeekable => Native.LibVLCMediaPlayerIsSeekable(NativeReference) != 0;
+        public bool IsSeekable => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerIsSeekable(NativeReference) != 0;
 
         /// <summary>
         /// True if the media player can pause
         /// </summary>
-        public bool CanPause => Native.LibVLCMediaPlayerCanPause(NativeReference) != 0;
+        public bool CanPause => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerCanPause(NativeReference) != 0;
 
         /// <summary>
         /// True if the current program is scrambled
         /// <para></para>
         /// LibVLC 2.2.0 or later
         /// </summary>
-        public bool ProgramScambled => Native.LibVLCMediaPlayerProgramScrambled(NativeReference) != 0;
+        public bool ProgramScambled => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerProgramScrambled(NativeReference) != 0;
 
         /// <summary>
         /// Display the next frame (if supported)
         /// </summary>
         public void NextFrame()
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCMediaPlayerNextFrame(NativeReference);
         }
 
@@ -907,6 +1000,8 @@ namespace LibVLCSharp.Shared
         /// LibVLC 2.0.0 or later
         public void Navigate(uint navigate)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCMediaPlayerNavigate(NativeReference, navigate);
         }
 
@@ -918,6 +1013,8 @@ namespace LibVLCSharp.Shared
         /// LibVLC 2.1.0 or later
         public void SetVideoTitleDisplay(Position position, uint timeout)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCMediaPlayerSetVideoTitleDisplay(NativeReference, position, timeout);
         }
 
@@ -928,6 +1025,8 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void ToggleFullscreen()
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCToggleFullscreen(NativeReference);
         }
 
@@ -946,14 +1045,29 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public bool Fullscreen
         {
-            get => Native.LibVLCGetFullscreen(NativeReference) != 0;
-            set => Native.LibVLCSetFullscreen(NativeReference, value ? 1 : 0);
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return false;
+                return Native.LibVLCGetFullscreen(NativeReference) != 0;
+            }
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCSetFullscreen(NativeReference, value ? 1 : 0);
+            }
         }
 
         /// <summary>
         /// Toggle teletext transparent status on video output.
         /// </summary>
-        public void ToggleTeletext() => Native.LibVLCToggleTeletext(NativeReference);
+        public void ToggleTeletext()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCToggleTeletext(NativeReference);
+        }
 
         /// <summary>
         /// Apply new equalizer settings to a media player.
@@ -969,13 +1083,13 @@ namespace LibVLCSharp.Shared
         /// <param name="equalizer">opaque equalizer handle, or NULL to disable the equalizer for this media player</param>
         /// LibVLC 2.2.0 or later
         /// <returns>true on success, false otherwise.</returns>
-        public bool SetEqualizer(Equalizer equalizer) => Native.LibVLCMediaPlayerSetEqualizer(NativeReference, equalizer.NativeReference) == 0;
+        public bool SetEqualizer(Equalizer equalizer) => (NativeReference != IntPtr.Zero) && (equalizer.NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerSetEqualizer(NativeReference, equalizer.NativeReference) == 0;
 
         /// <summary>
         /// unsetEqualizer disable equalizer for this media player
         /// </summary>
         /// <returns>true on success, false otherwise.</returns>
-        public bool UnsetEqualizer() => Native.LibVLCMediaPlayerSetEqualizer(NativeReference, IntPtr.Zero) == 0;
+        public bool UnsetEqualizer() => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerSetEqualizer(NativeReference, IntPtr.Zero) == 0;
 
         LibVLCAudioPlayCb? _audioPlayCb;
         LibVLCAudioPauseCb? _audioPauseCb;
@@ -998,6 +1112,8 @@ namespace LibVLCSharp.Shared
             LibVLCAudioResumeCb? resumeCb, LibVLCAudioFlushCb? flushCb,
             LibVLCAudioDrainCb? drainCb)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             _audioPlayCb = playCb ?? throw new ArgumentNullException(nameof(playCb));
             _audioPauseCb = pauseCb;
             _audioResumeCb = resumeCb;
@@ -1024,6 +1140,8 @@ namespace LibVLCSharp.Shared
         /// <param name="volumeCb">callback to apply audio volume, or NULL to apply volume in software</param>
         public void SetVolumeCallback(LibVLCVolumeCb volumeCb)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             _audioVolumeCb = volumeCb;
             Native.LibVLCAudioSetVolumeCallback(NativeReference, (volumeCb == null) ? null : AudioVolumeCallbackHandle);
         }
@@ -1039,6 +1157,8 @@ namespace LibVLCSharp.Shared
         /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
         public void SetAudioFormatCallback(LibVLCAudioSetupCb setupCb, LibVLCAudioCleanupCb cleanupCb)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             _setupCb = setupCb ?? throw new ArgumentNullException(nameof(setupCb));
             _cleanupCb = cleanupCb;
             Native.LibVLCAudioSetFormatCallbacks(NativeReference, AudioSetupCallbackHandle, (cleanupCb == null) ? null : AudioCleanupCallbackHandle);
@@ -1053,6 +1173,8 @@ namespace LibVLCSharp.Shared
         /// <param name="channels">channels count</param>
         public void SetAudioFormat(string format, uint rate, uint channels)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var formatUtf8 = format.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioSetFormat(NativeReference, formatUtf8, rate, channels), formatUtf8);
         }
@@ -1066,6 +1188,8 @@ namespace LibVLCSharp.Shared
         /// <returns>true if function succeeded, false on error</returns>
         public bool SetAudioOutput(string name)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var nameUtf8 = name.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAudioOutputSet(NativeReference, nameUtf8), nameUtf8) == 0;
         }
@@ -1417,16 +1541,32 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Retrieve SpuDescription in a TrackDescription struct
         /// </summary>
-        public TrackDescription[] SpuDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetSpuDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
+        public TrackDescription[] SpuDescription
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new TrackDescription[0];
+                return MarshalUtils.Retrieve(() => Native.LibVLCVideoGetSpuDescription(NativeReference),
+                    MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+                    t => t.Build(),
+                    t => t.Next,
+                    Native.LibVLCTrackDescriptionListRelease);
+            }
+        }
 
         /// <summary>
         /// Get the current subtitle delay.
         /// </summary>
-        public long SpuDelay => Native.LibVLCVideoGetSpuDelay(NativeReference);
+        public long SpuDelay
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return 0;
+                return Native.LibVLCVideoGetSpuDelay(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Set the subtitle delay.
@@ -1436,43 +1576,61 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="delay">time (in microseconds) the display of subtitles should be delayed</param>
         /// <returns>true if successful, false otherwise</returns>
-        public bool SetSpuDelay(long delay) => Native.LibVLCVideoSetSpuDelay(NativeReference, delay) == 0;
+        public bool SetSpuDelay(long delay) => (NativeReference != IntPtr.Zero) && Native.LibVLCVideoSetSpuDelay(NativeReference, delay) == 0;
 
         /// <summary>
         /// Get the description of available titles.
         /// </summary>
-        public TrackDescription[] TitleDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTitleDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
+        public TrackDescription[] TitleDescription
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new TrackDescription[0];
+                return MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTitleDescription(NativeReference),
+                    MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+                    t => t.Build(),
+                    t => t.Next,
+                    Native.LibVLCTrackDescriptionListRelease);
+            }
+        }
 
         /// <summary>
         /// Get the full description of available chapters.
         /// </summary>
         /// <param name="titleIndex">Index of the title to query for chapters (uses current title if set to -1)</param>
         /// <returns>Array of chapter descriptions.</returns>
-        public ChapterDescription[] FullChapterDescriptions(int titleIndex = -1) => MarshalUtils.Retrieve(NativeReference,
-            (IntPtr nativeRef, out IntPtr array) =>
-            {
-                var count = Native.LibVLCMediaPlayerGetFullChapterDescriptions(nativeRef, titleIndex, out array);
-                // the number of chapters (-1 on error)
-                return count < 0 ? 0 : (uint)count;
-            },
-            MarshalUtils.PtrToStructure<ChapterDescriptionStructure>,
-            t => t.Build(),
-            Native.LibVLCChapterDescriptionsRelease);
+        public ChapterDescription[] FullChapterDescriptions(int titleIndex = -1)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return new ChapterDescription[0];
+            return MarshalUtils.Retrieve(NativeReference,
+                (IntPtr nativeRef, out IntPtr array) =>
+                {
+                    var count = Native.LibVLCMediaPlayerGetFullChapterDescriptions(nativeRef, titleIndex, out array);
+                    // the number of chapters (-1 on error)
+                    return count < 0 ? 0 : (uint)count;
+                },
+                MarshalUtils.PtrToStructure<ChapterDescriptionStructure>,
+                t => t.Build(),
+                Native.LibVLCChapterDescriptionsRelease);
+        }
 
         /// <summary>
         /// Get the description of available chapters for specific title.
         /// </summary>
         /// <param name="titleIndex">selected title</param>
         /// <returns>chapter descriptions</returns>
-        public TrackDescription[] ChapterDescription(int titleIndex) => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
+        public TrackDescription[] ChapterDescription(int titleIndex)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return new TrackDescription[0];
+            return MarshalUtils.Retrieve(() => Native.LibVLCVideoGetChapterDescription(NativeReference, titleIndex),
+                MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
+                t => t.Build(),
+                t => t.Next,
+                Native.LibVLCTrackDescriptionListRelease);
+        }
 
         /// <summary>
         /// Get/Set current crop filter geometry.
@@ -1480,9 +1638,11 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public string? CropGeometry
         {
-            get => Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8(libvlcFree: true);
+            get => (NativeReference == IntPtr.Zero) ? "" : Native.LibVLCVideoGetCropGeometry(NativeReference).FromUtf8(libvlcFree: true);
             set
             {
+                if (NativeReference == IntPtr.Zero)
+                    return;
                 var cropGeometryUtf8 = value.ToUtf8();
                 MarshalUtils.PerformInteropAndFree(() => Native.LibVLCVideoSetCropGeometry(NativeReference, cropGeometryUtf8), cropGeometryUtf8);
             }
@@ -1494,14 +1654,19 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public int Teletext
         {
-            get => Native.LibVLCVideoGetTeletext(NativeReference);
-            set => Native.LibVLCVideoSetTeletext(NativeReference, value);
+            get => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCVideoGetTeletext(NativeReference);
+            set
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return;
+                Native.LibVLCVideoSetTeletext(NativeReference, value);
+            }
         }
 
         /// <summary>
         /// Get number of available video tracks.
         /// </summary>
-        public int VideoTrackCount => Native.LibVLCVideoGetTrackCount(NativeReference);
+        public int VideoTrackCount => (NativeReference == IntPtr.Zero) ? 0 : Native.LibVLCVideoGetTrackCount(NativeReference);
 
         /// <summary>
         /// Get the description of available video tracks.
@@ -1515,14 +1680,14 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Get current video track ID (int) or -1 if no active input.
         /// </summary>
-        public int VideoTrack => Native.LibVLCVideoGetTrack(NativeReference);
+        public int VideoTrack => (NativeReference == IntPtr.Zero) ? -1 : Native.LibVLCVideoGetTrack(NativeReference);
 
         /// <summary>
         /// Set video track.
         /// </summary>
         /// <param name="trackIndex">the track ID (i_id field from track description)</param>
         /// <returns>true on sucess, false out of range</returns>
-        public bool SetVideoTrack(int trackIndex) => Native.LibVLCVideoSetTrack(NativeReference, trackIndex) == 0;
+        public bool SetVideoTrack(int trackIndex) => (NativeReference != IntPtr.Zero) && Native.LibVLCVideoSetTrack(NativeReference, trackIndex) == 0;
 
         /// <summary>
         /// Take a snapshot of the current video window.
@@ -1536,6 +1701,8 @@ namespace LibVLCSharp.Shared
         /// <returns>true on success</returns>
         public bool TakeSnapshot(uint num, string? filePath, uint width, uint height)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var filePathUtf8 = filePath.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePathUtf8, width, height) == 0,
@@ -1548,6 +1715,8 @@ namespace LibVLCSharp.Shared
         /// <param name="deinterlaceMode">type of deinterlace filter, null to disable</param>
         public void SetDeinterlace(string? deinterlaceMode)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var deinterlaceModeUtf8 = deinterlaceMode.ToUtf8();
 
             MarshalUtils.PerformInteropAndFree(() =>
@@ -1560,7 +1729,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">marq option to get</param>
         /// <returns></returns>
-        public int MarqueeInt(VideoMarqueeOption option) => Native.LibVLCVideoGetMarqueeInt(NativeReference, option);
+        public int MarqueeInt(VideoMarqueeOption option)
+        {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(MediaPlayer));
+            return Native.LibVLCVideoGetMarqueeInt(NativeReference, option);
+        }
 
         /// <summary>
         /// Get a string marquee option value
@@ -1569,6 +1743,8 @@ namespace LibVLCSharp.Shared
         /// <returns></returns>
         public string? MarqueeString(VideoMarqueeOption option)
         {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(MediaPlayer));
             var marqueeStrPtr = Native.LibVLCVideoGetMarqueeString(NativeReference, option);
             return marqueeStrPtr.FromUtf8(libvlcFree: true);
         }
@@ -1580,8 +1756,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">marq option to set</param>
         /// <param name="value">marq option value</param>
-        public void SetMarqueeInt(VideoMarqueeOption option, int value) =>
+        public void SetMarqueeInt(VideoMarqueeOption option, int value)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCVideoSetMarqueeInt(NativeReference, option, value);
+        }
 
         /// <summary>
         /// Enable, disable or set an string marquee option
@@ -1590,6 +1770,8 @@ namespace LibVLCSharp.Shared
         /// <param name="marqueeValue">marq option value</param>
         public void SetMarqueeString(VideoMarqueeOption option, string? marqueeValue)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var marqueeValueUtf8 = marqueeValue.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoSetMarqueeString(NativeReference, option, marqueeValueUtf8),
@@ -1602,7 +1784,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">logo option to get, values of libvlc_video_logo_option_t</param>
         /// <returns></returns>
-        public int LogoInt(VideoLogoOption option) => Native.LibVLCVideoGetLogoInt(NativeReference, option);
+        public int LogoInt(VideoLogoOption option)
+        {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(MediaPlayer));
+            return Native.LibVLCVideoGetLogoInt(NativeReference, option);
+        }
 
         /// <summary>
         /// Set logo option as integer. Options that take a different type value
@@ -1611,7 +1798,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">logo option to set, values of libvlc_video_logo_option_t</param>
         /// <param name="value">logo option value</param>
-        public void SetLogoInt(VideoLogoOption option, int value) => Native.LibVLCVideoSetLogoInt(NativeReference, option, value);
+        public void SetLogoInt(VideoLogoOption option, int value)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCVideoSetLogoInt(NativeReference, option, value);
+        }
 
         /// <summary>
         /// Set logo option as string. Options that take a different type value are ignored.
@@ -1620,6 +1812,8 @@ namespace LibVLCSharp.Shared
         /// <param name="logoValue">logo option value</param>
         public void SetLogoString(VideoLogoOption option, string? logoValue)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var logoValueUtf8 = logoValue.ToUtf8();
 
             MarshalUtils.PerformInteropAndFree(() =>
@@ -1632,7 +1826,12 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">adjust option to get, values of libvlc_video_adjust_option_t</param>
         /// <returns></returns>
-        public int AdjustInt(VideoAdjustOption option) => Native.LibVLCVideoGetAdjustInt(NativeReference, option);
+        public int AdjustInt(VideoAdjustOption option)
+        {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(MediaPlayer));
+            return Native.LibVLCVideoGetAdjustInt(NativeReference, option);
+        }
 
         /// <summary>
         /// Set adjust option as integer. Options that take a different type value
@@ -1641,28 +1840,48 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="option">adust option to set, values of libvlc_video_adjust_option_t</param>
         /// <param name="value">adjust option value</param>
-        public void SetAdjustInt(VideoAdjustOption option, int value) => Native.LibVLCVideoSetAdjustInt(NativeReference, option, value);
+        public void SetAdjustInt(VideoAdjustOption option, int value)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCVideoSetAdjustInt(NativeReference, option, value);
+        }
 
         /// <summary>
         /// Get adjust option float value
         /// </summary>
         /// <param name="option">The option for which to get the value</param>
         /// <returns>the float value for a given option</returns>
-        public float AdjustFloat(VideoAdjustOption option) => Native.LibVLCVideoGetAdjustFloat(NativeReference, option);
+        public float AdjustFloat(VideoAdjustOption option)
+        {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(MediaPlayer));
+            return Native.LibVLCVideoGetAdjustFloat(NativeReference, option);
+        }
 
         /// <summary>
         /// Set adjust option as float. Options that take a different type value are ignored.
         /// </summary>
         /// <param name="option">adust option to set, values of <see cref="VideoAdjustOption"/></param>
         /// <param name="value">adjust option value</param>
-        public void SetAdjustFloat(VideoAdjustOption option, float value) => Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
+        public void SetAdjustFloat(VideoAdjustOption option, float value)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCVideoSetAdjustFloat(NativeReference, option, value);
+        }
 
 #if ANDROID
         /// <summary>
         /// Set the android context.
         /// </summary>
         /// <param name="aWindow">See LibVLCSharp.Android</param>
-        public void SetAndroidContext(IntPtr aWindow) => Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+        public void SetAndroidContext(IntPtr aWindow)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaPlayerSetAndroidContext(NativeReference, aWindow);
+        }
 #endif
 
         /// <summary>
@@ -1676,6 +1895,8 @@ namespace LibVLCSharp.Shared
         /// <returns></returns>
         public bool AddSlave(MediaSlaveType type, string uri, bool select)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var uriUtf8 = uri.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCMediaPlayerAddSlave(NativeReference, type, uriUtf8, select) == 0,
@@ -1702,6 +1923,8 @@ namespace LibVLCSharp.Shared
         /// <returns>true if successful, false otherwise</returns>
         public bool UpdateViewpoint(float yaw, float pitch, float roll, float fov, bool absolute = true)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var vpPtr = Native.LibVLCVideoNewViewpoint();
             if (vpPtr == IntPtr.Zero) return false;
 
@@ -1720,21 +1943,34 @@ namespace LibVLCSharp.Shared
         /// <param name="rendererItem">discovered renderer item or null to fallback on local rendering</param>
         /// <returns>true on success, false otherwise</returns>
         public bool SetRenderer(RendererItem? rendererItem) =>
-            Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem?.NativeReference ?? IntPtr.Zero) == 0;
+            (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerSetRenderer(NativeReference, rendererItem?.NativeReference ?? IntPtr.Zero) == 0;
 
         /// <summary>Gets the media role.
         /// <para/> version LibVLC 3.0.0 and later.
         /// </summary>
-        public MediaPlayerRole Role => Native.LibVLCMediaPlayerGetRole(NativeReference);
+        public MediaPlayerRole Role
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return MediaPlayerRole.None;
+                return Native.LibVLCMediaPlayerGetRole(NativeReference);
+            }
+        }
 
         /// <summary>Sets the media role.
         /// <para/> version LibVLC 3.0.0 and later.
         /// </summary>
         /// <returns>true on success, false otherwise</returns>
-        public bool SetRole(MediaPlayerRole role) => Native.LibVLCMediaPlayerSetRole(NativeReference, role) == 0;
+        public bool SetRole(MediaPlayerRole role) => (NativeReference != IntPtr.Zero) && Native.LibVLCMediaPlayerSetRole(NativeReference, role) == 0;
 
         /// <summary>Increments the native reference counter for this mediaplayer instance</summary>
-        internal void Retain() => Native.LibVLCMediaPlayerRetain(NativeReference);
+        internal void Retain()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaPlayerRetain(NativeReference);
+        }
 
         /// <summary>
         /// Enable/disable hardware decoding in a crossplatform way.
@@ -2110,6 +2346,8 @@ namespace LibVLCSharp.Shared
             {
                 if (_eventManager == null)
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        throw new ObjectDisposedException(nameof(MediaPlayer));
                     var eventManagerPtr = Native.LibVLCMediaPlayerEventManager(NativeReference);
                     _eventManager = new MediaPlayerEventManager(eventManagerPtr);
                 }

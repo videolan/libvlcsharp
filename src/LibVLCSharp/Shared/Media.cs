@@ -159,8 +159,10 @@ namespace LibVLCSharp.Shared
             : base(create, release)
         {
             if(options == null) return;
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(Media));
 
-            foreach(var optionUtf8 in options.ToUtf8())
+            foreach (var optionUtf8 in options.ToUtf8())
                 if(optionUtf8 != IntPtr.Zero)
                     MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
         }
@@ -247,6 +249,8 @@ namespace LibVLCSharp.Shared
                 throw new ArgumentNullException(nameof(libVLC));
             if (string.IsNullOrEmpty(mrl))
                 throw new ArgumentNullException(nameof(mrl));
+            if (libVLC.NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(libVLC));
 
             var mrlPtr = mrl.ToUtf8();
             if (mrlPtr == IntPtr.Zero)
@@ -280,6 +284,8 @@ namespace LibVLCSharp.Shared
                 throw new ArgumentNullException(nameof(libVLC));
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
+            if (libVLC.NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(libVLC));
 
             return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
                 OpenMediaCallbackHandle,
@@ -306,6 +312,8 @@ namespace LibVLCSharp.Shared
         public void AddOption(string option)
         {
             if(string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
+            if (NativeReference == IntPtr.Zero)
+                return;
 
             var optionUtf8 = option.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddOption(NativeReference, optionUtf8), optionUtf8);
@@ -341,6 +349,8 @@ namespace LibVLCSharp.Shared
         public void AddOptionFlag(string option, uint flags)
         {
             if (string.IsNullOrEmpty(option)) throw new ArgumentNullException(nameof(option));
+            if (NativeReference == IntPtr.Zero)
+                return;
 
             var optionUtf8 = option.ToUtf8();
 
@@ -355,6 +365,8 @@ namespace LibVLCSharp.Shared
             {
                 if (string.IsNullOrEmpty(_mrl))
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        throw new ObjectDisposedException(nameof(Media));
                     var mrlPtr = Native.LibVLCMediaGetMrl(NativeReference);
                     _mrl = mrlPtr.FromUtf8(libvlcFree: true);
                 }
@@ -365,6 +377,8 @@ namespace LibVLCSharp.Shared
         /// <summary>Duplicate a media descriptor object.</summary>
         public Media Duplicate()
         {
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(Media));
             var duplicatePtr = Native.LibVLCMediaDuplicate(NativeReference);
             if(duplicatePtr == IntPtr.Zero) throw new Exception("Failure to duplicate");
             return new Media(duplicatePtr);
@@ -378,6 +392,8 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public string? Meta(MetadataType metadataType)
         {
+            if (NativeReference == IntPtr.Zero)
+                return null;
             var metaPtr = Native.LibVLCMediaGetMeta(NativeReference, metadataType);
             return metaPtr.FromUtf8(libvlcFree: true);
         }
@@ -391,6 +407,8 @@ namespace LibVLCSharp.Shared
         public void SetMeta(MetadataType metadataType, string metaValue)
         {
             if(string.IsNullOrEmpty(metaValue)) throw new ArgumentNullException(metaValue);
+            if (NativeReference == IntPtr.Zero)
+                return;
 
             var metaUtf8 = metaValue.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaSetMeta(NativeReference, metadataType, metaUtf8), metaUtf8);
@@ -398,18 +416,30 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Save the meta previously set</summary>
         /// <returns>true if the write operation was successful</returns>
-        public bool SaveMeta() => Native.LibVLCMediaSaveMeta(NativeReference) != 0;
+        public bool SaveMeta()
+        {
+            return (NativeReference != IntPtr.Zero) && Native.LibVLCMediaSaveMeta(NativeReference) != 0;
+        }
 
         /// <summary>
         /// Get current <see cref="VLCState"/> of media descriptor object.
         /// </summary>
-        public VLCState State => Native.LibVLCMediaGetState(NativeReference);
+        public VLCState State => (NativeReference == IntPtr.Zero) ? VLCState.NothingSpecial : Native.LibVLCMediaGetState(NativeReference);
 
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
         /// </summary>
-        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0 
-            ? default : mediaStats;
+        public MediaStats Statistics
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return default;
+                return Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0
+                    ? default
+                    : mediaStats;
+            }
+        }
 
         MediaEventManager? _eventManager;
         /// <summary>
@@ -422,6 +452,8 @@ namespace LibVLCSharp.Shared
             get
             {
                 if (_eventManager != null) return _eventManager;
+                if (NativeReference == IntPtr.Zero)
+                    throw new ObjectDisposedException(nameof(Media));
                 var eventManagerPtr = Native.LibVLCMediaEventManager(NativeReference);
                 _eventManager = new MediaEventManager(eventManagerPtr);
                 return _eventManager;
@@ -430,7 +462,15 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Get duration (in ms) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
-        public long Duration => Native.LibVLCMediaGetDuration(NativeReference);
+        public long Duration
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return -1;
+                return Native.LibVLCMediaGetDuration(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Parse the media asynchronously with options.      
@@ -447,12 +487,15 @@ namespace LibVLCSharp.Shared
         public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+            if (NativeReference == IntPtr.Zero)
+                return MediaParsedStatus.Failed;
+
             var tcs = new TaskCompletionSource<MediaParsedStatus>();
             var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
                 ParsedChanged -= OnParsedChanged;
-                Native.LibVLCMediaParseStop(NativeReference);
+                if (NativeReference != IntPtr.Zero)
+                    Native.LibVLCMediaParseStop(NativeReference);
                 tcs.TrySetCanceled();
             });
 
@@ -480,7 +523,15 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Return true is the media descriptor object is parsed</summary>
         /// <returns>true if media object has been parsed otherwise it returns false</returns>
-        public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference) != 0;
+        public bool IsParsed
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return false;
+                return Native.LibVLCMediaIsParsed(NativeReference) != 0;
+            }
+        }
 
         /// <summary>Get Parsed status for media descriptor object.</summary>
         /// <returns>a value of the libvlc_media_parsed_status_t enum</returns>
@@ -489,7 +540,15 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_parsed_status_t</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public MediaParsedStatus ParsedStatus => Native.LibVLCMediaGetParsedStatus(NativeReference);
+        public MediaParsedStatus ParsedStatus
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return MediaParsedStatus.Failed;
+                return Native.LibVLCMediaGetParsedStatus(NativeReference);
+            }
+        }
 
         /// <summary>Stop the parsing of the media</summary>
         /// <remarks>
@@ -498,7 +557,12 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_parse_with_options</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
+        public void ParseStop()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaParseStop(NativeReference);
+        }
 
         /// <summary>Get media descriptor's elementary streams description
         /// <para>address to store an allocated array of Elementary Streams</para>
@@ -512,10 +576,19 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 2.1.0 and later.</para>
         /// </remarks>
         /// </summary>
-        public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaTracksGet(nativeRef, out array),
-            MarshalUtils.PtrToStructure<MediaTrackStructure>,
-            m => m.Build(),
-            Native.LibVLCMediaTracksRelease);
+        public MediaTrack[] Tracks
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new MediaTrack[0];
+                return MarshalUtils.Retrieve(NativeReference,
+                    (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaTracksGet(nativeRef, out array),
+                    MarshalUtils.PtrToStructure<MediaTrackStructure>,
+                    m => m.Build(),
+                    Native.LibVLCMediaTracksRelease);
+            }
+        }
 
         /// <summary>
         /// <para>Get subitems of media descriptor object. This will increment</para>
@@ -523,12 +596,20 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_media_list_release() to decrement the reference counting.</para>
         /// </summary>
         /// <returns>list of media descriptor subitems or NULL</returns>
-        public MediaList SubItems => new MediaList(Native.LibVLCMediaSubitems(NativeReference));
-       
+        public MediaList SubItems
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    throw new ObjectDisposedException(nameof(Media));
+                return new MediaList(Native.LibVLCMediaSubitems(NativeReference));
+            }
+        }
+
         /// <summary>
         /// The type of the media
         /// </summary>
-        public MediaType Type => Native.LibVLCMediaGetType(NativeReference);
+        public MediaType Type => NativeReference == IntPtr.Zero ? MediaType.Unknown : Native.LibVLCMediaGetType(NativeReference);
 
         /// <summary>Add a slave to the current media.</summary>
         /// <param name="type">subtitle or audio</param>
@@ -545,6 +626,8 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public bool AddSlave(MediaSlaveType type, uint priority, string uri)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var uriUtf8 = uri.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uriUtf8) != 0, uriUtf8);
         }
@@ -554,7 +637,12 @@ namespace LibVLCSharp.Shared
         /// <para>internally.</para>
         /// </summary>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public void ClearSlaves() => Native.LibVLCMediaClearSlaves(NativeReference);
+        public void ClearSlaves()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaClearSlaves(NativeReference);
+        }
 
         /// <summary>Get a media descriptor's slave list</summary>
         /// <para>address to store an allocated array of slaves (must be</para>
@@ -567,10 +655,19 @@ namespace LibVLCSharp.Shared
         /// <para>LibVLC 3.0.0 and later.</para>
         /// <para>libvlc_media_slaves_add</para>
         /// </remarks>
-        public MediaSlave[] Slaves => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaGetSlaves(nativeRef, out array),
-            MarshalUtils.PtrToStructure<MediaSlaveStructure>,
-            s => s.Build(),
-            Native.LibVLCMediaReleaseSlaves);
+        public MediaSlave[] Slaves
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new MediaSlave[0];
+                return MarshalUtils.Retrieve(NativeReference,
+                    (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaGetSlaves(nativeRef, out array),
+                    MarshalUtils.PtrToStructure<MediaSlaveStructure>,
+                    s => s.Build(),
+                    Native.LibVLCMediaReleaseSlaves);
+            }
+        }
 
         /// <summary>Get a media's codec description</summary>
         /// <param name="type">The type of the track</param>

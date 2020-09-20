@@ -86,14 +86,23 @@ namespace LibVLCSharp.Shared
         /// <param name="preamp">preamp value (-20.0 to 20.0 Hz)</param>
         ///  LibVLC 2.2.0 or later
         /// <returns>true on success, false otherwise</returns>
-        public bool SetPreamp(float preamp) => Native.LibVLCAudioEqualizerSetPreamp(NativeReference, preamp) == 0;
+        public bool SetPreamp(float preamp) => (NativeReference != IntPtr.Zero) && Native.LibVLCAudioEqualizerSetPreamp(NativeReference, preamp) == 0;
 
         /// <summary>
         /// Get the current pre-amplification value from an equalizer.
         /// return preamp value (Hz)
         /// LibVLC 2.2.0 or later
         /// </summary>
-        public float Preamp => Native.LibVLCAudioEqualizerGetPreamp(NativeReference);
+        public float Preamp {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                {
+                    return 0;
+                }
+                return Native.LibVLCAudioEqualizerGetPreamp(NativeReference);
+            }
+        }
 
         /// <summary>
         /// Set a new amplification value for a particular equalizer frequency band.
@@ -104,7 +113,7 @@ namespace LibVLCSharp.Shared
         /// <param name="amp">amplification value (-20.0 to 20.0 Hz)</param>
         /// <param name="band">index, counting from zero, of the frequency band to set</param>
         public bool SetAmp(float amp, uint band) =>
-            Native.LibVLCAudioEqualizerSetAmpAtIndex(NativeReference, amp, band) == 0;
+            (NativeReference != IntPtr.Zero) && Native.LibVLCAudioEqualizerSetAmpAtIndex(NativeReference, amp, band) == 0;
 
         /// <summary>
         /// Get the amplification value for a particular equalizer frequency band.
@@ -112,7 +121,14 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="band">index, counting from zero, of the frequency band to get</param>
         /// <returns>amplification value (Hz); NaN if there is no such frequency band</returns>
-        public float Amp(uint band) => Native.LibVLCAudioEqualizerGetAmpAtIndex(NativeReference, band);
+        public float Amp(uint band)
+        {
+            if (NativeReference == IntPtr.Zero)
+            {
+                return float.NaN;
+            }
+            return Native.LibVLCAudioEqualizerGetAmpAtIndex(NativeReference, band);
+        }
 
         /// <summary>
         /// Get the number of equalizer presets.

@@ -70,6 +70,8 @@ namespace LibVLCSharp.Shared
             {
                 if (_eventManager == null)
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        throw new ObjectDisposedException(nameof(RendererDiscoverer));
                     var eventManagerPtr = Native.LibVLCRendererDiscovererEventManager(NativeReference);
                     _eventManager = new RendererDiscovererEventManager(eventManagerPtr);
                 }
@@ -81,12 +83,17 @@ namespace LibVLCSharp.Shared
         /// Start the renderer discovery
         /// </summary>
         /// <returns>true if start successful</returns>
-        public bool Start() => Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
+        public bool Start() => (NativeReference != IntPtr.Zero) && Native.LibVLCRendererDiscovererStart(NativeReference) == 0;
 
         /// <summary>
         /// Stop the renderer discovery
         /// </summary>
-        public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
+        public void Stop()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCRendererDiscovererStop(NativeReference);
+        }
 
         /// <summary>
         /// Raised when a renderer item has been found
@@ -163,27 +170,27 @@ namespace LibVLCSharp.Shared
         /// <summary>
         /// Name of the renderer item
         /// </summary>
-        public string Name => Native.LibVLCRendererItemName(NativeReference).FromUtf8()!;
+        public string Name => (NativeReference == IntPtr.Zero) ? "" : Native.LibVLCRendererItemName(NativeReference).FromUtf8()!;
 
         /// <summary>
         /// Type of the renderer item
         /// </summary>
-        public string Type => Native.LibVLCRendererItemType(NativeReference).FromUtf8()!;
+        public string Type => (NativeReference == IntPtr.Zero) ? "" : Native.LibVLCRendererItemType(NativeReference).FromUtf8()!;
 
         /// <summary>
         /// IconUri of the renderer item
         /// </summary>
-        public string? IconUri => Native.LibVLCRendererItemIconUri(NativeReference).FromUtf8();
+        public string? IconUri => (NativeReference == IntPtr.Zero) ? null : Native.LibVLCRendererItemIconUri(NativeReference).FromUtf8();
 
         /// <summary>
         /// true if the renderer item can render video
         /// </summary>
-        public bool CanRenderVideo => (Native.LibVLCRendererItemFlags(NativeReference) & VideoRenderer) != 0;
+        public bool CanRenderVideo => (NativeReference != IntPtr.Zero) && (Native.LibVLCRendererItemFlags(NativeReference) & VideoRenderer) != 0;
 
         /// <summary>
         /// true if the renderer item can render audio
         /// </summary>
-        public bool CanRenderAudio => (Native.LibVLCRendererItemFlags(NativeReference) & AudioRenderer) != 0;
+        public bool CanRenderAudio => (NativeReference != IntPtr.Zero) && (Native.LibVLCRendererItemFlags(NativeReference) & AudioRenderer) != 0;
 
         /// <summary>
         /// Dispose of this renderer item instance

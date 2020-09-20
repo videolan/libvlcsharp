@@ -298,6 +298,8 @@ namespace LibVLCSharp.Shared
         /// <returns>True if successful, false otherwise</returns>
         public bool AddInterface(string? name)
         {
+            if (NativeReference == IntPtr.Zero)
+                return false;
             var namePtr = name.ToUtf8();
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
         }
@@ -324,6 +326,8 @@ namespace LibVLCSharp.Shared
         /// </remarks>
         public void SetExitHandler(ExitCallback cb)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             _exitCallback = cb;
             if (cb == null)
             {
@@ -347,6 +351,8 @@ namespace LibVLCSharp.Shared
         /// <remarks>LibVLC 1.1.1 or later</remarks>
         public void SetUserAgent(string name, string http)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var nameUtf8 = name.ToUtf8();
             var httpUtf8 = http.ToUtf8();
 
@@ -363,6 +369,8 @@ namespace LibVLCSharp.Shared
         /// <remarks>LibVLC 2.1.0 or later.</remarks>
         public void SetAppId(string? id, string? version, string? icon)
         {
+            if (NativeReference == IntPtr.Zero)
+                return;
             var idUtf8 = id.ToUtf8();
             var versionUtf8 = version.ToUtf8();
             var iconUtf8 = icon.ToUtf8();
@@ -394,6 +402,8 @@ namespace LibVLCSharp.Shared
         public void SetLogFile(string filename)
         {
             if (string.IsNullOrEmpty(filename)) throw new NullReferenceException(nameof(filename));
+            if (NativeReference == IntPtr.Zero)
+                return;
 
             _logFileHandle = NativeFilePtr(filename);
 
@@ -420,6 +430,8 @@ namespace LibVLCSharp.Shared
             {
                 lock (_logLock)
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        return;
                     _log += value;
                     if (_logSubscriberCount == 0)
                     {
@@ -435,6 +447,8 @@ namespace LibVLCSharp.Shared
             {
                 lock (_logLock)
                 {
+                    if (NativeReference == IntPtr.Zero)
+                        return;
                     _log -= value;
                     if (_logSubscriberCount > 0)
                     {
@@ -457,11 +471,20 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public ModuleDescription[] AudioFilters => MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
-            MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
-            s => s.Build(),
-            module => module.Next,
-            Native.LibVLCModuleDescriptionListRelease);
+        public ModuleDescription[] AudioFilters
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new ModuleDescription[0];
+
+                return MarshalUtils.Retrieve(() => Native.LibVLCAudioFilterListGet(NativeReference),
+                    MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
+                    s => s.Build(),
+                    module => module.Next,
+                    Native.LibVLCModuleDescriptionListRelease);
+            }
+        }
 
         /// <summary>Returns a list of video filters that are available.</summary>
         /// <returns>
@@ -472,11 +495,20 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_module_description_t</para>
         /// <para>libvlc_module_description_list_release</para>
         /// </remarks>
-        public ModuleDescription[] VideoFilters => MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
-            MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
-            s => s.Build(),
-            module => module.Next,
-            Native.LibVLCModuleDescriptionListRelease);
+        public ModuleDescription[] VideoFilters
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new ModuleDescription[0];
+
+                return MarshalUtils.Retrieve(() => Native.LibVLCVideoFilterListGet(NativeReference),
+                    MarshalUtils.PtrToStructure<ModuleDescriptionStructure>,
+                    s => s.Build(),
+                    module => module.Next,
+                    Native.LibVLCModuleDescriptionListRelease);
+            }
+        }
 
         /// <summary>Gets the list of available audio output modules.</summary>
         /// <returns>list of available audio outputs. It must be freed with</returns>
@@ -485,11 +517,19 @@ namespace LibVLCSharp.Shared
         /// <para>libvlc_audio_output_t .</para>
         /// <para>In case of error, NULL is returned.</para>
         /// </remarks>
-        public AudioOutputDescription[] AudioOutputs => MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
-            ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
-            s => s.Build(),
-            s => s.Next,
-            Native.LibVLCAudioOutputListRelease);
+        public AudioOutputDescription[] AudioOutputs
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new AudioOutputDescription[0];
+                return MarshalUtils.Retrieve(() => Native.LibVLCAudioOutputListGet(NativeReference),
+                    ptr => MarshalUtils.PtrToStructure<AudioOutputDescriptionStructure>(ptr),
+                    s => s.Build(),
+                    s => s.Next,
+                    Native.LibVLCAudioOutputListRelease);
+            }
+        }
 
         /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
         /// <param name="audioOutputName">
@@ -511,28 +551,38 @@ namespace LibVLCSharp.Shared
         /// <para>explicit audio device.</para>
         /// <para>LibVLC 2.1.0 or later.</para>
         /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) =>
-            MarshalUtils.Retrieve(() =>
-            {
-                var audioOutputNameUtf8 = audioOutputName.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() =>
-                    Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
-            },
-            MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
-            s => s.Build(),
-            device => device.Next,
-            Native.LibVLCAudioOutputDeviceListRelease);
+        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return new AudioOutputDevice[0];
+            return MarshalUtils.Retrieve(() =>
+                {
+                    var audioOutputNameUtf8 = audioOutputName.ToUtf8();
+                    return MarshalUtils.PerformInteropAndFree(() =>
+                            Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8),
+                        audioOutputNameUtf8);
+                },
+                MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
+                s => s.Build(),
+                device => device.Next,
+                Native.LibVLCAudioOutputDeviceListRelease);
+        }
 
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="discovererCategory">category of services to fetch</param>
         /// <returns>the number of media discoverer services (0 on error)</returns>
         /// <remarks>LibVLC 3.0.0 and later.</remarks>
-        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory) =>
-            MarshalUtils.Retrieve(NativeReference, discovererCategory,
-                (IntPtr nativeRef, MediaDiscovererCategory enumType, out IntPtr array) => Native.LibVLCMediaDiscovererListGet(nativeRef, enumType, out array),
-            MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
-            m => m.Build(),
-            Native.LibVLCMediaDiscovererListRelease);
+        public MediaDiscovererDescription[] MediaDiscoverers(MediaDiscovererCategory discovererCategory)
+        {
+            if (NativeReference == IntPtr.Zero)
+                return new MediaDiscovererDescription[0];
+            return MarshalUtils.Retrieve(NativeReference, discovererCategory,
+                (IntPtr nativeRef, MediaDiscovererCategory enumType, out IntPtr array) =>
+                    Native.LibVLCMediaDiscovererListGet(nativeRef, enumType, out array),
+                MarshalUtils.PtrToStructure<MediaDiscovererDescriptionStructure>,
+                m => m.Build(),
+                Native.LibVLCMediaDiscovererListRelease);
+        }
 
         #region DialogManagement
 
@@ -557,6 +607,8 @@ namespace LibVLCSharp.Shared
             _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
             _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
+            if (NativeReference == IntPtr.Zero)
+                return;
             Native.LibVLCDialogSetCallbacks(NativeReference, DialogCb, GCHandle.ToIntPtr(_gcHandle));
         }
 
@@ -567,6 +619,8 @@ namespace LibVLCSharp.Shared
         {
             if (DialogHandlersSet)
             {
+                if (NativeReference == IntPtr.Zero)
+                    return;
                 Native.LibVLCDialogSetCallbacks(NativeReference, default, IntPtr.Zero);
                 _error = null;
                 _login = null;
@@ -646,11 +700,20 @@ namespace LibVLCSharp.Shared
         /// List of available renderers used to create RendererDiscoverer objects
         /// Note: LibVLC 3.0.0 and later
         /// </summary>
-        public RendererDescription[] RendererList => MarshalUtils.Retrieve(NativeReference,
-            (IntPtr nativeRef, out IntPtr array) => Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
-            MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
-            m => m.Build(),
-            Native.LibVLCRendererDiscovererReleaseList);
+        public RendererDescription[] RendererList
+        {
+            get
+            {
+                if (NativeReference == IntPtr.Zero)
+                    return new RendererDescription[0];
+                return MarshalUtils.Retrieve(NativeReference,
+                    (IntPtr nativeRef, out IntPtr array) =>
+                        Native.LibVLCRendererDiscovererGetList(nativeRef, out array),
+                    MarshalUtils.PtrToStructure<RendererDescriptionStructure>,
+                    m => m.Build(),
+                    Native.LibVLCRendererDiscovererReleaseList);
+            }
+        }
 
         /// <summary>
         /// Gets log message debug infos.
@@ -677,7 +740,12 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Increments the native reference counter for this libvlc instance</summary>
-        internal void Retain() => Native.LibVLCRetain(NativeReference);
+        internal void Retain()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCRetain(NativeReference);
+        }
 
         /// <summary>The version of the LibVLC engine currently used by LibVLCSharp</summary>
         public string Version => Native.LibVLCVersion().FromUtf8()!;

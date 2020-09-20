@@ -131,14 +131,19 @@ namespace LibVLCSharp.Shared
         /// media instance was present it will be released.
         /// </summary>
         /// <param name="media">media instance to add</param>
-        public void SetMedia(Media media) => Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
+        public void SetMedia(Media media)
+        {
+            if (NativeReference == IntPtr.Zero || media.NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaListSetMedia(NativeReference, media.NativeReference);
+        }
 
         /// <summary>
         /// Add media instance to media list
         /// </summary>
         /// <param name="media">a media instance</param>
         /// <returns>true on success, false if the media list is read-only</returns>
-        public bool AddMedia(Media media) => NativeSync(() => Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
+        public bool AddMedia(Media media) => NativeSync(() => (NativeReference != IntPtr.Zero) && (media.NativeReference != IntPtr.Zero) && Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
 
         T NativeSync<T>(Func<T> operation)
         {
@@ -171,6 +176,8 @@ namespace LibVLCSharp.Shared
             NativeSync(() =>
             {
                 if (media == null) throw new ArgumentNullException(nameof(media));
+                if (NativeReference == IntPtr.Zero || media.NativeReference == IntPtr.Zero)
+                    return false;
                 return Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
             });
 
@@ -179,12 +186,16 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="positionIndex">position in the array where to remove the iteam</param>
         /// <returns>true on success, false if the media list is read-only or the item was not found</returns>
-        public bool RemoveIndex(int positionIndex) => NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
+        public bool RemoveIndex(int positionIndex) => NativeSync(() =>
+            (NativeReference != IntPtr.Zero) && Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
 
         /// <summary>
         /// Get count on media list items.
         /// </summary>
-        public int Count => NativeSync(() => Native.LibVLCMediaListCount(NativeReference));
+        public int Count => NativeSync(() =>
+        {
+            return NativeReference == IntPtr.Zero ? 0 : Native.LibVLCMediaListCount(NativeReference);
+        });
 
         /// <summary>
         /// Gets the element at the specified index
@@ -192,8 +203,10 @@ namespace LibVLCSharp.Shared
         /// <param name="position">position in array where to insert</param>
         /// <returns>media instance at position, or null if not found.
         /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
-        public Media? this[int position] => NativeSync(() => 
+        public Media? this[int position] => NativeSync(() =>
         {
+            if (NativeReference == IntPtr.Zero)
+                return null;
             var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
             return ptr == IntPtr.Zero ? null : new Media(ptr);
         });
@@ -204,13 +217,21 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="media">media instance</param>
         /// <returns>position of media instance or -1 if media not found</returns>
-        public int IndexOf(Media media) => NativeSync(() => Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference));
+        public int IndexOf(Media media)
+        {
+            return NativeSync(() =>
+            {
+                if (NativeReference == IntPtr.Zero || media.NativeReference == IntPtr.Zero)
+                    return -1;
+                return Native.LibVLCMediaListIndexOfItem(NativeReference, media.NativeReference);
+            });
+        }
 
         /// <summary>
         /// This indicates if this media list is read-only from a user point of view.
         /// True if readonly, false otherwise
         /// </summary>
-        public bool IsReadonly => Native.LibVLCMediaListIsReadonly(NativeReference) == 1;
+        public bool IsReadonly => NativeReference != IntPtr.Zero && Native.LibVLCMediaListIsReadonly(NativeReference) == 1;
 
         /// <summary>
         /// Get lock on media list items
@@ -219,6 +240,8 @@ namespace LibVLCSharp.Shared
         {
             lock (_syncLock)
             {
+                if (NativeReference == IntPtr.Zero)
+                    return;
                 if (_nativeLock)
                     throw new InvalidOperationException("already locked");
 
@@ -234,6 +257,8 @@ namespace LibVLCSharp.Shared
         {
             lock (_syncLock)
             {
+                if (NativeReference == IntPtr.Zero)
+                    return;
                 if (!_nativeLock)
                     throw new InvalidOperationException("not locked");
 
@@ -251,6 +276,8 @@ namespace LibVLCSharp.Shared
             get
             {
                 if (_eventManager != null) return _eventManager;
+                if (NativeReference == IntPtr.Zero)
+                    throw new ObjectDisposedException(nameof(MediaList));
                 var ptr = Native.LibVLCMediaListEventManager(NativeReference);
                 _eventManager = new MediaListEventManager(ptr);
                 return _eventManager;
@@ -258,7 +285,12 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>Increments the native reference counter for this medialist instance</summary>
-        internal void Retain() => Native.LibVLCMediaListRetain(NativeReference);
+        internal void Retain()
+        {
+            if (NativeReference == IntPtr.Zero)
+                return;
+            Native.LibVLCMediaListRetain(NativeReference);
+        }
 
         #region Events
 
