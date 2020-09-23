@@ -21,6 +21,14 @@ namespace LibVLCSharp.WPF.Sample
             parent.VideoView.Loaded += VideoView_Loaded;
             PlayButton.Click += PlayButton_Click;
             StopButton.Click += StopButton_Click;
+            Unloaded += Controls_Unloaded;
+        }
+
+        private void Controls_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _mediaPlayer.Stop();
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
         }
 
         private void VideoView_Loaded(object sender, RoutedEventArgs e)
@@ -43,8 +51,8 @@ namespace LibVLCSharp.WPF.Sample
         {
             if (!parent.VideoView.MediaPlayer.IsPlaying)
             {
-                var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
-                parent.VideoView.MediaPlayer.Play(new Media(_libVLC, uri));
+                using (var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))
+                    parent.VideoView.MediaPlayer.Play(media);
             }
         }
     }
