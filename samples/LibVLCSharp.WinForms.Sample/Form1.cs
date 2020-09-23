@@ -21,11 +21,21 @@ namespace LibVLCSharp.WinForms.Sample
             _mp = new MediaPlayer(_libVLC);
             videoView1.MediaPlayer = _mp;
             Load += Form1_Load;
+            FormClosed += Form1_FormClosed;
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _mp.Stop();
+            _mp.Dispose();
+            _libVLC.Dispose();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _mp.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+            var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            _mp.Play(media);
+            media.Dispose();
         }
     }
 }
