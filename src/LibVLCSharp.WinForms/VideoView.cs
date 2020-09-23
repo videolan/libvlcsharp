@@ -76,7 +76,7 @@ namespace LibVLCSharp.WinForms
 
         void Detach()
         {
-            if (_mp == null)
+            if (_mp == null || _mp.NativeReference == IntPtr.Zero)
                 return;
 
             _mp.Hwnd = IntPtr.Zero;
@@ -84,7 +84,7 @@ namespace LibVLCSharp.WinForms
 
         void Attach()
         {
-            if (_mp == null)
+            if (_mp == null || _mp.NativeReference == IntPtr.Zero)
                 return;
 
             _mp.Hwnd = Handle;
@@ -102,14 +102,13 @@ namespace LibVLCSharp.WinForms
             {
                 if (disposing)
                 {
-                    if (MediaPlayer != null)
+                    if (MediaPlayer != null && MediaPlayer.NativeReference != IntPtr.Zero)
                     {
                         MediaPlayer.Hwnd = IntPtr.Zero;
                     }
                 }
-                
                 disposedValue = true;
             }
-        }   
+        }
     }
 }
