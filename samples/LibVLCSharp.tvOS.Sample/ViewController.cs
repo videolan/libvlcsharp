@@ -22,7 +22,19 @@ namespace LibVLCSharp.tvOS.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+            var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+
+            _videoView.MediaPlayer.Play(media);
+
+            media.Dispose();
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
         }
     }
 }
