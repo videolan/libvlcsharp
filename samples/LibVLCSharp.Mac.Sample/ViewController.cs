@@ -31,7 +31,9 @@ namespace LibVLCSharp.Mac.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4")));
+            var media = new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"));
+            _videoView.MediaPlayer.Play(media);
+            media.Dispose();
         }
 
         public override NSObject RepresentedObject
@@ -46,5 +48,13 @@ namespace LibVLCSharp.Mac.Sample
                 // Update the view, if already loaded.
             }
         }
-   }
+
+        public override void ViewWillDisappear()
+        {
+            base.ViewWillDisappear();
+
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
+        }
+    }
 }

@@ -1,6 +1,6 @@
 ﻿using LibVLCSharp.Platforms.iOS;
 using LibVLCSharp;
-
+using System;
 using UIKit;
 
 namespace LibVLCSharp.iOS.Sample
@@ -22,7 +22,16 @@ namespace LibVLCSharp.iOS.Sample
 
             View = _videoView;
 
-            _videoView.MediaPlayer.Play(new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+            using var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            _videoView.MediaPlayer.Play(media);
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
         }
     }
 }
