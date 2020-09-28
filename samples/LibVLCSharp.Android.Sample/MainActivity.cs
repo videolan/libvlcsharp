@@ -37,7 +37,7 @@ namespace LibVLCSharp.Android.Sample
 
             _videoView = new VideoView(this) { MediaPlayer = _mediaPlayer };
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
             _videoView.MediaPlayer.Play(media);
         }
 
@@ -45,8 +45,9 @@ namespace LibVLCSharp.Android.Sample
         {
             base.OnPause();
 
-            _videoView.MediaPlayer.Stop();
             _videoView.Dispose();
+            _mediaPlayer.Dispose();
+            _libVLC.Dispose();
         }
     }
 }
