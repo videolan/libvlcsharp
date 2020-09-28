@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:LibVLCSharp.Forms.Sample.MediaPlayerElement"
              xmlns:vlc="clr-namespace:LibVLCSharp.Forms;assembly=LibVLCSharp.Forms"
              x:Class="LibVLCSharp.Forms.Sample.MediaPlayerElement.MainPage"
-             Appearing="OnAppearing">
+             Appearing="OnAppearing"
+             Disappearing="OnDisappearing">
     <ContentPage.BindingContext>
         <local:MainViewModel />
     </ContentPage.BindingContext>

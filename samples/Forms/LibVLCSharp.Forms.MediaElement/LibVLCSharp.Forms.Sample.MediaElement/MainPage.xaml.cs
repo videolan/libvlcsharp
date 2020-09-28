@@ -20,5 +20,11 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
             base.OnAppearing();
             ((MainViewModel)BindingContext).OnAppearing();
         }
+
+        void OnDisappearing(object sender, System.EventArgs e)
+        {
+            base.OnDisappearing();
+            ((MainViewModel)BindingContext).OnDisappearing();
+        }
     }
 }
