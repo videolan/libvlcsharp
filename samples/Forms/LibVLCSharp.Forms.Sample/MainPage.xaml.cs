@@ -16,6 +16,12 @@ namespace LibVLCSharp.Forms.Sample
             ((MainViewModel)BindingContext).OnAppearing();
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            ((MainViewModel)BindingContext).OnDisappearing();
+        }
+
         private void VideoView_MediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
             ((MainViewModel)BindingContext).OnVideoViewInitialized();

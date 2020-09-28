@@ -22,6 +22,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
         }
 
         private LibVLC _libVLC;
+
         /// <summary>
         /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
         /// </summary>
@@ -53,7 +54,15 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
             var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
+            media.Dispose();
             MediaPlayer.Play();
+        }
+
+
+        internal void OnDisappearing()
+        {
+            MediaPlayer.Dispose();
+            LibVLC.Dispose();
         }
 
         private void Set<T>(string propertyName, ref T field, T value)

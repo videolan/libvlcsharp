@@ -40,16 +40,26 @@ namespace LibVLCSharp.Forms.Sample
             Core.Initialize();
 
             LibVLC = new LibVLC();
+            var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+
             MediaPlayer = new MediaPlayer(LibVLC)
             {
-                Media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
+                Media = media
             };
+
+            media.Dispose();
         }
 
         public void OnAppearing()
         {
             IsLoaded = true;
             Play();
+        }
+
+        internal void OnDisappearing()
+        {
+            MediaPlayer.Dispose();
+            LibVLC.Dispose();
         }
 
         public void OnVideoViewInitialized()
