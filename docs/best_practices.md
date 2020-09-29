@@ -4,6 +4,11 @@ This page will detail a set of best practices when using LibVLC/LibVLCSharp
 
 [Back](home.md)
 
+## Only create **one** LibVLC instance at all times
+
+It is recommended by VLC core developers to only create a single instance of type `LibVLC` during your application's lifecycle.
+You may create as many `MediaPlayer` objects as you want from a single `LibVLC` object.
+
 ## Dispose of libvlc objects when done
 
 Since LibVLCSharp is a binding over native libvlc, LibVLCSharp types implement `IDisposable` which means the GC does not handle the disposal of these types, you do. Always call `Dispose()` on LibVLCSharp types when you're done using them (or use `using`).
