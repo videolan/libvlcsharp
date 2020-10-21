@@ -28,7 +28,7 @@ namespace LibVLCSharp.Android.Sample
 
             Core.Initialize();
 
-            _libVLC = new LibVLC();
+            _libVLC = new LibVLC(enableDebugLogs: true);
             _mediaPlayer = new MediaPlayer(_libVLC)
             {
                 EnableHardwareDecoding = true

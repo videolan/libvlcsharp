@@ -49,7 +49,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
         {
             Core.Initialize();
 
-            LibVLC = new LibVLC();
+            LibVLC = new LibVLC(enableDebugLogs: true);
 
             var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 

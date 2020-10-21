@@ -231,12 +231,62 @@ namespace LibVLCSharp
         }
 
         /// <summary>
+        /// Create and initialize a libvlc instance.
+        /// This functions accept a list of &quot;command line&quot; arguments similar to the
+        /// main(). These arguments affect the LibVLC instance default configuration.
+        /// LibVLC may create threads. Therefore, any thread-unsafe process
+        /// initialization must be performed before calling libvlc_new(). In particular
+        /// and where applicable:
+        /// <para>- setlocale() and textdomain(),</para>
+        /// <para>- setenv(), unsetenv() and putenv(),</para>
+        /// <para>- with the X11 display system, XInitThreads()</para>
+        /// (see also libvlc_media_player_set_xwindow()) and
+        /// <para>- on Microsoft Windows, SetErrorMode().</para>
+        /// <para>- sigprocmask() shall never be invoked; pthread_sigmask() can be used.</para>
+        /// On POSIX systems, the SIGCHLD signalmust notbe ignored, i.e. the
+        /// signal handler must set to SIG_DFL or a function pointer, not SIG_IGN.
+        /// Also while LibVLC is active, the wait() function shall not be called, and
+        /// any call to waitpid() shall use a strictly positive value for the first
+        /// parameter (i.e. the PID). Failure to follow those rules may lead to a
+        /// deadlock or a busy loop.
+        /// Also on POSIX systems, it is recommended that the SIGPIPE signal be blocked,
+        /// even if it is not, in principles, necessary, e.g.:
+        /// On Microsoft Windows Vista/2008, the process error mode
+        /// SEM_FAILCRITICALERRORS flagmustbe set before using LibVLC.
+        /// On later versions, that is optional and unnecessary.
+        /// Also on Microsoft Windows (Vista and any later version), setting the default
+        /// DLL directories to SYSTEM32 exclusively is strongly recommended for
+        /// security reasons:
+        /// Arguments are meant to be passed from the command line to LibVLC, just like
+        /// VLC media player does. The list of valid arguments depends on the LibVLC
+        /// version, the operating system and platform, and set of available LibVLC
+        /// plugins. Invalid or unsupported arguments will cause the function to fail
+        /// (i.e. return NULL). Also, some arguments may alter the behaviour or
+        /// otherwise interfere with other LibVLC functions.
+        /// There is absolutely no warranty or promise of forward, backward and
+        /// cross-platform compatibility with regards to libvlc_new() arguments.
+        /// We recommend that you do not use them, other than when debugging.
+        /// </summary>
+        /// <param name="enableDebugLogs">enable verbose debug logs</param>
+        /// <param name="options">list of arguments (should be NULL)</param>
+        public LibVLC(bool enableDebugLogs, params string[] options)
+            : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options, enableDebugLogs), Native.LibVLCNew), Native.LibVLCRelease)
+        {
+            _gcHandle = GCHandle.Alloc(this);
+        }
+
+        /// <summary>
         /// Make dirty hacks to include necessary defaults on some platforms.
         /// </summary>
         /// <param name="options">The options given by the user</param>
+        /// <param name="enableDebugLogs">enable debug logs</param>
         /// <returns>The patched options</returns>
-        static string[] PatchOptions(string[] options)
+        static string[] PatchOptions(string[] options, bool enableDebugLogs = false)
         {
+            if(enableDebugLogs)
+            {
+                options = options.Concat(new[] { "--verbose=2" }).ToArray();
+            }
 #if UWP
             return options.Concat(new[] {"--aout=winstore"}).ToArray();
 #else

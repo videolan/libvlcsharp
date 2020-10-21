@@ -24,7 +24,7 @@ namespace LibVLCSharp.Mac.Sample
 
             Core.Initialize();
 
-            _libVLC = new LibVLC("--verbose=2");
+            _libVLC = new LibVLC(enableDebugLogs: true);
             _mediaPlayer = new MediaPlayer(_libVLC);
 
             _videoView = new VideoView { MediaPlayer = _mediaPlayer };

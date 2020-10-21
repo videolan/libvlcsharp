@@ -59,7 +59,7 @@ namespace LibVLCSharp.Uno.Sample
 
         private void Initialize(string[] swapChainOptions)
         {
-            LibVLC = new LibVLC(swapChainOptions);
+            LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
             MediaPlayer = new MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC,
                 new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));

@@ -13,7 +13,7 @@ namespace LibVLCSharp.GTK.Sample
             // Initializes the GTK# app
             Application.Init();
 
-            using var libvlc = new LibVLC();
+            using var libvlc = new LibVLC(enableDebugLogs: true);
             using var mediaPlayer = new MediaPlayer(libvlc);
 
             // Create the window in code. This could be done in glade as well, I guess...
