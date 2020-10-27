@@ -245,6 +245,17 @@ For more advanced samples, have a look at [libvlcsharp-samples](https://code.vid
 Feel free to suggest and contribute new samples.
 
 ## Quick API overview
+```csharp
+Core.Initialize();
+
+using var libvlc = new LibVLC(enableDebugLogs: true);
+using var media = new Media(libvlc, new Uri(@"C:\tmp\big_buck_bunny.mp4"));
+using var mediaplayer = new MediaPlayer(media);
+
+mediaplayer.Play();
+
+Console.ReadKey();
+```
 
 - [`LibVLC.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/LibVLC.cs): Main object pointing to a native `libvlc` instance in native code.
 - [`MediaPlayer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/MediaPlayer.cs): Manages playback, offers event listeners and more. Accessible from `VideoView` with data-binding support.
