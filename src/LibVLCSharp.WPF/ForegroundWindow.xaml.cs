@@ -102,8 +102,13 @@ namespace LibVLCSharp.WPF
 
         void Wndhost_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
+            if (source == null)
+            {
+                return;
+            }
+
+            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
             Left = targetPoints.X;
             Top = targetPoints.Y;
