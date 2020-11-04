@@ -19,7 +19,15 @@
 
 ## Blogposts
 
+### mfkl
+
 You can find several blog post about LibVLCSharp on my blog at https://mfkl.github.io/
+
+### CodeSailer
+
+- https://codesailer.com/tutorials/simple_video_player/
+
+- https://codesailer.com/tutorials/simple_recorder/
 
 ## Samples
 
