@@ -84,10 +84,10 @@ namespace LibVLCSharp.WPF
                 Show();
                 _wndhost.Focus();
             }
-            catch
+            catch(Exception ex)
             {
                 Hide();
-                throw new VLCException("Unable to create WPF Window in VideoView.");
+                throw new VLCException("Unable to create WPF Window in VideoView.", ex);
             }
         }
 
