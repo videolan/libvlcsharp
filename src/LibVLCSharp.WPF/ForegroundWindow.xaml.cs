@@ -58,6 +58,11 @@ namespace LibVLCSharp.WPF
 
         void Background_Loaded(object sender, RoutedEventArgs e)
         {
+            if (_wndhost != null)
+            {
+                return;
+            }
+
             _wndhost = GetWindow(_bckgnd);
             Trace.Assert(_wndhost != null);
             if (_wndhost == null)
