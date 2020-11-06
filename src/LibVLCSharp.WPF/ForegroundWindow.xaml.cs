@@ -125,6 +125,10 @@ namespace LibVLCSharp.WPF
         void Wndhost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Close();
+
+            _bckgnd.DataContextChanged -= Background_DataContextChanged;
+            _bckgnd.Loaded -= Background_Loaded;
+            _bckgnd.Unloaded -= Background_Unloaded;
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
