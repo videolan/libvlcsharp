@@ -1,0 +1,13 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LibVLCSharp.Avalonia.Sample"
+             x:Class="LibVLCSharp.Avalonia.Sample.App" Name="LibVLCSharp.Avalonia.Sample">
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"/>
+        <StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/FluentDark.xaml"/>
+    </Application.Styles>
+</Application>

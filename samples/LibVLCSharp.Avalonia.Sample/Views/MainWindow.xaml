@@ -1,0 +1,22 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:LibVLCSharp.Avalonia.Sample.ViewModels;assembly=LibVLCSharp.Avalonia.Sample"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:LibVLCSharp.Avalonia.Sample.Views"
+        xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="LibVLCSharp.Avalonia.Sample.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="LibVLCSharp.Avalonia.Sample"
+        Opened="OnOpened">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Panel>
+        <vlc:VideoView MediaPlayer="{Binding MediaPlayer}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Panel>
+
+</Window>
