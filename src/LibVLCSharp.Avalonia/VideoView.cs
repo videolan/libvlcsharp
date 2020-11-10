@@ -66,7 +66,7 @@ namespace LibVLCSharp.Avalonia
 
         private void SetHandler()
         {
-            if((_mediaPlayer == null) || (_platformHandle == null))
+            if((_mediaPlayer == null) || (_platformHandle == null) || !IsInitialized)
                 return;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
