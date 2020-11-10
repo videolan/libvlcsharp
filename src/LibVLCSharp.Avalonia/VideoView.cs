@@ -81,7 +81,7 @@ namespace LibVLCSharp.Avalonia
                 _mediaPlayer.NsObject = _platformHandle.Handle;
             }
         }
-       
+
         /// <inheritdoc />
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
@@ -99,12 +99,12 @@ namespace LibVLCSharp.Avalonia
         protected override void DestroyNativeControlCore(IPlatformHandle control)
         {
             base.DestroyNativeControlCore(control);
-         
+
             if (_platformHandle != null)
             {
                 _platformHandle = null;
             }
-            
+
             if (_mediaPlayer == null)
                 return;
 
