@@ -37,37 +37,22 @@ namespace LibVLCSharp.Avalonia
             get { return _mediaPlayer; }
             set
             {
-                if (_mediaPlayer != null)
+                if (ReferenceEquals(_mediaPlayer, value))
                 {
-                    if(value != null)
-                        if (_mediaPlayer.Equals(value))
-                            return;
-
-                    if (_mediaPlayer.IsPlaying)
-                        _mediaPlayer.Stop();
-
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        _mediaPlayer.Hwnd = IntPtr.Zero;
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        _mediaPlayer.XWindow = 0;
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        _mediaPlayer.NsObject = IntPtr.Zero;
-                    }
+                    return;
                 }
+
+                Detach();
                 _mediaPlayer = value;
-                SetHandler();
+                Attach();
             }
         }
 
-        private void SetHandler()
+        private void Attach()
         {
             if((_mediaPlayer == null) || (_platformHandle == null) || !IsInitialized)
                 return;
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 _mediaPlayer.Hwnd = _platformHandle.Handle;
@@ -82,29 +67,8 @@ namespace LibVLCSharp.Avalonia
             }
         }
 
-        /// <inheritdoc />
-        protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
+        private void Detach()
         {
-            _platformHandle = base.CreateNativeControlCore(parent);
-
-            if (_mediaPlayer == null)
-                return _platformHandle;
-
-            SetHandler();
-
-            return _platformHandle;
-        }
-
-        /// <inheritdoc />
-        protected override void DestroyNativeControlCore(IPlatformHandle control)
-        {
-            base.DestroyNativeControlCore(control);
-
-            if (_platformHandle != null)
-            {
-                _platformHandle = null;
-            }
-
             if (_mediaPlayer == null)
                 return;
 
@@ -119,6 +83,32 @@ namespace LibVLCSharp.Avalonia
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 _mediaPlayer.NsObject = IntPtr.Zero;
+            }
+        }
+
+        /// <inheritdoc />
+        protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
+        {
+            _platformHandle = base.CreateNativeControlCore(parent);
+
+            if (_mediaPlayer == null)
+                return _platformHandle;
+
+            Attach();
+
+            return _platformHandle;
+        }
+
+        /// <inheritdoc />
+        protected override void DestroyNativeControlCore(IPlatformHandle control)
+        {
+            Detach();
+
+            base.DestroyNativeControlCore(control);
+
+            if (_platformHandle != null)
+            {
+                _platformHandle = null;
             }
         }
     }
