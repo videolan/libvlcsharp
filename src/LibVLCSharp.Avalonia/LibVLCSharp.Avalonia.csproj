@@ -39,5 +39,5 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup> 
+  </ItemGroup>
 </Project>
