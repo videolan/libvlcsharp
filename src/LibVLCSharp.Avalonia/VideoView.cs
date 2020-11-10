@@ -50,7 +50,7 @@ namespace LibVLCSharp.Avalonia
 
         private void Attach()
         {
-            if((_mediaPlayer == null) || (_platformHandle == null) || !IsInitialized)
+            if(_mediaPlayer == null || _platformHandle == null || !IsInitialized)
                 return;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
