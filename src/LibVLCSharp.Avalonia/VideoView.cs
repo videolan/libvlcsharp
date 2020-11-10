@@ -9,36 +9,43 @@ using LibVLCSharp.Shared;
 namespace LibVLCSharp.Avalonia
 {
     /// <summary>
-    /// Avalonia Video for Windows, Linux and Mac.
+    /// Avalonia VideoView for Windows, Linux and Mac.
     /// </summary>
-    public class Video : NativeControlHost
+    public class VideoView : NativeControlHost
     {
-        private IPlatformHandle PlatformHandle { get; set; }
+        private IPlatformHandle? _platformHandle = null;
+        private MediaPlayer? _mediaPlayer = null;
+
         /// <summary>
         /// MediaPlayer Data Bound property
         /// </summary>
         /// <summary>
         /// Defines the <see cref="MediaPlayer"/> property.
         /// </summary>
-        public static readonly DirectProperty<Video, MediaPlayer> MediaPlayerProperty =
-            AvaloniaProperty.RegisterDirect<Video, MediaPlayer>(
+        public static readonly DirectProperty<VideoView, MediaPlayer?> MediaPlayerProperty =
+            AvaloniaProperty.RegisterDirect<VideoView, MediaPlayer?>(
                 nameof(MediaPlayer),
                 o => o.MediaPlayer,
                 (o, v) => o.MediaPlayer = v,
                 defaultBindingMode: BindingMode.TwoWay);
 
-        private MediaPlayer _mediaPlayer;
-        
         /// <summary>
         /// Gets or sets the MediaPlayer that will be displayed.
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public MediaPlayer? MediaPlayer
         {
             get { return _mediaPlayer; }
             set
             {
                 if (_mediaPlayer != null)
                 {
+                    if(value != null)
+                        if (_mediaPlayer.Equals(value))
+                            return;
+
+                    if (_mediaPlayer.IsPlaying)
+                        _mediaPlayer.Stop();
+
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         _mediaPlayer.Hwnd = IntPtr.Zero;
@@ -52,43 +59,40 @@ namespace LibVLCSharp.Avalonia
                         _mediaPlayer.NsObject = IntPtr.Zero;
                     }
                 }
-
-                if (PlatformHandle != null)
-                {
-                    SetHandler(value, PlatformHandle);
-                }
-                
                 _mediaPlayer = value;
+                SetHandler();
             }
         }
 
-        private static void SetHandler(MediaPlayer player, IPlatformHandle platformHandle)
+        private void SetHandler()
         {
+            if((_mediaPlayer == null) || (_platformHandle == null))
+                return;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                player.Hwnd = platformHandle.Handle;
+                _mediaPlayer.Hwnd = _platformHandle.Handle;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                player.XWindow = (uint) platformHandle.Handle;
+                _mediaPlayer.XWindow = (uint)_platformHandle.Handle;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                player.NsObject = platformHandle.Handle;
+                _mediaPlayer.NsObject = _platformHandle.Handle;
             }
         }
        
         /// <inheritdoc />
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
-            PlatformHandle = base.CreateNativeControlCore(parent);
+            _platformHandle = base.CreateNativeControlCore(parent);
 
-            if (MediaPlayer == null)
-                return PlatformHandle;
-            
-            SetHandler(MediaPlayer, PlatformHandle);
-            
-            return PlatformHandle;
+            if (_mediaPlayer == null)
+                return _platformHandle;
+
+            SetHandler();
+
+            return _platformHandle;
         }
 
         /// <inheritdoc />
@@ -96,25 +100,25 @@ namespace LibVLCSharp.Avalonia
         {
             base.DestroyNativeControlCore(control);
          
-            if (PlatformHandle != null)
+            if (_platformHandle != null)
             {
-                PlatformHandle = null;
+                _platformHandle = null;
             }
             
-            if (MediaPlayer == null)
+            if (_mediaPlayer == null)
                 return;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                MediaPlayer.Hwnd = IntPtr.Zero;
+                _mediaPlayer.Hwnd = IntPtr.Zero;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                MediaPlayer.XWindow = 0;
+                _mediaPlayer.XWindow = 0;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                MediaPlayer.NsObject = IntPtr.Zero;
+                _mediaPlayer.NsObject = IntPtr.Zero;
             }
         }
     }

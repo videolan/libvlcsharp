@@ -8,14 +8,15 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="LibVLCSharp.Avalonia.Sample.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="LibVLCSharp.Avalonia.Sample">
+        Title="LibVLCSharp.Avalonia.Sample"
+        Opened="OnOpened">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <ScrollViewer>
-        <vlc:Video MediaPlayer="{Binding MediaPlayer}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-    </ScrollViewer>
+    <Panel>
+        <vlc:VideoView MediaPlayer="{Binding MediaPlayer}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Panel>
 
 </Window>

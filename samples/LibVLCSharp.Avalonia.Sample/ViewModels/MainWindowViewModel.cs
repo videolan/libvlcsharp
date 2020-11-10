@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Reactive;
+using Avalonia.Interactivity;
 using LibVLCSharp.Shared;
+using ReactiveUI;
 
 namespace LibVLCSharp.Avalonia.Sample.ViewModels
 {
@@ -9,9 +12,14 @@ namespace LibVLCSharp.Avalonia.Sample.ViewModels
         public MainWindowViewModel()
         {
             MediaPlayer = new MediaPlayer(_libVlc);
+        }
+
+
+        public void Play()
+        {
             using var media = new Media(_libVlc, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
             MediaPlayer.Play(media);
-        }
+        }            
 
         public MediaPlayer MediaPlayer { get; }
         

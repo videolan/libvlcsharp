@@ -67,7 +67,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Sample.MediaPlayerElement.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MediaPlayerElement.iOS", "..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.iOS\Sample.MediaPlayerElement.iOS.csproj", "{EF68D2A7-067D-427C-9690-5E0F0DD06F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Avalonia.Sample", "..\samples\LibVLCSharp.Avalonia.Sample\LibVLCSharp.Avalonia.Sample.MacOS.csproj", "{4B5837B1-CEA4-47F8-AB7A-1CF8704654A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibVLCSharp.Avalonia.Sample", "..\samples\LibVLCSharp.Avalonia.Sample\LibVLCSharp.Avalonia.Sample.csproj", "{4B5837B1-CEA4-47F8-AB7A-1CF8704654A2}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -1383,6 +1383,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{4B5837B1-CEA4-47F8-AB7A-1CF8704654A2} = {799A84A2-2161-4676-878B-5610E3586137}
 		{00419085-4455-45D4-84A0-0A80D6174D25} = {799A84A2-2161-4676-878B-5610E3586137}
 		{FC68D8B7-758E-4164-945B-9F922FA883F6} = {799A84A2-2161-4676-878B-5610E3586137}
 		{A7F1B21F-CA82-4FC7-871F-2BE5B9D6DA70} = {FC68D8B7-758E-4164-945B-9F922FA883F6}

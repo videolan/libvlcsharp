@@ -14,9 +14,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>LibVLCSharp.Avalonia</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <PackageId>LibVLCSharp.Avalonia</PackageId>
-    <Authors>VideoLAN;Shawn Black</Authors>
+    <Authors>VideoLAN</Authors>
     <Owners>VideoLAN</Owners>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -26,6 +26,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <Nullable>enable</Nullable>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;avalonia;linux;macos;windows;cross-platform</PackageTags>
   </PropertyGroup>
@@ -33,5 +34,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <PackageReference Include="Avalonia" Version="0.10.0-preview5" />
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <None Include="..\assets\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup> 
 </Project>

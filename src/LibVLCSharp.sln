@@ -93,7 +93,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MediaPlayerElement.i
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.MediaPlayerElement.UWP", "..\samples\Uno\Sample.MediaPlayerElement\Sample.MediaPlayerElement.UWP\Sample.MediaPlayerElement.UWP.csproj", "{3CCE13EB-C3E6-491A-BEDD-7B3EDDB12549}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Avalonia.Sample", "..\samples\LibVLCSharp.Avalonia.Sample\LibVLCSharp.Avalonia.Sample.Windows.csproj", "{4B5837B1-CEA4-47F8-AB7A-1CF8704654A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibVLCSharp.Avalonia.Sample", "..\samples\LibVLCSharp.Avalonia.Sample\LibVLCSharp.Avalonia.Sample.csproj", "{4B5837B1-CEA4-47F8-AB7A-1CF8704654A2}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
