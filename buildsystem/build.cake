@@ -14,7 +14,7 @@ var isCiBuild = BuildSystem.IsRunningOnAzurePipelines || BuildSystem.IsRunningOn
 var suffixVersion = $"alpha-{DateTime.Today.ToString("yyyyMMdd")}-{BuildSystem.AzurePipelines.Environment.Build.Id}";
 var feedzLVSSource = "https://f.feedz.io/videolan/preview/nuget/index.json";
 var FEEDZ = "FEEDZ";
-const uint totalPackageCount = 8;
+const uint totalPackageCount = 9;
 var buildProp = new FilePath("../src/Directory.build.props");
 
 //////////////////////////////////////////////////////////////////////
