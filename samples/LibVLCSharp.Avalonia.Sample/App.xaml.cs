@@ -15,17 +15,16 @@ namespace LibVLCSharp.Avalonia.Sample
             Core.Initialize();
             AvaloniaXamlLoader.Load(this);
         }
-        
+
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindowViewModel()
                 };
             }
-            
 
             var theme = new Themes.Default.DefaultTheme();
             theme.TryGetResource("Button", out _);
