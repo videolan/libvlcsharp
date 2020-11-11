@@ -77,6 +77,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Linux including desktop, server and Raspberry Pi (GTK)
 - Xamarin.Forms
 - Uno Platform (UWP, Android, iOS)
+- Avalonia (Windows, macOS, Linux)
 - .NET Standard 1.1 and 2.0
 - .NET Framework 4.5 and later
 - .NET Core (including ASP.NET Core)
@@ -122,6 +123,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Xamarin.Forms.GTK | [LibVLCSharp.Forms.GTK][RLibVLCSharpFormsGTK]   | [![LibVLCSharpFormsGTKBadge]][LibVLCSharpFormsGTK]|
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
+| Avalonia          | [LibVLCSharp.Avalonia][RLibVLCSharpAvalonia]    | [![LibVLCSharpAvaloniaBadge]][LibVLCSharpAvalonia]|
 | Unity3D - Windows | [VLC for Unity (Windows)][RVLCUnityWindows]     | [![VLCUnityWindowsBadge]][VLCUnityWindows]        |
 
 ### Pre-release versions
@@ -145,6 +147,7 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [RLibVLCSharpFormsGTK]: src/LibVLCSharp.Forms.Platforms.GTK/README.md
 [RLibVLCSharpWinForms]: src/LibVLCSharp.WinForms/README.md
 [RLibVLCSharpUno]: src/LibVLCSharp.Uno/README.md
+[RLibVLCSharpAvalonia]: src/LibVLCSharp.Avalonia/README.md
 [RVLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
@@ -188,6 +191,9 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [LibVLCSharpUno]: https://www.nuget.org/packages/LibVLCSharp.Uno/
 [LibVLCSharpUnoBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Uno.svg
+
+[LibVLCSharpAvalonia]: https://www.nuget.org/packages/LibVLCSharp.Avalonia/
+[LibVLCSharpAvaloniaBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Avalonia.svg
 
 [VLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
 [VLCUnityWindowsBadge]: https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity
