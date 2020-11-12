@@ -751,22 +751,22 @@ namespace LibVLCSharp.Forms.Shared
             BufferingProgress = Manager.Get<BufferingProgressNotifier>().BufferingProgress;
         }
 
-        private void OnAudioTracksChanged(object sender, EventArgs e)
+        private void OnAudioTracksChanged(object? sender, EventArgs e)
         {
             UpdateAudioTracksSelectionAvailability();
         }
 
-        private void OnSubtitlesTracksChanged(object sender, EventArgs e)
+        private void OnSubtitlesTracksChanged(object? sender, EventArgs e)
         {
             UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
-        private async void AudioTracksSelectionButton_ClickedAsync(object sender, EventArgs e)
+        private async void AudioTracksSelectionButton_ClickedAsync(object? sender, EventArgs e)
         {
             await SelectTrackAsync(Manager.Get<AudioTracksManager>(), ResourceManager.GetString(nameof(Strings.AudioTracks)));
         }
 
-        private async void CastButton_ClickedAsync(object sender, EventArgs e)
+        private async void CastButton_ClickedAsync(object? sender, EventArgs e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
             try
@@ -818,22 +818,22 @@ namespace LibVLCSharp.Forms.Shared
 
         }
 
-        private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
+        private async void ClosedCaptionsSelectionButton_ClickedAsync(object? sender, EventArgs e)
         {
             await SelectTrackAsync(Manager.Get<SubtitlesTracksManager>(), ResourceManager.GetString(nameof(Strings.ClosedCaptions)), true);
         }
 
-        private void PlayPauseButton_Clicked(object sender, EventArgs e)
+        private void PlayPauseButton_Clicked(object? sender, EventArgs e)
         {
             Manager.Get<StateManager>().TogglePause();
         }
 
-        private void StopButton_Clicked(object sender, EventArgs e)
+        private void StopButton_Clicked(object? sender, EventArgs e)
         {
             Manager.Get<StateManager>().Stop();
         }
 
-        private async void AspectRatioButton_ClickedAsync(object sender, EventArgs e)
+        private async void AspectRatioButton_ClickedAsync(object? sender, EventArgs e)
         {
             try
             {
@@ -855,7 +855,7 @@ namespace LibVLCSharp.Forms.Shared
 
         }
 
-        private void RewindButton_Clicked(object sender, EventArgs e)
+        private void RewindButton_Clicked(object? sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer == null)
@@ -866,7 +866,7 @@ namespace LibVLCSharp.Forms.Shared
             mediaPlayer.Time -= SEEK_OFFSET;
         }
 
-        private void SeekButton_Clicked(object sender, EventArgs e)
+        private void SeekButton_Clicked(object? sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer == null)
@@ -887,7 +887,7 @@ namespace LibVLCSharp.Forms.Shared
             return button;
         }
 
-        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler)
+        private void OnButtonClicked(object? sender, EventArgs e, EventHandler eventHandler)
         {
             Show();
 
@@ -1040,7 +1040,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
+        private void SeekBar_ValueChanged(object? sender, ValueChangedEventArgs e)
         {
             Show();
             Manager.Get<SeekBarManager>().SetSeekBarPosition(e.NewValue);

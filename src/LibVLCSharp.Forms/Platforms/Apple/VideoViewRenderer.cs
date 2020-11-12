@@ -59,7 +59,7 @@ namespace LibVLCSharp.Forms.Platforms.Mac
             }
         }
 
-        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
+        private void OnMediaPlayerChanging(object? sender, MediaPlayerChangingEventArgs e)
         {
             Control.MediaPlayer = e.NewMediaPlayer;
         }

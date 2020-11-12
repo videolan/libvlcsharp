@@ -197,7 +197,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void PageAppearing(object sender, Page e)
+        private void PageAppearing(object? sender, Page e)
         {
             if (e == this.FindAncestor<Page?>())
             {
@@ -231,7 +231,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void PageDisappearing(object sender, Page e)
+        private void PageDisappearing(object? sender, Page e)
         {
             if (e == this.FindAncestor<Page?>())
             {
@@ -240,7 +240,7 @@ namespace LibVLCSharp.Forms.Shared
             }
         }
 
-        private void GestureRecognized(object sender, EventArgs e)
+        private void GestureRecognized(object? sender, EventArgs e)
         {
             PlaybackControls.Show();
         }
