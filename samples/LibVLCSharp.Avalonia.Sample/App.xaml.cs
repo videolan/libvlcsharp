@@ -24,6 +24,8 @@ namespace LibVLCSharp.Avalonia.Sample
                 {
                     DataContext = new MainWindowViewModel()
                 };
+
+                desktop.Exit += OnExit;
             }
 
             var theme = new Themes.Default.DefaultTheme();
@@ -33,6 +35,16 @@ namespace LibVLCSharp.Avalonia.Sample
             theme1.TryGetResource("Button", out _);
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var vm = (MainWindowViewModel)desktop.MainWindow?.DataContext;
+                if (vm != null)
+                    vm.Dispose();
+            }
         }
     }
 }
