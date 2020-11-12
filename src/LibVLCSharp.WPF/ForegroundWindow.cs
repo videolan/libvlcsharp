@@ -2,34 +2,45 @@
 using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace LibVLCSharp.WPF
 {
-    internal partial class ForegroundWindow : Window
+    internal class ForegroundWindow : Window
     {
         Window? _wndhost;
         readonly FrameworkElement _bckgnd;
-        UIElement? _content;
         readonly Point _zeroPoint = new Point(0, 0);
+        private readonly Grid _grid = new Grid();
 
-        internal new UIElement? Content
+        UIElement? _overlayContent;
+        internal UIElement? OverlayContent
         {
-            get => _content;
+            get => _overlayContent;
             set
             {
-                _content = value;
-                PART_Content.Children.Clear();
-                if (_content != null)
+                _overlayContent = value;
+                _grid.Children.Clear();
+                if (_overlayContent != null)
                 {
-                    PART_Content.Children.Add(_content);
+                    _grid.Children.Add(_overlayContent);
                 }
             }
         }
 
         internal ForegroundWindow(FrameworkElement background)
         {
-            InitializeComponent();
+            Title = "LibVLCSharp.WPF";
+            Height = 300;
+            Width = 300;
+            WindowStyle = WindowStyle.None;
+            Background = Brushes.Transparent;
+            ResizeMode = ResizeMode.NoResize;
+            AllowsTransparency = true;
+            ShowInTaskbar = false;
+            Content = _grid;
 
             DataContext = background.DataContext;
 
