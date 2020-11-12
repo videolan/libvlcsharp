@@ -1,3 +1,12 @@
+LibVLCSharp version 3.4.9
+=========================
+* documentation improvements
+* improve samples with systematic libvlc resources disposal
+* WinForms: Add additional null checks
+* Core: Add easier way to enable verbose debug logs, hint with VS intellisense
+* Core: Fix incorrect libvlc interop for imem non-seekable streams by @jeremyVignelles https://github.com/videolan/libvlcsharp/pull/129
+* WPF: Improve the view to make it more reliable in some situations by @SkinnySackboy https://github.com/videolan/libvlcsharp/pull/172
+
 LibVLCSharp version 3.4.8
 =========================
 * documentation improvements
