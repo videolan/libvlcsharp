@@ -77,7 +77,7 @@ namespace LibVLCSharp.WPF
                 {
                     ForegroundWindow = new ForegroundWindow(windowsFormsHost)
                     {
-                        Content = ViewContent
+                        OverlayContent = ViewContent
                     };
                 }
 
@@ -125,7 +125,7 @@ namespace LibVLCSharp.WPF
             ViewContent = newContent as UIElement;
             if (ForegroundWindow != null)
             {
-                ForegroundWindow.Content = ViewContent;
+                ForegroundWindow.OverlayContent = ViewContent;
             }
         }
 
