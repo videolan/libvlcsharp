@@ -1,3 +1,7 @@
+LibVLCSharp.Avalonia version 3.4.9-alpha01
+=========================
+* Initial Avalonia support (Linux, macOS, Windows) by @shawnallen85
+
 LibVLCSharp version 3.4.9
 =========================
 * documentation improvements
