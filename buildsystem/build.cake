@@ -15,7 +15,6 @@ var suffixVersion = $"alpha-{DateTime.Today.ToString("yyyyMMdd")}-{BuildSystem.A
 var feedzLVSSource = "https://f.feedz.io/videolan/preview/nuget/index.json";
 var FEEDZ = "FEEDZ";
 const uint totalPackageCount = 9;
-var buildProp = new FilePath("../src/Directory.build.props");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -96,12 +95,16 @@ Task("CIDeploy")
 
 void Build(string project)
 {
+    var settings = new MSBuildSettings();
+    settings.SetConfiguration(configuration)
+            .WithProperty("PackageOutputPath", MakeAbsolute(artifactsDir).FullPath);
+
     if(isCiBuild)
     {
-        XmlPoke(buildProp, "//Project/PropertyGroup/VersionSuffix", suffixVersion);
+        settings.WithProperty("VersionSuffix", suffixVersion);
     }
 
-    MSBuild(project, settings => settings.SetConfiguration(configuration).WithProperty("PackageOutputPath", MakeAbsolute(artifactsDir).FullPath));
+    MSBuild(project, settings);
 }
 
 //////////////////////////////////////////////////////////////////////
