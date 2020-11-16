@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 using Themes = Avalonia.Themes;
 using LibVLCSharp.Avalonia.Sample.ViewModels;
 using LibVLCSharp.Avalonia.Sample.Views;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 namespace LibVLCSharp.Avalonia.Sample
 {
