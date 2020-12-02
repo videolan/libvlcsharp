@@ -10,12 +10,6 @@ Custom C# chat bot for Twitch TV
 
 https://github.com/SimpleSandman/TwitchBot
 
-## SeeSharpCameraViewer
-
-A simple tool for viewing live camera streams, written in C# (C Sharp)
-
-https://github.com/MarcelloCalligaris/SeeSharpCameraViewer
-
 ## Portcase player
 
 Portcase Player is all in one Video Player, Audio Player, Torrent Player and IPTV Player with TV guide and Catch-Up service support.
