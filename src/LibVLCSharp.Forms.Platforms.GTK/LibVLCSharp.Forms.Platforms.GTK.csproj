@@ -10,20 +10,8 @@ Xamarin.Forms support for other platforms are in different packages (namely LibV
     </Description>
     <TargetFramework>net47</TargetFramework>
     <RootNamespace>LibVLCSharp.Forms.Platforms.GTK</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
     <PackageId>LibVLCSharp.Forms.GTK</PackageId>
-    <Authors>VideoLAN</Authors>
-    <Owners>VideoLAN</Owners>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
-    <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
+    <PackageTags>$(PackageTags);gtk</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms.Platform.GTK" Version="3.2.0.871581" />
@@ -31,10 +19,6 @@ Xamarin.Forms support for other platforms are in different packages (namely LibV
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp.Forms\LibVLCSharp.Forms.csproj" />
     <ProjectReference Include="..\LibVLCSharp.GTK\LibVLCSharp.GTK.csproj" />
-    <None Include="..\assets\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="gdk-sharp">
