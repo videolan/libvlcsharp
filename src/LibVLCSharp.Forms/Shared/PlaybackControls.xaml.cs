@@ -675,11 +675,11 @@ namespace LibVLCSharp.Forms.Shared
             if (Parent != null && !Initialized)
             {
                 Initialized = true;
-                OnApplyTemplate();
+                OnApplyCustomTemplate();
             }
         }
 
-        private void OnApplyTemplate()
+        private void OnApplyCustomTemplate()
         {
             AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_ClickedAsync);
             CastButton = SetClickEventHandler(nameof(CastButton), CastButton_ClickedAsync);
