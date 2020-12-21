@@ -1,23 +1,9 @@
 steps:
 - task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3.1.300'
+  displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 3.1.300
-
-- bash: |
-   #!/bin/bash
-   set -ex   
-   MONO_MACOS_PKG_DOWNLOAD_URL='https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg'
-   mkdir -p /tmp/mono-install
-   cd /tmp/mono-install
-   mono --version
-   msbuild /version
-   wget -q -O ./mono-installer.pkg "$MONO_MACOS_PKG_DOWNLOAD_URL"
-   sudo installer -pkg ./mono-installer.pkg -target /
-   mono --version
-   msbuild /version
-  displayName: 'Update mono'
+    version: 5.0.101
 
 - script: |
    chmod +x build.sh
