@@ -103,6 +103,10 @@
       <Project>{A7F1B21F-CA82-4FC7-871F-2BE5B9D6DA70}</Project>
       <Name>LibVLCSharp.Forms.Sample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj">
+      <Project>{239A82A5-19A1-4382-8F9B-4A9705648017}</Project>
+      <Name>LibVLCSharp.Android.AWindow</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
