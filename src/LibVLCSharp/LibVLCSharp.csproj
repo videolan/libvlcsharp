@@ -33,22 +33,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299;net45;net471</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
-    <NeutralLanguage>en</NeutralLanguage>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
     <PackageId>LibVLCSharp</PackageId>
-    <Authors>VideoLAN</Authors>
-    <Owners>VideoLAN</Owners>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
-    <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
@@ -58,10 +43,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
-    <None Include="..\assets\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
 
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">

@@ -92,7 +92,6 @@ namespace LibVLCSharp.Tests
         public void SetExitHandler()
         {
             var called = false;
-
             var exitCb = new ExitCallback(() =>
             {
                 called = true;

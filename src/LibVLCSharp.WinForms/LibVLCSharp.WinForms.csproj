@@ -14,28 +14,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <TargetFrameworks>net45;netcoreapp3.0</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
     <PackageId>LibVLCSharp.WinForms</PackageId>
-    <Authors>VideoLAN</Authors>
-    <Owners>VideoLAN</Owners>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://code.videolan.org/videolan/LibVLCSharp</RepositoryUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
-    <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
+    <PackageTags>$(PackageTags);winforms</PackageTags>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\assets\icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
   </ItemGroup>
