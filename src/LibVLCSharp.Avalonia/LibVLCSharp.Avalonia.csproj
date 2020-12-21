@@ -29,7 +29,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <Nullable>enable</Nullable>
     <PackageReleaseNotes>https://code.videolan.org/videolan/LibVLCSharp/blob/master/NEWS</PackageReleaseNotes>
     <PackageTags>libvlc;vlc;videolan;video;audio;player;media;mediaplayer;avalonia;linux;macos;windows;cross-platform</PackageTags>
-    <VersionSuffix>alpha01</VersionSuffix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.0-preview5" />
