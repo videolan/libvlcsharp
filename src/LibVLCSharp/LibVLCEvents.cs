@@ -158,6 +158,10 @@ namespace LibVLCSharp
             [FieldOffset(0)]
             internal readonly EsChanged EsChanged;
             [FieldOffset(0)]
+            internal readonly MediaPlayerProgramChanged MediaPlayerProgramChanged;
+            [FieldOffset(0)]
+            internal readonly MediaPlayerProgramSelectionChanged MediaPlayerProgramSelectionChanged;
+            [FieldOffset(0)]
             internal readonly VolumeChanged MediaPlayerVolumeChanged;
             [FieldOffset(0)]
             internal readonly AudioDeviceChanged AudioDeviceChanged;
@@ -281,6 +285,19 @@ namespace LibVLCSharp
         {
             internal readonly TrackType Type;
             internal readonly IntPtr Id;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct MediaPlayerProgramChanged
+        {
+            internal readonly int Id;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct MediaPlayerProgramSelectionChanged
+        {
+            internal readonly int UnselectedId;
+            internal readonly int SelectedId;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -743,6 +760,76 @@ namespace LibVLCSharp
         internal MediaPlayerVolumeChangedEventArgs(float volume)
         {
             Volume = volume;
+        }
+    }
+
+    /// <summary>
+    /// The mediaplayer detected a new program
+    /// </summary>
+    public class MediaPlayerProgramAddedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The id of the newly added program
+        /// </summary>
+        public readonly int Id;
+
+        internal MediaPlayerProgramAddedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    /// <summary>
+    /// The mediaplayer detected a deleted program
+    /// </summary>
+    public class MediaPlayerProgramDeletedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The id of the newly deleted program
+        /// </summary>
+        public readonly int Id;
+
+        internal MediaPlayerProgramDeletedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    /// <summary>
+    /// The mediaplayer detected a new updated program
+    /// </summary>
+    public class MediaPlayerProgramUpdatedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The id of the newly updated program
+        /// </summary>
+        public readonly int Id;
+
+        internal MediaPlayerProgramUpdatedEventArgs(int id)
+        {
+            Id = id;
+        }
+    }
+
+    /// <summary>
+    /// The mediaplayer detected a new updated program
+    /// </summary>
+    public class MediaPlayerProgramSelectedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The id of the newly unselected program
+        /// </summary>
+        public readonly int UnselectedId;
+
+        /// <summary>
+        /// The id of the newly selected program
+        /// </summary>
+        public readonly int SelectedId;
+
+        internal MediaPlayerProgramSelectedEventArgs(int unselectedId, int selectedId)
+        {
+            UnselectedId = unselectedId;
+            SelectedId = selectedId;
         }
     }
 

@@ -33,6 +33,11 @@ namespace LibVLCSharp
         EventHandler<EventArgs>? _mediaPlayerMuted; // vlc 2.2
         EventHandler<EventArgs>? _mediaPlayerUnmuted; // vlc 2.2
         EventHandler<MediaPlayerVolumeChangedEventArgs>? _mediaPlayerVolumeChanged; // vlc 2.2
+        EventHandler<MediaPlayerProgramAddedEventArgs>? _mediaPlayerProgramAdded;
+        EventHandler<MediaPlayerProgramDeletedEventArgs>? _mediaPlayerProgramDeleted;
+        EventHandler<MediaPlayerProgramSelectedEventArgs>? _mediaPlayerProgramSelected;
+        EventHandler<MediaPlayerProgramUpdatedEventArgs>? _mediaPlayerProgramUpdated;
+
         public MediaPlayerEventManager(IntPtr ptr) : base(ptr)
         {
         }
@@ -152,6 +157,22 @@ namespace LibVLCSharp
                 case EventType.MediaPlayerAudioVolume:
                     _mediaPlayerVolumeChanged += eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>;
                     Attach(eventType, OnVolumeChanged);
+                    break;
+                case EventType.MediaPlayerProgramAdded:
+                    _mediaPlayerProgramAdded += eventHandler as EventHandler<MediaPlayerProgramAddedEventArgs>;
+                    Attach(eventType, OnProgramAdded);
+                    break;
+                case EventType.MediaPlayerProgramDeleted:
+                    _mediaPlayerProgramDeleted += eventHandler as EventHandler<MediaPlayerProgramDeletedEventArgs>;
+                    Attach(eventType, OnProgramDeleted);
+                    break;
+                case EventType.MediaPlayerProgramUpdated:
+                    _mediaPlayerProgramUpdated += eventHandler as EventHandler<MediaPlayerProgramUpdatedEventArgs>;
+                    Attach(eventType, OnProgramUpdated);
+                    break;
+                case EventType.MediaPlayerProgramSelected:
+                    _mediaPlayerProgramSelected += eventHandler as EventHandler<MediaPlayerProgramSelectedEventArgs>;
+                    Attach(eventType, OnProgramSelected);
                     break;
                 default:
                     OnEventUnhandled(this, eventType);
@@ -273,6 +294,22 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaPlayerAudioVolume:
                     _mediaPlayerVolumeChanged -= eventHandler as EventHandler<MediaPlayerVolumeChangedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaPlayerProgramAdded:
+                    _mediaPlayerProgramAdded -= eventHandler as EventHandler<MediaPlayerProgramAddedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaPlayerProgramDeleted:
+                    _mediaPlayerProgramDeleted -= eventHandler as EventHandler<MediaPlayerProgramDeletedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaPlayerProgramUpdated:
+                    _mediaPlayerProgramUpdated -= eventHandler as EventHandler<MediaPlayerProgramUpdatedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaPlayerProgramSelected:
+                    _mediaPlayerProgramSelected -= eventHandler as EventHandler<MediaPlayerProgramSelectedEventArgs>;
                     Detach(eventType);
                     break;
                 default:
@@ -441,5 +478,30 @@ namespace LibVLCSharp
                 new MediaPlayerVolumeChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVolumeChanged.Volume));
         }
 
+        void OnProgramAdded(IntPtr ptr)
+        {
+            _mediaPlayerProgramAdded?.Invoke(this,
+                new MediaPlayerProgramAddedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerProgramChanged.Id));
+        }
+
+        void OnProgramDeleted(IntPtr ptr)
+        {
+            _mediaPlayerProgramDeleted?.Invoke(this,
+                new MediaPlayerProgramDeletedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerProgramChanged.Id));
+        }
+
+        void OnProgramUpdated(IntPtr ptr)
+        {
+            _mediaPlayerProgramUpdated?.Invoke(this,
+                new MediaPlayerProgramUpdatedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerProgramChanged.Id));
+        }
+
+        void OnProgramSelected(IntPtr ptr)
+        {
+            var selectionChanged = RetrieveEvent(ptr).Union.MediaPlayerProgramSelectionChanged;
+
+            _mediaPlayerProgramSelected?.Invoke(this,
+                new MediaPlayerProgramSelectedEventArgs(selectionChanged.UnselectedId, selectionChanged.SelectedId));
+        }
     }
 }

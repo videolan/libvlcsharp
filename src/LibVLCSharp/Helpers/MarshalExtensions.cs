@@ -69,6 +69,19 @@ namespace LibVLCSharp.Helpers
         internal static RendererDescription Build(this RendererDescriptionStructure s) => 
             new RendererDescription(s.Name.FromUtf8(), s.LongName.FromUtf8());
 
+        internal static Program? BuildProgram(IntPtr programPtr, Action<IntPtr>? release = null)
+        {
+            if (programPtr == IntPtr.Zero)
+                return null;
+            
+            var programStruct = MarshalUtils.PtrToStructure<ProgramStructure>(programPtr);
+            var program = new Program(programStruct.GroupId, programStruct.Name.FromUtf8(), programStruct.Selected, programStruct.Scrambled);
+
+            release?.Invoke(programPtr);
+
+            return program;
+        }
+
         /// <summary>
         /// Helper method that marshals a UTF16 managed string to a UTF8 native string ptr
         /// </summary>

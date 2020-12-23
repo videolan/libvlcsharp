@@ -199,16 +199,33 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_player_can_pause")]
             internal static extern int LibVLCMediaPlayerCanPause(IntPtr mediaPlayer);
 
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_program_scrambled")]
             internal static extern int LibVLCMediaPlayerProgramScrambled(IntPtr mediaPlayer);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_programlist")]
+            internal static extern IntPtr LibVLCMediaPlayerGetProgramList(IntPtr mediaPlayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_program_from_id")]
+            internal static extern IntPtr LibVLCMediaPlayerGetProgramFromId(IntPtr mediaPlayer, int groupId);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_selected_program")]
+            internal static extern IntPtr LibVLCMediaPlayerGetSelectedProgram(IntPtr mediaPlayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_select_program_id")]
+            internal static extern void LibVLCMediaPlayerSelectProgramId(IntPtr mediaPlayer, int programId);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_player_program_delete")]
+            internal static extern void LibVLCPlayerProgramDelete(IntPtr program);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_next_frame")]
             internal static extern void LibVLCMediaPlayerNextFrame(IntPtr mediaPlayer);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_navigate")]
@@ -1792,6 +1809,66 @@ namespace LibVLCSharp
         /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
         public void Select(TrackType type, params string[] ids) => throw new NotImplementedException();
 
+        /// <summary>
+        /// Get the program list
+        /// version LibVLC 4.0.0 and later.
+        /// 
+        /// note: This program list is a snapshot of the current programs when this
+        /// function is called. If a program is updated after this call, the user will
+        /// need to call this function again to get the updated program.
+        /// 
+        /// The program list can be used to get program informations and to select
+        /// specific programs.
+        /// 
+        /// Return a valid ProgramList or NULL in case of error or empty list,
+        /// </summary>
+        public ProgramList? ProgramList
+        {
+            get
+            {
+                var programList = Native.LibVLCMediaPlayerGetProgramList(NativeReference);
+                return programList == IntPtr.Zero ? null : new ProgramList(programList);
+            }
+        }
+
+        /// <summary>
+        /// Get a program from a program id
+        /// 
+        /// version LibVLC 4.0.0 or later
+        /// 
+        /// </summary>
+        /// <param name="groupId">program id</param>
+        /// <returns>a valid program or NULL if the program id is not found.</returns>
+        public Program? Program(int groupId)
+        {
+            var program = Native.LibVLCMediaPlayerGetProgramFromId(NativeReference, groupId);
+            return MarshalExtensions.BuildProgram(program, Native.LibVLCPlayerProgramDelete);
+        }
+
+        /// <summary>
+        /// Get the selected program
+        /// version LibVLC 4.0.0 or later
+        /// 
+        /// return a valid program struct or NULL if no programs are selected.
+        /// </summary>
+        public Program? SelectedProgram
+        {
+            get
+            {
+                var program = Native.LibVLCMediaPlayerGetSelectedProgram(NativeReference);
+                return MarshalExtensions.BuildProgram(program, Native.LibVLCPlayerProgramDelete);
+            }
+        }
+
+        /// <summary>
+        /// Select program with a given program id.
+        /// 
+        /// note program ids are sent via the ProgramAdded event or
+        /// can be fetch via ProgramList property
+        /// </summary>
+        /// <param name="programId">program id</param>
+        public void SelectProgram(int programId) => Native.LibVLCMediaPlayerSelectProgramId(NativeReference, programId);
+
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
 #if UNITY
@@ -2415,7 +2492,42 @@ namespace LibVLCSharp
             remove => EventManager.DetachEvent(EventType.MediaPlayerAudioVolume, value);
         }
 
-#endregion
+        /// <summary>
+        /// The new program detected by the mediaplayer
+        /// </summary>
+        public event EventHandler<MediaPlayerProgramAddedEventArgs> ProgramAdded
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerProgramAdded, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramAdded, value);
+        }
+
+        /// <summary>
+        /// The deleted program detected by the mediaplayer
+        /// </summary>
+        public event EventHandler<MediaPlayerProgramDeletedEventArgs> ProgramDeleted
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerProgramDeleted, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramDeleted, value);
+        }
+
+        /// <summary>
+        /// The updated program detected by the mediaplayer
+        /// </summary>
+        public event EventHandler<MediaPlayerProgramUpdatedEventArgs> ProgramUpdated
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerProgramUpdated, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramUpdated, value);
+        }
+
+        /// <summary>
+        /// The selected/unselected program detected by the mediaplayer
+        /// </summary>
+        public event EventHandler<MediaPlayerProgramSelectedEventArgs> ProgramSelected
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerProgramSelected, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramSelected, value);
+        }
+        #endregion
 
         /// <summary>
         /// Dispose override
