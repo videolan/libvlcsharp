@@ -33,7 +33,6 @@ namespace LibVLCSharp
         MediaPlayerSnapshotTaken = 272,
         MediaPlayerLengthChanged = 273,
         MediaPlayerVout = 274,
-        MediaPlayerScrambledChanged = 275,
         MediaPlayerESAdded = 276,
         MediaPlayerESDeleted = 277,
         MediaPlayerESSelected = 278,
@@ -191,8 +190,6 @@ namespace LibVLCSharp
             [FieldOffset(0)]
             internal readonly MediaPlayerPausableChanged MediaPlayerPausableChanged;
             [FieldOffset(0)]
-            internal readonly MediaPlayerScrambledChanged MediaPlayerScrambledChanged;
-            [FieldOffset(0)]
             internal readonly MediaPlayerVoutChanged MediaPlayerVoutChanged;
 
             // medialist
@@ -321,12 +318,6 @@ namespace LibVLCSharp
         internal readonly struct MediaPlayerPausableChanged
         {
             internal readonly int NewPausable;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerScrambledChanged
-        {
-            internal readonly int NewScrambled;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -732,22 +723,6 @@ namespace LibVLCSharp
         internal MediaPlayerVoutEventArgs(int count)
         {
             Count = count;
-        }
-    }
-
-    /// <summary>
-    /// The mediaplayer scrambled status changed
-    /// </summary>
-    public class MediaPlayerScrambledChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The scrambled status
-        /// </summary>
-        public readonly int Scrambled;
-
-        internal MediaPlayerScrambledChangedEventArgs(int scrambled)
-        {
-            Scrambled = scrambled;
         }
     }
 

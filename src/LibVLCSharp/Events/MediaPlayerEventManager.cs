@@ -25,7 +25,6 @@ namespace LibVLCSharp
         EventHandler<MediaPlayerSnapshotTakenEventArgs>? _mediaPlayerSnapshotTaken;
         EventHandler<MediaPlayerLengthChangedEventArgs>? _mediaPlayerLengthChanged;
         EventHandler<MediaPlayerVoutEventArgs>? _mediaPlayerVout;
-        EventHandler<MediaPlayerScrambledChangedEventArgs>? _mediaPlayerScrambledChanged;
         EventHandler<MediaPlayerESAddedEventArgs>? _mediaPlayerESAdded; // vlc 3
         EventHandler<MediaPlayerESDeletedEventArgs>? _mediaPlayerESDeleted; // vlc 3
         EventHandler<MediaPlayerESSelectedEventArgs>? _mediaPlayerESSelected; // vlc 3
@@ -122,10 +121,6 @@ namespace LibVLCSharp
                 case EventType.MediaPlayerVout:
                     _mediaPlayerVout += eventHandler as EventHandler<MediaPlayerVoutEventArgs>;
                     Attach(eventType, OnVout);
-                    break;
-                case EventType.MediaPlayerScrambledChanged:
-                    _mediaPlayerScrambledChanged += eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>;
-                    Attach(eventType, OnScrambledChanged);
                     break;
                 case EventType.MediaPlayerESAdded:
                     _mediaPlayerESAdded += eventHandler as EventHandler<MediaPlayerESAddedEventArgs>;
@@ -251,10 +246,6 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaPlayerVout:
                     _mediaPlayerVout -= eventHandler as EventHandler<MediaPlayerVoutEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaPlayerScrambledChanged:
-                    _mediaPlayerScrambledChanged -= eventHandler as EventHandler<MediaPlayerScrambledChangedEventArgs>;
                     Detach(eventType);
                     break;
                 case EventType.MediaPlayerESAdded:
@@ -408,12 +399,6 @@ namespace LibVLCSharp
         {
             _mediaPlayerVout?.Invoke(this,
                 new MediaPlayerVoutEventArgs(RetrieveEvent(ptr).Union.MediaPlayerVoutChanged.NewCount));
-        }
-
-        void OnScrambledChanged(IntPtr ptr)
-        {
-            _mediaPlayerScrambledChanged?.Invoke(this,
-                new MediaPlayerScrambledChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerScrambledChanged.NewScrambled));
         }
 
         LibVLCEvent.EsChanged GetEsChanged(IntPtr ptr)

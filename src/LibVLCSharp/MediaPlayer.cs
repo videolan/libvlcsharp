@@ -2344,15 +2344,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// The mediaplayer scrambled status changed
-        /// </summary>
-        public event EventHandler<MediaPlayerScrambledChangedEventArgs> ScrambledChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaPlayerScrambledChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerScrambledChanged, value);
-        }
-
-        /// <summary>
         /// The mediaplayer has a new Elementary Stream (ES)
         /// </summary>
         public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
