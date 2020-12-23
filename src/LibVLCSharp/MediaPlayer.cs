@@ -2299,15 +2299,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// The title of the mediaplayer changed
-        /// </summary>
-        public event EventHandler<MediaPlayerTitleChangedEventArgs> TitleChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaPlayerTitleChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerTitleChanged, value);
-        }
-
-        /// <summary>
         /// The mediaplayer changed the chapter of a media
         /// </summary>
         public event EventHandler<MediaPlayerChapterChangedEventArgs> ChapterChanged

@@ -7,132 +7,78 @@ namespace LibVLCSharp
     internal enum EventType
     {
         MediaMetaChanged = 0,
-        MediaSubItemAdded = 1,
-        MediaDurationChanged = 2,
-        MediaParsedChanged = 3,
-        MediaFreed = 4,
-        MediaStateChanged = 5,
-        MediaSubItemTreeAdded = 6,
-        MediaThumbnailGenerated = 7,
-        MediaPlayerMediaChanged = 256,
-        MediaPlayerNothingSpecial = 257,
-        MediaPlayerOpening = 258,
-        MediaPlayerBuffering = 259,
-        MediaPlayerPlaying = 260,
-        MediaPlayerPaused = 261,
-        MediaPlayerStopped = 262,
-        MediaPlayerForward = 263,
-        MediaPlayerBackward = 264,
-        MediaPlayerEndReached = 265,
-        MediaPlayerEncounteredError = 266,
-        MediaPlayerTimeChanged = 267,
-        MediaPlayerPositionChanged = 268,
-        MediaPlayerSeekableChanged = 269,
-        MediaPlayerPausableChanged = 270,
-        MediaPlayerTitleChanged = 271,
-        MediaPlayerSnapshotTaken = 272,
-        MediaPlayerLengthChanged = 273,
-        MediaPlayerVout = 274,
-        MediaPlayerESAdded = 276,
-        MediaPlayerESDeleted = 277,
-        MediaPlayerESSelected = 278,
-        MediaPlayerCorked = 279,
-        MediaPlayerUncorked = 280,
-        MediaPlayerMuted = 281,
-        MediaPlayerUnmuted = 282,
-        MediaPlayerAudioVolume = 283,
-        MediaPlayerAudioDevice = 284,
-        MediaPlayerChapterChanged = 285,
-        MediaListItemAdded = 512,
-        MediaListWillAddItem = 513,
-        MediaListItemDeleted = 514,
-        MediaListWillDeleteItem = 515,
-        MediaListEndReached = 516,
-        MediaListViewItemAdded = 768,
-        MediaListViewWillAddItem = 769,
-        MediaListViewItemDeleted = 770,
-        MediaListViewWillDeleteItem = 771,
-        MediaListPlayerPlayed = 1024,
-        MediaListPlayerNextItemSet = 1025,
-        MediaListPlayerStopped = 1026,
+        MediaSubItemAdded,
+        MediaDurationChanged,
+        MediaParsedChanged,
+        MediaFreed,
+        MediaStateChanged,
+        MediaSubItemTreeAdded,
+        MediaThumbnailGenerated,
+        MediaAttachedThumbnailsFound,
+        MediaPlayerMediaChanged = 0x100,
+        MediaPlayerNothingSpecial,
+        MediaPlayerOpening,
+        MediaPlayerBuffering,
+        MediaPlayerPlaying,
+        MediaPlayerPaused,
+        MediaPlayerStopped,
+        MediaPlayerForward,
+        MediaPlayerBackward,
+        MediaPlayerEndReached,
+        MediaPlayerEncounteredError,
+        MediaPlayerTimeChanged,
+        MediaPlayerPositionChanged,
+        MediaPlayerSeekableChanged,
+        MediaPlayerPausableChanged,
+        MediaPlayerSnapshotTaken = MediaPlayerPausableChanged + 2,
+        MediaPlayerLengthChanged,
+        MediaPlayerVout,
+        MediaPlayerESAdded,
+        MediaPlayerESDeleted,
+        MediaPlayerESSelected,
+        MediaPlayerCorked,
+        MediaPlayerUncorked,
+        MediaPlayerMuted,
+        MediaPlayerUnmuted,
+        MediaPlayerAudioVolume,
+        MediaPlayerAudioDevice,
+        MediaPlayerESUpdated,
+        MediaPlayerProgramAdded,
+        MediaPlayerProgramDeleted,
+        MediaPlayerProgramSelected,
+        MediaPlayerProgramUpdated,
+
+        /// <remarks>
+        /// <para>The title list changed, call</para>
+        /// <para>libvlc_media_player_get_full_title_descriptions() to get the new list.</para>
+        /// </remarks>
+        MediaPlayerTitleListChanged,
+        MediaPlayerTitleSelectionChanged,
+        MediaPlayerChapterChanged,
+        MediaListItemAdded = 0x200,
+        MediaListWillAddItem,
+        MediaListItemDeleted,
+        MediaListWillDeleteItem,
+        MediaListEndReached,
+        MediaListViewItemAdded = 0x300,
+        MediaListViewWillAddItem,
+        MediaListViewItemDeleted,
+        MediaListViewWillDeleteItem,
+        MediaListPlayerPlayed = 0x400,
+        MediaListPlayerNextItemSet,
+        MediaListPlayerStopped,
 
         /// <remarks>
         /// <para>Useless event, it will be triggered only when calling</para>
         /// <para>libvlc_media_discoverer_stop()</para>
         /// </remarks>
-        RendererDiscovererItemAdded = 1282,
+        RendererDiscovererItemAdded = 0x502,
 
         /// <remarks>
         /// <para>Useless event, it will be triggered only when calling</para>
         /// <para>libvlc_media_discoverer_stop()</para>
         /// </remarks>
-        RendererDiscovererItemDeleted = 1283,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaAdded = 1536,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaRemoved = 1537,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaChanged = 1538,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStarted = 1539,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStopped = 1540,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusInit = 1541,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusOpening = 1542,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusPlaying = 1543,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusPause = 1544,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusEnd = 1545,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        VlmMediaInstanceStatusError = 1546
+        RendererDiscovererItemDeleted
     }
 
     /// <summary>Renderer item</summary>
@@ -183,8 +129,6 @@ namespace LibVLCSharp
             internal readonly MediaPlayerPositionChanged MediaPlayerPositionChanged;
             [FieldOffset(0)]
             internal readonly MediaPlayerTimeChanged MediaPlayerTimeChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerTitleChanged MediaPlayerTitleChanged;
             [FieldOffset(0)]
             internal readonly MediaPlayerSeekableChanged MediaPlayerSeekableChanged;
             [FieldOffset(0)]
@@ -300,12 +244,6 @@ namespace LibVLCSharp
         internal readonly struct MediaPlayerTimeChanged
         {
             internal readonly long NewTime;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerTitleChanged
-        {
-            internal readonly int NewTitle;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -643,22 +581,6 @@ namespace LibVLCSharp
         internal MediaPlayerPausableChangedEventArgs(int pausable)
         {
             Pausable = pausable;
-        }
-    }
-
-    /// <summary>
-    /// The mediaplayer's title changed
-    /// </summary>
-    public class MediaPlayerTitleChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The new title
-        /// </summary>
-        public readonly int Title;
-
-        internal MediaPlayerTitleChangedEventArgs(int title)
-        {
-            Title = title;
         }
     }
 

@@ -20,7 +20,6 @@ namespace LibVLCSharp
         EventHandler<MediaPlayerTimeChangedEventArgs>? _mediaPlayerTimeChanged;
         EventHandler<MediaPlayerSeekableChangedEventArgs>? _mediaPlayerSeekableChanged;
         EventHandler<MediaPlayerPausableChangedEventArgs>? _mediaPlayerPausableChanged;
-        EventHandler<MediaPlayerTitleChangedEventArgs>? _mediaPlayerTitleChanged;
         EventHandler<MediaPlayerChapterChangedEventArgs>? _mediaPlayerChapterChanged; //vlc 3
         EventHandler<MediaPlayerSnapshotTakenEventArgs>? _mediaPlayerSnapshotTaken;
         EventHandler<MediaPlayerLengthChangedEventArgs>? _mediaPlayerLengthChanged;
@@ -101,10 +100,6 @@ namespace LibVLCSharp
                 case EventType.MediaPlayerPausableChanged:
                     _mediaPlayerPausableChanged += eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>;
                     Attach(eventType, OnPausableChanged);
-                    break;
-                case EventType.MediaPlayerTitleChanged:
-                    _mediaPlayerTitleChanged += eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>;
-                    Attach(eventType, OnTitleChanged);
                     break;
                 case EventType.MediaPlayerChapterChanged:
                     _mediaPlayerChapterChanged += eventHandler as EventHandler<MediaPlayerChapterChangedEventArgs>;
@@ -226,10 +221,6 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaPlayerPausableChanged:
                     _mediaPlayerPausableChanged -= eventHandler as EventHandler<MediaPlayerPausableChangedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaPlayerTitleChanged:
-                    _mediaPlayerTitleChanged -= eventHandler as EventHandler<MediaPlayerTitleChangedEventArgs>;
                     Detach(eventType);
                     break;
                 case EventType.MediaPlayerChapterChanged:
@@ -369,12 +360,6 @@ namespace LibVLCSharp
         {
             _mediaPlayerPausableChanged?.Invoke(this,
                 new MediaPlayerPausableChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerPausableChanged.NewPausable));
-        }
-
-        void OnTitleChanged(IntPtr ptr)
-        {
-            _mediaPlayerTitleChanged?.Invoke(this,
-                new MediaPlayerTitleChangedEventArgs(RetrieveEvent(ptr).Union.MediaPlayerTitleChanged.NewTitle));
         }
 
         void OnChapterChanged(IntPtr ptr)
