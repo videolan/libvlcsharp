@@ -64,15 +64,15 @@ These issues are issues of libvlc 3, that we hope to get fixed for libvlc 4
 
 ### LibVLC additionnal parameters
 
-tl;dr : If you want to play a video with UWP, integrate the `VideoView` in your control, handle the `Loaded` event and then initialize your player with:
+tl;dr : If you want to play a video with UWP, integrate the `VideoView` in your control, use XAML Behaviours to invoke a command upon receiving the `Initalized` event and then initialize your player with:
 ```cs
-new LibVLC(VideoView.GetSwapChainOptions());
+new LibVLC(eventArgs.SwapChainOptions);
 ```
 
 Detailed explanation:
 In UWP here are mandatory options to be given to the LibVLC constructor. These options tells libvlc (and more precisely the DirectX plugin) where to output the video, using a so-called "swap chain".
 
-This initialization step will disappear in libvlc 4, but for now, you will need to have a code similar to [this one](../Samples/LibVLCSharp.UWP.Sample/MainPage.xaml.cs)
+This initialization step will disappear in libvlc 4, but for now, you will need to have a code similar to [this](../samples/LibVLCSharp.UWP.Sample/MainPage.xaml) and [this](../samples/LibVLCSharp.UWP.Sample/MainViewModel.cs#L63).
 
 
 ### Automatic audio output module selection
