@@ -6,7 +6,6 @@ steps:
     version: 5.0.101
 
 - script: |
-   chmod +x build.sh
    ./build.sh
   workingDirectory: buildsystem
   displayName: 'Build all'
