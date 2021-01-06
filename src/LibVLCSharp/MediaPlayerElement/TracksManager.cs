@@ -44,20 +44,20 @@ namespace LibVLCSharp.MediaPlayerElement
         /// <summary>
         /// Gets the tracks descriptions
         /// </summary>
-        public abstract IEnumerable<TrackDescription>? Tracks { get; }
+        public abstract MediaTrackList? Tracks { get; }
 
         /// <summary>
         /// Gets the current track identifier
         /// </summary>
-        /// <remarks>returns -1 if no active input</remarks>
-        public abstract int CurrentTrackId { get; set; }
+        /// <remarks>returns "" if no active input</remarks>
+        public abstract string CurrentTrackId { get; set; }
 
         /// <summary>
         /// Gets the current track identifier
         /// </summary>
-        protected int GetCurrentTrackId(int? trackId)
+        protected string GetCurrentTrackId(string? trackId)
         {
-            return trackId ?? -1;
+            return trackId ?? string.Empty;
         }
 
         /// <summary>
@@ -74,13 +74,14 @@ namespace LibVLCSharp.MediaPlayerElement
         }
 
         /// <summary>
-        /// Gets the track description
+        /// Gets the media track
         /// </summary>
         /// <param name="trackId">track identifier</param>
-        /// <returns>the track description</returns>
-        public TrackDescription? GetTrackDescription(int trackId)
+        /// <returns>the media track</returns>
+        public MediaTrack? GetMediaTrack(string trackId)
         {
-            return Tracks.FirstOrDefault(t => t.Id == trackId);
+            using var tracks = Tracks;
+            return tracks.FirstOrDefault(t => t.Id == trackId);
         }
 
         private Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)

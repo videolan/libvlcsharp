@@ -779,7 +779,7 @@ namespace LibVLCSharp.Uno
             AddTrack(menuflyout, null, ResourceLoader.GetString("None"));
         }
 
-        private void AddTrack(MenuFlyout menuflyout, int? trackId, string trackName)
+        private void AddTrack(MenuFlyout menuflyout, string? trackId, string? trackName)
         {
             if (menuflyout == null)
             {
@@ -795,7 +795,7 @@ namespace LibVLCSharp.Uno
             }
 
             var menuItem = new ToggleMenuFlyoutItem() { Text = trackName };
-            menuItem.Command = new ActionCommand<int?>(TrackMenuItemClick);
+            menuItem.Command = new ActionCommand<string?>(TrackMenuItemClick);
             menuItem.CommandParameter = trackId;
             menuItems.Add(menuItem);
 
@@ -814,14 +814,14 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void TrackMenuItemClick(int? trackId)
+        private void TrackMenuItemClick(string? trackId)
         {
-            var menu = TracksMenus.SelectMany(kvp => kvp.Key.Items.OfType<ToggleMenuFlyoutItem>().Where(i => ((int?)i.CommandParameter) == trackId)
+            var menu = TracksMenus.SelectMany(kvp => kvp.Key.Items.OfType<ToggleMenuFlyoutItem>().Where(i => ((string?)i.CommandParameter) == trackId)
                 .Select(i => new { Menu = kvp, MenuItem = i })).FirstOrDefault();
             if (menu != null)
             {
                 CheckMenuItem(menu.Menu.Key, menu.MenuItem);
-                menu.Menu.Value.Manager.CurrentTrackId = trackId ?? -1;
+                menu.Menu.Value.Manager.CurrentTrackId = trackId ?? string.Empty;
             }
         }
 
@@ -843,21 +843,13 @@ namespace LibVLCSharp.Uno
             }
             VisualStateManager.GoToState(this, tracksMenu.UnavailableStateName, true);
 
-            var tracks = manager.Tracks;
+            using var tracks = manager.Tracks;
             if (tracks != null)
             {
                 foreach (var track in tracks)
                 {
-                    AddTrack(menuFlyout, track);
+                    AddTrack(menuFlyout, track.Id, track.Name);
                 }
-            }
-        }
-
-        private void AddTrack(MenuFlyout menuFlyout, TrackDescription? trackDescription)
-        {
-            if (trackDescription is TrackDescription td && !string.IsNullOrWhiteSpace(td.Name))
-            {
-                AddTrack(menuFlyout, trackDescription?.Id, td.Name!);
             }
         }
 
@@ -868,14 +860,15 @@ namespace LibVLCSharp.Uno
             CheckMenuItem(menuFlyout, menuFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi =>
             {
                 var trackId = (int?)mi.CommandParameter;
-                return id == -1 && trackId == null || id.Equals(trackId);
+                return id == string.Empty && trackId == null || id.Equals(trackId);
             }));
         }
 
         private void OnTrackAdded(object sender, MediaPlayerESAddedEventArgs e)
         {
             var manager = (TracksManager)sender;
-            AddTrack(GetTracksMenu(manager).Key, manager.GetTrackDescription(e.Id));
+            using var track = manager.GetMediaTrack(e.Id);
+            AddTrack(GetTracksMenu(manager).Key, track?.Id, track?.Name);
         }
 
         private void OnTrackDeleted(object sender, MediaPlayerESDeletedEventArgs e)

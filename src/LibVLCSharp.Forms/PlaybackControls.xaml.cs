@@ -925,7 +925,7 @@ namespace LibVLCSharp.Forms
             VisualStateManager.GoToState(PlayPauseButton, PlayState);
         }
 
-        private string? GetTrackName(string? trackName, int trackId, int currentTrackId)
+        private string? GetTrackName(string? trackName, string trackId, string currentTrackId)
         {
             return trackId == currentTrackId ? $"{trackName} *" : trackName;
         }
@@ -941,15 +941,10 @@ namespace LibVLCSharp.Forms
             try
             {
                 var currentTrackId = manager.CurrentTrackId;
-                var index = 0;
-                IEnumerable<string?> tracksNames = tracks.Select(t =>
-                {
-                    index += 1;
-                    return GetTrackName(t.Name, currentTrackId, index);
-                }).OrderBy(n => n);
+                IEnumerable<string?> tracksNames = tracks.Select(t => t.Name).OrderBy(n => n);
                 if (addDeactivateRow)
                 {
-                    tracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), -1, currentTrackId) }
+                    tracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), string.Empty, currentTrackId) }
                         .Union(tracksNames);
                 }
 
@@ -959,22 +954,8 @@ namespace LibVLCSharp.Forms
                 var trackName = await page.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
                 if (trackName != null)
                 {
-                    var found = false;
-                    index = 0;
-                    foreach (var trackDescription in tracks)
-                    {
-                        index += 1;
-                        if (GetTrackName(trackDescription.Name, currentTrackId, index) == trackName)
-                        {
-                            found = true;
-                            manager.CurrentTrackId = trackDescription.Id;
-                            break;
-                        }
-                    }
-                    if (!found)
-                    {
-                        manager.CurrentTrackId = -1;
-                    }
+                    var match = tracks.FirstOrDefault(t => t.Name == trackName);
+                    manager.CurrentTrackId = match.Name ?? string.Empty;
                 }
             }
             catch (Exception ex)
@@ -996,9 +977,9 @@ namespace LibVLCSharp.Forms
         {
             if (tracksSelectionButton != null)
             {
-                var c = tracksManager.Tracks?.Where(t => t.Id != -1).Count();
+                var c = tracksManager.Tracks?.Where(t => t.Id != null).Count();
                 UpdateTracksSelectionButtonAvailability(tracksSelectionButton, isTracksSelectionButtonVisible &&
-                    tracksManager.Tracks?.Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
+                    tracksManager.Tracks?.Where(t => t.Id != null).Count() >= count ? availableState : unavailableState);
             }
         }
 

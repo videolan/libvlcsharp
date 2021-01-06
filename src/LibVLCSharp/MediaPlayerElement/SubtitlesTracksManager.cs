@@ -20,15 +20,19 @@ namespace LibVLCSharp.MediaPlayerElement
         /// Gets or sets the current track identifier
         /// </summary>
         /// <remarks>returns -1 if no active input</remarks>
-        public override int CurrentTrackId
+        public override string CurrentTrackId
         {
-            get => GetCurrentTrackId(MediaPlayer?.Spu);
-            set => SetCurrentTrackId(mp => mp.SetSpu(value));
+            get
+            {
+                using var subtitleTrack = MediaPlayer?.SelectedTrack(TrackType.Text);
+                return GetCurrentTrackId(subtitleTrack?.Id);
+            }
+            set => SetCurrentTrackId(mp => mp.Select(TrackType.Text, value));
         }
 
         /// <summary>
         /// Gets the tracks descriptions
         /// </summary>
-        public override IEnumerable<TrackDescription>? Tracks => MediaPlayer?.SpuDescription;
+        public override MediaTrackList? Tracks => MediaPlayer?.Tracks(TrackType.Text);
     }
 }

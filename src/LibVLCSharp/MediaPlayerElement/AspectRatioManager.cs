@@ -91,21 +91,9 @@ namespace LibVLCSharp.MediaPlayerElement
             {
                 return null;
             }
-            var selectedVideoTrack = mediaPlayer.VideoTrack;
-            if (selectedVideoTrack == -1)
-            {
-                return null;
-            }
 
-            try
-            {
-                var videoTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(t => t.Id == selectedVideoTrack);
-                return videoTrack == null ? (VideoTrack?)null : ((MediaTrack)videoTrack).Data.Video;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            using var selectedVideoTrack = mediaPlayer.SelectedTrack(TrackType.Video);
+            return selectedVideoTrack?.Data.Video;
         }
 
         private bool IsVideoSwapped(VideoTrack videoTrack)

@@ -19,16 +19,20 @@ namespace LibVLCSharp.MediaPlayerElement
         /// <summary>
         /// Gets or sets the current track identifier
         /// </summary>
-        /// <remarks>returns -1 if no active input</remarks>
-        public override int CurrentTrackId
+        /// <remarks>returns "" if no active input</remarks>
+        public override string CurrentTrackId
         {
-            get => GetCurrentTrackId(MediaPlayer?.AudioTrack);
-            set => SetCurrentTrackId(mp => mp.SetAudioTrack(value));
+            get
+            {
+                using var track = MediaPlayer?.SelectedTrack(TrackType.Audio);
+                return GetCurrentTrackId(track?.Id);
+            }
+            set => SetCurrentTrackId(mp => mp.Select(TrackType.Audio, value));
         }
 
         /// <summary>
         /// Gets the tracks descriptions
         /// </summary>
-        public override IEnumerable<TrackDescription>? Tracks => MediaPlayer?.AudioTrackDescription;
+        public override MediaTrackList? Tracks => MediaPlayer?.Tracks(TrackType.Audio);
     }
 }
