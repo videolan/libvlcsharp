@@ -108,12 +108,8 @@ namespace LibVLCSharp
             internal static extern IntPtr LibVLCMediaGetUserData(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_tracks_get")]
-            internal static extern uint LibVLCMediaTracksGet(IntPtr media, out IntPtr tracksPtr);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_tracks_release")]
-            internal static extern void LibVLCMediaTracksRelease(IntPtr tracks, uint count);
+                EntryPoint = "libvlc_media_get_tracklist")]
+            internal static extern IntPtr LibVLCMediaGetTracklist(IntPtr media, TrackType trackType);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_subitems")]
@@ -507,22 +503,25 @@ namespace LibVLCSharp
         /// </remarks>
         public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
 
-        /// <summary>Get media descriptor's elementary streams description
-        /// <para>address to store an allocated array of Elementary Streams</para>
-        /// <para>descriptions (must be freed with libvlc_media_tracks_release</para>
-        /// <para>by the caller) [OUT]</para>
-        /// <returns>the number of Elementary Streams (zero on error)</returns>
-        /// <remarks>
-        /// <para>Note, you need to call Parse() or play the media at least once</para>
-        /// <para>before calling this function.</para>
-        /// <para>Not doing this will result in an empty array.</para>
-        /// <para>LibVLC 2.1.0 and later.</para>
-        /// </remarks>
+        /// <summary>
+        /// Get the track list for one type
+        /// LibVLC 4.0.0 and later.
+        /// You need to call libvlc_media_parse_with_options() or play the media
+        /// at least once before calling this function.Not doing this will result in
+        /// an empty list.
         /// </summary>
-        public MediaTrack[] Tracks => MarshalUtils.Retrieve(NativeReference, (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaTracksGet(nativeRef, out array),
-            MarshalUtils.PtrToStructure<MediaTrackStructure>,
-            m => m.Build(),
-            Native.LibVLCMediaTracksRelease);
+        /// <param name="type">type of the track list to request</param>
+        /// <returns>a valid libvlc_media_tracklist_t or NULL in case of error, if there
+        /// is no track for a category, the returned list will have a size of 0, delete
+        /// with libvlc_media_tracklist_delete()
+        /// </returns>
+        public MediaTrackList? TrackList(TrackType type)
+        {
+            var trackListPtr = Native.LibVLCMediaGetTracklist(NativeReference, type);
+            if (trackListPtr == IntPtr.Zero)
+                return null;
+            return new MediaTrackList(trackListPtr);
+        }
 
         /// <summary>
         /// <para>Get subitems of media descriptor object. This will increment</para>
@@ -966,7 +965,7 @@ namespace LibVLCSharp
         Video = 1,
 
         /// <summary>
-        /// Text track
+        /// Text/Subtitle track
         /// </summary>
         Text = 2
     }

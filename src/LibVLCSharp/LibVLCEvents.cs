@@ -351,7 +351,7 @@ namespace LibVLCSharp
         internal readonly struct EsChanged
         {
             internal readonly TrackType Type;
-            internal readonly int Id;
+            internal readonly IntPtr Id;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -759,14 +759,14 @@ namespace LibVLCSharp
         /// <summary>
         /// The Id of the new Elementary Stream (ES)
         /// </summary>
-        public readonly int Id;
+        public readonly string Id;
 
         /// <summary>
         /// The type of the new Elementary Stream (ES)
         /// </summary>
         public readonly TrackType Type;
 
-        internal MediaPlayerESAddedEventArgs(int id, TrackType type)
+        internal MediaPlayerESAddedEventArgs(string id, TrackType type)
         {
             Id = id;
             Type = type;
@@ -781,14 +781,14 @@ namespace LibVLCSharp
         /// <summary>
         /// The Id of the deleted Elementary Stream (ES)
         /// </summary>
-        public readonly int Id;
+        public readonly string Id;
 
         /// <summary>
         /// The type of the deleted Elementary Stream (ES)
         /// </summary>
         public readonly TrackType Type;
 
-        internal MediaPlayerESDeletedEventArgs(int id, TrackType type)
+        internal MediaPlayerESDeletedEventArgs(string id, TrackType type)
         {
             Id = id;
             Type = type;
@@ -803,14 +803,14 @@ namespace LibVLCSharp
         /// <summary>
         /// The Id of the selected Elementary Stream (ES)
         /// </summary>
-        public readonly int Id;
+        public readonly string Id;
 
         /// <summary>
         /// The type of the seleted Elementary Stream (ES)
         /// </summary>
         public readonly TrackType Type;
 
-        internal MediaPlayerESSelectedEventArgs(int id, TrackType type)
+        internal MediaPlayerESSelectedEventArgs(string id, TrackType type)
         {
             Id = id;
             Type = type;

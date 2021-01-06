@@ -424,19 +424,19 @@ namespace LibVLCSharp
         void OnESAdded(IntPtr ptr)
         {
             var esChanged = GetEsChanged(ptr);
-            _mediaPlayerESAdded?.Invoke(this, new MediaPlayerESAddedEventArgs(esChanged.Id, esChanged.Type));
+            _mediaPlayerESAdded?.Invoke(this, new MediaPlayerESAddedEventArgs(esChanged.Id.FromUtf8()!, esChanged.Type));
         }
 
         void OnESDeleted(IntPtr ptr)
         {
             var esChanged = GetEsChanged(ptr);
-            _mediaPlayerESDeleted?.Invoke(this, new MediaPlayerESDeletedEventArgs(esChanged.Id, esChanged.Type));
+            _mediaPlayerESDeleted?.Invoke(this, new MediaPlayerESDeletedEventArgs(esChanged.Id.FromUtf8()!, esChanged.Type));
         }
 
         void OnESSelected(IntPtr ptr)
         {
             var esChanged = GetEsChanged(ptr);
-            _mediaPlayerESSelected?.Invoke(this, new MediaPlayerESSelectedEventArgs(esChanged.Id, esChanged.Type));
+            _mediaPlayerESSelected?.Invoke(this, new MediaPlayerESSelectedEventArgs(esChanged.Id.FromUtf8()!, esChanged.Type));
         }
 
         void OnAudioDevice(IntPtr ptr)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using LibVLCSharp.Helpers;
 
@@ -296,27 +297,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_audio_set_volume")]
             internal static extern int LibVLCAudioSetVolume(IntPtr mediaPlayer, int volume);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_get_track_count")]
-            internal static extern int LibVLCAudioGetTrackCount(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_get_track_description")]
-            internal static extern IntPtr LibVLCAudioGetTrackDescription(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_get_track")]
-            internal static extern int LibVLCAudioGetTrack(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_set_track")]
-            internal static extern int LibVLCAudioSetTrack(IntPtr mediaPlayer, int track);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_get_channel")]
             internal static extern AudioOutputChannel LibVLCAudioGetChannel(IntPtr mediaPlayer);
@@ -390,26 +370,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_video_set_aspect_ratio")]
             internal static extern void LibVLCVideoSetAspectRatio(IntPtr mediaPlayer, IntPtr aspect);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_spu")]
-            internal static extern int LibVLCVideoGetSpu(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_spu_count")]
-            internal static extern int LibVLCVideoGetSpuCount(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_spu_description")]
-            internal static extern IntPtr LibVLCVideoGetSpuDescription(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_set_spu")]
-            internal static extern int LibVLCVideoSetSpu(IntPtr mediaPlayer, int spu);
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu_delay")]
             internal static extern long LibVLCVideoGetSpuDelay(IntPtr mediaPlayer);
@@ -445,23 +405,6 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_teletext")]
             internal static extern void LibVLCVideoSetTeletext(IntPtr mediaPlayer, int page);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_track_count")]
-            internal static extern int LibVLCVideoGetTrackCount(IntPtr mediaPlayer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_track_description")]
-            internal static extern IntPtr LibVLCVideoGetTrackDescription(IntPtr mediaPlayer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_get_track")]
-            internal static extern int LibVLCVideoGetTrack(IntPtr mediaPlayer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_video_set_track")]
-            internal static extern int LibVLCVideoSetTrack(IntPtr mediaPlayer, int track);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_take_snapshot")]
@@ -525,12 +468,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_video_update_viewpoint")]
             internal static extern int LibVLCVideoUpdateViewpoint(IntPtr mediaPlayer, IntPtr viewpoint, bool absolute);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_track_description_list_release")]
-            internal static extern void LibVLCTrackDescriptionListRelease(IntPtr trackDescription);
-
-
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
             internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
@@ -551,6 +488,34 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_retain")]
             internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_selected_track")]
+            internal static extern IntPtr LibVLCMediaPlayerGetSelectedTrack(IntPtr mediaplayer, TrackType type);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_tracklist")]
+            internal static extern IntPtr LibVLCMediaPlayerGetTrackList(IntPtr mediaplayer, TrackType type);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_track_from_id")]
+            internal static extern IntPtr LibVLCMediaPlayerGetTrackFromId(IntPtr mediaplayer, IntPtr id);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_select_track")]
+            internal static extern void LibVLCMediaPlayerSelectTrack(IntPtr mediaplayer, IntPtr track);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_unselect_track_type")]
+            internal static extern void LibVLCMediaPlayerUnselectTrackType(IntPtr mediaplayer, TrackType type);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_select_tracks")]
+            internal static extern void LibVLCMediaPlayerSelectTracks(IntPtr mediaplayer, TrackType type, IntPtr tracks, UIntPtr count);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_select_tracks_by_ids")]
+            internal static extern void LibVLCMediaPlayerSelectTracksByIds(IntPtr mediaplayer, TrackType type, IntPtr[] ids);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_crop_ratio")]
@@ -1138,32 +1103,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Get the number of available audio tracks (int), or -1 if unavailable
-        /// </summary>
-        public int AudioTrackCount => Native.LibVLCAudioGetTrackCount(NativeReference);
-
-        /// <summary>
-        /// Retrive the audio track description
-        /// </summary>
-        public TrackDescription[] AudioTrackDescription => MarshalUtils.Retrieve(() => Native.LibVLCAudioGetTrackDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
-        /// Get current audio track ID or -1 if no active input.
-        /// </summary>
-        public int AudioTrack => Native.LibVLCAudioGetTrack(NativeReference);
-
-        /// <summary>
-        /// Set current audio track.
-        /// </summary>
-        /// <param name="trackIndex">the track ID (i_id field from track description)</param>
-        /// <returns>0 on success, -1 on error</returns>
-        public bool SetAudioTrack(int trackIndex) => Native.LibVLCAudioSetTrack(NativeReference, trackIndex) == 0;
-
-        /// <summary>
         /// Get current audio channel.
         /// </summary>
         public AudioOutputChannel Channel => Native.LibVLCAudioGetChannel(NativeReference);
@@ -1433,32 +1372,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// The current video subtitle track
-        /// </summary>
-        public int Spu => Native.LibVLCVideoGetSpu(NativeReference);
-
-        /// <summary>
-        /// Set Spu (subtitle)
-        /// </summary>
-        /// <param name="spu">Video subtitle track to select (id from track description)</param>
-        /// <returns>true on success, false otherwise</returns>
-        public bool SetSpu(int spu) => Native.LibVLCVideoSetSpu(NativeReference, spu) == 0;
-
-        /// <summary>
-        /// Get the number of available video subtitles.
-        /// </summary>
-        public int SpuCount => Native.LibVLCVideoGetSpuCount(NativeReference);
-
-        /// <summary>
-        /// Retrieve SpuDescription in a TrackDescription struct
-        /// </summary>
-        public TrackDescription[] SpuDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetSpuDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
         /// Get the current subtitle delay.
         /// </summary>
         public long SpuDelay => Native.LibVLCVideoGetSpuDelay(NativeReference);
@@ -1498,32 +1411,6 @@ namespace LibVLCSharp
             get => Native.LibVLCVideoGetTeletext(NativeReference);
             set => Native.LibVLCVideoSetTeletext(NativeReference, value);
         }
-
-        /// <summary>
-        /// Get number of available video tracks.
-        /// </summary>
-        public int VideoTrackCount => Native.LibVLCVideoGetTrackCount(NativeReference);
-
-        /// <summary>
-        /// Get the description of available video tracks.
-        /// </summary>
-        public TrackDescription[] VideoTrackDescription => MarshalUtils.Retrieve(() => Native.LibVLCVideoGetTrackDescription(NativeReference),
-            MarshalUtils.PtrToStructure<TrackDescriptionStructure>,
-            t => t.Build(),
-            t => t.Next,
-            Native.LibVLCTrackDescriptionListRelease);
-
-        /// <summary>
-        /// Get current video track ID (int) or -1 if no active input.
-        /// </summary>
-        public int VideoTrack => Native.LibVLCVideoGetTrack(NativeReference);
-
-        /// <summary>
-        /// Set video track.
-        /// </summary>
-        /// <param name="trackIndex">the track ID (i_id field from track description)</param>
-        /// <returns>true on sucess, false out of range</returns>
-        public bool SetVideoTrack(int trackIndex) => Native.LibVLCVideoSetTrack(NativeReference, trackIndex) == 0;
 
         /// <summary>
         /// Take a snapshot of the current video window.
@@ -1754,7 +1641,154 @@ namespace LibVLCSharp
             set => Configuration.NetworkCaching = value;
         }
 
-        MediaConfiguration Configuration = new MediaConfiguration();
+        /// <summary>
+        /// Get the track list for one type
+        /// LibVLC 4.0.0 and later.
+        ///
+        ///<br/> You need to call libvlc_media_parse_with_options() or play the media
+        ///at least once before calling this function. Not doing this will result in
+        ///an empty list.
+        ///
+        ///<br/> This track list is a snapshot of the current tracks when this function
+        ///is called.If a track is updated after this call, the user will need to call
+        ///this function again to get the updated track.
+        ///
+        ///
+        ///The track list can be used to get track informations and to select specific
+        ///tracks.
+        ///
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public MediaTrackList? Tracks(TrackType type)
+        {
+            var ptr = Native.LibVLCMediaPlayerGetTrackList(NativeReference, type);
+            if (ptr == IntPtr.Zero)
+                return null;
+            return new MediaTrackList(ptr);
+        }
+
+        /// <summary>
+        /// Get the selected track for one type
+        /// LibVLC 4.0.0 and later.
+        ///
+        /// <br/>More than one tracks can be selected for one type. In that case,
+        ///libvlc_media_player_get_tracklist() should be used.
+        /// </summary>
+        /// <param name="type">type of track</param>
+        /// <returns>a valid track or NULL if there is no selected tracks for this type. Remember to dispose of it when done</returns>
+        public MediaTrack? SelectedTrack(TrackType type)
+        {
+            var ptr = Native.LibVLCMediaPlayerGetSelectedTrack(NativeReference, type);
+            if (ptr == IntPtr.Zero)
+                return null;
+            return new MediaTrack(ptr);
+        }
+
+        /// <summary>
+        /// Get a track from a track id
+        /// version LibVLC 4.0.0 and later.
+        /// This function can be used to get the last updated informations of a track.
+        /// </summary>
+        /// <param name="id">valid string representing a track id</param>
+        /// <returns>a valid track or NULL if there is currently no tracks identified by
+        /// the string id, don't forget to dispose of it.</returns>
+        public MediaTrack? TrackFromId(string id)
+        {
+            if(string.IsNullOrEmpty(id)) return null;
+
+            var idPtr = id.ToUtf8();
+            var ptr = MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaPlayerGetTrackFromId(NativeReference, idPtr), idPtr);
+
+            if(ptr == IntPtr.Zero) return null;
+            return new MediaTrack(ptr);
+        }
+
+        /// <summary>
+        /// Select a track. This will unselected the current track.
+        /// LibVLC 4.0.0 and later.
+        /// </summary>
+        /// <param name="track">track to select</param>
+        public void Select(MediaTrack track) => Native.LibVLCMediaPlayerSelectTrack(NativeReference, track.NativeReference);
+
+        /// <summary>
+        /// Unselect all tracks for a given type
+        /// LibVLC 4.0.0 and later.
+        /// </summary>
+        /// <param name="trackType">type to unselect</param>
+        public void Unselect(TrackType trackType) => Native.LibVLCMediaPlayerUnselectTrackType(NativeReference, trackType);
+
+        /// <summary>
+        /// Select multiple tracks. All tracks must be of the same TrackType, otherwise this method does nothing.
+        /// LibVLC 4.0.0 and later.
+        /// The internal track list can change between the calls of
+        /// TrackList(TrackType type) and
+        /// libvlc_media_player_set_tracks(). If a track selection change but the
+        /// track is not present anymore, the player will just ignore it.
+        /// selecting multiple audio tracks is currently not supported.
+        /// </summary>
+        /// <param name="tracks">tracks to select</param>
+        public void Select(MediaTrack[] tracks)
+        {
+            if (tracks == null || tracks.Length == 0 || tracks.Any(t => t.TrackType != tracks[0].TrackType))
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Select tracks by their string identifier
+        /// version LibVLC 4.0.0 and later.
+        /// This function can be used pre-select a list of tracks before starting the
+        /// player. It has only effect for the current media. It can also be used when
+        /// the player is already started.
+        /// 'ids' can contain more than one track id, delimited with ','. "" or any
+        /// invalid track id will cause the player to unselect all tracks of that
+        /// category. NULL will disable the preference for newer tracks without
+        /// unselecting any current tracks.
+        /// Example:
+        /// - (libvlc_track_video, "video/1,video/2") will select these 2 video tracks.
+        /// If there is only one video track with the id "video/0", no tracks will be
+        /// selected.
+        /// - (libvlc_track_type_t, "${slave_url_md5sum}/spu/0) will select one spu
+        /// added by an input slave with the corresponding url.
+        ///
+        /// <remarks>The string identifier of a track can be found via psz_id from \ref
+        /// libvlc_media_track_t</remarks>
+        ///
+        /// <remarks>selecting multiple audio tracks is currently not supported.</remarks>
+        /// </summary>
+        /// <param name="type">track type to select</param>
+        /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
+        public void Select(TrackType type, string ids) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Select tracks by their string identifier
+        /// version LibVLC 4.0.0 and later.
+        /// This function can be used pre-select a list of tracks before starting the
+        /// player. It has only effect for the current media. It can also be used when
+        /// the player is already started.
+        /// 'ids' can contain more than one track id, delimited with ','. "" or any
+        /// invalid track id will cause the player to unselect all tracks of that
+        /// category. NULL will disable the preference for newer tracks without
+        /// unselecting any current tracks.
+        /// Example:
+        /// - (libvlc_track_video, "video/1,video/2") will select these 2 video tracks.
+        /// If there is only one video track with the id "video/0", no tracks will be
+        /// selected.
+        /// - (libvlc_track_type_t, "${slave_url_md5sum}/spu/0) will select one spu
+        /// added by an input slave with the corresponding url.
+        ///
+        /// <remarks>The string identifier of a track can be found via psz_id from \ref
+        /// libvlc_media_track_t</remarks>
+        ///
+        /// <remarks>selecting multiple audio tracks is currently not supported.</remarks>
+        /// </summary>
+        /// <param name="type">track type to select</param>
+        /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
+        public void Select(TrackType type, params string[] ids) => throw new NotImplementedException();
+
+        readonly MediaConfiguration Configuration = new MediaConfiguration();
 
 #if UNITY
         /// <summary>

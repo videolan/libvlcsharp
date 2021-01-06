@@ -345,6 +345,57 @@ namespace LibVLCSharp.Helpers
 
         /// <summary>
         /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
+        /// This supports uint libvlc signatures. This is used for the new mediatrack type which became a class.
+        /// From libvlcsharp 4.0
+        /// </summary>
+        /// <typeparam name="T">publicly facing class type</typeparam>
+        /// <param name="nativeRef">native reference of the parent</param>
+        /// <param name="getRef">Native libvlc call: retrieve collection start pointer from parent reference</param>
+        /// <param name="create">Create a publicly facing class from the ptr/internal struct values</param>
+        /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
+        /// <returns>An array of publicly facing class types</returns>
+        internal static T[] Retrieve<T>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T> create, Action<IntPtr, uint> releaseRef)
+           where T : class
+        {
+            var arrayPtr = IntPtr.Zero;
+            uint count = 0;
+
+            try
+            {
+                count = getRef(nativeRef, out arrayPtr);
+                if (count == 0)
+                {
+#if NETSTANDARD1_1 || NET45
+                    return new T[0];
+#else
+                    return Array.Empty<T>();
+#endif
+                }
+
+                var resultList = new List<T>();
+                T type;
+
+                for (var i = 0; i < count; i++)
+                {
+                    var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                    type = create(ptr);
+                    resultList.Add(type);
+                }
+
+                return resultList.ToArray();
+            }
+            finally
+            {
+                if (arrayPtr != IntPtr.Zero)
+                {
+                    releaseRef(arrayPtr, count);
+                    arrayPtr = IntPtr.Zero;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Generic marshalling function to retrieve structs from libvlc by reading from unmanaged memory with offsets
         /// </summary>
         /// <typeparam name="T">Internal struct type</typeparam>
         /// <typeparam name="TU">publicly facing struct type</typeparam>

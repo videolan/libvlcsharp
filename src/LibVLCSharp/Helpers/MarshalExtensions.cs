@@ -33,14 +33,6 @@ namespace LibVLCSharp.Helpers
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
-        /// <param name="s">TrackDescriptionStructure from interop</param>
-        /// <returns>public TrackDescription to be consumed by the user</returns>
-        internal static TrackDescription Build(this TrackDescriptionStructure s) =>
-            new TrackDescription(s.Id, s.Name.FromUtf8()!);
-
-        /// <summary>
-        /// Helper method that creates a user friendly type from the internal interop structure.
-        /// </summary>
         /// <param name="s">ChapterDescriptionStructure from interop</param>
         /// <returns>public ChapterDescription to be consumed by the user</returns>
         internal static ChapterDescription Build(this ChapterDescriptionStructure s) =>
@@ -54,43 +46,6 @@ namespace LibVLCSharp.Helpers
         internal static MediaSlave Build(this MediaSlaveStructure s) => 
             new MediaSlave(s.Uri.FromUtf8()!, s.Type, s.Priority);
 
-        /// <summary>
-        /// Helper method that creates a user friendly type from the internal interop structure.
-        /// </summary>
-        /// <param name="s">TrackDescriptionStructure from interop</param>
-        /// <returns>public TrackDescription to be consumed by the user</returns>
-        internal static MediaTrack Build(this MediaTrackStructure s)
-        {
-            AudioTrack audioTrack = default;
-            VideoTrack videoTrack = default;
-            SubtitleTrack subtitleTrack = default;
-
-            switch (s.TrackType)
-            {
-                case TrackType.Audio:
-                    audioTrack = MarshalUtils.PtrToStructure<AudioTrack>(s.TrackData);
-                    break;
-                case TrackType.Video:
-                    videoTrack = MarshalUtils.PtrToStructure<VideoTrack>(s.TrackData);
-                    break;
-                case TrackType.Text:
-                    subtitleTrack = MarshalUtils.PtrToStructure<SubtitleTrackStructure>(s.TrackData).Build();
-                    break;
-                case TrackType.Unknown:
-                    break;
-            }
-
-            return new MediaTrack(s.Codec, 
-                s.OriginalFourcc, 
-                s.Id, 
-                s.TrackType, 
-                s.Profile, 
-                s.Level, 
-                new MediaTrackData(audioTrack, videoTrack, subtitleTrack), s.Bitrate,
-                s.Language.FromUtf8(),
-                s.Description.FromUtf8());
-        }
-        
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.
         /// </summary>
