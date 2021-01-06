@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp;
 using NUnit.Framework;
@@ -27,23 +28,24 @@ namespace LibVLCSharp.Tests
             var t = mp.AudioOutputDeviceEnum;
             Debug.WriteLine(t);
         }
-        
+
         [Test]
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
-            
+
             mp.Media = media;
-            mp.Play();
             mp.Playing += (sender, args) =>
             {
-                var description = mp.AudioTrackDescription;
-                Assert.True(mp.SetAudioTrack(description.First().Id));
-                Assert.IsNotEmpty(description);
+                using var audioTracks = mp.Tracks(TrackType.Audio);
+                mp.Select(audioTracks.First());
+                Assert.AreEqual(mp.SelectedTrack(TrackType.Audio)?.Id, audioTracks.First().Id);
                 tcs.SetResult(true);
             };
+            mp.Play();
+
             await tcs.Task;
             Assert.True(tcs.Task.Result);
         }
@@ -94,7 +96,7 @@ namespace LibVLCSharp.Tests
             {
                 var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
                 var mp = new MediaPlayer(media);
-                
+
 
                 mp.Playing += Mp_Playing;
 
@@ -106,7 +108,7 @@ namespace LibVLCSharp.Tests
                 await Task.Delay(2000);
                 Assert.AreEqual(callCountRegisterOne, 1);
                 Assert.AreEqual(callCountRegisterTwo, 1);
-            
+
                 callCountRegisterOne = 0;
                 callCountRegisterTwo = 0;
 
@@ -114,7 +116,7 @@ namespace LibVLCSharp.Tests
 
                 mp.Playing -= Mp_Playing;
 
-            
+
                 Debug.WriteLine("second play");
 
                 mp.Play();
@@ -141,7 +143,7 @@ namespace LibVLCSharp.Tests
                 Assert.AreEqual(callCountRegisterOne, 0);
                 Assert.AreEqual(callCountRegisterTwo, 0);
 
-                
+
             }
             catch (Exception ex)
             {
@@ -190,7 +192,7 @@ namespace LibVLCSharp.Tests
             Assert.IsTrue(result);
 
             await Task.Delay(1000);
-            
+
             mp.Dispose();
 
             Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
@@ -211,6 +213,35 @@ namespace LibVLCSharp.Tests
 
             Assert.True(mp.SetRole(MediaPlayerRole.Video));
             Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+        }
+
+        [Test]
+        public async Task MultiTrackSelection()
+        {
+            var msub = "https://streams.videolan.org/samples/Matroska/subtitles/multiple_sub_sample.mkv";
+            var mp = new MediaPlayer(_libVLC)
+            {
+                Media = new Media(_libVLC, new Uri(msub)),
+                Mute = true
+            };
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            var trackList = default(MediaTrackList);
+            mp.Playing += (s, e) => Task.Run(() =>
+            {
+                trackList = mp.Tracks(TrackType.Text);
+                tcs.SetResult(true);
+            });
+
+            mp.Play();
+            await tcs.Task;
+
+            Assert.AreEqual(7, trackList?.Count);
+
+            mp.Select(trackList.ToArray());
+
+            await Task.Delay(10000);
         }
     }
 }

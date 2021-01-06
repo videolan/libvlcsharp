@@ -126,9 +126,17 @@ namespace LibVLCSharp.Tests
         public async Task GetTracks()
         {
             using var media = new Media(_libVLC, LocalAudioFile);
+            using var mp = new MediaPlayer(media);
             await media.Parse();
-            Assert.AreEqual(media.Tracks.Single().Data.Audio.Channels, 2);
-            Assert.AreEqual(media.Tracks.Single().Data.Audio.Rate, 44100);
+            mp.Playing += (s, e) =>
+            {
+                using var audioTracks = mp.Tracks(TrackType.Audio);
+                using var track = audioTracks?[0];
+                Assert.AreEqual(track?.Data.Audio.Channels, 2);
+                Assert.AreEqual(track?.Data.Audio.Rate, 44100);
+            };
+            mp.Play();
+            await Task.Delay(1000);
         }
 
         [Test]
