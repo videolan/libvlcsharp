@@ -137,7 +137,7 @@ namespace LibVLCSharp
             internal static extern IntPtr LibVLCMediaTrackHold(IntPtr mediaTrack);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_track_hold")]
+                EntryPoint = "libvlc_media_track_release")]
             internal static extern void LibVLCMediaTrackRelease(IntPtr mediaTrack);
         }
         internal MediaTrack(IntPtr mediaTrackPtr)
