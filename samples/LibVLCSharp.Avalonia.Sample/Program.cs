@@ -16,7 +16,7 @@ namespace LibVLCSharp.Avalonia.Sample
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .With(new SkiaOptions{ MaxGpuResourceSizeBytes = 8096000})
-                .LogToDebug()
+                .LogToTrace()
                 .UseSkia()
                 .UseReactiveUI();
     }
