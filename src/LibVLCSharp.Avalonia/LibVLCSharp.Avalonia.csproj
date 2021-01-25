@@ -16,10 +16,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     <RootNamespace>LibVLCSharp.Avalonia</RootNamespace>
     <PackageId>LibVLCSharp.Avalonia</PackageId>
     <PackageTags>$(PackageTags);avalonia</PackageTags>
-    <VersionSuffix>alpha01</VersionSuffix>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.0-preview5" />
+    <PackageReference Include="Avalonia" Version="0.10.0" />
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
   </ItemGroup>
