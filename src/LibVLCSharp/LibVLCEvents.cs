@@ -10,8 +10,7 @@ namespace LibVLCSharp
         MediaSubItemAdded,
         MediaDurationChanged,
         MediaParsedChanged,
-        MediaFreed,
-        MediaStateChanged,
+        MediaStateChanged = MediaParsedChanged + 2,
         MediaSubItemTreeAdded,
         MediaThumbnailGenerated,
         MediaAttachedThumbnailsFound,
@@ -112,8 +111,6 @@ namespace LibVLCSharp
             [FieldOffset(0)]
             internal readonly MediaParsedChanged MediaParsedChanged;
             [FieldOffset(0)]
-            internal readonly MediaFreed MediaFreed;
-            [FieldOffset(0)]
             internal readonly MediaStateChanged MediaStateChanged;
             [FieldOffset(0)]
             internal readonly MediaThumbnailGenerated MediaThumbnailGenerated;
@@ -196,12 +193,6 @@ namespace LibVLCSharp
         internal readonly struct MediaParsedChanged
         {
             internal readonly MediaParsedStatus NewStatus;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaFreed
-        {
-            internal readonly IntPtr MediaInstance;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -434,22 +425,6 @@ namespace LibVLCSharp
         internal MediaDurationChangedEventArgs(long duration)
         {
             Duration = duration;
-        }
-    }
-
-    /// <summary>
-    /// The media has been freed
-    /// </summary>
-    public class MediaFreedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Freed media
-        /// </summary>
-        public readonly Media Media;
-
-        internal MediaFreedEventArgs(IntPtr mediaPtr)
-        {
-            Media = new Media(mediaPtr);
         }
     }
 

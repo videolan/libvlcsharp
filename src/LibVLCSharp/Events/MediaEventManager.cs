@@ -8,7 +8,6 @@ namespace LibVLCSharp
         EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
         EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
         EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
-        EventHandler<MediaFreedEventArgs>? _mediaFreed;
         EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
         EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
         EventHandler<MediaThumbnailGeneratedEventArgs>? _mediaThumbnailGenerated;
@@ -36,10 +35,6 @@ namespace LibVLCSharp
                 case EventType.MediaDurationChanged:
                     _mediaDurationChanged += eventHandler as EventHandler<MediaDurationChangedEventArgs>;
                     Attach(eventType, OnDurationChanged);
-                    break;
-                case EventType.MediaFreed:
-                    _mediaFreed += eventHandler as EventHandler<MediaFreedEventArgs>;
-                    Attach(eventType, OnMediaFreed);
                     break;
                 case EventType.MediaStateChanged:
                     _mediaStateChanged += eventHandler as EventHandler<MediaStateChangedEventArgs>;
@@ -79,10 +74,6 @@ namespace LibVLCSharp
                     _mediaDurationChanged -= eventHandler as EventHandler<MediaDurationChangedEventArgs>;
                     Detach(eventType);
                     break;
-                case EventType.MediaFreed:
-                    _mediaFreed -= eventHandler as EventHandler<MediaFreedEventArgs>;
-                    Detach(eventType);
-                    break;
                 case EventType.MediaStateChanged:
                     _mediaStateChanged -= eventHandler as EventHandler<MediaStateChangedEventArgs>;
                     Detach(eventType);
@@ -111,11 +102,6 @@ namespace LibVLCSharp
         {
             _mediaStateChanged?.Invoke(this,
                 new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
-        }
-
-        void OnMediaFreed(IntPtr ptr)
-        {
-            _mediaFreed?.Invoke(this, new MediaFreedEventArgs(RetrieveEvent(ptr).Union.MediaFreed.MediaInstance));
         }
 
         void OnDurationChanged(IntPtr ptr)

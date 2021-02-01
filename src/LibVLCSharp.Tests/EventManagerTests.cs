@@ -43,21 +43,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void FreedMedia()
-        {
-            var media = new Media(_libVLC, LocalAudioFile);
-            var eventCalled = false;
-            media.MediaFreed += (sender, args) =>
-            {
-                eventCalled = true;
-            };
-
-            media.Dispose();
-
-            Assert.True(eventCalled);
-        }
-
-        [Test]
         public async Task OpeningStateChanged()
         {
             var media = new Media(_libVLC, LocalAudioFile);

@@ -840,15 +840,6 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// The media was freed on the native side
-        /// </summary>
-        public event EventHandler<MediaFreedEventArgs> MediaFreed
-        {
-            add => EventManager.AttachEvent(EventType.MediaFreed, value);
-            remove => EventManager.DetachEvent(EventType.MediaFreed, value);
-        }
-
-        /// <summary>
         /// The media state changed
         /// </summary>
         public event EventHandler<MediaStateChangedEventArgs> StateChanged
