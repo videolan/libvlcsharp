@@ -1,5 +1,6 @@
 steps:
 - template: base-template.yml
+
 - bash: |
    #!/bin/bash
    set -ex
