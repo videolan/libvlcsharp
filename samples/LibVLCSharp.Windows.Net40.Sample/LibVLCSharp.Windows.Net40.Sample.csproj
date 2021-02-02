@@ -5,7 +5,7 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.12" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj" />

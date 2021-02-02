@@ -163,13 +163,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.8</Version>
+      <Version>6.2.11</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.1.1</Version>
+      <Version>3.1.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
