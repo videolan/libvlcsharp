@@ -533,6 +533,9 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_video_set_spu_text_scale")]
             internal static extern void LibVLCVideoSetSpuTextScale(IntPtr mediaplayer, float scale);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_get_spu_text_scale")]
+            internal static extern float LibVLCVideoGetSpuTextScale(IntPtr mediaplayer);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -1344,7 +1347,7 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Set the subtitle text scale.
+        /// Get/Set the subtitle text scale.
         /// The scale factor is expressed as a percentage of the default size, where 1.0 represents 100 percent.
         /// A value of 0.5 would result in text half the normal size, and a value of 2.0 would result in text twice the normal size.
         /// The minimum acceptable value for the scale factor is 0.1.
@@ -1353,6 +1356,7 @@ namespace LibVLCSharp
         /// </summary>
         public float SpuTextScale
         {
+            get => Native.LibVLCVideoGetSpuTextScale(NativeReference);
             set => Native.LibVLCVideoSetSpuTextScale(NativeReference, value);
         }
 
