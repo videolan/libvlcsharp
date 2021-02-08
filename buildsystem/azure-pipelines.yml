@@ -42,12 +42,18 @@ stages:
       pool:
         vmImage: 'windows-latest'
       steps:
-        - task: PowerShell@2
+        - task: DotNetCoreCLI@2
+          displayName: 'Install Cake'
+          inputs:
+            command: custom
+            custom: 'tool'
+            arguments: 'install cake.tool --global'
+        - task: DotNetCoreCLI@2
           displayName: 'Test'
           inputs:
-            targetType: filePath
-            filePath: ./buildsystem/build.ps1 
-            arguments: -target Test
+            command: custom
+            custom: 'cake'
+            arguments: --target Test
             workingDirectory: buildsystem
 
 - stage: Deploy

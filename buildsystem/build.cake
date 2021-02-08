@@ -70,7 +70,7 @@ Task("Test")
 {
     var settings = new DotNetCoreTestSettings
     {
-        Logger = "console;verbosity=detailed"
+        Loggers = new []{ "console;verbosity=detailed" }
     };
 
     DotNetCoreTest(testCsproj, settings);
