@@ -45,12 +45,12 @@ stages:
           artifactName: 'nugets'
           itemPattern: '**/*.nupkg'
           downloadPath: $(Build.Repository.LocalPath)
-      - task: PowerShell@2
-        displayName: 'Deploy'
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
         env:
           FEEDZ: $(FEEDZ)
         inputs:
-          targetType: filePath
-          filePath: ./buildsystem/build.ps1
-          arguments: -target CIDeploy
+          command: custom
+          custom: 'cake'
+          arguments: --target CIDeploy
           workingDirectory: buildsystem

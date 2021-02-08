@@ -5,7 +5,16 @@ steps:
     packageType: sdk
     version: 5.0.101
 
-- script: |
-   ./build.sh
-  workingDirectory: buildsystem
-  displayName: 'Build all'
+- task: DotNetCoreCLI@2
+  displayName: 'Install Cake'
+  inputs:
+    command: custom
+    custom: 'tool'
+    arguments: 'install cake.tool --global'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: custom
+    custom: 'cake'
+    workingDirectory: buildsystem

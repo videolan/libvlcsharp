@@ -10,11 +10,18 @@ steps:
   inputs:
     version: 5.0.101
 
-- task: PowerShell@2
-  displayName: 'Build all'
+- task: DotNetCoreCLI@2
+  displayName: 'Install Cake'
   inputs:
-    targetType: filePath
-    filePath: ./buildsystem/build.ps1 
+    command: custom
+    custom: 'tool'
+    arguments: 'install cake.tool --global'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: custom
+    custom: 'cake'
     workingDirectory: buildsystem
 
 - task: PublishBuildArtifacts@1
