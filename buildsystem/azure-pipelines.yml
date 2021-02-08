@@ -46,7 +46,13 @@ stages:
           itemPattern: '**/*.nupkg'
           downloadPath: $(Build.Repository.LocalPath)
       - task: DotNetCoreCLI@2
-        displayName: 'Build'
+        displayName: 'Install Cake'
+        inputs:
+          command: custom
+          custom: 'tool'
+          arguments: 'install cake.tool --global'
+      - task: DotNetCoreCLI@2
+        displayName: 'Deploy'
         env:
           FEEDZ: $(FEEDZ)
         inputs:
