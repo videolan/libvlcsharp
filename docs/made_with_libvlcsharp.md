@@ -58,7 +58,7 @@ Beautiful WPF Control UI
 
 https://github.com/aduskin/AduSkin
 
-## Lively 
+## Lively
 
 Animated Wallpaper System
 
@@ -75,3 +75,9 @@ https://github.com/robvdpol/RaceControl
 Playing audio books triggred by a RFID card powered by .NET Core running on a Raspberry Pi!
 
 https://github.com/selmaohneh/JukeCore
+
+## climusicdotnet
+
+A terminal based music player using dotnet core 5, libvlcsharp and Terminal.Gui
+
+https://github.com/gareth7562/climusicdotnet
