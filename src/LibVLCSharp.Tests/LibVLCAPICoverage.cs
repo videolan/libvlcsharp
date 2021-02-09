@@ -113,7 +113,7 @@ namespace LibVLCSharp.Tests
                         if (attr.AttributeType.Name.Equals("DllImportAttribute"))
                         {
                             var arg = attr.NamedArguments.FirstOrDefault(a => a.MemberName.Equals("EntryPoint"));
-                            if (arg == null) continue;
+                            if (arg == default) continue;
 
                             var sym = (string)arg.TypedValue.Value;
 
