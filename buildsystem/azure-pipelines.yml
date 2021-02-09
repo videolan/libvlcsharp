@@ -42,12 +42,12 @@ stages:
       pool:
         vmImage: 'windows-latest'
       steps:
-        - task: DotNetCoreCLI@2
-          displayName: 'Install Cake'
+        - template: base-template.yml
+        - task: UseDotNet@2
+          displayName: 'Use .NET Core SDK 3.1.405'
           inputs:
-            command: custom
-            custom: 'tool'
-            arguments: 'install cake.tool --global'
+            packageType: sdk
+            version: 3.1.405
         - task: DotNetCoreCLI@2
           displayName: 'Test'
           inputs:
@@ -65,6 +65,7 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
+      - template: base-template.yml
       - task: DownloadBuildArtifacts@0
         inputs:
           buildType: 'current'
