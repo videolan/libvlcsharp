@@ -10,7 +10,7 @@ stages:
 - stage: Build
   variables:
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
   jobs:
   - job: Linux
     pool:
@@ -33,24 +33,18 @@ stages:
 - stage: Deploy
   dependsOn: Build
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
-
   jobs:
   - job: feedz
     pool:
       vmImage: 'windows-latest'
     steps:
+      - template: base-template.yml
       - task: DownloadBuildArtifacts@0
         inputs:
           buildType: 'current'
           artifactName: 'nugets'
           itemPattern: '**/*.nupkg'
           downloadPath: $(Build.Repository.LocalPath)
-      - task: DotNetCoreCLI@2
-        displayName: 'Install Cake'
-        inputs:
-          command: custom
-          custom: 'tool'
-          arguments: 'install cake.tool --global'
       - task: DotNetCoreCLI@2
         displayName: 'Deploy'
         env:
