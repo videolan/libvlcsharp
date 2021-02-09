@@ -1,17 +1,5 @@
 steps:
-- task: UseDotNet@2
-  displayName: 'Use .NET Core SDK'
-  inputs:
-    packageType: sdk
-    version: 5.0.101
-
-- task: DotNetCoreCLI@2
-  displayName: 'Install Cake'
-  inputs:
-    command: custom
-    custom: 'tool'
-    arguments: 'install cake.tool --global'
-
+- template: base-template.yml
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:

@@ -1,21 +1,10 @@
 steps:
+- template: base-template.yml
 - task: gep13.chocolatey-azuredevops.chocolatey-azuredevops.ChocolateyCommand@0
   displayName: 'Install GTK#'
   inputs:
     command: install
     installPackageId: gtksharp
-
-- task: UseDotNet@2
-  displayName: 'Use .NET Core SDK'
-  inputs:
-    version: 5.0.101
-
-- task: DotNetCoreCLI@2
-  displayName: 'Install Cake'
-  inputs:
-    command: custom
-    custom: 'tool'
-    arguments: 'install cake.tool --global'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'
