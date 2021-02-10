@@ -532,7 +532,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_select_tracks_by_ids")]
-            internal static extern void LibVLCMediaPlayerSelectTracksByIds(IntPtr mediaplayer, TrackType type, IntPtr[] ids);
+            internal static extern void LibVLCMediaPlayerSelectTracksByIds(IntPtr mediaplayer, TrackType type, IntPtr ids);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_crop_ratio")]
@@ -1781,33 +1781,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="type">track type to select</param>
         /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
-        public void Select(TrackType type, string ids) => throw new NotImplementedException();
-
-        /// <summary>
-        /// Select tracks by their string identifier
-        /// version LibVLC 4.0.0 and later.
-        /// This function can be used pre-select a list of tracks before starting the
-        /// player. It has only effect for the current media. It can also be used when
-        /// the player is already started.
-        /// 'ids' can contain more than one track id, delimited with ','. "" or any
-        /// invalid track id will cause the player to unselect all tracks of that
-        /// category. NULL will disable the preference for newer tracks without
-        /// unselecting any current tracks.
-        /// Example:
-        /// - (libvlc_track_video, "video/1,video/2") will select these 2 video tracks.
-        /// If there is only one video track with the id "video/0", no tracks will be
-        /// selected.
-        /// - (libvlc_track_type_t, "${slave_url_md5sum}/spu/0) will select one spu
-        /// added by an input slave with the corresponding url.
-        ///
-        /// <remarks>The string identifier of a track can be found via psz_id from \ref
-        /// libvlc_media_track_t</remarks>
-        ///
-        /// <remarks>selecting multiple audio tracks is currently not supported.</remarks>
-        /// </summary>
-        /// <param name="type">track type to select</param>
-        /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
-        public void Select(TrackType type, params string[] ids) => throw new NotImplementedException();
+        public void Select(TrackType type, string ids) => Native.LibVLCMediaPlayerSelectTracksByIds(NativeReference, type, ids.ToUtf8());
 
         /// <summary>
         /// Get the program list
