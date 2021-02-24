@@ -221,8 +221,17 @@ namespace LibVLCSharp
         /// There is absolutely no warranty or promise of forward, backward and
         /// cross-platform compatibility with regards to libvlc_new() arguments.
         /// We recommend that you do not use them, other than when debugging.
+        /// 
+        /// <example>
+        /// <code>
+        /// // example <br/>
+        /// using var libvlc = new LibVLC("--verbose=2");
+        /// <br/> // or <br/>
+        /// using var libvlc = new LibVLC("--verbose", "2");
+        /// </code>
+        /// </example>
         /// </summary>
-        /// <param name="options">list of arguments (should be NULL)</param>
+        /// <param name="options">list of arguments, in the form "--option=value"</param>
         /// <returns>the libvlc instance or NULL in case of error</returns>
         public LibVLC(params string[] options)
             : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options), Native.LibVLCNew), Native.LibVLCRelease)

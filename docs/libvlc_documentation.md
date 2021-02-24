@@ -2,8 +2,8 @@
 
 [Back](home.md)
 
-- [LibVLC options](#libvlc-options)
-- [LibVLC versions and differences](#libvlc-versions-and-differences)
+- [LibVLC on NuGet](#libvlc-on-nuget)
+- [LibVLC versions and differences](#libvlc-versioning)
 
 LibVLCSharp is based on LibVLC, so most of the LibVLC API documentation is very relevant to your experience using LibVLCSharp.
 
@@ -14,18 +14,6 @@ You can find it here [LibVLC Doc](https://www.videolan.org/developers/vlc/doc/do
 LibVLC is being distributed on NuGet from the [VideoLAN account](https://www.nuget.org/profiles/videolan).
 
 The packaging files and more packages details can be found at https://code.videolan.org/videolan/libvlc-nuget
-
-## LibVLC Options
-
-Some advanced customizations and features are only accessible through LibVLC options. Those take the form of strings that you give to the LibVLC library through the `LibVLC` constructor and/or through `media.AddOption`.
-
-> Note: If using the LibVLC constructor, you need to use prepend your option with `--`, like `--verbose=2`.
-> If using the `media.AddOption` API, you need to prepend with `:`, such as `:no-video`.
-
-> Note: Some options only work with the LibVLC constructor and some options only work with the `media.AddOption` API.
-
-### The list of such LibVLC string options can be found here https://wiki.videolan.org/VLC_command-line_help/
-
 
 ## LibVLC Versioning
 
