@@ -171,7 +171,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument.</param>
-        /// <param name="options">the libvlc options</param>
+        /// <param name="options">the libvlc options, in the form of ":your-option"</param>
         public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath, params string[] options)
             : this(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, options)
         {
@@ -182,7 +182,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="uri">The absolute URI of the resource.</param>
-        /// <param name="options">the libvlc options</param>
+        /// <param name="options">the libvlc options, in the form of ":your-option"</param>
         public Media(LibVLC libVLC, Uri uri, params string[] options)
             : this(() => SelectNativeCtor(libVLC, uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation),
                   Native.LibVLCMediaRelease,
@@ -208,7 +208,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="libVLC">A libvlc instance</param>
         /// <param name="fd">open file descriptor</param>
-        /// <param name="options">the libvlc options</param>
+        /// <param name="options">the libvlc options, in the form of ":your-option"</param>
         public Media(LibVLC libVLC, int fd, params string[] options)
             : this(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease, options)
         {
@@ -230,7 +230,7 @@ namespace LibVLCSharp.Shared
         /// <param name="libVLC">the libvlc instance</param>
         /// <param name="input">the media to be used by libvlc. LibVLCSharp will NOT dispose or close it.
         /// Use <see cref="StreamMediaInput"/> or implement your own.</param>
-        /// <param name="options">the libvlc options</param>
+        /// <param name="options">the libvlc options, in the form of ":your-option"</param>
         public Media(LibVLC libVLC, MediaInput input, params string[] options)
             : this(() => CtorFromInput(libVLC, input), Native.LibVLCMediaRelease, options)
         {
@@ -289,8 +289,14 @@ namespace LibVLCSharp.Shared
                 GCHandle.ToIntPtr(input.GcHandle));
         }
 
-        /// <summary>Add an option to the media.</summary>
-        /// <param name="option">the media option</param>
+        /// <summary>Add an option to the media.
+        /// <example>
+        /// <code>
+        /// // example <br/>
+        /// media.AddOption(":no-audio");
+        /// </code>
+        /// </example></summary>
+        /// <param name="option">the media option, in the form of ":your-option"</param>
         /// <remarks>
         /// <para>This option will be used to determine how the media_player will</para>
         /// <para>read the media. This allows to use VLC's advanced</para>

@@ -258,3 +258,30 @@ Example usage for red.
 MediaPlayer.SetMarqueeInt(VideoMarqueeOption.Color, 16711680); // red
 ```
 More Advance options here [wiki.videolan.org](http://wiki.videolan.org/Documentation:Modules/marq)
+
+# How do I use LibVLC's advanced options?
+
+LibVLC has [many advanced options](https://wiki.videolan.org/VLC_command-line_help/) to customize playback and streaming features.
+
+Multiple kinds of syntax are accepted to set these options:
+
+- Using the LibVLC constructor, like this:
+```csharp
+using var libvlc = new LibVLC("--verbose=2");
+```
+or like this
+```csharp
+using var libvlc = new LibVLC("--verbose", "2");
+```
+
+- Using the `Media.AddOption` method, like this:
+```csharp
+media.AddOption(":no-audio");
+```
+
+Several points to note:
+
+- Some options may not be available on some platforms.
+- Some options may be incompatible when used together.
+- Some options name may change or get removed from one version of libvlc to another.
+- Some options only work with LibVLC constructor, or only with `media.AddOption`.
