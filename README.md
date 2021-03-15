@@ -78,7 +78,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Xamarin.Forms
 - Uno Platform (UWP, Android, iOS)
 - Avalonia (Windows, macOS, Linux)
-- .NET Standard 1.1 and 2.0
+- .NET Standard 2.0+
 - .NET Framework 4.5 and later
 - .NET Core (including ASP.NET Core)
 - [Unity3D](https://code.videolan.org/videolan/vlc-unity)

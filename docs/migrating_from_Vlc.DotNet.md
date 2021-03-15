@@ -45,7 +45,7 @@ LibVLCSharp is designed to be fully crossplatform. Focus was initially mainly on
     Linux including desktop, server and Raspberry Pi (GTK)
     Xamarin.Forms
     Uno Platform (UWP, Android, iOS)
-    .NET Standard 1.1 and 2.0
+    .NET Standard 2.0+
     .NET Framework 4.0 and later
     .NET Core (including ASP.NET Core)
     Unity3D
