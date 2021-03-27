@@ -22,7 +22,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
 #endif
-            [DllImport(Constants.Kernel32, SetLastError = true)]
+            [DllImport(Constants.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern IntPtr LoadLibrary(string dllToLoad);
 
             [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
