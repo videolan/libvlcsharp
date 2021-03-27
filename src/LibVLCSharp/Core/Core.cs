@@ -22,8 +22,8 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_get_version")]
             internal static extern IntPtr LibVLCVersion();
 #endif
-            [DllImport(Constants.Kernel32, SetLastError = true)]
-            internal static extern IntPtr LoadLibrary(string dllToLoad);
+            [DllImport(Constants.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
+            internal static extern IntPtr LoadLibraryW(string dllToLoad);
 
             [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
             internal static extern IntPtr Dlopen(string libraryPath, int mode = 1);
@@ -166,7 +166,7 @@ namespace LibVLCSharp
             }
             else
             {
-                handle = Native.LoadLibrary(nativeLibraryPath);
+                handle = Native.LoadLibraryW(nativeLibraryPath);
             }
 
             return handle != IntPtr.Zero;
