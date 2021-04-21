@@ -553,6 +553,12 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu_text_scale")]
             internal static extern float LibVLCVideoGetSpuTextScale(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_output_callbacks")]
+            internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup, 
+                OutputCleanup? outputCleanup, OutputSetResize? resize, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, 
+                GetProcAddress? getProcAddress, FrameMetadata? metadata, OutputSelectPlane? selectPlane, IntPtr opaque);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -1786,14 +1792,14 @@ namespace LibVLCSharp
         /// <summary>
         /// Get the program list
         /// version LibVLC 4.0.0 and later.
-        /// 
+        ///
         /// note: This program list is a snapshot of the current programs when this
         /// function is called. If a program is updated after this call, the user will
         /// need to call this function again to get the updated program.
-        /// 
+        ///
         /// The program list can be used to get program informations and to select
         /// specific programs.
-        /// 
+        ///
         /// Return a valid ProgramList or NULL in case of error or empty list,
         /// </summary>
         public ProgramList? ProgramList
@@ -1807,9 +1813,9 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Get a program from a program id
-        /// 
+        ///
         /// version LibVLC 4.0.0 or later
-        /// 
+        ///
         /// </summary>
         /// <param name="groupId">program id</param>
         /// <returns>a valid program or NULL if the program id is not found.</returns>
@@ -1822,7 +1828,7 @@ namespace LibVLCSharp
         /// <summary>
         /// Get the selected program
         /// version LibVLC 4.0.0 or later
-        /// 
+        ///
         /// return a valid program struct or NULL if no programs are selected.
         /// </summary>
         public Program? SelectedProgram
@@ -1836,12 +1842,73 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Select program with a given program id.
-        /// 
+        ///
         /// note program ids are sent via the ProgramAdded event or
         /// can be fetch via ProgramList property
         /// </summary>
         /// <param name="programId">program id</param>
         public void SelectProgram(int programId) => Native.LibVLCMediaPlayerSelectProgramId(NativeReference, programId);
+
+
+        /// <summary>
+        /// Set callbacks and data to render decoded video to a custom texture
+        /// warning: VLC will perform video rendering in its own thread and at its own rate,
+        /// You need to provide your own synchronisation mechanism.
+        /// <para/>
+        /// note that <see cref="OutputSetup"/> and <see cref="OutputCleanup"/> may be called more than once per playback.
+        /// <para/>
+        /// version LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="engine">the GPU engine to use</param>
+        /// <param name="outputSetup">callback called to initialize user data</param>
+        /// <param name="outputCleanup">callback called to clean up user data</param>
+        /// <param name="resize">callback to set the resize callback</param>
+        /// <param name="updateOutput">callback to get the rendering format of the host (cannot be NULL)</param>
+        /// <param name="swap">called after rendering a video frame (cannot be NULL)</param>
+        /// <param name="makeCurrent">callback called to enter/leave the rendering context (cannot be NULL)</param>
+        /// <param name="getProcAddress">opengl function loading callback (cannot be NULL when either <see cref="VideoEngine.OpenGL"/> 
+        /// or <see cref="VideoEngine.OpenGLES2"/> is selected)</param>
+        /// <param name="metadata">callback to provide frame metadata (D3D11 only)</param>
+        /// <param name="selectPlane">callback to select different D3D11 rendering targets</param>
+        /// <returns>true engine selected and callbacks set, or false if engine type unknown or that the callbacks are not set</returns>
+        public bool SetOutputCallbacks(VideoEngine engine, OutputSetup? outputSetup, OutputCleanup? outputCleanup, OutputSetResize? resize,
+            UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, GetProcAddress? getProcAddress, FrameMetadata? metadata,
+            OutputSelectPlane? selectPlane)
+        {
+            _outputSetup = outputSetup;
+            _outputCleanup = outputCleanup;
+            _outputResize = resize;
+            _updateOutput = updateOutput ?? throw new ArgumentNullException(nameof(updateOutput));
+            _swap = swap ?? throw new ArgumentNullException(nameof(swap));
+            _makeCurrent = makeCurrent ?? throw new ArgumentNullException(nameof(makeCurrent));
+            _getProcAddress = getProcAddress == null && (engine == VideoEngine.OpenGL || engine == VideoEngine.OpenGLES2) 
+                ? throw new ArgumentNullException(nameof(getProcAddress)) 
+                : getProcAddress;
+            _frameMetadata = metadata;
+            _outputSelectPlane = selectPlane;
+
+            return Native.LibVLCVideoSetOutputCallbacks(NativeReference, engine,
+                _outputSetup == null ? null : OutputSetupHandle,
+                _outputCleanup == null ? null : OutputCleanupHandle,
+                _outputResize == null ? null : OutputSetResizeHandle,
+                UpdateOutputHandle,
+                SwapHandle,
+                MakeCurrentHandle,
+                _getProcAddress == null ? null : GetProcAddressHandle,
+                _frameMetadata == null ? null : FrameMetadataHandle,
+                _outputSelectPlane == null ? null : OutputSelectPlaneHandle,
+                GCHandle.ToIntPtr(_gcHandle));
+        }
+
+        OutputSetup? _outputSetup;
+        OutputCleanup? _outputCleanup;
+        OutputSetResize? _outputResize;
+        UpdateOutput? _updateOutput;
+        Swap? _swap;
+        MakeCurrent? _makeCurrent;
+        GetProcAddress? _getProcAddress;
+        FrameMetadata? _frameMetadata;
+        OutputSelectPlane? _outputSelectPlane;
 
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
@@ -1860,6 +1927,111 @@ namespace LibVLCSharp
 #endif
 
         #region Callbacks
+
+        static unsafe readonly OutputSetup OutputSetupHandle = OutputSetupCallback;
+        static readonly OutputCleanup OutputCleanupHandle = OutputCleanupCallback;
+        static readonly OutputSetResize OutputSetResizeHandle = OutputSetResizeCallback;
+        static unsafe readonly UpdateOutput UpdateOutputHandle = UpdateOutputCallback;
+        static readonly Swap SwapHandle = SwapCallback;
+        static readonly MakeCurrent MakeCurrentHandle = MakeCurrentCallback;
+        static readonly GetProcAddress GetProcAddressHandle = GetProcAddressCallback;
+        static unsafe readonly FrameMetadata FrameMetadataHandle = FrameMetadataCallback;
+        static unsafe readonly OutputSelectPlane OutputSelectPlaneHandle = OutputSelectPlaneCallback;
+
+        [MonoPInvokeCallback(typeof(OutputSetup))]
+        private static unsafe bool OutputSetupCallback(ref IntPtr opaque, SetupDeviceConfig* config, ref SetupDeviceInfo setup)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._outputSetup != null)
+            {
+                return mediaPlayer._outputSetup(ref mediaPlayer._videoUserData, config, ref setup);
+            }
+            return false;
+        }
+
+        [MonoPInvokeCallback(typeof(OutputCleanup))]
+        private static void OutputCleanupCallback(IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._outputCleanup != null)
+            {
+                mediaPlayer._outputCleanup(mediaPlayer._videoUserData);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(OutputSetResize))]
+        private static void OutputSetResizeCallback(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._outputResize != null)
+            {
+                mediaPlayer._outputResize(mediaPlayer._videoUserData, report_size_change, report_opaque);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(UpdateOutput))]
+        private unsafe static bool UpdateOutputCallback(IntPtr opaque, RenderConfig* config, ref OutputConfig output)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._updateOutput != null)
+            {
+                return mediaPlayer._updateOutput(mediaPlayer._videoUserData, config, ref output);
+            }
+            return false;
+        }
+
+        [MonoPInvokeCallback(typeof(Swap))]
+        private static void SwapCallback(IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._swap != null)
+            {
+                mediaPlayer._swap(mediaPlayer._videoUserData);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(MakeCurrent))]
+        private static bool MakeCurrentCallback(IntPtr opaque, bool enter)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._makeCurrent != null)
+            {
+                return mediaPlayer._makeCurrent(mediaPlayer._videoUserData, enter);
+            }
+            return false;
+        }
+
+        [MonoPInvokeCallback(typeof(GetProcAddress))]
+        private static IntPtr GetProcAddressCallback(IntPtr opaque, IntPtr functionName)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._getProcAddress != null)
+            {
+                return mediaPlayer._getProcAddress(mediaPlayer._videoUserData, functionName);
+            }
+            return IntPtr.Zero;
+        }
+
+        [MonoPInvokeCallback(typeof(FrameMetadata))]
+        private unsafe static void FrameMetadataCallback(IntPtr opaque, FrameMetadataType type, void* metadata)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._frameMetadata != null)
+            {
+                mediaPlayer._frameMetadata(mediaPlayer._videoUserData, type, metadata);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(OutputSelectPlane))]
+        private unsafe static bool OutputSelectPlaneCallback(IntPtr opaque, UIntPtr plane, void* output)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._outputSelectPlane != null)
+            {
+                return mediaPlayer._outputSelectPlane(mediaPlayer._videoUserData, plane, output);
+            }
+            return false;
+        }
 
         static readonly LibVLCVideoLockCb VideoLockCallbackHandle = VideoLockCallback;
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
@@ -2193,7 +2365,172 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVolumeCb(IntPtr data, float volume, [MarshalAs(UnmanagedType.I1)] bool mute);
 
-#endregion
+        /// <summary>
+        /// Callback prototype called to initialize user data. Setup the rendering environment.
+        /// <para/>
+        /// Note: LibVLC 4.0.0 or later
+        /// <para>
+        /// For libvlc_video_engine_d3d9 the output must be a IDirect3D9*.
+        /// A reference to this object is held until the LIBVLC_VIDEO_DEVICE_CLEANUP is called.
+        /// the device must be created with D3DPRESENT_PARAMETERS.hDeviceWindow set to 0.
+        /// </para>
+        /// <para>
+        /// For libvlc_video_engine_d3d11 the output must be a ID3D11DeviceContext*.
+        /// A reference to this object is held until the \ref LIBVLC_VIDEO_DEVICE_CLEANUP is called.
+        /// The ID3D11Device used to create ID3D11DeviceContext must have multithreading enabled.
+        /// </para>
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the @a libvlc_video_set_output_callbacks()
+        /// on input.The callback can change this value on output to be
+        /// passed to all the other callbacks set on @a libvlc_video_set_output_callbacks().
+        /// [IN/OUT]</param>
+        /// <param name="config">requested configuration of the video device [IN]</param>
+        /// <param name="setup">libvlc_video_setup_device_info_t* to fill [OUT]</param>
+        /// <returns>true on success</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        public unsafe delegate bool OutputSetup(ref IntPtr opaque, SetupDeviceConfig* config, ref SetupDeviceInfo setup);
+
+        /// <summary>
+        /// Callback prototype called to release user data.
+        /// <para/>
+        /// Note: version LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer set on the opaque parameter of <see cref="OutputSetup"/></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void OutputCleanup(IntPtr opaque);
+
+        /// <summary>
+        /// Set the callback to call when the host app resizes the rendering area.
+        /// <para/>
+        /// This allows text rendering and aspect ratio to be handled properly when the host
+        /// rendering size changes.
+        /// <para/>
+        /// <para/>
+        /// version LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">opaque pointer</param>
+        /// <param name="report_size_change">callback which must be called when the host size changes.
+        /// <para/>The callback is valid until another call to Resize/>
+        /// is done. This may be called from any thread.</param>
+        /// <param name="report_opaque">private pointer to pass to the <see cref="ReportSizeChange"/> callback</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void OutputSetResize(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque);
+
+        /// <summary>
+        /// Callback which must be called when the host size changes. Set with <see cref="OutputSetResize"/>
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="report_opaque">opaque pointer</param>
+        /// <param name="width">width</param>
+        /// <param name="height">height</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void ReportSizeChange(IntPtr report_opaque, uint width, uint height);
+
+        /// <summary>
+        /// Update the rendering output setup. <para/>
+        /// Note: the configuration device for Direct3D9 is the IDirect3DDevice9 that VLC
+        /// uses to render. The host must set a Render target and call Present()
+        /// when it needs the drawing from VLC to be done.This object is not valid
+        /// anymore after Cleanup is called. <para/>
+        /// Tone mapping, range and color conversion will be done depending on the values set in the output structure.
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the <see cref="SetOutputCallbacks"/>[IN]</param>
+        /// <param name="config">configuration of the video that will be rendered [IN]</param>
+        /// <param name="output">output configuration describing with how the rendering is setup [OUT]</param>
+        /// <returns>true on success</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
+        public unsafe delegate bool UpdateOutput(IntPtr opaque, RenderConfig* config, ref OutputConfig output);
+
+        /// <summary>
+        /// Callback prototype called after performing drawing calls.
+        /// This callback is called outside of libvlc_video_makeCurrent_cb current/not-current calls.
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// UpdateOutput, Swap,  MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void Swap(IntPtr opaque);
+
+        /// <summary>
+        /// Callback prototype to set up the OpenGL context for rendering. Tell the host the rendering is about to start/has finished.
+        /// <para/> LibVLC 4.0.0 or later <para/>
+        /// On Direct3D11 the following may change on the provided ID3D11DeviceContext*
+        /// between \ref enter being true and \ref enter being false: <para/> 
+        /// - IASetPrimitiveTopology() <para/> 
+        /// - IASetInputLayout() <para/> 
+        /// - IASetVertexBuffers() <para/> 
+        /// - IASetIndexBuffer() <para/> 
+        /// - VSSetConstantBuffers() <para/> 
+        /// - VSSetShader() <para/> 
+        /// - PSSetSamplers() <para/> 
+        /// - PSSetConstantBuffers() <para/> 
+        /// - PSSetShaderResources() <para/>
+        /// - PSSetShader() <para/>
+        /// - RSSetViewports() <para/>
+        /// - DrawIndexed() <para/>
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
+        /// <param name="enter">true to set the context as current, false to unset it</param>
+        /// <returns>true on success</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool MakeCurrent(IntPtr opaque, bool enter);
+
+        /// <summary>
+        /// Callback prototype to load opengl functions
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
+        /// <param name="functionName">name of the opengl function to load</param>
+        /// <returns>a pointer to the named OpenGL function, null otherwise</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr GetProcAddress(IntPtr opaque, IntPtr functionName);
+
+        /// <summary>
+        /// Callback prototype for frame metadata information
+        /// <para/> LibVLC 4.0.0 or later
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
+        /// <param name="type">the type of frame metadata</param>
+        /// <param name="metadata">the actual data, typed as one of <see cref="FrameMetadataType"/></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate void FrameMetadata(IntPtr opaque, FrameMetadataType type, void* metadata);
+
+        /// <summary>
+        /// Tell the host the rendering for the given plane is about to start
+        /// <para/> LibVLC 4.0.0 or later
+        /// <para/> note: This is only used with <see cref="VideoEngine.D3D11"/> <para/>
+        /// The output parameter receives the ID3D11RenderTargetView* to use for rendering
+        /// the plane.
+        /// If this callback is not used (set to NULL in <see cref="SetOutputCallbacks"/>)
+        /// OMSetRenderTargets has to be set during <see cref="MakeCurrent"/>
+        /// <para/>
+        /// The number of planes depend on the DXGI_FORMAT returned during the
+        /// <see cref="UpdateOutput"/> call.It's usually one plane except for
+        /// semi-planar formats like DXGI_FORMAT_NV12 or DXGI_FORMAT_P010.
+        /// entering call.
+        /// <para/>
+        /// This callback is called between <see cref="MakeCurrent"/> current/not-current calls.
+        /// </summary>
+        /// <param name="opaque">private pointer passed to the 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
+        /// <param name="plane">number of the rendering plane to select</param>
+        /// <param name="output">handle of the rendering output for the given plane</param>
+        /// <returns>true on success</returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate bool OutputSelectPlane(IntPtr opaque, UIntPtr plane, void* output);
+        #endregion
 
         /// <summary>
         /// Get the Event Manager from which the media player send event.
