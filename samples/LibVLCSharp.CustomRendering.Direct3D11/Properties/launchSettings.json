@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibVLCSharp.CustomRendering.Direct3D11": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
