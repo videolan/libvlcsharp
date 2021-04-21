@@ -97,7 +97,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
         static void CreateWindow()
         {
-            form = new Form() { Width = WIDTH, Height = HEIGHT };
+            form = new Form() { Width = WIDTH, Height = HEIGHT, Text = typeof(Program).Namespace };
             form.Show();
             form.Resize += Form_Resize;
             form.FormClosing += Form_FormClosing;
