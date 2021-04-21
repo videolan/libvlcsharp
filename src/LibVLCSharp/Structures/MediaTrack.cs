@@ -284,7 +284,7 @@ namespace LibVLCSharp
         {
             get
             {
-                if (position > Count)
+                if (position >= Count)
                     return null;
 
                 var ptr = Native.LibVLCMediaTrackListAt(NativeReference, (UIntPtr)position);
