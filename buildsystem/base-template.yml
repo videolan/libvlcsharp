@@ -3,7 +3,7 @@ steps:
   displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 5.0.101
+    version: 5.0.202
 
 - task: DotNetCoreCLI@2
   displayName: 'Install Cake'
