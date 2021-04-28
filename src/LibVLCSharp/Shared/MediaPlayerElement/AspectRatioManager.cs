@@ -99,7 +99,13 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
 
             try
             {
-                var videoTrack = mediaPlayer.Media?.Tracks?.FirstOrDefault(t => t.Id == selectedVideoTrack);
+                var media = mediaPlayer.Media;
+                MediaTrack? videoTrack = null;
+                if (media != null)
+                {
+                    videoTrack = media.Tracks?.FirstOrDefault(t => t.Id == selectedVideoTrack);
+                    media.Dispose();
+                }
                 return videoTrack == null ? (VideoTrack?)null : ((MediaTrack)videoTrack).Data.Video;
             }
             catch (Exception)

@@ -54,7 +54,20 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// <summary>
         /// Gets the media resource locator
         /// </summary>
-        public string? MediaResourceLocator => MediaPlayer?.Media?.Mrl;
+        public string? MediaResourceLocator 
+        { 
+            get 
+            {
+                var mrl = string.Empty;
+                var media = MediaPlayer?.Media;
+                if(media != null)
+                {
+                    mrl = media.Mrl;
+                    media.Dispose();
+                }
+                return mrl; 
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the playback is playing
