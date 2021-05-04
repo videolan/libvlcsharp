@@ -873,18 +873,6 @@ namespace LibVLCSharp
         }
 
         #endregion
-
-        /// <summary>
-        /// Dispose of this media
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
-            base.Dispose(disposing);
-        }
     }
 
     #region enums

@@ -105,18 +105,6 @@ namespace LibVLCSharp
             add => EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
             remove => EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
         }
-
-        /// <summary>
-        /// Dispose of this renderer discoverer instance
-        /// </summary>
-        /// <param name="disposing">true if called from a method</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
-            base.Dispose(disposing);
-        }
     }
 
     /// <summary>
@@ -184,17 +172,5 @@ namespace LibVLCSharp
         /// true if the renderer item can render audio
         /// </summary>
         public bool CanRenderAudio => (Native.LibVLCRendererItemFlags(NativeReference) & AudioRenderer) != 0;
-
-        /// <summary>
-        /// Dispose of this renderer item instance
-        /// </summary>
-        /// <param name="disposing">true if called from a method</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
-            base.Dispose(disposing);
-        }
     }
 }

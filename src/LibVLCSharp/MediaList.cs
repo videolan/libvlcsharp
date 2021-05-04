@@ -309,18 +309,6 @@ namespace LibVLCSharp
         #endregion
 
         /// <summary>
-        /// Dispose of this media list instance
-        /// </summary>
-        /// <param name="disposing">true to dispose of unmanaged resources</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
         /// Returns an enumerator that iterates through a collection of media
         /// </summary>
         /// <returns>an enumerator over a media collection</returns>

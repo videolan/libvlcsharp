@@ -309,9 +309,6 @@ namespace LibVLCSharp
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
             if (disposing)
             {
                 UnsetDialogHandlers();
