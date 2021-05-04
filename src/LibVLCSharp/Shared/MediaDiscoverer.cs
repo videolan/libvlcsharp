@@ -150,9 +150,6 @@ namespace LibVLCSharp.Shared
         /// <param name="disposing">true if called from a method</param>
         protected override void Dispose(bool disposing)
         {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
             if(disposing)
             {
                 if(_mediaList != null)

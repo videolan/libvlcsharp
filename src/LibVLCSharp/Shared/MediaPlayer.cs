@@ -2404,9 +2404,6 @@ namespace LibVLCSharp.Shared
         /// <param name="disposing">release any unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
             if(disposing)
             {
                 if (_gcHandle.IsAllocated)

@@ -143,25 +143,5 @@ namespace LibVLCSharp.Shared
         /// <param name="index">index index of the band, counting from zero</param>
         /// <returns>equalizer band frequency (Hz), or -1 if there is no such band</returns>
         public float BandFrequency(uint index) => Native.LibVLCAudioEqualizerGetBandFrequency(index);
-
-        /// <summary>
-        /// Dispose for equalizer
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        {
-            if (IsDisposed || NativeReference == IntPtr.Zero)
-                return;
-
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Finalizer for equalizer
-        /// </summary>
-        ~Equalizer()
-        {
-            Dispose(false);
-        }
     }
 }
