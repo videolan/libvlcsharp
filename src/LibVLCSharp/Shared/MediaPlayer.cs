@@ -631,20 +631,23 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public Media? Media
         {
-            get
-            {
-                return _media;
-            }
+            get => _media;
             set
             {
-                if(_media?.NativeReference != IntPtr.Zero)
+                if(_media != null)
                 {
-                    _media?.Dispose();
+                    _media.Dispose();
                     _media = null;
                 }
 
                 _media = value;
-                Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+                
+                if(_media != null)
+                {
+                    _media.Retain();
+                }
+
+                Native.LibVLCMediaPlayerSetMedia(NativeReference, _media?.NativeReference ?? IntPtr.Zero);
             }
         }
 
