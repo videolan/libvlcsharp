@@ -80,7 +80,7 @@ namespace LibVLCSharp.MediaPlayerElement
                 var mediaPlayer = MediaPlayer;
                 if (mediaPlayer != null)
                 {
-                    mediaPlayer.Volume = value;
+                    mediaPlayer.SetVolume(value);
                     Mute = value == 0;
                 }
             }

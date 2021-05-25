@@ -831,13 +831,10 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="rate">movie play rate to set</param>
         /// <returns>
-        /// return -1 if an error was detected, 0 otherwise (but even then, it
+        /// return false if an error was detected, true otherwise (but even then, it
         /// might not actually work depending on the underlying media protocol)
         /// </returns>
-        public int SetRate(float rate)
-        {
-            return Native.LibVLCMediaPlayerSetRate(NativeReference, rate);
-        }
+        public bool SetRate(float rate) => Native.LibVLCMediaPlayerSetRate(NativeReference, rate) == 0;
 
         /// <summary>
         /// Get the current state of the media player (playing, paused, ...)
@@ -1125,13 +1122,19 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Get/Set the volume in percents (0 = mute, 100 = 0dB)
+        /// Get the volume in percents (0 = mute, 100 = 0dB)
         /// </summary>
         public int Volume
         {
             get => Native.LibVLCAudioGetVolume(NativeReference);
-            set => Native.LibVLCAudioSetVolume(NativeReference, value);
         }
+
+        /// <summary>
+        /// Set the volume in percents (0 = mute, 100 = 0dB)
+        /// </summary>
+        /// <param name="volume">volume to set [0:200]</param>
+        /// <returns>true if volume was set, false otherwise</returns>
+        public bool SetVolume(int volume) => Native.LibVLCAudioSetVolume(NativeReference, volume) == 0;
 
         /// <summary>
         /// Get current audio channel.
