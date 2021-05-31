@@ -997,7 +997,7 @@ namespace LibVLCSharp
         CubemapLayoutStandard = 256
     }
 
-    /// <summary>Type of a media slave: subtitle or audio.</summary>
+    /// <summary>Type of a media slave: subtitle or generic (audio/video).</summary>
     public enum MediaSlaveType
     {
         /// <summary>
@@ -1006,9 +1006,14 @@ namespace LibVLCSharp
         Subtitle = 0,
 
         /// <summary>
+        /// Generic (audio or video)
+        /// </summary>
+        Generic = 1,
+
+        /// <summary>
         /// Audio
         /// </summary>
-        Audio = 1
+        Audio = Generic
     }
 
     /// <summary>
