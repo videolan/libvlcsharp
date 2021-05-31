@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <DefineConstants>$(DefineConstants);</DefineConstants>
   </PropertyGroup>
 
@@ -11,11 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.8" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.14" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="5.0.1" />
   </ItemGroup>
 
 </Project>
