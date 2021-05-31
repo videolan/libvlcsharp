@@ -11,7 +11,7 @@ in a Windows Forms app. It depends on LibVLCSharp.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
-    <TargetFrameworks>net45;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms</RootNamespace>
     <PackageId>LibVLCSharp.WinForms</PackageId>
