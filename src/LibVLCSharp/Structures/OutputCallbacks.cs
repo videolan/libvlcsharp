@@ -43,6 +43,11 @@ namespace LibVLCSharp
         /// ID3D11DeviceContext
         /// </summary>
         public void* DeviceContext { get; set; }
+
+        /// <summary>
+        /// Windows Mutex HANDLE to protect ID3D11DeviceContext usage
+        /// </summary>
+        public void* ContextMutex { get; set; }
     }
 
     /// <summary>

@@ -2387,6 +2387,12 @@ namespace LibVLCSharp
         /// A reference to this object is held until the \ref LIBVLC_VIDEO_DEVICE_CLEANUP is called.
         /// The ID3D11Device used to create ID3D11DeviceContext must have multithreading enabled.
         /// </para>
+        /// <para>
+        /// If the ID3D11DeviceContext is used outside of the callbacks called by libvlc, the host
+        /// MUST use a mutex to protect the access to the ID3D11DeviceContext of libvlc. This mutex
+        /// value is set on <see cref="SetupDeviceInfoD3D11.ContextMutex"/>. If the ID3D11DeviceContext is not used outside of
+        /// the callbacks, the mutex <see cref="SetupDeviceInfoD3D11.ContextMutex"/> may be NULL.
+        /// </para>
         /// </summary>
         /// <param name="opaque">private pointer passed to the @a libvlc_video_set_output_callbacks()
         /// on input.The callback can change this value on output to be
