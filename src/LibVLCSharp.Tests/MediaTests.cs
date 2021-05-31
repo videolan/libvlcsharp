@@ -202,7 +202,7 @@ namespace LibVLCSharp.Tests
         {
             using var media = new Media(_libVLC, RealMp3Path);
             var cancellationToken = new CancellationToken(canceled: true);
-            Assert.ThrowsAsync<TaskCanceledException>(async () => await media.Parse(cancellationToken: cancellationToken));
+            Assert.ThrowsAsync<OperationCanceledException>(async () => await media.Parse(cancellationToken: cancellationToken));
         }
 
         [Test]
