@@ -72,7 +72,15 @@ namespace LibVLCSharp.Shared
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
             }
 
-            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location),
+            var libvlcAssemblyLocation = typeof(LibVLC).Assembly.Location;
+
+#if !NET40
+            if (string.IsNullOrEmpty(libvlcAssemblyLocation)) /* .NET 5 (single file / self contained) and later */
+            {
+                libvlcAssemblyLocation = AppContext.BaseDirectory;
+            }
+#endif
+            var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation),
                 Constants.LibrariesRepositoryFolderName, arch);
 
             var libvlccorePath1 = LibVLCCorePath(libvlcDirPath1);
@@ -81,28 +89,29 @@ namespace LibVLCSharp.Shared
             paths.Add((libvlccorePath1, libvlcPath1));
 
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
+            if(!string.IsNullOrEmpty(assemblyLocation))
+            { 
+                var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation),
+                    Constants.LibrariesRepositoryFolderName, arch);
 
-            var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation),
-                Constants.LibrariesRepositoryFolderName, arch);
+                var libvlccorePath2 = string.Empty;
+                if (PlatformHelper.IsWindows)
+                {
+                    libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
+                }
 
-            var libvlccorePath2 = string.Empty;
-            if (PlatformHelper.IsWindows)
-            {
-                libvlccorePath2 = LibVLCCorePath(libvlcDirPath2);
+                var libvlcPath2 = LibVLCPath(libvlcDirPath2);
+                paths.Add((libvlccorePath2, libvlcPath2));
             }
-
-            var libvlcPath2 = LibVLCPath(libvlcDirPath2);
-            paths.Add((libvlccorePath2, libvlcPath2));
-
-            var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location));
+            var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(libvlcAssemblyLocation));
 
             paths.Add((string.Empty, libvlcPath3));
 
             if (PlatformHelper.IsMac)
             {
-                var libvlcPath4 = Path.Combine(Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location),
+                var libvlcPath4 = Path.Combine(Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation),
                     Constants.Lib), $"{Constants.LibVLC}{LibraryExtension}");
-                var libvlccorePath4 = LibVLCCorePath(Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.Lib));
+                var libvlccorePath4 = LibVLCCorePath(Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation), Constants.Lib));
                 paths.Add((libvlccorePath4, libvlcPath4));
             }
 
