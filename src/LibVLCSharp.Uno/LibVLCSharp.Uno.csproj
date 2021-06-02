@@ -39,7 +39,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.iOS.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS')) or $(TargetFramework.StartsWith('MonoAndroid'))">
-    <PackageReference Include="Uno.UI" Version="2.0.527" />
+    <PackageReference Include="Uno.UI" Version="2.4.9" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="**\*.UWP.*cs" />
