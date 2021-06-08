@@ -1,3 +1,15 @@
+LibVLCSharp version 3.5.1
+=========================
+* Core: fix Media leaks
+* Core: remove check potentially preventing proper disposal
+* Core: fix support for self contained single file apps https://code.videolan.org/videolan/LibVLCSharp/-/issues/470
+* Core: docs: add hint in exception message for missing libvlc on Android 
+* WPF/WinForms: Use stable versions TFMs 
+* Samples: Update all dependencies
+* Avalonia: Bump reference to include fix for https://code.videolan.org/videolan/LibVLCSharp/-/issues/458
+* Uno: Uno: Temporary workaround to fix CI build until we move to Uno 3 https://github.com/unoplatform/uno/issues/6137
+* docs and licensing: Mention libvlcsharp commercial licensing.
+
 LibVLCSharp version 3.5.0
 =========================
 * Xamarin.Forms: Fix namespace clashes with newer XF versions.
