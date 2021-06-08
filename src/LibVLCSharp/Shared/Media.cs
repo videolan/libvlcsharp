@@ -555,6 +555,25 @@ namespace LibVLCSharp.Shared
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uriUtf8) != 0, uriUtf8);
         }
 
+        /// <summary>Add a slave to the current media.</summary>
+        /// <param name="type">subtitle or audio</param>
+        /// <param name="priority">from 0 (low priority) to 4 (high priority)</param>
+        /// <param name="uri">Uri of the slave (should contain a valid scheme).</param>
+        /// <returns>0 on success, -1 on error.</returns>
+        /// <remarks>
+        /// <para>A slave is an external input source that may contains an additional subtitle</para>
+        /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
+        /// <para>This function must be called before the media is parsed (via</para>
+        /// <para>libvlc_media_parse_with_options()) or before the media is played (via</para>
+        /// <para>libvlc_media_player_play())</para>
+        /// <para>LibVLC 3.0.0 and later.</para>
+        /// </remarks>
+        public bool AddSlave(MediaSlaveType type, uint priority, Uri uri)
+        {
+            var uriUtf8 = uri?.AbsoluteUri?.ToUtf8() ?? IntPtr.Zero;
+            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaAddSlaves(NativeReference, type, priority, uriUtf8) != 0, uriUtf8);
+        }
+
         /// <summary>
         /// <para>Clear all slaves previously added by libvlc_media_slaves_add() or</para>
         /// <para>internally.</para>
