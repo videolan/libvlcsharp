@@ -44,7 +44,9 @@ namespace LibVLCSharp.Shared
             }
             catch (Java.Lang.UnsatisfiedLinkError exception)
             {
-                throw new VLCException($"failed to load libc++_shared {nameof(exception)} {exception.Message}");
+                throw new VLCException($"failed to load libc++_shared {nameof(exception)} {exception.Message}" +
+                                       $"{Environment.NewLine}" +
+                                       $"Please make sure you have installed the VideoLAN.LibVLC.Android NuGet");
             }
         }
         static void InitializeAndroid()
