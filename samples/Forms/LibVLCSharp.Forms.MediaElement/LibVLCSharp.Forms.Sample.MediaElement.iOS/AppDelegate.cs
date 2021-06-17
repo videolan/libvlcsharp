@@ -2,6 +2,7 @@
 using LibVLCSharp.Forms.Platforms.iOS;
 using LibVLCSharp.Forms.Sample.MediaPlayerElement;
 using LibVLCSharp.Forms.Shared;
+using ObjCRuntime;
 using UIKit;
 using Xamarin.Forms;
 
