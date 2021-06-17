@@ -237,12 +237,37 @@ namespace LibVLCSharp.Forms.Shared
             {
                 MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnSleep");
                 MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnResume");
+                MessagingCenter.Unsubscribe<PlaybackControls>(this, "ChangeOrientation");
             }
         }
 
         private void GestureRecognized(object sender, EventArgs e)
         {
             PlaybackControls.Show();
+        }
+
+        /// <summary>
+        /// On size allocated , sucbribes the page to the lock screen message wich will be sent by PlaybackControls.cs.
+        /// </summary>
+        /// <param name="width">Screen's with</param>
+        /// <param name="height">Screen's height</param>
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            MessagingCenter.Subscribe<PlaybackControls>(this, "ChangeOrientation", o =>
+            {
+                var OrientationHandler = DependencyService.Get<IOrientationHandler>();
+
+                if (OrientationHandler != null)
+                {
+                    // Portrait Mode
+                    if (Width < Height)
+                        OrientationHandler.ForcePortrait();
+                    else
+                        OrientationHandler.ForceLandscape();
+                }
+
+            });
         }
     }
 }

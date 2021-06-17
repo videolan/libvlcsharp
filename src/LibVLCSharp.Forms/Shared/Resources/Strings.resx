@@ -159,4 +159,7 @@
   <data name="Track" xml:space="preserve">
     <value>Track {0}</value>
   </data>
+  <data name="Unlock" xml:space="preserve">
+    <value>SWIPE TO UNLOCK</value>
+  </data>
 </root>
