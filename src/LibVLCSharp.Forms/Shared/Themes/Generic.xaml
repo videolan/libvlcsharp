@@ -4,6 +4,7 @@
                     xmlns:converters="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
                     xmlns:effects="clr-namespace:LibVLCSharp.Forms.Shared.Effects"
                     xmlns:fontawesome="clr-namespace:FontAwesome;assembly=LibVLCSharp"
+                    xmlns:local="clr-namespace:LibVLCSharp.Forms.Shared"
                     x:Class="LibVLCSharp.Forms.Shared.Themes.Generic">
     <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
     <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
@@ -56,6 +57,13 @@
     <Style x:Key="ControlsPanelStyle" TargetType="Layout">
         <Setter Property="BackgroundColor" Value="#30000000" />
         <Setter Property="Padding" Value="2,0,2,2" />
+    </Style>
+
+    <Style x:Key="UnLockControlsPanelStyle" TargetType="Layout">
+        <Setter Property="Margin" Value="0, 0, 0, 10" />
+        <Setter Property="WidthRequest" Value="300" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
     </Style>
 
     <Style x:Key="SeekBarStyle" TargetType="Slider">
@@ -209,6 +217,14 @@
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Stop}" />
     </Style>
 
+    <Style x:Key="LockButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.UnlockAlt}" />
+    </Style>
+    
+    <Style x:Key="UnLockButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Lock}" />
+    </Style>
+
     <Style x:Key="AspectRatioButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="IsVisible" Value="{TemplateBinding IsAspectRatioButtonVisible}" />
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.ExpandArrowsAlt}" />
@@ -233,7 +249,8 @@
                     <ProgressBar Style="{TemplateBinding BufferingProgressBarStyle}" Progress="{TemplateBinding BufferingProgress}" 
                              IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
                     <Label x:Name="AspectRatioLabel" Style="{TemplateBinding MessageStyle}"/>
-                    
+
+                    <!-- ControlsPanel -->
                     <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
                         <StackLayout Orientation="Horizontal" >
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
@@ -246,10 +263,11 @@
                         <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
                             <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" />
                         </StackLayout>
-                        <StackLayout Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
+                        <StackLayout x:Name="ButtonBar" Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center">
                                 <Button x:Name="AudioTracksSelectionButton" Style="{TemplateBinding AudioTracksSelectionButtonStyle}" />
                                 <Button x:Name="ClosedCaptionsSelectionButton" Style="{TemplateBinding ClosedCaptionsSelectionButtonStyle}" />
+                                <Button x:Name="LockButton" Style="{StaticResource LockButtonStyle}" />
                             </StackLayout>
                             <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
                             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
@@ -265,6 +283,26 @@
                             </StackLayout>
                         </StackLayout>
                     </StackLayout>
+
+                    <!--  Unlock Control View  -->
+                    <StackLayout x:Name="UnLockControlsPanel" Style="{TemplateBinding UnLockControlsPanelStyle}" IsVisible="False">
+                        <local:SwipeToUnLockView x:Name="SwipeToUnLock" HeightRequest="60" VerticalOptions="Center">
+                            <local:SwipeToUnLockView.Thumb>
+                                <Button IsVisible="True" Style="{StaticResource UnLockButtonStyle}" />
+                            </local:SwipeToUnLockView.Thumb>
+
+                            <local:SwipeToUnLockView.TrackBar>
+                                <Frame Padding="0" BackgroundColor="#1C1C1C" CornerRadius="30" HasShadow="false">
+                                    <Label HorizontalOptions="CenterAndExpand" x:Name="TrackBarLabel" TextColor="White" VerticalOptions="CenterAndExpand" />
+                                </Frame>
+                            </local:SwipeToUnLockView.TrackBar>
+
+                            <local:SwipeToUnLockView.FillBar>
+                                <Frame Padding="0" BackgroundColor="#1C1C1C" CornerRadius="20" HasShadow="false" />
+                            </local:SwipeToUnLockView.FillBar>
+                        </local:SwipeToUnLockView>
+                    </StackLayout>
+                    
                 </StackLayout>
             </ControlTemplate>
         </Setter>

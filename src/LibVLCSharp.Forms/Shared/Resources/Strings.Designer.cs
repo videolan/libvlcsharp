@@ -185,5 +185,14 @@ namespace LibVLCSharp.Forms.Shared.Resources {
                 return ResourceManager.GetString("Track", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SWIPE TO UNLOCK.
+        /// </summary>
+        internal static string Unlock {
+            get {
+                return ResourceManager.GetString("Unlock", resourceCulture);
+            }
+        }
     }
 }

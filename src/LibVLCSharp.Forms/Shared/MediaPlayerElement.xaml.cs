@@ -243,6 +243,6 @@ namespace LibVLCSharp.Forms.Shared
         private void GestureRecognized(object sender, EventArgs e)
         {
             PlaybackControls.Show();
-        }
+        }        
     }
 }
