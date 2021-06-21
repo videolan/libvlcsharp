@@ -130,8 +130,9 @@ from the main (upstream) repository:
 ### Developer Environment
 - Visual Studio 2019 (with latest patches/updates), with the following workloads/components
     - .NET desktop development workload
-    - Mobile development with .NET workload
+    - Mobile development with .NET workload and Android/iOS SDKs
     - .NET Core cross-platform development
+    - Developer packs for .NET Framework 4.7 and 4.7.1
 
 You will need to install GTK if you want to work on LibVLCSharp.GTK.
 
