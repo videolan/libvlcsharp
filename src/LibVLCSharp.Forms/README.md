@@ -22,6 +22,38 @@ This package has multiple target frameworks, which means it will pick the right 
 
 This package includes a Xamarin.Forms MediaPlayerElement component. It currently supports iOS and Android only.
 
+Note: In your iOS project, you must override the `GetSupportedInterfaceOrientations` method in `AppDelegate.cs` to enable the lock screen feature.
+
+```c#
+using Foundation;
+using LibVLCSharp.Forms.Platforms.iOS;
+using LibVLCSharp.Forms.Shared;
+using ObjCRuntime;
+using UIKit;
+// ...
+
+namespace MyAppNameSpace.iOS
+{
+    
+    [Register("AppDelegate")]
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    {
+       
+        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+        {
+            LibVLCSharpFormsRenderer.Init();
+            // ...
+        }
+
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, [Transient] UIWindow forWindow)
+        {
+            return OrientationChangeSuscriber.Suscribe(this);
+        }
+    }
+}
+
+```
+
 See the [sample](../../samples/Forms/LibVLCSharp.Forms.MediaElement) for more info.
 
 ## Why should I reference this package in my project?
