@@ -55,6 +55,9 @@ namespace LibVLCSharp.Forms
             AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
             RewindButtonStyle = Resources[nameof(RewindButtonStyle)] as Style;
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
+            LockButtonStyle = Resources[nameof(LockButtonStyle)] as Style;
+            UnLockButtonStyle = Resources[nameof(UnLockButtonStyle)] as Style;
+            UnLockControlsPanelStyle = Resources[nameof(UnLockControlsPanelStyle)] as Style;           
 
             Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation(), new DisplayRequest());
             var autoHideManager = Manager.Get<AutoHideNotifier>();
@@ -99,15 +102,21 @@ namespace LibVLCSharp.Forms
         private Button? CastButton { get; set; }
         private Button? ClosedCaptionsSelectionButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
+        private VisualElement? ButtonBar { get; set; }
+        private VisualElement? UnLockControlsPanel { get; set; }
+        private SwipeToUnLockView? SwipeToUnLock { get; set; }
+        private Label? TrackBarLabel { get; set; }       
         private Button? PlayPauseButton { get; set; }
         private Label? RemainingTimeLabel { get; set; }
         private Label? ElapsedTimeLabel { get; set; }
         private Label? AspectRatioLabel { get; set; }
 
         private Slider? SeekBar { get; set; }
+        private bool ScreenLockModeEnable { get; set; } = false;
 
         private bool Initialized { get; set; }
         private ISystemUI? SystemUI => DependencyService.Get<ISystemUI>();
+        private IOrientationHandler? OrientationHandler => DependencyService.Get<IOrientationHandler>();
 
         private const int SEEK_OFFSET = 2000;
         private bool RemoteRendering { get; set; } = false;
@@ -255,6 +264,34 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
+        /// Identifies the <see cref="UnLockControlsPanelStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty UnLockControlsPanelStyleProperty = BindableProperty.Create(nameof(UnLockControlsPanelStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the unlock controls panel style.
+        /// </summary>
+        public Style? UnLockControlsPanelStyle
+        {
+            get => (Style)GetValue(UnLockControlsPanelStyleProperty);
+            set => SetValue(UnLockControlsPanelStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="UnLockButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty UnLockButtonStyleProperty = BindableProperty.Create(nameof(UnLockButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the unlock controls panel style.
+        /// </summary>
+        public Style? UnLockButtonStyle
+        {
+            get => (Style)GetValue(UnLockButtonStyleProperty);
+            set => SetValue(UnLockButtonStyleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="MessageStyle"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MessageStyleProperty = BindableProperty.Create(nameof(MessageStyle), typeof(Style),
@@ -353,6 +390,20 @@ namespace LibVLCSharp.Forms
         {
             get => (VideoView)GetValue(VideoViewProperty);
             set => SetValue(VideoViewProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="LockButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty LockButtonStyleProperty = BindableProperty.Create(nameof(LockButtonStyle), typeof(Style),
+            typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the Lock button style.
+        /// </summary>
+        public Style? LockButtonStyle
+        {
+            get => (Style)GetValue(LockButtonStyleProperty);
+            set => SetValue(LockButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -700,9 +751,14 @@ namespace LibVLCSharp.Forms
             ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_ClickedAsync);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
             SetClickEventHandler("StopButton", StopButton_Clicked);
+            SetClickEventHandler("LockButton", LockButton_ClickedAsync);
             SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync);
             ControlsPanel = this.FindChild<VisualElement?>(nameof(ControlsPanel));
+            ButtonBar = this.FindChild<VisualElement?>(nameof(ButtonBar));
+            UnLockControlsPanel = this.FindChild<VisualElement?>(nameof(UnLockControlsPanel));
+            SwipeToUnLock = this.FindChild<SwipeToUnLockView?>(nameof(SwipeToUnLock));
             SeekBar = this.FindChild<Slider?>(nameof(SeekBar));
+            TrackBarLabel = this.FindChild<Label?>(nameof(TrackBarLabel));
             RemainingTimeLabel = this.FindChild<Label?>(nameof(RemainingTimeLabel));
             ElapsedTimeLabel = this.FindChild<Label?>(nameof(ElapsedTimeLabel));
             AspectRatioLabel = this.FindChild<Label?>(nameof(AspectRatioLabel));
@@ -714,6 +770,15 @@ namespace LibVLCSharp.Forms
                 Manager.Get<SeekBarManager>().SeekBarMaximum = SeekBar.Maximum;
                 SeekBar.ValueChanged += SeekBar_ValueChanged;
             }
+
+            if(TrackBarLabel != null)          
+                TrackBarLabel.Text = ResourceManager.GetString(nameof(Strings.Unlock));           
+            
+            if (SwipeToUnLock != null)
+                SwipeToUnLock.SlideCompleted += Handle_SlideCompletedAsync;
+
+            if (OrientationHandler != null)
+                OrientationHandler.UnLockOrientation();
 
             VisualStateManager.GoToState(PlayPauseButton, Manager.Get<StateManager>().IsPlaying ? PauseState : PlayState);
             UpdateSeekAvailability();
@@ -1108,9 +1173,15 @@ namespace LibVLCSharp.Forms
         private async Task FadeInAsync()
         {
             var controlsPanel = ControlsPanel;
-            if (controlsPanel != null)
+            if (controlsPanel != null && SeekBar != null && ButtonBar != null && UnLockControlsPanel != null)
             {
                 controlsPanel.IsVisible = true;
+                SeekBar.IsVisible = true;
+
+                SeekBar.IsEnabled = !ScreenLockModeEnable;
+                ButtonBar.IsVisible = !ScreenLockModeEnable;
+                UnLockControlsPanel.IsVisible = ScreenLockModeEnable;
+
                 if (controlsPanel.Opacity != 1)
                 {
                     var systemUI = SystemUI;
@@ -1133,12 +1204,44 @@ namespace LibVLCSharp.Forms
                     controlsPanel.IsVisible = false;
                 }
             }
+            if (UnLockControlsPanel != null)
+                UnLockControlsPanel.IsVisible = false;
 
             var systemUI = SystemUI;
             if (systemUI != null)
             {
                 systemUI.HideSystemUI();
             }
+        }
+
+        /// <summary>
+        /// Trigger whhen uer clicks on the Loock screen Button.
+        /// </summary>
+        /// <param name="sender">The control on which the event is triggered</param>
+        /// <param name="e">Then event's arguments</param>
+        private async void LockButton_ClickedAsync(object sender, EventArgs e)
+        {
+            ScreenLockModeEnable = true;
+            if (OrientationHandler != null)
+            {
+                OrientationHandler.LockOrientation();
+            }
+            await FadeOutAsync();
+        }
+
+        /// <summary>
+        /// Tigger when user clicks finished to move the swipe button that unlocks the view.
+        /// </summary>
+        /// <param name="sender">The control on which the event is triggered</param>
+        /// <param name="e">Then event's arguments</param>
+        private async void Handle_SlideCompletedAsync(object sender, EventArgs e)
+        {
+            ScreenLockModeEnable = false;
+            if (OrientationHandler != null)
+            {
+                OrientationHandler.UnLockOrientation();
+            }
+            await FadeInAsync();
         }
     }
 }

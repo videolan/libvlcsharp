@@ -138,4 +138,7 @@
   <data name="Track" xml:space="preserve">
     <value>Piste {0}</value>
   </data>
+  <data name="Unlock" xml:space="preserve">
+    <value>DÉVERROUILLER</value>
+  </data>
 </root>
