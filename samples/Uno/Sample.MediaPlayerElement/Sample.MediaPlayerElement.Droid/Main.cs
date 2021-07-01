@@ -14,7 +14,7 @@ namespace Sample.MediaPlayerElement.Droid
     public class Application : NativeApplication
     {
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
-            : base(new App(), javaReference, transfer)
+            : base(()=>new App(), javaReference, transfer)
         {
         }
     }

@@ -262,7 +262,7 @@
                                                                AutomationProperties.AccessibilityView="Raw">
                                                             <ToolTipService.ToolTip>
                                                                 <ToolTip x:Name="ThumbnailTooltip">
-                                                                    <ContentPresenter Content="{Binding}" />
+                                                                    <ContentControl Content="{Binding}" />
                                                                 </ToolTip>
                                                             </ToolTipService.ToolTip>
                                                             <Thumb.DataContext>
@@ -353,7 +353,6 @@
                                                     VerticalAlignment="Stretch">
                                                 <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
                                                                   ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                                  Content="{TemplateBinding Content}"
                                                                   HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                             </Border>

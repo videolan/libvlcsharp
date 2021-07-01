@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>LibVLCSharp.Uno</Title>
     <Summary>Uno integration for LibVLCSharp</Summary>
-    <TargetFrameworks>Xamarin.iOS10;MonoAndroid81</TargetFrameworks>
+    <TargetFrameworks>Xamarin.iOS10;MonoAndroid10.0</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.16299</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
@@ -39,8 +39,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.iOS.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS')) or $(TargetFramework.StartsWith('MonoAndroid'))">
-    <PackageReference Include="Uno.UI" Version="2.0.527" />
-    <PackageReference Include="Uno.SourceGenerationTasks" Version="3.0.2" /> <!-- TODO: Work around broken VS tooling. To remove when switching to Uno 3 -->
+    <PackageReference Include="Uno.UI" Version="3.8.6" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="**\*.UWP.*cs" />

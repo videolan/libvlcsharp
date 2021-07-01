@@ -15,7 +15,7 @@ namespace LibVLCSharp.Uno
         protected override Platforms.Android.VideoView CreateUnderlyingVideoView()
         {
             var underlyingVideoView = new Platforms.Android.VideoView(ContextHelper.Current);
-            Border!.Child = underlyingVideoView;
+            Border!.AddView(underlyingVideoView);
             return underlyingVideoView;
         }
     }
