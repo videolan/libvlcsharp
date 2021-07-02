@@ -1,8 +1,10 @@
 # MediaPlayerElement
 
 <h3 align="center">
-  <img src="/src/assets/media-element.png"/>
+  <img src="/src/assets/media-element.jpg"/>
 </h3>
+
+
 
 ## Getting started
 
@@ -16,8 +18,8 @@ It already has the fonts (that are needed for icons) and necessary setup for cus
 - Play/Pause button
 - Seekbar
 - Volume / Mute
-- Closed captions selection
-- Audio tracks selection
+- Tracks selection (Audio and Video) and Closed captions selection
+- Lock Screen button
 - Aspect ratio button
 - Zoom button
 - Cast button
