@@ -10,7 +10,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void LoadLibVLCFromSpecificPath()
         {
-            var dirPath = Path.GetDirectoryName(typeof(CoreLoadingTests).Assembly.Location);
+            var dirPath = Path.GetDirectoryName(typeof(CoreLoadingTests).Assembly.Location)!;
             var finalPath = Path.Combine(dirPath, "libvlc", "win-x86");
 
             Assert.DoesNotThrow(() => Core.Initialize(finalPath), "fail to load libVLC dll at specified location");

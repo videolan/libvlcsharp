@@ -109,7 +109,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             Timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
 
-        private async void OnStateChangedAsync(object sender, EventArgs e)
+        private async void OnStateChangedAsync(object? sender, EventArgs e)
         {
             await ShowAsync();
         }

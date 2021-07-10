@@ -37,7 +37,7 @@ namespace LibVLCSharp.Shared
         static void EnsureVersionsMatch()
         {
             var libvlcMajorVersion = int.Parse(Native.LibVLCVersion().FromUtf8()?.Split('.').FirstOrDefault() ?? "0");
-            var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version.Major;
+            var libvlcsharpMajorVersion = Assembly.GetExecutingAssembly().GetName().Version?.Major;
             if (libvlcMajorVersion != libvlcsharpMajorVersion)
                 throw new VLCException($"Version mismatch between LibVLC {libvlcMajorVersion} and LibVLCSharp {libvlcsharpMajorVersion}. " +
                     $"They must share the same major version number");

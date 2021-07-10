@@ -71,7 +71,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
                 (mediaPlayer.State == VLCState.Playing || mediaPlayer.State == VLCState.Opening));
         }
 
-        private async void OnStateChangedAsync(object sender, EventArgs e)
+        private async void OnStateChangedAsync(object? sender, EventArgs e)
         {
             await DispatcherInvokeAsync(UpdateState);
         }
