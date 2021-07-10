@@ -25,8 +25,11 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.Kernel32, SetLastError = true, CharSet = CharSet.Unicode)]
             internal static extern IntPtr LoadLibraryW(string dllToLoad);
 
-            [DllImport(Constants.LibSystem, EntryPoint = "dlopen")]
-            internal static extern IntPtr Dlopen(string libraryPath, int mode = 1);
+            [DllImport(Constants.Libdl, EntryPoint = "dlopen")]
+            internal static extern IntPtr Dlopen(string libraryPath, int mode = 0x002);
+
+            [DllImport(Constants.Libc)]
+            internal static extern int setenv(string name, string value, int overwrite = 1);
         }
 
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -44,9 +47,12 @@ namespace LibVLCSharp.Shared
         }
 
 #endif
-        static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
-        static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
+        static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibVLC}{LibraryExtension}");
+        static string LibVLCCorePath(string dir) => Path.Combine(dir, $"libvlccore{LibraryExtension}");
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
+#if !NETSTANDARD1_1
+        static void PluginPath(string pluginPath) => Native.setenv(Constants.VLCPLUGINPATH, pluginPath);
+#endif
         static void Log(string message)
         {
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -56,7 +62,7 @@ namespace LibVLCSharp.Shared
 #endif
         }
 
-#if (NETFRAMEWORK || NETSTANDARD) && !NETSTANDARD1_1
+#if (MAC || NETFRAMEWORK || NETSTANDARD) && !NETSTANDARD1_1
         static bool Loaded => LibvlcHandle != IntPtr.Zero;
         static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
         {
@@ -153,7 +159,7 @@ namespace LibVLCSharp.Shared
             {
                 throw new VLCException("Failed to load required native libraries. " +
                     $"{Environment.NewLine}Have you installed the latest LibVLC package from nuget for your target platform?" +
-                    $"{Environment.NewLine}Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
+                    $"{Environment.NewLine}Search paths include {string.Join($"; {Environment.NewLine}", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
             }
         }
 #endif

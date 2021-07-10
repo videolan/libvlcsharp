@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp.Shared
@@ -85,10 +86,31 @@ namespace LibVLCSharp.Shared
                 return;
             }
 
+            if (PlatformHelper.IsMac)
+            {
+#if !NETSTANDARD1_1 && !NET40
+                var pluginPath = string.Empty;
+                if(PlatformHelper.IsDotNet)
+                {
+                    pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.LibVLC,
+                        ArchitectureNames.MacOS64, Constants.Plugins);
+                }
+                else
+                {
+                    // in this case, we have a real macOS app bundle thanks to Mono integration with cocoa
+                    pluginPath = Path.Combine(Path.GetDirectoryName(typeof(LibVLC).Assembly.Location), Constants.Plugins);
+                }
+
+                Console.Out.WriteLine("PluginPath: " + pluginPath);
+                PluginPath(pluginPath);
+#endif
+
+            }
 #if !NETSTANDARD1_1
             LoadLibVLC(libvlcDirectoryPath);
 #endif
         }
     }
+
 }
 #endif // NETFRAMEWORK || NETSTANDARD

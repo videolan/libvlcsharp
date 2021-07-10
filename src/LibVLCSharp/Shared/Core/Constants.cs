@@ -8,10 +8,16 @@ namespace LibVLCSharp.Shared
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
 #elif TVOS
         internal const string LibraryName = "@rpath/DynamicTVVLCKit.framework/DynamicTVVLCKit";
+#elif MAC
+        internal const string LibraryName = "@executable_path/../MonoBundle/lib/libvlc.dylib";
 #else
         internal const string LibraryName = "libvlc";
+        // for netcore on mac, this is needed.
+        // but this case can't be determined at build time, so we might need LibraryName to be a variable
+        //internal const string LibraryName = "libvlc/osx-x64/lib/libvlc"; 
 #endif
-        internal const string CoreLibraryName = "libvlccore";
+        // TODO: fix
+        internal const string CoreLibraryName = "@rpath/libvlccore.dylib";
 
         /// <summary>
         /// The name of the folder that contains the per-architecture folders
@@ -20,6 +26,7 @@ namespace LibVLCSharp.Shared
 
         internal const string Msvcrt = "msvcrt";
         internal const string Libc = "libc";
+        internal const string Libdl = "libdl";
         internal const string LibSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
         internal const string LibX11 = "libX11";
@@ -27,6 +34,8 @@ namespace LibVLCSharp.Shared
         internal const string MacLibraryExtension = ".dylib";
         internal const string Lib = "lib";
         internal const string LibVLC = "libvlc";
+        internal const string VLCPLUGINPATH = "VLC_PLUGIN_PATH";
+        internal const string Plugins = "plugins";
     }
 
     internal static class ArchitectureNames
