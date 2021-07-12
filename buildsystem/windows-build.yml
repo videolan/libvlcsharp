@@ -1,10 +1,14 @@
 steps:
 - template: base-template.yml
-- task: gep13.chocolatey-azuredevops.chocolatey-azuredevops.ChocolateyCommand@0
-  displayName: 'Install GTK#'
+- task: PowerShell@2
+  displayName: 'Install gtksharp'
   inputs:
-    command: install
-    installPackageId: gtksharp
+    targetType: 'inline'
+    script: |
+      $msiFile = "gtk-sharp-2.12.45.msi"
+      Invoke-WebRequest "https://xamarin.azureedge.net/GTKforWindows/Windows/$msiFile" -OutFile $msiFile
+      $arguments = "/i `"$msiFile`" /quiet"
+      Start-Process msiexec.exe -ArgumentList $arguments -Wait
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'
