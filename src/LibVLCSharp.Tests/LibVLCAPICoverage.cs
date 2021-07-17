@@ -93,7 +93,8 @@ namespace LibVLCSharp.Tests
             List<string> notImplementedOnPurpose = new List<string>
             {
                 "libvlc_printerr", "libvlc_vprinterr", "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
-                "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
+                "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library",
+                "libvlc_media_player_get_media"
             };
 
             List<string> exclude = new List<string>();

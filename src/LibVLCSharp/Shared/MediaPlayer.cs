@@ -35,11 +35,6 @@ namespace LibVLCSharp.Shared
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_get_media")]
-            internal static extern IntPtr LibVLCMediaPlayerGetMedia(IntPtr mediaPlayer);
-
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_event_manager")]
             internal static extern IntPtr LibVLCMediaPlayerEventManager(IntPtr mediaPlayer);
 
@@ -623,7 +618,10 @@ namespace LibVLCSharp.Shared
             : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
             _gcHandle = GCHandle.Alloc(this);
+            _media = media;
         }
+
+        Media? _media;
 
         /// <summary>
         /// Get the media used by the media_player.
@@ -633,12 +631,24 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public Media? Media
         {
-            get
+            get => _media;
+            set
             {
-                var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
-                return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
+                if(_media != null)
+                {
+                    _media.Dispose();
+                    _media = null;
+                }
+
+                _media = value;
+                
+                if(_media != null)
+                {
+                    _media.Retain();
+                }
+
+                Native.LibVLCMediaPlayerSetMedia(NativeReference, _media?.NativeReference ?? IntPtr.Zero);
             }
-            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
         }
 
         /// <summary>
@@ -2408,6 +2418,11 @@ namespace LibVLCSharp.Shared
             {
                 if (_gcHandle.IsAllocated)
                     _gcHandle.Free();
+                if (_media?.NativeReference != IntPtr.Zero)
+                {
+                    _media?.Dispose();
+                    _media = null;
+                }    
             }
 
             base.Dispose(disposing);
