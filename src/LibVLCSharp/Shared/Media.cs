@@ -436,7 +436,7 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Get duration (in ms) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
-        public long Duration => NativeReference == IntPtr.Zero ? -1 : Native.LibVLCMediaGetDuration(NativeReference);
+        public long Duration => Native.LibVLCMediaGetDuration(NativeReference);
 
         /// <summary>
         /// Parse the media asynchronously with options.      
@@ -486,7 +486,7 @@ namespace LibVLCSharp.Shared
 
         /// <summary>Return true is the media descriptor object is parsed</summary>
         /// <returns>true if media object has been parsed otherwise it returns false</returns>
-        public bool IsParsed => NativeReference == IntPtr.Zero ? false : Native.LibVLCMediaIsParsed(NativeReference) != 0;
+        public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference) != 0;
 
         /// <summary>Get Parsed status for media descriptor object.</summary>
         /// <returns>a value of the libvlc_media_parsed_status_t enum</returns>
