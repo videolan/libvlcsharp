@@ -208,5 +208,18 @@ namespace LibVLCSharp.Tests
             Assert.True(mp.SetRole(MediaPlayerRole.None));
             Assert.AreEqual(MediaPlayerRole.None, mp.Role);
         }
+
+        [Test]
+        public void MediaRefCountTestFail()
+        {
+            var media1 = new Media(_libVLC, new Uri(RealStreamMediaPath));
+            var media2 = new Media(_libVLC, new Uri(RealStreamMediaPath));
+
+            var mp = new MediaPlayer(media1);
+            media1.Dispose();
+            Debug.WriteLine(mp.Media.Mrl);
+
+            mp.Media = media2;
+        }
     }
 }
