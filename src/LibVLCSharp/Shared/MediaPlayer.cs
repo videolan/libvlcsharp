@@ -2416,7 +2416,8 @@ namespace LibVLCSharp.Shared
             {
                 if (_gcHandle.IsAllocated)
                     _gcHandle.Free();
-                if (_media?.NativeReference != IntPtr.Zero)
+
+                if (_media != null)
                 {
                     _media?.Dispose();
                     _media = null;
