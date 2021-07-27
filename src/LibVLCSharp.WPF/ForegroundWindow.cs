@@ -58,10 +58,10 @@ namespace LibVLCSharp.WPF
         void Background_Unloaded(object sender, RoutedEventArgs e)
         {
             _bckgnd.SizeChanged -= Wndhost_SizeChanged;
+            _bckgnd.LayoutUpdated -= Wndhost_LayoutUpdated;
             if (_wndhost != null)
             {
                 _wndhost.Closing -= Wndhost_Closing;
-                _wndhost.LocationChanged -= Wndhost_LocationChanged;
             }
 
             Hide();
@@ -85,7 +85,7 @@ namespace LibVLCSharp.WPF
 
             _wndhost.Closing += Wndhost_Closing;
             _bckgnd.SizeChanged += Wndhost_SizeChanged;
-            _wndhost.LocationChanged += Wndhost_LocationChanged;
+            _bckgnd.LayoutUpdated += Wndhost_LayoutUpdated;
 
             try
             {
@@ -107,7 +107,7 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        void Wndhost_LocationChanged(object? sender, EventArgs e)
+        void Wndhost_LayoutUpdated(object? sender, EventArgs e)
         {
             var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
