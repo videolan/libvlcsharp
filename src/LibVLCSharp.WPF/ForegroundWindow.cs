@@ -107,16 +107,7 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        void Wndhost_LayoutUpdated(object sender, EventArgs e)
-        {
-            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-            var source = PresentationSource.FromVisual(_wndhost);
-            var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-            Left = targetPoints.X;
-            Top = targetPoints.Y;
-        }
-
-        void Wndhost_LocationChanged(object? sender, EventArgs e)
+        void Wndhost_LayoutUpdated(object? sender, EventArgs e)
         {
             var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
