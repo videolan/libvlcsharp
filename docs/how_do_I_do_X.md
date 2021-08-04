@@ -285,3 +285,17 @@ Several points to note:
 - Some options may be incompatible when used together.
 - Some options name may change or get removed from one version of libvlc to another.
 - Some options only work with LibVLC constructor, or only with `media.AddOption`.
+
+# How do I get the size of a video?
+
+Once the video has started playing, you can do this
+
+```csharp
+uint videoHeight = 0;
+uint videoWidth = 0;
+
+mediaPlayer.Size(0, ref videoWidth, ref videoHeight);
+```
+
+Do pay attention to the orientation of the video. You can check it analyzing the video track of the media.
+If the orientation turns out to be "Bottom right", you might want to switch width/height values.
