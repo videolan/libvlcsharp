@@ -69,7 +69,7 @@ namespace LibVLCSharp.WPF
 
         void Background_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_wndhost != null)
+            if (_wndhost != null && IsVisible)
             {
                 return;
             }
@@ -109,6 +109,11 @@ namespace LibVLCSharp.WPF
 
         void Wndhost_LayoutUpdated(object? sender, EventArgs e)
         {
+            if (PresentationSource.FromVisual(_bckgnd) == null)
+            {
+                return;
+            }
+            
             var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
             var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
