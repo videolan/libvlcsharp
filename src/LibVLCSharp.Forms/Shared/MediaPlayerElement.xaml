@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:LibVLCSharp.Forms.Shared"
              x:Class="LibVLCSharp.Forms.Shared.MediaPlayerElement">
     <ContentView.ControlTemplate>
         <ControlTemplate>
@@ -23,6 +24,66 @@
                         <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
                     </Grid>
                 </Grid>
+
+                <!-- Equalizer-->
+                <Frame CornerRadius="20" Margin="0, 0, 0, -20" Padding="10, 20, 10, 0" BackgroundColor="#323232"  IsVisible="True" AbsoluteLayout.LayoutBounds="0, .99, 1, 0.8" AbsoluteLayout.LayoutFlags="All">
+                    <ScrollView VerticalScrollBarVisibility="Never" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Orientation="Vertical">
+                        <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="250" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!-- Enable Equalizer -->
+                            <StackLayout Grid.Row="0" Margin="0, 0, 0, 10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label FontSize="20" HorizontalOptions="StartAndExpand" FontAttributes="Bold" Text="Equalizer" TextColor="#FE8A03" />
+                                <Switch HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
+                            </StackLayout>
+                            <!-- presets -->
+                            <StackLayout Grid.Row="1" Margin="0, 0, 0, 10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label FontSize="18" Margin="0, 10, 0, 0" HorizontalOptions="StartAndExpand" FontAttributes="Bold" Text="Presets" TextColor="#BFBFBF" />
+                                <Picker x:Name="PresetsDataPicker"  HorizontalOptions="FillAndExpand" TextColor="White" />
+                            </StackLayout>
+                            <!-- Preamp -->
+                            <StackLayout Grid.Row="2" Margin="0, 0, 0, 10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label FontSize="18" HorizontalOptions="Start" FontAttributes="Bold" Text="Preamp" TextColor="#BFBFBF" />
+                                <Slider x:Name="PreampSlider" ThumbColor="#FE8A03" MinimumTrackColor="#FE8A03" MaximumTrackColor="White" HorizontalOptions="FillAndExpand" Minimum="-20" Maximum="20" />
+                            </StackLayout>
+
+                            <!-- Bands & Frequencies -->
+                            <controls:BindableStackLayout Grid.Row="3" Margin="-5,-15,0,0" IsVisible="True" x:Name="FrequenciesLayout" Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <controls:BindableStackLayout.ItemDataTemplate>
+                                    <DataTemplate>
+                                        <StackLayout Orientation="Vertical" VerticalOptions="Center" Margin="-5,0,0,0" HorizontalOptions="FillAndExpand">
+                                            <Label Text="+20dB" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
+                                            <StackLayout Orientation="Vertical">
+                                                <Slider Rotation="-90" ValueChanged="BandFrequencyValueChanged" HeightRequest="150" WidthRequest="150" Margin="-75, 0, -75, 0" HorizontalOptions="FillAndExpand" Value="10" ThumbColor="#FE8A03" MinimumTrackColor="#FE8A03" MaximumTrackColor="White" Minimum="-20" Maximum="20" />
+                                            </StackLayout>
+                                            <Label Text="-20dB" TextColor="White" FontSize="12" />
+                                            <Label Margin="5, 0, 0, 0" Text="31Hz" TextColor="White" FontSize="12" />
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </controls:BindableStackLayout.ItemDataTemplate>
+                            </controls:BindableStackLayout>
+
+                            <!-- Snap Band-->
+                            <StackLayout Grid.Row="4" Margin="0, 0, 0, 10" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                <Label FontSize="18" HorizontalOptions="EndAndExpand" FontAttributes="Bold" Text="Snap bands" TextColor="White" />
+                                <Switch HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
+                            </StackLayout>
+
+                            <!-- Actions -->
+                            <StackLayout Grid.Row="5" Margin="0, 0, 0, 20" Orientation="Horizontal" HorizontalOptions="EndAndExpand" VerticalOptions="End">
+                                <Button TextColor="#FE8A03" IsEnabled="False" Text="Delete" BackgroundColor="#323232" HorizontalOptions="EndAndExpand" />
+                                <Button TextColor="#FE8A03" IsEnabled="False" Text="Reset" BackgroundColor="#323232" HorizontalOptions="End" />
+                                <Button TextColor="#FE8A03" IsEnabled="False" Text="Save" BackgroundColor="#323232" HorizontalOptions="End" />
+                            </StackLayout>
+                        </Grid>
+                    </ScrollView>
+                </Frame>
             </AbsoluteLayout>
         </ControlTemplate>
     </ContentView.ControlTemplate>

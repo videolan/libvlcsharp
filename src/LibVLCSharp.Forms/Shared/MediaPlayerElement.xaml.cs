@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,6 +18,7 @@ namespace LibVLCSharp.Forms.Shared
         public MediaPlayerElement()
         {
             InitializeComponent();
+            LoadContentChildren();
         }
 
         private bool Initialized { get; set; }
@@ -243,6 +245,45 @@ namespace LibVLCSharp.Forms.Shared
         private void GestureRecognized(object sender, EventArgs e)
         {
             PlaybackControls.Show();
-        }        
+        }
+
+        private Picker? PresetsDataPicker { get; set; }
+        private Slider? BandFrequencySlider { get; set; }
+        private BindableStackLayout? FrequenciesLayout { get; set; }
+        private void LoadContentChildren()
+        {
+            PresetsDataPicker = this.FindChild<Picker?>(nameof(PresetsDataPicker));
+            FrequenciesLayout = this.FindChild<BindableStackLayout?>(nameof(FrequenciesLayout));
+            BandFrequencySlider = this.FindChild<Slider?>(nameof(BandFrequencySlider));
+            LoadPresets();
+            if (BandFrequencySlider != null)
+                BandFrequencySlider.ValueChanged += BandFrequencyValueChanged;
+        }
+
+        private void BandFrequencyValueChanged(object sender, ValueChangedEventArgs e)
+        {
+
+        }
+
+        private void LoadPresets()
+        {
+            if (PresetsDataPicker != null)
+            {
+                PresetsDataPicker.Items.Add("Flat");
+                PresetsDataPicker.Items.Add("Rock");
+                PresetsDataPicker.Items.Add("Djazz");
+            }
+
+            var allFrequencies = new ObservableCollection<string>();
+            for (var i = 0; i < 10; i++)
+            {
+                allFrequencies.Add("FQ" + i);
+            }
+
+            if (allFrequencies != null && FrequenciesLayout != null)
+            {
+                FrequenciesLayout.ItemsSource = allFrequencies;
+            }
+        }
     }
 }
