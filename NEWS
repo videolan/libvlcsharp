@@ -1,3 +1,24 @@
+LibVLCSharp version 3.6.0
+=========================
+* Core: Media.AddSlave now has an URI overload, like the Media ctor
+* XF: Add Lock screen feature to the MediaElement by @egbakou https://github.com/videolan/libvlcsharp/pull/223
+* XF [BREAKING CHANGE]: Add Video track selection feature and rework other track management for the MediaElement by @egbakou https://github.com/videolan/libvlcsharp/pull/225
+* WPF: Fix airspace issue to synchronize content over video by @DengQingFeng https://github.com/videolan/libvlcsharp/pull/226
+* WPF: Add TabControl support for the VideoView by @Yelo420 https://github.com/videolan/libvlcsharp/pull/227
+* CI and build improvements.
+
+LibVLCSharp version 3.5.1
+=========================
+* Core: fix Media leaks
+* Core: remove check potentially preventing proper disposal
+* Core: fix support for self contained single file apps https://code.videolan.org/videolan/LibVLCSharp/-/issues/470
+* Core: docs: add hint in exception message for missing libvlc on Android 
+* WPF/WinForms: Use stable versions TFMs 
+* Samples: Update all dependencies
+* Avalonia: Bump reference to include fix for https://code.videolan.org/videolan/LibVLCSharp/-/issues/458
+* Uno: Uno: Temporary workaround to fix CI build until we move to Uno 3 https://github.com/unoplatform/uno/issues/6137
+* docs and licensing: Mention libvlcsharp commercial licensing.
+
 LibVLCSharp version 3.5.0
 =========================
 * Xamarin.Forms: Fix namespace clashes with newer XF versions.
