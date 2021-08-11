@@ -1,3 +1,12 @@
+LibVLCSharp version 3.6.0
+=========================
+* Core: Media.AddSlave now has an URI overload, like the Media ctor
+* XF: Add Lock screen feature to the MediaElement by @egbakou https://github.com/videolan/libvlcsharp/pull/223
+* XF [BREAKING CHANGE]: Add Video track selection feature and rework other track management for the MediaElement by @egbakou https://github.com/videolan/libvlcsharp/pull/225
+* WPF: Fix airspace issue to synchronize content over video by @DengQingFeng https://github.com/videolan/libvlcsharp/pull/226
+* WPF: Add TabControl support for the VideoView by @Yelo420 https://github.com/videolan/libvlcsharp/pull/227
+* CI and build improvements.
+
 LibVLCSharp version 3.5.1
 =========================
 * Core: fix Media leaks
