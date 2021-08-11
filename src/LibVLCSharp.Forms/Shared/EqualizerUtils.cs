@@ -69,6 +69,7 @@ namespace LibVLCSharp.Forms.Shared
 
         /// <summary>
         /// Perform frequency smoothing.
+        /// This method is used when the Snap band mode is enable.
         /// </summary>
         /// <param name="bandId">The bandId<see cref="int"/>.</param>
         /// <param name="oldAmp">The previous vlaue of the the band's amplication<see cref="float"/>.</param>
