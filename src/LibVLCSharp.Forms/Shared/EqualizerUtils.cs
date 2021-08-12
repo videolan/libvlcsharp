@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibVLCSharp.Shared;
+using Xamarin.Forms;
 
 namespace LibVLCSharp.Forms.Shared
 {
@@ -20,11 +21,21 @@ namespace LibVLCSharp.Forms.Shared
         private const float RANGE = 200;
 
         /// <summary>
+        /// Defines the EqualizerEnablePropertyKey.
+        /// </summary>
+        private const string EqualizerEnablePropertyKey = "VLC__MediaPlayerElement_IsEqualizerEnable";
+
+        /// <summary>
+        /// Defines the EqualizerPresetIndexPropertyKey.
+        /// </summary>
+        private const string EqualizerPresetIndexPropertyKey = "VLC__MediaPlayerElement_EqualizerPresetIndex";
+
+        /// <summary>
         /// Load all Presets.
         /// </summary>
         /// <param name="equalizer">The equalizer<see cref="Equalizer"/>.</param>
         /// <returns>The <see cref="List{Preset}"/>.</returns>
-        public static List<Preset> LoadPresets(Equalizer equalizer)
+        public static List<Preset> LoadAllPresets(Equalizer equalizer)
         {
             var presetCount = equalizer.PresetCount;
             var presets = new List<Preset>((int)presetCount);
@@ -66,10 +77,10 @@ namespace LibVLCSharp.Forms.Shared
             equalizer.SetAmp(amp, (uint)bandId);
         }
 
-
         /// <summary>
         /// Perform frequency smoothing.
         /// This method is used when the Snap band mode is enable.
+        /// @see https://code.videolan.org/videolan/vlc-android/-/blob/master/application/vlc-android/src/org/videolan/vlc/gui/audio/EqualizerFragment.kt#L270
         /// </summary>
         /// <param name="bandId">The bandId<see cref="int"/>.</param>
         /// <param name="oldAmp">The previous vlaue of the the band's amplication<see cref="float"/>.</param>
@@ -92,5 +103,60 @@ namespace LibVLCSharp.Forms.Shared
                 equalizer.SetAmp(ampToApply, (uint)band.BandId);
             }
         }
+
+        /// <summary>
+        /// Set an equalizer to a MediaPlayer.
+        /// </summary>
+        /// <param name="mediaPlayer">The MediaPlayer</param>
+        /// <param name="equalizer">the Equalizer</param>
+        public static void SetEqualizerToMediaPlyer(LibVLCSharp.Shared.MediaPlayer mediaPlayer, Equalizer equalizer)
+        {
+            mediaPlayer.UnsetEqualizer();
+            mediaPlayer.SetEqualizer(equalizer);
+        }
+
+        /// <summary>
+        /// Save the state of the Equalizer (enable or disable) to the Application properties dictionary.
+        /// </summary>
+        /// <param name="isEqualizerEnable">The state of the equalizer: Enable or Disable</param>
+        public static void SaveEqualizerState(bool isEqualizerEnable)
+        {
+            var applicationProperties = Application.Current.Properties;
+            applicationProperties[EqualizerEnablePropertyKey] = isEqualizerEnable;
+        }
+
+        /// <summary>
+        /// Get the state of the Equlizer from the application properties.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsEqualizerEnable()
+        {
+            var applicationProperties = Application.Current.Properties;
+            if(applicationProperties.ContainsKey(EqualizerEnablePropertyKey))
+            {
+                return (bool)applicationProperties[EqualizerEnablePropertyKey];
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Save a preset index to the Application properties dictionary.
+        /// </summary>
+        /// <param name="presetIndex"></param>
+        public static void SavePreset(int presetIndex)
+        {
+            var applicationProperties = Application.Current.Properties;
+            applicationProperties[EqualizerPresetIndexPropertyKey] = presetIndex;
+        }
+
+        /// <summary>
+        ///Get the saved preset index.
+        /// </summary>
+        /// <returns></returns>
+        public static int GetSavedPresetIndex()
+        {
+            return (int)Application.Current.Properties[EqualizerPresetIndexPropertyKey];
+        }
+
     }
 }

@@ -75,6 +75,10 @@ namespace LibVLCSharp.Forms.Shared
             {
                 return;
             }
+            if (Children.Count > 1)
+            {
+                Children.Clear();
+            }
             foreach (var item in ItemsSource)
             {
                 if (ItemDataTemplate.CreateContent() is View itemTemplate)

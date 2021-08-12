@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -18,7 +19,7 @@ namespace LibVLCSharp.Forms.Shared
         public MediaPlayerElement()
         {
             InitializeComponent();
-            LoadContentChildren();
+            LoadEqualizerControls();
         }
 
         private bool Initialized { get; set; }
@@ -122,6 +123,19 @@ namespace LibVLCSharp.Forms.Shared
             if (playbackControls != null)
             {
                 playbackControls.MediaPlayer = mediaPlayer;
+
+                // Definie Equalizer button click event
+                var equalizerButton = PlaybackControls.GetEqualizerButton();
+                if (equalizerButton != null)
+                {
+                    equalizerButton.Clicked += OpenEqualizerView;
+                }
+
+                // Check if the Equalizer must be set to the media
+                if(MediaPlayer.Length > 0 && EqualizerUtils.IsEqualizerEnable())
+                {
+                    MediaPlayer.SetEqualizer(new Equalizer((uint)EqualizerUtils.GetSavedPresetIndex()));
+                }
             }
         }
 
@@ -132,7 +146,7 @@ namespace LibVLCSharp.Forms.Shared
                 playbackControls.IsCastButtonVisible = EnableRendererDiscovery;
                 playbackControls.LibVLC = LibVLC;
                 playbackControls.MediaPlayer = MediaPlayer;
-                playbackControls.VideoView = VideoView;
+                playbackControls.VideoView = VideoView;                
             }
         }
 
@@ -244,46 +258,144 @@ namespace LibVLCSharp.Forms.Shared
 
         private void GestureRecognized(object sender, EventArgs e)
         {
+            if(EqualizerControls != null && EqualizerControls.IsVisible)
+            {
+                EqualizerControls.IsVisible = false;
+            }
             PlaybackControls.Show();
         }
 
+        private Frame? EqualizerControls { get; set; }
+        private Switch? EnableEqualizerSwitch { get; set; }
         private Picker? PresetsDataPicker { get; set; }
-        private Slider? BandFrequencySlider { get; set; }
+        private Slider? PreampSlider { get; set; }
         private BindableStackLayout? FrequenciesLayout { get; set; }
-        private void LoadContentChildren()
+        private Equalizer? MediaEqualizer;
+        private Preset? SelectedPreset { get; set; }
+        private Switch? SnapBandsSwitch { get; set; }
+        // Prevents EnableEqualizerIfDisable method to trigger when opening the equalizer overlay.
+        private bool FirstLoading = true;
+
+        private void LoadEqualizerControls()
         {
+            EqualizerControls = this.FindChild<Frame?>(nameof(EqualizerControls));
+            EnableEqualizerSwitch = this.FindChild<Switch?>(nameof(EnableEqualizerSwitch));
             PresetsDataPicker = this.FindChild<Picker?>(nameof(PresetsDataPicker));
+            PreampSlider = this.FindChild<Slider?>(nameof(PreampSlider));
             FrequenciesLayout = this.FindChild<BindableStackLayout?>(nameof(FrequenciesLayout));
-            BandFrequencySlider = this.FindChild<Slider?>(nameof(BandFrequencySlider));
-            LoadPresets();
-            if (BandFrequencySlider != null)
-                BandFrequencySlider.ValueChanged += BandFrequencyValueChanged;
+            SnapBandsSwitch = this.FindChild<Switch?>(nameof(SnapBandsSwitch));
+            if (EnableEqualizerSwitch != null && PresetsDataPicker != null && PreampSlider != null)
+            {
+                EnableEqualizerSwitch.Toggled += EnableEqualizerSwitchToggled;
+                PresetsDataPicker.SelectedIndexChanged += SelectedPresetIndexChanged;
+                PreampSlider.ValueChanged += PreampSliderValuechanged;
+            }
         }
 
-        private void BandFrequencyValueChanged(object sender, ValueChangedEventArgs e)
+        /// <summary>
+        /// Occurs when a preset is selected.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Arguments</param>
+        private void SelectedPresetIndexChanged(object sender, EventArgs e)
         {
-
+            EnableEqualizerIfDisable();
+            // TODO: Apply Preset to the Equalizer
         }
 
-        private void LoadPresets()
+        /// <summary>
+        /// Occurs when a new value of the amplification is set.
+        /// </summary>
+        /// <param name="sender">Arguments</param>
+        /// <param name="e">Sender</param>
+        private void PreampSliderValuechanged(object sender, ValueChangedEventArgs e)
         {
-            if (PresetsDataPicker != null)
+            EnableEqualizerIfDisable();
+            if(MediaEqualizer != null && !FirstLoading)
             {
-                PresetsDataPicker.Items.Add("Flat");
-                PresetsDataPicker.Items.Add("Rock");
-                PresetsDataPicker.Items.Add("Djazz");
+                MediaEqualizer.SetPreamp((float)e.NewValue);
+                EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
             }
+        }
 
-            var allFrequencies = new ObservableCollection<string>();
-            for (var i = 0; i < 10; i++)
+        private void SetPresetsItemsSource(int presetIndex)
+        {
+            if(MediaEqualizer != null && PresetsDataPicker != null && PreampSlider != null)
             {
-                allFrequencies.Add("FQ" + i);
-            }
+                var allPresets = EqualizerUtils.LoadAllPresets(MediaEqualizer);
+                PresetsDataPicker.BindingContext = this;
+                PresetsDataPicker.ItemsSource = allPresets;
+                PresetsDataPicker.ItemDisplayBinding = new Binding("Name");
+                SelectedPreset = allPresets.First(p => p.PresetId == presetIndex);
+                PresetsDataPicker.SelectedItem = SelectedPreset;
 
-            if (allFrequencies != null && FrequenciesLayout != null)
-            {
-                FrequenciesLayout.ItemsSource = allFrequencies;
+                PreampSlider.BindingContext = SelectedPreset;
+                PreampSlider.SetBinding(Slider.ValueProperty, new Binding("Preamp"));
+
+                if (FrequenciesLayout != null)
+                {
+                    FrequenciesLayout.ItemsSource = new ObservableCollection<Band>(SelectedPreset.Bands);
+                }
             }
+        }
+
+        private void BandAmplificationValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            // Apply snap band action
+        }
+
+
+        private void EnableEqualizerSwitchToggled(object sender, ToggledEventArgs e)
+        {
+           if(e.Value == true)
+           {      
+                if (SelectedPreset != null && MediaEqualizer != null && !FirstLoading)
+                {                   
+                    MediaEqualizer = new Equalizer((uint)SelectedPreset.PresetId);
+                    MediaEqualizer.SetPreamp((float)SelectedPreset.Preamp);
+                    EqualizerUtils.SaveEqualizerState(true);
+                    EqualizerUtils.SavePreset(SelectedPreset.PresetId);
+                    EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+                }
+            }
+           else
+           {
+                MediaPlayer.UnsetEqualizer();
+                EqualizerUtils.SaveEqualizerState(false);
+           }
+        }
+
+        /// <summary>
+        /// This method is called when the user try to change the preset or the amplifaction value 
+        /// while the equalizer is disable.
+        /// </summary>
+        private void EnableEqualizerIfDisable()
+        {
+            if (EnableEqualizerSwitch != null && SelectedPreset != null && !EnableEqualizerSwitch.IsToggled
+                && !FirstLoading)
+            {
+                EnableEqualizerSwitch.IsToggled = true;
+                EqualizerUtils.SaveEqualizerState(true);
+                EqualizerUtils.SavePreset(SelectedPreset.PresetId);
+                MediaEqualizer = new Equalizer((uint)SelectedPreset.PresetId);
+            }
+        }
+
+
+        private void OpenEqualizerView(object sender, EventArgs e)
+        {
+            FirstLoading = true;
+            if (MediaPlayer.Length > 0 && EqualizerControls != null)
+            {
+                var enableEqualizer = EqualizerUtils.IsEqualizerEnable();
+                var presetIndex = enableEqualizer ? EqualizerUtils.GetSavedPresetIndex() : 0;
+                MediaEqualizer = new Equalizer((uint)presetIndex);
+                SetPresetsItemsSource(presetIndex);
+                EqualizerControls.IsVisible = true;
+                if (EnableEqualizerSwitch != null && enableEqualizer)
+                    EnableEqualizerSwitch.IsToggled = true;
+            }
+            FirstLoading = false;
         }
     }
 }

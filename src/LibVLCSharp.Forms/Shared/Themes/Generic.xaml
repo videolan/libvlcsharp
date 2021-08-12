@@ -207,6 +207,10 @@
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.Forward}" />
     </Style>
 
+    <Style x:Key="EqualizerButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.SlidersH}" />
+    </Style>
+
     <Style x:Key="TracksListViewStyle" TargetType="ListView">
         <Setter Property="SeparatorColor" Value="Transparent" />
         <Setter Property="SeparatorVisibility" Value="None" />
@@ -305,6 +309,7 @@
                                 </StackLayout>
                                 <ContentPresenter Content="{TemplateBinding ButtonBarEndArea}" HorizontalOptions="End" VerticalOptions="Center" />
                                 <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Button x:Name="EqualizerButton" Rotation="90" Style="{TemplateBinding EqualizerButtonStyle}" />
                                     <Button x:Name="AspectRatioButton" Style="{TemplateBinding AspectRatioButtonStyle}" />
                                     <Button x:Name="CastButton" Style="{TemplateBinding CastButtonStyle}" />
                                 </StackLayout>

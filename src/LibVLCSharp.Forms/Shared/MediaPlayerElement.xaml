@@ -2,10 +2,12 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:LibVLCSharp.Forms.Shared"
+             xmlns:converter="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
              x:Name="MediaPlayerElementView"
              x:Class="LibVLCSharp.Forms.Shared.MediaPlayerElement">
     <ContentView.Resources>
         <ResourceDictionary>
+            <converter:FrequencyToStringConverter x:Key="FrequencyToStringConverter" />
             <Style x:Key="EqualizerFrameStyle" TargetType="Frame">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="Margin" Value="0, 0, 0, -20" />
@@ -13,6 +15,7 @@
                 <Setter Property="BackgroundColor" Value="#323232" />
                 <Setter Property="AbsoluteLayout.LayoutBounds" Value="0, .99, 1, 0.8" />
                 <Setter Property="AbsoluteLayout.LayoutFlags" Value="All" />
+                <Setter Property="IsVisible" Value="False" />
             </Style>
             <Style x:Key="GridRowStyle" TargetType="StackLayout">
                 <Setter Property="Margin" Value="0, 0, 0, 10" />
@@ -72,7 +75,7 @@
                 </Grid>
 
                 <!-- Equalizer-->
-                <Frame Style="{StaticResource EqualizerFrameStyle}"  IsVisible="True">
+                <Frame Style="{StaticResource EqualizerFrameStyle}" x:Name="EqualizerControls">
                     <ScrollView VerticalScrollBarVisibility="Never" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Orientation="Vertical">
                         <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                             <Grid.RowDefinitions>
@@ -86,7 +89,7 @@
                             <!-- Enable Equalizer -->
                             <StackLayout Grid.Row="0" Style="{StaticResource GridRowStyle}">
                                 <Label FontSize="18" HorizontalOptions="StartAndExpand" FontAttributes="Bold" Text="Equalizer" TextColor="#FE8A03" />
-                                <Switch HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
+                                <Switch x:Name="EnableEqualizerSwitch" HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
                             </StackLayout>
                             <!-- presets -->
                             <StackLayout Grid.Row="1"  Style="{StaticResource GridRowStyle}">
@@ -104,12 +107,13 @@
                                 <controls:BindableStackLayout.ItemDataTemplate>
                                     <DataTemplate>
                                         <StackLayout Orientation="Vertical" VerticalOptions="Center" Margin="-5,0,0,0" HorizontalOptions="FillAndExpand">
-                                            <Label Text="+20dB" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
+                                            <Label Text="{Binding AmpMax, StringFormat='+{0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
                                             <StackLayout Orientation="Vertical">
-                                                <Slider Style="{StaticResource BandStyle}" ValueChanged="BandFrequencyValueChanged" Value="10" Minimum="-20" Maximum="20" />
+                                                <Slider Style="{StaticResource BandStyle}" ValueChanged="BandAmplificationValueChanged" Value="{Binding Amp}" Minimum="{Binding AmpMin}" Maximum="{Binding AmpMax}" />
                                             </StackLayout>
-                                            <Label Text="-20dB" TextColor="White" FontSize="12" />
-                                            <Label Margin="5, 0, 0, 0" Text="31Hz" TextColor="White" FontSize="12" />
+                                            <Label Text="{Binding AmpMin, StringFormat='{0:F0}db'}" TextColor="White" FontSize="12" />
+                                            <Label Margin="5, 0, 0, 0" Text="{Binding BandFrequency, Converter={StaticResource FrequencyToStringConverter}}" TextColor="White" FontSize="12" />
+                                            <Label Margin="5, 0, 0, 0" Text="{Binding Amp, StringFormat='{0:F0}db'}" TextColor="White" FontSize="11" />
                                         </StackLayout>
                                     </DataTemplate>
                                 </controls:BindableStackLayout.ItemDataTemplate>
@@ -118,7 +122,7 @@
                             <!-- Snap Band-->
                             <StackLayout Grid.Row="4"  Style="{StaticResource GridRowStyle}">
                                 <Label FontSize="18" HorizontalOptions="EndAndExpand" FontAttributes="Bold" Text="Snap bands" TextColor="White" />
-                                <Switch HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
+                                <Switch x:Name="SnapBandsSwitch" HorizontalOptions="End" OnColor="#FE8A03" IsToggled="True" />
                             </StackLayout>
 
                             <!-- Actions -->

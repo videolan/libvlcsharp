@@ -56,6 +56,7 @@ namespace LibVLCSharp.Forms.Shared
             AspectRatioButtonStyle = Resources[nameof(AspectRatioButtonStyle)] as Style;
             RewindButtonStyle = Resources[nameof(RewindButtonStyle)] as Style;
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
+            EqualizerButtonStyle = Resources[nameof(EqualizerButtonStyle)] as Style;
             LockButtonStyle = Resources[nameof(LockButtonStyle)] as Style;
             UnLockButtonStyle = Resources[nameof(UnLockButtonStyle)] as Style;
             UnLockControlsPanelStyle = Resources[nameof(UnLockControlsPanelStyle)] as Style;
@@ -104,6 +105,10 @@ namespace LibVLCSharp.Forms.Shared
 
         private MediaPlayerElementManager Manager { get; }
         private Button? TracksButton { get; set; }
+        /// <summary>
+        /// Equlizer's button: Will be controlled from MediaPlayerElement.
+        /// </summary>
+        public Button? EqualizerButton { get; set; }
         private Button? CastButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
         private VisualElement? ButtonBar { get; set; }
@@ -188,6 +193,20 @@ namespace LibVLCSharp.Forms.Shared
         {
             get => (Style)GetValue(TracksButtonStyleProperty);
             set => SetValue(TracksButtonStyleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="EqualizerButtonStyle"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty EqualizerButtonStyleProperty = BindableProperty.Create(
+            nameof(EqualizerButtonStyle), typeof(Style), typeof(PlaybackControls));
+        /// <summary>
+        /// Gets or sets the equalizer button style.
+        /// </summary>
+        public Style? EqualizerButtonStyle
+        {
+            get => (Style)GetValue(EqualizerButtonStyleProperty);
+            set => SetValue(EqualizerButtonStyleProperty, value);
         }
 
 
@@ -711,6 +730,7 @@ namespace LibVLCSharp.Forms.Shared
             UnLockControlsPanel = this.FindChild<VisualElement?>(nameof(UnLockControlsPanel));
             TracksOverlayView = this.FindChild<VisualElement?>(nameof(TracksOverlayView));
             SwipeToUnLock = this.FindChild<SwipeToUnLockView?>(nameof(SwipeToUnLock));
+            EqualizerButton = this.FindChild<Button?>(nameof(EqualizerButton));
             SeekBar = this.FindChild<Slider?>(nameof(SeekBar));
             AudioTracksListView = this.FindChild<ListView?>(nameof(AudioTracksListView));
             if (AudioTracksListView != null)
@@ -938,7 +958,7 @@ namespace LibVLCSharp.Forms.Shared
             }
             return allTracks;
         }
-
+       
         private async void CastButton_ClickedAsync(object sender, EventArgs e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
@@ -1206,6 +1226,15 @@ namespace LibVLCSharp.Forms.Shared
         private void OnShowAndHideAutomaticallyPropertyChanged()
         {
             Manager.Get<AutoHideNotifier>().Enabled = ShowAndHideAutomatically;
+        }
+
+        /// <summary>
+        /// Returns the Equlizer Button.
+        /// </summary>
+        /// <returns>The equalizer button</returns>
+        public Button? GetEqualizerButton()
+        {
+            return EqualizerButton;
         }
 
         /// <summary>

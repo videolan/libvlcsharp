@@ -42,6 +42,16 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
+        /// Amplification Min value.
+        /// </summary>
+        public float AmpMin { get; set; } = -20;
+
+        /// <summary>
+        /// Amplification Max value.
+        /// </summary>
+        public float AmpMax { get; set; } = +20;
+
+        /// <summary>
         /// Occurs when a property value changes
         /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
