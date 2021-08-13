@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -9,10 +9,19 @@ namespace LibVLCSharp.Forms.Shared
     /// </summary>
     public class Preset : INotifyPropertyChanged
     {
+        private int presetId;
         /// <summary>
         /// Gets or sets the PresetId.
         /// </summary>
-        public int PresetId { get; set; }
+        public int PresetId
+        {
+            get { return presetId; }
+            set
+            {
+                presetId = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the Name.
@@ -38,13 +47,22 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         public int BandCount { get; set; }
 
+        private ObservableCollection<Band>? bands;
         /// <summary>
         /// Gets or sets the Bands.
         /// </summary>
-        public List<Band>? Bands { get; set; }
+        public ObservableCollection<Band>? Bands
+        {
+            get { return bands; }
+            set
+            {
+                bands = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         /// <summary>
-        /// 
+        /// Constructor with parameters presetId and name.
         /// </summary>
         /// <param name="presetId">The preset Id</param>
         /// <param name="name">The preset name</param>

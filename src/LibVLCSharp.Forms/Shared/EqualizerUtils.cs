@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 
@@ -33,21 +34,21 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Load all Presets.
         /// </summary>
-        /// <param name="equalizer">The equalizer<see cref="Equalizer"/>.</param>
-        /// <returns>The <see cref="List{Preset}"/>.</returns>
-        public static List<Preset> LoadAllPresets(Equalizer equalizer)
+        /// <returns>The <see cref="ObservableCollection{Preset}"/>.</returns>
+        public static ObservableCollection<Preset> LoadAllPresets()
         {
-            var presetCount = equalizer.PresetCount;
-            var presets = new List<Preset>((int)presetCount);
+            var presetCount = new Equalizer().PresetCount;
+            var presets = new ObservableCollection<Preset>();
             for (var index = 0; index < presetCount; index++)
             {
+                var equalizer = new Equalizer((uint)index);
                 var preset = new Preset(index, equalizer.PresetName((uint)index))
                 {
                     Preamp = equalizer.Preamp,
                     BandCount = (int)equalizer.BandCount
                 };
 
-                var bands = new List<Band>(preset.BandCount);
+                var bands = new ObservableCollection<Band>();
                 for (var bandId = 0; bandId < preset.BandCount; bandId++)
                 {
                     var band = new Band
@@ -66,7 +67,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Apply the new amplicatification to the Equalizer.
+        /// Apply a new amplification value to the Equalizer.
         /// This method is used when the Snap band mode is not enable.
         /// </summary>
         /// <param name="bandId">The bandId<see cref="int"/>.</param>

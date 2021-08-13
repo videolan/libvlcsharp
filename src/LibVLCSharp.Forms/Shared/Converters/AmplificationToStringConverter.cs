@@ -5,13 +5,13 @@ using Xamarin.Forms;
 namespace LibVLCSharp.Forms.Shared.Converters
 {
     /// <summary>
-    /// Converts frequency (float) to string.
+    /// Converts amplification (float) to string.
     /// </summary>
-    public class FrequencyToStringConverter : IValueConverter
+    public class AmplificationToStringConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a frequency value to string.
-        /// Example: 3000 to 3kHz or 20 to 20Hz.
+        /// Converts an amplification value to string.
+        /// Example: -6,23 to 6db.
         /// </summary>
         /// <param name="value">The source data being passed to the target.</param>
         /// <param name="targetType">The type of the target property.</param>
@@ -20,8 +20,8 @@ namespace LibVLCSharp.Forms.Shared.Converters
         /// <returns>the value converted to string.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var frequency = (float)value;
-            return frequency < 1000 ? $"{Math.Round(frequency)}Hz" : $"{Math.Round(frequency / 1000)}Hz";
+            var result = (int)Math.Round((float)value);
+            return result <= 0 ? $"{result}db" : $"+{result}db";
         }
 
         /// <summary>

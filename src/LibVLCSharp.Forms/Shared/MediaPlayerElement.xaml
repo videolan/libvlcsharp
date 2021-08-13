@@ -8,6 +8,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <converter:FrequencyToStringConverter x:Key="FrequencyToStringConverter" />
+            <converter:AmplificationToStringConverter x:Key="AmplificationToStringConverter" />
             <Style x:Key="EqualizerFrameStyle" TargetType="Frame">
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="Margin" Value="0, 0, 0, -20" />
@@ -23,7 +24,8 @@
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             </Style>
             <Style x:Key="BandListStyle" TargetType="controls:BindableStackLayout">
-                <Setter Property="Margin" Value="-5,-15,0,0" />
+                <Setter Property="Margin" Value="2,-15,0,0" />
+                <Setter Property="Padding" Value="2, 0, 0, 0" />
                 <Setter Property="Orientation" Value="Horizontal" />
                 <Setter Property="VerticalOptions" Value="FillAndExpand" />
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
@@ -99,7 +101,7 @@
                             <!-- Preamp -->
                             <StackLayout Grid.Row="2" Style="{StaticResource GridRowStyle}" Margin="0,0,0,20">
                                 <Label FontSize="18" HorizontalOptions="Start" FontAttributes="Bold" Text="Preamp" TextColor="#BFBFBF" />
-                                <Slider x:Name="PreampSlider" ThumbColor="#FE8A03" MinimumTrackColor="#FE8A03" MaximumTrackColor="White" HorizontalOptions="FillAndExpand" Minimum="-20" Maximum="20" />
+                                <Slider x:Name="PreampSlider" ThumbColor="#FE8A03" MinimumTrackColor="#FE8A03" MaximumTrackColor="White" HorizontalOptions="FillAndExpand" Maximum="20" Minimum="-20" />
                             </StackLayout>
 
                             <!-- Bands & Frequencies -->
@@ -107,13 +109,13 @@
                                 <controls:BindableStackLayout.ItemDataTemplate>
                                     <DataTemplate>
                                         <StackLayout Orientation="Vertical" VerticalOptions="Center" Margin="-5,0,0,0" HorizontalOptions="FillAndExpand">
-                                            <Label Text="{Binding AmpMax, StringFormat='+{0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
+                                            <Label Text="{Binding AmpMax, StringFormat='+{0:F0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
                                             <StackLayout Orientation="Vertical">
-                                                <Slider Style="{StaticResource BandStyle}" ValueChanged="BandAmplificationValueChanged" Value="{Binding Amp}" Minimum="{Binding AmpMin}" Maximum="{Binding AmpMax}" />
+                                                <Slider Style="{StaticResource BandStyle}" Maximum="20" Minimum="-20" Value="{Binding Amp, Mode=TwoWay}"  />
                                             </StackLayout>
                                             <Label Text="{Binding AmpMin, StringFormat='{0:F0}db'}" TextColor="White" FontSize="12" />
                                             <Label Margin="5, 0, 0, 0" Text="{Binding BandFrequency, Converter={StaticResource FrequencyToStringConverter}}" TextColor="White" FontSize="12" />
-                                            <Label Margin="5, 0, 0, 0" Text="{Binding Amp, StringFormat='{0:F0}db'}" TextColor="White" FontSize="11" />
+                                            <Label Margin="5, 0, 0, 0" Text="{Binding Amp, Converter={StaticResource AmplificationToStringConverter}}" TextColor="White" FontSize="11" />
                                         </StackLayout>
                                     </DataTemplate>
                                 </controls:BindableStackLayout.ItemDataTemplate>
@@ -122,7 +124,7 @@
                             <!-- Snap Band-->
                             <StackLayout Grid.Row="4"  Style="{StaticResource GridRowStyle}">
                                 <Label FontSize="18" HorizontalOptions="EndAndExpand" FontAttributes="Bold" Text="Snap bands" TextColor="White" />
-                                <Switch x:Name="SnapBandsSwitch" HorizontalOptions="End" OnColor="#FE8A03" IsToggled="True" />
+                                <Switch x:Name="SnapBandsSwitch" HorizontalOptions="End" OnColor="#FE8A03" IsToggled="False" />
                             </StackLayout>
 
                             <!-- Actions -->
