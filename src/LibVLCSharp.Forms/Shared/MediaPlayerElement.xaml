@@ -111,7 +111,7 @@
                                         <StackLayout Orientation="Vertical" VerticalOptions="Center" Margin="-5,0,0,0" HorizontalOptions="FillAndExpand">
                                             <Label Text="{Binding AmpMax, StringFormat='+{0:F0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
                                             <StackLayout Orientation="Vertical">
-                                                <Slider Style="{StaticResource BandStyle}" Maximum="20" Minimum="-20" Value="{Binding Amp, Mode=TwoWay}"  />
+                                                <Slider Style="{StaticResource BandStyle}" Maximum="20" Minimum="-20" Value="{Binding Amp}" ValueChanged="BandAmplificationValueChanged"  />
                                             </StackLayout>
                                             <Label Text="{Binding AmpMin, StringFormat='{0:F0}db'}" TextColor="White" FontSize="12" />
                                             <Label Margin="5, 0, 0, 0" Text="{Binding BandFrequency, Converter={StaticResource FrequencyToStringConverter}}" TextColor="White" FontSize="12" />

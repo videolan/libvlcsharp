@@ -81,15 +81,15 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Perform frequency smoothing.
         /// This method is used when the Snap band mode is enable.
-        /// @see https://code.videolan.org/videolan/vlc-android/-/blob/master/application/vlc-android/src/org/videolan/vlc/gui/audio/EqualizerFragment.kt#L270
         /// </summary>
         /// <param name="bandId">The bandId<see cref="int"/>.</param>
         /// <param name="oldAmp">The previous vlaue of the the band's amplication<see cref="float"/>.</param>
         /// <param name="newAmp">The new vlaue of the the band's amplication<see cref="float"/>.</param>
         /// <param name="bands">The bands<see cref="List{Band}"/>.</param>
         /// <param name="equalizer">The equalizer<see cref="Equalizer"/>.</param>
-        public static void SmoothOutFrequencies(int bandId, float oldAmp, float newAmp, List<Band> bands, Equalizer equalizer)
+        public static void SmoothOutFrequencies(int bandId, float oldAmp, float newAmp, ObservableCollection<Band> bands, Equalizer equalizer)
         {
+            // @see https://code.videolan.org/videolan/vlc-android/-/blob/master/application/vlc-android/src/org/videolan/vlc/gui/audio/EqualizerFragment.kt#L270
             var delta = newAmp - oldAmp;
             foreach (var band in bands)
             {
