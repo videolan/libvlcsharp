@@ -34,11 +34,11 @@ namespace LibVLCSharp.Forms.Shared
         /// <summary>
         /// Load all Presets.
         /// </summary>
-        /// <returns>The <see cref="ObservableCollection{Preset}"/>.</returns>
-        public static ObservableCollection<Preset> LoadAllPresets()
+        /// <returns>The <see cref="List{Preset}"/>.</returns>
+        public static List<Preset> LoadAllPresets()
         {
             var presetCount = new Equalizer().PresetCount;
-            var presets = new ObservableCollection<Preset>();
+            var presets = new List<Preset>();
             for (var index = 0; index < presetCount; index++)
             {
                 var equalizer = new Equalizer((uint)index);
@@ -48,7 +48,7 @@ namespace LibVLCSharp.Forms.Shared
                     BandCount = (int)equalizer.BandCount
                 };
 
-                var bands = new ObservableCollection<Band>();
+                var bands = new List<Band>();
                 for (var bandId = 0; bandId < preset.BandCount; bandId++)
                 {
                     var band = new Band
@@ -98,7 +98,7 @@ namespace LibVLCSharp.Forms.Shared
                     continue;
                 }
 
-                band.Amp = oldAmp + delta / (Math.Abs(band.BandId - bandId) * Math.Abs(band.BandId - bandId) * Math.Abs(band.BandId - bandId) + 1);
+                band.Amp = bands[band.BandId].Amp + delta / (Math.Abs(band.BandId - bandId) * Math.Abs(band.BandId - bandId) * Math.Abs(band.BandId - bandId) + 1);
 
                 var ampToApply = (band.Amp - RANGE) / PRECISION;
                 equalizer.SetAmp(ampToApply, (uint)band.BandId);
@@ -159,5 +159,29 @@ namespace LibVLCSharp.Forms.Shared
             return (int)Application.Current.Properties[EqualizerPresetIndexPropertyKey];
         }
 
+        /// <summary>
+        /// Shallow copy a list of bands to a new list.
+        /// </summary>
+        /// <param name="originalBands">The original list</param>
+        /// <returns>A new list</returns>
+        public static List<Band> CopyBands(List<Band>? originalBands)
+        {
+            var newBands = new List<Band>();
+            if (originalBands != null)
+            {
+                foreach (var band in originalBands)
+                {
+                    newBands.Add(new Band
+                    {
+                        BandId = band.BandId,
+                        Amp = band.Amp,
+                        BandFrequency = band.BandFrequency,
+                        AmpMin = band.AmpMin,
+                        AmpMax = band.AmpMax
+                    });
+                }
+            }    
+            return newBands;
+        }
     }
 }

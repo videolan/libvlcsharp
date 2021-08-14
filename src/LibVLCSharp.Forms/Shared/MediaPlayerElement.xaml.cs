@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
@@ -276,6 +277,8 @@ namespace LibVLCSharp.Forms.Shared
         // Prevents EnableEqualizerIfDisable method to trigger when opening the equalizer overlay.
         private bool EqualizerViewIsOpening = false;
         private bool IgnoreAmpValueChanged = true;
+        private int AmpSliderTriggerCount = 0;
+        private ObservableCollection<Band> AmpBands = new ObservableCollection<Band>();
 
         private void LoadEqualizerControls()
         {
@@ -306,10 +309,8 @@ namespace LibVLCSharp.Forms.Shared
             if (!EqualizerViewIsOpening && FrequenciesLayout != null && picker.SelectedIndex >= 0)
             {
                 SelectedPreset = (Preset)picker.SelectedItem;
-                if (SelectedPreset.Bands != null)
-                {
-                    FrequenciesLayout.ItemsSource = new ObservableCollection<Band>(SelectedPreset.Bands);
-                }
+                AmpBands = new ObservableCollection<Band>(EqualizerUtils.CopyBands(SelectedPreset.Bands));
+                FrequenciesLayout.ItemsSource = AmpBands;
 
                 EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, new Equalizer((uint)SelectedPreset.PresetId));
                 EqualizerUtils.SaveEqualizerState(true);
@@ -342,45 +343,49 @@ namespace LibVLCSharp.Forms.Shared
                 PresetsDataPicker.ItemsSource = allPresets;
                 PresetsDataPicker.ItemDisplayBinding = new Binding("Name");
                 SelectedPreset = allPresets.First(p => p.PresetId == presetIndex);
+                AmpBands = new ObservableCollection<Band>(EqualizerUtils.CopyBands(SelectedPreset.Bands));
                 PresetsDataPicker.SelectedIndex = SelectedPreset.PresetId;
 
                 PreampSlider.BindingContext = SelectedPreset;
                 PreampSlider.SetBinding(Slider.ValueProperty, nameof(SelectedPreset.Preamp));
 
                 if (FrequenciesLayout != null)
-                {
-                    FrequenciesLayout.ItemsSource = new ObservableCollection<Band>(SelectedPreset
-                        .Bands.OrderBy(b => b.BandId));
-                }
+                    FrequenciesLayout.ItemsSource = AmpBands;
             }
         }
 
-        // TODO: When a band amplification changes, apply the new value to the equalizer
         private void BandAmplificationValueChanged(object sender, ValueChangedEventArgs e)
         {
             EnableEqualizerIfDisable();
-            if(!EqualizerViewIsOpening && !IgnoreAmpValueChanged && !IsTheSameAmplification(e.OldValue, e.NewValue))
+            if (!EqualizerViewIsOpening && !IgnoreAmpValueChanged && !IsTheSameAmplification(e.OldValue, e.NewValue))
             {
                 var ampSwitch = (Slider)sender;
                 // Get the current band from where the Slider value was updated
                 var mainView = (View)ampSwitch.Parent.Parent;
                 var band = (Band)mainView.BindingContext;
                 
-                if(SelectedPreset != null  && SelectedPreset.Bands != null && MediaEqualizer != null && SnapBandsSwitch != null)
+                if(SelectedPreset != null  && MediaEqualizer != null && SnapBandsSwitch != null)
                 {
                     // Snap Band is enable => Perform frequency smoothing
-                    if (SnapBandsSwitch.IsToggled)
+                    if (SnapBandsSwitch.IsToggled && FrequenciesLayout != null)
                     {
-                        IgnoreAmpValueChanged = true;
-                        EqualizerUtils.SmoothOutFrequencies(band.BandId, (float)e.OldValue,
-                            (float)e.NewValue, SelectedPreset.Bands, MediaEqualizer);
+                        AmpSliderTriggerCount++;
+                        AmpSliderTriggerCount = AmpSliderTriggerCount >= 10 ? 0 : AmpSliderTriggerCount;
+                        if (AmpSliderTriggerCount == 1)
+                        {
+                            IgnoreAmpValueChanged = true;
+                            EqualizerUtils.SmoothOutFrequencies(band.BandId, (float)e.OldValue,
+                                (float)e.NewValue, AmpBands, MediaEqualizer);
+                            EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+                            IgnoreAmpValueChanged = false;
+                        }
                     }
                     else
                     {
                         EqualizerUtils.ApplyNewAmplicatification(band.BandId, (float)e.NewValue, MediaEqualizer);
+                        EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                     }
                 }
-                IgnoreAmpValueChanged = false;
             }
         }
 
@@ -396,7 +401,7 @@ namespace LibVLCSharp.Forms.Shared
                     EqualizerUtils.SavePreset(SelectedPreset.PresetId);
                     EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                 }
-            }
+           }
            else
            {
                 MediaPlayer.UnsetEqualizer();
@@ -434,13 +439,10 @@ namespace LibVLCSharp.Forms.Shared
                     EnableEqualizerSwitch.IsToggled = true;
             }
             EqualizerViewIsOpening = IgnoreAmpValueChanged = false;
-
         }
 
         private bool IsTheSameAmplification(double firstValue, double secondValue)
         {
-            var firstRoundedValue = Math.Round(firstValue, 2);
-            var secondRoundedValue = Math.Round(secondValue, 2);
             return Math.Round(firstValue, 2) == Math.Round(secondValue, 2);
         }
     }

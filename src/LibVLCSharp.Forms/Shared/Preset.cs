@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -47,11 +47,11 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         public int BandCount { get; set; }
 
-        private ObservableCollection<Band>? bands;
+        private List<Band>? bands;
         /// <summary>
         /// Gets or sets the Bands.
         /// </summary>
-        public ObservableCollection<Band>? Bands
+        public List<Band>? Bands
         {
             get { return bands; }
             set
