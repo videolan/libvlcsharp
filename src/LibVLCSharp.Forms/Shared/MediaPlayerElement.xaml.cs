@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using LibVLCSharp.Shared;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static LibVLCSharp.Forms.Shared.EqualizerUtils;
 
 namespace LibVLCSharp.Forms.Shared
 {
@@ -133,9 +133,9 @@ namespace LibVLCSharp.Forms.Shared
                 }
 
                 // Check if the Equalizer must be set to the media
-                if(MediaPlayer.Length > 0 && EqualizerUtils.IsEqualizerEnable())
+                if(MediaPlayer.Length > 0 && IsEqualizerEnable())
                 {
-                    EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, new Equalizer((uint)EqualizerUtils.GetSavedPresetIndex()));
+                    SetEqualizerToMediaPlyer(MediaPlayer, new Equalizer((uint)GetSavedPresetIndex()));
                 }
             }
         }
@@ -274,7 +274,7 @@ namespace LibVLCSharp.Forms.Shared
         private Equalizer? MediaEqualizer;
         private Preset? SelectedPreset { get; set; }
         private Switch? SnapBandsSwitch { get; set; }
-        // Prevents EnableEqualizerIfDisable method to trigger when opening the equalizer overlay.
+        // Workaround to prevent Slider issues
         private bool EqualizerViewIsOpening = false;
         private bool IgnoreAmpValueChanged = true;
         private int AmpSliderTriggerCount = 0;
@@ -309,12 +309,12 @@ namespace LibVLCSharp.Forms.Shared
             if (!EqualizerViewIsOpening && FrequenciesLayout != null && picker.SelectedIndex >= 0)
             {
                 SelectedPreset = (Preset)picker.SelectedItem;
-                AmpBands = new ObservableCollection<Band>(EqualizerUtils.CopyBands(SelectedPreset.Bands));
+                AmpBands = new ObservableCollection<Band>(CopyBands(SelectedPreset.Bands));
                 FrequenciesLayout.ItemsSource = AmpBands;
 
-                EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, new Equalizer((uint)SelectedPreset.PresetId));
-                EqualizerUtils.SaveEqualizerState(true);
-                EqualizerUtils.SavePreset(SelectedPreset.PresetId);
+                SetEqualizerToMediaPlyer(MediaPlayer, new Equalizer((uint)SelectedPreset.PresetId));
+                SaveEqualizerState(true);
+                SavePreset(SelectedPreset.PresetId);
             }
             IgnoreAmpValueChanged = false;
         }
@@ -330,7 +330,7 @@ namespace LibVLCSharp.Forms.Shared
             if(MediaEqualizer != null && !EqualizerViewIsOpening)
             {
                 MediaEqualizer.SetPreamp((float)e.NewValue);
-                EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+                SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
             }
         }
 
@@ -338,12 +338,14 @@ namespace LibVLCSharp.Forms.Shared
         {
             if(MediaEqualizer != null && PresetsDataPicker != null && PreampSlider != null)
             {
-                var allPresets = EqualizerUtils.LoadAllPresets();
+                var allPresets = LoadAllPresets();
+
                 PresetsDataPicker.BindingContext = this;
                 PresetsDataPicker.ItemsSource = allPresets;
                 PresetsDataPicker.ItemDisplayBinding = new Binding("Name");
+
                 SelectedPreset = allPresets.First(p => p.PresetId == presetIndex);
-                AmpBands = new ObservableCollection<Band>(EqualizerUtils.CopyBands(SelectedPreset.Bands));
+                AmpBands = new ObservableCollection<Band>(CopyBands(SelectedPreset.Bands));
                 PresetsDataPicker.SelectedIndex = SelectedPreset.PresetId;
 
                 PreampSlider.BindingContext = SelectedPreset;
@@ -374,16 +376,16 @@ namespace LibVLCSharp.Forms.Shared
                         if (AmpSliderTriggerCount == 1)
                         {
                             IgnoreAmpValueChanged = true;
-                            EqualizerUtils.SmoothOutFrequencies(band.BandId, (float)e.OldValue,
+                            SmoothOutFrequencies(band.BandId, (float)e.OldValue,
                                 (float)e.NewValue, AmpBands, MediaEqualizer);
-                            EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+                            SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                             IgnoreAmpValueChanged = false;
                         }
                     }
                     else
                     {
-                        EqualizerUtils.ApplyNewAmplicatification(band.BandId, (float)e.NewValue, MediaEqualizer);
-                        EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+                        ApplyNewAmplicatification(band.BandId, (float)e.NewValue, MediaEqualizer);
+                        SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                     }
                 }
             }
@@ -397,15 +399,16 @@ namespace LibVLCSharp.Forms.Shared
                 {
                     MediaEqualizer = new Equalizer((uint)SelectedPreset.PresetId);
                     MediaEqualizer.SetPreamp((float)SelectedPreset.Preamp);
-                    EqualizerUtils.SaveEqualizerState(true);
-                    EqualizerUtils.SavePreset(SelectedPreset.PresetId);
-                    EqualizerUtils.SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
+
+                    SaveEqualizerState(true);
+                    SavePreset(SelectedPreset.PresetId);
+                    SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                 }
            }
            else
            {
                 MediaPlayer.UnsetEqualizer();
-                EqualizerUtils.SaveEqualizerState(false);
+                SaveEqualizerState(false);
            }
         }
 
@@ -419,8 +422,8 @@ namespace LibVLCSharp.Forms.Shared
                 && !EqualizerViewIsOpening)
             {
                 EnableEqualizerSwitch.IsToggled = true;
-                EqualizerUtils.SaveEqualizerState(true);
-                EqualizerUtils.SavePreset(SelectedPreset.PresetId);
+                SaveEqualizerState(true);
+                SavePreset(SelectedPreset.PresetId);
                 MediaEqualizer = new Equalizer((uint)SelectedPreset.PresetId);
             }
         }
@@ -430,8 +433,8 @@ namespace LibVLCSharp.Forms.Shared
             EqualizerViewIsOpening = IgnoreAmpValueChanged = true;
             if (MediaPlayer.Length > 0 && EqualizerControls != null)
             {
-                var enableEqualizer = EqualizerUtils.IsEqualizerEnable();
-                var presetIndex = enableEqualizer ? EqualizerUtils.GetSavedPresetIndex() : 0;
+                var enableEqualizer = IsEqualizerEnable();
+                var presetIndex = enableEqualizer ? GetSavedPresetIndex() : 0;
                 MediaEqualizer = new Equalizer((uint)presetIndex);
                 SetPresetsItemsSource(presetIndex);
                 EqualizerControls.IsVisible = true;
@@ -439,11 +442,6 @@ namespace LibVLCSharp.Forms.Shared
                     EnableEqualizerSwitch.IsToggled = true;
             }
             EqualizerViewIsOpening = IgnoreAmpValueChanged = false;
-        }
-
-        private bool IsTheSameAmplification(double firstValue, double secondValue)
-        {
-            return Math.Round(firstValue, 2) == Math.Round(secondValue, 2);
         }
     }
 }

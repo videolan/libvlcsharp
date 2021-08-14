@@ -9,7 +9,7 @@ namespace LibVLCSharp.Forms.Shared
     /// <summary>
     /// Defines the <see cref="EqualizerUtils" />.
     /// </summary>
-    public class EqualizerUtils
+    public static class EqualizerUtils
     {
         /// <summary>
         /// Defines the PRECISION.
@@ -154,10 +154,7 @@ namespace LibVLCSharp.Forms.Shared
         ///Get the saved preset index.
         /// </summary>
         /// <returns></returns>
-        public static int GetSavedPresetIndex()
-        {
-            return (int)Application.Current.Properties[EqualizerPresetIndexPropertyKey];
-        }
+        public static int GetSavedPresetIndex() => (int)Application.Current.Properties[EqualizerPresetIndexPropertyKey];
 
         /// <summary>
         /// Shallow copy a list of bands to a new list.
@@ -180,8 +177,16 @@ namespace LibVLCSharp.Forms.Shared
                         AmpMax = band.AmpMax
                     });
                 }
-            }    
+            }
             return newBands;
         }
+
+        /// <summary>
+        /// Checks if two amplification values are the same.
+        /// </summary>
+        /// <param name="firstValue">The first value</param>
+        /// <param name="secondValue">The second value</param>
+        /// <returns></returns>
+        public static bool IsTheSameAmplification(double firstValue, double secondValue) => Math.Round(firstValue, 2) == Math.Round(secondValue, 2);
     }
 }
