@@ -73,7 +73,7 @@ namespace LibVLCSharp.Forms.Shared
         /// <param name="bandId">The bandId<see cref="int"/>.</param>
         /// <param name="amp">The amp<see cref="float"/>.</param>
         /// <param name="equalizer">The equalizer<see cref="Equalizer"/>.</param>
-        public static void ApplyNewAmplicatification(int bandId, float amp, Equalizer equalizer)
+        public static void ApplyNewAmplification(int bandId, float amp, Equalizer equalizer)
         {
             equalizer.SetAmp(amp, (uint)bandId);
         }
@@ -83,8 +83,8 @@ namespace LibVLCSharp.Forms.Shared
         /// This method is used when the Snap band mode is enable.
         /// </summary>
         /// <param name="bandId">The bandId<see cref="int"/>.</param>
-        /// <param name="oldAmp">The previous vlaue of the the band's amplication<see cref="float"/>.</param>
-        /// <param name="newAmp">The new vlaue of the the band's amplication<see cref="float"/>.</param>
+        /// <param name="oldAmp">The previous value of the the band's amplification<see cref="float"/>.</param>
+        /// <param name="newAmp">The new value of the the band's amplification<see cref="float"/>.</param>
         /// <param name="bands">The bands<see cref="List{Band}"/>.</param>
         /// <param name="equalizer">The equalizer<see cref="Equalizer"/>.</param>
         public static void SmoothOutFrequencies(int bandId, float oldAmp, float newAmp, ObservableCollection<Band> bands, Equalizer equalizer)
@@ -127,7 +127,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Get the state of the Equlizer from the application properties.
+        /// Get the state of the Equalizer from the application properties.
         /// </summary>
         /// <returns></returns>
         public static bool IsEqualizerEnable()

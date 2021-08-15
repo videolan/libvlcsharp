@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:LibVLCSharp.Forms.Shared"
              xmlns:converter="clr-namespace:LibVLCSharp.Forms.Shared.Converters"
-             x:Name="MediaPlayerElementView"
              x:Class="LibVLCSharp.Forms.Shared.MediaPlayerElement">
     <ContentView.Resources>
         <ResourceDictionary>
@@ -14,7 +13,14 @@
                 <Setter Property="Margin" Value="0, 0, 0, -20" />
                 <Setter Property="Padding" Value="10, 20, 10, 0" />
                 <Setter Property="BackgroundColor" Value="#323232" />
-                <Setter Property="AbsoluteLayout.LayoutBounds" Value="0, .99, 1, 0.8" />
+                <Setter Property="AbsoluteLayout.LayoutBounds">
+                    <Setter.Value>
+                        <OnPlatform x:TypeArguments="Rectangle">
+                            <On Platform="Android" Value="0, .99, 1, 0.8" />
+                            <On Platform="iOS" Value="0, .99, 1, 0.7" />
+                        </OnPlatform>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="AbsoluteLayout.LayoutFlags" Value="All" />
                 <Setter Property="IsVisible" Value="False" />
             </Style>
@@ -24,7 +30,6 @@
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             </Style>
             <Style x:Key="BandListStyle" TargetType="controls:BindableStackLayout">
-                <Setter Property="Margin" Value="2,-15,0,0" />
                 <Setter Property="Padding" Value="2, 0, 0, 0" />
                 <Setter Property="Orientation" Value="Horizontal" />
                 <Setter Property="VerticalOptions" Value="FillAndExpand" />
@@ -32,24 +37,13 @@
             </Style>
             <Style x:Key="BandStyle" TargetType="Slider">
                 <Setter Property="Rotation" Value="-90" />
-                <Setter Property="HeightRequest" Value="150" />
-                <Setter Property="WidthRequest" Value="150" />
-                <Setter Property="Margin" Value="-75, 0, -75, 0" />
+                <Setter Property="HeightRequest" Value="200" />
+                <Setter Property="WidthRequest" Value="200" />
+                <Setter Property="Margin" Value="-100, 0, -100, 0" />
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
                 <Setter Property="ThumbColor" Value="#FE8A03" />
                 <Setter Property="MinimumTrackColor" Value="#FE8A03" />
                 <Setter Property="MaximumTrackColor" Value="White" />
-            </Style>
-            <Style x:Key="ActionStackLayoutStyle" TargetType="StackLayout">
-                <Setter Property="Margin" Value="0, 0, 0, 20" />
-                <Setter Property="Orientation" Value="Horizontal" />
-                <Setter Property="HorizontalOptions" Value="EndAndExpand" />
-                <Setter Property="VerticalOptions" Value="End" />
-            </Style>
-            <Style x:Key="ActionButtonStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="#FE8A03" />
-                <Setter Property="BackgroundColor" Value="#323232" />
-                <Setter Property="HorizontalOptions" Value="End" />
             </Style>
         </ResourceDictionary>
     </ContentView.Resources>
@@ -84,8 +78,7 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="250" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="350" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <!-- Enable Equalizer -->
@@ -96,10 +89,10 @@
                             <!-- presets -->
                             <StackLayout Grid.Row="1"  Style="{StaticResource GridRowStyle}">
                                 <Label FontSize="18" Margin="0, 10, 0, 0" HorizontalOptions="StartAndExpand" FontAttributes="Bold" Text="Presets" TextColor="#BFBFBF" />
-                                <Picker x:Name="PresetsDataPicker"  HorizontalOptions="FillAndExpand" TextColor="White" />
+                                <Picker x:Name="PresetsDataPicker"  HorizontalOptions="FillAndExpand" TextColor="White" BackgroundColor="#323232" />
                             </StackLayout>
                             <!-- Preamp -->
-                            <StackLayout Grid.Row="2" Style="{StaticResource GridRowStyle}" Margin="0,0,0,20">
+                            <StackLayout Grid.Row="2" Style="{StaticResource GridRowStyle}">
                                 <Label FontSize="18" HorizontalOptions="Start" FontAttributes="Bold" Text="Preamp" TextColor="#BFBFBF" />
                                 <Slider x:Name="PreampSlider" ThumbColor="#FE8A03" MinimumTrackColor="#FE8A03" MaximumTrackColor="White" HorizontalOptions="FillAndExpand" Maximum="20" Minimum="-20" />
                             </StackLayout>
@@ -109,12 +102,12 @@
                                 <controls:BindableStackLayout.ItemDataTemplate>
                                     <DataTemplate>
                                         <StackLayout Orientation="Vertical" VerticalOptions="Center" Margin="-5,0,0,0" HorizontalOptions="FillAndExpand">
-                                            <Label Text="{Binding AmpMax, StringFormat='+{0:F0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 5" />
-                                            <StackLayout Orientation="Vertical">
+                                            <Label Text="{Binding AmpMax, StringFormat='+{0:F0}db'}" TextColor="White" FontSize="12" Margin="0, 0, 0, 10" />
+                                            <StackLayout Orientation="Vertical" Margin="0, 0, 0, 10">
                                                 <Slider Style="{StaticResource BandStyle}" Maximum="20" Minimum="-20" Value="{Binding Amp}" ValueChanged="BandAmplificationValueChanged" />
                                             </StackLayout>
                                             <Label Text="{Binding AmpMin, StringFormat='{0:F0}db'}" TextColor="White" FontSize="12" />
-                                            <Label Margin="5, 0, 0, 0" Text="{Binding BandFrequency, Converter={StaticResource FrequencyToStringConverter}}" TextColor="White" FontSize="12" />
+                                            <Label Margin="5, 0, 0, 0" Text="{Binding BandFrequency, Converter={StaticResource FrequencyToStringConverter}}" TextColor="White" FontSize="10" />
                                             <Label Margin="5, 0, 0, 0" Text="{Binding Amp, Converter={StaticResource AmplificationToStringConverter}}" TextColor="White" FontSize="11" />
                                         </StackLayout>
                                     </DataTemplate>
@@ -122,7 +115,7 @@
                             </controls:BindableStackLayout>
 
                             <!-- Snap Band-->
-                            <StackLayout Grid.Row="4"  Style="{StaticResource GridRowStyle}">
+                            <StackLayout Grid.Row="4"  Style="{StaticResource GridRowStyle}" VerticalOptions="Center">
                                 <Label FontSize="18" HorizontalOptions="EndAndExpand" FontAttributes="Bold" Text="Snap bands" TextColor="White" />
                                 <Switch x:Name="SnapBandsSwitch" HorizontalOptions="End" OnColor="#FE8A03" IsToggled="True" />
                             </StackLayout>

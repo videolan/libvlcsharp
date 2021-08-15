@@ -274,11 +274,11 @@ namespace LibVLCSharp.Forms.Shared
         private Equalizer? MediaEqualizer;
         private Preset? SelectedPreset { get; set; }
         private Switch? SnapBandsSwitch { get; set; }
+        private ObservableCollection<Band> AmpBands = new ObservableCollection<Band>();
         // Workaround to prevent Slider issues
         private bool EqualizerViewIsOpening = false;
         private bool IgnoreAmpValueChanged = true;
         private int AmpSliderTriggerCount = 0;
-        private ObservableCollection<Band> AmpBands = new ObservableCollection<Band>();
 
         private void LoadEqualizerControls()
         {
@@ -292,7 +292,7 @@ namespace LibVLCSharp.Forms.Shared
             {
                 EnableEqualizerSwitch.Toggled += EnableEqualizerSwitchToggled;
                 PresetsDataPicker.SelectedIndexChanged += SelectedPresetIndexChanged;
-                PreampSlider.ValueChanged += PreampSliderValuechanged;
+                PreampSlider.ValueChanged += PreAmpSliderValueChanged;
             }
         }
 
@@ -324,7 +324,7 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         /// <param name="sender">Arguments</param>
         /// <param name="e">Sender</param>
-        private void PreampSliderValuechanged(object sender, ValueChangedEventArgs e)
+        private void PreAmpSliderValueChanged(object sender, ValueChangedEventArgs e)
         {
             EnableEqualizerIfDisable();
             if(MediaEqualizer != null && !EqualizerViewIsOpening)
@@ -384,7 +384,7 @@ namespace LibVLCSharp.Forms.Shared
                     }
                     else
                     {
-                        ApplyNewAmplicatification(band.BandId, (float)e.NewValue, MediaEqualizer);
+                        ApplyNewAmplification(band.BandId, (float)e.NewValue, MediaEqualizer);
                         SetEqualizerToMediaPlyer(MediaPlayer, MediaEqualizer);
                     }
                 }
@@ -413,7 +413,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// This method is called when the user try to change the preset or the amplifaction value 
+        /// This method is called when the user try to change the preset or the amplification value 
         /// while the equalizer is disable.
         /// </summary>
         private void EnableEqualizerIfDisable()
