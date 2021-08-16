@@ -9,20 +9,6 @@ namespace LibVLCSharp.Forms.Shared
     public class BindableStackLayout : StackLayout
     {
         /// <summary>
-        /// Defines the header.
-        /// </summary>
-        internal readonly Label header;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BindableStackLayout"/> class.
-        /// </summary>
-        public BindableStackLayout()
-        {
-            header = new Label();
-            Children.Add(header);
-        }
-
-        /// <summary>
         /// Gets or sets the ItemsSource.
         /// </summary>
         public IEnumerable ItemsSource
@@ -53,22 +39,6 @@ namespace LibVLCSharp.Forms.Shared
         public static readonly BindableProperty ItemDataTemplateProperty =
             BindableProperty.Create(nameof(ItemDataTemplate), typeof(DataTemplate), typeof(BindableStackLayout));
 
-        /// <summary>
-        /// Gets or sets the Title.
-        /// </summary>
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        /// <summary>
-        /// Defines the TitleProperty.
-        /// </summary>
-        public static readonly BindableProperty TitleProperty =
-            BindableProperty.Create(nameof(Title), typeof(string), typeof(BindableStackLayout),
-                                    propertyChanged: (bindable, oldValue, newValue) => ((BindableStackLayout)bindable).PopulateHeader());
-
         internal void PopulateItems()
         {
             if (ItemsSource == null)
@@ -88,7 +58,5 @@ namespace LibVLCSharp.Forms.Shared
                 }
             }
         }
-
-        internal void PopulateHeader() => header.Text = Title;
     }
 }
