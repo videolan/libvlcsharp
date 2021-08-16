@@ -649,6 +649,20 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsEqualizerButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsEqualizerButtonVisibleProperty = BindableProperty.Create(nameof(IsEqualizerButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether the Equalizer button is shown.
+        /// </summary>
+        public bool IsEqualizerButtonVisible
+        {
+            get => (bool)GetValue(IsEqualizerButtonVisibleProperty);
+            set => SetValue(IsEqualizerButtonVisibleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsStopButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsStopButtonVisibleProperty = BindableProperty.Create(nameof(IsStopButtonVisible), typeof(bool),

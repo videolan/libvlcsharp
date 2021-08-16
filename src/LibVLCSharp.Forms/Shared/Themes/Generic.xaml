@@ -209,6 +209,7 @@
 
     <Style x:Key="EqualizerButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
         <Setter Property="Text" Value="{x:Static fontawesome:FontAwesomeIcons.SlidersH}" />
+        <Setter Property="IsVisible" Value="{TemplateBinding IsEqualizerButtonVisible}" />
     </Style>
 
     <Style x:Key="TracksListViewStyle" TargetType="ListView">
