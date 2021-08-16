@@ -11,7 +11,7 @@ namespace LibVLCSharp.Forms.Shared.Converters
     {
         /// <summary>
         /// Converts an amplification value to string.
-        /// Example: -6,23 to 6db.
+        /// Example: -6,23 to -6db.
         /// </summary>
         /// <param name="value">The source data being passed to the target.</param>
         /// <param name="targetType">The type of the target property.</param>
