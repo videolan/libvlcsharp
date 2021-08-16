@@ -574,6 +574,34 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
+        /// Identifies the <see cref="IsLockButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsLockButtonVisibleProperty = BindableProperty.Create(nameof(IsLockButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether the lock button is shown.
+        /// </summary>
+        public bool IsLockButtonVisible
+        {
+            get => (bool)GetValue(IsLockButtonVisibleProperty);
+            set => SetValue(IsLockButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsTracksButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsTracksButtonVisibleProperty = BindableProperty.Create(nameof(IsTracksButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether the tracks button is shown.
+        /// </summary>
+        public bool IsTracksButtonVisible
+        {
+            get => (bool)GetValue(IsTracksButtonVisibleProperty);
+            set => SetValue(IsTracksButtonVisibleProperty, value);
+        }
+
+        /// <summary>
         /// Identifies the <see cref="IsCastButtonVisible"/> dependency property.
         /// </summary>
         public static readonly BindableProperty IsCastButtonVisibleProperty = BindableProperty.Create(nameof(IsCastButtonVisible), typeof(bool),
@@ -760,21 +788,6 @@ namespace LibVLCSharp.Forms.Shared
             UpdatePauseAvailability();
             UpdateTime();
             OnBuffering();
-        }
-
-        private static void IsAudioTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateAudioTracksSelectionAvailability();
-        }
-
-        private static void IsVideoTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateVideoTracksSelectionAvailability();
-        }
-
-        private static void IsClosedCaptionsSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
         private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
