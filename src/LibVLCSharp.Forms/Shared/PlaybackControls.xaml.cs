@@ -106,9 +106,9 @@ namespace LibVLCSharp.Forms.Shared
         private MediaPlayerElementManager Manager { get; }
         private Button? TracksButton { get; set; }
         /// <summary>
-        /// Equlizer's button: Will be controlled from MediaPlayerElement.
+        /// Equalizer button: Will be controlled from MediaPlayerElement.
         /// </summary>
-        public Button? EqualizerButton { get; set; }
+        private Button? EqualizerButton { get; set; }
         private Button? CastButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
         private VisualElement? ButtonBar { get; set; }
@@ -1243,7 +1243,7 @@ namespace LibVLCSharp.Forms.Shared
         }
 
         /// <summary>
-        /// Returns the Equlizer Button.
+        /// Returns the Equalizer Button.
         /// </summary>
         /// <returns>The equalizer button</returns>
         public Button? GetEqualizerButton()
