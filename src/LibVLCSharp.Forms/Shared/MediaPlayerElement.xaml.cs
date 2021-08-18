@@ -92,7 +92,6 @@ namespace LibVLCSharp.Forms.Shared
             set => SetValue(EnableRendererDiscoveryProperty, value);
         }
 
-
         private void OnVideoViewChanged(VideoView videoView)
         {
             if (videoView != null)
@@ -496,7 +495,6 @@ namespace LibVLCSharp.Forms.Shared
         /// </summary>
         /// <returns></returns>
         private int GetSavedPresetIndex() => (int)Application.Current.Properties[EqualizerPresetIndexPropertyKey];
-
 
         /// <summary>
         /// Checks if two amplification values are the same.
