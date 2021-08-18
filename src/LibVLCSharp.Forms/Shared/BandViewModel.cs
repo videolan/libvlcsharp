@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 namespace LibVLCSharp.Forms.Shared
 {
     /// <summary>
-    /// Defines the <see cref="Band" />.
+    /// Defines the <see cref="BandViewModel" />.
     /// </summary>
-    public class Band : INotifyPropertyChanged
+    public class BandViewModel : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets or sets the BandId.

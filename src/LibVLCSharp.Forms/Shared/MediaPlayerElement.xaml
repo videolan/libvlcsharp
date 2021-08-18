@@ -30,7 +30,7 @@
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             </Style>
             <Style x:Key="BandListStyle" TargetType="controls:BindableStackLayout">
-                <Setter Property="Padding" Value="2, 0, 0, 0" />
+                <Setter Property="Padding" Value="5, 0, 0, 0" />
                 <Setter Property="Orientation" Value="Horizontal" />
                 <Setter Property="VerticalOptions" Value="FillAndExpand" />
                 <Setter Property="HorizontalOptions" Value="FillAndExpand" />
