@@ -281,6 +281,10 @@ namespace LibVLCSharp.Forms.Shared
         private ObservableCollection<BandViewModel> AmpBands = new ObservableCollection<BandViewModel>();
         private EqualizerUtils EqualizerService { get; }
         // Workaround to prevent Slider issues
+        // The Slider ValueChanged event(BandAmplificationValueChanged) triggers 2 times when it value changes.
+        // Now I used EqualizerViewIsOpening, IgnoreAmpValueChanged, AmpSliderTriggerCount to prevent the call
+        // of BandAmplificationValueChanged method when I set values to the amplifications(The ten vertical sliders).
+        // This behavior is caused by INPC.
         private bool EqualizerViewIsOpening = false;
         private bool IgnoreAmpValueChanged = true;
         private int AmpSliderTriggerCount = 0;
