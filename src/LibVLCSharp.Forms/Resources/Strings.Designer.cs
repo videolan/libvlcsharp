@@ -133,7 +133,7 @@ namespace LibVLCSharp.Forms.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Closed captions.
+        ///   Looks up a localized string similar to Subtitles.
         /// </summary>
         internal static string ClosedCaptions {
             get {
@@ -169,6 +169,15 @@ namespace LibVLCSharp.Forms.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No track found.
+        /// </summary>
+        internal static string NoTrackFoundMessage {
+            get {
+                return ResourceManager.GetString("NoTrackFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         internal static string OK {
@@ -192,6 +201,15 @@ namespace LibVLCSharp.Forms.Resources {
         internal static string Unlock {
             get {
                 return ResourceManager.GetString("Unlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video tracks.
+        /// </summary>
+        internal static string VideoTracks {
+            get {
+                return ResourceManager.GetString("VideoTracks", resourceCulture);
             }
         }
     }

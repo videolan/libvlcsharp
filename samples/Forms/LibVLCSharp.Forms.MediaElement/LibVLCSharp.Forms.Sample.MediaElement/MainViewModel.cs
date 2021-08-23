@@ -51,7 +51,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 
             LibVLC = new LibVLC(enableDebugLogs: true);
 
-            var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            var media = new Media(LibVLC, new Uri("http://streams.videolan.org/streams/mkv/multiple_tracks.mkv"));
 
             MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
             media.Dispose();

@@ -142,7 +142,7 @@
     <value>Cast to</value>
   </data>
   <data name="ClosedCaptions" xml:space="preserve">
-    <value>Closed captions</value>
+    <value>Subtitles</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>Disable</value>
@@ -153,6 +153,9 @@
   <data name="ErrorWithMedia" xml:space="preserve">
     <value>Error with media {0}</value>
   </data>
+  <data name="NoTrackFoundMessage" xml:space="preserve">
+    <value>No track found</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -161,5 +164,8 @@
   </data>
   <data name="Unlock" xml:space="preserve">
     <value>SWIPE TO UNLOCK</value>
+  </data>
+  <data name="VideoTracks" xml:space="preserve">
+    <value>Video tracks</value>
   </data>
 </root>

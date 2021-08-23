@@ -132,6 +132,9 @@
   <data name="Error" xml:space="preserve">
     <value>Erreur</value>
   </data>
+  <data name="NoTrackFoundMessage" xml:space="preserve">
+    <value>Aucune piste trouvée</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -140,5 +143,8 @@
   </data>
   <data name="Unlock" xml:space="preserve">
     <value>DÉVERROUILLER</value>
+  </data>
+  <data name="VideoTracks" xml:space="preserve">
+    <value>Pistes vidéo</value>
   </data>
 </root>

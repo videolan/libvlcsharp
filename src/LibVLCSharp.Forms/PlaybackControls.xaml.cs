@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
@@ -11,13 +11,15 @@ using Xamarin.Forms.Xaml;
 namespace LibVLCSharp.Forms
 {
     /// <summary>
-    /// Represents the playback controls for a <see cref="MediaPlayer"/>.
+    /// Represents the playback controls for a <see cref="LibVLCSharp.MediaPlayer"/>.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PlaybackControls : TemplatedView
     {
         private const string AudioSelectionAvailableState = "AudioSelectionAvailable";
+        private const string VideoSelectionAvailableState = "VideoSelectionAvailable";
         private const string AudioSelectionUnavailableState = "AudioSelectionUnavailable";
+        private const string VideoSelectionUnavailableState = "videoSelectionUnavailable";
         private const string ClosedCaptionsSelectionAvailableState = "ClosedCaptionsSelectionAvailable";
         private const string ClosedCaptionsSelectionUnavailableState = "ClosedCaptionsSelectionUnavailable";
         private const string PlayState = "PlayState";
@@ -36,15 +38,13 @@ namespace LibVLCSharp.Forms
         {
             InitializeComponent();
 
-            IconFontFamily = Resources[nameof(IconFontFamily)] as OnPlatform<string>;
             ButtonColor = (Color)(Resources[nameof(ButtonColor)] ?? Color.Transparent);
             Foreground = (Color)(Resources[nameof(Foreground)] ?? Color.White);
             MainColor = (Color)(Resources[nameof(MainColor)] ?? Color.Transparent);
-            AudioTracksSelectionButtonStyle = Resources[nameof(AudioTracksSelectionButtonStyle)] as Style;
+            TracksButtonStyle = Resources[nameof(TracksButtonStyle)] as Style;
             BufferingProgressBarStyle = Resources[nameof(BufferingProgressBarStyle)] as Style;
             ButtonBarStyle = Resources[nameof(ButtonBarStyle)] as Style;
             CastButtonStyle = Resources[nameof(CastButtonStyle)] as Style;
-            ClosedCaptionsSelectionButtonStyle = Resources[nameof(ClosedCaptionsSelectionButtonStyle)] as Style;
             ControlsPanelStyle = Resources[nameof(ControlsPanelStyle)] as Style;
             MessageStyle = Resources[nameof(MessageStyle)] as Style;
             PlayPauseButtonStyle = Resources[nameof(PlayPauseButtonStyle)] as Style;
@@ -57,7 +57,7 @@ namespace LibVLCSharp.Forms
             SeekButtonStyle = Resources[nameof(SeekButtonStyle)] as Style;
             LockButtonStyle = Resources[nameof(LockButtonStyle)] as Style;
             UnLockButtonStyle = Resources[nameof(UnLockButtonStyle)] as Style;
-            UnLockControlsPanelStyle = Resources[nameof(UnLockControlsPanelStyle)] as Style;           
+            UnLockControlsPanelStyle = Resources[nameof(UnLockControlsPanelStyle)] as Style;
 
             Manager = new MediaPlayerElementManager(new Dispatcher(), new DisplayInformation(), new DisplayRequest());
             var autoHideManager = Manager.Get<AutoHideNotifier>();
@@ -68,6 +68,10 @@ namespace LibVLCSharp.Forms
             audioTrackManager.TrackAdded += OnAudioTracksChanged;
             audioTrackManager.TrackDeleted += OnAudioTracksChanged;
             audioTrackManager.TracksCleared += OnAudioTracksChanged;
+            var videoTrackManager = Manager.Get<VideoTracksManager>();
+            videoTrackManager.TrackAdded += OnVideoTracksChanged;
+            videoTrackManager.TrackDeleted += OnVideoTracksChanged;
+            videoTrackManager.TracksCleared += OnVideoTracksChanged;
             var subTitlesTrackManager = Manager.Get<SubtitlesTracksManager>();
             subTitlesTrackManager.TrackAdded += OnSubtitlesTracksChanged;
             subTitlesTrackManager.TrackDeleted += OnSubtitlesTracksChanged;
@@ -98,20 +102,26 @@ namespace LibVLCSharp.Forms
         }
 
         private MediaPlayerElementManager Manager { get; }
-        private Button? AudioTracksSelectionButton { get; set; }
+        private Button? TracksButton { get; set; }
         private Button? CastButton { get; set; }
-        private Button? ClosedCaptionsSelectionButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
         private VisualElement? ButtonBar { get; set; }
         private VisualElement? UnLockControlsPanel { get; set; }
+        private VisualElement? TracksOverlayView { get; set; }
         private SwipeToUnLockView? SwipeToUnLock { get; set; }
-        private Label? TrackBarLabel { get; set; }       
+        private Label? TrackBarLabel { get; set; }
+        private Label? AudioTracksLabel { get; set; }
+        private Label? VideoTracksLabel { get; set; }
+        private Label? SubtileTracksLabel { get; set; }
         private Button? PlayPauseButton { get; set; }
         private Label? RemainingTimeLabel { get; set; }
         private Label? ElapsedTimeLabel { get; set; }
         private Label? AspectRatioLabel { get; set; }
 
         private Slider? SeekBar { get; set; }
+        private ListView? AudioTracksListView { get; set; }
+        private ListView? VideoTracksListView { get; set; }
+        private ListView? SubtitlesTracksListView { get; set; }
         private bool ScreenLockModeEnable { get; set; } = false;
 
         private bool Initialized { get; set; }
@@ -122,20 +132,6 @@ namespace LibVLCSharp.Forms
         private bool RemoteRendering { get; set; } = false;
         private const string Disconnect = "Disconnect";
         private const string Cancel = "Cancel";
-
-        /// <summary>
-        /// Identifies the <see cref="IconFontFamily"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IconFontFamilyProperty = BindableProperty.Create(nameof(IconFontFamily), typeof(string),
-            typeof(PlaybackControls));
-        /// <summary>
-        /// Gets or sets the icon font family.
-        /// </summary>
-        public string IconFontFamily
-        {
-            get => (string)GetValue(IconFontFamilyProperty);
-            set => SetValue(IconFontFamilyProperty, value);
-        }
 
         /// <summary>
         /// Identifies the <see cref="ButtonColor"/> dependency property.
@@ -180,18 +176,19 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="AudioTracksSelectionButtonStyle"/> dependency property.
+        /// Identifies the <see cref="TracksButtonStyle"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty AudioTracksSelectionButtonStyleProperty = BindableProperty.Create(
-            nameof(AudioTracksSelectionButtonStyle), typeof(Style), typeof(PlaybackControls));
+        public static readonly BindableProperty TracksButtonStyleProperty = BindableProperty.Create(
+            nameof(TracksButtonStyle), typeof(Style), typeof(PlaybackControls));
         /// <summary>
-        /// Gets or sets the audio tracks selection button style.
+        /// Gets or sets the tracks button style.
         /// </summary>
-        public Style? AudioTracksSelectionButtonStyle
+        public Style? TracksButtonStyle
         {
-            get => (Style)GetValue(AudioTracksSelectionButtonStyleProperty);
-            set => SetValue(AudioTracksSelectionButtonStyleProperty, value);
+            get => (Style)GetValue(TracksButtonStyleProperty);
+            set => SetValue(TracksButtonStyleProperty, value);
         }
+
 
         /// <summary>
         /// Identifies the <see cref="BufferingProgressBarStyle"/> dependency property.
@@ -233,20 +230,6 @@ namespace LibVLCSharp.Forms
         {
             get => (Style)GetValue(CastButtonStyleProperty);
             set => SetValue(CastButtonStyleProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="ClosedCaptionsSelectionButtonStyle"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty ClosedCaptionsSelectionButtonStyleProperty = BindableProperty.Create(
-            nameof(ClosedCaptionsSelectionButtonStyle), typeof(Style), typeof(PlaybackControls));
-        /// <summary>
-        /// Gets or sets the closed captions selection button style.
-        /// </summary>
-        public Style? ClosedCaptionsSelectionButtonStyle
-        {
-            get => (Style)GetValue(ClosedCaptionsSelectionButtonStyleProperty);
-            set => SetValue(ClosedCaptionsSelectionButtonStyleProperty, value);
         }
 
         /// <summary>
@@ -482,7 +465,7 @@ namespace LibVLCSharp.Forms
         public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls),
             propertyChanged: LibVLCPropertyChanged);
         /// <summary>
-        /// Gets or sets the <see cref="LibVLC"/> instance.
+        /// Gets or sets the <see cref="LibVLCSharp.LibVLC"/> instance.
         /// </summary>
         public LibVLC LibVLC
         {
@@ -494,13 +477,13 @@ namespace LibVLCSharp.Forms
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
-            typeof(MediaPlayer), typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
+            typeof(LibVLCSharp.MediaPlayer), typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
-        /// Gets or sets the <see cref="MediaPlayer"/> instance.
+        /// Gets or sets the <see cref="LibVLCSharp.MediaPlayer"/> instance.
         /// </summary>
-        public MediaPlayer MediaPlayer
+        public LibVLCSharp.MediaPlayer MediaPlayer
         {
-            get => (MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (LibVLCSharp.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -590,18 +573,31 @@ namespace LibVLCSharp.Forms
         }
 
         /// <summary>
-        /// Identifies the <see cref="IsAudioTracksSelectionButtonVisible"/> dependency property.
+        /// Identifies the <see cref="IsLockButtonVisible"/> dependency property.
         /// </summary>
-        public static readonly BindableProperty IsAudioTracksSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsAudioTracksSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true,
-            propertyChanged: IsAudioTracksSelectionButtonVisiblePropertyChanged);
+        public static readonly BindableProperty IsLockButtonVisibleProperty = BindableProperty.Create(nameof(IsLockButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
         /// <summary>
-        /// Gets or sets a value indicating whether the audio tracks selection button is shown.
+        /// Gets or sets a value that indicates whether the lock button is shown.
         /// </summary>
-        public bool IsAudioTracksSelectionButtonVisible
+        public bool IsLockButtonVisible
         {
-            get => (bool)GetValue(IsAudioTracksSelectionButtonVisibleProperty);
-            set => SetValue(IsAudioTracksSelectionButtonVisibleProperty, value);
+            get => (bool)GetValue(IsLockButtonVisibleProperty);
+            set => SetValue(IsLockButtonVisibleProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsTracksButtonVisible"/> dependency property.
+        /// </summary>
+        public static readonly BindableProperty IsTracksButtonVisibleProperty = BindableProperty.Create(nameof(IsTracksButtonVisible), typeof(bool),
+            typeof(PlaybackControls), true);
+        /// <summary>
+        /// Gets or sets a value that indicates whether the tracks button is shown.
+        /// </summary>
+        public bool IsTracksButtonVisible
+        {
+            get => (bool)GetValue(IsTracksButtonVisibleProperty);
+            set => SetValue(IsTracksButtonVisibleProperty, value);
         }
 
         /// <summary>
@@ -616,21 +612,6 @@ namespace LibVLCSharp.Forms
         {
             get => (bool)GetValue(IsCastButtonVisibleProperty);
             set => SetValue(IsCastButtonVisibleProperty, value);
-        }
-
-        /// <summary>
-        /// Identifies the <see cref="IsClosedCaptionsSelectionButtonVisible"/> dependency property.
-        /// </summary>
-        public static readonly BindableProperty IsClosedCaptionsSelectionButtonVisibleProperty = BindableProperty.Create(
-            nameof(IsClosedCaptionsSelectionButtonVisible), typeof(bool), typeof(PlaybackControls), true,
-            propertyChanged: IsClosedCaptionsSelectionButtonVisiblePropertyChanged);
-        /// <summary>
-        /// Gets or sets a value indicating whether the closed captions selection button is shown.
-        /// </summary>
-        public bool IsClosedCaptionsSelectionButtonVisible
-        {
-            get => (bool)GetValue(IsClosedCaptionsSelectionButtonVisibleProperty);
-            set => SetValue(IsClosedCaptionsSelectionButtonVisibleProperty, value);
         }
 
         /// <summary>
@@ -746,9 +727,8 @@ namespace LibVLCSharp.Forms
 
         private void OnApplyCustomTemplate()
         {
-            AudioTracksSelectionButton = SetClickEventHandler(nameof(AudioTracksSelectionButton), AudioTracksSelectionButton_ClickedAsync);
+            TracksButton = SetClickEventHandler(nameof(TracksButton), TracksButton_Clicked);
             CastButton = SetClickEventHandler(nameof(CastButton), CastButton_ClickedAsync);
-            ClosedCaptionsSelectionButton = SetClickEventHandler(nameof(ClosedCaptionsSelectionButton), ClosedCaptionsSelectionButton_ClickedAsync);
             PlayPauseButton = SetClickEventHandler(nameof(PlayPauseButton), PlayPauseButton_Clicked);
             SetClickEventHandler("StopButton", StopButton_Clicked);
             SetClickEventHandler("LockButton", LockButton_ClickedAsync);
@@ -756,9 +736,22 @@ namespace LibVLCSharp.Forms
             ControlsPanel = this.FindChild<VisualElement?>(nameof(ControlsPanel));
             ButtonBar = this.FindChild<VisualElement?>(nameof(ButtonBar));
             UnLockControlsPanel = this.FindChild<VisualElement?>(nameof(UnLockControlsPanel));
+            TracksOverlayView = this.FindChild<VisualElement?>(nameof(TracksOverlayView));
             SwipeToUnLock = this.FindChild<SwipeToUnLockView?>(nameof(SwipeToUnLock));
             SeekBar = this.FindChild<Slider?>(nameof(SeekBar));
+            AudioTracksListView = this.FindChild<ListView?>(nameof(AudioTracksListView));
+            if (AudioTracksListView != null)
+                AudioTracksListView.ItemTapped += AudioTracksItemTapped;
+            VideoTracksListView = this.FindChild<ListView?>(nameof(VideoTracksListView));
+            if (VideoTracksListView != null)
+                VideoTracksListView.ItemTapped += VideoTracksItemTapped;
+            SubtitlesTracksListView = this.FindChild<ListView?>(nameof(SubtitlesTracksListView));
+            if (SubtitlesTracksListView != null)
+                SubtitlesTracksListView.ItemTapped += SubtitlesTracksItemTapped;
             TrackBarLabel = this.FindChild<Label?>(nameof(TrackBarLabel));
+            AudioTracksLabel = this.FindChild<Label?>(nameof(AudioTracksLabel));
+            VideoTracksLabel = this.FindChild<Label?>(nameof(VideoTracksLabel));
+            SubtileTracksLabel = this.FindChild<Label?>(nameof(SubtileTracksLabel));
             RemainingTimeLabel = this.FindChild<Label?>(nameof(RemainingTimeLabel));
             ElapsedTimeLabel = this.FindChild<Label?>(nameof(ElapsedTimeLabel));
             AspectRatioLabel = this.FindChild<Label?>(nameof(AspectRatioLabel));
@@ -771,9 +764,15 @@ namespace LibVLCSharp.Forms
                 SeekBar.ValueChanged += SeekBar_ValueChanged;
             }
 
-            if(TrackBarLabel != null)          
-                TrackBarLabel.Text = ResourceManager.GetString(nameof(Strings.Unlock));           
-            
+            if (TrackBarLabel != null)
+                TrackBarLabel.Text = ResourceManager.GetString(nameof(Strings.Unlock));
+            if (AudioTracksLabel != null && VideoTracksLabel != null && SubtileTracksLabel != null)
+            {
+                AudioTracksLabel.Text = ResourceManager.GetString(nameof(Strings.AudioTracks));
+                VideoTracksLabel.Text = ResourceManager.GetString(nameof(Strings.VideoTracks));
+                SubtileTracksLabel.Text = ResourceManager.GetString(nameof(Strings.ClosedCaptions));
+            }
+
             if (SwipeToUnLock != null)
                 SwipeToUnLock.SlideCompleted += Handle_SlideCompletedAsync;
 
@@ -783,20 +782,11 @@ namespace LibVLCSharp.Forms
             VisualStateManager.GoToState(PlayPauseButton, Manager.Get<StateManager>().IsPlaying ? PauseState : PlayState);
             UpdateSeekAvailability();
             UpdateAudioTracksSelectionAvailability();
+            UpdateVideoTracksSelectionAvailability();
             UpdateClosedCaptionsTracksSelectionAvailability();
             UpdatePauseAvailability();
             UpdateTime();
             OnBuffering();
-        }
-
-        private static void IsAudioTracksSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateAudioTracksSelectionAvailability();
-        }
-
-        private static void IsClosedCaptionsSelectionButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((PlaybackControls)bindable).UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
         private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -822,7 +812,7 @@ namespace LibVLCSharp.Forms
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).Manager.MediaPlayer = (MediaPlayer)newValue;
+            ((PlaybackControls)bindable).Manager.MediaPlayer = (LibVLCSharp.MediaPlayer)newValue;
         }
 
         private void OnBuffering()
@@ -835,14 +825,133 @@ namespace LibVLCSharp.Forms
             UpdateAudioTracksSelectionAvailability();
         }
 
+        private void OnVideoTracksChanged(object sender, EventArgs e)
+        {
+            UpdateVideoTracksSelectionAvailability();
+        }
+
         private void OnSubtitlesTracksChanged(object sender, EventArgs e)
         {
             UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
-        private async void AudioTracksSelectionButton_ClickedAsync(object sender, EventArgs e)
+        private void TracksButton_Clicked(object sender, EventArgs e)
         {
-            await SelectTrackAsync(Manager.Get<AudioTracksManager>(), ResourceManager.GetString(nameof(Strings.AudioTracks)));
+            if (ControlsPanel != null)
+                ControlsPanel.IsVisible = false;
+
+            var subtitleTracksSources = LoadTracks(Manager.Get<SubtitlesTracksManager>());
+            var audioTrackSouces = LoadTracks(Manager.Get<AudioTracksManager>());
+            var videoTrackSouces = LoadTracks(Manager.Get<VideoTracksManager>());
+
+            HideOrDisplayListview(SubtitlesTracksListView, subtitleTracksSources);
+            HideOrDisplayListview(AudioTracksListView, audioTrackSouces);
+            HideOrDisplayListview(VideoTracksListView, videoTrackSouces);
+
+            if (subtitleTracksSources.Count <= 0 && audioTrackSouces.Count <= 0 && videoTrackSouces.Count <= 0)
+            {
+                ShowErrorMessageBox(new Exception(ResourceManager.GetString(nameof(Strings.ErrorWithMedia))));
+            }
+            else if (TracksOverlayView != null)
+            {
+                TracksOverlayView.IsVisible = true;
+            }
+        }
+
+        private void HideOrDisplayListview(ListView? tracksListview, ObservableCollection<TrackViewModel> itemsSource)
+        {
+            if (tracksListview != null)
+            {
+                if (itemsSource.Count <= 0)
+                {
+                    tracksListview.IsVisible = false;
+                }
+                else
+                {
+                    tracksListview.IsVisible = true;
+                    tracksListview.ItemsSource = itemsSource;
+                }
+            }
+        }
+
+        private void AudioTracksItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var track = (TrackViewModel)e.Item;
+            var manager = Manager.Get<AudioTracksManager>();
+            SelectTrack(manager, track, AudioTracksListView);
+        }
+
+        private void VideoTracksItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var track = (TrackViewModel)e.Item;
+            var manager = Manager.Get<VideoTracksManager>();
+            SelectTrack(manager, track, VideoTracksListView);
+        }
+
+        private void SubtitlesTracksItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var track = (TrackViewModel)e.Item;
+            var manager = Manager.Get<SubtitlesTracksManager>();
+            SelectTrack(manager, track, SubtitlesTracksListView);
+        }
+
+        private void SelectTrack(TracksManager manager, TrackViewModel track, ListView? tracksListview)
+        {
+            try
+            {
+                var tracks = manager.Tracks;
+                var currentTrackId = manager.CurrentTrackId;
+                if (tracks == null || track.Selected)
+                    return;
+            
+                var foundTrack = tracks.First(t => t.Id == track.Id);
+                manager.CurrentTrackId = foundTrack?.Id ?? string.Empty;
+                UpdateTracksListviewItemsSource(track, tracksListview);
+            }
+            catch (Exception)
+            {
+                manager.CurrentTrackId = string.Empty;
+            }
+        }
+
+        private void UpdateTracksListviewItemsSource(TrackViewModel selectedTrack, ListView? trackListView)
+        {
+            if (trackListView != null)
+            {
+                var itemSources = (ObservableCollection<TrackViewModel>)trackListView.ItemsSource;
+                var previousTrack = itemSources.First(t => t.Selected);
+                previousTrack.Selected = false;
+                selectedTrack.Selected = true;
+            }
+        }
+
+        private ObservableCollection<TrackViewModel> LoadTracks(TracksManager manager)
+        {
+            var allTracks = new ObservableCollection<TrackViewModel>();
+            var tracks = manager.Tracks;
+            try
+            {
+                if (tracks != null)
+                {
+                    var currentTrackId = manager.CurrentTrackId;
+                    foreach (var track in tracks)
+                    {
+                        if (track == null || track.Id == null || track.Name == null)
+                            continue;
+
+                        var trackViewModel = new TrackViewModel(track.Id, track.Name);
+
+                        if (track.Id == currentTrackId)
+                            trackViewModel.Selected = true;
+                        allTracks.Add(trackViewModel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessageBox(ex);
+            }
+            return allTracks;
         }
 
         private async void CastButton_ClickedAsync(object sender, EventArgs e)
@@ -892,15 +1001,8 @@ namespace LibVLCSharp.Forms
                 OnShowAndHideAutomaticallyPropertyChanged();
             }
             Show();
-
-
-
         }
 
-        private async void ClosedCaptionsSelectionButton_ClickedAsync(object sender, EventArgs e)
-        {
-            await SelectTrackAsync(Manager.Get<SubtitlesTracksManager>(), ResourceManager.GetString(nameof(Strings.ClosedCaptions)), true);
-        }
 
         private void PlayPauseButton_Clicked(object sender, EventArgs e)
         {
@@ -990,45 +1092,6 @@ namespace LibVLCSharp.Forms
             VisualStateManager.GoToState(PlayPauseButton, PlayState);
         }
 
-        private string? GetTrackName(string? trackName, string trackId, string currentTrackId)
-        {
-            return trackId == currentTrackId ? $"{trackName} *" : trackName;
-        }
-
-        private async Task SelectTrackAsync(TracksManager manager, string popupTitle, bool addDeactivateRow = false)
-        {
-            var tracks = manager.Tracks;
-            if (tracks == null)
-            {
-                return;
-            }
-
-            try
-            {
-                var currentTrackId = manager.CurrentTrackId;
-                IEnumerable<string?> tracksNames = tracks.Select(t => t.Name).OrderBy(n => n);
-                if (addDeactivateRow)
-                {
-                    tracksNames = new[] { GetTrackName(ResourceManager.GetString(nameof(Strings.Disable)), string.Empty, currentTrackId) }
-                        .Union(tracksNames);
-                }
-
-                var page = this.FindAncestor<Page>();
-                if (page == null) return;
-
-                var trackName = await page.DisplayActionSheet(popupTitle, null, null, tracksNames.ToArray());
-                if (trackName != null)
-                {
-                    var match = tracks.FirstOrDefault(t => t.Name == trackName);
-                    manager.CurrentTrackId = match.Name ?? string.Empty;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessageBox(ex);
-            }
-        }
-
         private void UpdateTracksSelectionButtonAvailability(Button? tracksSelectionButton, string state)
         {
             if (tracksSelectionButton != null)
@@ -1038,26 +1101,32 @@ namespace LibVLCSharp.Forms
         }
 
         private void UpdateTracksSelectionAvailability(TracksManager tracksManager, Button? tracksSelectionButton,
-            bool isTracksSelectionButtonVisible, string availableState, string unavailableState, int count)
+            string availableState, string unavailableState, int count)
         {
             if (tracksSelectionButton != null)
             {
-                var c = tracksManager.Tracks?.Where(t => t.Id != null).Count();
-                UpdateTracksSelectionButtonAvailability(tracksSelectionButton, isTracksSelectionButtonVisible &&
-                    tracksManager.Tracks?.Where(t => t.Id != null).Count() >= count ? availableState : unavailableState);
+                var c = tracksManager.Tracks?.Where(t => t.Id != string.Empty).Count();
+                UpdateTracksSelectionButtonAvailability(tracksSelectionButton,
+                    tracksManager.Tracks?.Where(t => t.Id != string.Empty).Count() >= count ? availableState : unavailableState);
             }
         }
 
         private void UpdateAudioTracksSelectionAvailability()
         {
-            UpdateTracksSelectionAvailability(Manager.Get<AudioTracksManager>(), AudioTracksSelectionButton, IsAudioTracksSelectionButtonVisible,
+            UpdateTracksSelectionAvailability(Manager.Get<AudioTracksManager>(), TracksButton,
                 AudioSelectionAvailableState, AudioSelectionUnavailableState, 2);
+        }
+
+        private void UpdateVideoTracksSelectionAvailability()
+        {
+            UpdateTracksSelectionAvailability(Manager.Get<VideoTracksManager>(), TracksButton,
+                VideoSelectionAvailableState, VideoSelectionUnavailableState, 3);
         }
 
         private void UpdateClosedCaptionsTracksSelectionAvailability()
         {
-            UpdateTracksSelectionAvailability(Manager.Get<SubtitlesTracksManager>(), ClosedCaptionsSelectionButton,
-                IsClosedCaptionsSelectionButtonVisible, ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
+            UpdateTracksSelectionAvailability(Manager.Get<SubtitlesTracksManager>(), TracksButton,
+                ClosedCaptionsSelectionAvailableState, ClosedCaptionsSelectionUnavailableState, 1);
         }
 
         private void ShowError()
@@ -1173,7 +1242,7 @@ namespace LibVLCSharp.Forms
         private async Task FadeInAsync()
         {
             var controlsPanel = ControlsPanel;
-            if (controlsPanel != null && SeekBar != null && ButtonBar != null && UnLockControlsPanel != null)
+            if (controlsPanel != null && SeekBar != null && ButtonBar != null && UnLockControlsPanel != null && TracksOverlayView != null)
             {
                 controlsPanel.IsVisible = true;
                 SeekBar.IsVisible = true;
@@ -1181,6 +1250,9 @@ namespace LibVLCSharp.Forms
                 SeekBar.IsEnabled = !ScreenLockModeEnable;
                 ButtonBar.IsVisible = !ScreenLockModeEnable;
                 UnLockControlsPanel.IsVisible = ScreenLockModeEnable;
+
+                if (TracksOverlayView.IsVisible)
+                    TracksOverlayView.IsVisible = false;
 
                 if (controlsPanel.Opacity != 1)
                 {
