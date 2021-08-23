@@ -337,6 +337,11 @@
                     <ContentView HeightRequest="300" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TracksOverlayView" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"  AbsoluteLayout.LayoutFlags="All" IsVisible="False" BackgroundColor="#7F000000">
                         <ScrollView VerticalScrollBarVisibility="Never" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Orientation="Vertical">
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <StackLayout Grid.Row="0" HorizontalOptions="FillAndExpand">
                                     <Label Style="{StaticResource TrackTypeLabelStyle}" x:Name="AudioTracksLabel" />
                                     <ListView x:Name="AudioTracksListView" ItemTemplate="{StaticResource TrackViewCellDataTemplate}" Style="{StaticResource TracksListViewStyle}" />
