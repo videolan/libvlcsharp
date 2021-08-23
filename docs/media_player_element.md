@@ -4,8 +4,6 @@
   <img src="/src/assets/media-element.jpg"/>
 </h3>
 
-
-
 ## Getting started
 
 The best way to get started is to use the samples https://code.videolan.org/videolan/LibVLCSharp/-/tree/3.x/samples/Forms/LibVLCSharp.Forms.MediaElement
@@ -29,6 +27,10 @@ It already has the fonts (that are needed for icons) and necessary setup for cus
 - Compact mode
 - Keep screen on
 
+## How to customize the control
+
+See this sample https://code.videolan.org/mfkl/libvlcsharp-samples/-/tree/master/MediaElement/MediaElementCustomization
+
 ## Platform support
 
 - Uno (UWP, Android, iOS),
@@ -46,4 +48,5 @@ It is currently NOT available on standalone platforms:
 - macOS.
 
 ## Bugs and features
+
 For issues and feature tracking, see the `MediaElement` tag on our [gitlab](https://code.videolan.org/videolan/LibVLCSharp/issues?label_name%5B%5D=MediaElement).
