@@ -61,7 +61,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android) and Uno platform (iOS/Android/UWP).
 
 <h3 align="center">
-  <img src="src/assets/media-element.png"/>
+  <img src="src/assets/media-element.jpg"/>
 </h3>
 
 ## Supported platforms
