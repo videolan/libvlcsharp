@@ -49,6 +49,7 @@ namespace LibVLCSharp.Shared
 #if !NETSTANDARD1_1
             EnsureVersionsMatch();
 #endif
+            LibVLCLoaded = true;
         }
 
         /// <summary>

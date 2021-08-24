@@ -23,6 +23,7 @@ namespace LibVLCSharp.Shared
         public static void Initialize(string? libvlcDirectoryPath = null)
         {
             EnsureVersionsMatch();
+            LibVLCLoaded = true;
         }
     }
 }

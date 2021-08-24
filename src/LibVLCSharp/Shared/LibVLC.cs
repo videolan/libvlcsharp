@@ -222,7 +222,9 @@ namespace LibVLCSharp.Shared
         /// There is absolutely no warranty or promise of forward, backward and
         /// cross-platform compatibility with regards to libvlc_new() arguments.
         /// We recommend that you do not use them, other than when debugging.
-        /// 
+        /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
+        /// <para/> It may also throw a <see cref="VLCException"/> if the LibVLC and LibVLCSharp major versions do not match.
+        /// See https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/docs/versioning.md for more info about the versioning strategy.
         /// <example>
         /// <code>
         /// // example <br/>
@@ -276,6 +278,9 @@ namespace LibVLCSharp.Shared
         /// There is absolutely no warranty or promise of forward, backward and
         /// cross-platform compatibility with regards to libvlc_new() arguments.
         /// We recommend that you do not use them, other than when debugging.
+        /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
+        /// <para/> It may also throw a <see cref="VLCException"/> if the LibVLC and LibVLCSharp major versions do not match.
+        /// See https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/docs/versioning.md for more info about the versioning strategy.
         /// </summary>
         /// <param name="enableDebugLogs">enable verbose debug logs</param>
         /// <param name="options">list of arguments (should be NULL)</param>

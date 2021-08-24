@@ -34,6 +34,8 @@ namespace LibVLCSharp.Shared
             InitializeAndroid();
 
             EnsureVersionsMatch();
+
+            LibVLCLoaded = true;
         }
 
         static void LoadLibCpp()
