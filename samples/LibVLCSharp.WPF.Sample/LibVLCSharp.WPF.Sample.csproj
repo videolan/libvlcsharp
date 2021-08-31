@@ -7,7 +7,7 @@
     <RootNamespace>LibVLCSharp.WPF.Sample</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.14" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp.WPF\LibVLCSharp.WPF.csproj" />

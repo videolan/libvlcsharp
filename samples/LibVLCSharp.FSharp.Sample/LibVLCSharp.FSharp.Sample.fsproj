@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.14" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="5.0.1" />
+    <PackageReference Update="FSharp.Core" Version="5.0.2" />
   </ItemGroup>
 
 </Project>
