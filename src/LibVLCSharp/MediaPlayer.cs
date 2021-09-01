@@ -763,6 +763,13 @@ namespace LibVLCSharp
         public float Position => Native.LibVLCMediaPlayerGetPosition(NativeReference);
 
         /// <summary>
+        /// Set the movie time. This has no effect if no media is being
+        /// played. Not all formats and protocols support this.
+        /// </summary>
+        /// <param name="time">the movie time to seek to</param>
+        public void SeekTo(TimeSpan time) => Time = (long)time.TotalMilliseconds;
+
+        /// <summary>
         /// Set movie chapter (if applicable).
         /// <para></para>
         /// Get the movie chapter number currently playing, or -1 if there is no media.
