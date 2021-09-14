@@ -57,7 +57,7 @@ Both being based off of the same libvlc APIs, the public C# APIs are quite simil
 
 At the time of writing, both Vlc.DotNet and LibVLCSharp support libvlc 3.x, but only LibVLCSharp has started implementing libvlc 4 features.
 
-For loading LibVLC, unlike with Vlc.DotNet, you may just call `Core.Initialize()`. The path will be found automatically, provided you have installed the LibVLC Windows nuget (see section below).
+For loading LibVLC, unlike with Vlc.DotNet, it is done automatically. If you prefer to do it yourself, you may just call `Core.Initialize()`. The path will be found automatically, provided you have installed the LibVLC Windows nuget (see section below), or you can provide it as a string parameter to `Initialize()`.
 
 Short example of API differences
 
@@ -128,8 +128,6 @@ namespace ConsoleApp1
     {
         static async Task Main(string[] args)
         {
-            Core.Initialize();
-
             using var libvlc = new LibVLC();
             using var mediaPlayer = new MediaPlayer(libvlc);
 

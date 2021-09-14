@@ -253,9 +253,8 @@ For more advanced samples, have a look at [libvlcsharp-samples](https://code.vid
 Feel free to suggest and contribute new samples.
 
 ## Quick API overview
-```csharp
-Core.Initialize();
 
+```csharp
 using var libvlc = new LibVLC(enableDebugLogs: true);
 using var media = new Media(libvlc, new Uri(@"C:\tmp\big_buck_bunny.mp4"));
 using var mediaplayer = new MediaPlayer(media);
