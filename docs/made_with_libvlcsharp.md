@@ -2,19 +2,13 @@
 
 [Back](home.md)
 
-In addition  to [official samples](https://github.com/mfkl/libvlcsharp-samples), you may explore the following opensource projects made by GitHub users:
+In addition  to [official samples](https://github.com/mfkl/libvlcsharp-samples), you may explore the following open-source projects made by GitHub users.
 
-## TwitchBot 
+## TwitchBot
 
 Custom C# chat bot for Twitch TV
 
 https://github.com/SimpleSandman/TwitchBot
-
-## Portcase player
-
-Portcase Player is all in one Video Player, Audio Player, Torrent Player and IPTV Player with TV guide and Catch-Up service support.
-
-https://play.google.com/store/apps/details?id=com.portcase.player.android&hl=en
 
 ## iSpy
 
@@ -28,7 +22,7 @@ http://www.ispyconnect.com/
 
 https://github.com/AvaloniaCommunity/Avalonia.FuncUI
 
-## WalkmanManager 
+## WalkmanManager
 
 A easy-to-use Sony Walkman media manager (VB.NET)
 
@@ -82,8 +76,26 @@ A terminal based music player using dotnet core 5, libvlcsharp and Terminal.Gui
 
 https://github.com/gareth7562/climusicdotnet
 
-## KlingonWin10WPF 
+## KlingonWin10WPF
 
-A FMV game made with libvlcsharp and WPF that utilizes the media on the original disks. The game includes clickable surfaces that trigger different videos to play and different outcomes. (The game will not play without the original media from the disks, but the source is still useful). 
+A FMV game made with libvlcsharp and WPF that utilizes the media on the original disks. The game includes clickable surfaces that trigger different videos to play and different outcomes. (The game will not play without the original media from the disks, but the source is still useful).
 
 https://github.com/Teravus/KlingonWin10WPF
+
+## Minista
+
+Unofficial Instagram Client which almost supports every features in real Instagram.
+
+https://github.com/ramtinak/Minista
+
+## AssetRipper
+
+GUI Application to work with engine assets, asset bundles, and serialized files
+
+https://github.com/ds5678/AssetRipper
+
+## Stylophone
+
+MPD Client for the Universal Windows Platform, based on MpcNET.
+
+https://github.com/Difegue/Stylophone
