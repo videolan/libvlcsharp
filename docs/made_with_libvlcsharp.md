@@ -81,3 +81,9 @@ https://github.com/selmaohneh/JukeCore
 A terminal based music player using dotnet core 5, libvlcsharp and Terminal.Gui
 
 https://github.com/gareth7562/climusicdotnet
+
+## KlingonWin10WPF 
+
+A FMV game made with libvlcsharp and WPF that utilizes the media on the original disks. The game includes clickable surfaces that trigger different videos to play and different outcomes. (The game will not play without the original media from the disks, but the source is still useful). 
+
+https://github.com/Teravus/KlingonWin10WPF
