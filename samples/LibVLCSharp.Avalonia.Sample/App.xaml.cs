@@ -12,7 +12,6 @@ namespace LibVLCSharp.Avalonia.Sample
     {
         public override void Initialize()
         {
-            Core.Initialize();
             AvaloniaXamlLoader.Load(this);
         }
 

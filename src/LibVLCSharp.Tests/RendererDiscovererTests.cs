@@ -18,8 +18,6 @@ namespace LibVLCSharp.Tests
         [Ignore("requires network calls that may fail when run from CI")]
         public async Task DiscoverItems()
         {
-            Core.Initialize();
-
             var mp = new MediaPlayer(_libVLC)
             {
                 Media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",

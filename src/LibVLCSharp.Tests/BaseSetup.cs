@@ -15,8 +15,6 @@ namespace LibVLCSharp.Tests
         [SetUp]
         public void SetUp()
         {
-            Core.Initialize();
-
             _libVLC = new LibVLC("--no-audio", "--no-video");
         }
 

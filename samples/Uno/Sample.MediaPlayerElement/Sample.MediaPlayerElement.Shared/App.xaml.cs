@@ -19,8 +19,6 @@ namespace Sample.MediaPlayerElement
         /// </summary>
         public App()
         {
-            Core.Initialize(); // LibVLCSharp initialization
-
             InitializeComponent();
             Suspending += OnSuspending;
             Resuming += OnResuming;
