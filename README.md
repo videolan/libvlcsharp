@@ -308,7 +308,7 @@ You have encountered an issue and wish to report it to the VLC dev team?
 
 You can create one on our [Gitlab](https://code.videolan.org/videolan/LibVLCSharp/issues) (using an issue template) for .NET related questions/problems.
 
-_For LibVLC/VLC specific issues, usually native code, trac is our [bug tracker](https://trac.videolan.org/vlc/)._
+_For LibVLC/VLC specific issues, usually native code, please go to the [bug tracker of the VLC project](https://code.videolan.org/videolan/vlc/-/issues)._
 
 Before creating an issue or ticket, please double check for duplicates!
 
