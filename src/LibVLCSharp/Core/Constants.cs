@@ -7,7 +7,7 @@ namespace LibVLCSharp
 #if IOS
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
 #elif TVOS
-        internal const string LibraryName = "@rpath/DynamicTVVLCKit.framework/DynamicTVVLCKit";
+        internal const string LibraryName = "@rpath/TVVLCKit.framework/TVVLCKit";
 #else
         internal const string LibraryName = "libvlc";
 #endif
