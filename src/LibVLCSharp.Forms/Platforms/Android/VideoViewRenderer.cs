@@ -14,13 +14,28 @@ namespace LibVLCSharp.Forms.Platforms.Android
     /// Xamarin.Forms custom renderer for the Android VideoView
     /// </summary>
     public class VideoViewRenderer : ViewRenderer<LibVLCSharp.Forms.Shared.VideoView, LibVLCSharp.Platforms.Android.VideoView>
-    {
+    {    
+        private bool _isDisposing = false;
+        
         /// <summary>
         /// Main constructor (empty)
         /// </summary>
         /// <param name="context">Android context</param>
         public VideoViewRenderer(Context context) : base(context)
         {
+        }
+
+        /// <summary>
+        /// Gets triggered when the object gets disposed
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            _isDisposing = true;
+            base.Dispose(disposing);
+
+            Control!.MediaPlayer = null;
+            Control!.Dispose();
         }
 
         /// <summary>
@@ -53,6 +68,11 @@ namespace LibVLCSharp.Forms.Platforms.Android
 
         private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
         {
+            // Avoid updating the MediaPlayer if the Context from the Control is already disposed
+            if (_isDisposing)
+            {
+                return;
+            }
             Control.MediaPlayer = e.NewMediaPlayer;
             Control.TriggerLayoutChangeListener();
         }
