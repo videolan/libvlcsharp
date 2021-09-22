@@ -767,7 +767,9 @@ namespace LibVLCSharp
         /// played. Not all formats and protocols support this.
         /// </summary>
         /// <param name="time">the movie time to seek to</param>
-        public void SeekTo(TimeSpan time) => Time = (long)time.TotalMilliseconds;
+        /// <param name="fast">prefer fast seeking or precise seeking</param>
+        /// <returns>true on success, false otherwise</returns>
+        public bool SeekTo(TimeSpan time, bool fast = false) => SetTime((long)time.TotalMilliseconds, fast);
 
         /// <summary>
         /// Set movie chapter (if applicable).
