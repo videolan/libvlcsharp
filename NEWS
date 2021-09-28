@@ -1,3 +1,13 @@
+LibVLCSharp version 3.6.1
+=========================
+* tvOS [BREAKING CHANGE]: Due to upstream breaking packaging change, LibVLCSharp 3.6.1 and above only work with LibVLC.tvOS 3.3.17 and above.
+see https://code.videolan.org/videolan/libvlc-nuget/-/commit/031ad01a30053208a657d61cbc340f703ac04f32 for more details
+* MediaElement XF: Add visibility property for track and lock buttons by @egbakou
+* MediaElement XF: Fixes TrackSelection taking too much space @egbakou
+* nuget: Use readmes for nuget.org pages
+* documentation improvements
+* Core: add mediaplayer helper SeekTo method
+
 LibVLCSharp version 3.6.0
 =========================
 * Core: Media.AddSlave now has an URI overload, like the Media ctor
