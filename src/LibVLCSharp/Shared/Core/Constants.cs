@@ -33,13 +33,6 @@ namespace LibVLCSharp.Shared
     {
         internal const string Win64 = "win-x64";
         internal const string Win86 = "win-x86";
-        internal const string Winrt64 = "winrt-x64";
-        internal const string Winrt86 = "winrt-x86";
-        internal const string WinrtArm = "winrt-arm";
-
-        internal const string Lin64 = "linux-x64";
-        internal const string LinArm = "linux-arm";
-
         internal const string MacOS64 = "osx-x64";
     }
 
