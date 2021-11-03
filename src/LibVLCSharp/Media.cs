@@ -719,6 +719,13 @@ namespace LibVLCSharp
                 Native.LibVLCMediaRetain(NativeReference);
         }
 
+        internal override void OnNativeInstanciationError()
+        {
+            throw new VLCException("Failed to instanciate the Media on the native side. " +
+                    $"{Environment.NewLine}Have you installed the latest LibVLC package from nuget for your target platform?" +
+                    $"{Environment.NewLine}Is your MRL correct? Do check the native LibVLC verbose logs for more information.");
+        }
+
         #region MediaFromStream
 
         static readonly InternalOpenMedia OpenMediaCallbackHandle = OpenMediaCallback;
