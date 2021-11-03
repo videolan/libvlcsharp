@@ -255,6 +255,11 @@ namespace LibVLCSharp
             if (string.IsNullOrEmpty(mrl))
                 throw new ArgumentNullException(nameof(mrl));
 
+            if(PlatformHelper.IsWindows && type == FromType.FromPath)
+            {
+                mrl = mrl.Replace("/", @"\");
+            }
+
             var mrlPtr = mrl.ToUtf8();
             if (mrlPtr == IntPtr.Zero)
                 throw new ArgumentException($"error marshalling {mrl} to UTF-8 for native interop");
