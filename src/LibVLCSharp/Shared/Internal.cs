@@ -33,9 +33,8 @@ namespace LibVLCSharp.Shared
         {
             Release = release;
             var nativeRef = create();
-            if(nativeRef == IntPtr.Zero)
-                throw new VLCException("Failed to perform instanciation on the native side. " +
-                    "Make sure you installed the correct VideoLAN.LibVLC.[YourPlatform] package in your platform specific project");
+            if (nativeRef == IntPtr.Zero)
+                OnNativeInstanciationError();
             NativeReference = nativeRef;
         }
 
@@ -61,5 +60,8 @@ namespace LibVLCSharp.Shared
             NativeReference = IntPtr.Zero;
             IsDisposed = true;
         }
+
+        internal virtual void OnNativeInstanciationError() => throw new VLCException("Failed to perform instanciation on the native side. " +
+                    "Make sure you installed the correct VideoLAN.LibVLC.[YourPlatform] package in your platform specific project");
     }
 }
