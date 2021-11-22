@@ -122,17 +122,17 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
             await OnPositionChangedAsync();
         }
 
-        private async void MediaPlayer_SeekableChangedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_SeekableChangedAsync(object? sender, EventArgs e)
         {
             await UpdateSeekableAsync();
         }
 
-        private async void MediaPlayer_PositionChangedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_PositionChangedAsync(object? sender, EventArgs e)
         {
             await OnPositionChangedAsync();
         }
 
-        private async void MediaPlayer_StoppedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_StoppedAsync(object? sender, EventArgs e)
         {
             await UpdateSeekableAndPositionAsync();
         }

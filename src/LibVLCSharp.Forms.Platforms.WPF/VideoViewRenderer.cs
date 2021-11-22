@@ -39,7 +39,7 @@ namespace LibVLCSharp.Forms.Platforms.WPF
             }
         }
 
-        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
+        private void OnMediaPlayerChanging(object? sender, MediaPlayerChangingEventArgs e)
         {
             Control.MediaPlayer = e.NewMediaPlayer;
         }

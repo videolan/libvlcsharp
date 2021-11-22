@@ -95,7 +95,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void OnPointerMoved(object sender, RoutedEventArgs e)
+        private void OnPointerMoved(object? sender, RoutedEventArgs e)
         {
             PlaybackControls?.Show();
         }
