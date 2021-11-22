@@ -119,13 +119,13 @@ namespace LibVLCSharp.MediaPlayerElement
             }
         }
 
-        private async void RendererDiscoverer_ItemAddedAsync(object sender, RendererDiscovererItemAddedEventArgs e)
+        private async void RendererDiscoverer_ItemAddedAsync(object? sender, RendererDiscovererItemAddedEventArgs e)
         {
             RenderersList.Add(e.RendererItem);
             await UpdateHasRenderersPropertyValueAsync();
         }
 
-        private async void RendererDiscoverer_ItemDeletedAsync(object sender, RendererDiscovererItemDeletedEventArgs e)
+        private async void RendererDiscoverer_ItemDeletedAsync(object? sender, RendererDiscovererItemDeletedEventArgs e)
         {
             RenderersList.Remove(e.RendererItem);
             await UpdateHasRenderersPropertyValueAsync();

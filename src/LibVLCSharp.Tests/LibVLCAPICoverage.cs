@@ -28,13 +28,13 @@ namespace LibVLCSharp.Tests
                 libvlcdeprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
             }
 
-            List<string> dllImports = new List<string>();
+            var dllImports = new List<string>();
 
             // retrieving EventManager using reflection because the type is internal
             var eventManager = typeof(MediaPlayer).GetRuntimeProperties()
                 .First(n => n.Name.Equals("EventManager"))
                 .PropertyType
-                .BaseType;
+                .BaseType!;
 
             var libvlcTypes = new List<Type>
             {
@@ -78,20 +78,20 @@ namespace LibVLCSharp.Tests
                 deprecatedSymbols.Add(finalSymbol.Trim());
             }
 
-            List<string> implementedButHidden = new List<string>
+            var implementedButHidden = new List<string>
             {
                 "libvlc_media_player_set_android_context", // android build only
                 "libvlc_free" // hidden in internal type
             };
 
             // not implemented symbols for lack of use case or user interest
-            List<string> notImplementedOnPurpose = new List<string>
+            var notImplementedOnPurpose = new List<string>
             {
                 "libvlc_printerr", "libvlc_vprinterr", "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
                 "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
             };
 
-            List<string> exclude = new List<string>();
+            var exclude = new List<string>();
             exclude.AddRange(implementedButHidden);
             exclude.AddRange(notImplementedOnPurpose);
 
@@ -109,7 +109,7 @@ namespace LibVLCSharp.Tests
                             var arg = attr.NamedArguments.FirstOrDefault(a => a.MemberName.Equals("EntryPoint"));
                             if (arg == default) continue;
 
-                            var sym = (string)arg.TypedValue.Value;
+                            var sym = (string)arg.TypedValue.Value!;
 
                             dllImports.Add(sym);
                         }

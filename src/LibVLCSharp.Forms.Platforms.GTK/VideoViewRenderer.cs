@@ -43,7 +43,7 @@ namespace LibVLCSharp.Forms.Platforms.GTK
             }
         }
 
-        private void OnMediaPlayerChanging(object sender, MediaPlayerChangingEventArgs e)
+        private void OnMediaPlayerChanging(object? sender, MediaPlayerChangingEventArgs e)
         {
             if (Control == null)
             {

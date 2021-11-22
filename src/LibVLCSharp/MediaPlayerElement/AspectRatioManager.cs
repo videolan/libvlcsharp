@@ -75,12 +75,12 @@ namespace LibVLCSharp.MediaPlayerElement
             mediaPlayer.ESSelected -= MediaPlayer_ESSelectedAsync;
         }
 
-        private async void MediaPlayer_ESSelectedAsync(object sender, MediaPlayerESSelectedEventArgs e)
+        private async void MediaPlayer_ESSelectedAsync(object? sender, MediaPlayerESSelectedEventArgs e)
         {
             await DispatcherInvokeAsync(() => UpdateAspectRatio());
         }
 
-        private void VideoView_SizeChanged(object sender, EventArgs args)
+        private void VideoView_SizeChanged(object? sender, EventArgs args)
         {
             UpdateAspectRatio();
         }

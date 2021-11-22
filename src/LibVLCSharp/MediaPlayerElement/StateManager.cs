@@ -159,7 +159,7 @@ namespace LibVLCSharp.MediaPlayerElement
             return DispatcherInvokeEventHandlerAsync(ErrorOccured);
         }
 
-        private async void OnMediaPlayerChangedAsync(object sender, EventArgs e)
+        private async void OnMediaPlayerChangedAsync(object? sender, EventArgs e)
         {
             await UpdatePlayPauseAvailabilityAsync();
             switch (MediaPlayer?.State)
@@ -179,29 +179,29 @@ namespace LibVLCSharp.MediaPlayerElement
             }
         }
 
-        private async void MediaPlayer_EncounteredErrorAsync(object sender, EventArgs e)
+        private async void MediaPlayer_EncounteredErrorAsync(object? sender, EventArgs e)
         {
             await OnErrorOccuredAsync();
         }
 
-        private async void MediaPlayer_PlayingAsync(object sender, EventArgs e)
+        private async void MediaPlayer_PlayingAsync(object? sender, EventArgs e)
         {
             await PlayingOrPausedAsync(Playing);
             await UpdatePlayPauseAvailabilityAsync();
         }
 
-        private async void MediaPlayer_PausedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_PausedAsync(object? sender, EventArgs e)
         {
             await PlayingOrPausedAsync(Paused);
         }
 
-        private async void MediaPlayer_StoppedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_StoppedAsync(object? sender, EventArgs e)
         {
             await DispatcherInvokeEventHandlerAsync(Stopped);
             await UpdatePlayPauseAvailabilityAsync();
         }
 
-        private async void MediaPlayer_PausableChangedAsync(object sender, MediaPlayerPausableChangedEventArgs e)
+        private async void MediaPlayer_PausableChangedAsync(object? sender, MediaPlayerPausableChangedEventArgs e)
         {
             await UpdatePlayPauseAvailabilityAsync();
         }

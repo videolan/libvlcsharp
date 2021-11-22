@@ -50,12 +50,12 @@ namespace LibVLCSharp.WPF
             _bckgnd.Unloaded += Background_Unloaded;
         }
 
-        void Background_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        void Background_DataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             DataContext = e.NewValue;
         }
 
-        void Background_Unloaded(object sender, RoutedEventArgs e)
+        void Background_Unloaded(object? sender, RoutedEventArgs e)
         {
             _bckgnd.SizeChanged -= Wndhost_SizeChanged;
             _bckgnd.LayoutUpdated -= RefreshOverlayPosition;
@@ -68,7 +68,7 @@ namespace LibVLCSharp.WPF
             Hide();
         }
 
-        void Background_Loaded(object sender, RoutedEventArgs e)
+        void Background_Loaded(object? sender, RoutedEventArgs e)
         {
             if (_wndhost != null && IsVisible)
             {
@@ -123,7 +123,7 @@ namespace LibVLCSharp.WPF
             Top = targetPoints.Y;
         }
 
-        void Wndhost_SizeChanged(object sender, SizeChangedEventArgs e)
+        void Wndhost_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             var source = PresentationSource.FromVisual(_wndhost);
             if (source == null)
@@ -140,7 +140,7 @@ namespace LibVLCSharp.WPF
             Width = size.X;
         }
 
-        void Wndhost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void Wndhost_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             Close();
 

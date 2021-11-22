@@ -151,14 +151,14 @@ namespace LibVLCSharp.Tests
             }
         }
 
-        void Mp_Playing1(object sender, EventArgs e)
+        void Mp_Playing1(object? sender, EventArgs e)
         {
             callCountRegisterTwo++;
             Debug.WriteLine($"Mp_Playing1 called with {callCountRegisterTwo}");
 
         }
 
-        void Mp_Playing(object sender, EventArgs e)
+        void Mp_Playing(object? sender, EventArgs e)
         {
             callCountRegisterOne++;
             Debug.WriteLine($"Mp_Playing called with {callCountRegisterOne}");

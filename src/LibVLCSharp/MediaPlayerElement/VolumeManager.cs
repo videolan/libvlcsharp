@@ -86,7 +86,7 @@ namespace LibVLCSharp.MediaPlayerElement
             }
         }
 
-        private async void OnMediaPlayerChangedAsync(object sender, EventArgs e)
+        private async void OnMediaPlayerChangedAsync(object? sender, EventArgs e)
         {
             await DispatcherInvokeAsync(() =>
             {
@@ -96,12 +96,12 @@ namespace LibVLCSharp.MediaPlayerElement
             });
         }
 
-        //private async void MediaPlayer_VolumeChangedAsync(object sender, EventArgs e)
+        //private async void MediaPlayer_VolumeChangedAsync(object? sender, EventArgs e)
         //{
         //    await DispatcherInvokeEventHandlerAsync(VolumeChanged);
         //}
 
-        private async void MediaPlayer_MuteChangedAsync(object sender, EventArgs e)
+        private async void MediaPlayer_MuteChangedAsync(object? sender, EventArgs e)
         {
             await DispatcherInvokeEventHandlerAsync(MuteChanged);
         }

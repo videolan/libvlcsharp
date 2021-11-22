@@ -80,8 +80,7 @@ namespace LibVLCSharp.MediaPlayerElement
         /// <returns>the media track</returns>
         public MediaTrack? GetMediaTrack(string trackId)
         {
-            using var tracks = Tracks;
-            return tracks.FirstOrDefault(t => t.Id == trackId);
+            return Tracks?.FirstOrDefault(t => t.Id == trackId);
         }
 
         private Task OnTrackChangedAsync<TEventArgs>(TrackType trackType, EventHandler<TEventArgs>? eventHandler, TEventArgs eventArgs)
@@ -94,22 +93,22 @@ namespace LibVLCSharp.MediaPlayerElement
             return Task.CompletedTask;
         }
 
-        private async void OnTrackSelectedAsync(object sender, MediaPlayerESSelectedEventArgs e)
+        private async void OnTrackSelectedAsync(object? sender, MediaPlayerESSelectedEventArgs e)
         {
             await OnTrackChangedAsync(e.Type, TrackSelected, e);
         }
 
-        private async void OnTrackAddedAsync(object sender, MediaPlayerESAddedEventArgs e)
+        private async void OnTrackAddedAsync(object? sender, MediaPlayerESAddedEventArgs e)
         {
             await OnTrackChangedAsync(e.Type, TrackAdded, e);
         }
 
-        private async void OnTrackDeletedAsync(object sender, MediaPlayerESDeletedEventArgs e)
+        private async void OnTrackDeletedAsync(object? sender, MediaPlayerESDeletedEventArgs e)
         {
             await OnTrackChangedAsync(e.Type, TrackDeleted, e);
         }
 
-        private async void OnStoppedAsync(object sender, EventArgs e)
+        private async void OnStoppedAsync(object? sender, EventArgs e)
         {
             await OnTracksClearedAsync();
         }

@@ -60,7 +60,7 @@ namespace LibVLCSharp.MediaPlayerElement
             }
         }
 
-        private async void MediaPlayer_BufferingAsync(object sender, MediaPlayerBufferingEventArgs e)
+        private async void MediaPlayer_BufferingAsync(object? sender, MediaPlayerBufferingEventArgs e)
         {
             await DispatcherInvokeAsync(() => BufferingProgress = e.Cache / 100);
         }

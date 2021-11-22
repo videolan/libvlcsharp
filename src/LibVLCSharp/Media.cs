@@ -474,7 +474,7 @@ namespace LibVLCSharp
                 tcs.TrySetCanceled();
             });
 
-            void OnParsedChanged(object sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
+            void OnParsedChanged(object? sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs) 
                 => tcs.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
 
             try
@@ -666,7 +666,7 @@ namespace LibVLCSharp
                 tcs.TrySetCanceled();
             });
 
-            void OnThumbnailGenerated(object sender, MediaThumbnailGeneratedEventArgs mediaThumbnailGeneratedEventArgs)
+            void OnThumbnailGenerated(object? sender, MediaThumbnailGeneratedEventArgs mediaThumbnailGeneratedEventArgs)
             {
                 if (mediaThumbnailGeneratedEventArgs.Thumbnail != null)
                     tcs.TrySetResult(mediaThumbnailGeneratedEventArgs.Thumbnail);
@@ -697,7 +697,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="obj">the media to compare this one with</param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Media media &&
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, media.NativeReference);

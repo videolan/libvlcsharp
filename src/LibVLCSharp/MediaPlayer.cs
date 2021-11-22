@@ -1162,7 +1162,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="obj">the mediaplayer instance to compare this to</param>
         /// <returns></returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is MediaPlayer player &&
                    EqualityComparer<IntPtr>.Default.Equals(NativeReference, player.NativeReference);

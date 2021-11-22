@@ -9,6 +9,7 @@ namespace LibVLCSharp.Helpers
     {
         internal readonly struct Native
         {
+#pragma warning disable IDE1006 // Naming Styles
 #if NETFRAMEWORK || NETSTANDARD
             #region Windows
 
@@ -59,6 +60,7 @@ namespace LibVLCSharp.Helpers
 
             [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+#pragma warning restore IDE1006 // Naming Styles
         }
 
         #region logging
@@ -139,7 +141,7 @@ namespace LibVLCSharp.Helpers
             }
         }
 
-        static string UseStructurePointer<T>(T structure, Func<IntPtr, string> action)
+        static string UseStructurePointer<T>(T structure, Func<IntPtr, string> action) where T: notnull
         {
             var structurePointer = IntPtr.Zero;
             try
@@ -154,7 +156,7 @@ namespace LibVLCSharp.Helpers
             }
         }
 
-        static void UseStructurePointer<T>(T structure, Action<IntPtr> action)
+        static void UseStructurePointer<T>(T structure, Action<IntPtr> action) where T : notnull
         {
             var structurePointer = IntPtr.Zero;
             try
@@ -169,6 +171,7 @@ namespace LibVLCSharp.Helpers
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         static int vsnprintf(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
         {
 #if ANDROID
@@ -196,6 +199,7 @@ namespace LibVLCSharp.Helpers
         }
 
 #endregion
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Helper for libvlc_new
@@ -265,7 +269,7 @@ namespace LibVLCSharp.Helpers
                 }
 
                 var resultList = new List<TU>();
-                IntPtr nextRef = nativeRef;
+                var nextRef = nativeRef;
                 T structure;
                 TU obj;
 
@@ -560,7 +564,7 @@ namespace LibVLCSharp.Helpers
 #if NETSTANDARD1_1 || NET45
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
 #else
-            return Marshal.PtrToStructure<T>(ptr);
+            return Marshal.PtrToStructure<T>(ptr)!;
 #endif
         }
 
