@@ -50,7 +50,7 @@ namespace LibVLCSharp.Platforms.Mac
 
         void Attach()
         {
-            if (MediaPlayer != null)
+            if (MediaPlayer != null && MediaPlayer.NativeReference != IntPtr.Zero)
             {
                 MediaPlayer.NsObject = Handle;
             }
@@ -58,7 +58,7 @@ namespace LibVLCSharp.Platforms.Mac
 
         void Detach()
         {
-            if (MediaPlayer != null)
+            if (MediaPlayer != null && MediaPlayer.NativeReference != IntPtr.Zero)
             {
                 MediaPlayer.NsObject = IntPtr.Zero;
             }
