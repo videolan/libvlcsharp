@@ -58,10 +58,11 @@ namespace LibVLCSharp.WPF
         void Background_Unloaded(object sender, RoutedEventArgs e)
         {
             _bckgnd.SizeChanged -= Wndhost_SizeChanged;
-            _bckgnd.LayoutUpdated -= Wndhost_LayoutUpdated;
+            _bckgnd.LayoutUpdated -= RefreshOverlayPosition;
             if (_wndhost != null)
             {
                 _wndhost.Closing -= Wndhost_Closing;
+                _wndhost.LocationChanged -= RefreshOverlayPosition;
             }
 
             Hide();
@@ -84,8 +85,9 @@ namespace LibVLCSharp.WPF
             Owner = _wndhost;
 
             _wndhost.Closing += Wndhost_Closing;
+            _wndhost.LocationChanged += RefreshOverlayPosition;
+            _bckgnd.LayoutUpdated += RefreshOverlayPosition;
             _bckgnd.SizeChanged += Wndhost_SizeChanged;
-            _bckgnd.LayoutUpdated += Wndhost_LayoutUpdated;
 
             try
             {
@@ -100,20 +102,20 @@ namespace LibVLCSharp.WPF
                 Show();
                 _wndhost.Focus();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Hide();
                 throw new VLCException("Unable to create WPF Window in VideoView.", ex);
             }
         }
 
-        void Wndhost_LayoutUpdated(object? sender, EventArgs e)
+        void RefreshOverlayPosition(object? sender, EventArgs e)
         {
             if (PresentationSource.FromVisual(_bckgnd) == null)
             {
                 return;
             }
-            
+
             var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
             var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
