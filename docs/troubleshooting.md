@@ -7,10 +7,10 @@ A good first step is to try to identify whether your issue is originating from t
 To better understand what might be going on inside libvlc during playback in your application, **verbose** libvlc logs are helpful. To enable them, use this argument when creating your `LibVLC` object:
 
 ```csharp
-new LibVLC("--verbose=2");
+new LibVLC(enableDebugLogs: true);
 ```
 
-They should be printed to your Console, if you are building a Console project, or to the Visual Studio Output Window. Alternatively, you may subscribe to the log messages in your code using `libvlc.Log += ...`
+They should be printed to your Console, if you are building a Console project, or to the Visual Studio Output Window. Additionally, you may subscribe to the log messages in your code using `libvlc.Log += ...`
 
 ## Try your code on multiple devices and platforms
 
