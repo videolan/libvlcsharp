@@ -4,6 +4,7 @@
 
 - [Tutorials](#tutorials)
     - [Videos](#videos)
+    - [Podcasts](#podcasts)
     - [Blogposts](#blogposts)
     - [Samples](#samples)
 
@@ -16,6 +17,12 @@
 **Introduction to VideoLAN, VLC and LibVLCSharp** by [@martz](https://twitter.com/martz2804).
 
 [![Introduction to VideoLAN, VLC and LibVLCSharp](https://img.youtube.com/vi/dvAYd4SfCos/0.jpg)](https://www.youtube.com/watch?v=dvAYd4SfCos "Introduction to VideoLAN, VLC and LibVLCSharp")
+
+## Podcasts
+
+**Episode 74 - libvlcsharp and .NET with Martin Finkel** on the The .NET Core Podcast.
+
+[![libvlcsharp and .NET with Martin Finkel](https://img.youtube.com/vi/gp3pBtL_k2A/0.jpg)](https://www.youtube.com/watch?v=gp3pBtL_k2A "libvlcsharp and .NET with Martin Finkel")
 
 ## Blogposts
 

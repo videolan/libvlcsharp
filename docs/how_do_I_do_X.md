@@ -44,9 +44,9 @@ Like any other media. [Here](https://www.videolan.org/vlc/features.html) is a no
 
 ## How do I get individual frames out of a video?
 
-You may want to have a look at the WPF control of Vlc.DotNet which does exactly that: https://github.com/ZeBobo5/Vlc.DotNet/blob/develop/src/Vlc.DotNet.Wpf/VlcVideoSourceProvider.cs
+We have a sample using [ImageSharp](https://code.videolan.org/mfkl/libvlcsharp-samples/-/tree/master/PreviewThumbnailExtractor) and one using [SkiaSharp](https://code.videolan.org/mfkl/libvlcsharp-samples/-/tree/master/PreviewThumbnailExtractor.Skia) doing exactly this.
 
-From libvlc, that means libvlc_video_set_callbacks and libvlc_video_set_format_callbacks.
+From a libvlc standpoint, that means using `libvlc_video_set_callbacks` and `libvlc_video_set_format_callbacks`.
 
 ## How do I do transcoding?
 
@@ -76,6 +76,8 @@ using(var libVLC = new LibVLC())
     }
 }
 ```
+
+Try the sample here https://code.videolan.org/mfkl/libvlcsharp-samples/-/blob/master/YoutubePlayback
 
 # Subtitles
 
