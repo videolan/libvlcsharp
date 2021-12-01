@@ -11,7 +11,7 @@ var libvlcsharpCsproj = "../src/libvlcsharp/libvlcsharp.csproj";
 var testCsproj = "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj";
 
 var packagesDir = "../packages";
-var isCiBuild = BuildSystem.IsRunningOnAzurePipelines || BuildSystem.IsRunningOnAzurePipelinesHosted;
+var isCiBuild = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
 var suffixVersion = $"alpha-{DateTime.Today.ToString("yyyyMMdd")}-{BuildSystem.AzurePipelines.Environment.Build.Id}";
 var feedzLVSSource = "https://f.feedz.io/videolan/preview/nuget/index.json";
 var FEEDZ = "FEEDZ";
