@@ -7,12 +7,22 @@
         xmlns:uc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
         Title="Example2" Height="450" Width="800">
-    <Grid>
-        <uc:VideoView x:Name="VideoView" Panel.ZIndex="1">
-            <StackPanel Orientation="Horizontal" x:Name="test">
-                <Button Content="PLAY" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="PlayButton_Click" />
-                <Button Content="STOP" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="StopButton_Click" />
-            </StackPanel>
-        </uc:VideoView>
-    </Grid>
+    <ScrollViewer>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Background="DarkSlateBlue" Height="1000"  Grid.Row="0"/>
+            <uc:VideoView Height="400" Grid.Row="1" x:Name="VideoView" Panel.ZIndex="1">
+                <StackPanel Orientation="Horizontal" x:Name="test">
+                    <Button Content="PLAY" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="PlayButton_Click" />
+                    <Button Content="STOP" Height="25" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="StopButton_Click" />
+                </StackPanel>
+            </uc:VideoView>
+            <Grid Background="DarkSlateBlue" Height="1000"  Grid.Row="2"/>
+        </Grid>
+    </ScrollViewer>
 </Window>
