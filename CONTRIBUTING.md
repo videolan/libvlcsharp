@@ -128,13 +128,18 @@ from the main (upstream) repository:
 ## Coding
 
 ### Developer Environment
-- Visual Studio 2019 (with latest patches/updates), with the following workloads/components
+
+The latest .NET 6 SDK is required.
+
+- Visual Studio 2022 (with latest patches/updates), with the following workloads/components
     - .NET desktop development workload
     - Mobile development with .NET workload and Android/iOS SDKs
     - .NET Core cross-platform development
     - Developer packs for .NET Framework 4.7 and 4.7.1
 
 You will need to install GTK if you want to work on LibVLCSharp.GTK.
+
+If you want to get started on Windows with minimal configuration requirements, open `LibVLCSharp.Win32.sln`.
 
 ### <a name="rules"></a> Coding Rules
 
