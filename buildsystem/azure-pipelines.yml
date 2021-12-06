@@ -26,7 +26,7 @@ stages:
 
   - job: Windows
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'windows-2022'
     steps:
     - template: windows-build.yml
 

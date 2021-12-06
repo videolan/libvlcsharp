@@ -3,7 +3,15 @@ steps:
   displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 5.0.202
+    version: 6.0.100
+
+- bash: |
+   dotnet workload install android
+   dotnet workload install ios
+   dotnet workload install macos
+   dotnet workload install tvos
+  displayName: 'Install mobile workloads'
+  condition: ne( variables['Agent.OS'], 'Linux' )
 
 - task: DotNetCoreCLI@2
   displayName: 'Install Cake'

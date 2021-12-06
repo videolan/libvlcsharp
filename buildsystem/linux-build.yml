@@ -1,10 +1,5 @@
 steps:
 - template: base-template.yml
-- bash: |
-   #!/bin/bash
-   set -ex
-   git apply buildsystem/linux.patch
-  displayName: 'Update csproj for linux'
  
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'

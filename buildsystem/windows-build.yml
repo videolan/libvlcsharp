@@ -10,6 +10,13 @@ steps:
       $arguments = "/i `"$msiFile`" /quiet"
       Start-Process msiexec.exe -ArgumentList $arguments -Wait
 
+- task: JavaToolInstaller@0
+  displayName: install JDK 11
+  inputs:
+    versionSpec: '11'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
