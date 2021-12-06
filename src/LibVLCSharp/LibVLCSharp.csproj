@@ -28,9 +28,9 @@ This package also contains the views for the following platforms:
 If you need Xamarin.Forms support, see LibVLCSharp.Forms.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);MonoAndroid81;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0;uap10.0.16299;net45;net471</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net45;net471</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0;net6.0-windows;net6.0-ios;net6.0-android;net6.0-tvos;net6.0-macos</TargetFrameworks>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
@@ -39,17 +39,18 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
     <None Include="Platforms\**\*.cs" />
 
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+  <ItemGroup Condition="$(TargetFramework.Contains('android'))">
     <Compile Include="Platforms\Android\**\*.cs" />
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin'))">
+  <ItemGroup Condition="$(TargetFramework.Contains('mac')) or $(TargetFramework.Contains('ios')) or $(TargetFramework.Contains('tvos'))">
     <Compile Include="Platforms\Apple\**\*.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
@@ -76,8 +77,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageReference Include="System.Memory" Version="4.5.4" />
 
   </ItemGroup>
-
-  <Target Name="IncludeAWindow" Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+  <Target Name="IncludeAWindow" Condition="$(TargetFramework.Contains('android'))">
     <ItemGroup>
       <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
     </ItemGroup>
