@@ -1,14 +1,14 @@
 ﻿<Project>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
+  <PropertyGroup Condition="$(TargetFramework.Contains('ios'))">
     <DefineConstants>$(DefineConstants);IOS;APPLE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.Mac'))">
+  <PropertyGroup Condition="$(TargetFramework.Contains('mac'))">
     <DefineConstants>$(DefineConstants);MAC;APPLE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('Xamarin.TVOS'))">
+  <PropertyGroup Condition="$(TargetFramework.Contains('tvos'))">
     <DefineConstants>$(DefineConstants);TVOS;APPLE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+  <PropertyGroup Condition="$(TargetFramework.Contains('android'))">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
