@@ -1,3 +1,5 @@
+#tool nuget:?package=NuGet.CommandLine&version=5.11.0
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -103,6 +105,8 @@ void Build(string project)
     {
         settings.WithProperty("VersionSuffix", suffixVersion);
     }
+
+    settings.ToolVersion = MSBuildToolVersion.VS2022;
 
     MSBuild(project, settings);
 }
