@@ -12,11 +12,16 @@ in a WPF app. It depends on LibVLCSharp.
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description> 
     <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
+    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <RootNamespace>LibVLCSharp.WPF</RootNamespace>
     <PackageId>LibVLCSharp.WPF</PackageId>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>    
+    <UseWindowsForms>true</UseWindowsForms>
     <PackageTags>$(PackageTags);wpf</PackageTags>
+  </PropertyGroup>
+  <!--Override TFMs when building from the LVS.Win32 solution-->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
