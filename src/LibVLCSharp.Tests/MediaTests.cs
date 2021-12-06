@@ -265,7 +265,7 @@ namespace LibVLCSharp.Tests
             return new MemoryStream(imageData);
         }
 
-        private void LibVLC_Log(object? sender, LogEventArgs e)
+        private void LibVLC_Log(object sender, LogEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
         }
