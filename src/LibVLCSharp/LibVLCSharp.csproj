@@ -31,10 +31,15 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <TargetFrameworks>netstandard2.1;netstandard2.0;net45;net471</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0;net6.0-windows;net6.0-ios;net6.0-android;net6.0-tvos;net6.0-macos</TargetFrameworks>
+    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <!--Override TFMs when building from the LVS.Win32 solution-->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net6.0-windows</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>

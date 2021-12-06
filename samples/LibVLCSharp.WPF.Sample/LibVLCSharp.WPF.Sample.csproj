@@ -5,6 +5,11 @@
     <TargetFrameworks>net461;netcoreapp3.1</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <RootNamespace>LibVLCSharp.WPF.Sample</RootNamespace>
+    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
+  </PropertyGroup>
+  <!--Override TFMs when building from the LVS.Win32 solution-->
+  <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20200819" />
