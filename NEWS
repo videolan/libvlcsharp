@@ -1,3 +1,11 @@
+LibVLCSharp version 3.6.2
+=========================
+* media: rewrite slashes for windows https://code.videolan.org/videolan/LibVLCSharp/-/issues/517
+* media: clarify error message if native media constructor fails
+* iOS: Add additional defensive lifetime check https://code.videolan.org/videolan/LibVLCSharp/-/issues/520
+* WPF: Fix WPF VideoView foreground window position bug by @Yelo420 / Philip https://code.videolan.org/videolan/LibVLCSharp/-/issues/523
+* core: Add .NET 6 support
+
 LibVLCSharp version 3.6.1
 =========================
 * tvOS [BREAKING CHANGE]: Due to upstream breaking packaging change, LibVLCSharp 3.6.1 and above only work with LibVLC.tvOS 3.3.17 and above.
