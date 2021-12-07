@@ -1,4 +1,5 @@
-﻿#if NETFRAMEWORK || NETSTANDARD
+﻿#if NETFRAMEWORK || NETSTANDARD || NET6_0
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -91,4 +92,4 @@ namespace LibVLCSharp.Shared
         }
     }
 }
-#endif // NETFRAMEWORK || NETSTANDARD
+#endif // NETFRAMEWORK || NETSTANDARD || NET6_0
