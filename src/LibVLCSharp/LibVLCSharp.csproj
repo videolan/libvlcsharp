@@ -36,7 +36,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
   <!--Override TFMs when building from the LVS.Win32 solution-->
   <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
