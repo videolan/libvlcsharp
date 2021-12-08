@@ -1,3 +1,8 @@
+LibVLCSharp version 3.6.3
+=========================
+* hotfix for net6 target - missing comoilation directive.
+* build: use C# 9
+
 LibVLCSharp version 3.6.2
 =========================
 * media: rewrite slashes for windows https://code.videolan.org/videolan/LibVLCSharp/-/issues/517
