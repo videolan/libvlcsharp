@@ -10,7 +10,7 @@ namespace LibVLCSharp.Shared.Helpers
         internal readonly struct Native
         {
 #pragma warning disable IDE1006 // Naming Styles
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
             #region Windows
 
             [DllImport(Constants.Msvcrt, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -517,7 +517,7 @@ namespace LibVLCSharp.Shared.Helpers
 #endif
         }
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
         /// <summary>
         /// Crossplatform dlopen
         /// </summary>

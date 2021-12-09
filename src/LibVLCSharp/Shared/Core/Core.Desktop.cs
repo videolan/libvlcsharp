@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK || NETSTANDARD || NET6_0
+﻿#if DESKTOP
 
 using System;
 using System.Diagnostics;
@@ -92,4 +92,4 @@ namespace LibVLCSharp.Shared
         }
     }
 }
-#endif // NETFRAMEWORK || NETSTANDARD || NET6_0
+#endif // DESKTOP

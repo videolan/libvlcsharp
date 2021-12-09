@@ -67,7 +67,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_stop")]
             internal static extern void LibVLCMediaPlayerStop(IntPtr mediaPlayer);
 
-#if APPLE || NETFRAMEWORK || NETSTANDARD || NET6_0
+#if APPLE || DESKTOP
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_nsobject")]
             internal static extern void LibVLCMediaPlayerSetNsobject(IntPtr mediaPlayer, IntPtr drawable);
@@ -76,7 +76,7 @@ namespace LibVLCSharp.Shared
                 EntryPoint = "libvlc_media_player_get_nsobject")]
             internal static extern IntPtr LibVLCMediaPlayerGetNsobject(IntPtr mediaPlayer);
 #endif
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_xwindow")]
             internal static extern void LibVLCMediaPlayerSetXwindow(IntPtr mediaPlayer, uint drawable);
@@ -693,7 +693,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public void Stop() => Native.LibVLCMediaPlayerStop(NativeReference);
 
-#if APPLE || NETFRAMEWORK || NETSTANDARD || NET6_0
+#if APPLE || DESKTOP
         /// <summary>
         /// Get the NSView handler previously set
         /// return the NSView handler or 0 if none where set
@@ -719,7 +719,7 @@ namespace LibVLCSharp.Shared
         }
 #endif
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
         /// <summary>
         /// Set an X Window System drawable where the media player should render its video output.
         /// The call takes effect when the playback starts. If it is already started, it might need to be stopped before changes apply.
