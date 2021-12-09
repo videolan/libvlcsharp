@@ -44,7 +44,7 @@ namespace LibVLCSharp
         /// </summary>
         EventHandler<LogEventArgs>? _log;
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
         IntPtr _logFileHandle;
 #endif
 
@@ -73,7 +73,7 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_release")]
             internal static extern void LibVLCRelease(IntPtr libVLC);
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_add_intf")]
             internal static extern int LibVLCAddInterface(IntPtr libVLC, IntPtr name);
@@ -343,7 +343,7 @@ namespace LibVLCSharp
             return libvlc1?.NativeReference != libvlc2?.NativeReference;
         }
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
         /// <summary>
         /// Try to start a user interface for the libvlc instance.
         /// </summary>
@@ -424,7 +424,7 @@ namespace LibVLCSharp
                 idUtf8, versionUtf8, iconUtf8);
         }
 
-#if NETFRAMEWORK || NETSTANDARD || NET6_0
+#if DESKTOP
         /// <summary>
         /// Close log file handle
         /// </summary>
