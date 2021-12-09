@@ -2,14 +2,14 @@
   <PropertyGroup>
     <Title>LibVLCSharp.WinForms.Sample</Title>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp3.1;net6.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms.Sample</RootNamespace>
     <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
   </PropertyGroup>
   <!--Override TFMs when building from the LVS.Win32 solution-->
   <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net6.0-windows</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20200819" />
