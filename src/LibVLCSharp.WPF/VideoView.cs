@@ -82,7 +82,7 @@ namespace LibVLCSharp.WPF
                 }
 
                 Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
-                if (Hwnd == null)
+                if (Hwnd == IntPtr.Zero)
                 {
                     Trace.WriteLine("HWND is NULL, aborting...");
                     return;
