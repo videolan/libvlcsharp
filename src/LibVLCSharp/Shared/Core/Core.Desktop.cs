@@ -1,4 +1,4 @@
-﻿#if NETFRAMEWORK || NETSTANDARD || NET6_0
+﻿#if NETFRAMEWORK || NETSTANDARD || NET6_0 || NET6_0_WINDOWS10_0_19041
 
 using System;
 using System.Diagnostics;

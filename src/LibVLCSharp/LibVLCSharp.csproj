@@ -31,6 +31,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net40;net471</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0;net6.0-windows;net6.0-ios;net6.0-android;net6.0-tvos;net6.0-macos</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
     <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
