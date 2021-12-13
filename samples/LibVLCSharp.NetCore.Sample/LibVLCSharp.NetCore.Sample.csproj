@@ -4,7 +4,6 @@
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">net6.0;net6.0-windows</TargetFrameworks>
     <TargetFramework Condition="!$([MSBuild]::IsOsPlatform('Windows'))">netcoreapp3.1</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
