@@ -1,3 +1,8 @@
+LibVLCSharp version 3.6.4
+=========================
+* hotfix for net6 target - third time's the charm.
+* Add .NET 6 support for WinForms and WPF integrations.
+
 LibVLCSharp version 3.6.3
 =========================
 * hotfix for net6 target - missing comoilation directive.
