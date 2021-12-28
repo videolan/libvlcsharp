@@ -3,8 +3,8 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">net6.0;net6.0-windows;net6.0-macos</TargetFrameworks>
     <TargetFramework Condition="!$([MSBuild]::IsOsPlatform('Windows'))">netcoreapp3.1</TargetFramework>
-    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <LangVersion>8.0</LangVersion>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Condition="$([MSBuild]::IsOsPlatform('Windows'))" Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20210207" />
