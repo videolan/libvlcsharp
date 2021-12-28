@@ -1,3 +1,7 @@
+LibVLCSharp version 3.6.5
+=========================
+* Fix Xamarin.Forms iOS MediaElement startup regression. https://code.videolan.org/videolan/LibVLCSharp/-/issues/529
+
 LibVLCSharp version 3.6.4
 =========================
 * hotfix for net6 target - third time's the charm.
