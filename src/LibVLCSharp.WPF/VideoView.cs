@@ -3,21 +3,17 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.Integration;
 
 namespace LibVLCSharp.WPF
 {
     /// <summary>
     /// WPF VideoView with databinding for use with LibVLCSharp
     /// </summary>
-    [TemplatePart(Name = PART_PlayerHost, Type = typeof(WindowsFormsHost))]
-    [TemplatePart(Name = PART_PlayerView, Type = typeof(System.Windows.Forms.Panel))]
+    [TemplatePart(Name = PART_PlayerHost, Type = typeof(VideoHwndHost))]
     public class VideoView : ContentControl, IVideoView, IDisposable
     {
         private const string PART_PlayerHost = "PART_PlayerHost";
-        private const string PART_PlayerView = "PART_PlayerView";
-
-        private WindowsFormsHost? WindowsFormsHost => Template.FindName(PART_PlayerHost, this) as WindowsFormsHost;
+        private VideoHwndHost? _videoHwndHost = null;
 
         /// <summary>
         /// WPF VideoView constructor
@@ -40,19 +36,19 @@ namespace LibVLCSharp.WPF
         /// </summary>
         public MediaPlayer? MediaPlayer
         {
-            get { return GetValue(MediaPlayerProperty) as MediaPlayer; }
-            set { SetValue(MediaPlayerProperty, value); }
+            get => GetValue(MediaPlayerProperty) as MediaPlayer;
+            set => SetValue(MediaPlayerProperty, value);
         }
 
         private static void OnMediaPlayerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue is MediaPlayer oldMediaPlayer)
             {
-                oldMediaPlayer.Hwnd = IntPtr.Zero;
+                ((VideoView)d).DetachMediaPlayer(oldMediaPlayer);
             }
             if (e.NewValue is MediaPlayer newMediaPlayer)
             {
-                newMediaPlayer.Hwnd = ((VideoView)d).Hwnd;
+                ((VideoView)d).AttachMediaPlayer(newMediaPlayer);
             }
         }
 
@@ -60,7 +56,6 @@ namespace LibVLCSharp.WPF
         private ForegroundWindow? ForegroundWindow { get; set; }
         private bool IsUpdatingContent { get; set; }
         private UIElement? ViewContent { get; set; }
-        private IntPtr Hwnd { get; set; }
 
         /// <summary>
         /// ForegroundWindow management and MediaPlayer setup.
@@ -69,31 +64,52 @@ namespace LibVLCSharp.WPF
         {
             base.OnApplyTemplate();
 
-            if (!IsDesignMode)
+            if (IsDesignMode)
             {
-                var windowsFormsHost = WindowsFormsHost;
-                if (windowsFormsHost != null)
-                {
-                    ForegroundWindow = new ForegroundWindow(windowsFormsHost)
-                    {
-                        OverlayContent = ViewContent
-                    };
-                }
+                return;
+            }
 
-                Hwnd = (Template.FindName(PART_PlayerView, this) as System.Windows.Forms.Panel)?.Handle ?? IntPtr.Zero;
-                if (Hwnd == IntPtr.Zero)
-                {
-                    Trace.WriteLine("HWND is NULL, aborting...");
-                    return;
-                }
+            if (Template.FindName(PART_PlayerHost, this) is not VideoHwndHost controlHost)
+            {
+                Trace.WriteLine($"Couldn't find {PART_PlayerHost} of type {nameof(VideoHwndHost)}");
+                return;
+            }
 
-                if (MediaPlayer == null)
-                {
-                    Trace.Write("No MediaPlayer is set, aborting...");
-                    return;
-                }
+            _videoHwndHost = controlHost;
 
-                MediaPlayer.Hwnd = Hwnd;
+            ForegroundWindow = new ForegroundWindow(_videoHwndHost)
+            {
+                OverlayContent = ViewContent
+            };
+
+
+            if (_videoHwndHost.Handle == IntPtr.Zero)
+            {
+                Trace.WriteLine("HWND is NULL, aborting...");
+                return;
+            }
+
+            if (MediaPlayer == null)
+            {
+                Trace.Write("No MediaPlayer is set, aborting...");
+                return;
+            }
+            AttachMediaPlayer(MediaPlayer);
+        }
+
+        private void AttachMediaPlayer(MediaPlayer mediaPlayer)
+        {
+            if (mediaPlayer != null && _videoHwndHost != null)
+            {
+                mediaPlayer.Hwnd = _videoHwndHost.Handle;
+            }
+        }
+
+        private void DetachMediaPlayer(MediaPlayer mediaPlayer)
+        {
+            if (mediaPlayer != null)
+            {
+                mediaPlayer.Hwnd = IntPtr.Zero;
             }
         }
 
@@ -143,10 +159,11 @@ namespace LibVLCSharp.WPF
                 {
                     if (MediaPlayer != null)
                     {
-                        MediaPlayer.Hwnd = IntPtr.Zero;
+                        DetachMediaPlayer(MediaPlayer);
                     }
 
-                    WindowsFormsHost?.Dispose();
+                    _videoHwndHost?.Dispose();
+                    _videoHwndHost = null;
                     ForegroundWindow?.Close();
                 }
 
