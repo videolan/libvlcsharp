@@ -5,6 +5,8 @@
     <TargetFramework Condition="!$([MSBuild]::IsOsPlatform('Windows'))">netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <!-- silence NETSDK1152 as the SDK seems to confuse x86 and x64 libvlc binaries -->
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles> 
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Condition="$([MSBuild]::IsOsPlatform('Windows'))" Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20210207" />
