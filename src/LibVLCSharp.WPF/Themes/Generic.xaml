@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:local="clr-namespace:LibVLCSharp.WPF">
 
     <Style TargetType="{x:Type local:VideoView}">
@@ -13,9 +12,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Margin="{TemplateBinding Padding}">
                         <Grid>
-                            <WindowsFormsHost x:Name="PART_PlayerHost">
-                                <wf:Panel x:Name="PART_PlayerView" />
-                            </WindowsFormsHost>
+                            <local:VideoHwndHost x:Name="PART_PlayerHost" />
                             <ContentPresenter Content="{TemplateBinding Content}" />
                         </Grid>
                     </Border>
