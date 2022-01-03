@@ -43,10 +43,10 @@ Please also provide the functional steps to reproduce the behavior (if necessary
 <!-- Paste any relevant logs - please use code blocks (```) to format console output,
 logs, and code as it's very hard to read otherwise. -->
 
-### Relevant logs and/or screenshots
+### Relevant LibVLC logs and/or screenshots
 
-<!-- Paste any relevant logs - please use code blocks (```) to format console output,
-logs, and code as it's very hard to read otherwise. -->
+<!-- Paste any relevant logs from your app and/or from LibVLC (`new LibVLC(enableDebugLogs: true)`).
+Please use code blocks (```) to format console output, logs, and code as it's very hard to read otherwise. -->
 
 ### Environment
 
