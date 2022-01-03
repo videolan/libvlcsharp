@@ -1199,7 +1199,7 @@ namespace LibVLCSharp.Shared
         /// Set current audio track.
         /// </summary>
         /// <param name="trackIndex">the track ID (i_id field from track description)</param>
-        /// <returns>0 on success, -1 on error</returns>
+        /// <returns>true on success, false on error</returns>
         public bool SetAudioTrack(int trackIndex) => Native.LibVLCAudioSetTrack(NativeReference, trackIndex) == 0;
 
         /// <summary>
