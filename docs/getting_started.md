@@ -57,6 +57,26 @@ The content you place inside the `VideoView` is used for the window, like this:
         </Grid>
     </lvs:VideoView>
 ```
+### Context Menu & Mouse-Click Events
+If you're trying to create a context menu for your `VideoView` or hook to one of the mouse-click events, you may find that it does not work as expected. This is due to quirk with WPF, for those to fire off there **has** to be a definitively defined background which is *not fully* transparent.
+
+So one quick and easy workaround is to add for example a `Grid` inside the `VideoView` as explained above. We'll be using this `Grid` component as a sort of invisible wall to detect click events. You'd implement it like this:
+
+```xml
+<vlc:VideoView x:Name="MyVideoView">
+	<Grid x:Name="DummyGrid" Background="#02000000" MouseRightButtonUp="DummyGrid_MouseRightButtonUp">
+		<Grid.ContextMenu>
+			<ContextMenu>
+				<MenuItem Header="Hello World"/>
+			</ContextMenu>
+		</Grid.ContextMenu>
+	</Grid>
+</vlc:VideoView>
+```
+
+Do note how we're defining a background, which would otherwise be set to `null` by default. Now it has a black background but with a *very* low opacity, so it's still basically transparent. Also be aware that setting the opacity to 0%, in other words `#00000000` will *not* work. _The alpha must be higher than 0._
+
+The context menu will now appear as expected when you right-click the video and the `MouseRightButtonUp` event will fire as expected.
 
 ## UWP
 
