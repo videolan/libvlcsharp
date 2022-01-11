@@ -174,6 +174,10 @@ namespace LibVLCSharp
             Language = MediaTrackStructure.Language.FromUtf8();
             Description = MediaTrackStructure.Description.FromUtf8();
             Id = MediaTrackStructure.StrId.FromUtf8();
+            if(string.IsNullOrEmpty(Id))
+            {
+                Id = MediaTrackStructure.Id.ToString();
+            }
             Stable = MediaTrackStructure.IdStable;
             Name = MediaTrackStructure.Name.FromUtf8();
             Selected = MediaTrackStructure.Selected;
