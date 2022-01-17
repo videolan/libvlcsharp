@@ -84,6 +84,10 @@ namespace LibVLCSharp
             internal static extern int LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_get_filestat")]
+            internal static extern int LibVLCMediaGetFileStat(IntPtr media, FileStat type, out ulong value);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_duration")]
             internal static extern long LibVLCMediaGetDuration(IntPtr media);
 
@@ -418,6 +422,20 @@ namespace LibVLCSharp
         /// <returns>true if the write operation was successful</returns>
         public bool SaveMeta() => Native.LibVLCMediaSaveMeta(NativeReference) != 0;
 
+        /// <summary>
+        /// Get information about the media file, such as size and modified timestamp
+        /// </summary>
+        /// <param name="type">the type of information</param>
+        /// <param name="value">the returned value</param>
+        /// <returns>returns false if error/not found, true otherwise</returns>
+        public bool FileStat(FileStat type, out ulong value)
+        {
+            if (Native.LibVLCMediaGetFileStat(NativeReference, type, out value) == 1)
+                return true;
+            
+            value = 0;
+            return false;
+        }
         /// <summary>
         /// Get current <see cref="VLCState"/> of media descriptor object.
         /// </summary>
@@ -1311,6 +1329,22 @@ namespace LibVLCSharp
         /// Fast seek
         /// </summary>
         Fast
+    }
+
+    /// <summary>
+    /// Type of stat that can be requested from FileStat
+    /// </summary>
+    public enum FileStat : uint
+    {
+        /// <summary>
+        /// The modified timestamp
+        /// </summary>
+        Mtime = 0,
+
+        /// <summary>
+        /// The file size
+        /// </summary>
+        Size = 1
     }
 
     /// <summary>
