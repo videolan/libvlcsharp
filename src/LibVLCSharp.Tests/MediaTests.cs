@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibVLCSharp;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests
@@ -251,8 +250,20 @@ namespace LibVLCSharp.Tests
             await media.Parse(MediaParseOptions.ParseNetwork);
 
             using var thumbnail = await media.GenerateThumbnail(media.Duration / 2, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
+        }
 
+        [Test]
+        public async Task MediaFileStat()
+        {
+            using var media = new Media(_libVLC, new Uri(Directory.GetParent(typeof(MediaTests).Assembly.Location).FullName));
+            await media.Parse();
 
+            var sample = media.SubItems.Single(m => m.Mrl.EndsWith("sample.mp3"));
+            sample.FileStat(FileStat.Mtime, out var mtime);
+            Assert.AreEqual(1618993056, mtime);
+
+            sample.FileStat(FileStat.Size, out var size);
+            Assert.AreEqual(24450, size);
         }
 
         private async Task<Stream> GetStreamFromUrl(string url)
