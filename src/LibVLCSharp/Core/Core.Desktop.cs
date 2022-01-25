@@ -1,4 +1,4 @@
-﻿#if DESKTOP
+﻿#if DESKTOP || UNITY
 
 using System;
 using System.Diagnostics;
@@ -26,18 +26,12 @@ namespace LibVLCSharp
 
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
-#if UNITY
-            [DllImport(Constants.UnityPlugin)]
-            internal static extern void SetPluginPath(string path);
-
-            [DllImport(Constants.UnityPlugin)]
-            internal static extern void Print(string toPrint);
-#endif
         }
 #if !NETSTANDARD1_1
         static IntPtr LibvlcHandle;
         static IntPtr LibvlccoreHandle;
 #endif
+
         /// <summary>
         /// Load the native libvlc library (if necessary, depending on platform)
         /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
@@ -52,7 +46,11 @@ namespace LibVLCSharp
         public static void Initialize(string? libvlcDirectoryPath = null)
         {
             DisableMessageErrorBox();
+#if UNITY
+            InitializeUnity(libvlcDirectoryPath);
+#else
             InitializeDesktop(libvlcDirectoryPath);
+#endif
 #if !NETSTANDARD1_1
             EnsureVersionsMatch();
 #endif
@@ -78,16 +76,6 @@ namespace LibVLCSharp
 
         static void InitializeDesktop(string? libvlcDirectoryPath = null)
         {
-#if UNITY
-            if(string.IsNullOrEmpty(libvlcDirectoryPath))
-            {
-                throw new VLCException("Please provide UnityEngine.Application.dataPath to Core.Initialize for proper initialization.");
-            }
-
-            Native.SetPluginPath(libvlcDirectoryPath!);
-
-            libvlcDirectoryPath = $"{libvlcDirectoryPath}\\Plugins";
-#endif
             if (PlatformHelper.IsLinux)
             {
                 if (!string.IsNullOrEmpty(libvlcDirectoryPath))
