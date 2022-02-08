@@ -24,7 +24,7 @@ namespace LibVLCSharp.Tests
             Assert.True(eventHandlerCalled);
         }
         
-        public void DurationChanged()
+        public async void DurationChanged()
         {
             var media = new Media(_libVLC, LocalAudioFile);
             var called = false;
@@ -36,7 +36,7 @@ namespace LibVLCSharp.Tests
                 duration = args.Duration;
             };
 
-            media.Parse();
+            await media.Parse();
 
             Assert.True(called);
             Assert.NotZero(duration);
