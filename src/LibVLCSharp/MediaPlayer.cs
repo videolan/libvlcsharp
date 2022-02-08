@@ -279,7 +279,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_set")]
-            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, IntPtr deviceId);
+            internal static extern int LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, IntPtr deviceId);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_get")]
@@ -1066,11 +1066,14 @@ namespace LibVLCSharp
         /// <see cref="AudioOutputDeviceEnum"/>
         /// </summary>
         /// <param name="deviceId">device identifier string</param>
-        public void SetOutputDevice(string deviceId)
+        /// <returns>True if the change of device was requested successfully 
+        /// (the actual change is asynchronous and not guaranteed to succeed). On error, this function returns false.
+        /// </returns>
+        public bool SetOutputDevice(string deviceId)
         {
             var deviceIdUtf8 = deviceId.ToUtf8();
-            MarshalUtils.PerformInteropAndFree(() =>
-                Native.LibVLCAudioOutputDeviceSet(NativeReference, deviceIdUtf8), deviceIdUtf8);
+            return MarshalUtils.PerformInteropAndFree(() =>
+                Native.LibVLCAudioOutputDeviceSet(NativeReference, deviceIdUtf8), deviceIdUtf8) == 0;
         }
 
         /// <summary>
