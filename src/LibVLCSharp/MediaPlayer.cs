@@ -279,7 +279,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_set")]
-            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, IntPtr module, IntPtr deviceId);
+            internal static extern void LibVLCAudioOutputDeviceSet(IntPtr mediaPlayer, IntPtr deviceId);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_get")]
@@ -488,7 +488,6 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
             internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
-
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_renderer")]
@@ -1063,27 +1062,15 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Configures an explicit audio output device.
-        /// If the module paramater is NULL, audio output will be moved to the device
-        /// specified by the device identifier string immediately.This is the
-        /// recommended usage.
         /// A list of adequate potential device strings can be obtained with
         /// <see cref="AudioOutputDeviceEnum"/>
-        /// However passing NULL is supported in LibVLC version 2.2.0 and later only;
-        /// in earlier versions, this function would have no effects when the module
-        /// parameter was NULL.
-        /// If the module parameter is not NULL, the device parameter of the
-        /// corresponding audio output, if it exists, will be set to the specified
-        /// string.
         /// </summary>
         /// <param name="deviceId">device identifier string</param>
-        /// <param name="module">If NULL, current audio output module. if non-NULL, name of audio output module</param>
-        public void SetOutputDevice(string deviceId, string? module = null)
+        public void SetOutputDevice(string deviceId)
         {
             var deviceIdUtf8 = deviceId.ToUtf8();
-            var moduleUtf8 = module.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() =>
-                Native.LibVLCAudioOutputDeviceSet(NativeReference, moduleUtf8, deviceIdUtf8),
-                moduleUtf8, deviceIdUtf8);
+                Native.LibVLCAudioOutputDeviceSet(NativeReference, deviceIdUtf8), deviceIdUtf8);
         }
 
         /// <summary>

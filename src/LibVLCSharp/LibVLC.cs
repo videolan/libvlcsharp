@@ -127,10 +127,6 @@ namespace LibVLCSharp
             internal static extern void LibVLCAudioOutputListRelease(IntPtr list);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_output_device_list_release")]
-            internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_list_get")]
             internal static extern UIntPtr LibVLCMediaDiscovererListGet(IntPtr libVLC, MediaDiscovererCategory category, out IntPtr pppServices);
 
