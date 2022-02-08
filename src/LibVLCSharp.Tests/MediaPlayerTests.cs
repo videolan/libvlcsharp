@@ -25,8 +25,10 @@ namespace LibVLCSharp.Tests
         public void OutputDeviceEnum()
         {
             var mp = new MediaPlayer(_libVLC);
-            var t = mp.AudioOutputDeviceEnum;
-            Debug.WriteLine(t);
+            foreach(var audioOutputDevice in mp.AudioOutputDeviceEnum)
+            {
+                Debug.WriteLine(audioOutputDevice);
+            }
         }
 
         [Test]

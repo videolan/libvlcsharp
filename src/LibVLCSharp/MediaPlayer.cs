@@ -1051,14 +1051,12 @@ namespace LibVLCSharp
         /// warning The initial value for the current audio output device identifier
         /// may not be set or may be some unknown value.A LibVLC application should
         /// compare this value against the known device identifiers (e.g.those that
-        /// were previously retrieved by a call to <see cref="AudioOutputDeviceEnum"/> or
-        /// <see cref="LibVLC.AudioOutputDevices"/>) to find the current audio output device.
-        ///
+        /// were previously retrieved by a call to <see cref="AudioOutputDeviceEnum"/> 
+        /// to find the current audio output device.
         /// It is possible that the selected audio output device changes(an external
         /// change) without a call to <see cref="SetOutputDevice"/>.That may make this
         /// method unsuitable to use if a LibVLC application is attempting to track
         /// dynamic audio device changes as they happen.
-        ///
         /// </summary>
         /// <returns>the current audio output device identifier, or NULL if no device is selected or in case of error.</returns>
         public string? OutputDevice => Native.LibVLCAudioOutputDeviceGet(NativeReference).FromUtf8(libvlcFree: true);
@@ -1076,8 +1074,6 @@ namespace LibVLCSharp
         /// If the module parameter is not NULL, the device parameter of the
         /// corresponding audio output, if it exists, will be set to the specified
         /// string.
-        /// A list of adequate potential device strings can be obtained with
-        /// <see cref="LibVLC.AudioOutputDevices"/>
         /// </summary>
         /// <param name="deviceId">device identifier string</param>
         /// <param name="module">If NULL, current audio output module. if non-NULL, name of audio output module</param>

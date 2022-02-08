@@ -127,10 +127,6 @@ namespace LibVLCSharp
             internal static extern void LibVLCAudioOutputListRelease(IntPtr list);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_output_device_list_get")]
-            internal static extern IntPtr LibVLCAudioOutputDeviceListGet(IntPtr libVLC, IntPtr aout);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_output_device_list_release")]
             internal static extern void LibVLCAudioOutputDeviceListRelease(IntPtr list);
 
@@ -543,38 +539,6 @@ namespace LibVLCSharp
             s => s.Build(),
             s => s.Next,
             Native.LibVLCAudioOutputListRelease);
-
-        /// <summary>Gets a list of audio output devices for a given audio output module,</summary>
-        /// <param name="audioOutputName">
-        /// <para>audio output name</para>
-        /// <para>(as returned by libvlc_audio_output_list_get())</para>
-        /// </param>
-        /// <returns>
-        /// <para>A NULL-terminated linked list of potential audio output devices.</para>
-        /// <para>It must be freed with libvlc_audio_output_device_list_release()</para>
-        /// </returns>
-        /// <remarks>
-        /// <para>libvlc_audio_output_device_set().</para>
-        /// <para>Not all audio outputs support this. In particular, an empty (NULL)</para>
-        /// <para>list of devices doesnotimply that the specified audio output does</para>
-        /// <para>not work.</para>
-        /// <para>The list might not be exhaustive.</para>
-        /// <para>Some audio output devices in the list might not actually work in</para>
-        /// <para>some circumstances. By default, it is recommended to not specify any</para>
-        /// <para>explicit audio device.</para>
-        /// <para>LibVLC 2.1.0 or later.</para>
-        /// </remarks>
-        public AudioOutputDevice[] AudioOutputDevices(string audioOutputName) =>
-            MarshalUtils.Retrieve(() =>
-            {
-                var audioOutputNameUtf8 = audioOutputName.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() =>
-                    Native.LibVLCAudioOutputDeviceListGet(NativeReference, audioOutputNameUtf8), audioOutputNameUtf8);
-            },
-            MarshalUtils.PtrToStructure<AudioOutputDeviceStructure>,
-            s => s.Build(),
-            device => device.Next,
-            Native.LibVLCAudioOutputDeviceListRelease);
 
         /// <summary>Get media discoverer services by category</summary>
         /// <param name="discovererCategory">category of services to fetch</param>

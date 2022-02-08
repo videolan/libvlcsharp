@@ -61,20 +61,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void AudioOutputDevices()
-        {
-            var outputs = _libVLC.AudioOutputs;
-            var name = outputs.First(output => output.Name.Equals("mmdevice")).Name;
-            var audioOutputDevices = _libVLC.AudioOutputDevices(name);
-
-            foreach (var audioOutputDevice in audioOutputDevices)
-            {
-                Debug.WriteLine(audioOutputDevice.Description);
-                Debug.WriteLine(audioOutputDevice.DeviceIdentifier);
-            }
-        }
-
-        [Test]
         public void EqualityTests()
         {
             Assert.AreNotSame(new LibVLC("--no-audio"), new LibVLC("--no-audio"));
