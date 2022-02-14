@@ -54,7 +54,8 @@ namespace LibVLCSharp.WPF
                 int x, int y, int width, int height,
                 IntPtr hwndParent,
                 IntPtr hMenu,
-                IntPtr hInst);
+                IntPtr hInst,
+                IntPtr lpParam);
 
 
         [DllImport(LibraryName, EntryPoint = EntryPoints.DestroyWindow, CharSet = CharSet.Unicode)]
