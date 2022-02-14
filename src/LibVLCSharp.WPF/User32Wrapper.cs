@@ -7,14 +7,8 @@ namespace LibVLCSharp.WPF
     {
         public const string LibraryName = "user32.dll";
 
-        public static class EntryPoints
-        {
-            public const string CreateWindow = "CreateWindowEx";
-            public const string DestroyWindow = "DestroyWindow";
-        }
-
         /// <summary>
-        /// Provide the win32 window stype when call <see cref="EntryPoints.CreateWindow"/>
+        /// Provide the win32 window stype when call <see cref="CreateWindowEx"/>
         /// <para>See following link: <a href="https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles" /> </para>
         /// </summary>
         [Flags]
@@ -28,7 +22,7 @@ namespace LibVLCSharp.WPF
         }
 
         /// <summary>
-        /// Provide the win32 window stype when call <see cref="EntryPoints.CreateWindow"/>
+        /// Provide the win32 window stype when call <see cref="CreateWindowEx"/>
         /// <para>See following link: <a href="https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles" /> </para>
         /// </summary>
         [Flags]
@@ -46,7 +40,7 @@ namespace LibVLCSharp.WPF
         }
 
 
-        [DllImport(LibraryName, EntryPoint = EntryPoints.CreateWindow, CharSet = CharSet.Unicode)]
+        [DllImport(LibraryName)]
         internal static extern IntPtr CreateWindowEx(ExtendedWindow32Styles dwExStyle,
                 string lpszClassName,
                 string lpszWindowName,
@@ -58,7 +52,7 @@ namespace LibVLCSharp.WPF
                 IntPtr lpParam);
 
 
-        [DllImport(LibraryName, EntryPoint = EntryPoints.DestroyWindow, CharSet = CharSet.Unicode)]
+        [DllImport(LibraryName)]
         internal static extern bool DestroyWindow(IntPtr hwnd);
     }
 }
