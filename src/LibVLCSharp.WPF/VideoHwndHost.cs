@@ -17,7 +17,7 @@ namespace LibVLCSharp.WPF
             var windowHandle = User32Wrapper.CreateWindowEx(User32Wrapper.ExtendedWindow32Styles.WS_EX_TRANSPARENT, "static", string.Empty,
                                                        User32Wrapper.Window32Styles.WS_CHILD | User32Wrapper.Window32Styles.WS_VISIBLE, 
                                                        0, 0, 0, 0, 
-                                                       hwndParent.Handle, IntPtr.Zero, IntPtr.Zero);
+                                                       hwndParent.Handle, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
             return new HandleRef(this, windowHandle);
         }
 
