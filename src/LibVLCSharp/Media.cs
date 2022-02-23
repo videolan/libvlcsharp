@@ -921,6 +921,15 @@ namespace LibVLCSharp
             remove => EventManager.DetachEvent(EventType.MediaThumbnailGenerated, value);
         }
 
+        /// <summary>
+        /// Attached thumbnails were found on the media
+        /// </summary>
+        public event EventHandler<MediaAttachedThumbnailsFoundEventArgs> AttachedThumbnailsFound
+        {
+            add => EventManager.AttachEvent(EventType.MediaAttachedThumbnailsFound, value);
+            remove => EventManager.DetachEvent(EventType.MediaAttachedThumbnailsFound, value);
+        }
+
         #endregion
     }
 

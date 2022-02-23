@@ -26,5 +26,8 @@ namespace LibVLCSharp.Tests
         protected string LocalAudioFile => Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, "sample.mp3");
 
         protected string LocalAudioFileSpecialCharacter => Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, "motörhead.mp3");
+
+        protected string AttachedThumbnailsMedia => Path.Combine(Directory.GetParent(Assembly.GetExecutingAssembly().Location).FullName, "multiple-images.mp3");
+
     }
 }

@@ -11,6 +11,7 @@ namespace LibVLCSharp
         EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
         EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
         EventHandler<MediaThumbnailGeneratedEventArgs>? _mediaThumbnailGenerated;
+        EventHandler<MediaAttachedThumbnailsFoundEventArgs>? _mediaAttachedThumbnailsFound;
 
         public MediaEventManager(IntPtr ptr) : base(ptr)
         {
@@ -48,6 +49,10 @@ namespace LibVLCSharp
                     _mediaThumbnailGenerated += eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
                     Attach(eventType, OnThumbnailGenerated);
                     break;
+                case EventType.MediaAttachedThumbnailsFound:
+                    _mediaAttachedThumbnailsFound += eventHandler as EventHandler<MediaAttachedThumbnailsFoundEventArgs>;
+                    Attach(eventType, OnAttachedThumbnailsFound);
+                    break;
                 default:
                     OnEventUnhandled(this, eventType);
                     break;
@@ -84,6 +89,10 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaThumbnailGenerated:
                     _mediaThumbnailGenerated -= eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaAttachedThumbnailsFound:
+                    _mediaAttachedThumbnailsFound -= eventHandler as EventHandler<MediaAttachedThumbnailsFoundEventArgs>;
                     Detach(eventType);
                     break;
                 default:
@@ -132,6 +141,12 @@ namespace LibVLCSharp
         {
             _mediaThumbnailGenerated?.Invoke(this,
                 new MediaThumbnailGeneratedEventArgs(RetrieveEvent(ptr).Union.MediaThumbnailGenerated.Thumbnail));
+        }
+
+        void OnAttachedThumbnailsFound(IntPtr ptr)
+        {
+            _mediaAttachedThumbnailsFound?.Invoke(this,
+                new MediaAttachedThumbnailsFoundEventArgs(RetrieveEvent(ptr).Union.MediaAttachedThumbnailsFound.Thumbmails));
         }
     }
 }

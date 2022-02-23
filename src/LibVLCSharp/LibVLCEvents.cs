@@ -116,6 +116,8 @@ namespace LibVLCSharp
             internal readonly MediaThumbnailGenerated MediaThumbnailGenerated;
             [FieldOffset(0)]
             internal readonly MediaSubItemTreeAdded MediaSubItemTreeAdded;
+            [FieldOffset(0)]
+            internal readonly MediaAttachedThumbnailsFound MediaAttachedThumbnailsFound;
 
             // mediaplayer
             [FieldOffset(0)]
@@ -211,6 +213,12 @@ namespace LibVLCSharp
         internal readonly struct MediaSubItemTreeAdded
         {
             internal readonly IntPtr MediaInstance;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct MediaAttachedThumbnailsFound
+        {
+            internal readonly IntPtr Thumbmails;
         }
 
         #endregion
@@ -457,6 +465,22 @@ namespace LibVLCSharp
         internal MediaThumbnailGeneratedEventArgs(IntPtr thumbnailPtr)
         {
             Thumbnail = thumbnailPtr == IntPtr.Zero ? null : new Picture(thumbnailPtr);
+        }
+    }
+
+    /// <summary>
+    /// Attached thumbnails have been found during pre-parsing or playback
+    /// </summary>
+    public class MediaAttachedThumbnailsFoundEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Attached thumbnails
+        /// </summary>
+        public readonly PictureList? AttachedThumbnails;
+
+        internal MediaAttachedThumbnailsFoundEventArgs(IntPtr pictureList)
+        {
+            AttachedThumbnails = pictureList == IntPtr.Zero ? null : new PictureList(pictureList);
         }
     }
 
