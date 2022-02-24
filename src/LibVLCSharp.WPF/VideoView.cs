@@ -99,7 +99,7 @@ namespace LibVLCSharp.WPF
 
         private void AttachMediaPlayer(MediaPlayer mediaPlayer)
         {
-            if (mediaPlayer != null && _videoHwndHost != null)
+            if (mediaPlayer != null && mediaPlayer.NativeReference != IntPtr.Zero && _videoHwndHost != null)
             {
                 mediaPlayer.Hwnd = _videoHwndHost.Handle;
             }
@@ -107,7 +107,7 @@ namespace LibVLCSharp.WPF
 
         private void DetachMediaPlayer(MediaPlayer mediaPlayer)
         {
-            if (mediaPlayer != null)
+            if (mediaPlayer != null && mediaPlayer.NativeReference != IntPtr.Zero)
             {
                 mediaPlayer.Hwnd = IntPtr.Zero;
             }
