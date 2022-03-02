@@ -71,7 +71,7 @@ Learn what it can do and our future plans for it [here](media_player_element.md)
 
 # General usage guidelines and best practices
 
-[Best practices](best_practices.md)
+See [Best practices](best_practices.md) and [Async support](async_support.md).
 
 # LibVLC documentation
 

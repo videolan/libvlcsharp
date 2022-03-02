@@ -30,6 +30,12 @@ If you need to call back into LibVLCSharp from an event, you need to switch thre
 mediaPlayer.EndReached += (sender, args) => ThreadPool.QueueUserWorkItem(_ => mediaPlayer.Play(nextMedia);
 ```
 
+## Async support
+
+LibVLC functions are mostly asynchronous and .NET provides first class support for asynchronous programming.
+
+[Learn how LibVLCSharp integrates async LibVLC functions with the .NET Task programming model](async_support.md).
+
 ## Check how official VLC apps do it
 
 VLC for iOS and VLC for Android are the biggest libvlc consumer out there. They use libvlc just like anyone using LibVLCSharp uses libvlc to make their app.
