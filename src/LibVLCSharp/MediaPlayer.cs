@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using LibVLCSharp.Helpers;
 
 namespace LibVLCSharp
@@ -619,10 +620,18 @@ namespace LibVLCSharp
         public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
 
         /// <summary>
-        /// Start playback with Media that is set
+        /// Starts playback with Media that is set
         /// If playback was already started, this method has no effect
         /// </summary>
-        /// <returns>true if successful</returns>
+        /// <returns>
+        /// Returns true if the playback will start successfully, false otherwise. 
+        /// This function returns immediately, as it sends a command to the native library
+        /// but does not wait for wait for the state change. Use <see cref="PlayAsync"/>
+        /// if you want to wait asynchronously for playback to start.
+        /// </returns>
+        /// <remarks>
+        /// Playback may not actually have yet started when this function returns.
+        /// </remarks>
         public bool Play()
         {
             var media = Media;
@@ -635,14 +644,52 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Set media and start playback
+        /// Sets the Media and starts playback
+        /// If playback was already started, this method has no effect
         /// </summary>
-        /// <param name="media"></param>
-        /// <returns>true if successful</returns>
+        /// <returns>
+        /// Returns true if the playback will start successfully, false otherwise. 
+        /// This function returns immediately, as it sends a command to the native library
+        /// but does not wait for wait for the state change. Use <see cref="PlayAsync"/>
+        /// if you want to wait asynchronously for playback to start.
+        /// </returns>
+        /// <remarks>
+        /// Playback may not actually have yet started when this function returns.
+        /// </remarks>
         public bool Play(Media media)
         {
             Media = media;
             return Play();
+        }
+
+        /// <summary>
+        /// Starts playback with Media that is set
+        /// If playback was already started, this method has no effect
+        /// </summary>
+        /// <returns>
+        /// Returns true if the playback started successfully, false otherwise. 
+        /// This function sends the command to start playback to libvlc,
+        /// and waits for the Playing event to fire. This makes the function asynchonously blocking 
+        /// and may take a bit of time, but you can be sure playback actually started when this method finally returns (true).
+        /// </returns>
+        /// <remarks>
+        /// Playback has actually started when this function returns (if return value is true).
+        /// </remarks>
+        public Task<bool> PlayAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void MediaPlayer_Play(object? sender, EventArgs e) => tcs.SetResult(true);
+
+            return MarshalUtils.InternalAsync(
+                nativeCall: () =>
+                {
+                    if (!Play())
+                        tcs.SetResult(false);
+                },
+                sub: () => Playing += MediaPlayer_Play,
+                unsub: () => Playing -= MediaPlayer_Play,
+                tcs: tcs);
         }
 
         /// <summary>
@@ -654,17 +701,64 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Toggle pause (no effect if there is no media)
+        /// <br/>
+        /// This function returns immediately, as it sends a command to the native library
+        /// but does not wait for wait for the state change. 
+        /// <br/>
+        /// Use <see cref="PauseAsync"/> if you want to wait asynchronously for the playback to pause.
         /// </summary>
         public void Pause() => Native.LibVLCMediaPlayerPause(NativeReference);
 
         /// <summary>
-        /// Stop asynchronously (no effect if there is no media)
-        /// This function is asynchronous. In case of success, the user should
-        /// wait for the MediaPlayer.Stopped event to know when the stop is
-        /// actually finished.
+        /// Pauses the playback and waits asynchronously for the change to be effective
+        /// </summary>
+        /// <returns>Task result of the async operation</returns>
+        /// <remarks>
+        /// Native playback pipeline has actually been paused when this function returns.
+        /// </remarks>
+        public Task PauseAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void MediaPlayer_Pause(object? sender, EventArgs e) => tcs.SetResult(true);
+
+            return MarshalUtils.InternalAsync(
+                nativeCall: () => Pause(),
+                sub: () => Playing += MediaPlayer_Pause,
+                unsub: () => Playing -= MediaPlayer_Pause,
+                tcs: tcs);
+        }
+
+        /// <summary>
+        /// Stops the playback pipeline (no effect if there is no media)
+        /// <br/>
+        /// While the native function is asynchronous, it returns immediately, 
+        /// as it sends a command to the native library but does not wait for the state change. 
+        /// <br/>
+        /// Use <see cref="StopAsync"/> if you want to wait asynchronously until the playback is stopped.
         /// </summary>
         /// <returns>true if the player is being stopped, false otherwise</returns>
         public bool Stop() => Native.LibVLCMediaPlayerStop(NativeReference) == 0;
+
+        /// <summary>
+        /// Stops the playback and waits asynchronously for the change to be effective
+        /// </summary>
+        /// <returns>Task result of the async operation</returns>
+        /// <remarks>
+        /// Native playback pipeline has actually been stopped when this function returns.
+        /// </remarks>
+        public Task<bool> StopAsync()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void MediaPlayer_Stopped(object? sender, EventArgs e) => tcs.SetResult(true);
+
+            return MarshalUtils.InternalAsync(
+                nativeCall: () => Stop(),
+                sub: () => Stopped += MediaPlayer_Stopped,
+                unsub: () => Stopped -= MediaPlayer_Stopped,
+                tcs: tcs);
+        }
 
 #if APPLE || DESKTOP
         /// <summary>
@@ -1444,8 +1538,13 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Take a snapshot of the current video window.
-        /// If i_width AND i_height is 0, original size is used. If i_width XOR
-        /// i_height is 0, original aspect-ratio is preserved.
+        /// If width AND height is 0, original size is used. If width XOR
+        /// height is 0, original aspect-ratio is preserved.
+        /// <br/>
+        /// While the native function is asynchronous, it returns immediately, 
+        /// as it sends a command to the native library but does not wait for the state change.
+        /// <br/>
+        /// Use <see cref="TakeSnapshotAsync"/> if you want to wait asynchronously for the snapshot to be taken.
         /// </summary>
         /// <param name="num">number of video output (typically 0 for the first/only one)</param>
         /// <param name="filePath">the path where to save the screenshot to</param>
@@ -1458,6 +1557,31 @@ namespace LibVLCSharp
             return MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoTakeSnapshot(NativeReference, num, filePathUtf8, width, height) == 0,
                 filePathUtf8);
+        }
+
+        /// <summary>
+        /// Take a snapshot of the current video window and waits asynchronously for the snapshot to be saved.
+        /// If width AND height is 0, original size is used. If width XOR
+        /// height is 0, original aspect-ratio is preserved.
+        /// <br/>
+        /// Snapshot has actually been taken when this function returns.
+        /// </summary>
+        /// <param name="num">number of video output (typically 0 for the first/only one)</param>
+        /// <param name="filePath">the path where to save the screenshot to</param>
+        /// <param name="width">the snapshot's width</param>
+        /// <param name="height">the snapshot's height</param>
+        /// <returns>Task result of the async operation</returns>
+        public Task<bool> TakeSnapshotAsync(uint num, string? filePath, uint width, uint height)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void MediaPlayer_SnapshotTaken(object? sender, MediaPlayerSnapshotTakenEventArgs e) => tcs.SetResult(true);
+
+            return MarshalUtils.InternalAsync(
+                nativeCall: () => TakeSnapshot(num, filePath, width, height),
+                sub: () => SnapshotTaken += MediaPlayer_SnapshotTaken,
+                unsub: () => SnapshotTaken -= MediaPlayer_SnapshotTaken,
+                tcs: tcs);
         }
 
         /// <summary>

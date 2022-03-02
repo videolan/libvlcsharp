@@ -128,16 +128,12 @@ namespace LibVLCSharp.Tests
         {
             using var media = new Media(_libVLC, LocalAudioFile);
             using var mp = new MediaPlayer(media);
-            await media.Parse();
-            mp.Playing += (s, e) =>
-            {
-                using var audioTracks = mp.Tracks(TrackType.Audio);
-                using var track = audioTracks?[0];
-                Assert.AreEqual(track?.Data.Audio.Channels, 2);
-                Assert.AreEqual(track?.Data.Audio.Rate, 44100);
-            };
-            mp.Play();
-            await Task.Delay(1000);
+            await media.ParseAsync();
+            await mp.PlayAsync();
+            using var audioTracks = mp.Tracks(TrackType.Audio);
+            using var track = audioTracks?[0];
+            Assert.AreEqual(track?.Data.Audio.Channels, 2);
+            Assert.AreEqual(track?.Data.Audio.Rate, 44100);
         }
 
         [Test]
@@ -145,17 +141,8 @@ namespace LibVLCSharp.Tests
         {
             using (var media = new Media(_libVLC, LocalAudioFileSpecialCharacter, FromType.FromPath))
             {
-                Assert.AreEqual(MediaParsedStatus.Skipped, media.ParsedStatus);
-
-                await media.Parse();
-                await Task.Delay(5000);
+                await media.ParseAsync();
                 Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);
-                using (var mp = new MediaPlayer(media))
-                {
-                    Assert.True(mp.Play());
-                    await Task.Delay(10000);
-                    mp.Stop();
-                }
             }
         }
 
@@ -163,7 +150,7 @@ namespace LibVLCSharp.Tests
         public async Task CreateMediaFromStreamMultiplePlay()
         {
             using var mp = new MediaPlayer(_libVLC);
-            using var stream = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var stream = await GetStreamFromUrl(RemoteVideoStream);
             using var mediaInput = new StreamMediaInput(stream);
             using var media = new Media(_libVLC, mediaInput);
             mp.Play(media);
@@ -186,7 +173,7 @@ namespace LibVLCSharp.Tests
             var mp1 = new MediaPlayer(libVLC1);
             var mp2 = new MediaPlayer(libVLC2);
 
-            using var s1 = await GetStreamFromUrl("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4");
+            using var s1 = await GetStreamFromUrl(RemoteVideoStream);
             using var s2 = await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3");
 
             using var i1 = new StreamMediaInput(s1);
@@ -208,14 +195,14 @@ namespace LibVLCSharp.Tests
         {
             using var media = new Media(_libVLC, LocalAudioFile);
             var cancellationToken = new CancellationToken(canceled: true);
-            Assert.ThrowsAsync<OperationCanceledException>(async () => await media.Parse(cancellationToken: cancellationToken));
+            Assert.ThrowsAsync<OperationCanceledException>(async () => await media.ParseAsync(cancellationToken: cancellationToken));
         }
 
         [Test]
         public async Task ParseShouldTimeoutWith1MillisecondLimit()
         {
             using var media = new Media(_libVLC, LocalAudioFile);
-            var parseResult = await media.Parse(timeout: 1);
+            var parseResult = await media.ParseAsync(timeout: 1);
             Assert.AreEqual(MediaParsedStatus.Timeout, parseResult);
         }
 
@@ -223,7 +210,7 @@ namespace LibVLCSharp.Tests
         public async Task ParseShouldSucceed()
         {
             using var media = new Media(_libVLC, LocalAudioFile);
-            var parseResult = await media.Parse();
+            var parseResult = await media.ParseAsync();
             Assert.AreEqual(MediaParsedStatus.Done, parseResult);
         }
 
@@ -231,7 +218,7 @@ namespace LibVLCSharp.Tests
         public async Task ParseShouldFailIfNotMediaFile()
         {
             using var media = new Media(_libVLC, Path.GetTempFileName());
-            var parseResult = await media.Parse();
+            var parseResult = await media.ParseAsync();
             Assert.AreEqual(MediaParsedStatus.Failed, parseResult);
         }
 
@@ -239,7 +226,7 @@ namespace LibVLCSharp.Tests
         public async Task ParseShouldBeSkippedIfLocalParseSpecifiedAndRemoteUrlProvided()
         {
             using var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation);
-            var parseResult = await media.Parse(MediaParseOptions.ParseLocal);
+            var parseResult = await media.ParseAsync(MediaParseOptions.ParseLocal);
             Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
         }
 
@@ -247,16 +234,16 @@ namespace LibVLCSharp.Tests
         public async Task MediaPictureTest()
         {
             using var media = new Media(_libVLC, RemoteVideoStream, FromType.FromLocation);
-            await media.Parse(MediaParseOptions.ParseNetwork);
+            await media.ParseAsync(MediaParseOptions.ParseNetwork);
 
-            using var thumbnail = await media.GenerateThumbnail(media.Duration / 2, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
+            using var thumbnail = await media.GenerateThumbnailAsync(media.Duration / 2, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
         }
 
         [Test]
         public async Task MediaFileStat()
         {
             using var media = new Media(_libVLC, new Uri(Directory.GetParent(typeof(MediaTests).Assembly.Location).FullName));
-            await media.Parse();
+            await media.ParseAsync();
 
             var sample = media.SubItems.Single(m => m.Mrl.EndsWith("sample.mp3"));
             sample.FileStat(FileStat.Mtime, out var mtime);

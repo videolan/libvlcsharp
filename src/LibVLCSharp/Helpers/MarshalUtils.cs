@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LibVLCSharp.Helpers
 {
@@ -527,6 +529,40 @@ namespace LibVLCSharp.Helpers
                     releaseRef(arrayPtr, countSizeT);
                     arrayPtr = IntPtr.Zero;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Due to the asynchronous design of LibVLC and the initial LibVLCSharp APIs, the C# functions returned immediately as they
+        /// act as "command sender" essentially, without waiting for state changes. For consumers interested in getting notified of state
+        /// changes triggered by their function calls, they could register to libvlc events manually (e.g. subscribe to the Playing event, 
+        /// call Play(), see your event handler invoked as the Playing event fires).
+        /// Now thanks to this, we can offer Async versions of the APIs which actually wait for state changes (e.g. only return when the native
+        /// event confirming state changes has fired). It may take a while and many users do not actually care about it. But some do.
+        /// </summary>
+        /// <typeparam name="T">the return type of the API call</typeparam>
+        /// <param name="nativeCall">the native P/Invoke mapping</param>
+        /// <param name="sub">the subscribe action delegate</param>
+        /// <param name="unsub">the unsubscribe action delegate</param>
+        /// <param name="tcs">the task completion source to wait for the event to fire</param>
+        /// <param name="ctr">the cancellation token registration to dispose once the operation is over</param>
+        /// <returns>The task result of the type of the API</returns>
+        internal static async Task<T> InternalAsync<T>(Action nativeCall, Action sub, Action unsub, TaskCompletionSource<T> tcs, CancellationTokenRegistration ctr = default)
+        {
+            try
+            {
+                sub();
+                nativeCall();
+                return await tcs.Task.ConfigureAwait(false);
+            }
+            finally
+            {
+                unsub();
+#if NETFRAMEWORK || NETSTANDARD2_0 || UWP
+                ctr.Dispose();
+#else
+                await ctr.DisposeAsync();
+#endif
             }
         }
 

@@ -480,38 +480,34 @@ namespace LibVLCSharp
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
         /// <returns>the parse status of the media</returns>
-        public async Task<MediaParsedStatus> Parse(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        public Task<MediaParsedStatus> ParseAsync(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var tcs = new TaskCompletionSource<MediaParsedStatus>();
-            var cancellationTokenRegistration = cancellationToken.Register(() =>
+
+            var ctr = cancellationToken.Register(() =>
             {
-                ParsedChanged -= OnParsedChanged;
                 Native.LibVLCMediaParseStop(NativeReference);
                 tcs.TrySetCanceled();
             });
 
-            void OnParsedChanged(object? sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs) 
+            void OnParsedChanged (object? sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
                 => tcs.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
 
-            try
-            {
-                ParsedChanged += OnParsedChanged;
-
-                var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
-                if (result == -1)
+            return MarshalUtils.InternalAsync(
+                nativeCall: () =>
                 {
-                    tcs.TrySetResult(MediaParsedStatus.Failed);
-                }
-
-                return await tcs.Task.ConfigureAwait(false);
-            }
-            finally
-            {
-                cancellationTokenRegistration.Dispose();
-                ParsedChanged -= OnParsedChanged;
-            }
+                    var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
+                    if (result == -1)
+                    {
+                        tcs.TrySetResult(MediaParsedStatus.Failed);
+                    }
+                },
+                sub: () => ParsedChanged += OnParsedChanged,
+                unsub: () => ParsedChanged -= OnParsedChanged,
+                tcs,
+                ctr);
         }
 
         /// <summary>Get Parsed status for media descriptor object.</summary>
@@ -643,10 +639,10 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public async Task<Picture> GenerateThumbnail(long time, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnailAsync(long time, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return await ThumbnailRequestInternal(() =>
+            return ThumbnailRequestInternal(() =>
                             Native.LibVLCMediaThumbnailRequestByTime(NativeReference, time, speed, width, height, crop, pictureType, timeout),
                             cancellationToken);
         }
@@ -662,23 +658,23 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public async Task<Picture> GenerateThumbnail(float position, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnailAsync(float position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return await ThumbnailRequestInternal(() =>
+            return ThumbnailRequestInternal(() =>
                 Native.LibVLCMediaThumbnailRequestByPosition(NativeReference, position, speed, width, height, crop, pictureType, timeout),
                 cancellationToken);
         }
 
-        async Task<Picture> ThumbnailRequestInternal(Func<IntPtr> nativeCall, CancellationToken cancellationToken = default)
+        Task<Picture> ThumbnailRequestInternal(Func<IntPtr> nativeCall, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            ThumbnailerRequest request = default;
 
+            ThumbnailerRequest request = default;
             var tcs = new TaskCompletionSource<Picture>();
-            var cancellationTokenRegistration = cancellationToken.Register(() =>
+
+            var ctr = cancellationToken.Register(() =>
             {
-                ThumbnailGenerated -= OnThumbnailGenerated;
                 if (request.Valid)
                     Native.LibVLCMediaThumbnailRequestCancel(request.NativeReference);
                 tcs.TrySetCanceled();
@@ -692,22 +688,21 @@ namespace LibVLCSharp
                     tcs.TrySetCanceled();
             }
 
-            try
-            {
-                ThumbnailGenerated += OnThumbnailGenerated;
-
-                var result = nativeCall();
-                request = new ThumbnailerRequest(result);
-
-                return await tcs.Task.ConfigureAwait(false);
-            }
-            finally
-            {
-                cancellationTokenRegistration.Dispose();
-                ThumbnailGenerated -= OnThumbnailGenerated;
-                if (request.Valid)
-                    Native.LibVLCMediaThumbnailRequestDestroy(request.NativeReference);
-            }
+            return MarshalUtils.InternalAsync(
+                nativeCall: () =>
+                {
+                    var result = nativeCall();
+                    request = new ThumbnailerRequest(result);
+                },
+                sub: () => ThumbnailGenerated += OnThumbnailGenerated,
+                unsub: () =>
+                {
+                    ThumbnailGenerated -= OnThumbnailGenerated;
+                    if (request.Valid)
+                        Native.LibVLCMediaThumbnailRequestDestroy(request.NativeReference);
+                },
+                tcs: tcs,
+                ctr: ctr);
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace LibVLCSharp.Tests
                     Assert.AreEqual(PictureType.Png, thumbnail.Type);
                 }
             };
-            await media.Parse();
+            await media.ParseAsync();
             Assert.AreEqual(2, thumbnailsFound);
         }
     }

@@ -36,7 +36,7 @@ namespace LibVLCSharp.Tests
                 duration = args.Duration;
             };
 
-            await media.Parse();
+            await media.ParseAsync();
 
             Assert.True(called);
             Assert.NotZero(duration);
