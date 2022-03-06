@@ -3,7 +3,7 @@ steps:
   displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 6.0.101
+    version: 6.0.200
 
 - bash: |
    dotnet workload install android
