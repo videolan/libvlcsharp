@@ -11,7 +11,7 @@
       <Version>6.2.11</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.1</Version>
+      <Version>3.3.2</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup>
