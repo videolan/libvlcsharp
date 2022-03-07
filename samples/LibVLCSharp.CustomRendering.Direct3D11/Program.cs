@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -574,6 +572,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             output.ColorSpace = ColorSpace.BT709;
             output.ColorPrimaries = ColorPrimaries.BT709;
             output.TransferFunction = TransferFunction.SRGB;
+            output.Orientation = VideoOrientation.LeftTop;
 
             return true;
         }

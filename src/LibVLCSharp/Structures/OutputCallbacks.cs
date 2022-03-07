@@ -142,6 +142,11 @@ namespace LibVLCSharp
         /// video transfer function
         /// </summary>
         public TransferFunction TransferFunction { get; set; }
+
+        /// <summary>
+        /// video orientation
+        /// </summary>
+        public VideoOrientation Orientation { get; set; }
     }
 
     /// <summary>
