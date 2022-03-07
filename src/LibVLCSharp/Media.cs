@@ -761,7 +761,7 @@ namespace LibVLCSharp
         }
 
         [MonoPInvokeCallback(typeof(InternalReadMedia))]
-        static int ReadMediaCallback(IntPtr opaque, IntPtr buf, uint len)
+        static nint ReadMediaCallback(IntPtr opaque, IntPtr buf, uint len)
         {
             var input = MarshalUtils.GetInstance<MediaInput>(opaque);
             if (input == null)
@@ -834,7 +834,7 @@ namespace LibVLCSharp
         /// <para>if it does not return, then libvlc_media_player_stop() will never return.</para>
         /// </remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int InternalReadMedia(IntPtr opaque, IntPtr buf, uint len);
+        internal delegate nint InternalReadMedia(IntPtr opaque, IntPtr buf, uint len);
 
         /// <summary>Callback prototype to seek a custom bitstream input media.</summary>
         /// <param name="opaque">private pointer as set by the</param>
