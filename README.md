@@ -83,6 +83,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - .NET Core (including ASP.NET Core)
 - [Unity3D](https://code.videolan.org/videolan/vlc-unity)
   - Windows Classic
+  - Android
 
 ## Installation
 
@@ -124,7 +125,8 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 | Avalonia          | [LibVLCSharp.Avalonia][RLibVLCSharpAvalonia]    | [![LibVLCSharpAvaloniaBadge]][LibVLCSharpAvalonia]|
-| Unity3D - Windows | [VLC for Unity (Windows)][RVLCUnityWindows]     | [![VLCUnityWindowsBadge]][VLCUnityWindows]        |
+| Unity3D - Windows | [VLC for Unity (Windows)][VLCUnityWindows]      | [![VLCUnityBadge]][VLCUnityWindows]               |
+| Unity3D - Android | [VLC for Unity (Android)][VLCUnityAndroid]      | [![VLCUnityBadge]][VLCUnityAndroid]               |
 
 ### Pre-release versions
 
@@ -148,7 +150,6 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [RLibVLCSharpWinForms]: src/LibVLCSharp.WinForms/README.md
 [RLibVLCSharpUno]: src/LibVLCSharp.Uno/README.md
 [RLibVLCSharpAvalonia]: src/LibVLCSharp.Avalonia/README.md
-[RVLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
@@ -196,7 +197,8 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [LibVLCSharpAvaloniaBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Avalonia.svg
 
 [VLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
-[VLCUnityWindowsBadge]: https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity
+[VLCUnityAndroid]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-android-213786
+[VLCUnityBadge]: https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity
 
 ## Getting started
 
