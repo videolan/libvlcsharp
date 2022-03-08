@@ -572,7 +572,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             output.ColorSpace = ColorSpace.BT709;
             output.ColorPrimaries = ColorPrimaries.BT709;
             output.TransferFunction = TransferFunction.SRGB;
-            output.Orientation = VideoOrientation.LeftTop;
+            output.Orientation = VideoOrientation.TopLeft;
 
             return true;
         }
