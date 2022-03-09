@@ -14,7 +14,7 @@ namespace LibVLCSharp.Uno
         protected override Platforms.iOS.VideoView CreateUnderlyingVideoView()
         {
             var underlyingVideoView = new Platforms.iOS.VideoView();
-            Border!.Child = underlyingVideoView;
+            Border!.AddSubview(underlyingVideoView);
             underlyingVideoView.Frame = Border.Frame;
             return underlyingVideoView;
         }
