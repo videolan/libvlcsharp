@@ -15,7 +15,7 @@ namespace LibVLCSharp
         EventHandler<EventArgs>? _mediaPlayerStopped;
         EventHandler<EventArgs>? _mediaPlayerForward;
         EventHandler<EventArgs>? _mediaPlayerBackward;
-        EventHandler<EventArgs>? _mediaPlayerEndReached;
+        EventHandler<EventArgs>? _mediaPlayerStopping;
         EventHandler<EventArgs>? _mediaPlayerEncounteredError;
         EventHandler<MediaPlayerTimeChangedEventArgs>? _mediaPlayerTimeChanged;
         EventHandler<MediaPlayerSeekableChangedEventArgs>? _mediaPlayerSeekableChanged;
@@ -86,9 +86,9 @@ namespace LibVLCSharp
                     _mediaPlayerBackward += eventHandler as EventHandler<EventArgs>;
                     Attach(eventType, OnBackward);
                     break;
-                case EventType.MediaPlayerEndReached:
-                    _mediaPlayerEndReached += eventHandler as EventHandler<EventArgs>;
-                    Attach(eventType, OnEndReached);
+                case EventType.MediaPlayerStopping:
+                    _mediaPlayerStopping += eventHandler as EventHandler<EventArgs>;
+                    Attach(eventType, OnStopping);
                     break;
                 case EventType.MediaPlayerEncounteredError:
                     _mediaPlayerEncounteredError += eventHandler as EventHandler<EventArgs>;
@@ -224,8 +224,8 @@ namespace LibVLCSharp
                     _mediaPlayerBackward -= eventHandler as EventHandler<EventArgs>;
                     Detach(eventType);
                     break;
-                case EventType.MediaPlayerEndReached:
-                    _mediaPlayerEndReached -= eventHandler as EventHandler<EventArgs>;
+                case EventType.MediaPlayerStopping:
+                    _mediaPlayerStopping -= eventHandler as EventHandler<EventArgs>;
                     Detach(eventType);
                     break;
                 case EventType.MediaPlayerEncounteredError:
@@ -365,9 +365,9 @@ namespace LibVLCSharp
             _mediaPlayerBackward?.Invoke(this, EventArgs.Empty);
         }
 
-        void OnEndReached(IntPtr ptr)
+        void OnStopping(IntPtr ptr)
         {
-            _mediaPlayerEndReached?.Invoke(this, EventArgs.Empty);
+            _mediaPlayerStopping?.Invoke(this, EventArgs.Empty);
         }
 
         void OnEncounteredError(IntPtr ptr)

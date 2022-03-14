@@ -131,7 +131,7 @@ namespace LibVLCSharp.MediaPlayerElement
         {
             base.SubscribeEvents(mediaPlayer);
             mediaPlayer.Stopped += OnStoppedAsync;
-            mediaPlayer.EndReached += OnStoppedAsync;
+            mediaPlayer.Stopping += OnStoppedAsync;
             mediaPlayer.ESSelected += OnTrackSelectedAsync;
             mediaPlayer.ESAdded += OnTrackAddedAsync;
             mediaPlayer.ESDeleted += OnTrackDeletedAsync;
@@ -145,7 +145,7 @@ namespace LibVLCSharp.MediaPlayerElement
         {
             base.UnsubscribeEvents(mediaPlayer);
             mediaPlayer.Stopped -= OnStoppedAsync;
-            mediaPlayer.EndReached -= OnStoppedAsync;
+            mediaPlayer.Stopping -= OnStoppedAsync;
             mediaPlayer.ESSelected -= OnTrackSelectedAsync;
             mediaPlayer.ESAdded -= OnTrackAddedAsync;
             mediaPlayer.ESDeleted -= OnTrackDeletedAsync;

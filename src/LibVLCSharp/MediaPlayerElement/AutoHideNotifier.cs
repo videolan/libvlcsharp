@@ -124,7 +124,7 @@ namespace LibVLCSharp.MediaPlayerElement
             mediaPlayer.MediaChanged += OnStateChangedAsync;
             mediaPlayer.Buffering += OnStateChangedAsync;
             mediaPlayer.EncounteredError += OnStateChangedAsync;
-            mediaPlayer.EndReached += OnStateChangedAsync;
+            mediaPlayer.Stopping += OnStateChangedAsync;
             mediaPlayer.NothingSpecial += OnStateChangedAsync;
             mediaPlayer.Paused += OnStateChangedAsync;
             mediaPlayer.Opening += OnStateChangedAsync;
@@ -142,7 +142,7 @@ namespace LibVLCSharp.MediaPlayerElement
             mediaPlayer.MediaChanged -= OnStateChangedAsync;
             mediaPlayer.Buffering -= OnStateChangedAsync;
             mediaPlayer.EncounteredError -= OnStateChangedAsync;
-            mediaPlayer.EndReached -= OnStateChangedAsync;
+            mediaPlayer.Stopping -= OnStateChangedAsync;
             mediaPlayer.NothingSpecial -= OnStateChangedAsync;
             mediaPlayer.Paused -= OnStateChangedAsync;
             mediaPlayer.Opening += OnStateChangedAsync;

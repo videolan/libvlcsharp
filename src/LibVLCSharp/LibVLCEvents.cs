@@ -23,7 +23,7 @@ namespace LibVLCSharp
         MediaPlayerStopped,
         MediaPlayerForward,
         MediaPlayerBackward,
-        MediaPlayerEndReached,
+        MediaPlayerStopping,
         MediaPlayerEncounteredError,
         MediaPlayerTimeChanged,
         MediaPlayerPositionChanged,

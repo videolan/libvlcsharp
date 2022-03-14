@@ -2768,12 +2768,12 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// The mediaplayer reached the end of the playback
+        /// The mediaplayer is reaching the end of the playback
         /// </summary>
-        public event EventHandler<EventArgs> EndReached
+        public event EventHandler<EventArgs> Stopping
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerEndReached, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerEndReached, value);
+            add => EventManager.AttachEvent(EventType.MediaPlayerStopping, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerStopping, value);
         }
 
         /// <summary>

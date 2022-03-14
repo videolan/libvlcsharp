@@ -215,7 +215,7 @@ namespace LibVLCSharp.MediaPlayerElement
             base.SubscribeEvents(mediaPlayer);
             mediaPlayer.EncounteredError += MediaPlayer_EncounteredErrorAsync;
             mediaPlayer.Stopped += MediaPlayer_StoppedAsync;
-            mediaPlayer.EndReached += MediaPlayer_StoppedAsync;
+            mediaPlayer.Stopping += MediaPlayer_StoppedAsync;
             mediaPlayer.Paused += MediaPlayer_PausedAsync;
             mediaPlayer.Playing += MediaPlayer_PlayingAsync;
             mediaPlayer.PausableChanged += MediaPlayer_PausableChangedAsync;
@@ -230,7 +230,7 @@ namespace LibVLCSharp.MediaPlayerElement
             base.UnsubscribeEvents(mediaPlayer);
             mediaPlayer.EncounteredError -= MediaPlayer_EncounteredErrorAsync;
             mediaPlayer.Stopped -= MediaPlayer_StoppedAsync;
-            mediaPlayer.EndReached -= MediaPlayer_StoppedAsync;
+            mediaPlayer.Stopping -= MediaPlayer_StoppedAsync;
             mediaPlayer.Paused -= MediaPlayer_PausedAsync;
             mediaPlayer.Playing -= MediaPlayer_PlayingAsync;
             mediaPlayer.PausableChanged -= MediaPlayer_PausableChangedAsync;
