@@ -966,9 +966,9 @@ namespace LibVLCSharp
         Stopped = 5,
 
         /// <summary>
-        /// Ended media
+        /// Stopping media
         /// </summary>
-        Ended = 6,
+        Stopping = 6,
 
         /// <summary>
         /// Error media

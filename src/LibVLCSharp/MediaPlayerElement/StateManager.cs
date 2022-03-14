@@ -109,7 +109,7 @@ namespace LibVLCSharp.MediaPlayerElement
             var state = mediaPlayer.State;
             switch (state)
             {
-                case VLCState.Ended:
+                case VLCState.Stopping:
                     mediaPlayer.Stop();
                     goto case VLCState.Stopped;
                 case VLCState.Paused:
