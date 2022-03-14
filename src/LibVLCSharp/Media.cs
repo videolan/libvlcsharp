@@ -930,15 +930,9 @@ namespace LibVLCSharp
 
     #region enums
 
-    /// <summary>Note the order of libvlc_state_t enum must match exactly the order of</summary>
-    /// <remarks>
-    /// <para>mediacontrol_PlayerStatus,</para>
-    /// <para>input_state_e enums,</para>
-    /// <para>and VideoLAN.LibVLCSharp.State (at bindings/cil/src/media.cs).</para>
-    /// <para>Expected states by web plugins are:</para>
-    /// <para>IDLE/CLOSE=0, OPENING=1, PLAYING=3, PAUSED=4,</para>
-    /// <para>STOPPING=5, ENDED=6, ERROR=7</para>
-    /// </remarks>
+    /// <summary>
+    /// libvlc media or media_player state
+    /// </summary>
     public enum VLCState
     {
         /// <summary>
