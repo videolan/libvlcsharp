@@ -110,7 +110,18 @@ namespace LibVLCSharp
         private static void EventCallback(IntPtr evt, IntPtr userData)
         {
             var eventManager = MarshalUtils.GetInstance<EventTypeManager>(userData);
+#if UNITY // .NET exceptions in native callbacks crash Unity
+            try
+            {
+                eventManager?.EventHandler(evt);
+            }
+            catch (Exception ex)
+            {
+                Core.Log(ex.ToString());
+            }
+#else
             eventManager?.EventHandler(evt);
+#endif
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
