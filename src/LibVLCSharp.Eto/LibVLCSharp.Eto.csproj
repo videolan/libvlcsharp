@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>LibVLCSharp.Eto</Title>
+    <Summary>Eto.Forms integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+  
+LibVLCSharp.Eto contains the integration with Eto.Forms.
+
+This package contains the views that allows to display a video played with LibVLCSharp
+in a Eto.Forms app. It depends on LibVLCSharp.
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
+    </Description>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageTags>$(PackageTags);eto.forms</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+</Project>
