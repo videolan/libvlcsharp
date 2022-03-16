@@ -37,6 +37,8 @@ namespace LibVLCSharp
 
             InitializeDesktop(libvlcDirectoryPath);
         }
+
+        internal static void Log(string message) => Native.Print(message);
     }
 }
 #endif
