@@ -8,7 +8,6 @@ namespace LibVLCSharp
         EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
         EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
         EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
-        EventHandler<MediaStateChangedEventArgs>? _mediaStateChanged;
         EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
         EventHandler<MediaThumbnailGeneratedEventArgs>? _mediaThumbnailGenerated;
         EventHandler<MediaAttachedThumbnailsFoundEventArgs>? _mediaAttachedThumbnailsFound;
@@ -36,10 +35,6 @@ namespace LibVLCSharp
                 case EventType.MediaDurationChanged:
                     _mediaDurationChanged += eventHandler as EventHandler<MediaDurationChangedEventArgs>;
                     Attach(eventType, OnDurationChanged);
-                    break;
-                case EventType.MediaStateChanged:
-                    _mediaStateChanged += eventHandler as EventHandler<MediaStateChangedEventArgs>;
-                    Attach(eventType, OnMediaStateChanged);
                     break;
                 case EventType.MediaSubItemTreeAdded:
                     _mediaSubItemTreeAdded += eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
@@ -79,10 +74,6 @@ namespace LibVLCSharp
                     _mediaDurationChanged -= eventHandler as EventHandler<MediaDurationChangedEventArgs>;
                     Detach(eventType);
                     break;
-                case EventType.MediaStateChanged:
-                    _mediaStateChanged -= eventHandler as EventHandler<MediaStateChangedEventArgs>;
-                    Detach(eventType);
-                    break;
                 case EventType.MediaSubItemTreeAdded:
                     _mediaSubItemTreeAdded -= eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
                     Detach(eventType);
@@ -105,12 +96,6 @@ namespace LibVLCSharp
         {
             _mediaSubItemTreeAdded?.Invoke(this,
                 new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
-        }
-
-        void OnMediaStateChanged(IntPtr ptr)
-        {
-            _mediaStateChanged?.Invoke(this,
-                new MediaStateChangedEventArgs(RetrieveEvent(ptr).Union.MediaStateChanged.NewState));
         }
 
         void OnDurationChanged(IntPtr ptr)

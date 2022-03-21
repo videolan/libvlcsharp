@@ -41,28 +41,5 @@ namespace LibVLCSharp.Tests
             Assert.True(called);
             Assert.NotZero(duration);
         }
-
-        [Test]
-        public async Task OpeningStateChanged()
-        {
-            var media = new Media(_libVLC, LocalAudioFile);
-            var tcs = new TaskCompletionSource<bool>();
-            var openingCalled = false;
-            media.StateChanged += (sender, args) =>
-            {
-                if (media.State == VLCState.Opening)
-                {
-                    openingCalled = true;
-                    tcs.SetResult(true);
-                    return;
-                }
-            };
-
-            var mp = new MediaPlayer(media);
-            mp.Play();
-            await tcs.Task;
-            Assert.True(tcs.Task.Result);
-            Assert.True(openingCalled);
-        }
     }
 }

@@ -72,10 +72,6 @@ namespace LibVLCSharp
             internal static extern int LibVLCMediaSaveMeta(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_get_state")]
-            internal static extern VLCState LibVLCMediaGetState(IntPtr media);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_event_manager")]
             internal static extern IntPtr LibVLCMediaEventManager(IntPtr media);
 
@@ -436,10 +432,6 @@ namespace LibVLCSharp
             value = 0;
             return false;
         }
-        /// <summary>
-        /// Get current <see cref="VLCState"/> of media descriptor object.
-        /// </summary>
-        public VLCState State => Native.LibVLCMediaGetState(NativeReference);
 
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
@@ -887,15 +879,6 @@ namespace LibVLCSharp
         {
             add => EventManager.AttachEvent(EventType.MediaDurationChanged, value);
             remove => EventManager.DetachEvent(EventType.MediaDurationChanged, value);
-        }
-
-        /// <summary>
-        /// The media state changed
-        /// </summary>
-        public event EventHandler<MediaStateChangedEventArgs> StateChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaStateChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaStateChanged, value);
         }
 
         /// <summary>

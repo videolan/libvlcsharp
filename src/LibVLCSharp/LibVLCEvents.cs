@@ -10,8 +10,7 @@ namespace LibVLCSharp
         MediaSubItemAdded,
         MediaDurationChanged,
         MediaParsedChanged,
-        MediaStateChanged = MediaParsedChanged + 2,
-        MediaSubItemTreeAdded,
+        MediaSubItemTreeAdded = MediaParsedChanged + 3,
         MediaThumbnailGenerated,
         MediaAttachedThumbnailsFound,
         MediaPlayerMediaChanged = 0x100,
@@ -111,8 +110,6 @@ namespace LibVLCSharp
             [FieldOffset(0)]
             internal readonly MediaParsedChanged MediaParsedChanged;
             [FieldOffset(0)]
-            internal readonly MediaStateChanged MediaStateChanged;
-            [FieldOffset(0)]
             internal readonly MediaThumbnailGenerated MediaThumbnailGenerated;
             [FieldOffset(0)]
             internal readonly MediaSubItemTreeAdded MediaSubItemTreeAdded;
@@ -195,12 +192,6 @@ namespace LibVLCSharp
         internal readonly struct MediaParsedChanged
         {
             internal readonly MediaParsedStatus NewStatus;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaStateChanged
-        {
-            internal readonly VLCState NewState;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -433,22 +424,6 @@ namespace LibVLCSharp
         internal MediaDurationChangedEventArgs(long duration)
         {
             Duration = duration;
-        }
-    }
-
-    /// <summary>
-    /// The state of the media changed
-    /// </summary>
-    public class MediaStateChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// New media state
-        /// </summary>
-        public readonly VLCState State;
-
-        internal MediaStateChangedEventArgs(VLCState state)
-        {
-            State = state;
         }
     }
 
