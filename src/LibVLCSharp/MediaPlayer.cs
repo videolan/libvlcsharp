@@ -1115,8 +1115,13 @@ namespace LibVLCSharp
         /// <summary>
         /// Sets a fixed decoded audio format.
         /// This only works in combination with libvlc_audio_set_callbacks(), and is mutually exclusive with libvlc_audio_set_format_callbacks().
+        /// The supported formats are:<para />
+        /// - "S16N" for signed 16-bit PCM<para />
+        /// - "S32N" for signed 32-bit PCM<para />
+        /// - "FL32" for single precision IEEE 754<para />
+        /// All supported formats use the native endianness. If there are more than one channel, samples are interleaved.
         /// </summary>
-        /// <param name="format">a four-characters string identifying the sample format (e.g. "S16N" or "FL32")</param>
+        /// <param name="format">a four-characters string identifying the sample format</param>
         /// <param name="rate">sample rate (expressed in Hz)</param>
         /// <param name="channels">channels count</param>
         public void SetAudioFormat(string format, uint rate, uint channels)
