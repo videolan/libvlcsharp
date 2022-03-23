@@ -125,6 +125,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Windows Forms     | [LibVLCSharp.WinForms][RLibVLCSharpWinForms]    | [![LibVLCSharpWinFormsBadge]][LibVLCSharpWinForms]|
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 | Avalonia          | [LibVLCSharp.Avalonia][RLibVLCSharpAvalonia]    | [![LibVLCSharpAvaloniaBadge]][LibVLCSharpAvalonia]|
+| Eto.Forms         | [LibVLCSharp.Eto][RLibVLCSharpEto]              | [![LibVLCSharpEtoBadge]][LibVLCSharpEto]          |
 | Unity3D - Windows | [VLC for Unity (Windows)][VLCUnityWindows]      | [![VLCUnityBadge]][VLCUnityWindows]               |
 | Unity3D - Android | [VLC for Unity (Android)][VLCUnityAndroid]      | [![VLCUnityBadge]][VLCUnityAndroid]               |
 
@@ -150,6 +151,7 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [RLibVLCSharpWinForms]: src/LibVLCSharp.WinForms/README.md
 [RLibVLCSharpUno]: src/LibVLCSharp.Uno/README.md
 [RLibVLCSharpAvalonia]: src/LibVLCSharp.Avalonia/README.md
+[RLibVLCSharpEto]: src/LibVLCSharp.Eto/README.md
 
 [LibVLCWindowsBadge]: https://img.shields.io/nuget/v/VideoLAN.LibVLC.Windows.svg
 [LibVLCWindows]: https://www.nuget.org/packages/VideoLAN.LibVLC.Windows/
@@ -195,6 +197,9 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [LibVLCSharpAvalonia]: https://www.nuget.org/packages/LibVLCSharp.Avalonia/
 [LibVLCSharpAvaloniaBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Avalonia.svg
+
+[LibVLCSharpEto]: https://www.nuget.org/packages/LibVLCSharp.Eto/
+[LibVLCSharpEtoBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Eto.svg
 
 [VLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
 [VLCUnityAndroid]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-android-213786
