@@ -1,3 +1,12 @@
+LibVLCSharp version 3.6.6
+=========================
+* Add support to Eto.Forms UI framework thanks to @rafntor.
+* Core: Make Core.Initialize() optional.
+* WPF: Add defensive checks around video view detach process.
+* WPF: Fix .NET 4.x support.
+* WPF: Remove WinForms dependency.
+* Documentation improvements.
+
 LibVLCSharp version 3.6.5
 =========================
 * Fix Xamarin.Forms iOS MediaElement startup regression. https://code.videolan.org/videolan/LibVLCSharp/-/issues/529
