@@ -36,6 +36,7 @@ namespace LibVLCSharp
 #if !UWP10_0
             EnsureVersionsMatch();
 #endif
+            LibVLCLoaded = true;
         }
 
         static void InitializeUWP()

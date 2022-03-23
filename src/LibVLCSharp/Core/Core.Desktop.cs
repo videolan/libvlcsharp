@@ -54,6 +54,7 @@ namespace LibVLCSharp
 #if !NETSTANDARD1_1
             EnsureVersionsMatch();
 #endif
+            LibVLCLoaded = true;
         }
 
         /// <summary>

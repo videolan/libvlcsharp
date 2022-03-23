@@ -216,13 +216,13 @@ namespace LibVLCSharp.Helpers
             try
             {
                 utf8Args = options.ToUtf8();
+                Core.EnsureLoaded();
                 return create(utf8Args.Length, utf8Args);
             }
             catch (DllNotFoundException ex)
             {
                 throw new VLCException("LibVLC could not be created. Make sure that you have done the following:" +
                     $"{Environment.NewLine}- Installed latest LibVLC from nuget for your target platform." +
-                    $"{Environment.NewLine}- Called LibVLCSharp.Core.Initialize() before creating any LibVLCSharp object." +
                     $"{Environment.NewLine}{ex.Message} {ex.StackTrace}");
             }
             finally

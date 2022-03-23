@@ -56,8 +56,18 @@ namespace LibVLCSharp
 #endif
         }
 
+        static bool _libvlcLoaded;
+        internal static bool LibVLCLoaded
+        {
 #if DESKTOP && !NETSTANDARD1_1
-        static bool Loaded => LibvlcHandle != IntPtr.Zero;
+            get => _libvlcLoaded || LibvlcHandle != IntPtr.Zero;
+#else
+            get => _libvlcLoaded;
+#endif
+            set => _libvlcLoaded = value;
+        }
+
+#if DESKTOP && !NETSTANDARD1_1
         static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
         {
             var paths = new List<(string, string)>();
@@ -149,7 +159,7 @@ namespace LibVLCSharp
                     break;
             }
 
-            if (!Loaded)
+            if (!LibVLCLoaded)
             {
                 throw new VLCException("Failed to load required native libraries. " +
                     $"{Environment.NewLine}Have you installed the latest LibVLC package from nuget for your target platform?" +
@@ -157,6 +167,15 @@ namespace LibVLCSharp
             }
         }
 #endif
+        internal static void EnsureLoaded()
+        {
+            if (LibVLCLoaded)
+            {
+                return;
+            }
+
+            Initialize();
+        }
         static bool LoadNativeLibrary(string nativeLibraryPath, out IntPtr handle)
         {
             handle = IntPtr.Zero;
