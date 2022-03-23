@@ -12,7 +12,7 @@ The `MinimalPlayback` one provides a simple approach to getting video on the scr
 
 The steps are:
 1. Instantiate a `VideoView` and add it to your main View. 
-2. Call `Core.Initialize()` to load the `libvlc` native libraries. **This call _must_ be made before creating any libvlcsharp object!**
+2. (Optional) Call `Core.Initialize()` to load the `libvlc` native libraries. If you are using LibVLCSharp with the provided LibVLC native nugets, you do not need to make this call yourself (LibVLCSharp handles it for you) but you can. Reasons you'd want to do it yourself, could be to separate the libvlc loading process (which may take a bit of time) and the mediaplayback starting process. Also, if you put your libvlc build in a custom location, you may want to call `Core.Initialize(string path)` yourself with the custom path location.
 3. The `VideoView` offers a `MediaPlayer` object (with data-binding support) which you should create and set on the `VideoView`. The `MediaPlayer` allows you to control playback with APIs such as `Play`, `Pause`, set a new media or listen for playback events.
 4. In case you are using `LibVLCSharp.Forms`, make sure to call `LibVLCSharpFormsRenderer.Init()` in your platform specific project [*before*](https://forums.xamarin.com/discussion/comment/57605/#Comment_57605) `Xamarin.Forms.Forms.Init` is called. See the [Forms sample](https://github.com/videolan/libvlcsharp/tree/master/Samples/Forms).
 

@@ -30,6 +30,20 @@ If you need to call back into LibVLCSharp from an event, you need to switch thre
 mediaPlayer.EndReached += (sender, args) => ThreadPool.QueueUserWorkItem(_ => mediaPlayer.Play(nextMedia);
 ```
 
+## Generate a plugin cache (LibVLC.Windows only for now)
+
+If you want `Core.Initialize()` or `new LibVLC()` (if you don't call `Core.Initialize` yourself) to be faster, you could generate a plugins cache (if it is not already there and up to date).
+
+Just run your app once with:
+
+```csharp
+new LibVLC("--reset-plugins-cache");
+```
+
+This will generate a new `plugins.dat` file in your libvlc plugins folder. LibVLC will use this file to get information on the available plugins in advance, reducing dramatically the loading process.
+
+This file should be updated everytime LibVLC is updated (not LibVLCSharp). We will likely ship it in the LibVLC.Windows NuGet in the future, but you can already generate it yourself by simply using the above code once.
+
 ## Async support
 
 LibVLC functions are mostly asynchronous and .NET provides first class support for asynchronous programming.

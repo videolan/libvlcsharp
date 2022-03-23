@@ -128,8 +128,6 @@ namespace ConsoleApp1
     {
         static async Task Main(string[] args)
         {
-            Core.Initialize();
-
             using var libvlc = new LibVLC();
             using var mediaPlayer = new MediaPlayer(libvlc);
 

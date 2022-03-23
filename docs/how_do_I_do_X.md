@@ -63,8 +63,6 @@ MediaPlayer.EnableHardwareDecoding = true
 Like this, for example:
 
 ```csharp
-Core.Initialize();
-
 using(var libVLC = new LibVLC())
 {
     var media = new Media(libVLC, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", FromType.FromLocation);
@@ -86,8 +84,6 @@ Full list commands and arguments https://wiki.videolan.org/VLC_command-line_help
 ## How do I set subtitles?
 
 ```csharp
-Core.Initialize();
-
 using(var libVLC = new LibVLC())
 {
     var media = new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation);
