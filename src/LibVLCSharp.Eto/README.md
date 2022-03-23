@@ -16,7 +16,7 @@ Supported frameworks:
 
 Supported platforms:
 
-- Windows (Windows Forms & WPF)
+- Windows (Windows Forms now & in the future WPF pending https://github.com/picoe/Eto/issues/2167)
 - MacOS (MonoMac & Xamarin.Mac)
 - Linux (GTK)
 
