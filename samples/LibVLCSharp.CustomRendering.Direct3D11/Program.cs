@@ -414,8 +414,6 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
         static void InitializeLibVLC()
         {
-            Core.Initialize();
-
             libvlc = new LibVLC(enableDebugLogs: true);
             libvlc.Log += (s, e) => Debug.WriteLine(e.FormattedLog);
 

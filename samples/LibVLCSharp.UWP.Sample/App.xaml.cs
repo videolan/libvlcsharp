@@ -29,7 +29,6 @@ namespace LibVLCSharp.UWP.Sample
         /// </summary>
         public App()
         {
-            Core.Initialize(); // LibVLCSharp initialization
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

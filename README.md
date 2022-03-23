@@ -254,8 +254,6 @@ Feel free to suggest and contribute new samples.
 
 ## Quick API overview
 ```csharp
-Core.Initialize();
-
 using var libvlc = new LibVLC(enableDebugLogs: true);
 using var media = new Media(libvlc, new Uri(@"C:\tmp\big_buck_bunny.mp4"));
 using var mediaplayer = new MediaPlayer(media);

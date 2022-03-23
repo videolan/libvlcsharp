@@ -11,11 +11,6 @@ namespace LibVLCSharp.WinForms.Sample
 
         public Form1()
         {
-            if (!DesignMode)
-            {
-                Core.Initialize();
-            }
-
             InitializeComponent();
             _libVLC = new LibVLC();
             _mp = new MediaPlayer(_libVLC);

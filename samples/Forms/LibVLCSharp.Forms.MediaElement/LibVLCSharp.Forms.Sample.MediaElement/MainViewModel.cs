@@ -47,8 +47,6 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
         /// </summary>
         public void OnAppearing()
         {
-            Core.Initialize();
-
             LibVLC = new LibVLC(enableDebugLogs: true);
 
             var media = new Media(LibVLC, new Uri("http://streams.videolan.org/streams/mkv/multiple_tracks.mkv"));

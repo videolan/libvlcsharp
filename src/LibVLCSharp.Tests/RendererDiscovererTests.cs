@@ -17,8 +17,6 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task DiscoverItems()
         {
-            Core.Initialize();
-
             var mp = new MediaPlayer(_libVLC)
             {
                 Media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",

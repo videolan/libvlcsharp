@@ -17,8 +17,6 @@ namespace LibVLCSharp.Eto.Sample
             MinimumSize = new Size(16, 9) * 10;
             Size = MinimumSize * 6;
 
-            Core.Initialize();
-
             _libVLC = new LibVLC();
             _mp = new MediaPlayer(_libVLC);
             

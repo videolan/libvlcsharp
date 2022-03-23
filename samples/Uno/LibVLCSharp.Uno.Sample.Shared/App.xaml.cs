@@ -19,8 +19,6 @@ namespace LibVLCSharp.Uno.Sample
         /// </summary>
         public App()
         {
-            Core.Initialize(); // LibVLCSharp initialization
-
             InitializeComponent();
             Suspending += OnSuspending;
         }

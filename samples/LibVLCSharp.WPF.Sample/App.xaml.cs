@@ -7,7 +7,6 @@ namespace LibVLCSharp.WPF.Sample
     {
         public App()
         {
-            Core.Initialize();
         }
     }
 }

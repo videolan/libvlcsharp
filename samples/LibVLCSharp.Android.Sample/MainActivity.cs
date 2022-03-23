@@ -26,8 +26,6 @@ namespace LibVLCSharp.Android.Sample
         {
             base.OnResume();
 
-            Core.Initialize();
-
             _libVLC = new LibVLC(enableDebugLogs: true);
             _mediaPlayer = new MediaPlayer(_libVLC)
             {
