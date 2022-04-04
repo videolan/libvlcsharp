@@ -21,13 +21,8 @@ Need professional support? Reach out at dotnet@videolabs.io for more info.
 
 Provide a Minimal, Complete, and Verifiable example (https://stackoverflow.com/help/mcve) through a git hosting platform
 and post the URL here. Do NOT paste parts of your code in the GitLab issue, share your full (but minimal) code through a git repository.
-If you don't provide this, we may not be able to help and may close the issue.
+Maintainers should be able to just clone and run your minimal project. If you don't provide this, we may not be able to help and may close the issue.
 
-Please also provide the functional steps to reproduce the behavior (if necessary):
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
 -->
 
 ### What is the current *bug* behavior?
