@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+  <Title>LibVLCSharp.Avalonia.Unofficial</Title>
+    <Summary>Avalonia integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+
+LibVLCSharp.Avalonia.Unofficial contains the integration with Avalonia.
+This package contains the views that allows to display a video played with LibVLCSharp
+in a Avalonia app.
+
+This package depends on LibVLCSharp as well as Avalonia.
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
+    </Description>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>LibVLCSharp.Avalonia</RootNamespace>
+    <PackageId>LibVLCSharp.Avalonia</PackageId>
+    <PackageTags>$(PackageTags);avalonia</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.10.13" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.29.0" />
+    <PackageReference Include="LibVLCSharp" Version="3.6.6" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+  </ItemGroup>
+</Project>
