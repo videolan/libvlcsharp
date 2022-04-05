@@ -23,6 +23,6 @@ Successfully tested on Windows 10, Kubuntu 18.04, MacOS 10.13 and Raspberry pi3-
 
 ### References:
 
-https://stackoverflow.com/a/71696308/4973374
-https://github.com/AvaloniaUI/Avalonia/issues/6237#issuecomment-1084914382
-https://github.com/AvaloniaUI/Avalonia/issues/2571#issuecomment-1084671987
+- https://stackoverflow.com/a/71696308/4973374
+- https://github.com/AvaloniaUI/Avalonia/issues/6237#issuecomment-1084914382
+- https://github.com/AvaloniaUI/Avalonia/issues/2571#issuecomment-1084671987
