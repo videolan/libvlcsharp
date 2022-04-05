@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaVLCWindow.Views.PlayerControls">
+
+	<Panel
+		Name="PlayerControl"			
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Bottom">
+		<Grid  ColumnDefinitions="Auto,Auto">
+			<Button
+				Click="StartPlay"
+				Margin="5"
+				Grid.Column="0"
+				Content="Play Video"
+				Background="Yellow"
+				Foreground="Black">
+				<Button.Styles>
+					<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Background" Value="Blue" />
+						<Setter Property="InputElement.Cursor" Value="Hand"/>
+						<Setter Property="TextBlock.Foreground" Value="Yellow"/>
+					</Style>
+				</Button.Styles>
+			</Button>
+
+			<Button
+				Click="StopPlay"
+				Margin="5"
+				Grid.Column="1"
+				Content="Stop Video"
+				Background="Yellow"
+				Foreground="Black">
+				<Button.Styles>
+					<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+						<Setter Property="Background" Value="Black" />
+						<Setter Property="InputElement.Cursor" Value="Hand"/>
+						<Setter Property="TextBlock.Foreground" Value="Yellow"/>
+					</Style>
+				</Button.Styles>
+			</Button>
+		</Grid>
+	</Panel>
+</UserControl>
