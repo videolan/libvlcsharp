@@ -4,7 +4,7 @@ The samples show how to use the **LibVLCSharp.Avalonia.Unofficial** project and 
 
 - **How to embed LibVLCSharp Avalonia VLC VideoView in Avalonia Window** (*AvaVLCWindow*)
 - **How to embed LibVLCSharp Avalonia VLC VideoView in Avalonia UserControl** (*AvaVLCControl*)
-- **How to put and use an Avalonia UserControl on top of VideoView (VLC MediaPlayer)****, for example, a set of buttons/controls to control the VLC MediaPlayer (*in both samples*).
+- **How to put and use an Avalonia UserControl on top of VideoView (VLC MediaPlayer)**, for example, a set of buttons/controls to control the VLC MediaPlayer (*in both samples*).
 
 Each sample is a full solution buildable in Visual Studio 2019.
 
