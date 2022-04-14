@@ -18,6 +18,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Input;
 using System.Diagnostics;
+using Avalonia.Media.Immutable;
 
 namespace LibVLCSharp.Avalonia
 {
@@ -26,7 +27,7 @@ namespace LibVLCSharp.Avalonia
     /// </summary>
     public class VideoView : NativeControlHost    
     {
-        /// <inheritdoc />
+        
         public static readonly DirectProperty<VideoView, Maybe<MediaPlayer>> MediaPlayerProperty =
             AvaloniaProperty.RegisterDirect<VideoView, Maybe<MediaPlayer>>(
                 nameof(MediaPlayer),
@@ -37,20 +38,21 @@ namespace LibVLCSharp.Avalonia
         private readonly IDisposable attacher;
         private readonly BehaviorSubject<Maybe<MediaPlayer>> mediaPlayers = new(Maybe<MediaPlayer>.None);
         private readonly BehaviorSubject<Maybe<IPlatformHandle>> platformHandles = new(Maybe<IPlatformHandle>.None);
+        
+        public IPlatformHandle hndl;
 
-        /// <inheritdoc />
-        public IPlatformHandle? hndl;
-
-        /// <inheritdoc />
         public static readonly StyledProperty<object> ContentProperty =
-            ContentControl.ContentProperty.AddOwner<VideoView>();        
+            ContentControl.ContentProperty.AddOwner<VideoView>();
 
-        private Window? _floatingContent;
-        private IDisposable? _disposables;
+        public static readonly StyledProperty<IBrush> BackgroundProperty =
+            Panel.BackgroundProperty.AddOwner<VideoView>();
+
+        private Window _floatingContent;
+        private IDisposable _disposables;
         private bool _isAttached;
-        private IDisposable? _isEffectivelyVisible;
+        private IDisposable _isEffectivelyVisible;
 
-        /// <inheritdoc />
+        
         public VideoView()
         {            
 
@@ -67,14 +69,13 @@ namespace LibVLCSharp.Avalonia
             IsVisibleProperty.Changed.AddClassHandler<VideoView>((s, e) => s.ShowNativeOverlay(s.IsVisible));
         }
 
-        /// <inheritdoc />
         public MediaPlayer MediaPlayer
         {
             get => mediaPlayers.Value.GetValueOrDefault();
             set => mediaPlayers.OnNext(value);
         }
 
-        /// <inheritdoc />
+
         [Content]
         public object Content
         {
@@ -82,7 +83,12 @@ namespace LibVLCSharp.Avalonia
             set => SetValue(ContentProperty, value);
         }
 
-        /// <inheritdoc />
+        public IBrush Background
+        {
+            get => GetValue(BackgroundProperty);
+            set => SetValue(BackgroundProperty, value);
+        }
+
         public void SetContent(object o)
         {
             Content = o;
@@ -94,7 +100,7 @@ namespace LibVLCSharp.Avalonia
 
             if (_floatingContent == null && Content != null)            
             {
-                //var rect = Bounds;
+                var rect = this.Bounds;
                 
 
                 _floatingContent = new Window()
@@ -105,10 +111,13 @@ namespace LibVLCSharp.Avalonia
                     Background = Brushes.Transparent,                                        
                     
                     SizeToContent = SizeToContent.WidthAndHeight,
+                    CanResize = false,
                     
                     ShowInTaskbar = false,
                     
-                    Topmost=true,
+                    //Topmost=true,
+                    ZIndex = 2147483647,
+
                     Opacity = 1,
                     
                 };
@@ -116,36 +125,32 @@ namespace LibVLCSharp.Avalonia
                 _floatingContent.PointerEnter += Controls_PointerEnter;
                 _floatingContent.PointerLeave += Controls_PointerLeave;
 
-                if (VisualRoot != null)
-                    _disposables = new CompositeDisposable()
-                    {
-                        _floatingContent.Bind(Window.ContentProperty, this.GetObservable(ContentProperty)),
-                        this.GetObservable(ContentProperty).Skip(1).Subscribe(_ => UpdateOverlayPosition()),
-                        this.GetObservable(BoundsProperty).Skip(1).Subscribe(_ => UpdateOverlayPosition()),
-                        Observable.FromEventPattern(VisualRoot, nameof(Window.PositionChanged))
-                        .Subscribe(_ => UpdateOverlayPosition())
-                    
-                    };
+                
+                _disposables = new CompositeDisposable()
+                {
+                    _floatingContent.Bind(Window.ContentProperty, this.GetObservable(ContentProperty)),
+                    this.GetObservable(ContentProperty).Skip(1).Subscribe(_=> UpdateOverlayPosition()),
+                    this.GetObservable(BoundsProperty).Skip(1).Subscribe(_ => UpdateOverlayPosition()),
+                    Observable.FromEventPattern(VisualRoot, nameof(Window.PositionChanged))
+                    .Subscribe(_ => UpdateOverlayPosition())
+                };
                 
             }
 
             ShowNativeOverlay(IsEffectivelyVisible);
         }
 
-        /// <inheritdoc />
         public void Controls_PointerEnter(object sender, PointerEventArgs e)
         {
-            //Debug.WriteLine("POINTER ENTER");
-            if (_floatingContent != null)
-                _floatingContent.Opacity = 0.8;
+            Debug.WriteLine("POINTER ENTER");
+            _floatingContent.Opacity = 0.8;
             
         }
-        /// <inheritdoc />
+
         public void Controls_PointerLeave(object sender, PointerEventArgs e)
         {
-            //Debug.WriteLine("POINTER LEAVE");
-            if (_floatingContent != null)
-                _floatingContent.Opacity = 0;
+            Debug.WriteLine("POINTER LEAVE");
+            _floatingContent.Opacity = 0;
             
         }
 
@@ -247,7 +252,6 @@ namespace LibVLCSharp.Avalonia
             
         }
 
-        /// <inheritdoc />
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
@@ -263,7 +267,6 @@ namespace LibVLCSharp.Avalonia
                     .Subscribe(v => IsVisible = v);
         }
 
-        /// <inheritdoc />
         protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnDetachedFromVisualTree(e);
@@ -275,7 +278,6 @@ namespace LibVLCSharp.Avalonia
             _isAttached = false;
         }
 
-        /// <inheritdoc />
         protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
         {
             base.OnDetachedFromLogicalTree(e);
@@ -287,10 +289,8 @@ namespace LibVLCSharp.Avalonia
         }
     }
 
-    /// <inheritdoc />
     public static class MediaPlayerExtensions
     {
-        /// <inheritdoc />
         public static void DisposeHandle(this MediaPlayer player)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -300,7 +300,6 @@ namespace LibVLCSharp.Avalonia
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) player.NsObject = IntPtr.Zero;
         }
 
-        /// <inheritdoc />
         public static void SetHandle(this MediaPlayer player, IPlatformHandle handle)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
