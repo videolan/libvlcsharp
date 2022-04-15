@@ -1,15 +1,23 @@
 # LibVLCSharp.Avalonia.Unofficial
-The unofficial Avalonia views for LibVLCSharp.
+
+**The** **Unofficial Avalonia** **views for** **LibVLCSharp**.
 
 This package contains the views that allows to display a video played with LibVLCSharp in an Avalonia app.
 
-This unofficial repository fixes the 2 main problems still present in the LibVLCSharp.Avalonia official release: 
-- how do I use VideoView in an Avalonia UserControl (in official release it works inside a window only)?
-- how do I put a UserControl in a clickable layer on top of the VLC MediaPlayer (in official release it's impossible)?
+This Unofficial repository fixes the 2 main problems still present in the LibVLCSharp.Avalonia official release: 
 
-VideoView.cs has been modified to handle the fixes and to answer to both questions.
-Being an unofficial release, it's still experimental and the VideoView code may need further modification.
+- **how do I use VideoView in an Avalonia UserControl** (in official release it works inside a window only)?
+- **how do I put a UserControl in a clickable layer on top of the VLC MediaPlayer** (as in official release it's impossible)?
 
-The samples folder of libvlcsharp contains the LibVLCSharp.Avalonia.Unofficial.Samples to test the fixed problems.
+*VideoView.cs* has been modified to handle the fixes and to answer to both questions.
+
+
+Being an unofficial release, <u>it's still experimental</u> and the VideoView code may need further modification.
+
+The [samples](https://github.com/radiolondra/libvlcsharp/tree/3.x/samples/LibVLCSharp.Avalonia.Unofficial.Samples) folder of libvlcsharp contains the **LibVLCSharp.Avalonia.Unofficial.Samples** to test the fixed problems.
 The samples have been successfully tested on Windows 10, Kubuntu 18.04, MacOS 10.13 and on Raspberry pi3 model B with DietPi (META) as OS.
-Use them as starting points for your own projects and tolearn how the whole thing is working.
+Use them as starting points for your own projects and to learn how the whole thing is working.
+
+#### ToDo
+
+- Add the ability to use multiple, configurable layers on top of VideoView, allowing to accomodate a set of new objects with dynamic properties. For example, a Text object which, while the video is playing, it will appear on top of the video, from FrameX to FrameY, with selectable and configurable animations, transparencies, colors, fonts....
