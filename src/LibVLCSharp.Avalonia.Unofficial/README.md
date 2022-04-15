@@ -11,7 +11,6 @@ This Unofficial repository fixes the 2 main problems still present in the LibVLC
 
 *VideoView.cs* has been modified to handle the fixes and to answer to both questions.
 
-
 Being an unofficial release, <u>it's still experimental</u> and the VideoView code may need further modification.
 
 The [samples](https://github.com/radiolondra/libvlcsharp/tree/3.x/samples/LibVLCSharp.Avalonia.Unofficial.Samples) folder of libvlcsharp contains the **LibVLCSharp.Avalonia.Unofficial.Samples** to test the fixed problems.
@@ -20,4 +19,4 @@ Use them as starting points for your own projects and to learn how the whole thi
 
 #### ToDo
 
-- Add the ability to use multiple, configurable layers on top of VideoView, allowing to accomodate a set of new objects with dynamic properties. For example, a Text object which, while the video is playing, it will appear on top of the video, from FrameX to FrameY, with selectable and configurable animations, transparencies, colors, fonts....
+- Add the ability to use multiple, configurable layers on top of VideoView, allowing to accomodate a set of new objects with dynamic properties. 
