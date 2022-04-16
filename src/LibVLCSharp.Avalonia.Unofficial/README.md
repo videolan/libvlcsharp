@@ -18,5 +18,5 @@ The samples have been successfully tested on Windows 10, Kubuntu 18.04, MacOS 10
 Use them as starting points for your own projects and to learn how the whole thing is working.
 
 #### ToDo
-
+- Add customizable event handlers
 - Add the ability to use multiple, configurable layers on top of VideoView, allowing to accomodate a set of new objects with dynamic properties. 
