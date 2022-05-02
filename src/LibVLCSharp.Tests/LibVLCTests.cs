@@ -103,8 +103,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void DisposeLibVLC()
         {
-            _libVLC.SetDialogHandlers((title, text) => Task.CompletedTask,
-                (dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
+            _libVLC.SetDialogHandlers((dialog, title, text, defaultUsername, askStore, token) => Task.CompletedTask,
                 (dialog, title, text, type, cancelText, firstActionText, secondActonText, token) => Task.CompletedTask,
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);

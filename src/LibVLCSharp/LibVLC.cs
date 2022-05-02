@@ -139,6 +139,10 @@ namespace LibVLCSharp
             internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, DialogCallbacks callbacks, IntPtr data);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_dialog_set_error_callback")]
+            internal static extern void LibVLCDialogSetErrorCallbacks(IntPtr libVLC, IntPtr errorCallback, IntPtr data);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
             internal static extern UIntPtr LibVLCRendererDiscovererGetList(IntPtr libVLC, out IntPtr discovererList);
 
@@ -559,23 +563,41 @@ namespace LibVLCSharp
         /// Register callbacks in order to handle VLC dialogs.
         /// LibVLC 3.0.0 and later.
         /// </summary>
-        /// <param name="error">Called when an error message needs to be displayed.</param>
         /// <param name="login">Called when a login dialog needs to be displayed.
         /// You can interact with this dialog by calling Dialog.PostLogin() to post an answer or Dialog.Dismiss() to cancel this dialog.</param>
         /// <param name="question">Called when a question dialog needs to be displayed.
         /// You can interact with this dialog by calling Dialog.PostLogin() to post an answer or Dialog.Dismiss() to cancel this dialog.</param>
         /// <param name="displayProgress">Called when a progress dialog needs to be displayed.</param>
         /// <param name="updateProgress">Called when a progress dialog needs to be updated.</param>
-        public void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
+        public void SetDialogHandlers(DisplayLogin login, DisplayQuestion question,
             DisplayProgress displayProgress, UpdateProgress updateProgress)
         {
-            _error = error ?? throw new ArgumentNullException(nameof(error));
             _login = login ?? throw new ArgumentNullException(nameof(login));
             _question = question ?? throw new ArgumentNullException(nameof(question));
             _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
             _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
             Native.LibVLCDialogSetCallbacks(NativeReference, DialogCb, GCHandle.ToIntPtr(_gcHandle));
+        }
+
+        /// <summary>
+        /// Register callback in order to handle VLC error messages
+        /// version 4.0.0 and later
+        /// </summary>
+        /// <param name="error">the user callback to raise on VLC error, null to unregister the callback</param>
+        public void SetErrorDialogCallback(DisplayError error)
+        {
+            _error = error;
+            if(_error == null)
+            {
+                DisplayErrorHandle = IntPtr.Zero;
+                Native.LibVLCDialogSetErrorCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
+            }
+            else
+            { 
+                DisplayErrorHandle = Marshal.GetFunctionPointerForDelegate(DisplayErrorCallbackHandle);
+                Native.LibVLCDialogSetErrorCallbacks(NativeReference, DisplayErrorHandle, GCHandle.ToIntPtr(_gcHandle));
+            }
         }
 
         /// <summary>
@@ -763,6 +785,8 @@ namespace LibVLCSharp
 
         #region Dialogs
 
+        private IntPtr DisplayErrorHandle;
+
         private static readonly InternalDisplayErrorCallback DisplayErrorCallbackHandle = DisplayErrorCallback;
         private static readonly InternalDisplayLoginCallback DisplayLoginCallbackHandle = DisplayLoginCallback;
         private static readonly InternalDisplayQuestionCallback DisplayQuestionCallbackHandle = DisplayQuestionCallback;
@@ -771,7 +795,6 @@ namespace LibVLCSharp
         private static readonly InternalUpdateProgressCallback UpdateProgressCallbackHandle = UpdateProgressCallback;
 
         private static readonly DialogCallbacks DialogCb = new DialogCallbacks(
-            DisplayErrorCallbackHandle,
             DisplayLoginCallbackHandle,
             DisplayQuestionCallbackHandle,
             DisplayProgressCallbackHandle,
@@ -861,22 +884,18 @@ namespace LibVLCSharp
         [StructLayout(LayoutKind.Sequential)]
         internal readonly struct DialogCallbacks
         {
-            internal DialogCallbacks(InternalDisplayErrorCallback displayError,
-                InternalDisplayLoginCallback displayLogin,
+            internal DialogCallbacks(InternalDisplayLoginCallback displayLogin,
                 InternalDisplayQuestionCallback displayQuestion,
                 InternalDisplayProgressCallback displayProgress,
                 InternalCancelCallback cancel,
                 InternalUpdateProgressCallback updateProgress)
             {
-                DisplayError = Marshal.GetFunctionPointerForDelegate(displayError);
                 DisplayLogin = Marshal.GetFunctionPointerForDelegate(displayLogin);
                 DisplayQuestion = Marshal.GetFunctionPointerForDelegate(displayQuestion);
                 DisplayProgress = Marshal.GetFunctionPointerForDelegate(displayProgress);
                 Cancel = Marshal.GetFunctionPointerForDelegate(cancel);
                 UpdateProgress = Marshal.GetFunctionPointerForDelegate(updateProgress);
             }
-
-            internal readonly IntPtr DisplayError;
 
             internal readonly IntPtr DisplayLogin;
 
