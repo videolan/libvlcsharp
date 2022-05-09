@@ -23,7 +23,7 @@
   
   <ItemGroup>
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2-643406799" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20220117" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20220509" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
