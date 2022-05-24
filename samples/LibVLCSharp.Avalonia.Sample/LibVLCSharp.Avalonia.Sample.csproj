@@ -4,6 +4,7 @@
     <TargetFramework Condition="$([MSBuild]::IsOsPlatform('Windows'))">net6.0</TargetFramework>
     <TargetFramework Condition="!$([MSBuild]::IsOsPlatform('Windows'))">netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -15,8 +16,8 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.7" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.14" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.14" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Condition="$([MSBuild]::IsOsPlatform('Windows'))" Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
