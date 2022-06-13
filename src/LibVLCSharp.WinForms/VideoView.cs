@@ -8,7 +8,7 @@ namespace LibVLCSharp.WinForms
     /// <summary>
     /// WinForms VideoView control with a LibVLCSharp MediaPlayer
     /// </summary>
-    public class VideoView : Control, ISupportInitialize, IVideoView, IDisposable
+    public class VideoView : Control, IVideoView, IDisposable
     {
         /// <summary>
         /// The VideoView constructor.
@@ -16,6 +16,22 @@ namespace LibVLCSharp.WinForms
         public VideoView()
         {
             BackColor = System.Drawing.Color.Black;
+        }
+
+        /// <inheritdoc />
+        protected override void CreateHandle()
+        {
+            base.CreateHandle();
+            if (!IsInDesignMode)
+                Attach();
+        }
+
+        /// <inheritdoc />
+        protected override void DestroyHandle()
+        {
+            if (!IsInDesignMode)
+                Detach();
+            base.DestroyHandle();
         }
 
         MediaPlayer? _mp;
@@ -37,24 +53,6 @@ namespace LibVLCSharp.WinForms
                 _mp = value;
                 Attach();
             }
-        }
-
-        /// <summary>
-        /// This currently does not do anything
-        /// </summary>
-        void ISupportInitialize.BeginInit()
-        {
-        }
-
-        /// <summary>
-        /// This attaches the mediaplayer to the view (if any)
-        /// </summary>
-        void ISupportInitialize.EndInit()
-        {
-            if (IsInDesignMode)
-                return;
-
-            Attach();
         }
 
         bool IsInDesignMode

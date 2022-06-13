@@ -31,7 +31,6 @@
         private void InitializeComponent()
         {
             this.videoView1 = new LibVLCSharp.WinForms.VideoView();
-            ((System.ComponentModel.ISupportInitialize)(this.videoView1)).BeginInit();
             this.SuspendLayout();
             // 
             // videoView1
@@ -52,7 +51,6 @@
             this.Controls.Add(this.videoView1);
             this.Name = "Form1";
             this.Text = "LibVLCSharp.WinForms";
-            ((System.ComponentModel.ISupportInitialize)(this.videoView1)).EndInit();
             this.ResumeLayout(false);
 
         }
