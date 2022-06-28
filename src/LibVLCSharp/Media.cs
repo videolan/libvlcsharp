@@ -69,7 +69,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_save_meta")]
-            internal static extern int LibVLCMediaSaveMeta(IntPtr media);
+            internal static extern int LibVLCMediaSaveMeta(IntPtr libvlc, IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_event_manager")]
@@ -415,8 +415,9 @@ namespace LibVLCSharp
         }
 
         /// <summary>Save the meta previously set</summary>
+        /// <param name="libvlc">libvlc instance</param>
         /// <returns>true if the write operation was successful</returns>
-        public bool SaveMeta() => Native.LibVLCMediaSaveMeta(NativeReference) != 0;
+        public bool SaveMeta(LibVLC libvlc) => Native.LibVLCMediaSaveMeta(libvlc.NativeReference, NativeReference) != 0;
 
         /// <summary>
         /// Get information about the media file, such as size and modified timestamp

@@ -119,7 +119,7 @@ namespace LibVLCSharp.Tests
             using var media = new Media(_libVLC, Path.GetTempFileName());
             const string test = "test";
             media.SetMeta(MetadataType.ShowName, test);
-            Assert.True(media.SaveMeta());
+            Assert.True(media.SaveMeta(_libVLC));
             Assert.AreEqual(test, media.Meta(MetadataType.ShowName));
         }
 
