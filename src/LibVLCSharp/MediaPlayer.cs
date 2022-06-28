@@ -37,7 +37,7 @@ namespace LibVLCSharp
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new_from_media")]
-            internal static extern IntPtr LibVLCMediaPlayerNewFromMedia(IntPtr media);
+            internal static extern IntPtr LibVLCMediaPlayerNewFromMedia(IntPtr libvlc, IntPtr media);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -587,13 +587,11 @@ namespace LibVLCSharp
 
 #if !UNITY
         /// <summary>Create a Media Player object from a Media</summary>
-        /// <param name="media">
-        /// <para>the media. Afterwards the p_md can be safely</para>
-        /// <para>destroyed.</para>
-        /// </param>
+        /// <param name="libvlc">LibVLC instance to create a media player with</param>
+        /// <param name="media">The media to play. Afterwards the p_md can be safely destroyed.</param>
         /// <returns>a new media player object, or NULL on error.</returns>
-        public MediaPlayer(Media media)
-            : base(() => Native.LibVLCMediaPlayerNewFromMedia(media.NativeReference), Native.LibVLCMediaPlayerRelease)
+        public MediaPlayer(LibVLC libvlc, Media media)
+            : base(() => Native.LibVLCMediaPlayerNewFromMedia(libvlc.NativeReference, media.NativeReference), Native.LibVLCMediaPlayerRelease)
         {
             _gcHandle = GCHandle.Alloc(this);
         }

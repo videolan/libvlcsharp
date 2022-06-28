@@ -68,7 +68,7 @@ namespace LibVLCSharp.Tests
             using (var media = new Media(_libVLC, RemoteAudioStream, FromType.FromLocation))
             {
                 Assert.NotZero(media.Duration);
-                using (var mp = new MediaPlayer(media))
+                using (var mp = new MediaPlayer(_libVLC, media))
                 {
                     Assert.True(mp.Play());
                     await Task.Delay(4000); // have to wait a bit for statistics to populate
@@ -84,7 +84,7 @@ namespace LibVLCSharp.Tests
             using (var media = new Media(_libVLC, new Uri(RemoteAudioStream, UriKind.Absolute)))
             {
                 Assert.NotZero(media.Duration);
-                using (var mp = new MediaPlayer(media))
+                using (var mp = new MediaPlayer(_libVLC, media))
                 {
                     Assert.True(mp.Play());
                     await Task.Delay(4000); // have to wait a bit for statistics to populate
@@ -127,7 +127,7 @@ namespace LibVLCSharp.Tests
         public async Task GetTracks()
         {
             using var media = new Media(_libVLC, LocalAudioFile);
-            using var mp = new MediaPlayer(media);
+            using var mp = new MediaPlayer(_libVLC, media);
             await media.ParseAsync(_libVLC);
             await mp.PlayAsync();
             using var audioTracks = mp.Tracks(TrackType.Audio);

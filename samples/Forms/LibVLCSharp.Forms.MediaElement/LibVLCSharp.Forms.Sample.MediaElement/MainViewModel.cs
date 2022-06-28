@@ -51,7 +51,7 @@ namespace LibVLCSharp.Forms.Sample.MediaPlayerElement
 
             var media = new Media(LibVLC, new Uri("http://streams.videolan.org/streams/mkv/multiple_tracks.mkv"));
 
-            MediaPlayer = new MediaPlayer(media) { EnableHardwareDecoding = true };
+            MediaPlayer = new MediaPlayer(LibVLC, media) { EnableHardwareDecoding = true };
             media.Dispose();
             MediaPlayer.Play();
         }

@@ -124,7 +124,7 @@ namespace LibVLCSharp.Tests
 
             _libVLC.SetErrorDialogCallback(DisplayError);
             using var media = new Media(_libVLC, new Uri(errorUrl));
-            using var mp = new MediaPlayer(media);
+            using var mp = new MediaPlayer(_libVLC, media);
             mp.Play();
 
             Task DisplayError(string title, string error)

@@ -76,7 +76,7 @@ namespace LibVLCSharp.Tests
         public async Task Play()
         {
             var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
-            var mp = new MediaPlayer(media);
+            var mp = new MediaPlayer(_libVLC, media);
             var called = false;
             mp.Playing += (sender, args) =>
             {
@@ -97,7 +97,7 @@ namespace LibVLCSharp.Tests
             try
             {
                 var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
-                var mp = new MediaPlayer(media);
+                var mp = new MediaPlayer(_libVLC, media);
 
 
                 mp.Playing += Mp_Playing;
