@@ -84,7 +84,7 @@ namespace Sample.MediaPlayerElement
         {
             LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
             MediaPlayer = new LibVLCSharp.MediaPlayer(LibVLC);
-            MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            MediaPlayer.Play(new Media("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 FromType.FromLocation));
         }
 

@@ -50,8 +50,8 @@ namespace LibVLCSharp.WPF.Sample
         {
             if (!parent.VideoView.MediaPlayer.IsPlaying)
             {
-                using (var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))
-                    parent.VideoView.MediaPlayer.Play(media);
+                using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+                parent.VideoView.MediaPlayer.Play(media);
             }
         }
     }

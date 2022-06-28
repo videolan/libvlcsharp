@@ -16,19 +16,19 @@ namespace LibVLCSharp
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_location")]
-            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr libVLC, IntPtr mrl);
+            internal static extern IntPtr LibVLCMediaNewLocation(IntPtr mrl);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_path")]
-            internal static extern IntPtr LibVLCMediaNewPath(IntPtr libVLC, IntPtr path);
+            internal static extern IntPtr LibVLCMediaNewPath(IntPtr path);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_as_node")]
-            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr libVLC, IntPtr name);
+            internal static extern IntPtr LibVLCMediaNewAsNode(IntPtr name);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_fd")]
-            internal static extern IntPtr LibVLCMediaNewFd(IntPtr libVLC, int fd);
+            internal static extern IntPtr LibVLCMediaNewFd(int fd);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_release")]
@@ -40,7 +40,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
-            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr libVLC, InternalOpenMedia openCb, InternalReadMedia readCb,
+            internal static extern IntPtr LibVLCMediaNewCallbacks(InternalOpenMedia openCb, InternalReadMedia readCb,
                 InternalSeekMedia? seekCb, InternalCloseMedia closeCb, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -175,23 +175,21 @@ namespace LibVLCSharp
         /// <summary>
         /// Media Constructs a libvlc Media instance
         /// </summary>
-        /// <param name="libVLC">A libvlc instance</param>
         /// <param name="mrl">A path, location, or node name, depending on the 3rd parameter</param>
         /// <param name="type">The type of the 2nd argument.</param>
         /// <param name="options">the libvlc options, in the form of ":your-option"</param>
-        public Media(LibVLC libVLC, string mrl, FromType type = FromType.FromPath, params string[] options)
-            : this(() => SelectNativeCtor(libVLC, mrl, type), Native.LibVLCMediaRelease, options)
+        public Media(string mrl, FromType type = FromType.FromPath, params string[] options)
+            : this(() => SelectNativeCtor(mrl, type), Native.LibVLCMediaRelease, options)
         {
         }
 
         /// <summary>
         /// Media Constructs a libvlc Media instance
         /// </summary>
-        /// <param name="libVLC">A libvlc instance</param>
         /// <param name="uri">The absolute URI of the resource.</param>
         /// <param name="options">the libvlc options, in the form of ":your-option"</param>
-        public Media(LibVLC libVLC, Uri uri, params string[] options)
-            : this(() => SelectNativeCtor(libVLC, uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation),
+        public Media(Uri uri, params string[] options)
+            : this(() => SelectNativeCtor(uri?.AbsoluteUri ?? string.Empty, FromType.FromLocation),
                   Native.LibVLCMediaRelease,
                   options)
         {
@@ -213,11 +211,10 @@ namespace LibVLCSharp
         /// rendered once in a media player.To render it a second time, the file
         /// descriptor should probably be rewound to the beginning with lseek().
         /// </summary>
-        /// <param name="libVLC">A libvlc instance</param>
         /// <param name="fd">open file descriptor</param>
         /// <param name="options">the libvlc options, in the form of ":your-option"</param>
-        public Media(LibVLC libVLC, int fd, params string[] options)
-            : this(() => Native.LibVLCMediaNewFd(libVLC.NativeReference, fd), Native.LibVLCMediaRelease, options)
+        public Media(int fd, params string[] options)
+            : this(() => Native.LibVLCMediaNewFd(fd), Native.LibVLCMediaRelease, options)
         {
         }
 
@@ -234,12 +231,11 @@ namespace LibVLCSharp
         /// Create a media from a MediaInput
         /// requires libvlc 3.0 or higher
         /// </summary>
-        /// <param name="libVLC">the libvlc instance</param>
         /// <param name="input">the media to be used by libvlc. LibVLCSharp will NOT dispose or close it.
         /// Use <see cref="StreamMediaInput"/> or implement your own.</param>
         /// <param name="options">the libvlc options, in the form of ":your-option"</param>
-        public Media(LibVLC libVLC, MediaInput input, params string[] options)
-            : this(() => CtorFromInput(libVLC, input), Native.LibVLCMediaRelease, options)
+        public Media(MediaInput input, params string[] options)
+            : this(() => CtorFromInput(input), Native.LibVLCMediaRelease, options)
         {
         }
 
@@ -248,10 +244,8 @@ namespace LibVLCSharp
         {
         }
 
-        static IntPtr SelectNativeCtor(LibVLC libVLC, string mrl, FromType type)
+        static IntPtr SelectNativeCtor(string mrl, FromType type)
         {
-            if (libVLC == null)
-                throw new ArgumentNullException(nameof(libVLC));
             if (string.IsNullOrEmpty(mrl))
                 throw new ArgumentNullException(nameof(mrl));
 
@@ -268,13 +262,13 @@ namespace LibVLCSharp
             switch (type)
             {
                 case FromType.FromLocation:
-                    result = Native.LibVLCMediaNewLocation(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewLocation(mrlPtr);
                     break;
                 case FromType.FromPath:
-                    result = Native.LibVLCMediaNewPath(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewPath(mrlPtr);
                     break;
                 case FromType.AsNode:
-                    result = Native.LibVLCMediaNewAsNode(libVLC.NativeReference, mrlPtr);
+                    result = Native.LibVLCMediaNewAsNode(mrlPtr);
                     break;
                 default:
                     result = IntPtr.Zero;
@@ -286,15 +280,12 @@ namespace LibVLCSharp
             return result;
         }
 
-        static IntPtr CtorFromInput(LibVLC libVLC, MediaInput input)
+        static IntPtr CtorFromInput(MediaInput input)
         {
-            if (libVLC == null)
-                throw new ArgumentNullException(nameof(libVLC));
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
-            return Native.LibVLCMediaNewCallbacks(libVLC.NativeReference,
-                OpenMediaCallbackHandle,
+            return Native.LibVLCMediaNewCallbacks(OpenMediaCallbackHandle,
                 ReadMediaCallbackHandle,
                 input.CanSeek ? SeekMediaCallbackHandle : null,
                 CloseMediaCallbackHandle,

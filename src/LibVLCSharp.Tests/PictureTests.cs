@@ -10,7 +10,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task RetrieveAttachedThumbnails()
         {
-            using var media = new Media(_libVLC, new Uri(AttachedThumbnailsMedia));
+            using var media = new Media(new Uri(AttachedThumbnailsMedia));
             uint thumbnailsFound = 0;
             media.AttachedThumbnailsFound += (sender, args) =>
             {

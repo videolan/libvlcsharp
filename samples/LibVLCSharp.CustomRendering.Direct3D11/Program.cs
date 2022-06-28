@@ -419,7 +419,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
             mediaplayer = new MediaPlayer(libvlc);
 
-            using var media = new Media(libvlc, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
+            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
             mediaplayer.Media = media;
 
             mediaplayer.SetOutputCallbacks(VideoEngine.D3D11, OutputSetup, OutputCleanup, OutputSetResize, UpdateOuput, Swap, StartRendering, null, null, SelectPlane);

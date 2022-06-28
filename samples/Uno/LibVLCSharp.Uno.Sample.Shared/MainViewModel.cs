@@ -61,8 +61,7 @@ namespace LibVLCSharp.Uno.Sample
         {
             LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
             MediaPlayer = new MediaPlayer(LibVLC);
-            MediaPlayer.Play(new Media(LibVLC,
-                new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+            MediaPlayer.Play(new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
         }
 
         /// <summary>

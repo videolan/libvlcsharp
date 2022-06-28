@@ -32,7 +32,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
+                Media = new Media(UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();
@@ -61,7 +61,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
+                Media = new Media(UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();
@@ -92,7 +92,7 @@ namespace LibVLCSharp.Tests
 
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, UrlRequireAuth, FromType.FromLocation)
+                Media = new Media(UrlRequireAuth, FromType.FromLocation)
             };
 
             mp.Play();
@@ -123,7 +123,7 @@ namespace LibVLCSharp.Tests
             var tcs = new TaskCompletionSource<bool>();
 
             _libVLC.SetErrorDialogCallback(DisplayError);
-            using var media = new Media(_libVLC, new Uri(errorUrl));
+            using var media = new Media(new Uri(errorUrl));
             using var mp = new MediaPlayer(_libVLC, media);
             mp.Play();
 

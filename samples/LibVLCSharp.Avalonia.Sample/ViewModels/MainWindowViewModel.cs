@@ -13,7 +13,7 @@ namespace LibVLCSharp.Avalonia.Sample.ViewModels
 
         public void Play()
         {
-            using var media = new Media(_libVlc, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
             MediaPlayer.Play(media);
         }
 

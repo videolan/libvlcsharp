@@ -12,7 +12,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void MetaChangedEventSubscribe()
         {
-            var media = new Media(_libVLC, Path.GetTempFileName());
+            var media = new Media(Path.GetTempFileName());
             var eventHandlerCalled = false;
             const MetadataType description = MetadataType.Description;
             media.MetaChanged += (sender, args) =>
@@ -26,7 +26,7 @@ namespace LibVLCSharp.Tests
         
         public async void DurationChanged()
         {
-            var media = new Media(_libVLC, LocalAudioFile);
+            var media = new Media(LocalAudioFile);
             var called = false;
             long duration = 0;
 

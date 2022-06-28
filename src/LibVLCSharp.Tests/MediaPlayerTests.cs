@@ -35,7 +35,7 @@ namespace LibVLCSharp.Tests
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
+            var media = new Media("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
 
             mp.Media = media;
@@ -56,7 +56,7 @@ namespace LibVLCSharp.Tests
         public async Task ChapterDescriptions()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media(_libVLC, "https://auphonic.com/media/blog/auphonic_chapters_demo.m4a", FromType.FromLocation);
+            var media = new Media("https://auphonic.com/media/blog/auphonic_chapters_demo.m4a", FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
 
             mp.Media = media;
@@ -75,7 +75,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task Play()
         {
-            var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
             var mp = new MediaPlayer(_libVLC, media);
             var called = false;
             mp.Playing += (sender, args) =>
@@ -96,7 +96,7 @@ namespace LibVLCSharp.Tests
         {
             try
             {
-                var media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+                var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
                 var mp = new MediaPlayer(_libVLC, media);
 
 
@@ -171,7 +171,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
 
-            mp.Play(new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+            mp.Play(new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
 
             await Task.Delay(1000);
 
@@ -185,7 +185,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
 
-            mp.Play(new Media(_libVLC, "https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation));
+            mp.Play(new Media("https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation));
 
             await Task.Delay(1000);
 
@@ -223,7 +223,7 @@ namespace LibVLCSharp.Tests
             var msub = "https://streams.videolan.org/samples/Matroska/subtitles/multiple_sub_sample.mkv";
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, new Uri(msub)),
+                Media = new Media(new Uri(msub)),
                 Mute = true
             };
 

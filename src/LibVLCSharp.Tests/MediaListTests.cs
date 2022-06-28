@@ -12,7 +12,7 @@ namespace LibVLCSharp.Tests
         public void AddAndRemoveMediaFromMediaList()
         {
             var mediaList = new MediaList();
-            var media = new Media(_libVLC, Path.GetTempFileName());
+            var media = new Media(Path.GetTempFileName());
             var itemAdded = false;
             var itemDeleted = false;
             mediaList.ItemAdded += (sender, args) => itemAdded = true;

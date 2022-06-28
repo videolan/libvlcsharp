@@ -26,8 +26,7 @@ namespace LibVLCSharp.GTK.Sample
             myWin.ShowAll();
 
             //Starts playing
-            using var media = new Media(libvlc,
-                new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
             mediaPlayer.Play(media);
 
