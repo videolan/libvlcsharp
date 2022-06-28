@@ -236,7 +236,8 @@ namespace LibVLCSharp.Tests
             using var media = new Media(_libVLC, RemoteVideoStream, FromType.FromLocation);
             await media.ParseAsync(MediaParseOptions.ParseNetwork);
 
-            using var thumbnail = await media.GenerateThumbnailAsync(media.Duration / 2, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
+            using var thumbnail = await media.GenerateThumbnailAsync(_libVLC, media.Duration / 2, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
+            using var thumbnail2 = await media.GenerateThumbnailAsync(_libVLC, 5.0f, ThumbnailerSeekSpeed.Precise, 200, 200, false, PictureType.Png);
         }
 
         [Test]

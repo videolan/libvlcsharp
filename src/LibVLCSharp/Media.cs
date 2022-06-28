@@ -145,12 +145,12 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_thumbnail_request_by_time")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestByTime(IntPtr media, long time, ThumbnailerSeekSpeed speed,
+            internal static extern IntPtr LibVLCMediaThumbnailRequestByTime(IntPtr libvlc, IntPtr media, long time, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_thumbnail_request_by_pos")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestByPosition(IntPtr media, float position, ThumbnailerSeekSpeed speed,
+            internal static extern IntPtr LibVLCMediaThumbnailRequestByPosition(IntPtr libvlc, IntPtr media, float position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -622,6 +622,7 @@ namespace LibVLCSharp
 
         /// <summary>Start an asynchronous thumbnail generation.
         /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="time">The time at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
         /// <param name="width">The thumbnail width</param>
@@ -631,16 +632,17 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public Task<Picture> GenerateThumbnailAsync(long time, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, long time, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
             return ThumbnailRequestInternal(() =>
-                            Native.LibVLCMediaThumbnailRequestByTime(NativeReference, time, speed, width, height, crop, pictureType, timeout),
+                            Native.LibVLCMediaThumbnailRequestByTime(libvlc.NativeReference, NativeReference, time, speed, width, height, crop, pictureType, timeout),
                             cancellationToken);
         }
 
         /// <summary>Start an asynchronous thumbnail generation.
         /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="position">The position at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
         /// <param name="width">The thumbnail width</param>
@@ -650,11 +652,11 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public Task<Picture> GenerateThumbnailAsync(float position, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, float position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
             return ThumbnailRequestInternal(() =>
-                Native.LibVLCMediaThumbnailRequestByPosition(NativeReference, position, speed, width, height, crop, pictureType, timeout),
+                Native.LibVLCMediaThumbnailRequestByPosition(libvlc.NativeReference, NativeReference, position, speed, width, height, crop, pictureType, timeout),
                 cancellationToken);
         }
 
