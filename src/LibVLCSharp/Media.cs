@@ -89,7 +89,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse_with_options")]
-            internal static extern int LibVLCMediaParseWithOptions(IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
+            internal static extern int LibVLCMediaParseWithOptions(IntPtr libvlc, IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_parsed_status")]
@@ -97,7 +97,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_parse_stop")]
-            internal static extern void LibVLCMediaParseStop(IntPtr media);
+            internal static extern void LibVLCMediaParseStop(IntPtr libvlc, IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_set_user_data")]
@@ -465,6 +465,7 @@ namespace LibVLCSharp
         /// It uses a flag to specify parse options (see <see cref="MediaParseOptions"/>). All these flags can be combined. By default, the media is parsed only if it's a local file.
         /// <para/> Note: Parsing can be aborted with ParseStop().
         /// </summary>
+        /// <param name="libvlc">LibVLC instance that is to parse the media</param>
         /// <param name="options">Parse options flags. They can be combined</param>
         /// <param name="timeout">maximum time allowed to preparse the media.
         /// <para/>If -1, the default "preparse-timeout" option will be used as a timeout.
@@ -472,7 +473,7 @@ namespace LibVLCSharp
         /// </param>
         /// <param name="cancellationToken">token to cancel the operation</param>
         /// <returns>the parse status of the media</returns>
-        public Task<MediaParsedStatus> ParseAsync(MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        public Task<MediaParsedStatus> ParseAsync(LibVLC libvlc, MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -480,7 +481,7 @@ namespace LibVLCSharp
 
             var ctr = cancellationToken.Register(() =>
             {
-                Native.LibVLCMediaParseStop(NativeReference);
+                Native.LibVLCMediaParseStop(libvlc.NativeReference, NativeReference);
                 tcs.TrySetCanceled();
             });
 
@@ -490,7 +491,7 @@ namespace LibVLCSharp
             return MarshalUtils.InternalAsync(
                 nativeCall: () =>
                 {
-                    var result = Native.LibVLCMediaParseWithOptions(NativeReference, options, timeout);
+                    var result = Native.LibVLCMediaParseWithOptions(libvlc.NativeReference, NativeReference, options, timeout);
                     if (result == -1)
                     {
                         tcs.TrySetResult(MediaParsedStatus.Failed);
@@ -512,13 +513,14 @@ namespace LibVLCSharp
         public MediaParsedStatus ParsedStatus => Native.LibVLCMediaGetParsedStatus(NativeReference);
 
         /// <summary>Stop the parsing of the media</summary>
+        /// <param name="libvlc">LibVLC instance that is to cease or give up parsing the media</param>
         /// <remarks>
         /// <para>When the media parsing is stopped, the libvlc_MediaParsedChanged event will</para>
         /// <para>be sent with the libvlc_media_parsed_status_timeout status.</para>
         /// <para>libvlc_media_parse_with_options</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
-        public void ParseStop() => Native.LibVLCMediaParseStop(NativeReference);
+        public void ParseStop(LibVLC libvlc) => Native.LibVLCMediaParseStop(libvlc.NativeReference, NativeReference);
 
         /// <summary>
         /// Get the track list for one type

@@ -20,7 +20,7 @@ namespace LibVLCSharp.Tests
                     Assert.AreEqual(PictureType.Png, thumbnail.Type);
                 }
             };
-            await media.ParseAsync();
+            await media.ParseAsync(_libVLC);
             Assert.AreEqual(2, thumbnailsFound);
         }
     }

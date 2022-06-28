@@ -36,7 +36,7 @@ namespace LibVLCSharp.Tests
                 duration = args.Duration;
             };
 
-            await media.ParseAsync();
+            await media.ParseAsync(_libVLC);
 
             Assert.True(called);
             Assert.NotZero(duration);
