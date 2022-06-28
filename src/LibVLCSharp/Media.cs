@@ -1240,24 +1240,34 @@ namespace LibVLCSharp
     public enum MediaParsedStatus
     {
         /// <summary>
+        /// Default unparsed status
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Parsing is currently processing
+        /// </summary>
+        Pending,
+
+        /// <summary>
         /// Parsing was skipped
         /// </summary>
-        Skipped = 1,
+        Skipped,
 
         /// <summary>
         /// Parsing failed
         /// </summary>
-        Failed = 2,
+        Failed,
 
         /// <summary>
         /// Parsing timed out
         /// </summary>
-        Timeout = 3,
+        Timeout,
 
         /// <summary>
         /// Parsing completed successfully
         /// </summary>
-        Done = 4
+        Done
     }
 
     /// <summary>Media type</summary>
