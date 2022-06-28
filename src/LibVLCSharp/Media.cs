@@ -88,8 +88,8 @@ namespace LibVLCSharp
             internal static extern long LibVLCMediaGetDuration(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_parse_with_options")]
-            internal static extern int LibVLCMediaParseWithOptions(IntPtr libvlc, IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
+                EntryPoint = "libvlc_media_parse_request")]
+            internal static extern int LibVLCMediaParseRequest(IntPtr libvlc, IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_parsed_status")]
@@ -491,7 +491,7 @@ namespace LibVLCSharp
             return MarshalUtils.InternalAsync(
                 nativeCall: () =>
                 {
-                    var result = Native.LibVLCMediaParseWithOptions(libvlc.NativeReference, NativeReference, options, timeout);
+                    var result = Native.LibVLCMediaParseRequest(libvlc.NativeReference, NativeReference, options, timeout);
                     if (result == -1)
                     {
                         tcs.TrySetResult(MediaParsedStatus.Failed);
@@ -517,7 +517,7 @@ namespace LibVLCSharp
         /// <remarks>
         /// <para>When the media parsing is stopped, the libvlc_MediaParsedChanged event will</para>
         /// <para>be sent with the libvlc_media_parsed_status_timeout status.</para>
-        /// <para>libvlc_media_parse_with_options</para>
+        /// <para>libvlc_media_parse_request</para>
         /// <para>LibVLC 3.0.0 or later</para>
         /// </remarks>
         public void ParseStop(LibVLC libvlc) => Native.LibVLCMediaParseStop(libvlc.NativeReference, NativeReference);
@@ -525,7 +525,7 @@ namespace LibVLCSharp
         /// <summary>
         /// Get the track list for one type
         /// LibVLC 4.0.0 and later.
-        /// You need to call libvlc_media_parse_with_options() or play the media
+        /// You need to call libvlc_media_parse_request() or play the media
         /// at least once before calling this function.Not doing this will result in
         /// an empty list.
         /// </summary>
@@ -564,7 +564,7 @@ namespace LibVLCSharp
         /// <para>A slave is an external input source that may contains an additional subtitle</para>
         /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
         /// <para>This function must be called before the media is parsed (via</para>
-        /// <para>libvlc_media_parse_with_options()) or before the media is played (via</para>
+        /// <para>libvlc_media_parse_request()) or before the media is played (via</para>
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
@@ -583,7 +583,7 @@ namespace LibVLCSharp
         /// <para>A slave is an external input source that may contains an additional subtitle</para>
         /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
         /// <para>This function must be called before the media is parsed (via</para>
-        /// <para>libvlc_media_parse_with_options()) or before the media is played (via</para>
+        /// <para>libvlc_media_parse_request()) or before the media is played (via</para>
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
@@ -1212,9 +1212,8 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Parse flags used by libvlc_media_parse_with_options()
+    /// Parse flags used by libvlc_media_parse_request()
     /// </summary>
-    /// <remarks>libvlc_media_parse_with_options</remarks>
     [Flags]
     public enum MediaParseOptions
     {
@@ -1235,13 +1234,9 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Parse status used sent by libvlc_media_parse_with_options() or returned by
+    /// Parse status used sent by libvlc_media_parse_request() or returned by
     /// libvlc_media_get_parsed_status()
     /// </summary>
-    /// <remarks>
-    /// libvlc_media_parse_with_options
-    /// libvlc_media_get_parsed_status
-    /// </remarks>
     public enum MediaParsedStatus
     {
         /// <summary>

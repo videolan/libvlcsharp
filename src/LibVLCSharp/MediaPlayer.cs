@@ -1804,7 +1804,7 @@ namespace LibVLCSharp
         /// Get the track list for one type
         /// LibVLC 4.0.0 and later.
         ///
-        ///<br/> You need to call libvlc_media_parse_with_options() or play the media
+        ///<br/> You need to call libvlc_media_parse_request() or play the media
         ///at least once before calling this function. Not doing this will result in
         ///an empty list.
         ///
