@@ -36,7 +36,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoNFloatUsing Condition="$(DefineConstants.Contains('APPLE'))">true</NoNFloatUsing>
   </PropertyGroup>
   <!--Override TFMs when building from the LVS.Win32 solution-->
   <PropertyGroup Condition="$(Configuration.StartsWith('Win32'))">
