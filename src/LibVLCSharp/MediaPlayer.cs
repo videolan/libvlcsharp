@@ -512,7 +512,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_tracklist")]
-            internal static extern IntPtr LibVLCMediaPlayerGetTrackList(IntPtr mediaplayer, TrackType type);
+            internal static extern IntPtr LibVLCMediaPlayerGetTrackList(IntPtr mediaplayer, TrackType type, bool selected);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_track_from_id")]
@@ -1815,11 +1815,38 @@ namespace LibVLCSharp
         ///tracks.
         ///
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <param name="type">type of track</param>
+        /// <returns>the track list</returns>
         public MediaTrackList? Tracks(TrackType type)
         {
-            var ptr = Native.LibVLCMediaPlayerGetTrackList(NativeReference, type);
+            var ptr = Native.LibVLCMediaPlayerGetTrackList(NativeReference, type, selected: false);
+            if (ptr == IntPtr.Zero)
+                return null;
+            return new MediaTrackList(ptr);
+        }
+
+        /// <summary>
+        /// Get the selected track list for one type
+        /// LibVLC 4.0.0 and later.
+        ///
+        ///<br/> You need to call libvlc_media_parse_request() or play the media
+        ///at least once before calling this function. Not doing this will result in
+        ///an empty list.
+        ///
+        ///<br/> This selected track list is a snapshot of the current tracks when this function
+        ///is called. If a new track is selected after this call, the user will need to call
+        ///this function again to get the new selected track.
+        ///
+        ///
+        ///The track list can be used to get track informations and to select specific
+        ///tracks.
+        ///
+        /// </summary>
+        /// <param name="type">type of track</param>
+        /// <returns>selected track(s)</returns>
+        public MediaTrackList? SelectedTracks(TrackType type)
+        {
+            var ptr = Native.LibVLCMediaPlayerGetTrackList(NativeReference, type, selected: true);
             if (ptr == IntPtr.Zero)
                 return null;
             return new MediaTrackList(ptr);
