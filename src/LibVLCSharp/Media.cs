@@ -150,7 +150,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_thumbnail_request_by_pos")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestByPosition(IntPtr libvlc, IntPtr media, float position, ThumbnailerSeekSpeed speed,
+            internal static extern IntPtr LibVLCMediaThumbnailRequestByPosition(IntPtr libvlc, IntPtr media, double position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -646,7 +646,7 @@ namespace LibVLCSharp
         /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, float position, ThumbnailerSeekSpeed speed,
+        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, double position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
             return ThumbnailRequestInternal(() =>

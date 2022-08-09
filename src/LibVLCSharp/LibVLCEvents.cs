@@ -535,9 +535,9 @@ namespace LibVLCSharp
         /// <summary>
         /// Mediaplayer's current position
         /// </summary>
-        public readonly float Position;
+        public readonly double Position;
 
-        internal MediaPlayerPositionChangedEventArgs(float position)
+        internal MediaPlayerPositionChangedEventArgs(double position)
         {
             Position = position;
         }

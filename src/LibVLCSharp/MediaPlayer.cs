@@ -120,12 +120,12 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_position")]
-            internal static extern float LibVLCMediaPlayerGetPosition(IntPtr mediaPlayer);
+            internal static extern double LibVLCMediaPlayerGetPosition(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_position")]
-            internal static extern int LibVLCMediaPlayerSetPosition(IntPtr mediaPlayer, float position, bool fast);
+            internal static extern int LibVLCMediaPlayerSetPosition(IntPtr mediaPlayer, double position, bool fast);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -845,13 +845,13 @@ namespace LibVLCSharp
         /// <param name="position">the position</param>
         /// <param name="fast">prefer fast seeking or precise seeking</param>
         /// <returns>true on success, false otherwise</returns>
-        public bool SetPosition(float position, bool fast = false) => Native.LibVLCMediaPlayerSetPosition(NativeReference, position, fast) == 0;
+        public bool SetPosition(double position, bool fast = false) => Native.LibVLCMediaPlayerSetPosition(NativeReference, position, fast) == 0;
 
         /// <summary>
         /// Get movie position as percentage between 0.0 and 1.0.
         /// Returns movie position, or -1. in case of error
         /// </summary>
-        public float Position => Native.LibVLCMediaPlayerGetPosition(NativeReference);
+        public double Position => Native.LibVLCMediaPlayerGetPosition(NativeReference);
 
         /// <summary>
         /// Set the movie time. This has no effect if no media is being

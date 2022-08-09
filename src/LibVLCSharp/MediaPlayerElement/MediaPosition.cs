@@ -13,7 +13,7 @@ namespace LibVLCSharp.MediaPlayerElement
         /// <param name="position">position as percentage, between 0.0 and 1.0</param>
         /// <param name="seekBarPosition">seek bar position</param>
         /// <param name="length">media length in milliseconds</param>
-        public MediaPosition(float position, double seekBarPosition, long length)
+        public MediaPosition(double position, double seekBarPosition, long length)
         {
             Position = position;
             SeekBarPosition = seekBarPosition;
@@ -25,7 +25,7 @@ namespace LibVLCSharp.MediaPlayerElement
         /// <summary>
         /// Gets the media position
         /// </summary>
-        public float Position { get; }
+        public double Position { get; }
 
         /// <summary>
         /// Gets the seek bar position
