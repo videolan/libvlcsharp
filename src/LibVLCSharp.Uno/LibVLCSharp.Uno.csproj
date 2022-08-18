@@ -43,7 +43,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('ios')) or $(TargetFramework.Contains('android'))">
     <PackageReference Include="Uno.UI" Version="2.0.527" />
-    <PackageReference Include="Uno.SourceGenerationTasks" Version="3.0.2" /> <!-- TODO: Work around broken VS tooling. To remove when switching to Uno 3 -->
+    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.1.0" /> <!-- TODO: Work around broken VS tooling. To remove when switching to Uno 3 -->
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="**\*.UWP.*cs" />
