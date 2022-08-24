@@ -559,6 +559,11 @@ namespace LibVLCSharp
             internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup, 
                 OutputCleanup? outputCleanup, OutputSetResize? resize, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, 
                 GetProcAddress? getProcAddress, FrameMetadata? metadata, OutputSelectPlane? selectPlane, IntPtr opaque);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_record")]
+            internal static extern void LibVLCMediaPlayerRecord(IntPtr mediaplayer, bool enable, IntPtr path);
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2067,6 +2072,27 @@ namespace LibVLCSharp
         FrameMetadata? _frameMetadata;
         OutputSelectPlane? _outputSelectPlane;
 
+        /// <summary>
+        /// Start recording
+        /// <para/>
+        /// Users should subscribe to <see cref="MediaPlayer.RecordChanged"/> beforehand to get the final filepath of the recorded file and 
+        /// monitor the recording state.
+        /// <para/>
+        /// LibVLC 4.0 and later
+        /// </summary>
+        /// <param name="directory">path of the recording directory or NULL (use default path)</param>
+        public void StartRecording(string? directory = null) => Native.LibVLCMediaPlayerRecord(NativeReference, enable: true, directory.ToUtf8());
+
+        /// <summary>
+        /// Stop recording
+        /// <para/>
+        /// Users should subscribe to <see cref="MediaPlayer.RecordChanged"/> beforehand to get the final filepath of the recorded file and 
+        /// monitor the recording state.
+        /// <para/>
+        /// LibVLC 4.0 and later
+        /// </summary>
+        public void StopRecording() => Native.LibVLCMediaPlayerRecord(NativeReference, enable: false, IntPtr.Zero);
+
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
 #if UNITY
@@ -3002,6 +3028,15 @@ namespace LibVLCSharp
         {
             add => EventManager.AttachEvent(EventType.MediaPlayerProgramSelected, value);
             remove => EventManager.DetachEvent(EventType.MediaPlayerProgramSelected, value);
+        }
+
+        /// <summary>
+        /// The recording state of the mediaplayer changed
+        /// </summary>
+        public event EventHandler<MediaPlayerRecordChangedEventArgs> RecordChanged
+        {
+            add => EventManager.AttachEvent(EventType.MediaPlayerRecordChanged, value);
+            remove => EventManager.DetachEvent(EventType.MediaPlayerRecordChanged, value);
         }
         #endregion
 

@@ -31,7 +31,7 @@ namespace LibVLCSharp
         MediaPlayerSnapshotTaken = MediaPlayerPausableChanged + 2,
         MediaPlayerLengthChanged,
         MediaPlayerVout,
-        MediaPlayerESAdded,
+        MediaPlayerESAdded = MediaPlayerVout + 2,
         MediaPlayerESDeleted,
         MediaPlayerESSelected,
         MediaPlayerCorked,
@@ -53,6 +53,7 @@ namespace LibVLCSharp
         MediaPlayerTitleListChanged,
         MediaPlayerTitleSelectionChanged,
         MediaPlayerChapterChanged,
+        MediaPlayerRecordChanged,
         MediaListItemAdded = 0x200,
         MediaListWillAddItem,
         MediaListItemDeleted,
@@ -161,6 +162,8 @@ namespace LibVLCSharp
             internal readonly VolumeChanged MediaPlayerVolumeChanged;
             [FieldOffset(0)]
             internal readonly AudioDeviceChanged AudioDeviceChanged;
+            [FieldOffset(0)]
+            internal readonly RecordChanged RecordChanged;
 
             // renderer discoverer
             [FieldOffset(0)]
@@ -294,6 +297,13 @@ namespace LibVLCSharp
         internal readonly struct AudioDeviceChanged
         {
             internal readonly IntPtr Device;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct RecordChanged
+        {
+            internal readonly bool IsRecording;
+            internal readonly IntPtr RecordedFilePath;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -804,6 +814,29 @@ namespace LibVLCSharp
         {
             UnselectedId = unselectedId;
             SelectedId = selectedId;
+        }
+    }
+
+    /// <summary>
+    /// The mediaplayer started or stopped recording
+    /// </summary>
+    public class MediaPlayerRecordChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// True if the mediaplayer started recording, 
+        /// false when the mediaplayer stopped recording
+        /// </summary>
+        public readonly bool IsRecording;
+
+        /// <summary>
+        /// filepath of the recorded file, only valid when <see cref="IsRecording"/> is false
+        /// </summary>
+        public readonly string? FilePath;
+
+        internal MediaPlayerRecordChangedEventArgs(bool isRecording, string? filePath)
+        {
+            IsRecording = isRecording;
+            FilePath = filePath;
         }
     }
 

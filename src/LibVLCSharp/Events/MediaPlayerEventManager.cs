@@ -37,6 +37,7 @@ namespace LibVLCSharp
         EventHandler<MediaPlayerProgramDeletedEventArgs>? _mediaPlayerProgramDeleted;
         EventHandler<MediaPlayerProgramSelectedEventArgs>? _mediaPlayerProgramSelected;
         EventHandler<MediaPlayerProgramUpdatedEventArgs>? _mediaPlayerProgramUpdated;
+        EventHandler<MediaPlayerRecordChangedEventArgs>? _mediaplayerRecordChanged;
 
         public MediaPlayerEventManager(IntPtr ptr) : base(ptr)
         {
@@ -174,6 +175,10 @@ namespace LibVLCSharp
                     _mediaPlayerProgramSelected += eventHandler as EventHandler<MediaPlayerProgramSelectedEventArgs>;
                     Attach(eventType, OnProgramSelected);
                     break;
+                case EventType.MediaPlayerRecordChanged:
+                    _mediaplayerRecordChanged += eventHandler as EventHandler<MediaPlayerRecordChangedEventArgs>;
+                    Attach(eventType, OnRecordChanged);
+                    break;
                 default:
                     OnEventUnhandled(this, eventType);
                     break;
@@ -310,6 +315,10 @@ namespace LibVLCSharp
                     break;
                 case EventType.MediaPlayerProgramSelected:
                     _mediaPlayerProgramSelected -= eventHandler as EventHandler<MediaPlayerProgramSelectedEventArgs>;
+                    Detach(eventType);
+                    break;
+                case EventType.MediaPlayerRecordChanged:
+                    _mediaplayerRecordChanged -= eventHandler as EventHandler<MediaPlayerRecordChangedEventArgs>;
                     Detach(eventType);
                     break;
                 default:
@@ -502,6 +511,14 @@ namespace LibVLCSharp
 
             _mediaPlayerProgramSelected?.Invoke(this,
                 new MediaPlayerProgramSelectedEventArgs(selectionChanged.UnselectedId, selectionChanged.SelectedId));
+        }
+
+        void OnRecordChanged(IntPtr ptr)
+        {
+            var recordChanged = RetrieveEvent(ptr).Union.RecordChanged;
+
+            _mediaplayerRecordChanged?.Invoke(this,
+                new MediaPlayerRecordChangedEventArgs(recordChanged.IsRecording, recordChanged.RecordedFilePath.FromUtf8()));
         }
     }
 }
