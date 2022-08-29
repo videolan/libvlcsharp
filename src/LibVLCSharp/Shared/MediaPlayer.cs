@@ -1316,7 +1316,7 @@ namespace LibVLCSharp.Shared
             _videoFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
-                (cleanupCb == null)? null : VideoCleanupCallbackHandle);
+                (cleanupCb == null)? null : _videoCleanupCb);
         }
 
         /// <summary>
@@ -1783,7 +1783,6 @@ namespace LibVLCSharp.Shared
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
         static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
         static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
-        static readonly LibVLCVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
         private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
@@ -1826,16 +1825,6 @@ namespace LibVLCSharp.Shared
             }
 
             return 0;
-        }
-
-        [MonoPInvokeCallback(typeof(LibVLCVideoCleanupCb))]
-        private static void VideoCleanupCallback(ref IntPtr opaque)
-        {
-            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            if (mediaPlayer?._videoCleanupCb != null)
-            {
-                mediaPlayer._videoCleanupCb(ref mediaPlayer._videoUserData);
-            }
         }
 
         static readonly LibVLCAudioPlayCb AudioPlayCallbackHandle = AudioPlayCallback;
