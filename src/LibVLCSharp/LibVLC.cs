@@ -174,6 +174,10 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_get_compiler")]
             internal static extern IntPtr LibVLCGetCompiler();
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_clock")]
+            internal static extern long LibVLCClock();
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -742,6 +746,13 @@ namespace LibVLCSharp
         /// </summary>
         public string LibVLCCompiler => Native.LibVLCGetCompiler().FromUtf8()!;
 
+        /// <summary>
+        /// Return the current time as defined by LibVLC. The unit is the microsecond.
+        /// Time increases monotonically (regardless of time zone changes and RTC adjustments).
+        /// The origin is arbitrary but consistent across the whole system (e.g. the system uptime, the time since the system was booted).
+        /// On systems that support it, the POSIX monotonic clock is used.
+        /// </summary>
+        public long Clock => Native.LibVLCClock();
         #region Exit
 
         static readonly InternalExitCallback ExitCallbackHandle = ExitCallback;

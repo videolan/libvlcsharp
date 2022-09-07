@@ -564,6 +564,24 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_player_record")]
             internal static extern void LibVLCMediaPlayerRecord(IntPtr mediaplayer, bool enable, IntPtr path);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_watch_time")]
+            internal static extern int LibVLCMediaPlayerWatchTime(IntPtr mediaplayer, long minimumPeriod, WatchTimeOnUpdate onUpdate,
+                WatchTimeOnDiscontinuity? onDiscontinuity, IntPtr opaque);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_unwatch_time")]
+            internal static extern void LibVLCMediaPlayerUnwatchTime(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_time_point_interpolate")]
+            internal static extern int LibVLCMediaPlayerTimePointInterpolate(TimePoint point, long systemNow, ref long interpolatedTime, 
+                ref double interpolatedPosition);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_time_point_get_next_date")]
+            internal static extern long LibVLCMediaPlayerTimePointGetNextDate(TimePoint point, long systemNow, long interpolatedTime,
+                long nextInterval);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2093,6 +2111,63 @@ namespace LibVLCSharp
         /// </summary>
         public void StopRecording() => Native.LibVLCMediaPlayerRecord(NativeReference, enable: false, IntPtr.Zero);
 
+        /// <summary>
+        /// Watch for times updates
+        /// </summary>
+        /// <remarks>
+        /// Warning: Only one watcher can be registered at a time. 
+        /// Calling this function a second time(if <see cref="UnwatchTime"/> was not called in-between) will fail.
+        /// LibVLC 4.0.0 and later
+        /// </remarks>
+        /// <param name="minimumPeriod">corresponds to the minimum period, in us (microsecond), between each updates, 
+        /// use it to avoid flood from too many source updates, set it to 0 to receive all updates.</param>
+        /// <param name="onUpdate">callback to listen to update events (must not be NULL)</param>
+        /// <param name="onDiscontinuity">callback to listen to discontinuity events (can be be NULL)</param>
+        /// <returns>true on success, false otherwise (memory allocation error, or if already watching)</returns>
+        public bool WatchTime(long minimumPeriod, WatchTimeOnUpdate onUpdate, WatchTimeOnDiscontinuity? onDiscontinuity)
+        {
+            _onUpdate = onUpdate ?? throw new ArgumentNullException(nameof(onUpdate));
+            _onDiscontinuity = onDiscontinuity;
+
+            return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeOnUpdateHandle, 
+                onDiscontinuity == null ? null : WatchTimeOnDiscontinuityHandle, GCHandle.ToIntPtr(_gcHandle)) == 0;
+        }
+
+        /// <summary>
+        /// Unwatch time updates
+        /// </summary>
+        /// <remarks>LibVLC 4.0.0 and later</remarks>
+        public void UnwatchTime() => Native.LibVLCMediaPlayerUnwatchTime(NativeReference);
+
+        /// <summary>
+        /// Interpolate a timer value to now
+        /// </summary>
+        /// <remarks>LibVLC 4.0.0 and later</remarks>
+        /// <param name="timepoint">time update obtained via the <see cref="WatchTimeOnUpdate"/> callback</param>
+        /// <param name="systemNow">current system date, in microsecond (us), returned by <see cref="LibVLC.Clock"/></param>
+        /// <param name="interpolatedTime">pointer where to set the interpolated time, in microsecond (us)</param>
+        /// <param name="interpolatedPosition">pointer where to set the interpolated position</param>
+        /// <returns>true on success, false otherwise (if the interpolated time is negative, may happen during buffering)</returns>
+        public bool Interpolate(TimePoint timepoint, long systemNow, ref long interpolatedTime, ref double interpolatedPosition)
+            => Native.LibVLCMediaPlayerTimePointInterpolate(timepoint, systemNow, ref interpolatedTime, ref interpolatedPosition) == 0;
+
+        /// <summary>
+        /// Get the date of the next interval
+        /// <para>
+        /// Can be used to setup an UI timer in order to update some widgets at specific interval. 
+        /// A next_interval of VLC_TICK_FROM_SEC(1) can be used to update a time widget when the media reaches a new second.
+        /// </para>
+        /// The media time doesn't necessarily correspond to the system time, that is why this function is needed and uses the rate of the current point.
+        /// </summary>
+        /// <remarks>LibVLC 4.0.0 and later</remarks>
+        /// <param name="timepoint">time update obtained by <see cref="WatchTimeOnUpdate"/></param>
+        /// <param name="systemNow">same system date used by <see cref="Interpolate(TimePoint, long, ref long, ref double)"/>, in microsecond (us)</param>
+        /// <param name="interpolatedTime">time returned by ts returned by <see cref="Interpolate(TimePoint, long, ref long, ref double)"/>, in microsecond (us)</param>
+        /// <param name="nextIntervalTime">next interval, in microsecond (us)</param>
+        /// <returns>the absolute system date, in microsecond (us), of the next interval.</returns>
+        public long GetNextDate(TimePoint timepoint, long systemNow, long interpolatedTime, long nextIntervalTime)
+            => Native.LibVLCMediaPlayerTimePointGetNextDate(timepoint, systemNow, interpolatedTime, nextIntervalTime);
+
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
 #if UNITY
@@ -2354,6 +2429,32 @@ namespace LibVLCSharp
             if (mediaPlayer?._cleanupCb != null)
             {
                 mediaPlayer._cleanupCb(mediaPlayer._audioUserData);
+            }
+        }
+
+        WatchTimeOnUpdate? _onUpdate;
+        WatchTimeOnDiscontinuity? _onDiscontinuity;
+
+        static unsafe readonly WatchTimeOnUpdate WatchTimeOnUpdateHandle = WatchTimeOnUpdateCallback;
+        static unsafe readonly WatchTimeOnDiscontinuity WatchTimeOnDiscontinuityHandle = WatchTimeOnDiscontinuityCallback;
+
+        [MonoPInvokeCallback(typeof(OutputCleanup))]
+        private static unsafe void WatchTimeOnUpdateCallback(TimePoint timepoint, void* opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._onUpdate != null)
+            {
+                mediaPlayer._onUpdate(timepoint, opaque);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(OutputCleanup))]
+        private static unsafe void WatchTimeOnDiscontinuityCallback(long systemDate, void* opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._onDiscontinuity != null)
+            {
+                mediaPlayer._onDiscontinuity(systemDate, opaque);
             }
         }
 
@@ -2710,6 +2811,42 @@ namespace LibVLCSharp
         /// <returns>true on success</returns>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate bool OutputSelectPlane(IntPtr opaque, UIntPtr plane, void* output);
+
+        /// <summary>
+        /// Callback  that notify when the player state or time changed.
+        /// <para>
+        /// Get notified when the time is updated by the input or output source. The
+        /// input source is the 'demux' or the 'access_demux'. The output source are
+        /// audio and video outputs: an update is received each time a video frame is
+        /// displayed or an audio sample is written. The delay between each updates may
+        /// depend on the input and source type(it can be every 5ms, 30ms, 1s or
+        /// 10s...).
+        /// </para>
+        /// Users of this timer may need to update the position at a higher
+        /// frequency from their own mainloop via
+        /// <see cref="Interpolate(TimePoint, long, ref long, ref double)"/>.
+        /// </summary>
+        /// <remarks>Warning: It is forbidden to call any Media Player functions from here.</remarks> 
+        /// <param name="timepoint">always valid, the time corresponding to the state</param>
+        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnDiscontinuity?)"/></param>
+        /// <returns></returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate void WatchTimeOnUpdate(TimePoint timepoint, void* opaque);
+
+        /// <summary>
+        /// Callback prototype that notify when the player is paused or a discontinuity occurred.
+        /// <para>
+        /// Likely caused by seek from the user or because the playback is stopped. The player user should stop its "interpolate" timer.
+        /// </para>
+        /// </summary>
+        /// <remarks>Warning: It is forbidden to call any Media Player functions from here.</remarks> 
+        /// <param name="systemDate">system date of this event, only valid (> 0) when paused.
+        /// It can be used to interpolate the last updated point to this date in order to get the last paused ts/position.</param>
+        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnDiscontinuity?)"/></param>
+        /// <returns></returns>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public unsafe delegate void WatchTimeOnDiscontinuity(long systemDate, void* opaque);
+
         #endregion
 
         /// <summary>

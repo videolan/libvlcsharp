@@ -755,6 +755,8 @@ namespace LibVLCSharp.Helpers
             return instance;
         }
 
+        internal unsafe static T GetInstance<T>(void* handle) where T : class => GetInstance<T>((IntPtr)handle);
+
         private static void Free(params IntPtr[] ptrs)
         {
             foreach (var ptr in ptrs)
