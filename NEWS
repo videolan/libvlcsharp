@@ -1,3 +1,9 @@
+LibVLCSharp version 3.6.7
+=========================
+* Updated samples.
+* Update .NET and Uno.SourceGenerationTasks SDKs.
+* Interop: Fix mediaplayer vmem cleanup callback regression https://code.videolan.org/videolan/LibVLCSharp/-/issues/339
+
 LibVLCSharp version 3.6.6
 =========================
 * Add support to Eto.Forms UI framework thanks to @rafntor.
