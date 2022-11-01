@@ -47,4 +47,9 @@ Xamarin.Forms support for GTK and WPF are in separate packages. LibVLC needs to 
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarin.mac')) And $([MSBuild]::IsOsPlatform('Windows'))">
+    <Reference Include="Xamarin.Mac">
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Xamarin.VisualStudio\Xamarin.Mac.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

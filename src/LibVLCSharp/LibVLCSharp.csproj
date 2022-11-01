@@ -80,6 +80,11 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <ItemGroup Condition="'$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('xamarin.mac')) And $([MSBuild]::IsOsPlatform('Windows'))">
+    <Reference Include="Xamarin.Mac">
+      <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Xamarin.VisualStudio\Xamarin.Mac.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Target Name="IncludeAWindow" Condition="$(TargetFramework.Contains('android'))">
     <ItemGroup>
       <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
