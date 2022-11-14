@@ -20,6 +20,7 @@ _The official repository URL for this repo is https://code.videolan.org/videolan
   - [Preview builds](#Pre-release-versions)
 - [Getting started](#getting-started)
 - [Documentation](#documentation)
+- [Ebook](#ebook)
 - [Migrating from Vlc.DotNet](docs/migrating_from_Vlc.DotNet.md)
 - [Samples](#samples)
 - [Quick API overview](#quick-api-overview)
@@ -240,6 +241,12 @@ This page indexes all available tutorial materials about LibVLCSharp. There are 
 ### [Community projects](docs/made_with_libvlcsharp.md)
 
 Here we list several interesting projects made by the community using LibVLCSharp. Feel free to send a PR to yours!
+
+## Ebook
+
+In September 2022, the first book ever about LibVLC, the VideoLAN community and LibVLCSharp was released!
+
+[The Good Parts of LibVLC](https://mfkl.gumroad.com/l/libvlc-good-parts) contains everything you need to know about VLC, LibVLC and how to use it from .NET with LibVLCSharp.
 
 ## Samples
 
