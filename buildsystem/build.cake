@@ -70,12 +70,12 @@ Task("Build-only-libvlcsharp")
 Task("Test")
     .Does(() =>
 {
-    var settings = new DotNetCoreTestSettings
+    var settings = new DotNetTestSettings
     {
         Loggers = new []{ "console;verbosity=detailed" }
     };
 
-    DotNetCoreTest(testCsproj, settings);
+    DotNetTest(testCsproj, settings);
 });
 
 Task("CIDeploy")
