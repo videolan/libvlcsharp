@@ -14,19 +14,19 @@ stages:
   jobs:
   - job: Linux
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: 'ubuntu-latest'
     steps:
     - template: linux-build.yml
 
   - job: macOS
     pool:
-      vmImage: 'macOS-10.15'
+      vmImage: 'macOS-latest'
     steps:
     - template: mac-build.yml
 
   - job: Windows
     pool:
-      vmImage: 'windows-2022'
+      vmImage: 'windows-latest'
     steps:
     - template: windows-build.yml
 
