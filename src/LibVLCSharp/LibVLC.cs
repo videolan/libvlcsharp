@@ -297,11 +297,7 @@ namespace LibVLCSharp
             {
                 options = options.Concat(new[] { "--verbose=2" }).ToArray();
             }
-#if UWP
-            return options.Concat(new[] {"--aout=winstore"}).ToArray();
-#else
             return options;
-#endif
         }
 
         /// <summary>
