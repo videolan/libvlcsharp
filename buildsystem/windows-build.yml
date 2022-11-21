@@ -6,7 +6,7 @@ steps:
     targetType: 'inline'
     script: |
       $msiFile = "gtk-sharp-2.12.45.msi"
-      Invoke-WebRequest "https://github.com/mfkl/gtk-sharp-msi/raw/main/$msiFile" -OutFile $msiFile
+      Invoke-WebRequest "https://github.com/mono/gtk-sharp/releases/download/2.12.45/$msiFile" -OutFile $msiFile
       $arguments = "/i `"$msiFile`" /quiet"
       Start-Process msiexec.exe -ArgumentList $arguments -Wait
 
