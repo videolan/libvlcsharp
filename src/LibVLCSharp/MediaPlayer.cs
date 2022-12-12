@@ -316,13 +316,13 @@ namespace LibVLCSharp
             internal static extern int LibVLCAudioSetVolume(IntPtr mediaPlayer, int volume);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_get_channel")]
-            internal static extern AudioOutputChannel LibVLCAudioGetChannel(IntPtr mediaPlayer);
+                EntryPoint = "libvlc_audio_get_stereomode")]
+            internal static extern AudioOutputStereoMode LibVLCAudioGetStereoMode(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_audio_set_channel")]
-            internal static extern int LibVLCAudioSetChannel(IntPtr mediaPlayer, AudioOutputChannel channel);
+                EntryPoint = "libvlc_audio_set_stereomode")]
+            internal static extern int LibVLCAudioSetStereoMode(IntPtr mediaPlayer, AudioOutputStereoMode stereoMode);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -556,8 +556,8 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_output_callbacks")]
-            internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup, 
-                OutputCleanup? outputCleanup, OutputSetResize? resize, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, 
+            internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup,
+                OutputCleanup? outputCleanup, OutputSetResize? resize, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent,
                 GetProcAddress? getProcAddress, FrameMetadata? metadata, OutputSelectPlane? selectPlane, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -575,13 +575,21 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_time_point_interpolate")]
-            internal static extern int LibVLCMediaPlayerTimePointInterpolate(TimePoint point, long systemNow, ref long interpolatedTime, 
+            internal static extern int LibVLCMediaPlayerTimePointInterpolate(TimePoint point, long systemNow, ref long interpolatedTime,
                 ref double interpolatedPosition);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_time_point_get_next_date")]
             internal static extern long LibVLCMediaPlayerTimePointGetNextDate(TimePoint point, long systemNow, long interpolatedTime,
                 long nextInterval);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_get_mixmode")]
+            internal static extern AudioOutputMixmode LibVLCAudioGetMixmode(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_audio_set_mixmode")]
+            internal static extern int LibVLCAudioSetMixmode(IntPtr mediaplayer, AudioOutputMixmode mode);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -656,7 +664,7 @@ namespace LibVLCSharp
         public bool Play()
         {
             var media = Media;
-            if(media != null)
+            if (media != null)
             {
                 media.AddOption(Configuration);
                 media.Dispose();
@@ -1252,16 +1260,18 @@ namespace LibVLCSharp
         public bool SetVolume(int volume) => Native.LibVLCAudioSetVolume(NativeReference, volume) == 0;
 
         /// <summary>
-        /// Get current audio channel.
+        /// Get current audio stereo-mode.
+        /// <para/> version LibVLC 4.0.0 and later.
         /// </summary>
-        public AudioOutputChannel Channel => Native.LibVLCAudioGetChannel(NativeReference);
+        public AudioOutputStereoMode StereoMode => Native.LibVLCAudioGetStereoMode(NativeReference);
 
         /// <summary>
         /// Set current audio channel.
+        /// <para/> version LibVLC 4.0.0 and later.
         /// </summary>
-        /// <param name="channel">the audio channel</param>
-        /// <returns></returns>
-        public bool SetChannel(AudioOutputChannel channel) => Native.LibVLCAudioSetChannel(NativeReference, channel) == 0;
+        /// <param name="mode">the audio stereo-mode</param>
+        /// <returns>true on success, false on error</returns>
+        public bool SetStereoMode(AudioOutputStereoMode mode) => Native.LibVLCAudioSetStereoMode(NativeReference, mode) == 0;
 
         /// <summary>
         /// Equals override based on the native instance reference
@@ -1376,8 +1386,8 @@ namespace LibVLCSharp
             _videoDisplayCb = displayCb;
             Native.LibVLCVideoSetCallbacks(NativeReference,
                                            VideoLockCallbackHandle,
-                                           (unlockCb == null)? null : VideoUnlockCallbackHandle,
-                                           (displayCb == null)? null : VideoDisplayCallbackHandle,
+                                           (unlockCb == null) ? null : VideoUnlockCallbackHandle,
+                                           (displayCb == null) ? null : VideoDisplayCallbackHandle,
                                            GCHandle.ToIntPtr(_gcHandle));
         }
 
@@ -1414,7 +1424,7 @@ namespace LibVLCSharp
             _videoFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
-                (cleanupCb == null)? null : _videoCleanupCb);
+                (cleanupCb == null) ? null : _videoCleanupCb);
         }
 
         /// <summary>
@@ -1902,12 +1912,12 @@ namespace LibVLCSharp
         /// the string id, don't forget to dispose of it.</returns>
         public MediaTrack? TrackFromId(string id)
         {
-            if(string.IsNullOrEmpty(id)) return null;
+            if (string.IsNullOrEmpty(id)) return null;
 
             var idPtr = id.ToUtf8();
             var ptr = MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaPlayerGetTrackFromId(NativeReference, idPtr), idPtr);
 
-            if(ptr == IntPtr.Zero) return null;
+            if (ptr == IntPtr.Zero) return null;
             return new MediaTrack(ptr);
         }
 
@@ -2061,8 +2071,8 @@ namespace LibVLCSharp
             _updateOutput = updateOutput ?? throw new ArgumentNullException(nameof(updateOutput));
             _swap = swap ?? throw new ArgumentNullException(nameof(swap));
             _makeCurrent = makeCurrent ?? throw new ArgumentNullException(nameof(makeCurrent));
-            _getProcAddress = getProcAddress == null && (engine == VideoEngine.OpenGL || engine == VideoEngine.OpenGLES2) 
-                ? throw new ArgumentNullException(nameof(getProcAddress)) 
+            _getProcAddress = getProcAddress == null && (engine == VideoEngine.OpenGL || engine == VideoEngine.OpenGLES2)
+                ? throw new ArgumentNullException(nameof(getProcAddress))
                 : getProcAddress;
             _frameMetadata = metadata;
             _outputSelectPlane = selectPlane;
@@ -2129,7 +2139,7 @@ namespace LibVLCSharp
             _onUpdate = onUpdate ?? throw new ArgumentNullException(nameof(onUpdate));
             _onDiscontinuity = onDiscontinuity;
 
-            return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeOnUpdateHandle, 
+            return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeOnUpdateHandle,
                 onDiscontinuity == null ? null : WatchTimeOnDiscontinuityHandle, GCHandle.ToIntPtr(_gcHandle)) == 0;
         }
 
@@ -2167,6 +2177,34 @@ namespace LibVLCSharp
         /// <returns>the absolute system date, in microsecond (us), of the next interval.</returns>
         public long GetNextDate(TimePoint timepoint, long systemNow, long interpolatedTime, long nextIntervalTime)
             => Native.LibVLCMediaPlayerTimePointGetNextDate(timepoint, systemNow, interpolatedTime, nextIntervalTime);
+
+        /// <summary>
+        /// Get current audio mix-mode.
+        /// <para>version LibVLC 4.0.0 or later</para>
+        /// </summary>
+        public AudioOutputMixmode AudioOutputMixmode => Native.LibVLCAudioGetMixmode(NativeReference);
+
+        /// <summary>
+        /// Set current audio mix-mode.
+        /// <para>
+        /// By default (<see cref="AudioOutputMixmode.Unset"/>), the audio output will keep its
+        /// original channel configuration (play stereo as stereo, or 5.1 as 5.1). Yet,
+        /// the OS and Audio API might refuse a channel configuration and ask VLC to
+        /// adapt (Stereo played as 5.1 or vice-versa).
+        /// </para>
+        /// <para>
+        /// This function allows to force a channel configuration, it will only work if
+        /// the OS and Audio API accept this configuration (otherwise, it won't have any
+        /// effect). Here are some examples:
+        ///  - Play multi-channels (5.1, 7.1...) as stereo (<see cref="AudioOutputMixmode.Stereo"/>)
+        ///  - Play Stereo or 5.1 as 7.1 (<see cref="AudioOutputMixmode.M7_1"/>)
+        ///  - Play multi-channels as stereo with a binaural effect (<see cref="AudioOutputMixmode.Binaural"/>). It might be selected automatically if the
+        /// OS and Audio API can detect if a headphone is plugged.
+        /// </para>
+        /// </summary>
+        /// <param name="mode">the audio mixmode</param>
+        /// <returns></returns>
+        public bool SetAudioOutputMixmode(AudioOutputMixmode mode) => Native.LibVLCAudioSetMixmode(NativeReference, mode) == 0;
 
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
@@ -3173,7 +3211,7 @@ namespace LibVLCSharp
         /// <param name="disposing">release any unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposing)
             {
                 if (_gcHandle.IsAllocated)
                     _gcHandle.Free();
@@ -3454,14 +3492,14 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Audio channels
+    /// Audio stereo modes
     /// </summary>
-    public enum AudioOutputChannel
+    public enum AudioOutputStereoMode
     {
         /// <summary>
-        /// Error
+        /// Unset stereo mode
         /// </summary>
-        Error = -1,
+        Unset = 0,
 
         /// <summary>
         /// Stereo mode
@@ -3486,7 +3524,12 @@ namespace LibVLCSharp
         /// <summary>
         /// Dolbys mode
         /// </summary>
-        Dolbys = 5
+        Dolbys = 5,
+
+        /// <summary>
+        /// Mono mode
+        /// </summary>
+        Mono = 7
     }
 
     /// <summary>Media player roles.</summary>
@@ -3516,5 +3559,41 @@ namespace LibVLCSharp
         Accessibility = 8,
         /// <summary>Testing</summary>
         Test = 9
+    }
+
+    /// <summary>
+    /// Audio mix modes
+    /// </summary>
+    public enum AudioOutputMixmode
+    {
+        /// <summary>
+        /// Unset mixmode
+        /// </summary>
+        Unset = 0,
+
+        /// <summary>
+        /// Stereo mixmode
+        /// </summary>
+        Stereo = 1,
+
+        /// <summary>
+        /// Binaural mixmode
+        /// </summary>
+        Binaural = 2,
+
+        /// <summary>
+        /// 4.0 mixmode
+        /// </summary>
+        M4_0 = 3,
+
+        /// <summary>
+        /// 5.1 mixmode
+        /// </summary>
+        M5_1 = 4,
+
+        /// <summary>
+        /// 7.1 mixmode
+        /// </summary>
+        M7_1 = 5
     }
 }
