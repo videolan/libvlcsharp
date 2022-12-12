@@ -178,6 +178,10 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_clock")]
             internal static extern long LibVLCClock();
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_abi_version")]
+            internal static extern int LibVLCABIVersion();
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -753,6 +757,23 @@ namespace LibVLCSharp
         /// On systems that support it, the POSIX monotonic clock is used.
         /// </summary>
         public long Clock => Native.LibVLCClock();
+
+        /// <summary>
+        /// Get the ABI version of the libvlc library. <br/>
+        /// This is different than the VLC version, which is the version of the whole
+        /// VLC package. The value is the same as LIBVLC_ABI_VERSION_INT used when
+        /// compiling.
+        /// </summary>
+        /// <returns>a value with the following mask in hexadecimal:
+        ///  0xFF000000: major VLC version, similar to VLC major version,
+        ///  0x00FF0000: major ABI version, incremented incompatible changes are added,
+        ///  0x0000FF00: minor ABI version, incremented when new functions are added
+        ///  0x000000FF: micro ABI version, incremented with new release/builds
+        ///  <br/>
+        ///  This the same value as the.so version but cross platform.
+        /// </returns>
+        public int ABI => Native.LibVLCABIVersion();
+
         #region Exit
 
         static readonly InternalExitCallback ExitCallbackHandle = ExitCallback;
