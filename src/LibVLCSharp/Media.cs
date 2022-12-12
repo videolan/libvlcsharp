@@ -1222,7 +1222,11 @@ namespace LibVLCSharp
         /// (and not its sub items). Set this flag in order to receive a callback
         /// when the input is asking for credentials.
         /// </summary>
-        DoInteract = 8
+        DoInteract = 8,
+        /// <summary>
+        /// Force parsing the media even if it would be skipped.
+        /// </summary>
+        NoSkip = 10
     }
 
     /// <summary>
