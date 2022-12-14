@@ -81,6 +81,11 @@ namespace LibVLCSharp.WPF
             {
                 return;
             }
+            
+            if (PresentationSource.FromVisual(_bckgnd) == null)
+            {
+                return;
+            }
 
             Owner = _wndhost;
 
