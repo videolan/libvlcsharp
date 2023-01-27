@@ -111,7 +111,7 @@ media.AddOption(":freetype-color=16711680"); // Red
 ## How do I change the subtitle encoding?
 
 ```csharp
-media.AddOption(":subsdec-encoding=Windows-125");
+media.AddOption(":subsdec-encoding=Windows-1252");
 ```
 
 # How do I change aspect ratio?
