@@ -154,10 +154,6 @@ namespace LibVLCSharp
                 uint width, uint height, bool crop, PictureType pictureType, long timeout);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_thumbnail_request_cancel")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestCancel(IntPtr thumbnailRequest);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_thumbnail_request_destroy")]
             internal static extern IntPtr LibVLCMediaThumbnailRequestDestroy(IntPtr thumbnailRequest);
         }
@@ -664,7 +660,7 @@ namespace LibVLCSharp
             var ctr = cancellationToken.Register(() =>
             {
                 if (request.Valid)
-                    Native.LibVLCMediaThumbnailRequestCancel(request.NativeReference);
+                    Native.LibVLCMediaThumbnailRequestDestroy(request.NativeReference);
                 tcs.TrySetCanceled();
             });
 
