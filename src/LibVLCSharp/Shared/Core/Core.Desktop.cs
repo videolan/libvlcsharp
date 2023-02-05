@@ -16,14 +16,6 @@ namespace LibVLCSharp.Shared
     {
         partial struct Native
         {
-            /// <summary>
-            /// Initializes the X threading system
-            /// </summary>
-            /// <remarks>Linux X11 only</remarks>
-            /// <returns>non-zero on success, zero on failure</returns>
-            [DllImport(Constants.LibX11, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int XInitThreads();
-
             [DllImport(Constants.Kernel32, SetLastError = true)]
             internal static extern ErrorModes SetErrorMode(ErrorModes uMode);
         }
@@ -78,11 +70,6 @@ namespace LibVLCSharp.Shared
                 {
                     throw new InvalidOperationException($"Using {nameof(libvlcDirectoryPath)} is not supported on the Linux platform. " +
                         $"The recommended way is to have the libvlc librairies in /usr/lib. Use LD_LIBRARY_PATH if you need more customization");
-                }
-                // Initializes X threads before calling VLC. This is required for vlc plugins like the VDPAU hardware acceleration plugin.
-                if (Native.XInitThreads() == 0)
-                {
-                    Debug.WriteLine("XInitThreads failed");
                 }
                 return;
             }
