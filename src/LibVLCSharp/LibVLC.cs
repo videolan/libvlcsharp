@@ -198,7 +198,6 @@ namespace LibVLCSharp
         /// and where applicable:
         /// <para>- setlocale() and textdomain(),</para>
         /// <para>- setenv(), unsetenv() and putenv(),</para>
-        /// <para>- with the X11 display system, XInitThreads()</para>
         /// (see also libvlc_media_player_set_xwindow()) and
         /// <para>- on Microsoft Windows, SetErrorMode().</para>
         /// <para>- sigprocmask() shall never be invoked; pthread_sigmask() can be used.</para>
@@ -254,7 +253,6 @@ namespace LibVLCSharp
         /// and where applicable:
         /// <para>- setlocale() and textdomain(),</para>
         /// <para>- setenv(), unsetenv() and putenv(),</para>
-        /// <para>- with the X11 display system, XInitThreads()</para>
         /// (see also libvlc_media_player_set_xwindow()) and
         /// <para>- on Microsoft Windows, SetErrorMode().</para>
         /// <para>- sigprocmask() shall never be invoked; pthread_sigmask() can be used.</para>

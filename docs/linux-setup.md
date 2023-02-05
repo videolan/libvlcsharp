@@ -25,5 +25,47 @@ For ubuntu:
 
 ## For other platforms
 
+If you are using the *X Window System*, it has to be initialized for multithreading support and this requires you to natively import `libx11`.
+
 If your application doesn't find `libX11.so`, you may need to install the `libx11-dev` package :
 > `sudo apt install libx11-dev`
+
+Code example:
+```c#
+using System.Runtime.InteropServices;
+
+namespace myApp;
+
+public static class ImportHelper
+{
+    public struct Native
+    {
+        /// <summary>
+        /// Initializes the X threading system
+        /// </summary>
+        /// <remarks>Linux X11 only</remarks>
+        /// <returns>non-zero on success, zero on failure</returns>
+        [DllImport("libX11", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int XInitThreads();
+
+    }
+}
+
+```
+
+Usage:
+
+```c#
+// initialize multithreading support
+ImportHelper.Native.XInitThreads();
+
+
+// player initialization
+using var libvlc = new LibVLC(enableDebugLogs: true);
+using var media = new Media(libvlc, new Uri(@"C:\tmp\big_buck_bunny.mp4"));
+using var mediaplayer = new MediaPlayer(media);
+
+mediaplayer.Play();
+
+Console.ReadKey();
+```
