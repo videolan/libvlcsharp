@@ -142,6 +142,11 @@ namespace LibVLCSharp.WPF
 
         void Wndhost_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (e.Cancel)
+            {
+                return;
+            }
+
             Close();
 
             _bckgnd.DataContextChanged -= Background_DataContextChanged;
