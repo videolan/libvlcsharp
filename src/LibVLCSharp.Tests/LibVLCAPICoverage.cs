@@ -92,7 +92,7 @@ namespace LibVLCSharp.Tests
             // not implemented symbols for lack of use case or user interest
             var notImplementedOnPurpose = new List<string>
             {
-                "libvlc_printerr", "libvlc_vprinterr", "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
+                "libvlc_printerr", "libvlc_vprinterr", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
                 "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
             };
 
