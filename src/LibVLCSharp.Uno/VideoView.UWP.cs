@@ -1,5 +1,5 @@
 ﻿using System;
-using LibVLCSharp.Platforms.UWP;
+using LibVLCSharp.Platforms.Windows;
 using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.Uno

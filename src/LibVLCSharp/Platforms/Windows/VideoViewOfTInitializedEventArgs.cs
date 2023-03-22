@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibVLCSharp.Platforms.UWP
+namespace LibVLCSharp.Platforms.Windows
 {
     /// <summary>
     /// VideoView base class for the UWP platform with <see cref="Initialized"/> event

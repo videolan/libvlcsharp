@@ -1,4 +1,4 @@
-﻿#if DESKTOP
+﻿#if DESKTOP || WINUI
 
 using System;
 using System.Diagnostics;
@@ -74,7 +74,7 @@ namespace LibVLCSharp.Shared
                 return;
             }
 
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 || WINUI
             LoadLibVLC(libvlcDirectoryPath);
 #endif
         }

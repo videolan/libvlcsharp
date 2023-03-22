@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vlc="using:LibVLCSharp.Platforms.UWP">
+    xmlns:vlc="using:LibVLCSharp.Platforms.Windows">
 
     <Style TargetType="vlc:VideoViewBase">
         <Setter Property="Template">

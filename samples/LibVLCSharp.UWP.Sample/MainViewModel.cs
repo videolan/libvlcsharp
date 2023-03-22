@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using LibVLCSharp.Platforms.UWP;
+using LibVLCSharp.Platforms.Windows;
 using LibVLCSharp.Shared;
 
 namespace LibVLCSharp.UWP.Sample
