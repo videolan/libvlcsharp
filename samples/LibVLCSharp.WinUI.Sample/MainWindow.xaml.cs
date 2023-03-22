@@ -1,5 +1,4 @@
-﻿using DirectN;
-using LibVLCSharp.Platforms.Windows;
+﻿using LibVLCSharp.Platforms.Windows;
 using LibVLCSharp.Shared;
 using Microsoft.UI.Xaml;
 using System;

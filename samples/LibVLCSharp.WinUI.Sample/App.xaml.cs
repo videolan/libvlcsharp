@@ -1,5 +1,4 @@
-﻿using DirectN;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,16 +29,6 @@ namespace LibVLCSharp.WinUI.Sample
         {
             m_window = new MainWindow();
             m_window.Activate();
-            m_window.Closed += M_window_Closed;
-        }
-
-        private void M_window_Closed(object sender, WindowEventArgs args)
-        {
-            var dxgiDebug = DXGIFunctions.DXGIGetDebugInterface();
-            Debug.WriteLine("ReportLiveObjects");
-            dxgiDebug.Object.ReportLiveObjects(DXGIConstants.DXGI_DEBUG_ALL,
-                DXGI_DEBUG_RLO_FLAGS.DXGI_DEBUG_RLO_ALL);
-            dxgiDebug.Dispose();
         }
 
         private Window m_window;
