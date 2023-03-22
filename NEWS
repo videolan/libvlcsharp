@@ -1,3 +1,26 @@
+
+LibVLCSharp version 3.7.0
+=========================
+[BREAKING CHANGE] for UWP and Uno: The namespaces of the view has been changed from
+```
+LibVLCSharp.Platforms.UWP
+```
+to
+```
+LibVLCSharp.Platforms.Windows
+```
+We needed to have a way to name the view for both UWP and WinUI platforms as having 2 separate names was not possible. Hence the API break.
+
+* WinUI: Add initial View integration.
+Both Packaged and Unpackaged modes have been tested. For Unpackaged, modify your csproj as the following
+    <EnablePreviewMsixTooling>false</EnablePreviewMsixTooling>
+	<WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSdkBootstrapInitialize>false</WindowsAppSdkBootstrapInitialize>
+	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+and remove Package.appxmanifest.
+The minimal TFM supported for WinUI is net6.0-windows10.0.17763.0.
+* UWP: Fix small D3D11 memory leaks in the VideoView.
+
 LibVLCSharp version 3.6.8
 =========================
 * WPF: Prevent disappear foreground window when closing canceled.
