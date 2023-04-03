@@ -59,7 +59,7 @@ namespace LibVLCSharp
         static bool _libvlcLoaded;
         internal static bool LibVLCLoaded
         {
-#if DESKTOP && !NETSTANDARD1_1
+#if (DESKTOP && !NETSTANDARD1_1) || WINUI
             get => _libvlcLoaded || LibvlcHandle != IntPtr.Zero;
 #else
             get => _libvlcLoaded;
@@ -67,7 +67,7 @@ namespace LibVLCSharp
             set => _libvlcLoaded = value;
         }
 
-#if DESKTOP && !NETSTANDARD1_1
+#if DESKTOP && !NETSTANDARD1_1 || WINUI
         static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
         {
             var paths = new List<(string, string)>();

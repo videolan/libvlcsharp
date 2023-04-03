@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LibVLCSharp
+namespace LibVLCSharp.Platforms.Windows
 {
     /// <summary>
     /// Provides data for the <see cref="VideoView{TInitializedEventArgs}.Initialized"/> event.

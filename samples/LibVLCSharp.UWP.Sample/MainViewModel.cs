@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using LibVLCSharp;
+using LibVLCSharp.Platforms.Windows;
 
 namespace LibVLCSharp.UWP.Sample
 {
@@ -61,7 +61,7 @@ namespace LibVLCSharp.UWP.Sample
         {
             LibVLC = new LibVLC(enableDebugLogs: true, eventArgs.SwapChainOptions);
             MediaPlayer = new MediaPlayer(LibVLC);
-            using var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
             MediaPlayer.Play(media);
         }
 
@@ -78,3 +78,4 @@ namespace LibVLCSharp.UWP.Sample
         }
     }
 }
+
