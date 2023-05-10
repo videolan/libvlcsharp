@@ -24,7 +24,9 @@ namespace LibVLCSharp
         /// <exception cref="VLCException"></exception>
         internal static void InitializeUnity(string? libvlcDirectoryPath = null)
         {
-            if(!PlatformHelper.IsWindows) return; // only VLC for Unity on Windows currently requires pre-initialization logic
+            // only VLC for Unity on Windows and MacOS currently requires pre-initialization logic
+            if(!PlatformHelper.IsWindows && !PlatformHelper.IsMac)
+              return;
 
             if(string.IsNullOrEmpty(libvlcDirectoryPath))
             {
