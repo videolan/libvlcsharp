@@ -8,10 +8,17 @@ namespace LibVLCSharp
         internal const string LibraryName = "@rpath/DynamicMobileVLCKit.framework/DynamicMobileVLCKit";
 #elif TVOS
         internal const string LibraryName = "@rpath/TVVLCKit.framework/TVVLCKit";
+#elif UNITY_IOS
+        internal const string LibraryName = "@rpath/vlc.framework/vlc";
 #else
         internal const string LibraryName = "libvlc";
 #endif
+
+#if UNITY_IOS
+        internal const string CoreLibraryName = "@rpath/vlccore.framework/vlccore";
+#else
         internal const string CoreLibraryName = "libvlccore";
+#endif
 
         /// <summary>
         /// The name of the folder that contains the per-architecture folders
@@ -26,7 +33,11 @@ namespace LibVLCSharp
         internal const string MacLibraryExtension = ".dylib";
         internal const string Lib = "lib";
         internal const string LibVLC = "libvlc";
+#if UNITY_IOS
+        internal const string UnityPlugin = "@rpath/VLCUnityPlugin.framework/VLCUnityPlugin";
+#else
         internal const string UnityPlugin = "VLCUnityPlugin";
+#endif
     }
 
     internal static class ArchitectureNames
