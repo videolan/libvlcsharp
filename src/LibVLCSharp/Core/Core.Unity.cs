@@ -33,7 +33,10 @@ namespace LibVLCSharp
                 throw new VLCException("Please provide UnityEngine.Application.dataPath to Core.Initialize for proper initialization.");
             }
 
-            Native.SetPluginPath(libvlcDirectoryPath!);
+            if (PlatformHelper.IsMac)
+                Native.SetPluginPath(libvlcDirectoryPath! + "/VLCUnity/Plugins/MacOS/x86_64/vlc/plugins/" + ":" + libvlcDirectoryPath! + "/PlugIns/");
+            else
+                Native.SetPluginPath(libvlcDirectoryPath!);
 
             libvlcDirectoryPath = $"{libvlcDirectoryPath}\\Plugins";
 
