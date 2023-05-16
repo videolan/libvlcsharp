@@ -24,6 +24,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefineConstants>$(DefineConstants);UNITY</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="$(UNITY_IOS)=='true'">
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);UNITY_IOS</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup Condition="!$(DefineConstants.Contains('ANDROID')) and !$(DefineConstants.Contains('APPLE')) and !$(DefineConstants.Contains('UWP'))">
     <DefineConstants>$(DefineConstants);DESKTOP</DefineConstants>
   </PropertyGroup>
