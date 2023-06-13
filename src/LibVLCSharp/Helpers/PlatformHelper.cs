@@ -64,5 +64,12 @@ namespace LibVLCSharp
         /// Returns true if running in 64bit process, false otherwise
         /// </summary>
         public static bool IsX64BitProcess => IntPtr.Size == 8;
+
+#if !NET45
+        /// <summary>
+        /// Returns true if running in ARM64 process, false otherwise
+        /// </summary>
+        public static bool IsArm64BitProcess => RuntimeInformation.ProcessArchitecture == Architecture.Arm64;
+#endif
     }
 }

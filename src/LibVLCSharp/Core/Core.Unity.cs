@@ -34,10 +34,14 @@ namespace LibVLCSharp
             }
 
             if (PlatformHelper.IsMac)
-                Native.SetPluginPath(libvlcDirectoryPath! + "/VLCUnity/Plugins/MacOS/x86_64/vlc/plugins/" + ":" + libvlcDirectoryPath! + "/PlugIns/");
+            {
+                var arch = PlatformHelper.IsArm64BitProcess ? "arm64" : "x86_64";
+                Native.SetPluginPath($"{libvlcDirectoryPath!}/VLCUnity/Plugins/macOS/{arch}/vlc/plugins/:{libvlcDirectoryPath!}/PlugIns/");
+            }
             else
+            {
                 Native.SetPluginPath(libvlcDirectoryPath!);
-
+            }
             libvlcDirectoryPath = $"{libvlcDirectoryPath}\\Plugins";
 
             InitializeDesktop(libvlcDirectoryPath);
