@@ -90,6 +90,22 @@ namespace LibVLCSharp.Platforms.Windows
         }
 
         /// <summary>
+        /// Clears the current view restoring the initial visual state.
+        /// This is a LibVLCSharp UWP-specific workaround for the following issue: https://code.videolan.org/videolan/vlc/-/issues/23667 
+        /// </summary>
+        public void Clear()
+        {
+            if (_loaded && _swapChain is not null && _deviceContext is not null)
+            {
+                using var backBuffer = _swapChain.GetBackBuffer<Texture2D>(0);
+                using var target = new RenderTargetView(_d3D11Device, backBuffer);
+
+                _deviceContext.ClearRenderTargetView(target, new RawColor4(0, 0, 0, 0));
+                _swapChain.Present(0, PresentFlags.None);
+            }
+        }
+
+        /// <summary>
         /// Gets the swapchain parameters to pass to the <see cref="LibVLC"/> constructor.
         /// If you don't pass them to the <see cref="LibVLC"/> constructor, the video won't
         /// be displayed in your application.
