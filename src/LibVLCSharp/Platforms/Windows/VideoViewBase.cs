@@ -205,7 +205,7 @@ namespace LibVLCSharp.Platforms.Windows
                     BufferCount = 2,
                     SwapEffect = SwapEffect.FlipSequential,
                     Flags = SwapChainFlags.None,
-                    AlphaMode = AlphaMode.Unspecified
+                    AlphaMode = AlphaMode.Premultiplied
                 };
 
                 _swapChain = new SharpDX.DXGI.SwapChain1(dxgiFactory, _d3D11Device, ref swapChainDescription);
