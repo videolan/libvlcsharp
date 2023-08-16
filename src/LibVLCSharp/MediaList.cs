@@ -73,7 +73,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_is_readonly")]
-            internal static extern int LibVLCMediaListIsReadonly(IntPtr mediaList);
+            internal static extern bool LibVLCMediaListIsReadonly(IntPtr mediaList);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -209,7 +209,7 @@ namespace LibVLCSharp
         /// This indicates if this media list is read-only from a user point of view.
         /// True if readonly, false otherwise
         /// </summary>
-        public bool IsReadonly => Native.LibVLCMediaListIsReadonly(NativeReference) == 1;
+        public bool IsReadonly => Native.LibVLCMediaListIsReadonly(NativeReference);
 
         /// <summary>
         /// Get lock on media list items
