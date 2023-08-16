@@ -57,7 +57,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_playing")]
-            internal static extern int LibVLCMediaPlayerIsPlaying(IntPtr mediaPlayer);
+            internal static extern bool LibVLCMediaPlayerIsPlaying(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -193,16 +193,16 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_seekable")]
-            internal static extern int LibVLCMediaPlayerIsSeekable(IntPtr mediaPlayer);
+            internal static extern bool LibVLCMediaPlayerIsSeekable(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_can_pause")]
-            internal static extern int LibVLCMediaPlayerCanPause(IntPtr mediaPlayer);
+            internal static extern bool LibVLCMediaPlayerCanPause(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_program_scrambled")]
-            internal static extern int LibVLCMediaPlayerProgramScrambled(IntPtr mediaPlayer);
+            internal static extern bool LibVLCMediaPlayerProgramScrambled(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_programlist")]
@@ -250,7 +250,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_fullscreen")]
-            internal static extern int LibVLCGetFullscreen(IntPtr mediaPlayer);
+            internal static extern bool LibVLCGetFullscreen(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_equalizer")]
@@ -646,7 +646,7 @@ namespace LibVLCSharp
         /// <summary>
         /// return true if the media player is playing, false otherwise
         /// </summary>
-        public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference) != 0;
+        public bool IsPlaying => Native.LibVLCMediaPlayerIsPlaying(NativeReference);
 
         /// <summary>
         /// Starts playback with Media that is set
@@ -980,19 +980,19 @@ namespace LibVLCSharp
         /// <summary>
         /// True if the media player can seek
         /// </summary>
-        public bool IsSeekable => Native.LibVLCMediaPlayerIsSeekable(NativeReference) != 0;
+        public bool IsSeekable => Native.LibVLCMediaPlayerIsSeekable(NativeReference);
 
         /// <summary>
         /// True if the media player can pause
         /// </summary>
-        public bool CanPause => Native.LibVLCMediaPlayerCanPause(NativeReference) != 0;
+        public bool CanPause => Native.LibVLCMediaPlayerCanPause(NativeReference);
 
         /// <summary>
         /// True if the current program is scrambled
         /// <para></para>
         /// LibVLC 2.2.0 or later
         /// </summary>
-        public bool ProgramScambled => Native.LibVLCMediaPlayerProgramScrambled(NativeReference) != 0;
+        public bool ProgramScambled => Native.LibVLCMediaPlayerProgramScrambled(NativeReference);
 
         /// <summary>
         /// Display the next frame (if supported)
@@ -1048,7 +1048,7 @@ namespace LibVLCSharp
         /// </summary>
         public bool Fullscreen
         {
-            get => Native.LibVLCGetFullscreen(NativeReference) != 0;
+            get => Native.LibVLCGetFullscreen(NativeReference);
             set => Native.LibVLCSetFullscreen(NativeReference, value ? 1 : 0);
         }
 
