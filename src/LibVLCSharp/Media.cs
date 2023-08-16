@@ -77,7 +77,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_stats")]
-            internal static extern int LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
+            internal static extern bool LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_filestat")]
@@ -424,7 +424,7 @@ namespace LibVLCSharp
         /// <summary>Get the current statistics about the media
         /// structure that contain the statistics about the media
         /// </summary>
-        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats) == 0
+        public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats)
             ? default : mediaStats;
 
         MediaEventManager? _eventManager;
