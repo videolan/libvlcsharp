@@ -31,7 +31,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                             EntryPoint = "libvlc_media_discoverer_is_running")]
-            internal static extern int LibVLCMediaDiscovererIsRunning(IntPtr mediaDiscoverer);
+            internal static extern bool LibVLCMediaDiscovererIsRunning(IntPtr mediaDiscoverer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_discoverer_media_list")]
@@ -68,7 +68,7 @@ namespace LibVLCSharp
         /// <summary>
         /// Query if media service discover object is running.
         /// </summary>
-        public bool IsRunning => NativeReference != IntPtr.Zero && Native.LibVLCMediaDiscovererIsRunning(NativeReference) != 0;
+        public bool IsRunning => NativeReference != IntPtr.Zero && Native.LibVLCMediaDiscovererIsRunning(NativeReference);
 
         /// <summary>
         /// The MediaList attached to this MediaDiscoverer
