@@ -1206,23 +1206,21 @@ namespace LibVLCSharp
     public enum MediaParseOptions
     {
         /// <summary>Parse media if it's a local file</summary>
-        ParseLocal = 0,
+        ParseLocal = 0x01,
         /// <summary>Parse media even if it's a network file</summary>
-        ParseNetwork = 1,
+        ParseNetwork = 0x02,
+        /// <summary>Force parsing the media even if it would be skipped.</summary>
+        ParseForced = 0x04,
         /// <summary>Fetch meta and covert art using local resources</summary>
-        FetchLocal = 2,
+        FetchLocal = 0x08,
         /// <summary>Fetch meta and covert art using network resources</summary>
-        FetchNetwork = 4,
+        FetchNetwork = 0x10,
         /// <summary>
         /// Interact with the user (via libvlc_dialog_cbs) when preparsing this item
         /// (and not its sub items). Set this flag in order to receive a callback
         /// when the input is asking for credentials.
         /// </summary>
-        DoInteract = 8,
-        /// <summary>
-        /// Force parsing the media even if it would be skipped.
-        /// </summary>
-        NoSkip = 10
+        DoInteract = 0x20
     }
 
     /// <summary>
