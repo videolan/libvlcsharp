@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Themes = Avalonia.Themes;
 using LibVLCSharp.Avalonia.Sample.ViewModels;
 using LibVLCSharp.Avalonia.Sample.Views;
 using LibVLCSharp.Shared;
@@ -26,9 +25,6 @@ namespace LibVLCSharp.Avalonia.Sample
 
                 desktop.Exit += OnExit;
             }
-
-            var theme = new Themes.Default.DefaultTheme();
-            theme.TryGetResource("Button", out _);
 
             base.OnFrameworkInitializationCompleted();
         }
