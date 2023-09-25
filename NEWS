@@ -1,3 +1,8 @@
+LibVLCSharp version 3.8.0
+=========================
+* UWP: Added Clear method on VideoView by @FrayxRulez
+* UWP: Add alpha support to the SwapChain by @FrayxRulez
+* [BREAKING CHANGE] Add support to Avalonia 11. This breaks support to previous versions as Avalonia is not backward compatible.
 
 LibVLCSharp version 3.7.0
 =========================
