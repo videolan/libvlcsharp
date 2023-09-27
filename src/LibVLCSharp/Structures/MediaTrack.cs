@@ -232,15 +232,13 @@ namespace LibVLCSharp
 
         /// <summary>
         /// String identifier of track, can be used to save the track preference
-        /// from an other LibVLC run, only valid when the track is fetch from a
-        /// media_player
+        /// from another LibVLC run
         /// </summary>
         public readonly string? Id;
 
         /// <summary>
         /// A string identifier is stable when it is certified to be the same
-        /// across different playback instances for the same track, only valid when
-        /// the track is fetch from a media_player
+        /// across different playback instances for the same track
         /// </summary>
         public readonly bool Stable;
 
