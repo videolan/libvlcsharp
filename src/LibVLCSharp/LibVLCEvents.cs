@@ -77,7 +77,18 @@ namespace LibVLCSharp
         /// <para>Useless event, it will be triggered only when calling</para>
         /// <para>libvlc_media_discoverer_stop()</para>
         /// </remarks>
-        RendererDiscovererItemDeleted
+        RendererDiscovererItemDeleted,
+
+        /// <remarks>
+        /// <para>The current media set into the <see cref="MediaPlayer"/> is stopping.</para>
+        /// This event can be used to notify when the media callbacks, initialized
+        /// from <see cref="MediaInput"/>, should be interrupted, and in
+        /// particular the <see cref="MediaInput.Read(IntPtr, uint)"/>. 
+        /// <para>It can also be used to signal the application state that any input resource (webserver, file mounting,
+        /// etc) can be discarded.</para>
+        /// Output resources still need to be active until the player switches to the <see cref="VLCState.Stopped"/> state.
+        /// </remarks>
+        MediaPlayerMediaStopping
     }
 
     /// <summary>Renderer item</summary>
@@ -152,6 +163,8 @@ namespace LibVLCSharp
             internal readonly MediaPlayerLengthChanged MediaPlayerLengthChanged;
             [FieldOffset(0)]
             internal readonly MediaPlayerMediaChanged MediaPlayerMediaChanged;
+            [FieldOffset(0)]
+            internal readonly MediaPlayerMediaStopping MediaPlayerMediaStopping;
             [FieldOffset(0)]
             internal readonly EsChanged EsChanged;
             [FieldOffset(0)]
@@ -310,6 +323,12 @@ namespace LibVLCSharp
         internal readonly struct MediaPlayerMediaChanged
         {
             internal readonly IntPtr NewMedia;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal readonly struct MediaPlayerMediaStopping
+        {
+            internal readonly IntPtr Media;
         }
 
         [StructLayout(LayoutKind.Sequential)]
