@@ -57,12 +57,12 @@ namespace LibVLCSharp.WPF
 
         void Background_Unloaded(object? sender, RoutedEventArgs e)
         {
-            _bckgnd.SizeChanged -= Wndhost_SizeChanged;
-            _bckgnd.LayoutUpdated -= RefreshOverlayPosition;
+            _bckgnd.SizeChanged -= Bckgnd_SizeChanged;
+            _bckgnd.LayoutUpdated -= Bckgnd_LayoutUpdated;
             if (_wndhost != null)
             {
                 _wndhost.Closing -= Wndhost_Closing;
-                _wndhost.LocationChanged -= RefreshOverlayPosition;
+                _wndhost.LocationChanged -= Wndhost_LocationChanged;
             }
 
             Hide();
@@ -85,20 +85,13 @@ namespace LibVLCSharp.WPF
             Owner = _wndhost;
 
             _wndhost.Closing += Wndhost_Closing;
-            _wndhost.LocationChanged += RefreshOverlayPosition;
-            _bckgnd.LayoutUpdated += RefreshOverlayPosition;
-            _bckgnd.SizeChanged += Wndhost_SizeChanged;
+            _wndhost.LocationChanged += Wndhost_LocationChanged;
+            _bckgnd.LayoutUpdated += Bckgnd_LayoutUpdated;
+            _bckgnd.SizeChanged += Bckgnd_SizeChanged;
 
             try
             {
-                var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-                var source = PresentationSource.FromVisual(_wndhost);
-                var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-                Left = targetPoints.X;
-                Top = targetPoints.Y;
-                var size = new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight);
-                Height = size.Y;
-                Width = size.X;
+                AlignWithBackground();
                 Show();
                 _wndhost.Focus();
             }
@@ -109,35 +102,90 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        void RefreshOverlayPosition(object? sender, EventArgs e)
+        void Bckgnd_LayoutUpdated(object? sender, EventArgs e)
         {
-            if (PresentationSource.FromVisual(_bckgnd) == null)
+            AlignWithBackground();
+        }
+
+        void Wndhost_LocationChanged(object? sender, EventArgs e)
+        {
+            AlignWithBackground();
+        }
+
+        void Bckgnd_SizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            AlignWithBackground();
+        }
+
+        void AlignWithBackground()
+        {
+            if (_wndhost == null)
             {
                 return;
             }
 
-            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
             var source = PresentationSource.FromVisual(_wndhost);
-            var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-            Left = targetPoints.X;
-            Top = targetPoints.Y;
-        }
 
-        void Wndhost_SizeChanged(object? sender, SizeChangedEventArgs e)
-        {
-            var source = PresentationSource.FromVisual(_wndhost);
             if (source == null)
             {
                 return;
             }
 
-            var locationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
-            var targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
-            Left = targetPoints.X;
-            Top = targetPoints.Y;
-            var size = new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight);
-            Height = size.Y;
-            Width = size.X;
+            /*
+             * Note that _bckgnd.ActualWidth and _bckgnd.ActualWidth are in local coordinates
+             * and not in screen coordinates.
+             *
+             * Sizes in local and screen coordinates differ when a scale transformation has
+             * been applied to _bckgnd or one of its ancestors up to the parent window.
+             * This is also the case when the video or one of its ancestors is contained
+             * in a Viewbox.
+             *
+             * To correctly position and size the ForegroundWindow, we transform the extent
+             * of _bckgnd (top-left and bottom-right points) from _bckgnd coordinates
+             * to screen coordinates and use them as the extents of ForegroundWindow.
+             *
+             * In case a scaling is detected, we should also apply that scaling to the
+             * content of ForegroundWindow, so it naturally scales up and down with the
+             * rest of the parent controls.
+             *
+             * The video view itself natively supports scaling.
+             */
+
+            var startLocationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
+            var startLocationPoint = source.CompositionTarget.TransformFromDevice.Transform(startLocationFromScreen);
+            var endLocationFromScreen = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight));
+            var endLocationPoint = source.CompositionTarget.TransformFromDevice.Transform(endLocationFromScreen);
+
+            Left = Math.Min(startLocationPoint.X, endLocationPoint.X);
+            Top = Math.Min(startLocationPoint.Y, endLocationPoint.Y);
+            Width = Math.Abs(endLocationPoint.X - startLocationPoint.X);
+            Height = Math.Abs(endLocationPoint.Y - startLocationPoint.Y);
+
+            if (Math.Abs(Width - _bckgnd.ActualWidth) + Math.Abs(Height - _bckgnd.ActualHeight) > 0.5)
+            {
+                ScaleWindowContent(Width / _bckgnd.ActualWidth, Height / _bckgnd.ActualHeight);
+            }
+        }
+
+        void ScaleWindowContent(double scaleX, double scaleY)
+        {
+            if (VisualChildrenCount <= 0)
+            {
+                return;
+            }
+
+            var child = (FrameworkElement)GetVisualChild(0)!;
+
+            // Do not re-create and apply the ScaleTransform if already scaled
+            // That would lead to an infinite layout update cycle
+            if (child.LayoutTransform is ScaleTransform scaleTransform && 
+                Math.Abs(scaleTransform.ScaleX - scaleX) < 0.01 &&
+                Math.Abs(scaleTransform.ScaleY - scaleY) < 0.01)
+            {
+                return;
+            }
+
+            child.LayoutTransform = new ScaleTransform(scaleX, scaleY);
         }
 
         void Wndhost_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
