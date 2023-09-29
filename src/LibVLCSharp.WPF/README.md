@@ -58,6 +58,16 @@ The DataContext of the `VideoView` is propagated to your overlay content. This m
 
 *Note : This behavior is specific to the LibVLCSharp WPF implementation and is not (yet?) available to LibVLCSharp.Forms.Platforms.WPF*
 
+## WPF transforms support and limitations
+
+Applying layout and render transforms to the `VideoView` or one of its ancestors is partially supported by LibVLCSharp.WPF: 
+
+Translate transforms and uniform scale transforms are fully supported and correctly applied to the video and the overlay content. Using a `Viewbox` with a uniform stretch is also fully supported, as it is analogous to a uniform scale transform.
+
+Non-uniform scale transforms and negative scale factors (mirroring) have a limited support. That also applies to using a `Viewbox` with a non-uniform stretch.
+
+Other transforms (rotate, skew, ...) are currently not supported.
+
 ## Why should I reference this package in my project?
 
 If you want to create a video application using WPF and any supported .NET language, this package is made for you.
