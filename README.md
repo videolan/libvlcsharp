@@ -343,7 +343,7 @@ If you have any question or if you're not sure it's actually an issue, please vi
 If you would like VLC developers to provide you with:
 - custom development on LibVLC and/or LibVLCSharp, 
 - training and workshops,
-- [commercial licenses](https://videolabs.io/solutions/libvlcsharp),
+- [commercial licenses](https://videolabs.io/products/libvlcsharp),
 - support services,
 - consulting services,
 - other multimedia services.
@@ -356,7 +356,7 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 
 ## Licenses
 
-LibVLCSharp is released under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)) and is also available under a [commercial license](https://videolabs.io/solutions/libvlcsharp).
+LibVLCSharp is released under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)) and is also available under a [commercial license](https://videolabs.io/products/libvlcsharp).
 
 <br/>
 <div align="center">
