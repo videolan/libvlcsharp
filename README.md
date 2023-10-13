@@ -203,9 +203,9 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [LibVLCSharpEto]: https://www.nuget.org/packages/LibVLCSharp.Eto/
 [LibVLCSharpEtoBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Eto.svg
 
-[VLCUnityWindows]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-windows-133979
-[VLCUnityUWP]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-uwp-246153
-[VLCUnityAndroid]: https://assetstore.unity.com/packages/tools/video/vlc-for-unity-android-213786
+[VLCUnityWindows]: https://videolabs.io/store/unity
+[VLCUnityUWP]: https://videolabs.io/store/unity
+[VLCUnityAndroid]: https://videolabs.io/store/unity
 [VLCUnityBadge]: https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity
 
 ## Getting started
