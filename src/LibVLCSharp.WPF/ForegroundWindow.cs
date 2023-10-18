@@ -131,6 +131,11 @@ namespace LibVLCSharp.WPF
                 return;
             }
 
+            if (PresentationSource.FromVisual(_bckgnd) == null)
+            {
+                return;
+            }
+
             /*
              * Note that _bckgnd.ActualWidth and _bckgnd.ActualWidth are in local coordinates
              * and not in screen coordinates.
