@@ -1,3 +1,7 @@
+LibVLCSharp version 3.8.2
+=========================
+* WPF: ForegroundWindow: Fix regression by @amine2050
+
 LibVLCSharp version 3.8.1
 =========================
 * WPF: ForegroundWindow: support Viewbox contained and scaled video host by @amine2050
