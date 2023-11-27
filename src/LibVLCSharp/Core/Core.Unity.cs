@@ -36,7 +36,7 @@ namespace LibVLCSharp
             if (PlatformHelper.IsMac)
             {
                 var arch = PlatformHelper.IsArm64BitProcess ? "ARM64" : "x86_64";
-                Native.SetPluginPath($"{libvlcDirectoryPath!}/VLCUnity/Plugins/macOS/{arch}/vlc/plugins/:{libvlcDirectoryPath!}/PlugIns/{arch}");
+                Native.SetPluginPath($"{libvlcDirectoryPath!}/VLCUnity/Plugins/macOS/{arch}/vlc/plugins/:{libvlcDirectoryPath!}/PlugIns/{arch}:{libvlcDirectoryPath!}/PlugIns");
                 libvlcDirectoryPath = $"{libvlcDirectoryPath}\\PlugIns\\{arch}";
             }
             else
