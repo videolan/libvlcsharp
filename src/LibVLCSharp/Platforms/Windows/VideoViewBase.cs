@@ -34,6 +34,7 @@ namespace LibVLCSharp.Platforms.Windows
         DeviceContext? _deviceContext;
         const string Mobile = "Windows.Mobile";
         bool _loaded;
+        AlphaMode _alphaMode = AlphaMode.Unspecified;
 
         /// <summary>
         /// The constructor
@@ -90,17 +91,18 @@ namespace LibVLCSharp.Platforms.Windows
         }
 
         /// <summary>
-        /// Clears the current view restoring the initial visual state.
+        /// Clears the current view restoring the initial visual state with the configured clear color.
         /// This is a LibVLCSharp UWP-specific workaround for the following issue: https://code.videolan.org/videolan/vlc/-/issues/23667 
         /// </summary>
-        public void Clear()
+        /// <param name="clearColor">The color to clear the render target view with. Defaults to black.</param>
+        public void Clear(RawColor4 clearColor = default)
         {
             if (_loaded && _swapChain is not null && _deviceContext is not null)
             {
                 using var backBuffer = _swapChain.GetBackBuffer<Texture2D>(0);
                 using var target = new RenderTargetView(_d3D11Device, backBuffer);
 
-                _deviceContext.ClearRenderTargetView(target, new RawColor4(0, 0, 0, 0));
+                _deviceContext.ClearRenderTargetView(target, clearColor);
                 _swapChain.Present(0, PresentFlags.None);
             }
         }
@@ -205,7 +207,7 @@ namespace LibVLCSharp.Platforms.Windows
                     BufferCount = 2,
                     SwapEffect = SwapEffect.FlipSequential,
                     Flags = SwapChainFlags.None,
-                    AlphaMode = AlphaMode.Premultiplied
+                    AlphaMode = _alphaMode
                 };
 
                 _swapChain = new SharpDX.DXGI.SwapChain1(dxgiFactory, _d3D11Device, ref swapChainDescription);
@@ -362,6 +364,15 @@ namespace LibVLCSharp.Platforms.Windows
         {
             get => (MediaPlayer?)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
+        }
+
+        /// <summary>
+        /// Swapchain alpha mode, defaults to <see cref="AlphaMode.Unspecified"/>
+        /// </summary>
+        public AlphaMode AlphaMode
+        {
+            get => _alphaMode;
+            set => _alphaMode = value;
         }
 
         private static void OnMediaPlayerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
