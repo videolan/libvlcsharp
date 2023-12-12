@@ -11,7 +11,7 @@ namespace LibVLCSharp
         /// <summary>
         /// The number of bytes read
         /// </summary>
-        public readonly int ReadBytes;
+        public readonly ulong ReadBytes;
 
         /// <summary>
         /// The input bitrate
@@ -21,7 +21,7 @@ namespace LibVLCSharp
         /// <summary>
         /// The number of bytes read by the demux
         /// </summary>
-        public readonly int DemuxReadBytes;
+        public readonly ulong DemuxReadBytes;
 
         /// <summary>
         /// The demux bitrate
@@ -31,46 +31,46 @@ namespace LibVLCSharp
         /// <summary>
         /// The number of frame discarded
         /// </summary>
-        public readonly int DemuxCorrupted;
+        public readonly ulong DemuxCorrupted;
 
         /// <summary>
         /// The number of frame dropped
         /// </summary>
-        public readonly int DemuxDiscontinuity;
+        public readonly ulong DemuxDiscontinuity;
 
         /// <summary>
         /// The number of decoded video blocks
         /// </summary>
-        public readonly int DecodedVideo;
+        public readonly ulong DecodedVideo;
 
         /// <summary>
         /// The number of decoded audio blocks
         /// </summary>
-        public readonly int DecodedAudio;
+        public readonly ulong DecodedAudio;
 
         /// <summary>
         /// The number of frames displayed
         /// </summary>
-        public readonly int DisplayedPictures;
+        public readonly ulong DisplayedPictures;
 
         /// <summary>
         /// The number of late frames
         /// </summary>
-        public readonly int LatePictures;
+        public readonly ulong LatePictures;
 
         /// <summary>
         /// The number of frames lost
         /// </summary>
-        public readonly int LostPictures;
+        public readonly ulong LostPictures;
 
         /// <summary>
         /// The number of buffers played
         /// </summary>
-        public readonly int PlayedAudioBuffers;
+        public readonly ulong PlayedAudioBuffers;
 
         /// <summary>
         /// The number of buffers lost
         /// </summary>
-        public readonly int LostAudioBuffers;
+        public readonly ulong LostAudioBuffers;
     }
 }
