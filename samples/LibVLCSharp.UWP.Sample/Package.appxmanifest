@@ -20,9 +20,166 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileOpenPicker">
+          <uap:FileOpenPicker>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.3g2</uap:FileType>
+              <uap:FileType>.3gp</uap:FileType>
+              <uap:FileType>.3gp2</uap:FileType>
+              <uap:FileType>.3gpp</uap:FileType>
+              <uap:FileType>.amv</uap:FileType>
+              <uap:FileType>.asf</uap:FileType>
+              <uap:FileType>.avi</uap:FileType>
+              <uap:FileType>.divx</uap:FileType>
+              <uap:FileType>.drc</uap:FileType>
+              <uap:FileType>.dv</uap:FileType>
+              <uap:FileType>.f4v</uap:FileType>
+              <uap:FileType>.flv</uap:FileType>
+              <uap:FileType>.gvi</uap:FileType>
+              <uap:FileType>.gxf</uap:FileType>
+              <uap:FileType>.ismv</uap:FileType>
+              <uap:FileType>.m1v</uap:FileType>
+              <uap:FileType>.m2v</uap:FileType>
+              <uap:FileType>.m2t</uap:FileType>
+              <uap:FileType>.m2ts</uap:FileType>
+              <uap:FileType>.m4a</uap:FileType>
+              <uap:FileType>.mkv</uap:FileType>
+              <uap:FileType>.mov</uap:FileType>
+              <uap:FileType>.mp2</uap:FileType>
+              <uap:FileType>.mp2v</uap:FileType>
+              <uap:FileType>.mp4</uap:FileType>
+              <uap:FileType>.m4v</uap:FileType>
+              <uap:FileType>.mp4v</uap:FileType>
+              <uap:FileType>.mpe</uap:FileType>
+              <uap:FileType>.mpeg</uap:FileType>
+              <uap:FileType>.mpeg1</uap:FileType>
+              <uap:FileType>.mpeg2</uap:FileType>
+              <uap:FileType>.mpeg4</uap:FileType>
+              <uap:FileType>.mpg</uap:FileType>
+              <uap:FileType>.mpv2</uap:FileType>
+              <uap:FileType>.mts</uap:FileType>
+              <uap:FileType>.mtv</uap:FileType>
+              <uap:FileType>.mxf</uap:FileType>
+              <uap:FileType>.mxg</uap:FileType>
+              <uap:FileType>.nsv</uap:FileType>
+              <uap:FileType>.nut</uap:FileType>
+              <uap:FileType>.nuv</uap:FileType>
+              <uap:FileType>.ogm</uap:FileType>
+              <uap:FileType>.ogv</uap:FileType>
+              <uap:FileType>.opus</uap:FileType>
+              <uap:FileType>.ogx</uap:FileType>
+              <uap:FileType>.ps</uap:FileType>
+              <uap:FileType>.rec</uap:FileType>
+              <uap:FileType>.rm</uap:FileType>
+              <uap:FileType>.rmvb</uap:FileType>
+              <uap:FileType>.srt</uap:FileType>
+              <uap:FileType>.ass</uap:FileType>
+              <uap:FileType>.ssa</uap:FileType>
+              <uap:FileType>.tob</uap:FileType>
+              <uap:FileType>.ts</uap:FileType>
+              <uap:FileType>.tts</uap:FileType>
+              <uap:FileType>.vro</uap:FileType>
+              <uap:FileType>.webm</uap:FileType>
+              <uap:FileType>.wm</uap:FileType>
+              <uap:FileType>.wmv</uap:FileType>
+              <uap:FileType>.wtv</uap:FileType>
+              <uap:FileType>.xesc</uap:FileType>
+              <uap:FileType>.mp3</uap:FileType>
+              <uap:FileType>.ogg</uap:FileType>
+              <uap:FileType>.aac</uap:FileType>
+              <uap:FileType>.wma</uap:FileType>
+              <uap:FileType>.wav</uap:FileType>
+              <uap:FileType>.flac</uap:FileType>
+              <uap:FileType>.mlp</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileOpenPicker>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="vlc">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.3g2</uap:FileType>
+              <uap:FileType>.3gp</uap:FileType>
+              <uap:FileType>.3gp2</uap:FileType>
+              <uap:FileType>.3gpp</uap:FileType>
+              <uap:FileType>.amv</uap:FileType>
+              <uap:FileType>.asf</uap:FileType>
+              <uap:FileType>.avi</uap:FileType>
+              <uap:FileType>.divx</uap:FileType>
+              <uap:FileType>.drc</uap:FileType>
+              <uap:FileType>.dv</uap:FileType>
+              <uap:FileType>.f4v</uap:FileType>
+              <uap:FileType>.flv</uap:FileType>
+              <uap:FileType>.gvi</uap:FileType>
+              <uap:FileType>.gxf</uap:FileType>
+              <uap:FileType>.ismv</uap:FileType>
+              <uap:FileType>.m1v</uap:FileType>
+              <uap:FileType>.m2v</uap:FileType>
+              <uap:FileType>.m2t</uap:FileType>
+              <uap:FileType>.m2ts</uap:FileType>
+              <uap:FileType>.m4a</uap:FileType>
+              <uap:FileType>.mkv</uap:FileType>
+              <uap:FileType>.mov</uap:FileType>
+              <uap:FileType>.mp2</uap:FileType>
+              <uap:FileType>.mp2v</uap:FileType>
+              <uap:FileType>.mp4</uap:FileType>
+              <uap:FileType>.m4v</uap:FileType>
+              <uap:FileType>.mp4v</uap:FileType>
+              <uap:FileType>.mpe</uap:FileType>
+              <uap:FileType>.mpeg</uap:FileType>
+              <uap:FileType>.mpeg1</uap:FileType>
+              <uap:FileType>.mpeg2</uap:FileType>
+              <uap:FileType>.mpeg4</uap:FileType>
+              <uap:FileType>.mpg</uap:FileType>
+              <uap:FileType>.mpv2</uap:FileType>
+              <uap:FileType>.mts</uap:FileType>
+              <uap:FileType>.mtv</uap:FileType>
+              <uap:FileType>.mxf</uap:FileType>
+              <uap:FileType>.mxg</uap:FileType>
+              <uap:FileType>.nsv</uap:FileType>
+              <uap:FileType>.nut</uap:FileType>
+              <uap:FileType>.nuv</uap:FileType>
+              <uap:FileType>.ogm</uap:FileType>
+              <uap:FileType>.ogv</uap:FileType>
+              <uap:FileType>.opus</uap:FileType>
+              <uap:FileType>.ogx</uap:FileType>
+              <uap:FileType>.ps</uap:FileType>
+              <uap:FileType>.rec</uap:FileType>
+              <uap:FileType>.rm</uap:FileType>
+              <uap:FileType>.rmvb</uap:FileType>
+              <uap:FileType>.srt</uap:FileType>
+              <uap:FileType>.ass</uap:FileType>
+              <uap:FileType>.ssa</uap:FileType>
+              <uap:FileType>.tob</uap:FileType>
+              <uap:FileType>.ts</uap:FileType>
+              <uap:FileType>.tts</uap:FileType>
+              <uap:FileType>.vro</uap:FileType>
+              <uap:FileType>.webm</uap:FileType>
+              <uap:FileType>.wm</uap:FileType>
+              <uap:FileType>.wmv</uap:FileType>
+              <uap:FileType>.wtv</uap:FileType>
+              <uap:FileType>.xesc</uap:FileType>
+              <uap:FileType>.mp3</uap:FileType>
+              <uap:FileType>.ogg</uap:FileType>
+              <uap:FileType>.aac</uap:FileType>
+              <uap:FileType>.wma</uap:FileType>
+              <uap:FileType>.wav</uap:FileType>
+              <uap:FileType>.flac</uap:FileType>
+              <uap:FileType>.mlp</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>LibVLCSharp Sample</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true" AlwaysUnsafe="true"/>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap:Capability Name="videosLibrary"/>
+    <uap:Capability Name="musicLibrary"/>
+    <uap:Capability Name="removableStorage"/>
+    <uap:Capability Name="picturesLibrary"/>
+    <Capability Name="privateNetworkClientServer"/>
   </Capabilities>
 </Package>
