@@ -17,6 +17,15 @@ steps:
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
 
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" "platforms;android-27"
+      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" --licenses
+      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" "platforms;android-28"
+      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" --licenses
+  displayName: 'Install Android SDK'
+
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
