@@ -902,7 +902,7 @@ namespace LibVLCSharp.Shared
         /// <para></para>
         /// LibVLC 2.2.0 or later
         /// </summary>
-        public bool ProgramScambled => Native.LibVLCMediaPlayerProgramScrambled(NativeReference) != 0;
+        public bool ProgramScrambled => Native.LibVLCMediaPlayerProgramScrambled(NativeReference) != 0;
 
         /// <summary>
         /// Display the next frame (if supported)
