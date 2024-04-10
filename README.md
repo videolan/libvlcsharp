@@ -85,6 +85,9 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - [Unity3D](https://code.videolan.org/videolan/vlc-unity)
   - Windows Classic
   - Android
+  - UWP
+  - iOS
+  - macOS
 
 ## Installation
 
@@ -127,9 +130,11 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Uno Platform      | [LibVLCSharp.Uno][RLibVLCSharpUno]              | [![LibVLCSharpUnoBadge]][LibVLCSharpUno]          |
 | Avalonia          | [LibVLCSharp.Avalonia][RLibVLCSharpAvalonia]    | [![LibVLCSharpAvaloniaBadge]][LibVLCSharpAvalonia]|
 | Eto.Forms         | [LibVLCSharp.Eto][RLibVLCSharpEto]              | [![LibVLCSharpEtoBadge]][LibVLCSharpEto]          |
-| Unity3D - Windows | [VLC for Unity (Windows)][VLCUnityWindows]      | [![VLCUnityBadge]][VLCUnityWindows]               |
-| Unity3D - UWP     | [VLC for Unity (UWP)][VLCUnityUWP]              | [![VLCUnityBadge]][VLCUnityUWP]                   |
-| Unity3D - Android | [VLC for Unity (Android)][VLCUnityAndroid]      | [![VLCUnityBadge]][VLCUnityAndroid]               |
+| Unity3D - Windows | [VLC for Unity (Windows)][VLCUnityStore]        | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - UWP     | [VLC for Unity (UWP)][VLCUnityStore]            | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - Android | [VLC for Unity (Android)][VLCUnityStore]        | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - iOS     | [VLC for Unity (iOS)][VLCUnityStore]            | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - macOS   | [VLC for Unity (macOS)][VLCUnityStore]          | [![VLCUnityBadge]][VLCUnityStore]                 |
 
 ### Pre-release versions
 
@@ -203,9 +208,7 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [LibVLCSharpEto]: https://www.nuget.org/packages/LibVLCSharp.Eto/
 [LibVLCSharpEtoBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Eto.svg
 
-[VLCUnityWindows]: https://videolabs.io/store/unity
-[VLCUnityUWP]: https://videolabs.io/store/unity
-[VLCUnityAndroid]: https://videolabs.io/store/unity
+[VLCUnityStore]: https://videolabs.io/store/unity
 [VLCUnityBadge]: https://img.shields.io/badge/Made%20with-Unity-57b9d3.svg?style=flat&logo=unity
 
 ## Getting started
