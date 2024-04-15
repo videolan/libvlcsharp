@@ -389,6 +389,14 @@ namespace LibVLCSharp
             internal static extern void LibVLCVideoSetAspectRatio(IntPtr mediaPlayer, IntPtr aspect);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_get_display_fit")]
+            internal static extern VideoFitMode LibVLCVideoGetDisplayFit(IntPtr mediaPlayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_display_fit")]
+            internal static extern void LibVLCVideoSetDisplayFit(IntPtr mediaPlayer, VideoFitMode fitMode);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_spu_delay")]
             internal static extern long LibVLCVideoGetSpuDelay(IntPtr mediaPlayer);
 
@@ -1500,6 +1508,15 @@ namespace LibVLCSharp
         {
             get => Native.LibVLCVideoGetScale(NativeReference);
             set => Native.LibVLCVideoSetScale(NativeReference, value);
+        }
+
+        /// <summary>
+        /// Get/set the current video display fit
+        /// </summary>
+        public VideoFitMode Fit
+        {
+            get => Native.LibVLCVideoGetDisplayFit(NativeReference);
+            set => Native.LibVLCVideoSetDisplayFit(NativeReference, value);
         }
 
         /// <summary>
@@ -3595,5 +3612,36 @@ namespace LibVLCSharp
         /// 7.1 mixmode
         /// </summary>
         M7_1 = 5
+    }
+
+    /// <summary>
+    /// Enumeration of values used to set the video fitting inside the display area.
+    /// </summary>
+    public enum VideoFitMode
+    {
+        /// <summary>
+        /// Explicit zoom set by <see cref="MediaPlayer.Scale"/>
+        /// </summary>
+        FitNone = 0,
+
+        /// <summary>
+        /// Fit inside / to smallest display dimension
+        /// </summary>
+        FitSmaller = 1,
+
+        /// <summary>
+        /// Fit outside / to largest display dimension
+        /// </summary>
+        FitLarger = 2,
+
+        /// <summary>
+        /// Fit to display width
+        /// </summary>
+        FitWidth = 3,
+
+        /// <summary>
+        /// Fit to display height
+        /// </summary>
+        FitHeight = 4
     }
 }
