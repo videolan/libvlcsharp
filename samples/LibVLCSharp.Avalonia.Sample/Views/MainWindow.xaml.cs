@@ -1,7 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using LibVLCSharp.Avalonia.Sample.ViewModels;
-using System;
 
 namespace LibVLCSharp.Avalonia.Sample.Views
 {
@@ -16,12 +14,5 @@ namespace LibVLCSharp.Avalonia.Sample.Views
         {
             AvaloniaXamlLoader.Load(this);
         }
-
-        private void OnOpened(object sender, EventArgs e)
-        {
-            var vm = DataContext as MainWindowViewModel;
-            vm?.Play();
-        }
-                    
     }
 }
