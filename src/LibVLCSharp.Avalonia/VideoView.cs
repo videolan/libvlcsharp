@@ -47,6 +47,12 @@ namespace LibVLCSharp.Avalonia
                 Attach();
             }
         }
+        
+        /// <inheritdoc />
+        public VideoView()
+        {
+            Initialized += (_, _) => { Attach(); };
+        }
 
         private void Attach()
         {
@@ -90,12 +96,6 @@ namespace LibVLCSharp.Avalonia
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
             _platformHandle = base.CreateNativeControlCore(parent);
-
-            if (_mediaPlayer == null)
-                return _platformHandle;
-
-            Attach();
-
             return _platformHandle;
         }
 

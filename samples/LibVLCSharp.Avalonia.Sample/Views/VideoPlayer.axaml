@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
+             xmlns:viewModels="clr-namespace:LibVLCSharp.Avalonia.Sample.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="LibVLCSharp.Avalonia.Sample.Views.VideoPlayer"
+             DataContextChanged="OnDataContextChanged">
+
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        <Label Grid.Row="0" HorizontalAlignment="Center">Video Player</Label>
+
+        <vlc:VideoView Grid.Row="1" MediaPlayer="{Binding MediaPlayer}"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="20" Margin="20" HorizontalAlignment="Center">
+            <Button Command="{Binding Play}">Play</Button>
+            <Button Command="{Binding Stop}">Stop</Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
