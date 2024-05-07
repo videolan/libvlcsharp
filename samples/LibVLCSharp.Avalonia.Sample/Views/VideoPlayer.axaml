@@ -17,11 +17,15 @@
 
         <vlc:VideoView Grid.Row="1" MediaPlayer="{Binding MediaPlayer}"
                        HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch" />
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="20" Margin="20" HorizontalAlignment="Center">
-            <Button Command="{Binding Play}">Play</Button>
-            <Button Command="{Binding Stop}">Stop</Button>
-        </StackPanel>
+                       VerticalAlignment="Stretch"
+                       PointerEntered="VideoViewOnPointerEntered"
+                       PointerExited="VideoViewOnPointerExited">
+            <Panel Name="ControlsPanel">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Background="#900000FF" Spacing="20">
+                    <Button Command="{Binding Play}" Margin="20">Play</Button>
+                    <Button Command="{Binding Stop}" Margin="20">Stop</Button>
+                </StackPanel>
+            </Panel>
+        </vlc:VideoView>
     </Grid>
 </UserControl>
