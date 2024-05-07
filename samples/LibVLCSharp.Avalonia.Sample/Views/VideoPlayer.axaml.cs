@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.Controls;
+using Avalonia.Input;
 using LibVLCSharp.Avalonia.Sample.ViewModels;
 
 namespace LibVLCSharp.Avalonia.Sample.Views
@@ -17,6 +18,16 @@ namespace LibVLCSharp.Avalonia.Sample.Views
             {
                 vm.Play();
             }
+        }
+
+        private void VideoViewOnPointerEntered(object sender, PointerEventArgs e)
+        {
+            ControlsPanel.IsVisible = true;
+        }
+
+        private void VideoViewOnPointerExited(object sender, PointerEventArgs e)
+        {
+            ControlsPanel.IsVisible = false;
         }
     }
 }
