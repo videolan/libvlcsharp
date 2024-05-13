@@ -1,3 +1,9 @@
+LibVLCSharp version 3.8.3
+=========================
+* UWP: Fix for opaque subtitle background bug while still allowing optional alpha configuration
+* Avalonia: Support UserControl by @taivasverkko
+* Avalonia: Child content support for VideoView by @taivasverkko
+
 LibVLCSharp version 3.8.2
 =========================
 * WPF: ForegroundWindow: Fix regression by @amine2050
