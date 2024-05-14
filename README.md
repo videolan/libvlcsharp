@@ -77,6 +77,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Windows Universal (UWP for Desktop, mobile and Xbox)
 - Linux including desktop, server and Raspberry Pi (GTK)
 - Xamarin.Forms
+- MAUI
 - Uno Platform (UWP, Android, iOS)
 - Avalonia (Windows, macOS, Linux)
 - .NET Standard 1.1 and 2.0
@@ -122,6 +123,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Xamarin.Mac       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | UWP               | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Forms     | [LibVLCSharp.Forms][RLibVLCSharpForms]          | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
+| MAUI              | [LibVLCSharp.MAUI][RLibVLCSharpMAUI]            | [![LibVLCSharpMAUIBadge]][LibVLCSharpMAUI]        |
 | WPF               | [LibVLCSharp.WPF][RLibVLCSharpWPF]              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
 | Xamarin.Forms.WPF | [LibVLCSharp.Forms.WPF][RLibVLCSharpFormsWPF]   | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
 | GTK               | [LibVLCSharp.GTK][RLibVLCSharpGTK]              | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
@@ -151,6 +153,7 @@ LibVLCSharp 4 preview and LibVLC 4 nightly builds are distributed using https://
 See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [RLibVLCSharpForms]: src/LibVLCSharp.Forms/README.md
+[RLibVLCSharpMAUI]: src/LibVLCSharp.MAUI/README.md
 [RLibVLCSharpWPF]: src/LibVLCSharp.WPF/README.md
 [RLibVLCSharpFormsWPF]: src/LibVLCSharp.Forms.Platforms.WPF/README.md
 [RLibVLCSharpGTK]: src/LibVLCSharp.GTK/README.md
@@ -183,6 +186,9 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [LibVLCSharpForms]: https://www.nuget.org/packages/LibVLCSharp.Forms/
 [LibVLCSharpFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Forms.svg
+
+[LibVLCSharpMAUI]: https://www.nuget.org/packages/LibVLCSharp.MAUI/
+[LibVLCSharpMAUIBadge]: https://img.shields.io/nuget/v/LibVLCSharp.MAUI.svg
 
 [LibVLCSharpWPF]: https://www.nuget.org/packages/LibVLCSharp.WPF/
 [LibVLCSharpWPFBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WPF.svg
