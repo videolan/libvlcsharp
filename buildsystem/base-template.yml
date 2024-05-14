@@ -10,6 +10,8 @@ steps:
    dotnet workload install ios
    dotnet workload install macos
    dotnet workload install tvos
+   dotnet workload install maui-android
+   dotnet workload install maui-ios
   displayName: 'Install mobile workloads'
   condition: ne( variables['Agent.OS'], 'Linux' )
 
