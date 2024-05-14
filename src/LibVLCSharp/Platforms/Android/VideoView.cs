@@ -12,7 +12,12 @@ namespace LibVLCSharp
     /// <summary>
     /// VideoView implementation for the Android platform
     /// </summary>
-    public class VideoView : SurfaceView, IVLCVoutCallback, IVideoView, AWindow.ISurfaceCallback
+    public class VideoView : SurfaceView, IVideoView, AWindow.ISurfaceCallback,
+#if NET6_0_OR_GREATER && ANDROID
+        IVLCVout.ICallback // Java interop binding generation changed.
+#else
+        IVLCVoutCallback
+#endif
     {
         MediaPlayer? _mediaPlayer;
         AWindow? _awindow;
@@ -131,7 +136,7 @@ namespace LibVLCSharp
         /// Callback when surfaces are created
         /// </summary>
         /// <param name="vout">Video output</param>
-        public virtual void OnSurfacesCreated(IVLCVout vout)
+        public virtual void OnSurfacesCreated(IVLCVout? vout)
         {
         }
 
@@ -139,7 +144,7 @@ namespace LibVLCSharp
         /// Callback when surfaces are destroyed
         /// </summary>
         /// <param name="vout">Video output</param>
-        public virtual void OnSurfacesDestroyed(IVLCVout vout)
+        public virtual void OnSurfacesDestroyed(IVLCVout? vout)
         {
         }
 
@@ -154,11 +159,11 @@ namespace LibVLCSharp
             Detach();
         }
 
-        void AWindow.ISurfaceCallback.OnSurfacesCreated(AWindow aWindow)
+        void AWindow.ISurfaceCallback.OnSurfacesCreated(AWindow? aWindow)
         {
         }
 
-        void AWindow.ISurfaceCallback.OnSurfacesDestroyed(AWindow aWindow)
+        void AWindow.ISurfaceCallback.OnSurfacesDestroyed(AWindow? aWindow)
         {
         }
     }

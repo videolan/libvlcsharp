@@ -51,9 +51,13 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <None Include="Platforms\**\*.cs" />
 
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.Contains('android'))">
+  <ItemGroup Condition="$(TargetFramework.Contains('monoandroid'))">
     <Compile Include="Platforms\Android\**\*.cs" />
     <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+     <Compile Include="Platforms\Android\**\*.cs" />
+     <ProjectReference Include="..\LibVLCSharp.Android.AWindowModern\LibVLCSharp.Android.AWindowModern.csproj" />
   </ItemGroup>
   <ItemGroup Condition="$(DefineConstants.Contains('APPLE'))">
     <Compile Include="Platforms\Apple\**\*.cs" />
@@ -95,9 +99,10 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
       <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Xamarin.VisualStudio\Xamarin.Mac.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Target Name="IncludeAWindow" Condition="$(TargetFramework.Contains('android'))">
+  <Target Name="IncludeAWindow">
     <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
+      <BuildOutputInPackage Condition="$(TargetFramework.Contains('monoandroid'))" Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
+      <BuildOutputInPackage Condition="$(TargetFramework.Contains('-android'))" Include="$(OutputPath)LibVLCSharp.Android.AWindowModern.dll" />
     </ItemGroup>
   </Target>
 </Project>
