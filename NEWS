@@ -1,3 +1,7 @@
+LibVLCSharp version 3.8.4
+=========================
+* MAUI: Initial support with simple VideoView for now.
+
 LibVLCSharp version 3.8.3
 =========================
 * UWP: Fix for opaque subtitle background bug while still allowing optional alpha configuration
