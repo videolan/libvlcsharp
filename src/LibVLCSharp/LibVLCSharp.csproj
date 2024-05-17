@@ -56,7 +56,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
      <Compile Include="Platforms\Android\**\*.cs" />
-     <ProjectReference Include="..\LibVLCSharp.Android.AWindowModern\LibVLCSharp.Android.AWindowModern.csproj" />
+     <ProjectReference Include="..\LibVLCSharp.Android.AWindowModern\LibVLCSharp.Android.AWindowModern.csproj" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition="$(DefineConstants.Contains('APPLE'))">
     <Compile Include="Platforms\Apple\**\*.cs" />
