@@ -102,7 +102,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <Target Name="IncludeAWindow">
     <ItemGroup>
       <BuildOutputInPackage Condition="$(TargetFramework.Contains('monoandroid'))" Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />
-      <BuildOutputInPackage Condition="$(TargetFramework.Contains('-android'))" Include="$(OutputPath)LibVLCSharp.Android.AWindowModern.dll" />
     </ItemGroup>
   </Target>
 </Project>
