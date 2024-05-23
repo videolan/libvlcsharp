@@ -1,3 +1,7 @@
+LibVLCSharp version 3.8.5
+=========================
+* MAUI: Fix broken release by shipping the modern AWindow binding to NuGet.
+
 LibVLCSharp version 3.8.4
 =========================
 * MAUI: Initial support with simple VideoView for now.
