@@ -631,6 +631,9 @@ namespace LibVLCSharp.Shared
         /// If any, previous md will be released.
         /// Note: It is safe to release the Media on the C# side after it's been set on the MediaPlayer successfully
         /// </summary>
+        /// <remarks>
+        /// Each time this getter is called, the native media instance reference count is incremented. So, once you're done with the Media object after accessing it with this property, you should dispose of it.
+        /// </remarks>
         public Media? Media
         {
             get
