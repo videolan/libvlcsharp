@@ -598,6 +598,14 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_set_mixmode")]
             internal static extern int LibVLCAudioSetMixmode(IntPtr mediaplayer, AudioOutputMixmode mode);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_teletext_transparency")]
+            internal static extern void LibVLCVideoSetTeletextTransparency(IntPtr mediaplayer, bool transparent);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_get_teletext_transparency")]
+            internal static extern bool LibVLCVideoGetTeletextTransparency(IntPtr mediaplayer);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2228,6 +2236,14 @@ namespace LibVLCSharp
 
         readonly MediaConfiguration Configuration = new MediaConfiguration();
 
+        /// <summary>
+        /// Get/set whether the teletext background should be transparent or opaque
+        /// </summary>
+        public bool TeletextTransparency
+        {
+            get => Native.LibVLCVideoGetTeletextTransparency(NativeReference);
+            set => Native.LibVLCVideoSetTeletextTransparency(NativeReference, value);
+        }
 #if UNITY
         /// <summary>
         /// Retrieve a video frame from the Unity plugin as a texture.
