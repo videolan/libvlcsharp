@@ -606,6 +606,10 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_teletext_transparency")]
             internal static extern bool LibVLCVideoGetTeletextTransparency(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_jump_time")]
+            internal static extern int LibVLCMediaPlayerJumpTime(IntPtr mediaplayer, long time);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2244,6 +2248,16 @@ namespace LibVLCSharp
             get => Native.LibVLCVideoGetTeletextTransparency(NativeReference);
             set => Native.LibVLCVideoSetTeletextTransparency(NativeReference, value);
         }
+
+        /// <summary>
+        /// Jump the movie time (in ms).
+        /// </summary>
+        /// <remarks>
+        /// This will trigger a precise and relative seek (from the current time). This has no effect if no media is being played. Not all formats and protocols support this.
+        /// </remarks>
+        /// <param name="time">the movie time (in ms)</param>
+        /// <returns>true on success, false on error</returns>
+        public bool JumpTime(long time) => Native.LibVLCMediaPlayerJumpTime(NativeReference, time) == 0;
 #if UNITY
         /// <summary>
         /// Retrieve a video frame from the Unity plugin as a texture.

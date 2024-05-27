@@ -245,5 +245,17 @@ namespace LibVLCSharp.Tests
 
             await Task.Delay(10000);
         }
+
+        [Test]
+        public async Task JumpTime()
+        {
+            var mp = new MediaPlayer(_libVLC);
+            mp.TimeChanged += (s, e) => Debug.WriteLine(e.Time);
+            mp.Play(new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+
+            await Task.Delay(4000);
+            
+            Assert.True(mp.JumpTime(5000));
+        }
     }
 }
