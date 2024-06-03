@@ -156,6 +156,22 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_thumbnail_request_destroy")]
             internal static extern IntPtr LibVLCMediaThumbnailRequestDestroy(IntPtr thumbnailRequest);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_get_meta_extra")]
+            internal static extern IntPtr LibVLCMediaGetMetaExtra(IntPtr media, IntPtr name);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_set_meta_extra")]
+            internal static extern void LibVLCMediaSetMetaExtra(IntPtr media, IntPtr name, IntPtr value);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_get_meta_extra_names")]
+            internal static extern uint LibVLCMediaGetMetaExtraNames(IntPtr media, out IntPtr names);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_meta_extra_names_release")]
+            internal static extern void LibVLCMediaMetaExtraNamesRelease(IntPtr names, uint count);
         }
 
         Media(Func<IntPtr> create, Action<IntPtr> release, params string[] options)
@@ -385,6 +401,49 @@ namespace LibVLCSharp
         {
             var metaPtr = Native.LibVLCMediaGetMeta(NativeReference, metadataType);
             return metaPtr.FromUtf8(libvlcFree: true);
+        }
+
+        /// <summary>
+        /// Read the meta extra of the media.
+        /// </summary>
+        /// <remarks>If the media has not yet been parsed, this will return null.</remarks>
+        /// <param name="name">the meta extra to read</param>
+        /// <returns>the media's meta extra or null</returns>
+        public string? MetaExtra(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            var metaExtraPtr = Native.LibVLCMediaGetMetaExtra(NativeReference, name.ToUtf8());
+            return metaExtraPtr.FromUtf8(true);
+        }
+
+        /// <summary>
+        /// Set the meta extra of the media
+        /// </summary>
+        /// <remarks>This function will not save the meta, call <see cref="SaveMeta(LibVLC)"/> in order to save the meta</remarks>
+        /// <param name="name">the meta extra name to write</param>
+        /// <param name="value">the meta extra value to write</param>
+        public void SetMetaExtra(string name, string? value)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            Native.LibVLCMediaSetMetaExtra(NativeReference, name.ToUtf8(), value.ToUtf8());
+        }
+
+        /// <summary>
+        /// Read the meta extra names of the media.
+        /// </summary>
+        public string?[] MetaExtraNames
+        {
+            get
+            {
+                return MarshalUtils.Retrieve(NativeReference,
+                    (IntPtr nativeRef, out IntPtr array) => Native.LibVLCMediaGetMetaExtraNames(nativeRef, out array),
+                    p => p.FromUtf8(),
+                    Native.LibVLCMediaMetaExtraNamesRelease);
+            }
         }
 
         /// <summary>

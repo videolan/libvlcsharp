@@ -360,7 +360,7 @@ namespace LibVLCSharp.Helpers
         /// <param name="create">Create a publicly facing class from the ptr/internal struct values</param>
         /// <param name="releaseRef">Native libvlc call: release the array allocated with the getRef call with the given element count</param>
         /// <returns>An array of publicly facing class types</returns>
-        internal static T[] Retrieve<T>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T> create, Action<IntPtr, uint> releaseRef)
+        internal static T?[] Retrieve<T>(IntPtr nativeRef, ArrayOut getRef, Func<IntPtr, T?> create, Action<IntPtr, uint> releaseRef)
            where T : class
         {
             var arrayPtr = IntPtr.Zero;
@@ -378,8 +378,8 @@ namespace LibVLCSharp.Helpers
 #endif
                 }
 
-                var resultList = new List<T>();
-                T type;
+                var resultList = new List<T?>();
+                T? type;
 
                 for (var i = 0; i < count; i++)
                 {
