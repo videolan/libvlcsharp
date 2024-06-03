@@ -304,7 +304,7 @@ namespace LibVLCSharp.Shared
                 options = options.Concat(new[] { "--verbose=2" }).ToArray();
             }
 #if UWP
-            return options.Concat(new[] {"--aout=winstore"}).ToArray();
+            return options.Concat(new[] {"--aout=winstore", "--audio-resampler=speex_resampler"}).ToArray();
 #elif ANDROID
             return options.Concat(new[] {"--audio-resampler=soxr"}).ToArray();
 #else
