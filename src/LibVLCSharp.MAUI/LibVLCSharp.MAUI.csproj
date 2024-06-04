@@ -13,12 +13,121 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<GenerateDocumentationFile>False</GenerateDocumentationFile>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
+	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
+	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-ios|AnyCPU'">
+	  <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <MauiImage Include="Resources\Images\*.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AndroidResource Remove="Handlers\**" />
+    <Compile Remove="Handlers\**" />
+    <EmbeddedResource Remove="Handlers\**" />
+    <MauiCss Remove="Handlers\**" />
+    <MauiXaml Remove="Handlers\**" />
+    <None Remove="Handlers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\Resources\Images\backward.svg" />
+    <None Remove="Shared\Resources\Images\check.svg" />
+    <None Remove="Shared\Resources\Images\chromecast.svg" />
+    <None Remove="Shared\Resources\Images\forward_fast.svg" />
+    <None Remove="Shared\Resources\Images\list.svg" />
+    <None Remove="Shared\Resources\Images\lock.svg" />
+    <None Remove="Shared\Resources\Images\maximize.svg" />
+    <None Remove="Shared\Resources\Images\pause.svg" />
+    <None Remove="Shared\Resources\Images\play.svg" />
+    <None Remove="Shared\Resources\Images\stop.svg" />
+    <None Remove="Shared\Resources\Images\unlock.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+	</ItemGroup>
 
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+	  <MauiXaml Update="MediaPlayerElement.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="PlaybackControls.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Shared\Themes\Dictionary1.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Shared\Themes\Generic.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <Compile Update="MediaPlayerElement.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="PlaybackControls.xaml.cs">
+	    <DependentUpon>%(Filename)</DependentUpon>
+	  </Compile>
+	  <Compile Update="Shared\Resources\Strings.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Strings.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <Folder Include="Shared\Resources\Fonts\" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <MauiImage Include="Shared\Resources\Images\backward.svg" />
+	  <MauiImage Include="Shared\Resources\Images\check.svg" />
+	  <MauiImage Include="Shared\Resources\Images\chromecast.svg" />
+	  <MauiImage Include="Shared\Resources\Images\forward_fast.svg" />
+	  <MauiImage Include="Shared\Resources\Images\list.svg" />
+	  <MauiImage Include="Shared\Resources\Images\lock.svg" />
+	  <MauiImage Include="Shared\Resources\Images\maximize.svg" />
+	  <MauiImage Include="Shared\Resources\Images\pause.svg" />
+	  <MauiImage Include="Shared\Resources\Images\play.svg" />
+	  <MauiImage Include="Shared\Resources\Images\stop.svg" />
+	  <MauiImage Include="Shared\Resources\Images\unlock.svg" />
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Shared\Resources\Strings.fr.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Shared\Resources\Strings.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 
