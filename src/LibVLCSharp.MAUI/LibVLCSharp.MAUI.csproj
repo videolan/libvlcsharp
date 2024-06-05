@@ -49,7 +49,7 @@
     <None Remove="Shared\Resources\Images\backward.svg" />
     <None Remove="Shared\Resources\Images\check.svg" />
     <None Remove="Shared\Resources\Images\chromecast.svg" />
-    <None Remove="Shared\Resources\Images\forward_fast.svg" />
+    <None Remove="Shared\Resources\Images\forward.svg" />
     <None Remove="Shared\Resources\Images\list.svg" />
     <None Remove="Shared\Resources\Images\lock.svg" />
     <None Remove="Shared\Resources\Images\maximize.svg" />
@@ -108,7 +108,7 @@
 	  <MauiImage Include="Shared\Resources\Images\backward.svg" />
 	  <MauiImage Include="Shared\Resources\Images\check.svg" />
 	  <MauiImage Include="Shared\Resources\Images\chromecast.svg" />
-	  <MauiImage Include="Shared\Resources\Images\forward_fast.svg" />
+	  <MauiImage Include="Shared\Resources\Images\forward.svg" />
 	  <MauiImage Include="Shared\Resources\Images\list.svg" />
 	  <MauiImage Include="Shared\Resources\Images\lock.svg" />
 	  <MauiImage Include="Shared\Resources\Images\maximize.svg" />
@@ -121,9 +121,6 @@
 
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Shared\Resources\Strings.fr.resx">
-	    <Generator>PublicResXFileCodeGenerator</Generator>
-	  </EmbeddedResource>
 	  <EmbeddedResource Update="Shared\Resources\Strings.resx">
 	    <Generator>PublicResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Strings.Designer.cs</LastGenOutput>

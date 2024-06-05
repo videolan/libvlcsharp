@@ -111,7 +111,7 @@ namespace LibVLCSharp.MAUI.Shared
             Manager.Dispose();
         }
 
-        private MediaPlayerElementManager Manager { get; }
+        private MediaPlayerElementManager Manager { get; } = default!;
         private ImageButton? TracksButton { get; set; }
         private ImageButton? CastButton { get; set; }
         private VisualElement? ControlsPanel { get; set; }
@@ -743,28 +743,28 @@ namespace LibVLCSharp.MAUI.Shared
             SetClickEventHandler("StopButton", StopButton_Clicked);
             SetClickEventHandler("LockButton", LockButton_ClickedAsync);
             SetClickEventHandler("AspectRatioButton", AspectRatioButton_ClickedAsync);
-            ControlsPanel = this.FindChild<VisualElement?>(nameof(ControlsPanel));
-            ButtonBar = this.FindChild<VisualElement?>(nameof(ButtonBar));
-            UnLockControlsPanel = this.FindChild<VisualElement?>(nameof(UnLockControlsPanel));
-            TracksOverlayView = this.FindChild<VisualElement?>(nameof(TracksOverlayView));
-            SwipeToUnLock = this.FindChild<SwipeToUnLockView?>(nameof(SwipeToUnLock));
-            SeekBar = this.FindChild<Slider?>(nameof(SeekBar));
-            AudioTracksListView = this.FindChild<ListView?>(nameof(AudioTracksListView));
+            ControlsPanel = this.FindChild<VisualElement>(nameof(ControlsPanel));
+            ButtonBar = this.FindChild<VisualElement>(nameof(ButtonBar));
+            UnLockControlsPanel = this.FindChild<VisualElement>(nameof(UnLockControlsPanel));
+            TracksOverlayView = this.FindChild<VisualElement>(nameof(TracksOverlayView));
+            SwipeToUnLock = this.FindChild<SwipeToUnLockView>(nameof(SwipeToUnLock));
+            SeekBar = this.FindChild<Slider>(nameof(SeekBar));
+            AudioTracksListView = this.FindChild<ListView>(nameof(AudioTracksListView));
             if (AudioTracksListView != null)
                 AudioTracksListView.ItemTapped += AudioTracksItemTapped;
-            VideoTracksListView = this.FindChild<ListView?>(nameof(VideoTracksListView));
+            VideoTracksListView = this.FindChild<ListView>(nameof(VideoTracksListView));
             if (VideoTracksListView != null)
                 VideoTracksListView.ItemTapped += VideoTracksItemTapped;
-            SubtitlesTracksListView = this.FindChild<ListView?>(nameof(SubtitlesTracksListView));
+            SubtitlesTracksListView = this.FindChild<ListView>(nameof(SubtitlesTracksListView));
             if (SubtitlesTracksListView != null)
                 SubtitlesTracksListView.ItemTapped += SubtitlesTracksItemTapped;
-            TrackBarLabel = this.FindChild<Label?>(nameof(TrackBarLabel));
-            AudioTracksLabel = this.FindChild<Label?>(nameof(AudioTracksLabel));
-            VideoTracksLabel = this.FindChild<Label?>(nameof(VideoTracksLabel));
-            SubtileTracksLabel = this.FindChild<Label?>(nameof(SubtileTracksLabel));
-            RemainingTimeLabel = this.FindChild<Label?>(nameof(RemainingTimeLabel));
-            ElapsedTimeLabel = this.FindChild<Label?>(nameof(ElapsedTimeLabel));
-            AspectRatioLabel = this.FindChild<Label?>(nameof(AspectRatioLabel));
+            TrackBarLabel = this.FindChild<Label>(nameof(TrackBarLabel));
+            AudioTracksLabel = this.FindChild<Label>(nameof(AudioTracksLabel));
+            VideoTracksLabel = this.FindChild<Label>(nameof(VideoTracksLabel));
+            SubtileTracksLabel = this.FindChild<Label>(nameof(SubtileTracksLabel));
+            RemainingTimeLabel = this.FindChild<Label>(nameof(RemainingTimeLabel));
+            ElapsedTimeLabel = this.FindChild<Label>(nameof(ElapsedTimeLabel));
+            AspectRatioLabel = this.FindChild<Label>(nameof(AspectRatioLabel));
             SetClickEventHandler("RewindButton", RewindButton_Clicked);
             SetClickEventHandler("SeekButton", SeekButton_Clicked);
 
@@ -798,28 +798,28 @@ namespace LibVLCSharp.MAUI.Shared
             OnBuffering();
         }
 
-        private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void IsPlayPauseButtonVisiblePropertyChanged(BindableObject bindable, object? oldValue, object? newValue)
         {
             ((PlaybackControls)bindable).UpdatePauseAvailability();
         }
 
-        private static void IsCastButtonVisiblePropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
+        private static void IsCastButtonVisiblePropertyChangedAsync(BindableObject bindable, object? oldValue, object newValue)
         {
             var playbackControls = (PlaybackControls)bindable;
             playbackControls.Manager.Get<CastRenderersDiscoverer>().Enabled = (bool)newValue;
         }
 
-        private static void KeepScreenOnPropertyChangedAsync(BindableObject bindable, object oldValue, object newValue)
+        private static void KeepScreenOnPropertyChangedAsync(BindableObject bindable, object? oldValue, object newValue)
         {
             ((PlaybackControls)bindable).UpdateKeepScreenOn((bool)newValue);
         }
 
-        private static void LibVLCPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void LibVLCPropertyChanged(BindableObject bindable, object? oldValue, object newValue)
         {
             ((PlaybackControls)bindable).Manager.LibVLC = (LibVLC)newValue;
         }
 
-        private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void MediaPlayerPropertyChanged(BindableObject bindable, object? oldValue, object newValue)
         {
             ((PlaybackControls)bindable).Manager.MediaPlayer = (LibVLCSharp.Shared.MediaPlayer)newValue;
         }
@@ -829,22 +829,22 @@ namespace LibVLCSharp.MAUI.Shared
             BufferingProgress = Manager.Get<BufferingProgressNotifier>().BufferingProgress;
         }
 
-        private void OnAudioTracksChanged(object sender, EventArgs e)
+        private void OnAudioTracksChanged(object? sender, EventArgs e)
         {
             UpdateAudioTracksSelectionAvailability();
         }
 
-        private void OnVideoTracksChanged(object sender, EventArgs e)
+        private void OnVideoTracksChanged(object? sender, EventArgs e)
         {
             UpdateVideoTracksSelectionAvailability();
         }
 
-        private void OnSubtitlesTracksChanged(object sender, EventArgs e)
+        private void OnSubtitlesTracksChanged(object? sender, EventArgs e)
         {
             UpdateClosedCaptionsTracksSelectionAvailability();
         }
 
-        private void TracksButton_Clicked(object sender, EventArgs e)
+        private void TracksButton_Clicked(object? sender, EventArgs e)
         {
             if (ControlsPanel != null)
                 ControlsPanel.IsVisible = false;
@@ -883,21 +883,21 @@ namespace LibVLCSharp.MAUI.Shared
             }
         }
 
-        private void AudioTracksItemTapped(object sender, ItemTappedEventArgs e)
+        private void AudioTracksItemTapped(object? sender, ItemTappedEventArgs e)
         {
             var track = (TrackViewModel)e.Item;
             var manager = Manager.Get<AudioTracksManager>();
             SelectTrack(manager, track, AudioTracksListView);
         }
 
-        private void VideoTracksItemTapped(object sender, ItemTappedEventArgs e)
+        private void VideoTracksItemTapped(object? sender, ItemTappedEventArgs e)
         {
             var track = (TrackViewModel)e.Item;
             var manager = Manager.Get<VideoTracksManager>();
             SelectTrack(manager, track, VideoTracksListView);
         }
 
-        private void SubtitlesTracksItemTapped(object sender, ItemTappedEventArgs e)
+        private void SubtitlesTracksItemTapped(object? sender, ItemTappedEventArgs e)
         {
             var track = (TrackViewModel)e.Item;
             var manager = Manager.Get<SubtitlesTracksManager>();
@@ -915,7 +915,7 @@ namespace LibVLCSharp.MAUI.Shared
             
                 var foundTrack = tracks.First(t => t.Id == track.Id);
                 manager.CurrentTrackId = foundTrack.Id;
-                UpdateTracksListviewItemsSource(track, tracksListview);
+                PlaybackControls.UpdateTracksListviewItemsSource(track, tracksListview);
             }
             catch (Exception)
             {
@@ -923,7 +923,7 @@ namespace LibVLCSharp.MAUI.Shared
             }     
         }
 
-        private void UpdateTracksListviewItemsSource(TrackViewModel selectedTrack, ListView? trackListView)
+        private static void UpdateTracksListviewItemsSource(TrackViewModel selectedTrack, ListView? trackListView)
         {
             if (trackListView != null)
             {
@@ -960,7 +960,7 @@ namespace LibVLCSharp.MAUI.Shared
             return allTracks;
         }
 
-        private async void CastButton_ClickedAsync(object sender, EventArgs e)
+        private async void CastButton_ClickedAsync(object? sender, EventArgs e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
             try
@@ -1010,17 +1010,17 @@ namespace LibVLCSharp.MAUI.Shared
         }
 
 
-        private void PlayPauseButton_Clicked(object sender, EventArgs e)
+        private void PlayPauseButton_Clicked(object? sender, EventArgs e)
         {
             Manager.Get<StateManager>().TogglePause();
         }
 
-        private void StopButton_Clicked(object sender, EventArgs e)
+        private void StopButton_Clicked(object? sender, EventArgs e)
         {
             Manager.Get<StateManager>().Stop();
         }
 
-        private async void AspectRatioButton_ClickedAsync(object sender, EventArgs e)
+        private async void AspectRatioButton_ClickedAsync(object? sender, EventArgs e)
         {
             try
             {
@@ -1042,7 +1042,7 @@ namespace LibVLCSharp.MAUI.Shared
 
         }
 
-        private void RewindButton_Clicked(object sender, EventArgs e)
+        private void RewindButton_Clicked(object? sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer == null)
@@ -1053,7 +1053,7 @@ namespace LibVLCSharp.MAUI.Shared
             mediaPlayer.Time -= SEEK_OFFSET;
         }
 
-        private void SeekButton_Clicked(object sender, EventArgs e)
+        private void SeekButton_Clicked(object? sender, EventArgs e)
         {
             var mediaPlayer = MediaPlayer;
             if (mediaPlayer == null)
@@ -1074,7 +1074,7 @@ namespace LibVLCSharp.MAUI.Shared
             return button;
         }
 
-        private void OnButtonClicked(object sender, EventArgs e, EventHandler eventHandler)
+        private void OnButtonClicked(object? sender, EventArgs e, EventHandler eventHandler)
         {
             Show();
 
@@ -1137,7 +1137,12 @@ namespace LibVLCSharp.MAUI.Shared
 
         private void ShowError()
         {
-            Device.BeginInvokeOnMainThread(() => ErrorMessage = string.Format(ResourceManager.GetString(nameof(Strings.ErrorWithMedia)), Manager.Get<StateManager>().MediaResourceLocator));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var resourceManager = ResourceManager.GetString(nameof(Strings.ErrorWithMedia));
+                var mediaResourceLocator = Manager?.Get<StateManager>()?.MediaResourceLocator;
+                ErrorMessage = string.Format(resourceManager ?? "Error with media: {0}", mediaResourceLocator);
+            });
         }
 
         private void UpdateKeepScreenOn(bool keepScreenOn)
@@ -1175,7 +1180,7 @@ namespace LibVLCSharp.MAUI.Shared
             }
         }
 
-        private void SeekBar_ValueChanged(object sender, ValueChangedEventArgs e)
+        private void SeekBar_ValueChanged(object? sender, ValueChangedEventArgs e)
         {
             Show();
             Manager.Get<SeekBarManager>().SetSeekBarPosition(e.NewValue);
@@ -1219,9 +1224,13 @@ namespace LibVLCSharp.MAUI.Shared
         /// <param name="ex">The exception to show.</param>
         protected virtual void ShowErrorMessageBox(Exception ex)
         {
-            var error = ResourceManager.GetString(nameof(Strings.Error));
-            Device.BeginInvokeOnMainThread(() => this.FindAncestor<Page?>()?.DisplayAlert(error, ex?.GetBaseException().Message ?? error,
-                ResourceManager.GetString(nameof(Strings.OK))));
+            var errorString = ResourceManager.GetString(nameof(Strings.Error)) ?? "Error";
+            var okString = ResourceManager.GetString(nameof(Strings.OK)) ?? "OK";
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var page = this.FindAncestor<Page>();
+                page?.DisplayAlert(errorString ?? "Error", ex?.GetBaseException().Message ?? errorString ?? "An error occurred", okString);
+            });
         }
 
         private void OnShowAndHideAutomaticallyPropertyChanged()
@@ -1287,11 +1296,11 @@ namespace LibVLCSharp.MAUI.Shared
         }
 
         /// <summary>
-        /// Trigger whhen uer clicks on the Loock screen Button.
+        /// Trigger when user clicks on the Lock screen Button.
         /// </summary>
         /// <param name="sender">The control on which the event is triggered</param>
         /// <param name="e">Then event's arguments</param>
-        private async void LockButton_ClickedAsync(object sender, EventArgs e)
+        private async void LockButton_ClickedAsync(object? sender, EventArgs e)
         {
             ScreenLockModeEnable = true;
             OrientationHandler?.LockOrientation();
@@ -1299,11 +1308,11 @@ namespace LibVLCSharp.MAUI.Shared
         }
 
         /// <summary>
-        /// Tigger when user clicks finished to move the swipe button that unlocks the view.
+        /// Trigger when user clicks finished to move the swipe button that unlocks the view.
         /// </summary>
         /// <param name="sender">The control on which the event is triggered</param>
         /// <param name="e">Then event's arguments</param>
-        private async void Handle_SlideCompletedAsync(object sender, EventArgs e)
+        private async void Handle_SlideCompletedAsync(object? sender, EventArgs e)
         {
             ScreenLockModeEnable = false;
             OrientationHandler?.UnLockOrientation();

@@ -25,7 +25,7 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
             }
         }
 
-        private ImageButton AssociatedImageButton { get; set; }
+        private ImageButton? AssociatedImageButton { get; set; }
 
         protected override void OnAttachedTo(ImageButton bindable)
         {
@@ -42,9 +42,12 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
             AssociatedImageButton = null;
         }
 
-        private void OnBindingContextChanged(object sender, EventArgs e)
+        private void OnBindingContextChanged(object? sender, EventArgs e)
         {
-            BindingContext = AssociatedImageButton.BindingContext;
+            if (AssociatedImageButton != null)
+            {
+                BindingContext = AssociatedImageButton.BindingContext;
+            }
         }
 
         private void ApplyTintColor()
@@ -68,14 +71,11 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
                 }
             }
         }
-        
-        private string GetSvgWithColor(string resourceName, Color color)
+
+        private string? GetSvgWithColor(string resourceName, Color color)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var assemblyName = assembly.GetName().Name;
 
-            // Ensure this matches your namespace and resource path
-            //var fullyQualifiedResourceName = $"{assemblyName}.{resourceName}";
             Console.WriteLine($"Looking for resource: {resourceName}");
             using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream == null)
@@ -87,14 +87,13 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
             using var reader = new StreamReader(stream);
             var svgContent = reader.ReadToEnd();
 
-            // Replace or insert the fill attribute
             var colorHex = color.ToHex();
-            svgContent = ReplaceOrInsertFill(svgContent, colorHex);
+            svgContent = SvgTintColorBehavior.ReplaceOrInsertFill(svgContent, colorHex);
 
             return svgContent;
         }
 
-        private string ReplaceOrInsertFill(string svgContent, string colorHex)
+        private static string ReplaceOrInsertFill(string svgContent, string colorHex)
         {
             const string fillAttribute = "fill=\"";
             var pathIndex = svgContent.IndexOf("<path", StringComparison.OrdinalIgnoreCase);
@@ -104,23 +103,19 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
             var fillIndex = svgContent.IndexOf(fillAttribute, pathIndex, StringComparison.OrdinalIgnoreCase);
             if (fillIndex != -1)
             {
-                // Replace existing fill attribute
                 var start = fillIndex + fillAttribute.Length;
                 var end = svgContent.IndexOf("\"", start, StringComparison.OrdinalIgnoreCase);
                 svgContent = svgContent.Substring(0, start) + colorHex + svgContent.Substring(end);
             }
             else
             {
-                // Insert fill attribute
                 var endOfPathTagIndex = svgContent.IndexOf(">", pathIndex, StringComparison.OrdinalIgnoreCase);
                 if (svgContent[endOfPathTagIndex - 1] == '/')
                 {
-                    // Self-closing tag
                     svgContent = svgContent.Insert(endOfPathTagIndex - 1, $" {fillAttribute}{colorHex}\"");
                 }
                 else
                 {
-                    // Normal closing tag
                     svgContent = svgContent.Insert(endOfPathTagIndex, $" {fillAttribute}{colorHex}\"");
                 }
             }
@@ -128,7 +123,7 @@ namespace LibVLCSharp.MAUI.Shared.Behaviors
             return svgContent;
         }
 
-        private ImageSource GetImageSourceFromSvg(string svgContent)
+        private static ImageSource? GetImageSourceFromSvg(string svgContent)
         {
             if (svgContent == null)
                 return null;

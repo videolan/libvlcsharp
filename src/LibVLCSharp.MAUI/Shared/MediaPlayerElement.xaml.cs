@@ -37,8 +37,8 @@ namespace LibVLCSharp.MAUI.Shared
         {
             if (Application.Current != null)
             {
-                Application.Current.PageAppearing += (s, e) => _pageAppearingEventManager.HandleEvent(s, new PageEventArgs(e), nameof(PageAppearing));
-                Application.Current.PageDisappearing += (s, e) => _pageDisappearingEventManager.HandleEvent(s, new PageEventArgs(e), nameof(PageDisappearing));
+                Application.Current.PageAppearing += (s, e) => _pageAppearingEventManager.HandleEvent(s ?? Application.Current, new PageEventArgs(e), nameof(PageAppearing));
+                Application.Current.PageDisappearing += (s, e) => _pageDisappearingEventManager.HandleEvent(s ?? Application.Current, new PageEventArgs(e), nameof(PageDisappearing));
             }
         }
     }
@@ -248,7 +248,7 @@ namespace LibVLCSharp.MAUI.Shared
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPageAppearing(object sender, EventArgs e)
+        private void OnPageAppearing(object? sender, EventArgs e)
         {
             if (sender is Page page && page == this.FindAncestor<Page>())
             {
@@ -268,7 +268,7 @@ namespace LibVLCSharp.MAUI.Shared
         /// </summary> minimize change.
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPageDisappearing(object sender, EventArgs e)
+        private void OnPageDisappearing(object? sender, EventArgs e)
         {
             if (sender is Page page && page == this.FindAncestor<Page>())
             {

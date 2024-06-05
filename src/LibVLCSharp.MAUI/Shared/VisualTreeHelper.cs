@@ -6,7 +6,7 @@ namespace LibVLCSharp.MAUI.Shared
 {
     internal static class VisualTreeHelper
     {
-        internal static T FindChild<T>(this IElement parent) where T : IElement
+        internal static T? FindChild<T>(this IElement parent) where T : IElement
         {
             foreach (var child in GetVisualChildren(parent))
             {
@@ -24,7 +24,7 @@ namespace LibVLCSharp.MAUI.Shared
             return default;
         }
 
-        internal static T FindChild<T>(this IElement parent, string name) where T : IElement
+        internal static T? FindChild<T>(this IElement parent, string name) where T : IElement
         {
             foreach (var child in GetVisualChildren(parent))
             {
@@ -42,7 +42,7 @@ namespace LibVLCSharp.MAUI.Shared
             return default;
         }
 
-        internal static T FindAncestor<T>(this IElement element) where T : IElement
+        internal static T? FindAncestor<T>(this IElement? element) where T : IElement
         {
             while (element != null)
             {

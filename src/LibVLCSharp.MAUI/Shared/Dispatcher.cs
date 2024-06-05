@@ -12,13 +12,13 @@ namespace LibVLCSharp.MAUI.Shared
     internal class Dispatcher : LibVLCSharp.Shared.MediaPlayerElement.IDispatcher
     {
         /// <summary>
-        /// Schedules the provided callback on the UI thread from a worker threa
+        /// Schedules the provided callback on the UI thread from a worker thread
         /// </summary>
         /// <param name="action">The callback on which the dispatcher returns when the event is dispatched</param>
         /// <returns>The task object representing the asynchronous operation</returns>
         public Task InvokeAsync(Action action)
         {
-            Device.BeginInvokeOnMainThread(action);
+            Application.Current?.Dispatcher.Dispatch(action);
             return Task.CompletedTask;
         }
     }

@@ -105,7 +105,7 @@ namespace LibVLCSharp.MAUI.Shared
         /// </summary>
         private const uint AnimLength = 50;
 
-        internal async void OnPanGestureUpdated(object sender, PanUpdatedEventArgs e)
+        internal async void OnPanGestureUpdated(object? sender, PanUpdatedEventArgs e)
         {
             if (Thumb == null || TrackBar == null || FillBar == null)
                 return;
@@ -146,7 +146,7 @@ namespace LibVLCSharp.MAUI.Shared
             }
         }
 
-        internal void OnSizeChanged(object sender, EventArgs e)
+        internal void OnSizeChanged(object? sender, EventArgs e)
         {
             if (Width == 0 || Height == 0)
                 return;

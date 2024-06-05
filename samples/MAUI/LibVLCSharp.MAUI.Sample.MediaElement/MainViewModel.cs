@@ -13,7 +13,7 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
         /// <summary>
         /// Property changed event
         /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged = null!;
+        public event PropertyChangedEventHandler PropertyChanged = null!;
 
         /// <summary>
         /// Initializes a new instance of <see cref="MainViewModel"/> class.
@@ -22,22 +22,22 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
         {
         }
 
-        private LibVLC? _libVLC;
+        private LibVLC _libVLC;
 		
         /// <summary>
         /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
         /// </summary>
-        public LibVLC? LibVLC
+        public LibVLC LibVLC
         {
             get => _libVLC;
             private set => SetProperty(ref _libVLC, value);
         }
 
-        private LibVLCSharp.Shared.MediaPlayer? _mediaPlayer;
+        private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
         /// <summary>
         /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer? MediaPlayer
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
             private set => SetProperty(ref _mediaPlayer, value);

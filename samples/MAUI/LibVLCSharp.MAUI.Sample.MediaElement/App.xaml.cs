@@ -14,7 +14,7 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
             MainPage = new MainPage();
         }
 
-        private void ConfigureUnhandledExceptionHandling()
+        private static void ConfigureUnhandledExceptionHandling()
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
@@ -34,11 +34,10 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
             };
         }
 
-        private void HandleException(Exception ex)
+        private static void HandleException(Exception ex)
         {
             if (ex != null)
             {
-                // Log the exception or show a message to the user.
                 Console.WriteLine(ex.Message);
             }
         }
