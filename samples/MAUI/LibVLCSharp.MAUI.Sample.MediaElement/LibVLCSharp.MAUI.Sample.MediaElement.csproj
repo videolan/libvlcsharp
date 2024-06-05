@@ -59,4 +59,6 @@
 	  <ProjectReference Include="..\..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
 	</ItemGroup>
 
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionLibVLCSharpMAUISampleMediaElementHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
 </Project>

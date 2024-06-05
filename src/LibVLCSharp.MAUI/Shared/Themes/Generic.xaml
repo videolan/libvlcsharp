@@ -31,7 +31,7 @@
     </Style>
 
     <Style x:Key="ControlsPanelStyle" TargetType="Layout">
-        <Setter Property="BackgroundColor" Value="#30000000" />
+        <Setter Property="BackgroundColor" Value="#40E57A00" />
         <Setter Property="Padding" Value="2,0,2,2" />
     </Style>
 
@@ -215,7 +215,7 @@
 
     <Style x:Key="CheckedTrackStyle" TargetType="ImageButton">
         <!--JKN check that this control is visible-->
-        <Setter Property="Source" Value="Resources/Images/stop.svg" />
+        <Setter Property="Source" Value="Resources/Images/check.svg" />
         <Setter Property="Opacity" Value="1" />
         <Setter Property="WidthRequest" Value="40" />
     </Style>
@@ -230,7 +230,7 @@
         <ViewCell>
             <StackLayout Style="{StaticResource TrackViewCellStyle}">
                 <StackLayout WidthRequest="30" Orientation="Horizontal" VerticalOptions="Center">
-                    <Button Style="{StaticResource CheckedTrackStyle}" IsVisible="{Binding Selected}" />
+                    <ImageButton Style="{StaticResource CheckedTrackStyle}" IsVisible="{Binding Selected}" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                     <Label Style="{StaticResource TrackNameLabelStyle}" Text="{Binding Name}" />
@@ -287,7 +287,7 @@
                         <StackLayout x:Name="UnLockControlsPanel" Style="{TemplateBinding UnLockControlsPanelStyle}" IsVisible="False">
                             <local:SwipeToUnLockView x:Name="SwipeToUnLock" HeightRequest="60" VerticalOptions="Center">
                                 <local:SwipeToUnLockView.Thumb>
-                                    <Button IsVisible="True" Style="{StaticResource UnLockButtonStyle}" />
+                                    <ImageButton IsVisible="True" Style="{StaticResource UnLockButtonStyle}" />
                                 </local:SwipeToUnLockView.Thumb>
 
                                 <local:SwipeToUnLockView.TrackBar>

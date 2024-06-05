@@ -99,8 +99,7 @@ namespace LibVLCSharp.MAUI.Shared
             }
             catch (Exception ex)
             {
-
-                throw;
+                ShowErrorMessageBox(ex);
             }
         }
 

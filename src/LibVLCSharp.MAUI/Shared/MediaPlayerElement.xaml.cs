@@ -243,7 +243,14 @@ namespace LibVLCSharp.MAUI.Shared
 
         private void GestureRecognized(object? sender, EventArgs e)
         {
-            PlaybackControls.Show();
+            try
+            {
+                PlaybackControls.Show();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }        
     }
 }
