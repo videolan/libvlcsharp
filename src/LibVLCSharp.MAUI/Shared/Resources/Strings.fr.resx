@@ -132,9 +132,6 @@
   <data name="Error" xml:space="preserve">
     <value>Erreur</value>
   </data>
-  <data name="Moi" xml:space="preserve">
-    <value>JKN</value>
-  </data>
   <data name="NoTrackFoundMessage" xml:space="preserve">
     <value>Aucune piste trouvée</value>
   </data>

@@ -6,15 +6,11 @@ using Microsoft.Maui;
 
 namespace LibVLCSharp.MAUI.Shared
 {
-    /// <summary>
-    /// Represents an object that uses a <see cref="LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
-    /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MediaPlayerElement : ContentView
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MediaPlayerElement"/> class.
-        /// </summary>
+        private readonly WeakEventManager _weakEventManager = new WeakEventManager();
+
         public MediaPlayerElement()
         {
             InitializeComponent();
@@ -22,28 +18,18 @@ namespace LibVLCSharp.MAUI.Shared
 
         private bool Initialized { get; set; }
 
-        /// <summary>
-        /// Identifies the <see cref="LibVLC"/> dependency property.
-        /// </summary>
         public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC),
             typeof(MediaPlayerElement), propertyChanged: LibVLCPropertyChanged);
-        /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
-        /// </summary>
+
         public LibVLC LibVLC
         {
             get => (LibVLC)GetValue(LibVLCProperty);
             set => SetValue(LibVLCProperty, value);
         }
 
-        /// <summary>
-        /// Identifies the <see cref="MediaPlayer"/> dependency property.
-        /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
             typeof(LibVLCSharp.Shared.MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
-        /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
-        /// </summary>
+
         public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
             get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
@@ -52,23 +38,16 @@ namespace LibVLCSharp.MAUI.Shared
 
         private static readonly BindableProperty PlaybackControlsProperty = BindableProperty.Create(nameof(PlaybackControls),
             typeof(PlaybackControls), typeof(MediaPlayerElement), propertyChanged: PlaybackControlsPropertyChanged);
-        /// <summary>
-        /// Gets or sets the playback controls for the media.
-        /// </summary>
+
         public PlaybackControls PlaybackControls
         {
             get => (PlaybackControls)GetValue(PlaybackControlsProperty);
             set => SetValue(PlaybackControlsProperty, value);
         }
 
-        /// <summary>
-        /// Identifies the <see cref="VideoView"/> dependency property
-        /// </summary>
         private static readonly BindableProperty VideoViewProperty = BindableProperty.Create(nameof(VideoView), typeof(VideoView),
-         typeof(MediaPlayerElement), propertyChanged: VideoViewPropertyChanged);
-        /// <summary>
-        /// Gets or sets the video view.
-        /// </summary>
+            typeof(MediaPlayerElement), propertyChanged: VideoViewPropertyChanged);
+
         public VideoView? VideoView
         {
             get => (VideoView)GetValue(VideoViewProperty);
@@ -78,9 +57,6 @@ namespace LibVLCSharp.MAUI.Shared
         private static readonly BindableProperty EnableRendererDiscoveryProperty = BindableProperty.Create(nameof(EnableRendererDiscovery),
             typeof(bool), typeof(PlaybackControls), true, propertyChanged: EnableRendererDiscoveryPropertyChanged);
 
-        /// <summary>
-        /// Enable or disable renderer discovery
-        /// </summary>
         public bool EnableRendererDiscovery
         {
             get => (bool)GetValue(EnableRendererDiscoveryProperty);
@@ -168,11 +144,6 @@ namespace LibVLCSharp.MAUI.Shared
             ((MediaPlayerElement)bindable).OnEnableRendererDiscoveryChanged((bool)newValue);
         }
 
-        /// <summary>
-        /// Invoked whenever the <see cref="Element.Parent"/> of an element is set. 
-        /// Implement this method in order to add behavior when the element is added to a parent.
-        /// </summary>
-        /// <remarks>Implementors must call the base method.</remarks>
         protected override void OnParentSet()
         {
             base.OnParentSet();
@@ -191,53 +162,52 @@ namespace LibVLCSharp.MAUI.Shared
                     PlaybackControls = new PlaybackControls();
                 }
 
-                var application = Application.Current;
-                application.PageAppearing += PageAppearing;
-                application.PageDisappearing += PageDisappearing;
+                Application.Current.ModalPushed += OnAppModalPushed;
+                Application.Current.ModalPopped += OnAppModalPopped;
             }
         }
 
-        private void PageAppearing(object? sender, Page e)
+        private void OnAppModalPushed(object sender, EventArgs e)
         {
-            if (e == this.FindAncestor<Page?>())
+            var page = this.FindAncestor<Page>();
+            if (page != null)
             {
-                //    MessagingCenter.Subscribe<LifecycleMessage>(this, "OnSleep", m =>
-                //    {
-                //        var applicationProperties = Application.Current.Properties;
-                //        var mediaPlayer = MediaPlayer;
-                //        if (mediaPlayer != null)
-                //        {
-                //            applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position"] = mediaPlayer.Position;
-                //            applicationProperties[$"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying"] = mediaPlayer.State == VLCState.Playing;
-                //            mediaPlayer.Stop();
-                //        }
-                //        VideoView = null;
-                //    });
-                //    MessagingCenter.Subscribe<LifecycleMessage>(this, "OnResume", m =>
-                //    {
-                //        VideoView = new VideoView();
-                //        var mediaPlayer = MediaPlayer;
-                //        if (mediaPlayer != null)
-                //        {
-                //            var applicationProperties = Application.Current.Properties;
-                //            if (applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", out var play) && play is true)
-                //            {
-                //                mediaPlayer.Play();
-                //                mediaPlayer.Position = applicationProperties.TryGetValue($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", out var position)
-                //                    && position is float p ? p : 0;
-                //            }
-                //        }
-                //    });
+                _weakEventManager.AddEventHandler<EventArgs>(OnSleep, nameof(Application.ModalPushed));
             }
-            //JKN
         }
 
-        private void PageDisappearing(object? sender, Page e)
+        private void OnAppModalPopped(object sender, EventArgs e)
         {
-            if (e == this.FindAncestor<Page?>())
+            var page = this.FindAncestor<Page>();
+            if (page != null)
             {
-                //    MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnSleep");
-                //    MessagingCenter.Unsubscribe<LifecycleMessage>(this, "OnResume");
+                _weakEventManager.AddEventHandler<EventArgs>(OnResume, nameof(Application.ModalPopped));
+            }
+        }
+
+        private void OnSleep(object sender, EventArgs e)
+        {
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
+            {
+                Preferences.Set($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", mediaPlayer.Position);
+                Preferences.Set($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", mediaPlayer.State == VLCState.Playing);
+                mediaPlayer.Stop();
+            }
+            VideoView = null;
+        }
+
+        private void OnResume(object sender, EventArgs e)
+        {
+            VideoView = new VideoView();
+            var mediaPlayer = MediaPlayer;
+            if (mediaPlayer != null)
+            {
+                if (Preferences.Get($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", false))
+                {
+                    mediaPlayer.Play();
+                    mediaPlayer.Position = Preferences.Get($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", 0f);
+                }
             }
         }
 
@@ -249,8 +219,8 @@ namespace LibVLCSharp.MAUI.Shared
             }
             catch (Exception ex)
             {
-                throw;
+                Console.WriteLine($"Error in GestureRecognized: {ex.Message}");
             }
-        }        
+        }
     }
 }

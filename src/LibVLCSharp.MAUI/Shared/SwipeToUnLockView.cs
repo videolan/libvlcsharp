@@ -126,12 +126,12 @@ namespace LibVLCSharp.MAUI.Shared
                     // if (e.TotalX < Thumb.TranslationX)
                     //    return;
                     Thumb.TranslationX = x;
-                    this.SetLayoutBounds(FillBar, new Rect(0, 0, x + Thumb.Width / 2, Height)); //JKN
+                    this.SetLayoutBounds(FillBar, new Rect(0, 0, x + Thumb.Width / 2, Height));
                     break;
 
                 case GestureStatus.Completed:
                     var posX = Thumb.TranslationX;
-                    this.SetLayoutBounds(FillBar, new Rect(0, 0, 0, Height)); //JKN
+                    this.SetLayoutBounds(FillBar, new Rect(0, 0, 0, Height));
 
                     // Reset translation applied during the pan
                     await Task.WhenAll(new Task[]
@@ -155,7 +155,7 @@ namespace LibVLCSharp.MAUI.Shared
 
             Children.Clear();
 
-            this.SetLayoutFlags(TrackBar, AbsoluteLayoutFlags.SizeProportional); //JKN
+            this.SetLayoutFlags(TrackBar, AbsoluteLayoutFlags.SizeProportional);
             this.SetLayoutBounds(TrackBar, new Rect(0, 0, 1, 1));
             Children.Add(TrackBar);
 

@@ -29,7 +29,7 @@ namespace LibVLCSharp.MAUI
 #endif
         }
 
-        protected override void ConnectHandler(PlatformView platformView) //JKN check if the override is not a dupp from the other part of the class implementation
+        protected override void ConnectHandler(PlatformView platformView) 
         {
             base.ConnectHandler(platformView);
             // Perform any control setup here

@@ -169,15 +169,6 @@ namespace LibVLCSharp.MAUI.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to JKN.
-        /// </summary>
-        public static string Me {
-            get {
-                return ResourceManager.GetString("Me", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No track found.
         /// </summary>
         public static string NoTrackFoundMessage {
