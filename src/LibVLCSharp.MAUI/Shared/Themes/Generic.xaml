@@ -214,7 +214,6 @@
     </Style>
 
     <Style x:Key="CheckedTrackStyle" TargetType="ImageButton">
-        <!--JKN check that this control is visible-->
         <Setter Property="Source" Value="Resources/Images/check.svg" />
         <Setter Property="Opacity" Value="1" />
         <Setter Property="WidthRequest" Value="40" />
