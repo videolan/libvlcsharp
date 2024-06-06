@@ -18,7 +18,10 @@ This package has multiple target frameworks, which means it will pick the right 
 
 ## MediaPlayerElement
 
-Coming soon...
+This package includes a MAUI MediaPlayerElement component. It currently supports iOS and Android only.
+
+See the [sample](../../samples/MAUI/LibVLCSharp.MAUI.MediaElement) for more info.
+MediaElement.Multiple shows you how to use multiple instances of the componant in the same project.
 
 ## Why should I reference this package in my project?
 

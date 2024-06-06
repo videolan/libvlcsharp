@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Shared\Resources\Images\background.png" />
     <None Remove="Shared\Resources\Images\backward.svg" />
     <None Remove="Shared\Resources\Images\check.svg" />
     <None Remove="Shared\Resources\Images\chromecast.svg" />
@@ -105,6 +106,7 @@
 
 
 	<ItemGroup>
+	  <MauiImage Include="Shared\Resources\Images\background.png" />
 	  <MauiImage Include="Shared\Resources\Images\backward.svg" />
 	  <MauiImage Include="Shared\Resources\Images\check.svg" />
 	  <MauiImage Include="Shared\Resources\Images\chromecast.svg" />

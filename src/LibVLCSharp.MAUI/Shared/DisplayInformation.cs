@@ -12,6 +12,6 @@ namespace LibVLCSharp.MAUI.Shared
         /// <summary>
         /// Gets the scale factor
         /// </summary>
-        public double ScalingFactor => DeviceDisplay.MainDisplayInfo.Density; //JKN is this correct?
+        public double ScalingFactor => DeviceDisplay.MainDisplayInfo.Density;
     }
 }

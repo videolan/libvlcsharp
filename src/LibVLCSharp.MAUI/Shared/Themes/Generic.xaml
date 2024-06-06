@@ -88,10 +88,11 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="HeightRequest" Value="40" />
         <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="Margin" Value="0" />
+        <Setter Property="Margin" Value="5" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="Aspect" Value="AspectFit" />
         <Setter Property="Opacity" Value="1" />
         <Style.Triggers>
             <Trigger TargetType="ImageButton" Property="IsEnabled" Value="False">
@@ -218,6 +219,7 @@
         <Setter Property="Source" Value="Resources/Images/check.svg" />
         <Setter Property="Opacity" Value="1" />
         <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="Aspect" Value="AspectFit" />
     </Style>
 
     <Style x:Key="TrackViewCellStyle" TargetType="StackLayout">
@@ -230,7 +232,7 @@
         <ViewCell>
             <StackLayout Style="{StaticResource TrackViewCellStyle}">
                 <StackLayout WidthRequest="30" Orientation="Horizontal" VerticalOptions="Center">
-                    <ImageButton Style="{StaticResource CheckedTrackStyle}" IsVisible="{Binding Selected}" />
+                    <ImageButton Style="{StaticResource CheckedTrackStyle}" IsVisible="{Binding Selected}" WidthRequest="30" HeightRequest="30" Aspect="AspectFit" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                     <Label Style="{StaticResource TrackNameLabelStyle}" Text="{Binding Name}" />
