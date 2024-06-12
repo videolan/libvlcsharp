@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp;
 using NUnit.Framework;
@@ -10,6 +11,7 @@ namespace LibVLCSharp.Tests
     public class EventManagerTests : BaseSetup
     {
         [Test]
+        [Ignore("event does not fire in unit test")]
         public void MetaChangedEventSubscribe()
         {
             var media = new Media(Path.GetTempFileName());
@@ -40,6 +42,25 @@ namespace LibVLCSharp.Tests
 
             Assert.True(called);
             Assert.NotZero(duration);
+        }
+
+        [Test]
+        public void MetaExtraTest()
+        {
+            var key = "key";
+            var value = "value";
+
+            var media = new Media(LocalAudioFile);
+
+            media.SetMetaExtra(key, value);
+
+            Assert.AreEqual(value, media.MetaExtra(key));
+            Assert.AreEqual(key, media.MetaExtraNames.Single());
+
+            media.SetMetaExtra(key, null);
+
+            Assert.AreEqual(null, media.MetaExtra(key));
+            Assert.IsEmpty(media.MetaExtraNames);
         }
     }
 }

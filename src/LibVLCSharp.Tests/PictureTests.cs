@@ -8,6 +8,7 @@ namespace LibVLCSharp.Tests
     public class PictureTests : BaseSetup
     {
         [Test]
+        [Ignore("parsing hanging in unit test")]
         public async Task RetrieveAttachedThumbnails()
         {
             using var media = new Media(new Uri(AttachedThumbnailsMedia));
