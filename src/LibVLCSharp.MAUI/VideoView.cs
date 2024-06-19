@@ -7,7 +7,7 @@ namespace LibVLCSharp.MAUI
     /// <summary>
     /// Generic MAUI VideoView
     /// </summary>
-    public class VideoView : View//, IVideoControl
+    public class VideoView : View, IVideoControl
     {
         /// <summary>
         /// Raised when a new MediaPlayer is set and will be attached to the view

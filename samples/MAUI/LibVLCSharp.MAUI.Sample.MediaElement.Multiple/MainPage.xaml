@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LibVLCSharp.MAUI.Sample.MediaElement"
+             xmlns:vlc="clr-namespace:LibVLCSharp.MAUI.Shared;assembly=LibVLCSharp.MAUI"
+             x:Class="LibVLCSharp.MAUI.Sample.MediaElement.MainPage"
+             Appearing="OnAppearing"
+             Disappearing="OnDisappearing">
+
+    <ContentPage.BindingContext>
+        <local:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Image Source="Resources/Images/background.png"
+               Aspect="AspectFill"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <vlc:MediaPlayerElement x:Name="mpe1" MediaPlayer="{Binding MediaPlayer1}" LibVLC="{Binding LibVLC1}" EnableRendererDiscovery="True"
+                                    HorizontalOptions="FillAndExpand" VerticalOptions="Start" Margin="20">
+                <vlc:MediaPlayerElement.PlaybackControls>
+                    <vlc:PlaybackControls IsAspectRatioButtonVisible="True" IsSeekButtonVisible="True" IsCastButtonVisible="True" />
+                </vlc:MediaPlayerElement.PlaybackControls>
+            </vlc:MediaPlayerElement>
+
+            <vlc:MediaPlayerElement x:Name="mpe2" Grid.Row="1" MediaPlayer="{Binding MediaPlayer2}" LibVLC="{Binding LibVLC2}" EnableRendererDiscovery="True"
+                                    HorizontalOptions="FillAndExpand" VerticalOptions="End" Margin="20">
+                <vlc:MediaPlayerElement.PlaybackControls>
+                    <vlc:PlaybackControls IsAspectRatioButtonVisible="True" IsSeekButtonVisible="True" IsCastButtonVisible="True" />
+                </vlc:MediaPlayerElement.PlaybackControls>
+            </vlc:MediaPlayerElement>
+        </Grid>
+    </Grid>
+</ContentPage>
