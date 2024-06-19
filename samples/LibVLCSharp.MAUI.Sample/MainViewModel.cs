@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared;
+using LibVLCSharp.Shared;
 using System.ComponentModel;
 
 namespace LibVLCSharp.MAUI.Sample
@@ -14,8 +14,8 @@ namespace LibVLCSharp.MAUI.Sample
 
         private LibVLC LibVLC { get; set; }
 
-        private Shared.MediaPlayer _mediaPlayer;
-        public Shared.MediaPlayer MediaPlayer
+        private LibVLCSharp.Shared.MediaPlayer _mediaPlayer;
+        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
             private set => Set(nameof(MediaPlayer), ref _mediaPlayer, value);
@@ -38,7 +38,7 @@ namespace LibVLCSharp.MAUI.Sample
             LibVLC = new LibVLC(enableDebugLogs: true);
             using var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
-            MediaPlayer = new Shared.MediaPlayer(LibVLC)
+            MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC)
             {
                 Media = media
             };
