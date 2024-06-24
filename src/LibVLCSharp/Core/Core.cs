@@ -163,9 +163,14 @@ namespace LibVLCSharp
 
             if (!LibVLCLoaded)
             {
-                throw new VLCException("Failed to load required native libraries. " +
+                throw new VLCException("Failed to load required native libraries. There might be several reasons for this:" +
+#if UNITY
+                    $"{Environment.NewLine}Have you installed the latest LibVLC package from VLC Unity for your target platform?" +
+#else
                     $"{Environment.NewLine}Have you installed the latest LibVLC package from nuget for your target platform?" +
-                    $"{Environment.NewLine}Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}");
+#endif
+                    $"{Environment.NewLine}Search paths include {string.Join("; ", paths.Select(p => $"{p.libvlc},{p.libvlccore}"))}" + 
+                    $"{Environment.NewLine}Are you using an unsupported constructor LibVLC option?");
             }
         }
 #endif
