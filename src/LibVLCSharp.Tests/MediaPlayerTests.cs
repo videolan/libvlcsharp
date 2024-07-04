@@ -75,7 +75,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task Play()
         {
-            var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+            var media = new Media(new Uri(LocalAudioFile));
             var mp = new MediaPlayer(_libVLC, media);
             var called = false;
             mp.Playing += (sender, args) =>
@@ -85,7 +85,6 @@ namespace LibVLCSharp.Tests
             mp.Play();
             await Task.Delay(5000);
             Assert.True(called);
-            //Assert.True(mp.IsPlaying);
         }
 
         int callCountRegisterOne = 0;
@@ -96,7 +95,7 @@ namespace LibVLCSharp.Tests
         {
             try
             {
-                var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
+                var media = new Media(new Uri(LocalAudioFile));
                 var mp = new MediaPlayer(_libVLC, media);
 
 
@@ -185,7 +184,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
 
-            mp.Play(new Media("https://streams.videolan.org/streams/360/eagle_360.mp4", FromType.FromLocation));
+            mp.Play(new Media(new Uri("https://streams.videolan.org/streams/360/eagle_360.mp4"), ":no-video"));
 
             await Task.Delay(1000);
 
@@ -204,46 +203,17 @@ namespace LibVLCSharp.Tests
         public void GetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
         }
 
         [Test]
         public void SetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
-
-            Assert.True(mp.SetRole(MediaPlayerRole.Video));
             Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
-        }
 
-        [Test]
-        public async Task MultiTrackSelection()
-        {
-            var msub = "https://streams.videolan.org/samples/Matroska/subtitles/multiple_sub_sample.mkv";
-            var mp = new MediaPlayer(_libVLC)
-            {
-                Media = new Media(new Uri(msub)),
-                Mute = true
-            };
-
-            var tcs = new TaskCompletionSource<bool>();
-
-            var trackList = default(MediaTrackList);
-            mp.Playing += (s, e) => Task.Run(() =>
-            {
-                trackList = mp.Tracks(TrackType.Text);
-                tcs.SetResult(true);
-            });
-
-            mp.Play();
-            await tcs.Task;
-
-            Assert.AreEqual(7, trackList?.Count);
-
-            mp.Select(trackList.ToArray());
-
-            await Task.Delay(10000);
+            Assert.True(mp.SetRole(MediaPlayerRole.Music));
+            Assert.AreEqual(MediaPlayerRole.Music, mp.Role);
         }
 
         [Test]

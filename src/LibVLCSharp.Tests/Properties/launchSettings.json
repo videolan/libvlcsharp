@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibVLCSharp.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
