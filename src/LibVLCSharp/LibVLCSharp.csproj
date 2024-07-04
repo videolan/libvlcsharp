@@ -73,7 +73,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
   
-  <ItemGroup Condition="$(TargetFramework.StartsWith('uap')) Or $(TargetFramework.StartsWith('net6.0-windows10')) ">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap')) Or $(UseWinUI) == true">
     <Compile Include="Platforms\Windows\**\*.cs" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <Page Include="Themes\Generic.xaml">
@@ -82,7 +82,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     </Page>
   </ItemGroup>
   
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-windows10')) ">
+  <ItemGroup Condition="$(UseWinUI) == true">
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.1" />
   </ItemGroup>
 

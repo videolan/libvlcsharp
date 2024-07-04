@@ -14,7 +14,7 @@
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <DefineConstants>$(DefineConstants);UWP;WINDOWS_MODERN</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0-windows10'))">
+  <PropertyGroup Condition="$(UseWinUI) == true">
     <DefineConstants>$(DefineConstants);WINUI;WINDOWS_MODERN</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
