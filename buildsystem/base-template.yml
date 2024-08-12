@@ -3,7 +3,7 @@ steps:
   displayName: 'Use .NET Core SDK'
   inputs:
     packageType: sdk
-    version: 7.0.202
+    version: 8.0.300
 
 - bash: |
    dotnet workload install android
@@ -29,3 +29,9 @@ steps:
    yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
   displayName: 'Install Android SDK 27 and 28'
   condition: eq( variables['Agent.OS'], 'Darwin' )
+
+- bash: |
+   dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
+   uno-check -v --ci --non-interactive --fix --skip xcode --skip gtk3 --skip vswin --skip vsmac --skip androidsdk --skip androidemulator
+  displayName: 'Run uno.check'
+  condition: ne( variables['Agent.OS'], 'Linux' )
