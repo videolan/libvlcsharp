@@ -13,7 +13,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         /// <param name="mediaPlayer">media player</param>
         /// <param name="identifier">optional identifier</param>
-        public static void Save(Shared.MediaPlayer mediaPlayer, string? identifier = null)
+        public static void Save(Shared.MediaPlayer? mediaPlayer, string? identifier = null)
         {
             if (mediaPlayer == null)
             {
@@ -31,7 +31,7 @@ namespace LibVLCSharp.Uno
         /// </summary>
         /// <param name="mediaPlayer">media player</param>
         /// <param name="identifier">optional identifier</param>
-        public static void Restore(Shared.MediaPlayer mediaPlayer, string? identifier = null)
+        public static void Restore(Shared.MediaPlayer? mediaPlayer, string? identifier = null)
         {
             if (mediaPlayer == null)
             {

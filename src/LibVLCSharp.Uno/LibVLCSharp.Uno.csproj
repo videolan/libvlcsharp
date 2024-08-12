@@ -1,22 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>LibVLCSharp.Uno</Title>
     <Summary>Uno integration for LibVLCSharp</Summary>
-    <TargetFrameworks>xamarin.ios10;monoandroid81</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362</TargetFrameworks>
+    <TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <OutputType>Library</OutputType>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
 
 It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iOS)</Description>
     <PackageTags>$(PackageTags);uno</PackageTags>
     <RootNamespace>LibVLCSharp.Uno</RootNamespace>
     <PackageId>LibVLCSharp.Uno</PackageId>
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
-    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-  </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows10.0.19041'">
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
     <PRIResource Include="Strings\**\*.resw" />
     <Compile Update="**\*.xaml.cs">
@@ -42,15 +40,13 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <None Include="**\*.iOS.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('ios')) or $(TargetFramework.Contains('android'))">
-    <PackageReference Include="Uno.UI" Version="2.0.527" />
-    <PackageReference Include="Uno.SourceGenerationTasks" Version="4.1.0" /> <!-- TODO: Work around broken VS tooling. To remove when switching to Uno 3 -->
+    <PackageReference Include="Uno.WinUI" Version="5.3.114" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
+  <ItemGroup Condition="$(TargetFramework.Contains('windows'))">
     <Compile Include="**\*.UWP.*cs" />
     <Page Include="**\*.UWP.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('android'))">
-    <ProjectReference Include="..\LibVLCSharp.Android.AWindow\LibVLCSharp.Android.AWindow.csproj" PrivateAssets="All" />
     <Compile Include="**\*.Android.*cs" />
     <Page Include="**\*.Android.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
@@ -58,7 +54,8 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <Compile Include="**\*.iOS.*cs" />
     <Page Include="**\*.iOS.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
-  <Target Name="_BeforeGenerateProjectPriFileCore" BeforeTargets="_GenerateProjectPriFileCore" Condition=" '$(Configuration)'=='Release' ">
-    <Copy SourceFiles="$(ProjectDir)\filtered.layout.resfiles" DestinationFolder="$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework)" />
-  </Target>
+  <ItemGroup Condition="$(TargetFramework.Contains('windows'))">
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+  </ItemGroup>
 </Project>

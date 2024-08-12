@@ -37,7 +37,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void VideoView_SizeChanged(object? sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void VideoView_SizeChanged(object? sender, Microsoft.UI.Xaml.SizeChangedEventArgs e)
         {
             _sizeChangedHandler?.Invoke(this, EventArgs.Empty);
         }

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -14,7 +15,7 @@ namespace LibVLCSharp.Uno
         protected override Platforms.iOS.VideoView CreateUnderlyingVideoView()
         {
             var underlyingVideoView = new Platforms.iOS.VideoView();
-            Border!.Child = underlyingVideoView;
+            Border!.Child = VisualTreeHelper.AdaptNative(underlyingVideoView);
             underlyingVideoView.Frame = Border.Frame;
             return underlyingVideoView;
         }

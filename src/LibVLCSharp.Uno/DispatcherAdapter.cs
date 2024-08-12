@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared.MediaPlayerElement;
-using Windows.UI.Core;
+using Microsoft.UI.Dispatching;
+//using Windows.UI.Core;
 
 namespace LibVLCSharp.Uno
 {
@@ -14,21 +15,21 @@ namespace LibVLCSharp.Uno
         /// Initializes a new instance 
         /// </summary>
         /// <param name="dispatcher"></param>
-        public DispatcherAdapter(CoreDispatcher dispatcher)
+        public DispatcherAdapter(DispatcherQueue dispatcher)
         {
             Dispatcher = dispatcher;
         }
 
-        private CoreDispatcher Dispatcher { get; }
+        private DispatcherQueue Dispatcher { get; }
 
         /// <summary>
         /// Schedules the provided callback on the UI thread from a worker threa
         /// </summary>
         /// <param name="action">The callback on which the dispatcher returns when the event is dispatched</param>
         /// <returns>The task object representing the asynchronous operation</returns>
-        public async Task InvokeAsync(Action action)
+        public Task InvokeAsync(Action action)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(action));
+            return Task.Run(() => Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, new DispatcherQueueHandler(action)));
         }
     }
 }

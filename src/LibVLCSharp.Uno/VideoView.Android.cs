@@ -1,5 +1,6 @@
 ﻿using Uno.UI;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -15,7 +16,7 @@ namespace LibVLCSharp.Uno
         protected override Platforms.Android.VideoView CreateUnderlyingVideoView()
         {
             var underlyingVideoView = new Platforms.Android.VideoView(ContextHelper.Current);
-            Border!.Child = underlyingVideoView;
+            Border!.Child = VisualTreeHelper.AdaptNative(underlyingVideoView);
             return underlyingVideoView;
         }
     }
