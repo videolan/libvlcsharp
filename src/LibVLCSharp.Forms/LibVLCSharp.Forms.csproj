@@ -12,7 +12,7 @@ LibVLCSharp.Forms contains the Xamarin.Forms support for LibVLCSharp through cus
 Xamarin.Forms support for GTK and WPF are in separate packages. LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Forms</RootNamespace>
     <PackageId>LibVLCSharp.Forms</PackageId>
   </PropertyGroup>
