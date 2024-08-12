@@ -48,8 +48,7 @@ Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    NuGetRestore(solutionPath);
-    MoveDirectory("../src/packages", packagesDir);
+    DotNetRestore(solutionPath);
 });
 
 Task("Build")

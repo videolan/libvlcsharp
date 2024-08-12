@@ -1,8 +1,5 @@
 steps:
 - template: base-template.yml
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: custom
-    custom: 'cake'
-    workingDirectory: buildsystem
+
+- script: dotnet build src/LibVLCSharp.Mac.sln -c Release
+  displayName: 'Build solution'
