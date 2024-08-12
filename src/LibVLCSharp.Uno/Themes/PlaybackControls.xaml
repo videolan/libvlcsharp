@@ -6,9 +6,7 @@
     <Style TargetType="vlc:PlaybackControls">
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FlowDirection" Value="LeftToRight" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="vlc:PlaybackControls">
@@ -29,7 +27,6 @@
                                 <Setter Property="FontSize" Value="{ThemeResource MTCMediaFontSize}" />
                                 <Setter Property="FontFamily" Value="{ThemeResource MTCMediaFontFamily}" />
                                 <Setter Property="Style" Value="{ThemeResource CaptionTextBlockStyle }" />
-                                <Setter Property="IsTextScaleFactorEnabled" Value="False" />
                             </Style>
                             <!-- Style for Position slider used in Playback Controls -->
                             <Style x:Key="MediaSliderStyle" TargetType="Slider">
@@ -258,11 +255,9 @@
                                                                Grid.Row="0"
                                                                Grid.RowSpan="3"
                                                                Grid.Column="1"
-                                                               FocusVisualMargin="-14,-6,-14,-6"
-                                                               AutomationProperties.AccessibilityView="Raw">
+                                                               FocusVisualMargin="-14,-6,-14,-6">
                                                             <ToolTipService.ToolTip>
                                                                 <ToolTip x:Name="ThumbnailTooltip">
-                                                                    <ContentPresenter Content="{Binding}" />
                                                                 </ToolTip>
                                                             </ToolTipService.ToolTip>
                                                             <Thumb.DataContext>
@@ -274,7 +269,6 @@
                                                                         <TextBlock x:Name="TimeElapsedPreview"
                                                                                    Margin="6,1,6,3"
                                                                                    Style="{StaticResource BodyTextBlockStyle}"
-                                                                                   IsTextScaleFactorEnabled="False"
                                                                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}" />
                                                                     </Border>
                                                                 </Grid>
@@ -330,8 +324,7 @@
                                                                Grid.Row="1"
                                                                Grid.Column="0"
                                                                Grid.ColumnSpan="3"  
-                                                               FocusVisualMargin="-6,-14,-6,-14"
-                                                               AutomationProperties.AccessibilityView="Raw" />
+                                                               FocusVisualMargin="-6,-14,-6,-14" />
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

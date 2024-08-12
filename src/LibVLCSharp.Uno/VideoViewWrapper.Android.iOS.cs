@@ -1,8 +1,8 @@
 ﻿using System;
 using LibVLCSharp.MediaPlayerElement;
 using Windows.ApplicationModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace LibVLCSharp.Uno
 {

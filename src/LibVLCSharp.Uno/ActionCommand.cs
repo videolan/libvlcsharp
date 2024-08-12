@@ -18,14 +18,14 @@ namespace LibVLCSharp.Uno
         /// Initializes a new instance of <see cref="ActionCommand{TParameter}"/> class
         /// </summary>
         /// <param name="action">action to execute</param>
-        public ActionCommand(Action<TParameter> action)
+        public ActionCommand(Action<TParameter?> action)
         {
             Action = action;
         }
 
-        private Action<TParameter> Action { get; }
+        private Action<TParameter?> Action { get; }
 
-        bool ICommand.CanExecute(object parameter)
+        bool ICommand.CanExecute(object? parameter)
         {
             return true;
         }
@@ -34,9 +34,9 @@ namespace LibVLCSharp.Uno
         /// Defines the method to be called when the command is invoked
         /// </summary>
         /// <param name="parameter">data used by the command</param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            Action((TParameter)parameter);
+            Action((TParameter?)parameter);
         }
     }
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using FontAwesome;
 using LibVLCSharp.MediaPlayerElement;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 
 namespace LibVLCSharp.Uno
 {
@@ -51,7 +51,7 @@ namespace LibVLCSharp.Uno
         {
             DefaultStyleKey = typeof(PlaybackControls);
 
-            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Dispatcher), new DisplayInformation(), new DisplayRequestAdapter());
+            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread()), new DisplayInformation(), new DisplayRequestAdapter());
             Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
             var autoHideManager = Manager.Get<AutoHideNotifier>();
             autoHideManager.Shown += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
@@ -680,13 +680,13 @@ namespace LibVLCSharp.Uno
                 var currentAspectRatio = Manager.Get<AspectRatioManager>().AspectRatio;
                 foreach (AspectRatio aspectRatio in Enum.GetValues(typeof(AspectRatio)))
                 {
-                    var menuItem = new ToggleMenuFlyoutItem()
+                    var menuItem = new ToggleMenuFlyoutItem
                     {
                         Text = ResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
-                        IsChecked = aspectRatio == currentAspectRatio
+                        IsChecked = aspectRatio == currentAspectRatio,
+                        Command = new ActionCommand<AspectRatio>(AspectRatioMenuItemClick),
+                        CommandParameter = aspectRatio
                     };
-                    menuItem.Command = new ActionCommand<AspectRatio>(AspectRatioMenuItemClick);
-                    menuItem.CommandParameter = aspectRatio;
                     menuItems.Add(menuItem);
                 }
             }
@@ -704,7 +704,7 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void UpdateZoomMenu(AspectRatio aspectRatio)
+        private void UpdateZoomMenu(AspectRatio? aspectRatio)
         {
             if (ZoomMenu != null)
             {
@@ -712,17 +712,17 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void AspectRatioChanged(object sender, EventArgs e)
+        private void AspectRatioChanged(object? sender, EventArgs? e)
         {
-            UpdateZoomMenu(((AspectRatioManager)sender).AspectRatio);
+            UpdateZoomMenu(((AspectRatioManager?)sender)?.AspectRatio);
         }
 
-        private void Flyout_Opened(object sender, object e)
+        private void Flyout_Opened(object? sender, object? e)
         {
             Manager.Get<AutoHideNotifier>().Enabled = false;
         }
 
-        private void Flyout_Closed(object sender, object e)
+        private void Flyout_Closed(object? sender, object? e)
         {
             OnShowAndHideAutomaticallyPropertyChanged();
         }
@@ -776,7 +776,7 @@ namespace LibVLCSharp.Uno
 
         private void AddNoneItem(MenuFlyout menuflyout)
         {
-            AddTrack(menuflyout, null, ResourceLoader.GetString("None"));
+            AddTrack(menuflyout, null, ResourceLoader.GetString("None") ?? string.Empty);
         }
 
         private void AddTrack(MenuFlyout menuflyout, string? trackId, string? trackName)
@@ -794,14 +794,19 @@ namespace LibVLCSharp.Uno
                 return;
             }
 
-            var menuItem = new ToggleMenuFlyoutItem() { Text = trackName };
-            menuItem.Command = new ActionCommand<string?>(TrackMenuItemClick);
-            menuItem.CommandParameter = trackId;
+            var menuItem = new ToggleMenuFlyoutItem
+            {
+                Text = trackName,
+                Command = new ActionCommand<string?>(TrackMenuItemClick),
+                CommandParameter = trackId
+            };
             menuItems.Add(menuItem);
 
             if (menuItems.Count == 2)
             {
-                toggleMenuFlyoutItems.FirstOrDefault(i => i.CommandParameter != null).IsChecked = true;
+                var item = toggleMenuFlyoutItems.FirstOrDefault(i => i.CommandParameter != null);
+                if(item != null)
+                    item.IsChecked = true;
                 VisualStateManager.GoToState(this, TracksMenus[menuflyout].AvailableStateName, true);
             }
         }
@@ -825,14 +830,14 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private KeyValuePair<MenuFlyout, TracksMenu> GetTracksMenu(object sender)
+        private KeyValuePair<MenuFlyout, TracksMenu> GetTracksMenu(object? sender)
         {
             return TracksMenus.First(kvp => kvp.Value.Manager == sender);
         }
 
-        private void OnTracksCleared(object sender, EventArgs e)
+        private void OnTracksCleared(object? sender, EventArgs? e)
         {
-            var manager = (TracksManager)sender;
+            var manager = sender as TracksManager;
             var tracksMenukeyValuePair = GetTracksMenu(manager);
             var menuFlyout = tracksMenukeyValuePair.Key;
             var tracksMenu = tracksMenukeyValuePair.Value;
@@ -843,7 +848,7 @@ namespace LibVLCSharp.Uno
             }
             VisualStateManager.GoToState(this, tracksMenu.UnavailableStateName, true);
 
-            using var tracks = manager.Tracks;
+            var tracks = manager?.Tracks;
             if (tracks != null)
             {
                 foreach (var track in tracks)
@@ -853,25 +858,34 @@ namespace LibVLCSharp.Uno
             }
         }
 
-        private void OnTrackSelected(object sender, MediaPlayerESSelectedEventArgs e)
+        private void OnTrackSelected(object? sender, MediaPlayerESSelectedEventArgs? e)
         {
             var menuFlyout = GetTracksMenu(sender).Key;
-            var id = e.Id;
-            CheckMenuItem(menuFlyout, menuFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi =>
+            var id = e?.Id;
+            var toggleMenuFlyoutItem = menuFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi =>
             {
                 var trackId = (int?)mi.CommandParameter;
-                return id == string.Empty && trackId == null || id.Equals(trackId);
-            }));
+                if(trackId is not null)
+                {
+                    if(int.TryParse(id, out var idd))
+                    {
+                        return idd.Equals(trackId);
+                    }
+                }
+                return false;
+            });
+            if(toggleMenuFlyoutItem != null)
+                CheckMenuItem(menuFlyout, toggleMenuFlyoutItem);
         }
 
-        private void OnTrackAdded(object sender, MediaPlayerESAddedEventArgs e)
+        private void OnTrackAdded(object? sender, MediaPlayerESAddedEventArgs? e)
         {
-            var manager = (TracksManager)sender;
-            using var track = manager.GetMediaTrack(e.Id);
+            var manager = sender as TracksManager;
+            var track = manager?.Tracks?.FirstOrDefault(t => t.Id == e?.Id);
             AddTrack(GetTracksMenu(manager).Key, track?.Id, track?.Name);
         }
 
-        private void OnTrackDeleted(object sender, MediaPlayerESDeletedEventArgs e)
+        private void OnTrackDeleted(object? sender, MediaPlayerESDeletedEventArgs? e)
         {
             var tracksMenu = GetTracksMenu(sender);
             var menuFlyout = tracksMenu.Key;
@@ -881,7 +895,7 @@ namespace LibVLCSharp.Uno
             }
 
             var menuItems = menuFlyout.Items;
-            var menuItem = menuItems.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi => e.Id.Equals(mi.CommandParameter));
+            var menuItem = menuItems.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(mi => e!.Id.Equals(mi.CommandParameter));
             if (menuItem != null)
             {
                 var isChecked = menuItem is ToggleMenuFlyoutItem toggleMenuFlyoutItem && toggleMenuFlyoutItem.IsChecked;
@@ -934,9 +948,12 @@ namespace LibVLCSharp.Uno
 
         private void AddCastMenuItem(ICollection<MenuFlyoutItemBase> items, string? name, bool disconnectItem = false)
         {
-            var menuItem = new MenuFlyoutItem() { Text = name };
-            menuItem.Command = new ActionCommand<string>(CastMenuItemClick);
-            menuItem.CommandParameter = disconnectItem ? null : name;
+            var menuItem = new MenuFlyoutItem
+            {
+                Text = name,
+                Command = new ActionCommand<string>(CastMenuItemClick),
+                CommandParameter = disconnectItem ? null : name
+            };
             items.Add(menuItem);
         }
 
@@ -1015,7 +1032,7 @@ namespace LibVLCSharp.Uno
             var errorTextBlock = ErrorTextBlock;
             if (errorTextBlock != null)
             {
-                errorTextBlock.Text = string.Format(ResourceLoader.GetString("Error"), Manager.Get<StateManager>().MediaResourceLocator);
+                errorTextBlock.Text = string.Format(ResourceLoader.GetString("Error") ?? string.Empty, Manager.Get<StateManager>().MediaResourceLocator);
                 VisualStateManager.GoToState(this, ErrorState, true);
             }
         }

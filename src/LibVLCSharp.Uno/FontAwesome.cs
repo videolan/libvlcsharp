@@ -1,5 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace LibVLCSharp.Uno
 {
@@ -9,9 +9,9 @@ namespace LibVLCSharp.Uno
     internal static class FontAwesome
     {
         private static FontFamily Solid { get; } =
-            new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Free-Solid-900.otf#Font Awesome 5 Free");
+            new FontFamily("ms-appx:///Assets/Fonts/solid.otf#Font Awesome 5 Free");
         private static FontFamily Brands { get; } =
-            new FontFamily("ms-appx:///Assets/Fonts/Font Awesome 5 Brands-Regular-400.otf#Font Awesome 5 Brands");
+            new FontFamily("ms-appx:///Assets/Fonts/regular.otf#Font Awesome 5 Brands");
 
         /// <summary>
         /// Creates a solid font icon
