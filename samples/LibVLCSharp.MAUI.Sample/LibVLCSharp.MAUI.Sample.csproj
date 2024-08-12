@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios</TargetFrameworks>
+		<TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>LibVLCSharp.MAUI.Sample</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -55,6 +55,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\LibVLCSharp.MAUI\LibVLCSharp.MAUI.csproj" />
+	  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">

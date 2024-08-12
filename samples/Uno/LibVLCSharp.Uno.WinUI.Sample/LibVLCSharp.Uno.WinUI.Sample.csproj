@@ -1,0 +1,53 @@
+﻿<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>
+      net8.0-android;
+      net8.0-ios;
+    </TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>LibVLCSharp.Uno.WinUI.Sample</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.companyname.LibVLCSharp.Uno.WinUI.Sample</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+		Mvvm;
+    </UnoFeatures>
+
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+
+	  <!--
+      Adding NoWarn to remove build warnings
+      NU1507: Warning when there are multiple package sources when using CPM with no source mapping
+      NETSDK1201: Warning that specifying RID won't create self containing app
+      PRI257: Ignore default language (en) not being one of the included resources (eg en-us, en-uk)
+    -->
+	  <NoWarn>$(NoWarn);NU1507;NETSDK1201;PRI257</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+      <Content Include="Assets\Fonts\regular.otf" />
+      <Content Include="Assets\Fonts\solid.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj" />
+    <ProjectReference Include="..\..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<PackageReference Include="VideoLAN.LibVLC.Android" Version="3.5.3" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+		<PackageReference Include="VideoLAN.LibVLC.iOS" Version="3.3.18" />
+	</ItemGroup>
+</Project>

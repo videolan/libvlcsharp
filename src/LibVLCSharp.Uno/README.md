@@ -11,13 +11,13 @@ This package depends on [LibVLCSharp](../LibVLCSharp/README.md). It also makes u
 
 Supported frameworks:
 
-- UAP
-- monoandroid
-- xamarin.ios
+- net8.0-android,
+- net8.0-ios,
+- net8.0-windows10.0.19041.
 
 Supported platforms:
 
-- UWP
+- WinUI
 - Android
 - iOS
 
