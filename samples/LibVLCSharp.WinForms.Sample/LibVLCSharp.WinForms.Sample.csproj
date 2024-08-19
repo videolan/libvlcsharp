@@ -12,7 +12,7 @@
     <TargetFrameworks>netcoreapp3.1;net6.0-windows</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20220830" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20240819" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
