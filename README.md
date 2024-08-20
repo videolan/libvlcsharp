@@ -78,7 +78,7 @@ Mono, .NET Framework and .NET Core runtimes are supported.
 - Linux including desktop, server and Raspberry Pi (GTK)
 - Xamarin.Forms
 - MAUI
-- Uno Platform (UWP, Android, iOS)
+- Uno Platform 5 (WinUI, Android, iOS)
 - Avalonia (Windows, macOS, Linux)
 - .NET Standard 2.0+
 - .NET Framework 4.5 and later
