@@ -1,16 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
-		<UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-	</PropertyGroup>
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+  
+LibVLCSharp.MAUI contains the integration with .NET MAUI.
 
-	<ItemGroup>
-	  <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
-      <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
-	</ItemGroup>
+This package contains the views that allows to display a video played with LibVLCSharp
+in a MAUI app. It depends on LibVLCSharp.
 
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
+  </ItemGroup>
 </Project>
