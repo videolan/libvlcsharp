@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:converters="clr-namespace:LibVLCSharp.MAUI.Converters"
+                    xmlns:effects="clr-namespace:LibVLCSharp.MAUI.Effects"
+                    xmlns:local="clr-namespace:LibVLCSharp.MAUI"
+                    xmlns:fontAwesome="clr-namespace:LibVLCSharp.MAUI.Resources"
+                    x:Class="LibVLCSharp.MAUI.Themes.Generic">
+    <converters:BufferingProgressToBoolConverter x:Key="BufferingProgressToBoolConverter" />
+    <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+
+    <Color x:Key="Foreground">White</Color>
+    <Color x:Key="MainColor">#E57A00</Color>
+    <Color x:Key="ButtonColor">#A0E57A00</Color>
+
+    <Style x:Key="MessageStyle" TargetType="Label">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
+    </Style>
+
+    <Style x:Key="BufferingProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="HeightRequest" Value="6" />
+        <Setter Property="ProgressColor" Value="{TemplateBinding MainColor}" />
+    </Style>
+
+    <Style x:Key="ControlsPanelStyle" TargetType="Layout">
+        <Setter Property="BackgroundColor" Value="#40E57A00" />
+        <Setter Property="Padding" Value="2,0,2,2" />
+    </Style>
+
+    <Style x:Key="UnLockControlsPanelStyle" TargetType="Layout">
+        <Setter Property="Margin" Value="0, 0, 0, 10" />
+        <Setter Property="WidthRequest" Value="300" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+    </Style>
+
+    <Style x:Key="SeekBarStyle" TargetType="Slider">
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="IsEnabled" Value="False" />
+        <Setter Property="MinimumTrackColor" Value="{TemplateBinding MainColor}" />
+        <Setter Property="MaximumTrackColor" Value="{TemplateBinding Foreground}" />
+        <Setter Property="Maximum" Value="1000" />
+        <Setter Property="ThumbColor" Value="{TemplateBinding MainColor}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="SeekAvailabilityStates">
+                    <VisualState x:Name="SeekAvailable">
+                        <VisualState.Setters>
+                            <Setter Property="IsEnabled" Value="True" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="SeekUnavailable" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ElapsedTimeLabelStyle" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+        <Setter Property="Margin" Value="15,15,15,0" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="TextColor" Value="{TemplateBinding MainColor}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="RemainingTimeLabelStyle" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+        <Setter Property="Margin" Value="15,15,15,0" />
+        <Setter Property="FontSize" Value="Small" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="ButtonBarStyle" TargetType="Layout">
+        <Setter Property="HeightRequest" Value="54" />
+    </Style>
+
+    <Style x:Key="ButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="FontAwesomeSolid" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="TextColor" Value="{TemplateBinding Foreground}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="WidthRequest" Value="40" />
+        <Style.Triggers>
+            <Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                <Setter Property="TextColor" Value="DarkGray"/>
+            </Trigger>
+            <EventTrigger Event="Clicked">
+                <effects:ClickEffect />
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CastButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="False" />
+        <Setter Property="FontFamily" Value="FontAwesomeBrands" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Chromecast}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CastAvailabilityStates">
+                    <VisualState x:Name="CastAvailable">
+                        <VisualState.Setters>
+                            <Setter Property="IsVisible" Value="True" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="CastUnavailable" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlayPauseButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="CornerRadius" Value="27" />
+        <Setter Property="FontSize" Value="36" />
+        <Setter Property="HeightRequest" Value="54" />
+        <Setter Property="WidthRequest" Value="54" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Play}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="PlayPauseStates">
+                    <VisualState x:Name="PlayState" />
+                    <VisualState x:Name="PauseState">
+                        <VisualState.Setters>
+                            <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Pause}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="PauseAvailabilityStates">
+                    <VisualState x:Name="PauseAvailable" />
+                    <VisualState x:Name="PauseUnavailable">
+                        <VisualState.Setters>
+                            <Setter Property="IsVisible" Value="False" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StopButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsStopButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Stop}" />
+    </Style>
+
+    <Style x:Key="LockButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.UnlockAlt}" />
+        <Setter Property="IsVisible" Value="{TemplateBinding IsLockButtonVisible}" />
+    </Style>
+
+    <Style x:Key="UnLockButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Lock}" />
+    </Style>
+
+    <Style x:Key="TracksButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.ListAlt}" />
+        <Setter Property="IsVisible" Value="{TemplateBinding IsTracksButtonVisible}" />
+    </Style>
+
+    <Style x:Key="AspectRatioButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsAspectRatioButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.ExpandArrowsAlt}" />
+    </Style>
+
+    <Style x:Key="RewindButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsRewindButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Backward}" />
+    </Style>
+
+    <Style x:Key="SeekButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+        <Setter Property="IsVisible" Value="{TemplateBinding IsSeekButtonVisible}" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Forward}" />
+    </Style>
+
+    <Style x:Key="TracksListViewStyle" TargetType="ListView">
+        <Setter Property="SeparatorColor" Value="Transparent" />
+        <Setter Property="SeparatorVisibility" Value="None" />
+        <Setter Property="BackgroundColor">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="Color">
+                    <On Platform="iOS">#7F000000</On>
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RowHeight">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="x:Int32">
+                    <On Platform="Android">40</On>
+                    <On Platform="iOS">50</On>
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HasUnevenRows" Value="False" />
+        <Setter Property="SelectionMode" Value="None" />
+    </Style>
+
+    <Style x:Key="TrackTypeLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+    
+    <Style x:Key="TrackNameLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="VerticalOptions" Value="End" />
+    </Style>
+
+    <Style x:Key="CheckedTrackStyle" TargetType="Button">
+        <Setter Property="FontFamily" Value="FontAwesomeSolid" />
+        <Setter Property="Text" Value="{x:Static fontAwesome:FontAwesomeCodes.Check}" />
+        <Setter Property="TextColor" Value="#FE8A03" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    
+    <Style x:Key="TrackViewCellStyle" TargetType="StackLayout">
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+    
+    <DataTemplate x:Key="TrackViewCellDataTemplate">
+        <ViewCell>
+            <StackLayout Style="{StaticResource TrackViewCellStyle}">
+                <StackLayout WidthRequest="30" Orientation="Horizontal" VerticalOptions="Center">
+                    <Button Style="{StaticResource CheckedTrackStyle}" IsVisible="{Binding Selected}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <Label Style="{StaticResource TrackNameLabelStyle}" Text="{Binding Name}" />
+                </StackLayout>
+            </StackLayout>
+        </ViewCell>
+    </DataTemplate>
+
+    <Style x:Key="PlaybackControlsStyle" TargetType="TemplatedView">
+        <Setter Property="ControlTemplate">
+            <ControlTemplate>
+                <Grid>
+                    <StackLayout IsVisible="{TemplateBinding MediaPlayer, Converter={StaticResource ObjectToBoolConverter}}" Spacing="0">
+                        <Label Text="{TemplateBinding ErrorMessage}" Style="{TemplateBinding MessageStyle}"
+                       IsVisible="{TemplateBinding ErrorMessage, Converter={StaticResource ObjectToBoolConverter}}" />
+                        <ProgressBar Style="{TemplateBinding BufferingProgressBarStyle}" Progress="{TemplateBinding BufferingProgress}" 
+                             IsVisible="{TemplateBinding BufferingProgress, Converter={StaticResource BufferingProgressToBoolConverter}}" />
+                        <Label x:Name="AspectRatioLabel" Style="{TemplateBinding MessageStyle}"/>
+                        <!-- ControlsPanel -->
+                        <StackLayout x:Name="ControlsPanel" Style="{TemplateBinding ControlsPanelStyle}">
+                            <StackLayout Orientation="Horizontal" >
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                                    <Label x:Name="ElapsedTimeLabel" Style="{TemplateBinding ElapsedTimeLabelStyle}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                                    <Label x:Name="RemainingTimeLabel" Style="{TemplateBinding RemainingTimeLabelStyle}"/>
+                                </StackLayout>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{TemplateBinding IsSeekBarVisible}" Spacing="0">
+                                <Slider x:Name="SeekBar" Style="{TemplateBinding SeekBarStyle}" />
+                            </StackLayout>
+                            <StackLayout x:Name="ButtonBar" Orientation="Horizontal" Style="{TemplateBinding ButtonBarStyle}">
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="Center">
+                                    <Button x:Name="TracksButton" Style="{StaticResource TracksButtonStyle}" />
+                                    <Button x:Name="LockButton" Style="{StaticResource LockButtonStyle}" />
+                                </StackLayout>
+                                <ContentPresenter Content="{TemplateBinding ButtonBarStartArea}" HorizontalOptions="Start" VerticalOptions="Center" />
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                                    <Button x:Name="RewindButton" Style="{TemplateBinding RewindButtonStyle}" />
+                                    <Button x:Name="PlayPauseButton" Style="{TemplateBinding PlayPauseButtonStyle}" />
+                                    <Button x:Name="StopButton" Style="{TemplateBinding StopButtonStyle}" />
+                                    <Button x:Name="SeekButton" Style="{TemplateBinding SeekButtonStyle}" />
+                                </StackLayout>
+                                <ContentPresenter Content="{TemplateBinding ButtonBarEndArea}" HorizontalOptions="End" VerticalOptions="Center" />
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Button x:Name="AspectRatioButton" Style="{TemplateBinding AspectRatioButtonStyle}" />
+                                    <Button x:Name="CastButton" Style="{TemplateBinding CastButtonStyle}" />
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+
+                        <!--  Unlock Control View  -->
+                        <StackLayout x:Name="UnLockControlsPanel" Style="{TemplateBinding UnLockControlsPanelStyle}" IsVisible="False">
+                            <local:SwipeToUnLockView x:Name="SwipeToUnLock" HeightRequest="60" VerticalOptions="Center">
+                                <local:SwipeToUnLockView.Thumb>
+                                    <Button IsVisible="True" Style="{StaticResource UnLockButtonStyle}" />
+                                </local:SwipeToUnLockView.Thumb>
+
+                                <local:SwipeToUnLockView.TrackBar>
+                                    <Frame Padding="0" BackgroundColor="#1C1C1C" CornerRadius="30" HasShadow="false">
+                                        <Label HorizontalOptions="CenterAndExpand" x:Name="TrackBarLabel" TextColor="White" VerticalOptions="CenterAndExpand" />
+                                    </Frame>
+                                </local:SwipeToUnLockView.TrackBar>
+
+                                <local:SwipeToUnLockView.FillBar>
+                                    <Frame Padding="0" BackgroundColor="#1C1C1C" CornerRadius="20" HasShadow="false" />
+                                </local:SwipeToUnLockView.FillBar>
+                            </local:SwipeToUnLockView>
+                        </StackLayout>
+                    </StackLayout>
+
+                    <!-- Overlay -->
+                    <ContentView HeightRequest="300" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" x:Name="TracksOverlayView" AbsoluteLayout.LayoutBounds="0, 0, 1, 1"  AbsoluteLayout.LayoutFlags="All" IsVisible="False" BackgroundColor="#7F000000">
+                        <ScrollView VerticalScrollBarVisibility="Never" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Orientation="Vertical">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackLayout Grid.Row="0" HorizontalOptions="FillAndExpand">
+                                    <Label Style="{StaticResource TrackTypeLabelStyle}" x:Name="AudioTracksLabel" />
+                                    <ListView x:Name="AudioTracksListView" ItemTemplate="{StaticResource TrackViewCellDataTemplate}" Style="{StaticResource TracksListViewStyle}" />
+                                </StackLayout>
+                                <StackLayout Grid.Row="1" HorizontalOptions="FillAndExpand">
+                                    <Label Style="{StaticResource TrackTypeLabelStyle}" x:Name="VideoTracksLabel" />
+                                    <ListView x:Name="VideoTracksListView" ItemTemplate="{StaticResource TrackViewCellDataTemplate}" Style="{StaticResource TracksListViewStyle}" />
+                                </StackLayout>
+                                <StackLayout Grid.Row="2" HorizontalOptions="FillAndExpand">
+                                    <Label Style="{StaticResource TrackTypeLabelStyle}" x:Name="SubtileTracksLabel" />
+                                    <ListView x:Name="SubtitlesTracksListView" ItemTemplate="{StaticResource TrackViewCellDataTemplate}" Style="{StaticResource TracksListViewStyle}" />
+                                </StackLayout>
+                            </Grid>
+                        </ScrollView>
+                    </ContentView>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</ResourceDictionary>

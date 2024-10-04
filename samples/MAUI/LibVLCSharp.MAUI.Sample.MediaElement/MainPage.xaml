@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LibVLCSharp.MAUI.Sample.MediaElement"
+             xmlns:vlc="clr-namespace:LibVLCSharp.MAUI;assembly=LibVLCSharp.MAUI"
+             x:Class="LibVLCSharp.MAUI.Sample.MediaElement.MainPage"
+             Appearing="OnAppearing"
+             Disappearing="OnDisappearing">
+
+    <ContentPage.BindingContext>
+        <local:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" EnableRendererDiscovery="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <vlc:MediaPlayerElement.PlaybackControls>
+            <vlc:PlaybackControls
+        	IsAspectRatioButtonVisible="True" IsSeekButtonVisible="True" IsCastButtonVisible="True" />
+        </vlc:MediaPlayerElement.PlaybackControls>
+
+    </vlc:MediaPlayerElement>
+
+</ContentPage>

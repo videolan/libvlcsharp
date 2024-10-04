@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LibVLCSharp.MAUI.MediaPlayerElement">
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <AbsoluteLayout>
+                <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="GestureRecognized" />
+                        <ClickGestureRecognizer Clicked="GestureRecognized" />
+                        <PanGestureRecognizer PanUpdated="GestureRecognized" />
+                        <PinchGestureRecognizer PinchUpdated="GestureRecognized" />
+                        <SwipeGestureRecognizer Swiped="GestureRecognized" />
+                    </Grid.GestureRecognizers>
+                    <ContentPresenter Content="{TemplateBinding VideoView}"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding PlaybackControls}" />
+                    </Grid>
+                </Grid>
+            </AbsoluteLayout>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
+</ContentView>

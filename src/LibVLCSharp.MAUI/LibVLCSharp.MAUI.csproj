@@ -17,7 +17,39 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
   </PropertyGroup>
 
   <ItemGroup>
+    <MauiFont Include="Resources\Fonts\FontAwesome5Brands.otf" />
+    <MauiFont Include="Resources\Fonts\FontAwesome5Solid.otf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MediaPlayerElement.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PlaybackControls.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Themes\Generic.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="MediaPlayerElement.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </MauiXaml>
+    <MauiXaml Update="PlaybackControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </MauiXaml>
+  </ItemGroup>
+
 </Project>
