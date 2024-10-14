@@ -1550,7 +1550,7 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Get/set current video aspect ratio.
-        /// Set to null to reset to default
+        /// Set to null to reset to source aspect ratio
         /// Invalid aspect ratios are ignored.
         /// </summary>
         public string? AspectRatio
