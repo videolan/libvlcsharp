@@ -609,6 +609,14 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_jump_time")]
             internal static extern int LibVLCMediaPlayerJumpTime(IntPtr mediaplayer, long time);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_abloop")]
+            internal static extern int LibVLCMediaPlayerSetABloop(IntPtr mediaplayer, ABLoop abLoop);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_get_abloop")]
+            internal static extern ABLoop LibVLCMediaPlayerGetABloop(IntPtr mediaplayer, out long aTime, out double aPosition, out long bTime, out double bPosition);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2259,6 +2267,28 @@ namespace LibVLCSharp
         /// <param name="time">the movie time (in ms)</param>
         /// <returns>true on success, false on error</returns>
         public bool JumpTime(long time) => Native.LibVLCMediaPlayerJumpTime(NativeReference, time) == 0;
+
+        /// <summary>
+        /// Enable A to B loop for the current media <br/>
+        /// This function need to be called 2 times, with <see cref="ABLoop.A"/> and <see cref="ABLoop.B"/> to setup an A to B loop. It uses and stores the current time/position when called. The B time must be higher than the A time.
+        /// </summary>
+        /// <param name="abloop">select which A/B cursor to set</param>
+        /// <returns>true on success, false on error</returns>
+        public bool SetABLoop(ABLoop abloop) => Native.LibVLCMediaPlayerSetABloop(NativeReference, abloop) == 0;
+
+        /// <summary>
+        /// Get the A to B loop status <br/>
+        /// <remarks>
+        /// If the returned status is <see cref="ABLoop.A"/>, then aTime and aPosition will be valid. If the returned status is <see cref="ABLoop.B"/>, then all output parameters are valid. If the returned status is <see cref="ABLoop.None"/>, then all output parameters are invalid (ABlooping is off).
+        /// </remarks>
+        /// </summary>
+        /// <param name="aTime">A time (in ms) or -1 (if the media doesn't have valid times)</param>
+        /// <param name="aPosition">A position</param>
+        /// <param name="bTime">B time (in ms) or -1 (if the media doesn't have valid times)</param>
+        /// <param name="bPosition">B position</param>
+        /// <returns>A to B loop status</returns>
+        public ABLoop GetABLoop(out long aTime, out double aPosition, out long bTime, out double bPosition) => Native.LibVLCMediaPlayerGetABloop(NativeReference, out aTime, out aPosition, out bTime, out bPosition);
+
 #if UNITY
         /// <summary>
         /// Retrieve a video frame from the Unity plugin as a texture.
@@ -3701,5 +3731,26 @@ namespace LibVLCSharp
         /// Fit to display height
         /// </summary>
         FitHeight = 4
+    }
+
+    /// <summary>
+    /// A to B loop state
+    /// </summary>
+    public enum ABLoop
+    {
+        /// <summary>
+        /// No looping
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// A loop state
+        /// </summary>
+        A,
+
+        /// <summary>
+        /// B loop state
+        /// </summary>
+        B
     }
 }
