@@ -574,8 +574,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_watch_time")]
-            internal static extern int LibVLCMediaPlayerWatchTime(IntPtr mediaplayer, long minimumPeriod, WatchTimeOnUpdate onUpdate,
-                WatchTimeOnDiscontinuity? onDiscontinuity, WatchTimeOnSeek? onSeek, IntPtr opaque);
+            internal static extern int LibVLCMediaPlayerWatchTime(IntPtr mediaplayer, long minimumPeriod, WatchTimeOnUpdate onUpdate, WatchTimeOnPaused? onPaused, WatchTimeOnSeek? onSeek, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_unwatch_time")]
@@ -2164,17 +2163,17 @@ namespace LibVLCSharp
         /// <param name="minimumPeriod">corresponds to the minimum period, in us (microsecond), between each updates, 
         /// use it to avoid flood from too many source updates, set it to 0 to receive all updates.</param>
         /// <param name="onUpdate">callback to listen to update events (must not be NULL)</param>
-        /// <param name="onDiscontinuity">callback to listen to discontinuity events (can be be NULL)</param>
+        /// <param name="onPaused">callback to listen to paused events (can be be NULL)</param>
         /// <param name="onSeek">callback to listen to seek events (can be be NULL)</param>
         /// <returns>true on success, false otherwise (memory allocation error, or if already watching)</returns>
-        public bool WatchTime(long minimumPeriod, WatchTimeOnUpdate onUpdate, WatchTimeOnDiscontinuity? onDiscontinuity, WatchTimeOnSeek? onSeek)
+        public bool WatchTime(long minimumPeriod, WatchTimeOnUpdate onUpdate, WatchTimeOnPaused? onPaused, WatchTimeOnSeek? onSeek)
         {
             _onUpdate = onUpdate ?? throw new ArgumentNullException(nameof(onUpdate));
-            _onDiscontinuity = onDiscontinuity;
+            _onPaused = onPaused;
             _onSeek = onSeek;
 
             return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeOnUpdateHandle,
-                onDiscontinuity == null ? null : WatchTimeOnDiscontinuityHandle, onSeek == null ? null : WatchTimeOnSeekHandle, GCHandle.ToIntPtr(_gcHandle)) == 0;
+                onPaused == null ? null : WatchTimeOnPausedHandle, onSeek == null ? null : WatchTimeOnSeekHandle, GCHandle.ToIntPtr(_gcHandle)) == 0;
         }
 
         /// <summary>
@@ -2523,11 +2522,11 @@ namespace LibVLCSharp
         }
 
         WatchTimeOnUpdate? _onUpdate;
-        WatchTimeOnDiscontinuity? _onDiscontinuity;
+        WatchTimeOnPaused? _onPaused;
         WatchTimeOnSeek? _onSeek;
 
         static unsafe readonly WatchTimeOnUpdate WatchTimeOnUpdateHandle = WatchTimeOnUpdateCallback;
-        static unsafe readonly WatchTimeOnDiscontinuity WatchTimeOnDiscontinuityHandle = WatchTimeOnDiscontinuityCallback;
+        static unsafe readonly WatchTimeOnPaused WatchTimeOnPausedHandle = WatchTimeOnDiscontinuityCallback;
         static unsafe readonly WatchTimeOnSeek WatchTimeOnSeekHandle = WatchTimeOnSeekCallback;
 
         [MonoPInvokeCallback(typeof(OutputCleanup))]
@@ -2544,9 +2543,9 @@ namespace LibVLCSharp
         private static unsafe void WatchTimeOnDiscontinuityCallback(long systemDate, void* opaque)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            if (mediaPlayer?._onDiscontinuity != null)
+            if (mediaPlayer?._onPaused != null)
             {
-                mediaPlayer._onDiscontinuity(systemDate, opaque);
+                mediaPlayer._onPaused(systemDate, opaque);
             }
         }
 
@@ -2930,31 +2929,34 @@ namespace LibVLCSharp
         /// </summary>
         /// <remarks>Warning: It is forbidden to call any Media Player functions from here.</remarks> 
         /// <param name="timepoint">always valid, the time corresponding to the state</param>
-        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnDiscontinuity?, WatchTimeOnSeek?)"/></param>
+        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnPaused?, WatchTimeOnSeek?)"/></param>
         /// <returns></returns>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void WatchTimeOnUpdate(TimePoint timepoint, void* opaque);
 
         /// <summary>
-        /// Callback prototype that notify when the player is paused or a discontinuity occurred.
+        /// Callback prototype that notify when the timer is paused.
         /// <para>
-        /// Likely caused by seek from the user or because the playback is stopped. The player user should stop its "interpolate" timer.
+        /// This event is sent when the player is paused or stopping. The player user should stop its "interpolate" timer.
         /// </para>
+        /// <see cref="MediaPlayer.WatchTimeOnUpdate"/> can be called when paused for those 2 reasons:<br/>
+        /// - playback is resumed (<see cref="TimePoint.SystemDate"/> is valid)<br/>
+        /// - a track, likely video (next-frame) is outputted when paused (<see cref="TimePoint.SystemDate"/> equals <see cref="long.MaxValue"/>)
         /// </summary>
-        /// <remarks>Warning: It is forbidden to call any Media Player functions from here.</remarks> 
+        /// <remarks>Warning: It is forbidden to call any Media Player functions from here. It is not possible to receive points via <see cref="WatchTimeOnUpdate"/> while seeking.</remarks> 
         /// <param name="systemDate">system date of this event, only valid (> 0) when paused.
         /// It can be used to interpolate the last updated point to this date in order to get the last paused ts/position.</param>
-        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnDiscontinuity?, WatchTimeOnSeek?)"/></param>
+        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnPaused?, WatchTimeOnSeek?)"/></param>
         /// <returns></returns>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public unsafe delegate void WatchTimeOnDiscontinuity(long systemDate, void* opaque);
+        public unsafe delegate void WatchTimeOnPaused(long systemDate, void* opaque);
 
         /// <summary>
         /// Callback prototype that notify when the player is seeking or finished seeking
         /// </summary>
         /// <remarks>Warning: It is forbidden to call any Media Player functions from here.</remarks> 
-        /// <param name="seekRequestValue">point of the seek request or NULL when seeking is finished (<see cref="TimePoint.SystemDate"/> equals <see cref="long.MaxValue"/> in that case)</param>
-        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnDiscontinuity?, WatchTimeOnSeek?)"/></param>
+        /// <param name="seekRequestValue">point of the seek request or NULL when seeking is finished </param>
+        /// <param name="opaque">opaque pointer set by <see cref="WatchTime(long, WatchTimeOnUpdate, WatchTimeOnPaused?, WatchTimeOnSeek?)"/></param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void WatchTimeOnSeek(TimePoint? seekRequestValue, void* opaque);
 
