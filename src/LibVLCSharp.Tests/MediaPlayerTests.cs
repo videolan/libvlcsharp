@@ -257,5 +257,34 @@ namespace LibVLCSharp.Tests
             
             Assert.True(mp.JumpTime(5000));
         }
+
+        [Test]
+        public async Task SetABTest()
+        {
+            var mp = new MediaPlayer(_libVLC)
+            {
+                Media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
+            };
+
+            await mp.PlayAsync();
+
+            await Task.Delay(5000);
+
+            Assert.True(mp.SetABLoop(ABLoop.A));
+
+            await Task.Delay(3000);
+
+            Assert.True(mp.SetABLoop(ABLoop.B));
+
+            var abloop = mp.GetABLoop(out var atime, out var aposition, out var btime, out var bposition);
+
+            Assert.AreEqual(ABLoop.B, abloop);
+
+            Assert.Greater(btime, atime);
+            Assert.Greater(bposition, aposition);
+
+            Assert.True(mp.SetABLoop(ABLoop.None));
+            Assert.AreEqual(ABLoop.None, mp.GetABLoop(out atime, out aposition, out btime, out bposition));
+        }
     }
 }
