@@ -21,9 +21,3 @@ steps:
     command: custom
     custom: 'tool'
     arguments: 'install cake.tool --global'
-
-- bash: |
-   dotnet tool update --global uno.check --add-source https://api.nuget.org/v3/index.json
-   uno-check -v --ci --non-interactive --fix --skip xcode --skip gtk3 --skip vswin --skip vsmac --skip androidsdk --skip androidemulator
-  displayName: 'Run uno.check'
-  condition: ne( variables['Agent.OS'], 'Linux' )
