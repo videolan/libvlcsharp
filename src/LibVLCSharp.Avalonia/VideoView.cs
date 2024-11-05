@@ -80,7 +80,7 @@ namespace LibVLCSharp.Avalonia
 
         private void UpdateOverlayPosition()
         {
-            if (_floatingContent == null)
+            if (_floatingContent == null || !IsVisible)
                 return;
 
             bool forceSetWidth = false, forceSetHeight = false;
@@ -216,7 +216,8 @@ namespace LibVLCSharp.Avalonia
                 _floatingContent.PointerReleased += FloatingContentOnPointerEvent;
 
                 ContentProperty.Changed.AddClassHandler<VideoView>((o, _) => o.UpdateOverlayPosition());
-                BoundsProperty.Changed.AddClassHandler<VideoView>((o, _) => o.UpdateOverlayPosition());
+                
+                visualRoot.LayoutUpdated += (_, _) => UpdateOverlayPosition();
                 visualRoot.PositionChanged += (_, _) => UpdateOverlayPosition();
             }
 
