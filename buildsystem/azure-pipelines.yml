@@ -58,8 +58,17 @@ stages:
 
 - stage: Deploy
   dependsOn: Test
-  condition: and(succeeded('Test'), not(eq(variables['build.reason'], 'PullRequest')))
-
+  condition: |
+      and(
+        eq(variables['Build.Repository.Name'], 'videolan/libvlcsharp'),
+        succeeded('Test'),
+        or(
+          eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/3.x')
+        ),
+        ne(variables['Build.Reason'], 'PullRequest'),
+        ne(variables['Build.Reason'], 'Manual')
+      )
   jobs:
   - job: feedz
     pool:
