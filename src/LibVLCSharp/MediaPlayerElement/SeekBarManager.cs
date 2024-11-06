@@ -9,6 +9,17 @@ namespace LibVLCSharp.MediaPlayerElement
     /// <remarks>the <see cref="MediaPlayerElementManagerBase.MediaPlayer"/> property needs to be set in order to work</remarks>
     internal class SeekBarManager : MediaPlayerElementManagerBase
     {
+        private bool isDragging = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the seek bar is being dragged by the user.
+        /// </summary>
+        public bool IsDragging
+        {
+            get => isDragging;
+            set => isDragging = value;
+        }
+
         /// <summary>
         /// Occurs when the media position changes
         /// </summary>
@@ -112,9 +123,13 @@ namespace LibVLCSharp.MediaPlayerElement
             });
         }
 
-        private Task OnPositionChangedAsync()
+        private async Task OnPositionChangedAsync()
         {
-            return DispatcherInvokeEventHandlerAsync(PositionChanged);
+            // Fire event only when not seeking manually
+            if (!isDragging)
+            {
+                await DispatcherInvokeEventHandlerAsync(PositionChanged);
+            }
         }
 
         private async Task UpdateSeekableAndPositionAsync()

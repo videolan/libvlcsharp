@@ -18,7 +18,7 @@ namespace LibVLCSharp.MAUI
         /// <summary>
         /// 
         /// </summary>
-        public VideoViewHandler() : base(PropertyMapper, null)
+        public VideoViewHandler() : base(PropertyMapper)
         {
         }
 
