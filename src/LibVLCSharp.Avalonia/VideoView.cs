@@ -145,6 +145,47 @@ namespace LibVLCSharp.Avalonia
             {
                 _floatingContent.Position = newPosition;
             }
+            
+            if (_floatingContent.Content is Visual content && VisualRoot is Visual root && this is Visual videoView && child != null)
+            {
+                content.Clip = GetVisibleRegionAsGeometry(root, videoView, child.Margin);
+            }
+        }
+        
+        private static RectangleGeometry? GetVisibleRegionAsGeometry(Visual parent, Visual child, Thickness childMargin)
+        {
+            var childPosition = child.TranslatePoint(new Point(0, 0), parent);
+
+            if (!childPosition.HasValue) return null;
+        
+            var topDistance = childPosition.Value.Y + childMargin.Top;
+            var leftDistance = childPosition.Value.X + childMargin.Left;
+            var bottomDistance = parent.Bounds.Height - (childPosition.Value.Y + child.Bounds.Height + childMargin.Bottom);
+            var rightDistance = parent.Bounds.Width - (childPosition.Value.X + child.Bounds.Width + childMargin.Right);
+        
+            var region = new Rect(0, 0, child.Bounds.Width, child.Bounds.Height);
+        
+            if (topDistance < 0)
+            {
+                region = new Rect(region.X, region.Y - topDistance, region.Width, region.Height + topDistance);
+            }
+        
+            if (leftDistance < 0)
+            {
+                region = new Rect(region.X - leftDistance, region.Y, region.Width + leftDistance, region.Height);
+            }
+        
+            if (rightDistance < 0)
+            {
+                region = region.WithWidth(region.Width + rightDistance);
+            }
+        
+            if (bottomDistance < 0)
+            {
+                region = region.WithHeight(region.Height + bottomDistance);
+            }
+        
+            return new RectangleGeometry(region);
         }
 
         private void Attach()
