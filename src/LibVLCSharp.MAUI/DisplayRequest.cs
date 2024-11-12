@@ -1,4 +1,4 @@
-﻿using LibVLCSharp.Shared.MediaPlayerElement;
+﻿using LibVLCSharp.MediaPlayerElement;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui;
 

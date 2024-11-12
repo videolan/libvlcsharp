@@ -1,5 +1,5 @@
 ﻿using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
@@ -66,7 +66,7 @@ namespace LibVLCSharp.MAUI
     }
 
     /// <summary>
-    /// Represents an object that uses a <see cref="LibVLCSharp.Shared.MediaPlayer"/> to render audio and video to the display.
+    /// Represents an object that uses a <see cref="LibVLCSharp.MediaPlayer"/> to render audio and video to the display.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MediaPlayerElement : ContentView
@@ -89,7 +89,7 @@ namespace LibVLCSharp.MAUI
             typeof(MediaPlayerElement), propertyChanged: LibVLCPropertyChanged);
 
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// Gets the <see cref="LibVLCSharp.LibVLC"/> instance.
         /// </summary>
         public LibVLC LibVLC
         {
@@ -101,14 +101,14 @@ namespace LibVLCSharp.MAUI
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
-            typeof(LibVLCSharp.Shared.MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
+            typeof(LibVLCSharp.MediaPlayer), typeof(MediaPlayerElement), propertyChanged: MediaPlayerPropertyChanged);
 
         /// <summary>
-        /// Gets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
+        /// Gets the <see cref="LibVLCSharp.MediaPlayer"/> instance.
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
+        public LibVLCSharp.MediaPlayer MediaPlayer
         {
-            get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (LibVLCSharp.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -173,7 +173,7 @@ namespace LibVLCSharp.MAUI
             }
         }
 
-        private void OnMediaPlayerChanged(LibVLCSharp.Shared.MediaPlayer mediaPlayer)
+        private void OnMediaPlayerChanged(LibVLCSharp.MediaPlayer mediaPlayer)
         {
             var videoView = VideoView;
             if (videoView != null)
@@ -219,7 +219,7 @@ namespace LibVLCSharp.MAUI
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((LibVLCSharp.Shared.MediaPlayer)newValue);
+            ((MediaPlayerElement)bindable).OnMediaPlayerChanged((LibVLCSharp.MediaPlayer)newValue);
         }
 
         private static void PlaybackControlsPropertyChanged(BindableObject bindable, object oldValue, object newValue)
@@ -301,7 +301,7 @@ namespace LibVLCSharp.MAUI
                     if (Preferences.Get($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_IsPlaying", false))
                     {
                         mediaPlayer.Play();
-                        mediaPlayer.Position = Preferences.Get($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", 0f);
+                        mediaPlayer.SetPosition(Preferences.Get($"VLC_{mediaPlayer.NativeReference}_MediaPlayerElement_Position", 0f));
                     }
                 }
             }

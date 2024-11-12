@@ -4,8 +4,8 @@ using System.Linq;
 using System.Resources;
 using System.Threading.Tasks;
 using LibVLCSharp.MAUI.Resources;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp;
+using LibVLCSharp.MediaPlayerElement;
 using Microsoft.Maui.Controls.Xaml;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Controls;
@@ -14,7 +14,7 @@ using Microsoft.Maui;
 namespace LibVLCSharp.MAUI
 {
     /// <summary>
-    /// Represents the playback controls for a <see cref="LibVLCSharp.Shared.MediaPlayer"/>.
+    /// Represents the playback controls for a <see cref="LibVLCSharp.MediaPlayer"/>.
     /// </summary>
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PlaybackControls : TemplatedView
@@ -483,7 +483,7 @@ namespace LibVLCSharp.MAUI
         public static readonly BindableProperty LibVLCProperty = BindableProperty.Create(nameof(LibVLC), typeof(LibVLC), typeof(PlaybackControls),
             propertyChanged: LibVLCPropertyChanged);
         /// <summary>
-        /// Gets or sets the <see cref="LibVLCSharp.Shared.LibVLC"/> instance.
+        /// Gets or sets the <see cref="LibVLCSharp.LibVLC"/> instance.
         /// </summary>
         public LibVLC LibVLC
         {
@@ -495,13 +495,13 @@ namespace LibVLCSharp.MAUI
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static readonly BindableProperty MediaPlayerProperty = BindableProperty.Create(nameof(MediaPlayer),
-            typeof(LibVLCSharp.Shared.MediaPlayer), typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
+            typeof(LibVLCSharp.MediaPlayer), typeof(PlaybackControls), propertyChanged: MediaPlayerPropertyChanged);
         /// <summary>
-        /// Gets or sets the <see cref="LibVLCSharp.Shared.MediaPlayer"/> instance.
+        /// Gets or sets the <see cref="LibVLCSharp.MediaPlayer"/> instance.
         /// </summary>
-        public LibVLCSharp.Shared.MediaPlayer MediaPlayer
+        public LibVLCSharp.MediaPlayer MediaPlayer
         {
-            get => (LibVLCSharp.Shared.MediaPlayer)GetValue(MediaPlayerProperty);
+            get => (LibVLCSharp.MediaPlayer)GetValue(MediaPlayerProperty);
             set => SetValue(MediaPlayerProperty, value);
         }
 
@@ -868,7 +868,7 @@ namespace LibVLCSharp.MAUI
 
         private static void MediaPlayerPropertyChanged(BindableObject bindable, object? oldValue, object newValue)
         {
-            ((PlaybackControls)bindable).Manager.MediaPlayer = (LibVLCSharp.Shared.MediaPlayer)newValue;
+            ((PlaybackControls)bindable).Manager.MediaPlayer = (LibVLCSharp.MediaPlayer)newValue;
         }
 
         private void OnBuffering()
@@ -961,12 +961,12 @@ namespace LibVLCSharp.MAUI
                     return;
             
                 var foundTrack = tracks.First(t => t.Id == track.Id);
-                manager.CurrentTrackId = foundTrack.Id;
+                manager.CurrentTrackId = foundTrack.Id!;
                 PlaybackControls.UpdateTracksListviewItemsSource(track, tracksListview);
             }
             catch (Exception)
             {
-                manager.CurrentTrackId = -1;
+                manager.CurrentTrackId = "-1";
             }     
         }
 
@@ -992,7 +992,7 @@ namespace LibVLCSharp.MAUI
                     var currentTrackId = manager.CurrentTrackId;
                     foreach (var track in tracks)
                     {
-                        var trackViewModel = new TrackViewModel(track.Id, track.Name);
+                        var trackViewModel = new TrackViewModel(track.Id!, track.Name!);
 
                         if (track.Id == currentTrackId)
                             trackViewModel.Selected = true;
@@ -1097,7 +1097,7 @@ namespace LibVLCSharp.MAUI
                 return;
             }
 
-            mediaPlayer.Time -= SEEK_OFFSET;
+            mediaPlayer.SetTime(mediaPlayer.Time - SEEK_OFFSET);
         }
 
         private void SeekButton_Clicked(object? sender, EventArgs e)
@@ -1108,7 +1108,7 @@ namespace LibVLCSharp.MAUI
                 return;
             }
 
-            mediaPlayer.Time += SEEK_OFFSET;
+            mediaPlayer.SetTime(mediaPlayer.Time + SEEK_OFFSET);
         }
 
         private Button? SetClickEventHandler(string name, EventHandler eventHandler, bool fadeIn = false)
@@ -1158,9 +1158,9 @@ namespace LibVLCSharp.MAUI
         {
             if (tracksSelectionButton != null)
             {
-                var c = tracksManager.Tracks?.Where(t => t.Id != -1).Count();
+                var c = tracksManager.Tracks?.Where(t => t.Id != null && !t.Id.Equals("-1")).Count();
                 UpdateTracksSelectionButtonAvailability(tracksSelectionButton,
-                    tracksManager.Tracks?.Where(t => t.Id != -1).Count() >= count ? availableState : unavailableState);
+                    tracksManager.Tracks?.Where(t => t.Id != null && !t.Id.Equals("-1")).Count() >= count ? availableState : unavailableState);
             }
         }
 

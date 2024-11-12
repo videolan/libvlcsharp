@@ -11,7 +11,7 @@ namespace LibVLCSharp.MAUI
         /// <summary>
         /// Track description Id
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Track description
@@ -37,7 +37,7 @@ namespace LibVLCSharp.MAUI
         /// </summary>
         /// <param name="id">Track description Id</param>
         /// <param name="name">Track description</param>
-        internal TrackViewModel(int id, string name)
+        internal TrackViewModel(string id, string name)
         {
             Id = id;
             Name = name;
