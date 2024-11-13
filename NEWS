@@ -1,3 +1,11 @@
+LibVLCSharp version 3.9.1
+=========================
+* Add macOS and tvOS NET 8 targets
+* docs and CI improvements
+* MAUI: Add MediaElement support for iOS and Android by @jonx
+* Avalonia: Fix VideoView failing to update Content position when shifted by @Odalith
+* Avalonia: Add GetVisibleRegionAsGeometry() to clip VideoView.Content to parent window bounds by @Odalith
+
 LibVLCSharp version 3.9.0
 =========================
 * [BREAKING CHANGE] Uno: Move to Uno 5 support.
