@@ -1,3 +1,19 @@
+LibVLCSharp version 3.9.1
+=========================
+* Add macOS and tvOS NET 8 targets
+* docs and CI improvements
+* MAUI: Add MediaElement support for iOS and Android by @jonx
+* Avalonia: Fix VideoView failing to update Content position when shifted by @Odalith
+* Avalonia: Add GetVisibleRegionAsGeometry() to clip VideoView.Content to parent window bounds by @Odalith
+
+LibVLCSharp version 3.9.0
+=========================
+* [BREAKING CHANGE] Uno: Move to Uno 5 support.
+* [BREAKING CHANGE] MAUI: Move to .NET 8
+* Core: Add support to .NET 8
+* CI: Reduce macOS CI scope as it cannot cross-build old/new TFMs easily.
+* UWP: use speex for audio resampling
+
 LibVLCSharp version 3.8.5
 =========================
 * MAUI: Fix broken release by shipping the modern AWindow binding to NuGet.
