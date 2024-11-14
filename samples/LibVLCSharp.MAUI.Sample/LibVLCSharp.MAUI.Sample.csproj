@@ -10,10 +10,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>LibVLCSharp.MAUI.Sample</ApplicationTitle>
+		<ApplicationTitle>LibVLCSharp.MAUI.SampleX</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.libvlcsharp.maui.sample</ApplicationId>
+		<ApplicationId>com.companyname.libvlcsharp.maui.samplex</ApplicationId>
 		<ApplicationIdGuid>49861f9e-48d3-45c0-b6a8-f591ad6d2010</ApplicationIdGuid>
 
 		<!-- Versions -->
