@@ -1314,6 +1314,11 @@ namespace LibVLCSharp
         Timeout,
 
         /// <summary>
+        /// Parsing cancelled
+        /// </summary>
+        Cancelled,
+
+        /// <summary>
         /// Parsing completed successfully
         /// </summary>
         Done
