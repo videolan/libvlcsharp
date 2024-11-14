@@ -66,4 +66,7 @@
 	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
 		<PackageReference Include="VideoLAN.LibVLC.iOS" Version="3.3.18" />
 	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+	</ItemGroup>
 </Project>
