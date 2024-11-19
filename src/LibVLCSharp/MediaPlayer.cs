@@ -617,6 +617,14 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_abloop")]
             internal static extern ABLoop LibVLCMediaPlayerGetABloop(IntPtr mediaplayer, out long aTime, out double aPosition, out long bTime, out double bPosition);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_set_projection_mode")]
+            internal static extern void LibVLCMediaPlayerSetProjectionMode(IntPtr mediaplayer, VideoProjection projectionMode);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_unset_projection_mode")]
+            internal static extern void LibVLCMediaPlayerUnsetProjectionMode(IntPtr mediaplayer);
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -2289,6 +2297,17 @@ namespace LibVLCSharp
         /// <returns>A to B loop status</returns>
         public ABLoop GetABLoop(out long aTime, out double aPosition, out long bTime, out double bPosition) => Native.LibVLCMediaPlayerGetABloop(NativeReference, out aTime, out aPosition, out bTime, out bPosition);
 
+        /// <summary>
+        /// Change the projection mode used for rendering the source. 
+        /// This changes how the source is mapped to the output wrt. 360 playback.
+        /// </summary>
+        /// <param name="projectionMode">the considered projection mode for the source</param>
+        public void SetProjectionMode(VideoProjection projectionMode) => Native.LibVLCMediaPlayerSetProjectionMode(NativeReference, projectionMode);
+
+        /// <summary>
+        /// Remove previously set projection mode.
+        /// </summary>
+        public void UnsetProjectionMode() => Native.LibVLCMediaPlayerUnsetProjectionMode(NativeReference);
 #if UNITY
         /// <summary>
         /// Retrieve a video frame from the Unity plugin as a texture.
