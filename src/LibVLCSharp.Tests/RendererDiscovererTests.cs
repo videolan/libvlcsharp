@@ -15,6 +15,7 @@ namespace LibVLCSharp.Tests
         // This test depends on both accepting the network access request made by the test runner 
         // and having a chromecast on the same local network.
         [Test]
+        [Ignore("requires network calls that may fail when run from CI")]
         public async Task DiscoverItems()
         {
             var mp = new MediaPlayer(_libVLC)
