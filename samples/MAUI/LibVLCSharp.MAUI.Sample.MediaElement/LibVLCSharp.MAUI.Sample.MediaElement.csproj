@@ -10,6 +10,7 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+	<WindowsPackageType>None</WindowsPackageType>
     <!-- Display name -->
     <ApplicationTitle>LibVLCSharp.MAUI.Sample.MediaElement</ApplicationTitle>
     <!-- App Identifier -->
