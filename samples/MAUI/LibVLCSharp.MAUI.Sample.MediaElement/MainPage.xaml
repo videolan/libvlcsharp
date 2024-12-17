@@ -11,10 +11,10 @@
         <local:MainViewModel />
     </ContentPage.BindingContext>
 
-    <vlc:MediaPlayerElement MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" EnableRendererDiscovery="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <vlc:MediaPlayerElement x:Name="MediaPlayerElement" MediaPlayer="{Binding MediaPlayer}" LibVLC="{Binding LibVLC}" EnableRendererDiscovery="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <vlc:MediaPlayerElement.PlaybackControls>
             <vlc:PlaybackControls
-        	IsAspectRatioButtonVisible="True" IsSeekButtonVisible="True" IsCastButtonVisible="True" />
+        	IsAspectRatioButtonVisible="True" IsSeekButtonVisible="True" IsCastButtonVisible="True"/>
         </vlc:MediaPlayerElement.PlaybackControls>
 
     </vlc:MediaPlayerElement>
