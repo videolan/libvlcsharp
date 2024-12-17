@@ -46,11 +46,11 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
         /// <summary>
         /// Initialize LibVLC and playback when page appears
         /// </summary>
-        public void OnAppearing()
+        public void OnAppearing(string[] swapchainOptions = null)
         {
             if (LibVLC == null)
             {
-                LibVLC = new LibVLC(enableDebugLogs: true);
+                LibVLC = new LibVLC(enableDebugLogs: true, swapchainOptions);
             }
 
             if (MediaPlayer == null)
@@ -71,10 +71,10 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
         public void OnDisappearing()
         {
             MediaPlayer?.Dispose();
-            MediaPlayer = null;
+            //MediaPlayer = null;
 
             LibVLC?.Dispose();
-            LibVLC = null;
+            //LibVLC = null;
         }
 
         /// <summary>

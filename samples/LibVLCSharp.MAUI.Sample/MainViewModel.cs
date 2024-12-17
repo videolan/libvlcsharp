@@ -9,7 +9,9 @@ namespace LibVLCSharp.MAUI.Sample
 
         public MainViewModel()
         {
+#if !WINDOWS
             Initialize();
+#endif
         }
 
         private LibVLC LibVLC { get; set; }
@@ -33,9 +35,9 @@ namespace LibVLCSharp.MAUI.Sample
             }
         }
 
-        private void Initialize()
+        internal void Initialize(string[] swapchainOptions = null)
         {
-            LibVLC = new LibVLC(enableDebugLogs: true);
+            LibVLC = new LibVLC(enableDebugLogs: true, swapchainOptions);
             using var media = new Media(LibVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
 
             MediaPlayer = new Shared.MediaPlayer(LibVLC)
