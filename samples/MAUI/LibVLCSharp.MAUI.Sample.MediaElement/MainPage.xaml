@@ -4,8 +4,8 @@
              xmlns:local="clr-namespace:LibVLCSharp.MAUI.Sample.MediaElement"
              xmlns:vlc="clr-namespace:LibVLCSharp.MAUI;assembly=LibVLCSharp.MAUI"
              x:Class="LibVLCSharp.MAUI.Sample.MediaElement.MainPage"
-             Appearing="OnAppearing"
-             Disappearing="OnDisappearing">
+             Appearing="ContentPage_Appearing"
+             Disappearing="ContentPage_Disappearing">
 
     <ContentPage.BindingContext>
         <local:MainViewModel />

@@ -28,7 +28,7 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
 #endif
         }
 
-        void OnAppearing(object sender, System.EventArgs e)
+        private void ContentPage_Appearing(object sender, EventArgs e)
         {
             base.OnAppearing();
 #if !WINDOWS
@@ -36,7 +36,7 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
 #endif
         }
 
-        void OnDisappearing(object sender, System.EventArgs e)
+        private void ContentPage_Disappearing(object sender, EventArgs e)
         {
             base.OnDisappearing();
             ((MainViewModel)BindingContext).OnDisappearing();
