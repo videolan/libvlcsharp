@@ -74,8 +74,10 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         {
             get
             {
-                var mediaPlayer = MediaPlayer;
-                return mediaPlayer == null ? true : mediaPlayer.State == VLCState.Error || mediaPlayer.State == VLCState.Ended;
+                var state = MediaPlayer?.State;
+                if (state == null)
+                    return true;
+                return state == VLCState.Error || state == VLCState.Ended;
             }
         }
 

@@ -3,6 +3,8 @@
 using VideoViewImpl = LibVLCSharp.Platforms.Android.VideoView;
 #elif IOS
 using VideoViewImpl = LibVLCSharp.Platforms.iOS.VideoView;
+#elif WINUI
+using VideoViewImpl = LibVLCSharp.Platforms.Windows.VideoView;
 #endif 
 
 namespace LibVLCSharp.MAUI
