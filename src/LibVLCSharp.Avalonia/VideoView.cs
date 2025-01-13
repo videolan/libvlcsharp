@@ -21,6 +21,9 @@ namespace LibVLCSharp.Avalonia
         private IPlatformHandle? _platformHandle = null;
         private MediaPlayer? _mediaPlayer = null;
         private Window? _floatingContent = null;
+        IDisposable? contentChangedHandler = null;
+        IDisposable? isVisibleChangedHandler = null;
+        IDisposable? floatingContentChangedHandler = null;
 
         /// <summary>
         /// MediaPlayer Data Bound property
@@ -74,15 +77,17 @@ namespace LibVLCSharp.Avalonia
         public VideoView()
         {
             Initialized += (_, _) => { Attach(); };
-            ContentProperty.Changed.AddClassHandler<VideoView>((s, _) => s.InitializeNativeOverlay());
-            IsVisibleProperty.Changed.AddClassHandler<VideoView>((s, _) => s.ShowNativeOverlay(s.IsVisible));
+
+            contentChangedHandler = ContentProperty.Changed.AddClassHandler<VideoView>((s, _) => s.UpdateOverlayPosition());
+            isVisibleChangedHandler = IsVisibleProperty.Changed.AddClassHandler<VideoView>((s, _) => s.ShowNativeOverlay(s.IsVisible));
         }
 
         private void UpdateOverlayPosition()
         {
             if (_floatingContent == null || !IsVisible)
+            {
                 return;
-
+            }
             bool forceSetWidth = false, forceSetHeight = false;
             var topLeft = new Point();
             var child = _floatingContent.Presenter?.Child;
@@ -250,20 +255,20 @@ namespace LibVLCSharp.Avalonia
                     Opacity = 1.0,
                     DataContext = DataContext
                 };
-                _floatingContent.Bind(ContentControl.ContentProperty, this.GetObservable(ContentProperty));
+                floatingContentChangedHandler = _floatingContent.Bind(ContentControl.ContentProperty, this.GetObservable(ContentProperty));
                 _floatingContent.PointerEntered += FloatingContentOnPointerEvent;
                 _floatingContent.PointerExited += FloatingContentOnPointerEvent;
                 _floatingContent.PointerPressed += FloatingContentOnPointerEvent;
                 _floatingContent.PointerReleased += FloatingContentOnPointerEvent;
 
-                ContentProperty.Changed.AddClassHandler<VideoView>((o, _) => o.UpdateOverlayPosition());
-                
-                visualRoot.LayoutUpdated += (_, _) => UpdateOverlayPosition();
-                visualRoot.PositionChanged += (_, _) => UpdateOverlayPosition();
+                visualRoot.LayoutUpdated += VisualRoot_UpdateOverlayPosition;
+                visualRoot.PositionChanged += VisualRoot_UpdateOverlayPosition;
             }
 
             ShowNativeOverlay(IsEffectivelyVisible);
         }
+
+        private void VisualRoot_UpdateOverlayPosition(object sender, EventArgs e) => UpdateOverlayPosition();
 
         private void FloatingContentOnPointerEvent(object? sender, PointerEventArgs e)
         {
@@ -284,13 +289,30 @@ namespace LibVLCSharp.Avalonia
         /// <inheritdoc />
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
+            var parent = this.GetVisualParent();
+            if(parent != null)
+                parent.DetachedFromVisualTree += Parent_DetachedFromVisualTree;
             base.OnAttachedToVisualTree(e);
             InitializeNativeOverlay();
+        }
+
+        private void Parent_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (VisualRoot is not Window visualRoot)
+            {
+                return;
+            }
+
+            visualRoot.LayoutUpdated -= VisualRoot_UpdateOverlayPosition;
+            visualRoot.PositionChanged -= VisualRoot_UpdateOverlayPosition;
         }
 
         /// <inheritdoc />
         protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
         {
+            var parent = this.GetVisualParent();
+            if (parent != null)
+                parent.DetachedFromVisualTree -= Parent_DetachedFromVisualTree;
             base.OnDetachedFromVisualTree(e);
             ShowNativeOverlay(false);
         }
@@ -305,6 +327,10 @@ namespace LibVLCSharp.Avalonia
         /// <inheritdoc />
         protected override void DestroyNativeControlCore(IPlatformHandle control)
         {
+            contentChangedHandler?.Dispose();
+            isVisibleChangedHandler?.Dispose();
+            floatingContentChangedHandler?.Dispose();
+
             Detach();
             if (_floatingContent != null)
             {
