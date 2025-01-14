@@ -5,10 +5,5 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:LibVLCSharp.MAUI.Sample"
     Shell.FlyoutBehavior="Disabled">
-
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <ShellContent ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
 </Shell>

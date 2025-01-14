@@ -12,7 +12,9 @@ namespace LibVLCSharp.MAUI.Sample
         protected override void OnAppearing()
         {
             base.OnAppearing();
+#if !WINDOWS
             ((MainViewModel)BindingContext).OnAppearing();
+#endif
         }
 
         protected override void OnDisappearing()
@@ -24,6 +26,19 @@ namespace LibVLCSharp.MAUI.Sample
         private void VideoView_MediaPlayerChanged(object sender, MediaPlayerChangedEventArgs e)
         {
             ((MainViewModel)BindingContext).OnVideoViewInitialized();
+        }
+
+        private void VideoView_HandlerChanged(object sender, EventArgs e)
+        {
+#if WINDOWS
+            var windowsView = ((LibVLCSharp.Platforms.Windows.VideoView)VideoView.Handler.PlatformView);
+
+            windowsView.Initialized += (s, e) =>
+            {
+                ((MainViewModel)BindingContext).Initialize(e.SwapChainOptions);
+                ((MainViewModel)BindingContext).OnAppearing();
+            };
+#endif
         }
     }
 }
