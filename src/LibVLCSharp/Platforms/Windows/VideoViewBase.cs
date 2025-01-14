@@ -41,7 +41,7 @@ namespace LibVLCSharp.Platforms.Windows
         /// </summary>
         public VideoViewBase()
         {
-            DefaultStyleKey = typeof(VideoViewBase);
+            DefaultStyleKey = typeof(VideoView);
 
             Unloaded += (s, e) => DestroySwapChain();
 #if !WINUI
