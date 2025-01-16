@@ -1,5 +1,4 @@
-﻿using LibVLCSharp;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,19 +12,17 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class LibVLCAPICoverage
     {
-        const string LibVLCSymURL = "https://raw.githubusercontent.com/videolan/vlc/master/lib/libvlc.sym";
-        const string LibVLCDeprecatedSymUrl = "https://raw.githubusercontent.com/videolan/vlc/master/include/vlc/deprecated.h";
+        const string LibVLCSymURL = "https://code.videolan.org/videolan/vlc/-/raw/master/lib/libvlc.sym";
 
         [Test]
         public async Task CheckLibVLCCoverage()
         {
             string[] libvlcSymbols;
-            string[] libvlcdeprecatedSym;
 
             using (var httpClient = new HttpClient())
             {
                 libvlcSymbols = (await httpClient.GetStringAsync(LibVLCSymURL)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                libvlcdeprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                
             }
 
             var dllImports = new List<string>();
@@ -48,35 +45,12 @@ namespace LibVLCSharp.Tests
                 typeof(MediaList),
                 typeof(Equalizer),
                 typeof(Picture),
+                typeof(PictureList),
+                typeof(MediaTrack),
+                typeof(MediaTrackList),
+                typeof(ProgramList),
                 eventManager
             };
-
-            var deprecatedSymbolsLine = new List<string>();
-
-            for (var i = 0; i < libvlcdeprecatedSym.Count(); i++)
-            {
-                var currentLine = libvlcdeprecatedSym[i];
-                if(currentLine.StartsWith("LIBVLC_DEPRECATED"))
-                {
-                    deprecatedSymbolsLine.Add(libvlcdeprecatedSym[i + 1]);
-                }
-            }
-
-            var deprecatedSymbols = new List<string>();
-
-            foreach (var symLine in deprecatedSymbolsLine)
-            {
-                var libvlcIndexStart = symLine.IndexOf("libvlc");
-                var sym1 = symLine.Substring(libvlcIndexStart);
-                var finalSymbol = new string(sym1.TakeWhile(c => c != '(').ToArray());
-
-                if (finalSymbol.Contains('*'))
-                {
-                    finalSymbol = finalSymbol.Substring(finalSymbol.IndexOf('*') + 1);
-                }
-
-                deprecatedSymbols.Add(finalSymbol.Trim());
-            }
 
             var implementedButHidden = new List<string>
             {
@@ -87,8 +61,7 @@ namespace LibVLCSharp.Tests
             // not implemented symbols for lack of use case or user interest
             var notImplementedOnPurpose = new List<string>
             {
-                "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
-                "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
+               "libvlc_media_list_player", "libvlc_dialog_get_context", "libvlc_dialog_set_context", "libvlc_log_get_object", "libvlc_media_player_lock", "libvlc_media_player_signal", "libvlc_media_player_unlock", "libvlc_media_player_wait"
             };
 
             var exclude = new List<string>();
@@ -121,28 +94,15 @@ namespace LibVLCSharp.Tests
 
             var missingApis = libvlcSymbols
                 .Where(symbol => !exclude.Any(excludeSymbol => symbol.StartsWith(excludeSymbol))) // Filters out excluded symbols
-                .Except(dllImports)
-                .Except(deprecatedSymbols);
+                .Except(dllImports);
 
             var missingApisCount = missingApis.Count();
 
             Debug.WriteLine($"we have {dllImports.Count} dll import statements");
-            Debug.WriteLine($"{missingApisCount} missing APIs implementation");
 
-            foreach (var miss in missingApis)
-            {
-                Debug.WriteLine(miss);
-            }
+            Assert.Zero(missingApis.Count(), string.Concat("missing APIs are: ", string.Join(", ", missingApis)));
 
-            var unusedDllImportsCount = unusedDllImports.Count();
-            Debug.WriteLine($"{unusedDllImportsCount} unused DllImports implementation");
-            foreach (var unused in unusedDllImports)
-            {
-                Debug.WriteLine(unused);
-            }
-
-            Assert.Zero(missingApisCount);
-            Assert.Zero(unusedDllImportsCount);
+            Assert.Zero(unusedDllImports.Count(), string.Concat("unused dll imports are: ", string.Join(", ", unusedDllImports)));
         }
     }
 }

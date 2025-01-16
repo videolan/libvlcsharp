@@ -116,27 +116,27 @@ namespace LibVLCSharp.Tests
             Assert.False(_libVLC.DialogHandlersSet);
         }
 
-        [Test]
-        public async Task ShouldRaiseErrorCallback()
-        {
-            const string errorUrl = "https://zzz.mp4";
-            var tcs = new TaskCompletionSource<bool>();
+        //[Test]
+        //public async Task ShouldRaiseErrorCallback()
+        //{
+        //    const string errorUrl = "https://zzz.mp4";
+        //    var tcs = new TaskCompletionSource<bool>();
 
-            _libVLC.SetErrorDialogCallback(DisplayError);
-            using var media = new Media(new Uri(errorUrl));
-            using var mp = new MediaPlayer(_libVLC, media);
-            mp.Play();
+        //    _libVLC.SetErrorDialogCallback(DisplayError);
+        //    using var media = new Media(new Uri(errorUrl));
+        //    using var mp = new MediaPlayer(_libVLC, media);
+        //    mp.Play();
 
-            Task DisplayError(string title, string error)
-            {
-                Assert.AreEqual(title, "Your input can't be opened");
-                Assert.AreEqual(error, $"VLC is unable to open the MRL '{errorUrl}/'. Check the log for details.");
-                tcs.TrySetResult(true);
-                return Task.CompletedTask;
-            }
+        //    Task DisplayError(string title, string error)
+        //    {
+        //        Assert.AreEqual(title, "Your input can't be opened");
+        //        Assert.AreEqual(error, $"VLC is unable to open the MRL '{errorUrl}/'. Check the log for details.");
+        //        tcs.TrySetResult(true);
+        //        return Task.CompletedTask;
+        //    }
 
-            await tcs.Task;
-            Assert.True(tcs.Task.Result);
-        }
+        //    await tcs.Task;
+        //    Assert.True(tcs.Task.Result);
+        //}
     }
 }

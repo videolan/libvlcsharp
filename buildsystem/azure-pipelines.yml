@@ -30,6 +30,32 @@ stages:
     steps:
     - template: windows-build.yml
 
+- stage: Test
+  dependsOn: Build
+  condition: succeeded('Build')
+  variables:
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  jobs:
+    - job: test
+      pool:
+        vmImage: 'windows-latest'
+      steps:
+        - template: base-template.yml
+        - task: UseDotNet@2
+          displayName: 'Use .NET Core SDK'
+          inputs:
+            packageType: sdk
+            version: 6.0.x
+        - task: DotNetCoreCLI@2
+          displayName: 'Test'
+          inputs:
+            command: custom
+            custom: 'cake'
+            arguments: --target Test
+            workingDirectory: buildsystem
+
 - stage: Deploy
   dependsOn: Build
   condition: |

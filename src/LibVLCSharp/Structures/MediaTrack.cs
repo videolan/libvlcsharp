@@ -311,7 +311,7 @@ namespace LibVLCSharp
 
         internal class MediaTrackListEnumerator : IEnumerator<MediaTrack>
         {
-            uint position = 0;
+            int position = -1;
             MediaTrackList? _mediaTrackList;
 
             internal MediaTrackListEnumerator(MediaTrackList mediaTrackList)
@@ -327,12 +327,12 @@ namespace LibVLCSharp
 
             void IEnumerator.Reset()
             {
-                position = 0;
+                position = -1;
             }
 
             public void Dispose()
             {
-                position = 0;
+                position = -1;
                 _mediaTrackList = default;
             }
 
@@ -346,7 +346,7 @@ namespace LibVLCSharp
                     {
                         throw new ObjectDisposedException(nameof(MediaTrackListEnumerator));
                     }
-                    return _mediaTrackList[position] ?? throw new ArgumentOutOfRangeException(nameof(position));
+                    return _mediaTrackList[position < 0 ? 0 : (uint)position] ?? throw new ArgumentOutOfRangeException(nameof(position));
                 }
             }
         }
