@@ -292,6 +292,16 @@ namespace LibVLCSharp
         }
 
         /// <summary>
+        /// TO REMOVE
+        /// </summary>
+        /// <param name="logger"></param>
+        public void SetLogger(Action<string> logger)
+        {
+            _logger = logger;
+        }
+        static Action<string>? _logger;
+
+        /// <summary>
         /// Make dirty hacks to include necessary defaults on some platforms.
         /// </summary>
         /// <param name="options">The options given by the user</param>
@@ -794,7 +804,7 @@ namespace LibVLCSharp
 
             try
             {
-                var message = MarshalUtils.GetLogMessage(format, args);
+                var message = MarshalUtils.GetLogMessage(format, args, _logger);
 
                 GetLogContext(logContext, out var module, out var file, out var line);
 

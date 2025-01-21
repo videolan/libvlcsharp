@@ -51,6 +51,9 @@ namespace LibVLCSharp.Helpers
             [DllImport(Constants.LibSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vasprintf_apple(ref IntPtr buffer, IntPtr format, IntPtr args);
 
+            [DllImport(Constants.Libc, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vasprintf_android(ref IntPtr buffer, IntPtr format, IntPtr args);
+
             [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf_linux(IntPtr buffer, IntPtr format, IntPtr args);
 
@@ -64,10 +67,9 @@ namespace LibVLCSharp.Helpers
             public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
 #pragma warning restore IDE1006 // Naming Styles
         }
-
         #region logging
 
-        internal static string GetLogMessage(IntPtr format, IntPtr args)
+        internal static string GetLogMessage(IntPtr format, IntPtr args, Action<string>? logger)
         {
             if(PlatformHelper.IsMac)
                 return AppleLogCallback(format, args);
@@ -78,6 +80,13 @@ namespace LibVLCSharp.Helpers
             if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
             {
                 return LinuxX64LogCallback(format, args);
+            }
+
+            // HACK
+            // find a way to detect Android from netstandard2.0?
+            if (logger != null)
+            {
+                return AndroidUnityLogCallback(format, args);
             }
 
             var byteLength = vsnprintf(IntPtr.Zero, UIntPtr.Zero, format, args) + 1;
@@ -96,6 +105,24 @@ namespace LibVLCSharp.Helpers
                 Marshal.FreeHGlobal(buffer);
             }
 #endif
+        }
+
+        static string AndroidUnityLogCallback(IntPtr format, IntPtr args)
+        {
+            var buffer = IntPtr.Zero;
+            try
+            {
+                var count = Native.vasprintf_android(ref buffer, format, args);
+
+                if (count == -1)
+                    return string.Empty;
+
+                return buffer.FromUtf8() ?? string.Empty;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
         }
 
         static string AppleLogCallback(IntPtr format, IntPtr args)
