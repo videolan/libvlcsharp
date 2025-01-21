@@ -51,6 +51,9 @@ namespace LibVLCSharp.Helpers
             [DllImport(Constants.LibSystem, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vasprintf_apple(ref IntPtr buffer, IntPtr format, IntPtr args);
 
+            [DllImport(Constants.Libc, EntryPoint = "vasprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vasprintf_unix(ref IntPtr buffer, IntPtr format, IntPtr args);
+
             [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf_linux(IntPtr buffer, IntPtr format, IntPtr args);
 
@@ -69,18 +72,30 @@ namespace LibVLCSharp.Helpers
 
         internal static string GetLogMessage(IntPtr format, IntPtr args)
         {
-            if(PlatformHelper.IsMac)
-                return AppleLogCallback(format, args);
 #if APPLE
             return AppleLogCallback(format, args);
 #else
+            if(PlatformHelper.IsMac)
+                return AppleLogCallback(format, args);
+
             // special marshalling is needed on Linux desktop 64 bits.
             if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
             {
                 return LinuxX64LogCallback(format, args);
             }
 
-            var byteLength = vsnprintf(IntPtr.Zero, UIntPtr.Zero, format, args) + 1;
+            if (PlatformHelper.IsWindows)
+            {
+                return WindowsLogCallback(format, args);
+            }
+
+            return UnixLogCallback(format, args);
+#endif
+        }
+
+        static string WindowsLogCallback(IntPtr format, IntPtr args)
+        {
+            var byteLength = Native.vsnprintf_windows(IntPtr.Zero, UIntPtr.Zero, format, args) + 1;
             if (byteLength <= 1)
                 return string.Empty;
 
@@ -88,14 +103,32 @@ namespace LibVLCSharp.Helpers
             try
             {
                 buffer = Marshal.AllocHGlobal(byteLength);
-                vsprintf(buffer, format, args);
+                if (Native.vsprintf_windows(buffer, format, args) < 0)
+                    return string.Empty;
                 return buffer.FromUtf8()!;
             }
             finally
             {
                 Marshal.FreeHGlobal(buffer);
             }
-#endif
+        }
+
+        static string UnixLogCallback(IntPtr format, IntPtr args)
+        {
+            var buffer = IntPtr.Zero;
+            try
+            {
+                var count = Native.vasprintf_unix(ref buffer, format, args);
+
+                if (count == -1)
+                    return string.Empty;
+
+                return buffer.FromUtf8() ?? string.Empty;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
         }
 
         static string AppleLogCallback(IntPtr format, IntPtr args)
@@ -173,35 +206,7 @@ namespace LibVLCSharp.Helpers
             }
         }
 
-#pragma warning disable IDE1006 // Naming Styles
-        static int vsnprintf(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
-        {
-#if ANDROID
-            return Native.vsnprintf_linux(buffer, size, format, args);
-#else
-            if (PlatformHelper.IsWindows)
-                return Native.vsnprintf_windows(buffer, size, format, args);
-            else if (PlatformHelper.IsLinux)
-                return Native.vsnprintf_linux(buffer, size, format, args);
-            return -1;
-#endif
-        }
-
-        static int vsprintf(IntPtr buffer, IntPtr format, IntPtr args)
-        {
-#if ANDROID
-            return Native.vsprintf_linux(buffer, format, args);
-#else
-            if (PlatformHelper.IsWindows)
-                return Native.vsprintf_windows(buffer, format, args);
-            else if (PlatformHelper.IsLinux)
-                return Native.vsprintf_linux(buffer, format, args);
-            return -1;
-#endif
-        }
-
-#endregion
-#pragma warning restore IDE1006 // Naming Styles
+        #endregion
 
         /// <summary>
         /// Helper for libvlc_new
