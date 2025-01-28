@@ -76,7 +76,7 @@ namespace LibVLCSharp.Helpers
                 return AppleLogCallback(format, args);
 #if APPLE
             return AppleLogCallback(format, args);
-#else
+#endif
             // special marshalling is needed on Linux desktop 64 bits.
             if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
             {
@@ -89,7 +89,6 @@ namespace LibVLCSharp.Helpers
             }
 
             return UnixLogCallback(format, args);
-#endif
         }
 
         static string WindowsLogCallback(IntPtr format, IntPtr args)
