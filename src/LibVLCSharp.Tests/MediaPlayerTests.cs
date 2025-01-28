@@ -268,22 +268,19 @@ namespace LibVLCSharp.Tests
 
             await mp.PlayAsync();
 
-            await Task.Delay(5000);
+            long aTime = 3000;
+            long bTime = 6000;
 
-            Assert.True(mp.SetABLoop(ABLoop.A));
-
-            await Task.Delay(3000);
-
-            Assert.True(mp.SetABLoop(ABLoop.B));
+            Assert.True(mp.SetABLoopTime(aTime, bTime));
 
             var abloop = mp.GetABLoop(out var atime, out var aposition, out var btime, out var bposition);
 
             Assert.AreEqual(ABLoop.B, abloop);
 
-            Assert.Greater(btime, atime);
-            Assert.Greater(bposition, aposition);
+            Assert.AreEqual(aTime, atime);
+            Assert.AreEqual(bTime, btime);
 
-            Assert.True(mp.SetABLoop(ABLoop.None));
+            Assert.True(mp.ResetABLoop());
             Assert.AreEqual(ABLoop.None, mp.GetABLoop(out atime, out aposition, out btime, out bposition));
         }
     }

@@ -611,8 +611,16 @@ namespace LibVLCSharp
             internal static extern int LibVLCMediaPlayerJumpTime(IntPtr mediaplayer, long time);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_set_abloop")]
-            internal static extern int LibVLCMediaPlayerSetABloop(IntPtr mediaplayer, ABLoop abLoop);
+                EntryPoint = "libvlc_media_player_set_abloop_time")]
+            internal static extern int LibVLCMediaPlayerSetABloopTime(IntPtr mediaplayer, long aTime, long bTime);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_abloop_position")]
+            internal static extern int LibVLCMediaPlayerSetABloopPosition(IntPtr mediaplayer, double aPosition, double bPosition);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_reset_abloop")]
+            internal static extern int LibVLCMediaPlayerResetABloop(IntPtr mediaplayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_abloop")]
@@ -625,6 +633,15 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_unset_projection_mode")]
             internal static extern void LibVLCMediaPlayerUnsetProjectionMode(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_get_video_stereo_mode")]
+            internal static extern VideoStereoMode LibVLCMediaPlayerGetVideoStereoMode(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                            EntryPoint = "libvlc_video_set_video_stereo_mode")]
+            internal static extern void LibVLCMediaPlayerSetVideoStereoMode(IntPtr mediaplayer, VideoStereoMode videoStereoMode);
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -1301,7 +1318,19 @@ namespace LibVLCSharp
         /// Get current audio stereo-mode.
         /// <para/> version LibVLC 4.0.0 and later.
         /// </summary>
-        public AudioOutputStereoMode StereoMode => Native.LibVLCAudioGetStereoMode(NativeReference);
+        public AudioOutputStereoMode AudioStereoMode => Native.LibVLCAudioGetStereoMode(NativeReference);
+
+        /// <summary>
+        /// Get current video stereo-mode.
+        /// <para/> version LibVLC 4.0.0 and later.
+        /// </summary>
+        public VideoStereoMode VideoStereoMode => Native.LibVLCMediaPlayerGetVideoStereoMode(NativeReference);
+
+        /// <summary>
+        /// Set current video stereo mode.
+        /// <para/> version LibVLC 4.0.0 and later.
+        /// </summary>
+        public void SetVideoStereoMode() => Native.LibVLCMediaPlayerSetVideoStereoMode(NativeReference, VideoStereoMode);
 
         /// <summary>
         /// Set current audio channel.
@@ -1309,7 +1338,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="mode">the audio stereo-mode</param>
         /// <returns>true on success, false on error</returns>
-        public bool SetStereoMode(AudioOutputStereoMode mode) => Native.LibVLCAudioSetStereoMode(NativeReference, mode) == 0;
+        public bool SetAudioStereoMode(AudioOutputStereoMode mode) => Native.LibVLCAudioSetStereoMode(NativeReference, mode) == 0;
 
         /// <summary>
         /// Equals override based on the native instance reference
@@ -2277,18 +2306,44 @@ namespace LibVLCSharp
         public bool JumpTime(long time) => Native.LibVLCMediaPlayerJumpTime(NativeReference, time) == 0;
 
         /// <summary>
-        /// Enable A to B loop for the current media <br/>
-        /// This function need to be called 2 times, with <see cref="ABLoop.A"/> and <see cref="ABLoop.B"/> to setup an A to B loop. It uses and stores the current time/position when called. The B time must be higher than the A time.
+        /// Enable A to B loop for the current media by setting the start time and end time
+        /// <para/>
+        /// The B time must be higher than the A time.
+        /// <para/>
+        /// version LibVLC 4.0.0 and later
         /// </summary>
-        /// <param name="abloop">select which A/B cursor to set</param>
+        /// <param name="aTime">start time for the loop (in ms)</param>
+        /// <param name="bTime">end time for the loop (in ms)</param>
         /// <returns>true on success, false on error</returns>
-        public bool SetABLoop(ABLoop abloop) => Native.LibVLCMediaPlayerSetABloop(NativeReference, abloop) == 0;
+        public bool SetABLoopTime(long aTime, long bTime) => Native.LibVLCMediaPlayerSetABloopTime(NativeReference, aTime, bTime) == 0;
+
+        /// <summary>
+        /// Enable A to B loop for the current media by setting the start position and end position
+        /// <para/>
+        /// The B position must be higher than the A position.
+        /// <para/>
+        /// version LibVLC 4.0.0 and later
+        /// </summary>
+        /// <param name="aPosition">start position for the loop</param>
+        /// <param name="bPosition">end position for the loop</param>
+        /// <returns>true on success, false on error</returns>
+        public bool SetABLoopPosition(double aPosition, double bPosition) => Native.LibVLCMediaPlayerSetABloopPosition(NativeReference, aPosition, bPosition) == 0;
+
+        /// <summary>
+        /// Reset/remove the A to B loop for the current media
+        /// <para/>
+        /// version LibVLC 4.0.0 and later
+        /// </summary>
+        /// <returns>true on success, false on error</returns>
+        public bool ResetABLoop() => Native.LibVLCMediaPlayerResetABloop(NativeReference) == 0;
 
         /// <summary>
         /// Get the A to B loop status <br/>
         /// <remarks>
         /// If the returned status is <see cref="ABLoop.A"/>, then aTime and aPosition will be valid. If the returned status is <see cref="ABLoop.B"/>, then all output parameters are valid. If the returned status is <see cref="ABLoop.None"/>, then all output parameters are invalid (ABlooping is off).
         /// </remarks>
+        /// <para/>
+        /// version LibVLC 4.0.0 and later
         /// </summary>
         /// <param name="aTime">A time (in ms) or -1 (if the media doesn't have valid times)</param>
         /// <param name="aPosition">A position</param>
@@ -3771,5 +3826,36 @@ namespace LibVLCSharp
         /// B loop state
         /// </summary>
         B
+    }
+
+    /// <summary>
+    /// Video stereo mode
+    /// </summary>
+    public enum VideoStereoMode
+    {
+        /// <summary>
+        /// Auto
+        /// </summary>
+        Auto = 0,
+
+        /// <summary>
+        /// Stereo
+        /// </summary>
+        Stereo,
+
+        /// <summary>
+        /// Left eye only
+        /// </summary>
+        LeftEye,
+
+        /// <summary>
+        /// Right eye only
+        /// </summary>
+        RightEye,
+
+        /// <summary>
+        /// Side by side
+        /// </summary>
+        SideBySide
     }
 }
