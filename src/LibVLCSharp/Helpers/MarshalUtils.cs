@@ -70,7 +70,7 @@ namespace LibVLCSharp.Helpers
 
         #region logging
 
-        internal static string GetLogMessage(IntPtr format, IntPtr args, Action<string>? logger)
+        internal static string GetLogMessage(IntPtr format, IntPtr args)
         {
             if(PlatformHelper.IsMac)
                 return AppleLogCallback(format, args);
