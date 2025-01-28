@@ -625,6 +625,15 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_unset_projection_mode")]
             internal static extern void LibVLCMediaPlayerUnsetProjectionMode(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_video_get_video_stereo_mode")]
+            internal static extern VideoStereoMode LibVLCMediaPlayerGetVideoStereoMode(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                            EntryPoint = "libvlc_video_set_video_stereo_mode")]
+            internal static extern void LibVLCMediaPlayerSetVideoStereoMode(IntPtr mediaplayer, VideoStereoMode videoStereoMode);
+
 #if ANDROID
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_set_android_context")]
@@ -1301,7 +1310,19 @@ namespace LibVLCSharp
         /// Get current audio stereo-mode.
         /// <para/> version LibVLC 4.0.0 and later.
         /// </summary>
-        public AudioOutputStereoMode StereoMode => Native.LibVLCAudioGetStereoMode(NativeReference);
+        public AudioOutputStereoMode AudioStereoMode => Native.LibVLCAudioGetStereoMode(NativeReference);
+
+        /// <summary>
+        /// Get current video stereo-mode.
+        /// <para/> version LibVLC 4.0.0 and later.
+        /// </summary>
+        public VideoStereoMode VideoStereoMode => Native.LibVLCMediaPlayerGetVideoStereoMode(NativeReference);
+
+        /// <summary>
+        /// Set current video stereo mode.
+        /// <para/> version LibVLC 4.0.0 and later.
+        /// </summary>
+        public void SetVideoStereoMode() => Native.LibVLCMediaPlayerSetVideoStereoMode(NativeReference, VideoStereoMode);
 
         /// <summary>
         /// Set current audio channel.
@@ -1309,7 +1330,7 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="mode">the audio stereo-mode</param>
         /// <returns>true on success, false on error</returns>
-        public bool SetStereoMode(AudioOutputStereoMode mode) => Native.LibVLCAudioSetStereoMode(NativeReference, mode) == 0;
+        public bool SetAudioStereoMode(AudioOutputStereoMode mode) => Native.LibVLCAudioSetStereoMode(NativeReference, mode) == 0;
 
         /// <summary>
         /// Equals override based on the native instance reference
@@ -3771,5 +3792,36 @@ namespace LibVLCSharp
         /// B loop state
         /// </summary>
         B
+    }
+
+    /// <summary>
+    /// Video stereo mode
+    /// </summary>
+    public enum VideoStereoMode
+    {
+        /// <summary>
+        /// Auto
+        /// </summary>
+        Auto = 0,
+
+        /// <summary>
+        /// Stereo
+        /// </summary>
+        Stereo,
+
+        /// <summary>
+        /// Left eye only
+        /// </summary>
+        LeftEye,
+
+        /// <summary>
+        /// Right eye only
+        /// </summary>
+        RightEye,
+
+        /// <summary>
+        /// Side by side
+        /// </summary>
+        SideBySide
     }
 }
