@@ -268,23 +268,31 @@ namespace LibVLCSharp.Tests
 
             await mp.PlayAsync();
 
-            await Task.Delay(5000);
+            long aTime = 3000;
+            long bTime = 6000;
 
-            Assert.True(mp.SetABLoop(ABLoop.A));
+            Assert.True(mp.SetABLoopTime(aTime, bTime));
 
-            await Task.Delay(3000);
-
-            Assert.True(mp.SetABLoop(ABLoop.B));
-
-            var abloop = mp.GetABLoop(out var atime, out var aposition, out var btime, out var bposition);
+            var abloop = mp.GetABLoop(out var atime, out _, out var btime, out _);
 
             Assert.AreEqual(ABLoop.B, abloop);
 
-            Assert.Greater(btime, atime);
-            Assert.Greater(bposition, aposition);
+            Assert.AreEqual(aTime, atime);
+            Assert.AreEqual(bTime, btime);
 
-            Assert.True(mp.SetABLoop(ABLoop.None));
-            Assert.AreEqual(ABLoop.None, mp.GetABLoop(out atime, out aposition, out btime, out bposition));
+            Assert.True(mp.ResetABLoop());
+            Assert.AreEqual(ABLoop.None, mp.GetABLoop(out _, out _, out _, out _));
+
+            var aPosition = 0.3;
+            var bPosition = 0.6;
+
+            Assert.True(mp.SetABLoopPosition(aPosition, bPosition));
+
+            abloop = mp.GetABLoop(out _, out var aposition, out _, out var bposition);
+            Assert.AreEqual(ABLoop.B, abloop);
+
+            Assert.AreEqual(aPosition, aposition);
+            Assert.AreEqual(bPosition, bposition);
         }
     }
 }
