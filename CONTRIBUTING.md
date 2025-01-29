@@ -129,7 +129,7 @@ from the main (upstream) repository:
 
 ### Developer Environment
 
-The latest .NET 6 SDK is required.
+The latest .NET 8 SDK is required.
 
 - Visual Studio 2022 (with latest patches/updates), with the following workloads/components
     - .NET desktop development workload
