@@ -1330,7 +1330,7 @@ namespace LibVLCSharp
         /// Set current video stereo mode.
         /// <para/> version LibVLC 4.0.0 and later.
         /// </summary>
-        public void SetVideoStereoMode() => Native.LibVLCMediaPlayerSetVideoStereoMode(NativeReference, VideoStereoMode);
+        public void SetVideoStereoMode(VideoStereoMode mode) => Native.LibVLCMediaPlayerSetVideoStereoMode(NativeReference, mode);
 
         /// <summary>
         /// Set current audio channel.
