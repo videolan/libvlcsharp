@@ -93,7 +93,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.6.0" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('xamarin.mac')) And $([MSBuild]::IsOsPlatform('Windows'))">
     <Reference Include="Xamarin.Mac">
