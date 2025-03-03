@@ -55,6 +55,8 @@
     <VersionSuffix></VersionSuffix>
     <PackageTags>libvlc;vlc;videolan;native;c/c++;video;audio;player;media;mediaplayer;codec;ffmpeg;xamarin;graphics;ios;android;linux;windows;macos;cross-platform</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\assets\icon.png">
