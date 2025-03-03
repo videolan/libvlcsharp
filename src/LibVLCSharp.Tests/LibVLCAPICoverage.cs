@@ -138,7 +138,7 @@ namespace LibVLCSharp.Tests
                 Debug.WriteLine(miss);
             }
 
-            Assert.Zero(missingApisCount);
+            Assert.That(missingApisCount, Is.Zero);
         }
     }
 }

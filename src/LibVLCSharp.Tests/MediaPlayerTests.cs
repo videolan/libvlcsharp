@@ -17,7 +17,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
             mp.Dispose();
-            Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+            Assert.That(IntPtr.Zero == mp.NativeReference);
         }
 
         [Test]
@@ -40,12 +40,12 @@ namespace LibVLCSharp.Tests
             mp.Playing += (sender, args) =>
             {
                 var description = mp.AudioTrackDescription;
-                Assert.True(mp.SetAudioTrack(description.First().Id));
-                Assert.IsNotEmpty(description);
+                Assert.That(mp.SetAudioTrack(description.First().Id));
+                Assert.That(description, Is.Not.Empty);
                 tcs.SetResult(true);
             };
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            Assert.That(tcs.Task.Result);
         }
 
         [Test]
@@ -60,12 +60,12 @@ namespace LibVLCSharp.Tests
             mp.Playing += (sender, args) =>
             {
                 var chapters = mp.FullChapterDescriptions(-1);
-                Assert.IsNotEmpty(chapters);
-                Assert.AreEqual(chapters.Length, mp.ChapterCount);
+                Assert.That(chapters, Is.Not.Empty);
+                Assert.That(chapters.Length == mp.ChapterCount);
                 tcs.SetResult(true);
             };
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            Assert.That(tcs.Task.Result);
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace LibVLCSharp.Tests
             };
             mp.Play();
             await Task.Delay(5000);
-            Assert.True(called);
-            //Assert.True(mp.IsPlaying);
+            Assert.That(called);
+            //Assert.That(mp.IsPlaying);
         }
 
         int callCountRegisterOne = 0;
@@ -102,8 +102,8 @@ namespace LibVLCSharp.Tests
 
                 mp.Play();
                 await Task.Delay(2000);
-                Assert.AreEqual(callCountRegisterOne, 1);
-                Assert.AreEqual(callCountRegisterTwo, 1);
+                Assert.That(callCountRegisterOne == 1);
+                Assert.That(callCountRegisterTwo == 1);
             
                 callCountRegisterOne = 0;
                 callCountRegisterTwo = 0;
@@ -118,8 +118,8 @@ namespace LibVLCSharp.Tests
                 mp.Play();
                 await Task.Delay(2000);
 
-                Assert.AreEqual(callCountRegisterOne, 0);
-                Assert.AreEqual(callCountRegisterTwo, 1);
+                Assert.That(callCountRegisterOne == 0);
+                Assert.That(callCountRegisterTwo == 1);
 
               //  mp.Stop();
 
@@ -136,8 +136,8 @@ namespace LibVLCSharp.Tests
                 mp.Play();
                 await Task.Delay(500);
 
-                Assert.AreEqual(callCountRegisterOne, 0);
-                Assert.AreEqual(callCountRegisterTwo, 0);
+                Assert.That(callCountRegisterOne == 0);
+                Assert.That(callCountRegisterTwo == 0);
             }
             catch (Exception ex)
             {
@@ -169,7 +169,7 @@ namespace LibVLCSharp.Tests
 
             mp.Dispose();
 
-            Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+            Assert.That(IntPtr.Zero == mp.NativeReference);
         }
 
         [Test]
@@ -183,30 +183,30 @@ namespace LibVLCSharp.Tests
 
             var result = mp.UpdateViewpoint(yaw: 0, pitch: 90, roll: 0, fov: 0);
 
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
 
             await Task.Delay(1000);
             
             mp.Dispose();
 
-            Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+            Assert.That(IntPtr.Zero == mp.NativeReference);
         }
 
         [Test]
         public void GetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+            Assert.That(MediaPlayerRole.Video == mp.Role);
         }
 
         [Test]
         public void SetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+            Assert.That(MediaPlayerRole.Video == mp.Role);
 
-            Assert.True(mp.SetRole(MediaPlayerRole.None));
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+            Assert.That(mp.SetRole(MediaPlayerRole.None));
+            Assert.That(MediaPlayerRole.None == mp.Role);
         }
     }
 }

@@ -24,10 +24,10 @@ namespace LibVLCSharp.Tests
                     FromType.FromLocation)
             };
 
-            Assert.True(mp.Play());
+            Assert.That(mp.Play());
 
             var rendererList = _libVLC.RendererList;
-            Assert.IsNotEmpty(rendererList);
+            Assert.That(rendererList, Is.Not.Empty);
 
             var rendererDiscoverer = new RendererDiscoverer(_libVLC, _libVLC.RendererList.LastOrDefault().Name);
             var rendererItems = new List<RendererItem>();
@@ -47,12 +47,12 @@ namespace LibVLCSharp.Tests
             };
 
 
-            Assert.True(rendererDiscoverer.Start());
+            Assert.That(rendererDiscoverer.Start());
 
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
-            Assert.IsNotEmpty(rendererItems);
-            Assert.True(mp.SetRenderer(rendererItems.First()));
+            Assert.That(tcs.Task.Result);
+            Assert.That(rendererItems.Any(), Is.True);
+            Assert.That(mp.SetRenderer(rendererItems.First()));
 
             await Task.Delay(10000);
         }
@@ -62,7 +62,7 @@ namespace LibVLCSharp.Tests
         {
             var rendererDiscoverer = new RendererDiscoverer(_libVLC, _libVLC.RendererList.LastOrDefault().Name);
             rendererDiscoverer.Dispose();
-            Assert.AreEqual(IntPtr.Zero, rendererDiscoverer.NativeReference);
+            Assert.That(IntPtr.Zero == rendererDiscoverer.NativeReference);
         }
     }
 }

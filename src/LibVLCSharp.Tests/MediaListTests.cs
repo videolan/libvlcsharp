@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
 
@@ -18,13 +19,13 @@ namespace LibVLCSharp.Tests
             mediaList.ItemAdded += (sender, args) => itemAdded = true;
             mediaList.ItemDeleted += (sender, args) => itemDeleted = true;
             mediaList.AddMedia(media);
-            Assert.AreEqual(media, mediaList[0]);
-            Assert.AreEqual(1, mediaList.Count);
-            Assert.True(itemAdded);
-            Assert.Zero(mediaList.IndexOf(media));
+            Assert.That(media.NativeReference == mediaList.First().NativeReference);
+            Assert.That(1 == mediaList.Count);
+            Assert.That(itemAdded);
+            Assert.That(mediaList.IndexOf(media), Is.Zero);
             mediaList.RemoveIndex(0);
-            Assert.Zero(mediaList.Count);
-            Assert.True(itemDeleted);
+            Assert.That(mediaList.Count, Is.Zero);
+            Assert.That(itemDeleted);
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace LibVLCSharp.Tests
         {
             var mediaList = new MediaList(_libVLC);
             mediaList.Dispose();
-            Assert.AreEqual(IntPtr.Zero, mediaList.NativeReference);
+            Assert.That(IntPtr.Zero == mediaList.NativeReference);
         }
     }
 }

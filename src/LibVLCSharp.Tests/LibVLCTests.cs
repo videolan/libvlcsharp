@@ -15,7 +15,7 @@ namespace LibVLCSharp.Tests
         public void DisposeInstanceNativeRelease()
         {
             _libVLC.Dispose();
-            Assert.AreEqual(IntPtr.Zero, _libVLC.NativeReference);
+            Assert.That(IntPtr.Zero == _libVLC.NativeReference);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void EqualityTests()
         {
-            Assert.AreNotSame(new LibVLC("--no-audio"), new LibVLC("--no-audio"));
+            Assert.That(new LibVLC("--no-audio"), Is.Not.SameAs(new LibVLC("--no-audio")));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace LibVLCSharp.Tests
             _libVLC.SetLogFile(path);
             _libVLC.CloseLogFile();
             var logs = File.ReadAllText(path);
-            Assert.True(logs.StartsWith("VLC media player"));
+            Assert.That(logs.StartsWith("VLC media player"));
         }
 
         [Test]
@@ -111,24 +111,24 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            Assert.IsTrue(_libVLC.DialogHandlersSet);
+            Assert.That(_libVLC.DialogHandlersSet, Is.True);
 
             _libVLC.Dispose();
 
-            Assert.AreEqual(IntPtr.Zero, _libVLC.NativeReference);
-            Assert.IsFalse(_libVLC.DialogHandlersSet);
+            Assert.That(IntPtr.Zero == _libVLC.NativeReference);
+            Assert.That(_libVLC.DialogHandlersSet, Is.False);
         }
 
         [Test]
         public void LibVLCVersion()
         {
-            Assert.True(_libVLC.Version.StartsWith("3"));
+            Assert.That(_libVLC.Version.StartsWith("3"));
         }
 
         [Test]
         public void LibVLCChangeset()
         {
-            Assert.IsNotNull(_libVLC.Changeset);
+            Assert.That(_libVLC.Changeset, Is.Not.Null);
         }
     }
 }

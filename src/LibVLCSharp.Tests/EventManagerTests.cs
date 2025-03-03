@@ -17,14 +17,14 @@ namespace LibVLCSharp.Tests
             const MetadataType description = MetadataType.Description;
             media.MetaChanged += (sender, args) =>
             {
-                Assert.AreEqual(description, args.MetadataType);
+                Assert.That(description == args.MetadataType);
                 eventHandlerCalled = true;
             };
             media.SetMeta(MetadataType.Description, "test");
-            Assert.True(eventHandlerCalled);
+            Assert.That(eventHandlerCalled);
         }
         
-        public void DurationChanged()
+        public async void DurationChanged()
         {
             var media = new Media(_libVLC, RealMp3Path);
             var called = false;
@@ -36,10 +36,10 @@ namespace LibVLCSharp.Tests
                 duration = args.Duration;
             };
 
-            media.Parse();
+            await media.Parse();
 
-            Assert.True(called);
-            Assert.NotZero(duration);
+            Assert.That(called);
+            Assert.That(duration, Is.Not.Zero);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace LibVLCSharp.Tests
 
             media.Dispose();
 
-            Assert.True(eventCalled);
+            Assert.That(eventCalled);
         }
 
         [Test]
@@ -76,8 +76,8 @@ namespace LibVLCSharp.Tests
             var mp = new MediaPlayer(media);
             mp.Play();
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
-            Assert.True(openingCalled);
+            Assert.That(tcs.Task.Result);
+            Assert.That(openingCalled);
         }
     }
 }

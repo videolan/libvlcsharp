@@ -15,10 +15,10 @@ namespace LibVLCSharp.Tests
         {
             var mds = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(_libVLC, mds.First().Name!);
-            Assert.True(md.Start());
-            Assert.True(md.IsRunning);
+            Assert.That(md.Start());
+            Assert.That(md.IsRunning);
             md.Stop();
-            Assert.False(md.IsRunning);
+            Assert.That(md.IsRunning, Is.False);
         }
 
         [Test]
@@ -26,18 +26,18 @@ namespace LibVLCSharp.Tests
         {
             var mds = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(_libVLC, mds.First().Name!);
-            Assert.True(md.Start());
-            Assert.True(md.IsRunning);
-            Assert.NotNull(md.MediaList);
+            Assert.That(md.Start());
+            Assert.That(md.IsRunning);
+            Assert.That(md.MediaList, Is.Not.Null);
             await Task.Delay(1000);
             foreach(var media in md.MediaList!)
             {
                 Debug.WriteLine(media.Mrl);
             }
             md.Dispose();
-            Assert.IsNull(md.MediaList);
-            Assert.False(md.IsRunning);
-            Assert.AreEqual(IntPtr.Zero, md.NativeReference);
+            Assert.That(md.MediaList, Is.Null);
+            Assert.That(md.IsRunning, Is.False);
+            Assert.That(IntPtr.Zero == md.NativeReference);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace LibVLCSharp.Tests
         {
             var equalizer = new Equalizer();
             equalizer.SetAmp(-1, 1);
-            Assert.AreEqual(-1, equalizer.Amp(1));
+            Assert.That(-1 == equalizer.Amp(1));
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace LibVLCSharp.Tests
             var equalizer = new Equalizer();
             equalizer.SetAmp(-1, 1);
             equalizer.Dispose();
-            Assert.AreEqual(IntPtr.Zero, equalizer.NativeReference);
+            Assert.That(IntPtr.Zero == equalizer.NativeReference);
         }
     }
 }

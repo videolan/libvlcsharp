@@ -38,7 +38,7 @@ namespace LibVLCSharp.Tests
             mp.Play();
 
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            Assert.That(tcs.Task.Result);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace LibVLCSharp.Tests
             mp.Play();
 
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            Assert.That(tcs.Task.Result);
         }
 
         [Test]
@@ -80,9 +80,9 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, username, store, token) =>
                 {
                     var result = dialog.Dismiss();
-                    Assert.IsTrue(result);
+                    Assert.That(result, Is.True);
                     result = dialog.Dismiss();
-                    Assert.IsFalse(result);
+                    Assert.That(result, Is.False);
                     tcs.TrySetResult(true);
                     return Task.CompletedTask;
                 },
@@ -98,7 +98,7 @@ namespace LibVLCSharp.Tests
             mp.Play();
 
             await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            Assert.That(tcs.Task.Result);
         }
 
         [Test]
@@ -110,11 +110,11 @@ namespace LibVLCSharp.Tests
                 (dialog, title, text, indeterminate, position, cancelText, token) => Task.CompletedTask,
                 (dialog, position, text) => Task.CompletedTask);
 
-            Assert.True(_libVLC.DialogHandlersSet);
+            Assert.That(_libVLC.DialogHandlersSet);
 
             _libVLC.Dispose();
 
-            Assert.False(_libVLC.DialogHandlersSet);
+            Assert.That(_libVLC.DialogHandlersSet, Is.False);
         }
     }
 }
