@@ -479,7 +479,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             { 
                 EnterCriticalSection(sl);
 
-                if (report_size_change != null && report_opaque != IntPtr.Zero)
+                if (report_size_change != null && report_opaque != IntPtr.Zero && width != 0)
                 {
                     reportSize = report_size_change;
                     reportOpaque = report_opaque;

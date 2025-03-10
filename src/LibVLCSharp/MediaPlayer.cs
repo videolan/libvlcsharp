@@ -3393,7 +3393,10 @@ namespace LibVLCSharp
             if (disposing)
             {
                 if (_gcHandle.IsAllocated)
+                {
+                    _outputCleanup?.Invoke(_videoUserData);
                     _gcHandle.Free();
+                }
             }
 
             base.Dispose(disposing);
