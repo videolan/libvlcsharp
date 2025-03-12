@@ -46,7 +46,6 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
         static ID3D11Texture2D* _texture;
         static ID3D11ShaderResourceView* _textureShaderInput;
 
-        /* our vertex/pixel shader */
         static ID3D11VertexShader* pVS;
         static ID3D11PixelShader* pPS;
         static ID3D11InputLayout* pShadersInputLayout;
@@ -74,6 +73,9 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
         static uint width, height;
 
+        static ID3DBlob* VS;
+        static ID3DBlob* PS;
+
         static void ThrowIfFailed(HRESULT hr)
         {
             if (FAILED(hr))
@@ -85,12 +87,10 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
         static void Main()
         {
             CreateWindow();
-
             InitializeDirect3D();
-
             InitializeLibVLC();
-
             Application.Run();
+            Cleanup();
         }
 
         static void CreateWindow()
@@ -110,6 +110,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             libvlc?.Dispose();
             libvlc = null;
 
+            Cleanup();
             Environment.Exit(0);
         }
 
@@ -121,13 +122,9 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             fixed (RTL_CRITICAL_SECTION* sl = &sizeLock)
             {
                 EnterCriticalSection(sl);
-
                 reportSize?.Invoke(reportOpaque, width, height);
-
                 LeaveCriticalSection(sl);
             }
-
-            reportSize?.Invoke(reportOpaque, width, height);
         }
 
         static void InitializeDirect3D()
@@ -140,10 +137,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
                     Height = HEIGHT,
                     Format = DXGI_FORMAT_R8G8B8A8_UNORM,
                 },
-                SampleDesc = new DXGI_SAMPLE_DESC
-                {
-                    Count = 1
-                },
+                SampleDesc = new DXGI_SAMPLE_DESC { Count = 1 },
                 BufferCount = 1,
                 Windowed = TRUE,
                 OutputWindow = form.Handle,
@@ -159,13 +153,13 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             fixed (IDXGISwapChain** swapchain = &_swapchain)
             fixed (ID3D11Device** device = &_d3dDevice)
             fixed (ID3D11DeviceContext** context = &_d3dctx)
-            { 
-                ThrowIfFailed(D3D11CreateDeviceAndSwapChain(null, 
-                        D3D_DRIVER_TYPE_HARDWARE, 
+            {
+                ThrowIfFailed(D3D11CreateDeviceAndSwapChain(null,
+                        D3D_DRIVER_TYPE_HARDWARE,
                         IntPtr.Zero,
-                        creationFlags, 
+                        creationFlags,
                         null,
-                        0, 
+                        0,
                         D3D11_SDK_VERSION,
                         &desc,
                         swapchain,
@@ -176,17 +170,15 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
             ID3D10Multithread* pMultithread;
             var iid = IID_ID3D10Multithread;
-
             ThrowIfFailed(_d3dDevice->QueryInterface(&iid, (void**)&pMultithread));
             pMultithread->SetMultithreadProtected(TRUE);
             pMultithread->Release();
 
-            var viewport = new D3D11_VIEWPORT 
+            var viewport = new D3D11_VIEWPORT
             {
                 Height = HEIGHT,
                 Width = WIDTH
             };
-
             _d3dctx->RSSetViewports(1, &viewport);
 
             fixed (ID3D11Device** device = &_d3deviceVLC)
@@ -195,139 +187,95 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
                 ThrowIfFailed(D3D11CreateDevice(null,
                       D3D_DRIVER_TYPE_HARDWARE,
                       IntPtr.Zero,
-                      creationFlags | (uint)D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_VIDEO_SUPPORT, /* needed for hardware decoding */
+                      creationFlags | (uint)D3D11_CREATE_DEVICE_FLAG.D3D11_CREATE_DEVICE_VIDEO_SUPPORT,
                       null, 0,
                       D3D11_SDK_VERSION,
                       device, null, context));
             }
 
             using ComPtr<ID3D11Resource> pBackBuffer = null;
-
             iid = IID_ID3D11Texture2D;
-            ThrowIfFailed(_swapchain->GetBuffer(0, &iid, (void**)pBackBuffer.GetAddressOf()));
+            fixed (IDXGISwapChain** swapchain = &_swapchain)
+                ThrowIfFailed((*swapchain)->GetBuffer(0, &iid, (void**)pBackBuffer.GetAddressOf()));
 
-            fixed (ID3D11RenderTargetView** swapchainRenderTarget = &_swapchainRenderTarget)
-                ThrowIfFailed(_d3dDevice->CreateRenderTargetView(pBackBuffer.Get(), null, swapchainRenderTarget));
+            fixed (ID3D11RenderTargetView** rtv = &_swapchainRenderTarget)
+                ThrowIfFailed(_d3dDevice->CreateRenderTargetView(pBackBuffer.Get(), null, rtv));
 
-            pBackBuffer.Dispose();
+            fixed (ID3D11RenderTargetView** rtv = &_swapchainRenderTarget)
+                _d3dctx->OMSetRenderTargets(1, rtv, null);
 
-            fixed (ID3D11RenderTargetView** swapchainRenderTarget = &_swapchainRenderTarget)
-                _d3dctx->OMSetRenderTargets(1, swapchainRenderTarget, null);
-
-            ID3DBlob* VS, PS, pErrBlob;
-            
-            using ComPtr<ID3DBlob> vertexShaderBlob = null;
-
+            ID3DBlob* pErrBlob;
             fixed (byte* shader = Encoding.ASCII.GetBytes(DefaultShaders.HLSL))
             fixed (byte* vshader = Encoding.ASCII.GetBytes("VShader"))
             fixed (byte* vs4 = Encoding.ASCII.GetBytes("vs_4_0"))
             fixed (byte* pshader = Encoding.ASCII.GetBytes("PShader"))
             fixed (byte* ps4 = Encoding.ASCII.GetBytes("ps_4_0"))
+            fixed (ID3DBlob** vsBlob = &VS)
+            fixed (ID3DBlob** psBlob = &PS)
             {
-                var result = D3DCompile(shader, (nuint)DefaultShaders.HLSL.Length, null, null, null, (sbyte*)vshader, (sbyte*)vs4, 0, 0, &VS, &pErrBlob);
+                var result = D3DCompile(shader, (nuint)DefaultShaders.HLSL.Length, null, null, null, (sbyte*)vshader, (sbyte*)vs4, 0, 0, vsBlob, &pErrBlob);
                 if (FAILED(result) && pErrBlob != null)
                 {
                     var errorMessage = Encoding.ASCII.GetString((byte*)pErrBlob->GetBufferPointer(), (int)pErrBlob->GetBufferSize());
                     Debug.WriteLine(errorMessage);
+                    pErrBlob->Release();
                     ThrowIfFailed(result);
                 }
+                else if (pErrBlob != null) pErrBlob->Release();
 
-                result = D3DCompile(shader, (nuint)DefaultShaders.HLSL.Length, null, null, null, (sbyte*)pshader, (sbyte*)ps4, 0, 0, &PS, &pErrBlob);
+                result = D3DCompile(shader, (nuint)DefaultShaders.HLSL.Length, null, null, null, (sbyte*)pshader, (sbyte*)ps4, 0, 0, psBlob, &pErrBlob);
                 if (FAILED(result) && pErrBlob != null)
                 {
                     var errorMessage = Encoding.ASCII.GetString((byte*)pErrBlob->GetBufferPointer(), (int)pErrBlob->GetBufferSize());
                     Debug.WriteLine(errorMessage);
+                    pErrBlob->Release();
                     ThrowIfFailed(result);
                 }
+                else if (pErrBlob != null) pErrBlob->Release();
             }
 
-            fixed (ID3D11VertexShader** vertexShader = &pVS)
-            fixed (ID3D11PixelShader** pixelShader = &pPS)
+            fixed (ID3D11VertexShader** vs = &pVS)
+            fixed (ID3D11PixelShader** ps = &pPS)
             {
-                ThrowIfFailed(_d3dDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), null, vertexShader));
-                ThrowIfFailed(_d3dDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), null, pixelShader));
+                ThrowIfFailed(_d3dDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), null, vs));
+                ThrowIfFailed(_d3dDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), null, ps));
             }
 
             fixed (byte* position = Encoding.ASCII.GetBytes("POSITION"))
             fixed (byte* textcoord = Encoding.ASCII.GetBytes("TEXCOORD"))
-            fixed (ID3D11InputLayout** shadersInputLayout = &pShadersInputLayout)
-            { 
+            fixed (ID3D11InputLayout** layout = &pShadersInputLayout)
+            {
                 var inputElementDescs = stackalloc D3D11_INPUT_ELEMENT_DESC[2];
+                inputElementDescs[0] = new D3D11_INPUT_ELEMENT_DESC
                 {
-                    inputElementDescs[0] = new D3D11_INPUT_ELEMENT_DESC
-                    {
-                        SemanticName = (sbyte*)position,
-                        SemanticIndex = 0,
-                        Format = DXGI_FORMAT_R32G32B32_FLOAT,
-                        InputSlot = 0,
-                        AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
-                        InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
-                        InstanceDataStepRate = 0
-                    };
-
-                    inputElementDescs[1] = new D3D11_INPUT_ELEMENT_DESC
-                    {
-                        SemanticName = (sbyte*)textcoord,
-                        SemanticIndex = 0,
-                        Format = DXGI_FORMAT_R32G32_FLOAT,
-                        InputSlot = 0,
-                        AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
-                        InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
-                        InstanceDataStepRate = 0
-                    };
-                }
-
-                ThrowIfFailed(_d3dDevice->CreateInputLayout(inputElementDescs, 2, VS->GetBufferPointer(), VS->GetBufferSize(), shadersInputLayout));
+                    SemanticName = (sbyte*)position,
+                    SemanticIndex = 0,
+                    Format = DXGI_FORMAT_R32G32B32_FLOAT,
+                    InputSlot = 0,
+                    AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
+                    InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
+                    InstanceDataStepRate = 0
+                };
+                inputElementDescs[1] = new D3D11_INPUT_ELEMENT_DESC
+                {
+                    SemanticName = (sbyte*)textcoord,
+                    SemanticIndex = 0,
+                    Format = DXGI_FORMAT_R32G32_FLOAT,
+                    InputSlot = 0,
+                    AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT,
+                    InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
+                    InstanceDataStepRate = 0
+                };
+                ThrowIfFailed(_d3dDevice->CreateInputLayout(inputElementDescs, 2, VS->GetBufferPointer(), VS->GetBufferSize(), layout));
             }
 
             var ourVerticles = new ShaderInput[4];
-
-            ourVerticles[0] = new ShaderInput
-            {
-                position = new Position
-                {
-                    x = BORDER_LEFT,
-                    y = BORDER_BOTTOM,
-                    z = 0.0f
-                },
-                texture = new Texture { x = 0.0f, y = 1.0f }
-            };
-
-            ourVerticles[1] = new ShaderInput
-            {
-                position = new Position
-                {
-                    x = BORDER_RIGHT,
-                    y = BORDER_BOTTOM,
-                    z = 0.0f
-                },
-                texture = new Texture { x = 1.0f, y = 1.0f }
-            };
-
-            ourVerticles[2] = new ShaderInput
-            {
-                position = new Position
-                {
-                    x = BORDER_RIGHT,
-                    y = BORDER_TOP,
-                    z = 0.0f
-                },
-                texture = new Texture { x = 1.0f, y = 0.0f }
-            };
-
-            ourVerticles[3] = new ShaderInput
-            {
-                position = new Position
-                {
-                    x = BORDER_LEFT,
-                    y = BORDER_TOP,
-                    z = 0.0f
-                },
-                texture = new Texture { x = 0.0f, y = 0.0f }
-            };
+            ourVerticles[0] = new ShaderInput { position = new Position { x = BORDER_LEFT, y = BORDER_BOTTOM, z = 0.0f }, texture = new Texture { x = 0.0f, y = 1.0f } };
+            ourVerticles[1] = new ShaderInput { position = new Position { x = BORDER_RIGHT, y = BORDER_BOTTOM, z = 0.0f }, texture = new Texture { x = 1.0f, y = 1.0f } };
+            ourVerticles[2] = new ShaderInput { position = new Position { x = BORDER_RIGHT, y = BORDER_TOP, z = 0.0f }, texture = new Texture { x = 1.0f, y = 0.0f } };
+            ourVerticles[3] = new ShaderInput { position = new Position { x = BORDER_LEFT, y = BORDER_TOP, z = 0.0f }, texture = new Texture { x = 0.0f, y = 0.0f } };
 
             var verticlesSize = (uint)sizeof(ShaderInput) * 4;
-
             var bd = new D3D11_BUFFER_DESC
             {
                 Usage = D3D11_USAGE_DYNAMIC,
@@ -335,27 +283,23 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
                 BindFlags = (uint)D3D11_BIND_VERTEX_BUFFER,
                 CPUAccessFlags = (uint)D3D11_CPU_ACCESS_WRITE
             };
-            
+
             pVertexBuffer = CreateBuffer(bd);
             vertexBufferStride = Marshal.SizeOf(ourVerticles[0]);
 
             D3D11_MAPPED_SUBRESOURCE ms;
-
             ID3D11Resource* res;
             iid = IID_ID3D11Resource;
-
             ThrowIfFailed(pVertexBuffer->QueryInterface(&iid, (void**)&res));
-
             ThrowIfFailed(_d3dctx->Map(res, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
             for (var i = 0; i < ourVerticles.Length; i++)
             {
                 Marshal.StructureToPtr(ourVerticles[i], (IntPtr)ms.pData + (i * vertexBufferStride), false);
             }
-            //Buffer.MemoryCopy(ms.pData, ourVerticles, verticlesSize, verticlesSize);
             _d3dctx->Unmap(res, 0);
+            res->Release();
 
             quadIndexCount = 6;
-
             var bufferDesc = new D3D11_BUFFER_DESC
             {
                 Usage = D3D11_USAGE_DYNAMIC,
@@ -365,9 +309,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             };
 
             pIndexBuffer = CreateBuffer(bufferDesc);
-
             ThrowIfFailed(pIndexBuffer->QueryInterface(&iid, (void**)&res));
-
             ThrowIfFailed(_d3dctx->Map(res, 0, D3D11_MAP_WRITE_DISCARD, 0, &ms));
             Marshal.WriteInt16((IntPtr)ms.pData, 0 * sizeof(ushort), 3);
             Marshal.WriteInt16((IntPtr)ms.pData, 1 * sizeof(ushort), 1);
@@ -375,19 +317,17 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             Marshal.WriteInt16((IntPtr)ms.pData, 3 * sizeof(ushort), 2);
             Marshal.WriteInt16((IntPtr)ms.pData, 4 * sizeof(ushort), 1);
             Marshal.WriteInt16((IntPtr)ms.pData, 5 * sizeof(ushort), 3);
-
             _d3dctx->Unmap(res, 0);
+            res->Release();
 
             _d3dctx->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             _d3dctx->IASetInputLayout(pShadersInputLayout);
             uint offset = 0;
-
-            var vv = (uint)vertexBufferStride;
-            fixed(ID3D11Buffer** buffer = &pVertexBuffer)
+            uint vv = (uint)vertexBufferStride;
+            fixed (ID3D11Buffer** buffer = &pVertexBuffer)
                 _d3dctx->IASetVertexBuffers(0, 1, buffer, &vv, &offset);
 
             _d3dctx->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
             _d3dctx->VSSetShader(pVS, null, 0);
             _d3dctx->PSSetShader(pPS, null, 0);
 
@@ -418,47 +358,54 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             libvlc.Log += (s, e) => Debug.WriteLine(e.FormattedLog);
 
             mediaplayer = new MediaPlayer(libvlc);
-
             using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
             mediaplayer.Media = media;
 
             mediaplayer.SetOutputCallbacks(VideoEngine.D3D11, OutputSetup, OutputCleanup, OutputSetResize, UpdateOuput, Swap, StartRendering, null, null, SelectPlane);
-
             mediaplayer.Play();
         }
 
         static ID3D11Buffer* CreateBuffer(D3D11_BUFFER_DESC bd)
         {
             ID3D11Buffer* buffer;
-
             ThrowIfFailed(_d3dDevice->CreateBuffer(&bd, null, &buffer));
-
             return buffer;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct ShaderInput
+        static void Cleanup()
         {
-            internal Position position;
-            internal Texture texture;
-        }
+            ReleaseTextures();
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct Position
-        {
-            internal float x;
-            internal float y;
-            internal float z;
-        }
+            // Release swap chain before device
+            if (_swapchain != null) { _swapchain->Release(); _swapchain = null; }
+            if (_swapchainRenderTarget != null) { _swapchainRenderTarget->Release(); _swapchainRenderTarget = null; }
 
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct Texture
-        {
-            internal float x;
-            internal float y;
-        }
+            // Release VLC context and device
+            if (_d3dctxVLC != null)
+            {
+                _d3dctxVLC->Release(); // Extra release for AddRef in OutputSetup
+                _d3dctxVLC->Release();
+                _d3dctxVLC = null;
+            }
+            if (_d3deviceVLC != null) { _d3deviceVLC->Release(); _d3deviceVLC = null; }
 
-        // libvlc
+            // Release main context and device
+            if (_d3dctx != null) { _d3dctx->Release(); _d3dctx = null; }
+            if (_d3dDevice != null) { _d3dDevice->Release(); _d3dDevice = null; }
+
+            // Release other resources
+            if (samplerState != null) { samplerState->Release(); samplerState = null; }
+            if (pVS != null) { pVS->Release(); pVS = null; }
+            if (pPS != null) { pPS->Release(); pPS = null; }
+            if (pShadersInputLayout != null) { pShadersInputLayout->Release(); pShadersInputLayout = null; }
+            if (pVertexBuffer != null) { pVertexBuffer->Release(); pVertexBuffer = null; }
+            if (pIndexBuffer != null) { pIndexBuffer->Release(); pIndexBuffer = null; }
+            if (VS != null) { VS->Release(); VS = null; }
+            if (PS != null) { PS->Release(); PS = null; }
+
+            fixed (RTL_CRITICAL_SECTION* sl = &sizeLock)
+                DeleteCriticalSection(sl);
+        }
 
         static bool OutputSetup(ref IntPtr opaque, SetupDeviceConfig* config, ref SetupDeviceInfo setup)
         {
@@ -469,23 +416,20 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
         static void OutputCleanup(IntPtr opaque)
         {
-            // here we can release all things Direct3D11 for good (if playing only one file)
-            _d3dctxVLC->Release();
+            Cleanup();
         }
 
         static void OutputSetResize(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque)
         {
             fixed (RTL_CRITICAL_SECTION* sl = &sizeLock)
-            { 
+            {
                 EnterCriticalSection(sl);
-
-                if (report_size_change != null && report_opaque != IntPtr.Zero)
+                if (report_size_change != null && report_opaque != IntPtr.Zero && width != 0)
                 {
                     reportSize = report_size_change;
                     reportOpaque = report_opaque;
                     reportSize?.Invoke(reportOpaque, width, height);
                 }
-
                 LeaveCriticalSection(sl);
             }
         }
@@ -495,7 +439,6 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             ReleaseTextures();
 
             var renderFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-
             var texDesc = new D3D11_TEXTURE2D_DESC
             {
                 MipLevels = 1,
@@ -515,17 +458,14 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
             IDXGIResource1* sharedResource = null;
             var iid = IID_IDXGIResource1;
-
-            _texture->QueryInterface(&iid, (void**)&sharedResource);
-
+            ThrowIfFailed(_texture->QueryInterface(&iid, (void**)&sharedResource));
             fixed (void* handle = &_sharedHandle)
                 ThrowIfFailed(sharedResource->CreateSharedHandle(null, DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE, null, (IntPtr*)handle));
             sharedResource->Release();
 
             ID3D11Device1* d3d11VLC1;
             iid = IID_ID3D11Device1;
-            _d3deviceVLC->QueryInterface(&iid, (void**)&d3d11VLC1);
-
+            ThrowIfFailed(_d3deviceVLC->QueryInterface(&iid, (void**)&d3d11VLC1));
             iid = IID_ID3D11Texture2D;
             fixed (ID3D11Texture2D** texture = &_textureVLC)
                 ThrowIfFailed(d3d11VLC1->OpenSharedResource1(_sharedHandle, &iid, (void**)texture));
@@ -536,18 +476,17 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
                 ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D,
                 Format = texDesc.Format
             };
-
             shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
             ID3D11Resource* res;
             iid = IID_ID3D11Resource;
-            _texture->QueryInterface(&iid, (void**)&res);
-            fixed (ID3D11ShaderResourceView** tsi = &_textureShaderInput)
+            ThrowIfFailed(_texture->QueryInterface(&iid, (void**)&res));
+            fixed (ID3D11ShaderResourceView** srv = &_textureShaderInput)
             {
-                ThrowIfFailed(_d3dDevice->CreateShaderResourceView(res, &shaderResourceViewDesc, tsi));
-                res->Release();
-                _d3dctx->PSSetShaderResources(0, 1, tsi);
+                ThrowIfFailed(_d3dDevice->CreateShaderResourceView(res, &shaderResourceViewDesc, srv));
+                _d3dctx->PSSetShaderResources(0, 1, srv);
             }
+            res->Release();
 
             var renderTargetViewDesc = new D3D11_RENDER_TARGET_VIEW_DESC
             {
@@ -556,14 +495,13 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             };
 
             iid = IID_ID3D11Resource;
-            _textureVLC->QueryInterface(&iid, (void**)&res);
-
-            fixed(ID3D11RenderTargetView** trt = &_textureRenderTarget)
+            ThrowIfFailed(_textureVLC->QueryInterface(&iid, (void**)&res));
+            fixed (ID3D11RenderTargetView** rtv = &_textureRenderTarget)
             {
-                ThrowIfFailed(_d3deviceVLC->CreateRenderTargetView(res, &renderTargetViewDesc, trt));
-                res->Release();
-                _d3dctxVLC->OMSetRenderTargets(1, trt, null);
+                ThrowIfFailed(_d3deviceVLC->CreateRenderTargetView(res, &renderTargetViewDesc, rtv));
+                _d3dctxVLC->OMSetRenderTargets(1, rtv, null);
             }
+            res->Release();
 
             output.Union.DxgiFormat = (int)renderFormat;
             output.FullRange = true;
@@ -577,70 +515,59 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
 
         static void ReleaseTextures()
         {
-            if (_sharedHandle != null)
-            {
-                CloseHandle(_sharedHandle);
-                _sharedHandle = null;
-            }
-            if(_textureVLC != null)
-            {
-                var count = _textureVLC->Release();
-                Debug.Assert(count == 0);
-                _textureVLC = null;
-            }
-            if(_textureShaderInput != null)
-            {
-                var count = _textureShaderInput->Release();
-                Debug.Assert(count == 0);
-                _textureShaderInput = null;
-            }
-            if(_textureRenderTarget != null)
-            {
-                var count = _textureRenderTarget->Release();
-                Debug.Assert(count == 0);
-                _textureRenderTarget = null;
-            }
-            if(_texture != null)
-            {
-                var count = _texture->Release();
-                Debug.Assert(count == 0);
-                _texture = null;
-            }
+            if (_sharedHandle != null) { CloseHandle(_sharedHandle); _sharedHandle = null; }
+            if (_textureVLC != null) { _textureVLC->Release(); _textureVLC = null; }
+            if (_textureShaderInput != null) { _textureShaderInput->Release(); _textureShaderInput = null; }
+            if (_textureRenderTarget != null) { _textureRenderTarget->Release(); _textureRenderTarget = null; }
+            if (_texture != null) { _texture->Release(); _texture = null; }
         }
 
         static void Swap(IntPtr opaque)
         {
-            _swapchain->Present(0, 0);
+            fixed (IDXGISwapChain** swapchain = &_swapchain)
+                (*swapchain)->Present(0, 0);
         }
 
         static bool StartRendering(IntPtr opaque, bool enter)
         {
-            if(enter)
+            if (enter)
             {
-                // DEBUG: draw greenish background to show where libvlc doesn't draw in the texture
-                // Normally you should Clear with a black background
                 var greenRGBA = new Vector4(0.5f, 0.5f, 0.0f, 1.0f);
-                //var blackRGBA = new Vector4(0, 0, 0, 1);
-
-                _d3dctxVLC->ClearRenderTargetView(_textureRenderTarget, (float*)&greenRGBA);
+                fixed (ID3D11RenderTargetView** rtv = &_textureRenderTarget)
+                    _d3dctxVLC->ClearRenderTargetView(*rtv, (float*)&greenRGBA);
             }
             else
             {
                 var orangeRGBA = new Vector4(1.0f, 0.5f, 0.0f, 1.0f);
-                _d3dctx->ClearRenderTargetView(_swapchainRenderTarget, (float*)&orangeRGBA);
-                // Render into the swapchain
-                // We start the drawing of the shared texture in our app as early as possible
-                // in hope it's done as soon as Swap_cb is called
+                fixed (ID3D11RenderTargetView** rtv = &_swapchainRenderTarget)
+                    _d3dctx->ClearRenderTargetView(*rtv, (float*)&orangeRGBA);
                 _d3dctx->DrawIndexed(quadIndexCount, 0, 0);
             }
             return true;
         }
 
-        static unsafe bool SelectPlane(IntPtr opaque, UIntPtr plane, void* output)
+        static bool SelectPlane(IntPtr opaque, UIntPtr plane, void* output)
         {
-            if ((ulong)plane != 0)
-                return false;
-            return true;
-        }        
+            return (ulong)plane == 0;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct ShaderInput
+        {
+            internal Position position;
+            internal Texture texture;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct Position
+        {
+            internal float x, y, z;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct Texture
+        {
+            internal float x, y;
+        }
     }
 }
