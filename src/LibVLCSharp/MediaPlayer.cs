@@ -565,7 +565,7 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_output_callbacks")]
             internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup,
-                OutputCleanup? outputCleanup, OutputSetResize? resize, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent,
+                OutputCleanup? outputCleanup, SetWindow? setWindow, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent,
                 GetProcAddress? getProcAddress, FrameMetadata? metadata, OutputSelectPlane? selectPlane, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -2128,7 +2128,7 @@ namespace LibVLCSharp
         /// <param name="engine">the GPU engine to use</param>
         /// <param name="outputSetup">callback called to initialize user data</param>
         /// <param name="outputCleanup">callback called to clean up user data</param>
-        /// <param name="resize">callback to set the resize callback</param>
+        /// <param name="setWindow">callback called to setup the window</param>
         /// <param name="updateOutput">callback to get the rendering format of the host (cannot be NULL)</param>
         /// <param name="swap">called after rendering a video frame (cannot be NULL)</param>
         /// <param name="makeCurrent">callback called to enter/leave the rendering context (cannot be NULL)</param>
@@ -2137,13 +2137,12 @@ namespace LibVLCSharp
         /// <param name="metadata">callback to provide frame metadata (D3D11 only)</param>
         /// <param name="selectPlane">callback to select different D3D11 rendering targets</param>
         /// <returns>true engine selected and callbacks set, or false if engine type unknown or that the callbacks are not set</returns>
-        public bool SetOutputCallbacks(VideoEngine engine, OutputSetup? outputSetup, OutputCleanup? outputCleanup, OutputSetResize? resize,
-            UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, GetProcAddress? getProcAddress, FrameMetadata? metadata,
+        public bool SetOutputCallbacks(VideoEngine engine, OutputSetup? outputSetup, OutputCleanup? outputCleanup, SetWindow? setWindow, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent, GetProcAddress? getProcAddress, FrameMetadata? metadata,
             OutputSelectPlane? selectPlane)
         {
             _outputSetup = outputSetup;
             _outputCleanup = outputCleanup;
-            _outputResize = resize;
+            _setWindow = setWindow;
             _updateOutput = updateOutput ?? throw new ArgumentNullException(nameof(updateOutput));
             _swap = swap ?? throw new ArgumentNullException(nameof(swap));
             _makeCurrent = makeCurrent ?? throw new ArgumentNullException(nameof(makeCurrent));
@@ -2156,7 +2155,7 @@ namespace LibVLCSharp
             return Native.LibVLCVideoSetOutputCallbacks(NativeReference, engine,
                 _outputSetup == null ? null : OutputSetupHandle,
                 _outputCleanup == null ? null : OutputCleanupHandle,
-                _outputResize == null ? null : OutputSetResizeHandle,
+                _setWindow == null ? null : SetWindowHandle,
                 UpdateOutputHandle,
                 SwapHandle,
                 MakeCurrentHandle,
@@ -2168,7 +2167,7 @@ namespace LibVLCSharp
 
         OutputSetup? _outputSetup;
         OutputCleanup? _outputCleanup;
-        OutputSetResize? _outputResize;
+        SetWindow? _setWindow;
         UpdateOutput? _updateOutput;
         Swap? _swap;
         MakeCurrent? _makeCurrent;
@@ -2383,7 +2382,7 @@ namespace LibVLCSharp
 
         static unsafe readonly OutputSetup OutputSetupHandle = OutputSetupCallback;
         static readonly OutputCleanup OutputCleanupHandle = OutputCleanupCallback;
-        static readonly OutputSetResize OutputSetResizeHandle = OutputSetResizeCallback;
+        static readonly SetWindow SetWindowHandle = SetWindowCallback;
         static unsafe readonly UpdateOutput UpdateOutputHandle = UpdateOutputCallback;
         static readonly Swap SwapHandle = SwapCallback;
         static readonly MakeCurrent MakeCurrentHandle = MakeCurrentCallback;
@@ -2412,13 +2411,13 @@ namespace LibVLCSharp
             }
         }
 
-        [MonoPInvokeCallback(typeof(OutputSetResize))]
-        private static void OutputSetResizeCallback(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque)
+        [MonoPInvokeCallback(typeof(SetWindow))]
+        private static void SetWindowCallback(IntPtr opaque, OutputResize report_size_change, MouseMove mouseMove, MousePress mousePress, MouseRelease mouseRelease, IntPtr report_opaque)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            if (mediaPlayer?._outputResize != null)
+            if (mediaPlayer?._setWindow != null)
             {
-                mediaPlayer._outputResize(mediaPlayer._videoUserData, report_size_change, report_opaque);
+                mediaPlayer._setWindow(mediaPlayer._videoUserData, report_size_change, mouseMove, mousePress, mouseRelease, report_opaque);
             }
         }
 
@@ -2887,31 +2886,87 @@ namespace LibVLCSharp
         public delegate void OutputCleanup(IntPtr opaque);
 
         /// <summary>
-        /// Set the callback to call when the host app resizes the rendering area.
+        /// Set the callback to call when the host app resizes the rendering area. This allows text rendering and aspect ratio to be handled properly when the host rendering size changes and to provide mouse.
+        /// It may be called before the <see cref="OutputSetup"/> callback.
         /// <para/>
-        /// This allows text rendering and aspect ratio to be handled properly when the host
-        /// rendering size changes.
-        /// <para/>
-        /// <para/>
-        /// version LibVLC 4.0.0 or later
+        /// Warning: These callbacks cannot be called concurrently, the caller is responsible for serialization.
         /// </summary>
-        /// <param name="opaque">opaque pointer</param>
-        /// <param name="report_size_change">callback which must be called when the host size changes.
-        /// <para/>The callback is valid until another call to Resize/>
-        /// is done. This may be called from any thread.</param>
-        /// <param name="report_opaque">private pointer to pass to the <see cref="ReportSizeChange"/> callback</param>
+        /// <param name="opaque"> private pointer set on the opaque parameter of <see cref="OutputSetup"/></param>
+        /// <param name="reportSizeChange">callback which must be called when the host size changes. The callback is valid until another call to <see cref="SetWindow"/> is done.This may be called from any thread.
+        /// </param>
+        /// <param name="mouseMove">callback which must be called when the mouse position change on the video surface. The coordinates are relative to the size reported through the <see cref="OutputResize"/>. This may be called from any thread.
+        /// </param>
+        /// <param name="mousePress">callback which must be called when a mouse button is pressed on the video surface. The position of the event is the last position reported by the <see cref="MouseMove"/> callback. This may be called from any thread.
+        /// </param>
+        /// <param name="mouseRelease">callback which must be called when a mouse button is released on the video surface. The position of the event is the last position reported by the report_mouse_move callback. This may be called from any thread.
+        /// </param>
+        /// <param name="reportOpaque">private pointer to pass to the <see cref="OutputResize"/> callback.</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void OutputSetResize(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque);
+        public delegate void SetWindow(IntPtr opaque, OutputResize reportSizeChange, MouseMove mouseMove, MousePress mousePress, MouseRelease mouseRelease, IntPtr reportOpaque);
 
         /// <summary>
-        /// Callback which must be called when the host size changes. Set with <see cref="OutputSetResize"/>
+        /// Callback type that can be called to notify the mouse position when hovering the render surface.
+        /// libvlc will provide a callback of this type when calling <see cref="SetWindow"/>
+        /// <para/>
+        /// The position (0,0) denotes the top left corner, bottom right corner position is (width,height) as reported by <see cref="OutputResize"/>
+        /// </summary>
+        /// <param name="opaque">parameter passed to <see cref="SetWindow"/></param>
+        /// <param name="x">horizontal mouse position in <see cref="OutputResize"/></param>
+        /// <param name="y">vertical mouse position in <see cref="OutputResize"/></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void MouseMove(IntPtr opaque, int x, int y);
+
+        /// <summary>
+        /// Callback type that can be called to notify when a mouse button is pressed in the rendering surface.
+        /// libvlc will provide a callback of this type when calling <see cref="SetWindow"/>.
+        /// The button event will be reported at the last position provided by <see cref="MouseMove"/>
+        /// </summary>
+        /// <param name="opaque">parameter passed to <see cref="SetWindow"/></param>
+        /// <param name="button">represent the button pressed, see <see cref="MouseButton"/> for available buttons.</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void MousePress(IntPtr opaque, MouseButton button);
+
+        /// <summary>
+        /// Callback type that can be called to notify when a mouse button is released in the rendering surface.
+        /// libvlc will provide a callback of this type when calling <see cref="SetWindow"/>.
+        /// The button event will be reported at the last position provided by <see cref="MouseMove"/>.
+        /// </summary>
+        /// <param name="opaque">parameter passed to <see cref="SetWindow"/></param>
+        /// <param name="button">represent the button released, see <see cref="MouseButton"/> for available buttons.</param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void MouseRelease(IntPtr opaque, MouseButton button);
+
+        /// <summary>
+        /// Enumeration of the different mouse buttons that can be reported for user interaction
+        /// can be passed to <see cref="MousePress"/> and <see cref="MouseRelease"/>
+        /// </summary>
+        public enum MouseButton
+        {
+            /// <summary>
+            /// Left button
+            /// </summary>
+            Left = 0,
+
+            /// <summary>
+            /// Middle button
+            /// </summary>
+            Middle = 1,
+
+            /// <summary>
+            /// Right button
+            /// </summary>
+            Right = 2
+        }
+
+        /// <summary>
+        /// Callback type that can be called to request a render size changes. libvlc will provide a callback of this type when calling <see cref="SetWindow"/>.
         /// <para/> LibVLC 4.0.0 or later
         /// </summary>
-        /// <param name="report_opaque">opaque pointer</param>
-        /// <param name="width">width</param>
-        /// <param name="height">height</param>
+        /// <param name="reportOpaque">opaque pointer passed to <see cref="SetWindow"/></param>
+        /// <param name="width">new rendering width requested</param>
+        /// <param name="height">new rendering height requested</param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void ReportSizeChange(IntPtr report_opaque, uint width, uint height);
+        public delegate void OutputResize(IntPtr reportOpaque, uint width, uint height);
 
         /// <summary>
         /// Update the rendering output setup. <para/>
@@ -2936,7 +2991,7 @@ namespace LibVLCSharp
         /// <para/> LibVLC 4.0.0 or later
         /// </summary>
         /// <param name="opaque">private pointer passed to the 
-        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, SetWindow?, 
         /// UpdateOutput, Swap,  MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void Swap(IntPtr opaque);
@@ -2961,7 +3016,7 @@ namespace LibVLCSharp
         /// <para/> LibVLC 4.0.0 or later
         /// </summary>
         /// <param name="opaque">private pointer passed to the 
-        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, SetWindow?, 
         /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
         /// <param name="enter">true to set the context as current, false to unset it</param>
         /// <returns>true on success</returns>
@@ -2973,7 +3028,7 @@ namespace LibVLCSharp
         /// <para/> LibVLC 4.0.0 or later
         /// </summary>
         /// <param name="opaque">private pointer passed to the 
-        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, SetWindow?, 
         /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
         /// <param name="functionName">name of the opengl function to load</param>
         /// <returns>a pointer to the named OpenGL function, null otherwise</returns>
@@ -2985,7 +3040,7 @@ namespace LibVLCSharp
         /// <para/> LibVLC 4.0.0 or later
         /// </summary>
         /// <param name="opaque">private pointer passed to the 
-        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, SetWindow?, 
         /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
         /// <param name="type">the type of frame metadata</param>
         /// <param name="metadata">the actual data, typed as one of <see cref="FrameMetadataType"/></param>
@@ -3009,7 +3064,7 @@ namespace LibVLCSharp
         /// This callback is called between <see cref="MakeCurrent"/> current/not-current calls.
         /// </summary>
         /// <param name="opaque">private pointer passed to the 
-        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, OutputSetResize?, 
+        /// <see cref="SetOutputCallbacks(VideoEngine, OutputSetup?, OutputCleanup?, SetWindow?, 
         /// UpdateOutput, Swap, MakeCurrent, GetProcAddress, FrameMetadata?, OutputSelectPlane?)"/></param>
         /// <param name="plane">number of the rendering plane to select</param>
         /// <param name="output">handle of the rendering output for the given plane</param>
