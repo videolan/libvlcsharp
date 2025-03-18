@@ -68,7 +68,10 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
         static LibVLC libvlc;
         static MediaPlayer mediaplayer;
 
-        static ReportSizeChange reportSize;
+        static OutputResize reportSize;
+        static MouseMove mouseMove;
+        static MousePress mousePress;
+        static MouseRelease mouseRelease;
         static IntPtr reportOpaque;
 
         static uint width, height;
@@ -361,7 +364,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
             mediaplayer.Media = media;
 
-            mediaplayer.SetOutputCallbacks(VideoEngine.D3D11, OutputSetup, OutputCleanup, OutputSetResize, UpdateOuput, Swap, StartRendering, null, null, SelectPlane);
+            mediaplayer.SetOutputCallbacks(VideoEngine.D3D11, OutputSetup, OutputCleanup, SetWindow, UpdateOuput, Swap, StartRendering, null, null, SelectPlane);
             mediaplayer.Play();
         }
 
@@ -419,18 +422,16 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             Cleanup();
         }
 
-        static void OutputSetResize(IntPtr opaque, ReportSizeChange report_size_change, IntPtr report_opaque)
+        static void SetWindow(IntPtr opaque, OutputResize reportSizeChange, MouseMove mousemove, MousePress mousepress, MouseRelease mouserelease, IntPtr reportopaque)
         {
             fixed (RTL_CRITICAL_SECTION* sl = &sizeLock)
             {
-                EnterCriticalSection(sl);
-                if (report_size_change != null && report_opaque != IntPtr.Zero && width != 0)
-                {
-                    reportSize = report_size_change;
-                    reportOpaque = report_opaque;
-                    reportSize?.Invoke(reportOpaque, width, height);
-                }
-                LeaveCriticalSection(sl);
+                reportOpaque = reportopaque;
+                reportSize = reportSizeChange;
+                mouseMove = mousemove;
+                mousePress = mousepress;
+                mouseRelease = mouserelease;
+                reportSize?.Invoke(reportOpaque, width, height);
             }
         }
 
