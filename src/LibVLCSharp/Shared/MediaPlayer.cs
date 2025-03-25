@@ -2403,13 +2403,13 @@ namespace LibVLCSharp.Shared
         /// <param name="disposing">release any unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if(disposing)
             {
                 if (_gcHandle.IsAllocated)
                     _gcHandle.Free();
             }
-
-            base.Dispose(disposing);
         }
     }
 
