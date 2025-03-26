@@ -2039,7 +2039,7 @@ namespace LibVLCSharp.Shared
         /// <param name="data">data pointer as passed to libvlc_audio_set_callbacks() [IN]</param>
         /// <param name="samples">pointer to a table of audio samples to play back [IN]</param>
         /// <param name="count">number of audio samples to play back</param>
-        /// <param name="pts">expected play time stamp (see libvlc_delay())</param>
+        /// <param name="pts">expected play time stamp (see <see cref="LibVLC.Delay(long)"/>)</param>
         /// <remarks>
         /// <para>The LibVLC media player decodes and post-processes the audio signal</para>
         /// <para>asynchronously (in an internal thread). Whenever audio samples are ready</para>
