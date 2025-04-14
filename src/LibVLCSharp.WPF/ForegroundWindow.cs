@@ -136,6 +136,12 @@ namespace LibVLCSharp.WPF
                 return;
             }
 
+            if (double.IsNaN(_bckgnd.ActualWidth) || double.IsNaN(_bckgnd.ActualHeight) ||
+                _bckgnd.ActualWidth == 0 || _bckgnd.ActualHeight == 0)
+            {
+                return;
+            }
+
             /*
              * Note that _bckgnd.ActualWidth and _bckgnd.ActualWidth are in local coordinates
              * and not in screen coordinates.
