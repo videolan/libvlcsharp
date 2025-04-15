@@ -1,3 +1,11 @@
+LibVLCSharp version 3.9.3
+=========================
+* Dependency: Update System.Memory
+* Build and docs improvements
+* Update Avalonia sample by @jpmikkers
+* Core: dispose native mediaplayer instance before freeing gcHandle
+* WPF: Make VideoView support zero window height
+
 LibVLCSharp version 3.9.2
 =========================
 * Avalonia: Fix memory leaks.
