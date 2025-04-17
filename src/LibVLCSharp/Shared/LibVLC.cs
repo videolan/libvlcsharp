@@ -776,6 +776,13 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public long Clock => Native.LibVLCClock();
 
+        /// <summary>
+        /// Return the delay (in microseconds) until a certain timestamp.
+        /// </summary>
+        /// <param name="pts">timestamp in microsecond</param>
+        /// <returns>negative if timestamp is in the past, positive if it is in the future</returns>
+        public long Delay(long pts) => pts - Clock;
+
         #region Exit
 
         static readonly InternalExitCallback ExitCallbackHandle = ExitCallback;
