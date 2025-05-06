@@ -166,15 +166,6 @@ namespace LibVLCSharp.Shared
             return this;
         }
 
-        /// <summary>
-        /// Adds a raw libvlc command-line option.
-        /// </summary>
-        /// <param name="rawOption">The full option string to add.</param>
-        public LibVLCOptionsBuilder AddRaw(string rawOption)
-        {
-            _options.Add(rawOption);
-            return this;
-        }
 
         /// <summary>
         /// Builds the final LibVLCOptions object including any platform-specific defaults.
