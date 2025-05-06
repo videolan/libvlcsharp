@@ -190,6 +190,39 @@ namespace LibVLCSharp.Shared
         }
 
         /// <summary>
+        /// Create and initialize a libvlc instance using a <see cref="LibVLCOptions"/> object.
+        /// This constructor allows for strongly-typed, flexible configuration of libvlc command-line parameters,
+        /// including platform-specific defaults, logging verbosity, resamplers, caching, and rendering settings.
+        /// LibVLC may create threads. Therefore, any thread-unsafe process
+        /// initialization must be performed before calling libvlc_new(). In particular:
+        /// <para>- setlocale() and textdomain(),</para>
+        /// <para>- setenv(), unsetenv(), and putenv(),</para>
+        /// <para>- On Microsoft Windows, SetErrorMode().</para>
+        /// On POSIX systems, certain signals must be handled properly (e.g., SIGCHLD must not be ignored).
+        /// <para/> This will throw a <see cref="VLCException"/> if the native libvlc libraries cannot be found or loaded.
+        /// <para/> It may also throw a <see cref="VLCException"/> if the LibVLC and LibVLCSharp major versions do not match.
+        /// See https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/docs/versioning.md for more info about the versioning strategy.
+        /// <example>
+        /// <code>
+        /// var options = new LibVLCOptionsBuilder()
+        ///     .EnableDebugLogs()
+        ///     .SetAudioResampler(\"soxr\")
+        ///     .Build();
+        ///
+        /// using var libvlc = new LibVLC(options);
+        /// </code>
+        /// </example>
+        /// </summary>
+        /// <param name="options">An instance of <see cref="LibVLCOptions"/> containing libvlc configuration parameters.</param>
+
+        public LibVLC(LibVLCOptions options)
+    : base(() => MarshalUtils.CreateWithOptions(options.Options, Native.LibVLCNew), Native.LibVLCRelease)
+        {
+            _gcHandle = GCHandle.Alloc(this);
+        }
+
+
+        /// <summary>
         /// Create and initialize a libvlc instance.
         /// This functions accept a list of &quot;command line&quot; arguments similar to the
         /// main(). These arguments affect the LibVLC instance default configuration.
@@ -239,10 +272,8 @@ namespace LibVLCSharp.Shared
         /// <param name="options">list of arguments, in the form "--option=value"</param>
         /// <returns>the libvlc instance or NULL in case of error</returns>
         public LibVLC(params string[] options)
-            : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options), Native.LibVLCNew), Native.LibVLCRelease)
-        {
-            _gcHandle = GCHandle.Alloc(this);
-        }
+            : this(new LibVLCOptionsBuilder().AddOptions(options).Build()) { }
+
 
         /// <summary>
         /// Create and initialize a libvlc instance.
@@ -286,31 +317,11 @@ namespace LibVLCSharp.Shared
         /// <param name="enableDebugLogs">enable verbose debug logs</param>
         /// <param name="options">list of arguments (should be NULL)</param>
         public LibVLC(bool enableDebugLogs, params string[] options)
-            : base(() => MarshalUtils.CreateWithOptions(PatchOptions(options, enableDebugLogs), Native.LibVLCNew), Native.LibVLCRelease)
-        {
-            _gcHandle = GCHandle.Alloc(this);
-        }
-
-        /// <summary>
-        /// Make dirty hacks to include necessary defaults on some platforms.
-        /// </summary>
-        /// <param name="options">The options given by the user</param>
-        /// <param name="enableDebugLogs">enable debug logs</param>
-        /// <returns>The patched options</returns>
-        static string[] PatchOptions(string[] options, bool enableDebugLogs = false)
-        {
-            if(enableDebugLogs)
-            {
-                options = options.Concat(new[] { "--verbose=2" }).ToArray();
-            }
-#if UWP
-            return options.Concat(new[] {"--aout=winstore", "--audio-resampler=speex_resampler"}).ToArray();
-#elif ANDROID
-            return options.Concat(new[] {"--audio-resampler=soxr"}).ToArray();
-#else
-            return options;
-#endif
-        }
+            : this(new LibVLCOptionsBuilder()
+                        .AddOptions(options)
+                        .EnableDebugLogs()
+                        .Build())
+        { }
 
         /// <summary>
         /// Dispose of this libvlc instance
