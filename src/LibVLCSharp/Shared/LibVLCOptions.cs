@@ -206,12 +206,12 @@ namespace LibVLCSharp.Shared
         /// <param name="options">The options to include.</param>
         public LibVLCOptions(IEnumerable<string>? options)
         {
-            Options = options?.ToArray() ?? Array.Empty<string>();
+            Options = options?.ToArray() ?? new string[0];
         }
 
         /// <summary>
         /// Gets an empty LibVLCOptions instance.
         /// </summary>
-        public static LibVLCOptions Empty => new LibVLCOptions(Array.Empty<string>());
+        public static LibVLCOptions Empty => new LibVLCOptions(new string[0]);
     }
 }
