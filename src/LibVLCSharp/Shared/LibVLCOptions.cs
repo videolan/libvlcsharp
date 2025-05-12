@@ -7,6 +7,8 @@ namespace LibVLCSharp.Shared
     /// <summary>
     /// Fluent builder for constructing LibVLC options.
     /// Mirrors many common libvlc command line parameters.
+    /// See https://wiki.videolan.org/VLC_command-line_help for more details about available parameters.
+    /// OPTIONS ARE PROVIDED AS-IS, WITHOUT ANY GUARANTEE OF FORWARD/BACKWARD COMPATIBILITY.
     /// </summary>
     public class LibVLCOptionsBuilder
     {
@@ -172,7 +174,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         public LibVLCOptions Build()
         {
-            var finalOptions = _options.ToList();
+            var finalOptions = _options;
 
             if (_includeDebugLogs)
                 finalOptions.Add("--verbose=2");

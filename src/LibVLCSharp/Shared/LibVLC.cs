@@ -206,7 +206,7 @@ namespace LibVLCSharp.Shared
         /// <code>
         /// var options = new LibVLCOptionsBuilder()
         ///     .EnableDebugLogs()
-        ///     .SetAudioResampler(\"soxr\")
+        ///     .SetAudioResampler("soxr")
         ///     .Build();
         ///
         /// using var libvlc = new LibVLC(options);
@@ -216,11 +216,10 @@ namespace LibVLCSharp.Shared
         /// <param name="options">An instance of <see cref="LibVLCOptions"/> containing libvlc configuration parameters.</param>
 
         public LibVLC(LibVLCOptions options)
-    : base(() => MarshalUtils.CreateWithOptions(options.Options, Native.LibVLCNew), Native.LibVLCRelease)
+        : base(() => MarshalUtils.CreateWithOptions(options.Options, Native.LibVLCNew), Native.LibVLCRelease)
         {
             _gcHandle = GCHandle.Alloc(this);
         }
-
 
         /// <summary>
         /// Create and initialize a libvlc instance.
