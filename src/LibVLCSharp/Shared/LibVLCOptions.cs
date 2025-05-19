@@ -210,10 +210,5 @@ namespace LibVLCSharp.Shared
         {
             Options = options?.ToArray() ?? new string[0];
         }
-
-        /// <summary>
-        /// Gets an empty LibVLCOptions instance.
-        /// </summary>
-        public static LibVLCOptions Empty => new LibVLCOptions(new string[0]);
     }
 }
