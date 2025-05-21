@@ -43,11 +43,6 @@ stages:
         vmImage: 'windows-latest'
       steps:
         - template: base-template.yml
-        - task: UseDotNet@2
-          displayName: 'Use .NET Core SDK 3.1.405'
-          inputs:
-            packageType: sdk
-            version: 3.1.405
         - task: DotNetCoreCLI@2
           displayName: 'Test'
           inputs:
