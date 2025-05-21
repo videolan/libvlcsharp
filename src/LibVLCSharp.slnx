@@ -1,0 +1,517 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Ad-Hoc" />
+    <BuildType Name="AppStore" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
+    <Platform Name="iPhone" />
+    <Platform Name="iPhoneSimulator" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Samples/">
+    <Project Path="../samples/LibVLCSharp.Android.Sample/LibVLCSharp.Android.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+      <Deploy />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.Avalonia.Sample/LibVLCSharp.Avalonia.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+      <BuildType Solution="AppStore|ARM" Project="Release" />
+      <BuildType Solution="AppStore|ARM64" Project="Release" />
+      <BuildType Solution="AppStore|iPhone" Project="Debug" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.Eto.Sample/LibVLCSharp.Eto.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.FSharp.Sample/LibVLCSharp.FSharp.Sample.fsproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+      <BuildType Solution="AppStore|ARM" Project="Release" />
+      <BuildType Solution="AppStore|ARM64" Project="Release" />
+      <BuildType Solution="AppStore|iPhone" Project="Debug" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.GTK.Sample/LibVLCSharp.GTK.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+      <BuildType Solution="AppStore|ARM" Project="Release" />
+      <BuildType Solution="AppStore|ARM64" Project="Release" />
+      <BuildType Solution="AppStore|iPhone" Project="Debug" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.iOS.Sample/LibVLCSharp.iOS.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+      <Platform Solution="*|Any CPU" Project="iPhone" />
+      <Platform Solution="*|ARM" Project="iPhoneSimulator" />
+      <Platform Solution="*|ARM64" Project="iPhoneSimulator" />
+      <Platform Solution="*|iPhone" Project="iPhone" />
+      <Platform Solution="*|iPhoneSimulator" Project="iPhoneSimulator" />
+      <Platform Solution="*|x64" Project="iPhone" />
+      <Platform Solution="*|x86" Project="iPhone" />
+      <Build Solution="Debug|Any CPU" Project="false" />
+      <Build Solution="Debug|ARM" Project="false" />
+      <Build Solution="Debug|ARM64" Project="false" />
+      <Build Solution="Debug|x64" Project="false" />
+      <Build Solution="Debug|x86" Project="false" />
+      <Build Solution="Release|Any CPU" Project="false" />
+      <Build Solution="Release|ARM" Project="false" />
+      <Build Solution="Release|ARM64" Project="false" />
+      <Build Solution="Release|x64" Project="false" />
+      <Build Solution="Release|x86" Project="false" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.MAUI.Sample/LibVLCSharp.MAUI.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+      <Deploy />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.NetCore.Sample/LibVLCSharp.NetCore.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.UWP.Sample/LibVLCSharp.UWP.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Release" />
+      <BuildType Solution="AppStore|*" Project="Release" />
+      <Platform Solution="*|ARM" Project="ARM" />
+      <Platform Solution="*|ARM64" Project="ARM64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Platform Solution="Ad-Hoc|Any CPU" Project="x64" />
+      <Platform Solution="Ad-Hoc|iPhone" Project="x64" />
+      <Platform Solution="Ad-Hoc|iPhoneSimulator" Project="x64" />
+      <Platform Solution="AppStore|Any CPU" Project="x64" />
+      <Platform Solution="AppStore|iPhone" Project="x64" />
+      <Platform Solution="AppStore|iPhoneSimulator" Project="x64" />
+      <Platform Solution="Debug|Any CPU" Project="x86" />
+      <Platform Solution="Debug|iPhone" Project="x86" />
+      <Platform Solution="Debug|iPhoneSimulator" Project="x86" />
+      <Platform Solution="Release|Any CPU" Project="x86" />
+      <Platform Solution="Release|iPhone" Project="x86" />
+      <Platform Solution="Release|iPhoneSimulator" Project="x86" />
+      <Build Solution="Debug|Any CPU" Project="false" />
+      <Build Solution="Debug|iPhone" Project="false" />
+      <Build Solution="Debug|iPhoneSimulator" Project="false" />
+      <Build Solution="Release|Any CPU" Project="false" />
+      <Build Solution="Release|iPhone" Project="false" />
+      <Build Solution="Release|iPhoneSimulator" Project="false" />
+      <Deploy Solution="*|ARM" />
+      <Deploy Solution="*|ARM64" />
+      <Deploy Solution="*|x64" />
+      <Deploy Solution="*|x86" />
+      <Deploy Solution="Ad-Hoc|Any CPU" />
+      <Deploy Solution="Ad-Hoc|iPhone" />
+      <Deploy Solution="Ad-Hoc|iPhoneSimulator" />
+      <Deploy Solution="AppStore|Any CPU" />
+      <Deploy Solution="AppStore|iPhone" />
+      <Deploy Solution="AppStore|iPhoneSimulator" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.Windows.Net40.Sample/LibVLCSharp.Windows.Net40.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.WinForms.Sample/LibVLCSharp.WinForms.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.WinUI.Sample/LibVLCSharp.WinUI.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+      <Platform Solution="*|ARM64" Project="arm64" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Platform Solution="Ad-Hoc|Any CPU" Project="x86" />
+      <Platform Solution="Ad-Hoc|ARM" Project="x86" />
+      <Platform Solution="Ad-Hoc|iPhone" Project="x86" />
+      <Platform Solution="Ad-Hoc|iPhoneSimulator" Project="x86" />
+      <Platform Solution="AppStore|Any CPU" Project="x86" />
+      <Platform Solution="AppStore|ARM" Project="x86" />
+      <Platform Solution="AppStore|iPhone" Project="x86" />
+      <Platform Solution="AppStore|iPhoneSimulator" Project="x86" />
+      <Platform Solution="Debug|Any CPU" Project="x64" />
+      <Platform Solution="Debug|ARM" Project="x64" />
+      <Platform Solution="Debug|iPhone" Project="x64" />
+      <Platform Solution="Debug|iPhoneSimulator" Project="x64" />
+      <Platform Solution="Release|Any CPU" Project="x64" />
+      <Platform Solution="Release|ARM" Project="x64" />
+      <Platform Solution="Release|iPhone" Project="x64" />
+      <Platform Solution="Release|iPhoneSimulator" Project="x64" />
+      <Deploy />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.WPF.Sample/LibVLCSharp.WPF.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Samples/Forms/">
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.Sample.GTK/LibVLCSharp.Forms.Sample.GTK.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+    </Project>
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.Sample.iOS/LibVLCSharp.Forms.Sample.iOS.csproj">
+      <Platform Solution="*|Any CPU" Project="iPhone" />
+      <Platform Solution="*|ARM" Project="iPhoneSimulator" />
+      <Platform Solution="*|ARM64" Project="iPhoneSimulator" />
+      <Platform Solution="*|iPhone" Project="iPhone" />
+      <Platform Solution="*|iPhoneSimulator" Project="iPhoneSimulator" />
+      <Platform Solution="*|x64" Project="iPhone" />
+      <Platform Solution="*|x86" Project="iPhone" />
+      <Build Solution="*|Any CPU" Project="false" />
+      <Build Solution="*|ARM" Project="false" />
+      <Build Solution="*|ARM64" Project="false" />
+      <Build Solution="*|x64" Project="false" />
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.Sample/LibVLCSharp.Forms.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+      <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+      <BuildType Solution="AppStore|ARM" Project="Release" />
+      <BuildType Solution="AppStore|ARM64" Project="Release" />
+      <BuildType Solution="AppStore|iPhone" Project="Debug" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+      <BuildType Solution="AppStore|x64" Project="Debug" />
+      <BuildType Solution="AppStore|x86" Project="Debug" />
+    </Project>
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.WPF.Sample/LibVLCSharp.Forms.Sample.WPF.csproj">
+      <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+      <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+      <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+      <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+      <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+      <BuildType Solution="AppStore|Any CPU" Project="Release" />
+      <BuildType Solution="AppStore|ARM" Project="Debug" />
+      <BuildType Solution="AppStore|ARM64" Project="Debug" />
+      <BuildType Solution="AppStore|iPhone" Project="Release" />
+      <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+      <BuildType Solution="AppStore|x64" Project="Release" />
+      <BuildType Solution="AppStore|x86" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Samples/Forms/MediaElement/">
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.MediaElement/LibVLCSharp.Forms.Sample.MediaElement.iOS/LibVLCSharp.Forms.Sample.MediaElement.iOS.csproj">
+      <Platform Solution="*|Any CPU" Project="iPhone" />
+      <Platform Solution="*|ARM" Project="iPhone" />
+      <Platform Solution="*|ARM64" Project="iPhone" />
+      <Platform Solution="*|iPhone" Project="iPhone" />
+      <Platform Solution="*|iPhoneSimulator" Project="iPhoneSimulator" />
+      <Platform Solution="*|x64" Project="iPhone" />
+      <Platform Solution="*|x86" Project="iPhone" />
+      <Build Solution="*|Any CPU" Project="false" />
+      <Build Solution="*|ARM" Project="false" />
+      <Build Solution="*|ARM64" Project="false" />
+      <Build Solution="*|x64" Project="false" />
+      <Build Solution="*|x86" Project="false" />
+    </Project>
+    <Project Path="../samples/Forms/LibVLCSharp.Forms.MediaElement/LibVLCSharp.Forms.Sample.MediaElement/LibVLCSharp.Forms.Sample.MediaElement.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Samples/MAUI/" />
+  <Folder Name="/Samples/MAUI/MediaElement/">
+    <Project Path="../samples/MAUI/LibVLCSharp.MAUI.Sample.MediaElement/LibVLCSharp.MAUI.Sample.MediaElement.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+      <Deploy />
+    </Project>
+  </Folder>
+  <Folder Name="/Samples/Uno/">
+    <Project Path="../samples/Uno/LibVLCSharp.Uno.WinUI.Sample/LibVLCSharp.Uno.WinUI.Sample.csproj">
+      <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+      <BuildType Solution="AppStore|*" Project="Debug" />
+      <Deploy Solution="Debug|x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="LibVLCSharp.Android.AWindow/LibVLCSharp.Android.AWindow.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Release" />
+    <BuildType Solution="AppStore|x86" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp.Android.AWindowModern/LibVLCSharp.Android.AWindowModern.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+    <BuildType Solution="AppStore|*" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.Avalonia/LibVLCSharp.Avalonia.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Release" />
+    <BuildType Solution="AppStore|*" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp.Eto/LibVLCSharp.Eto.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+    <BuildType Solution="AppStore|*" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.Forms.Platforms.GTK/LibVLCSharp.Forms.Platforms.GTK.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+    <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+    <BuildType Solution="AppStore|ARM" Project="Release" />
+    <BuildType Solution="AppStore|ARM64" Project="Release" />
+    <BuildType Solution="AppStore|iPhone" Project="Debug" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="AppStore|x64" Project="Debug" />
+    <BuildType Solution="AppStore|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.Forms.Platforms.WPF/LibVLCSharp.Forms.Platforms.WPF.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Release" />
+    <BuildType Solution="AppStore|x86" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp.Forms/LibVLCSharp.Forms.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+    <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+    <BuildType Solution="AppStore|ARM" Project="Release" />
+    <BuildType Solution="AppStore|ARM64" Project="Release" />
+    <BuildType Solution="AppStore|iPhone" Project="Debug" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="AppStore|x64" Project="Debug" />
+    <BuildType Solution="AppStore|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.GTK/LibVLCSharp.GTK.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+    <BuildType Solution="AppStore|Any CPU" Project="Debug" />
+    <BuildType Solution="AppStore|ARM" Project="Release" />
+    <BuildType Solution="AppStore|ARM64" Project="Release" />
+    <BuildType Solution="AppStore|iPhone" Project="Debug" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Debug" />
+    <BuildType Solution="AppStore|x64" Project="Debug" />
+    <BuildType Solution="AppStore|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.MAUI/LibVLCSharp.MAUI.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+    <BuildType Solution="AppStore|*" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.Tests/LibVLCSharp.Tests.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Debug" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Debug" />
+    <BuildType Solution="AppStore|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.Uno/LibVLCSharp.Uno.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+    <BuildType Solution="AppStore|*" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Release" />
+    <BuildType Solution="AppStore|x86" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp.WPF/LibVLCSharp.WPF.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Release" />
+    <BuildType Solution="AppStore|x86" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp/LibVLCSharp.csproj">
+    <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
+    <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|ARM64" Project="Debug" />
+    <BuildType Solution="Ad-Hoc|iPhone" Project="Release" />
+    <BuildType Solution="Ad-Hoc|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x64" Project="Release" />
+    <BuildType Solution="Ad-Hoc|x86" Project="Release" />
+    <BuildType Solution="AppStore|Any CPU" Project="Release" />
+    <BuildType Solution="AppStore|ARM" Project="Debug" />
+    <BuildType Solution="AppStore|ARM64" Project="Debug" />
+    <BuildType Solution="AppStore|iPhone" Project="Release" />
+    <BuildType Solution="AppStore|iPhoneSimulator" Project="Release" />
+    <BuildType Solution="AppStore|x64" Project="Release" />
+    <BuildType Solution="AppStore|x86" Project="Release" />
+  </Project>
+</Solution>
