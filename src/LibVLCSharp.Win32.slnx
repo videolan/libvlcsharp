@@ -1,0 +1,64 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Win32Debug" />
+    <BuildType Name="Win32Release" />
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Samples/">
+    <Project Path="../samples/LibVLCSharp.Avalonia.Sample/LibVLCSharp.Avalonia.Sample.csproj">
+      <BuildType Solution="Win32Debug|*" Project="Debug" />
+      <BuildType Solution="Win32Release|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.CustomRendering.Direct3D11/LibVLCSharp.CustomRendering.Direct3D11.csproj">
+      <BuildType Solution="Win32Debug|*" Project="Debug" />
+      <BuildType Solution="Win32Release|*" Project="Release" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.NetCore.Sample/LibVLCSharp.NetCore.Sample.csproj">
+      <BuildType Solution="Win32Debug|*" Project="Debug" />
+      <BuildType Solution="Win32Release|Any CPU" Project="Release" />
+      <Platform Solution="Debug|x64" Project="x64" />
+      <Platform Solution="Debug|x86" Project="x86" />
+      <Platform Solution="Win32Debug|x64" Project="x64" />
+      <Platform Solution="Win32Debug|x86" Project="x86" />
+      <Platform Solution="Win32Release|x64" Project="x64" />
+      <Platform Solution="Win32Release|x86" Project="x86" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.WinForms.Sample/LibVLCSharp.WinForms.Sample.csproj">
+      <BuildType Solution="Win32Debug|*" Project="Debug" />
+      <BuildType Solution="Win32Release|Any CPU" Project="Release" />
+      <Build Solution="Debug|*" Project="false" />
+      <Build Solution="Release|*" Project="false" />
+    </Project>
+    <Project Path="../samples/LibVLCSharp.WPF.Sample/LibVLCSharp.WPF.Sample.csproj">
+      <BuildType Solution="Win32Debug|*" Project="Debug" />
+      <BuildType Solution="Win32Release|Any CPU" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="LibVLCSharp.Avalonia/LibVLCSharp.Avalonia.csproj">
+    <BuildType Solution="Win32Debug|*" Project="Debug" />
+    <BuildType Solution="Win32Release|Any CPU" Project="Release" />
+  </Project>
+  <Project Path="LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj">
+    <BuildType Solution="Win32Debug|ARM" Project="Debug" />
+    <BuildType Solution="Win32Debug|ARM64" Project="Debug" />
+    <BuildType Solution="Win32Debug|x64" Project="Debug" />
+    <BuildType Solution="Win32Debug|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp.WPF/LibVLCSharp.WPF.csproj">
+    <BuildType Solution="Win32Debug|ARM" Project="Debug" />
+    <BuildType Solution="Win32Debug|ARM64" Project="Debug" />
+    <BuildType Solution="Win32Debug|x64" Project="Debug" />
+    <BuildType Solution="Win32Debug|x86" Project="Debug" />
+  </Project>
+  <Project Path="LibVLCSharp/LibVLCSharp.csproj" />
+</Solution>
