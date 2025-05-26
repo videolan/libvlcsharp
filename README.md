@@ -353,7 +353,7 @@ If you have any question or if you're not sure it's actually an issue, please vi
 If you would like VLC developers to provide you with:
 - custom development on LibVLC and/or LibVLCSharp, 
 - training and workshops,
-- [commercial licenses](https://videolabs.io/products/libvlcsharp),
+- [commercial licenses](https://videolabs.io/store/libvlcsharp),
 - support services,
 - consulting services,
 - other multimedia services.
@@ -366,7 +366,7 @@ Please read and follow the [VideoLAN CoC](https://wiki.videolan.org/Code_of_Cond
 
 ## Licenses
 
-LibVLCSharp is released under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)) and is also available under a [commercial license](https://videolabs.io/products/libvlcsharp).
+LibVLCSharp is released under the [LGPLv2.1](https://tldrlegal.com/license/gnu-lesser-general-public-license-v2.1-(lgpl-2.1)) and is also available under a [commercial license](https://videolabs.io/store/libvlcsharp).
 
 Note: the .NET4.0 LibVLCSharp build references a nuget package that may indicate its license as the .NET Library license but it's actually [opensource](https://github.com/Microsoft/referencesource/commit/6952d2c3923d30a4d88bf57120688b9532bbe1d8) under MIT.
 
