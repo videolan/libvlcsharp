@@ -348,6 +348,9 @@ namespace LibVLCSharp.Shared
         /// <returns>The patched options</returns>
         static string[] PatchOptions(string[] options, bool enableDebugLogs = false, bool useDefaultLibVLCOptions = true)
         {
+            if (options == null)
+                options = new string[0];
+
             if(enableDebugLogs)
             {
                 options = options.Concat(new[] { "--verbose=2" }).ToArray();
