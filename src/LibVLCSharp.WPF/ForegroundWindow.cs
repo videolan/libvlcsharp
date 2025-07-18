@@ -11,7 +11,8 @@ namespace LibVLCSharp.WPF
     internal class ForegroundWindow : Window
     {
         Window? _wndhost;
-        readonly FrameworkElement _bckgnd;
+        readonly FrameworkElement _videoHost;
+        readonly FrameworkElement _backgroundElement;
         readonly Point _zeroPoint = new Point(0, 0);
         private readonly Grid _grid = new Grid();
 
@@ -30,7 +31,7 @@ namespace LibVLCSharp.WPF
             }
         }
 
-        internal ForegroundWindow(FrameworkElement background)
+        internal ForegroundWindow(FrameworkElement videoHost, FrameworkElement? background)
         {
             Title = "LibVLCSharp.WPF";
             Height = 300;
@@ -42,23 +43,27 @@ namespace LibVLCSharp.WPF
             ShowInTaskbar = false;
             Content = _grid;
 
-            DataContext = background.DataContext;
+            DataContext = videoHost.DataContext;
 
-            _bckgnd = background;
-            _bckgnd.DataContextChanged += Background_DataContextChanged;
-            _bckgnd.Loaded += Background_Loaded;
-            _bckgnd.Unloaded += Background_Unloaded;
+            if (background == null)
+                background = videoHost;
+
+            _backgroundElement = background;
+            _videoHost = videoHost;
+            _videoHost.DataContextChanged += VideoHost_DataContextChanged;
+            _videoHost.Loaded += VideoHost_Loaded;
+            _videoHost.Unloaded += VideoHost_Unloaded;
         }
 
-        void Background_DataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
+        void VideoHost_DataContextChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             DataContext = e.NewValue;
         }
 
-        void Background_Unloaded(object? sender, RoutedEventArgs e)
+        void VideoHost_Unloaded(object? sender, RoutedEventArgs e)
         {
-            _bckgnd.SizeChanged -= Bckgnd_SizeChanged;
-            _bckgnd.LayoutUpdated -= Bckgnd_LayoutUpdated;
+            _backgroundElement.SizeChanged -= Bckgnd_SizeChanged;
+            _backgroundElement.LayoutUpdated -= Bckgnd_LayoutUpdated;
             if (_wndhost != null)
             {
                 _wndhost.Closing -= Wndhost_Closing;
@@ -68,14 +73,14 @@ namespace LibVLCSharp.WPF
             Hide();
         }
 
-        void Background_Loaded(object? sender, RoutedEventArgs e)
+        void VideoHost_Loaded(object? sender, RoutedEventArgs e)
         {
             if (_wndhost != null && IsVisible)
             {
                 return;
             }
 
-            _wndhost = GetWindow(_bckgnd);
+            _wndhost = GetWindow(_videoHost);
             Trace.Assert(_wndhost != null);
             if (_wndhost == null)
             {
@@ -86,8 +91,8 @@ namespace LibVLCSharp.WPF
 
             _wndhost.Closing += Wndhost_Closing;
             _wndhost.LocationChanged += Wndhost_LocationChanged;
-            _bckgnd.LayoutUpdated += Bckgnd_LayoutUpdated;
-            _bckgnd.SizeChanged += Bckgnd_SizeChanged;
+            _backgroundElement.LayoutUpdated += Bckgnd_LayoutUpdated;
+            _backgroundElement.SizeChanged += Bckgnd_SizeChanged;
 
             try
             {
@@ -131,13 +136,13 @@ namespace LibVLCSharp.WPF
                 return;
             }
 
-            if (PresentationSource.FromVisual(_bckgnd) == null)
+            if (PresentationSource.FromVisual(_backgroundElement) == null)
             {
                 return;
             }
 
-            if (double.IsNaN(_bckgnd.ActualWidth) || double.IsNaN(_bckgnd.ActualHeight) ||
-                _bckgnd.ActualWidth == 0 || _bckgnd.ActualHeight == 0)
+            if (double.IsNaN(_backgroundElement.ActualWidth) || double.IsNaN(_backgroundElement.ActualHeight) ||
+                _backgroundElement.ActualWidth == 0 || _backgroundElement.ActualHeight == 0)
             {
                 return;
             }
@@ -162,9 +167,9 @@ namespace LibVLCSharp.WPF
              * The video view itself natively supports scaling.
              */
 
-            var startLocationFromScreen = _bckgnd.PointToScreen(_zeroPoint);
+            var startLocationFromScreen = _backgroundElement.PointToScreen(_zeroPoint);
             var startLocationPoint = source.CompositionTarget.TransformFromDevice.Transform(startLocationFromScreen);
-            var endLocationFromScreen = _bckgnd.PointToScreen(new Point(_bckgnd.ActualWidth, _bckgnd.ActualHeight));
+            var endLocationFromScreen = _backgroundElement.PointToScreen(new Point(_backgroundElement.ActualWidth, _backgroundElement.ActualHeight));
             var endLocationPoint = source.CompositionTarget.TransformFromDevice.Transform(endLocationFromScreen);
 
             Left = Math.Min(startLocationPoint.X, endLocationPoint.X);
@@ -172,9 +177,9 @@ namespace LibVLCSharp.WPF
             Width = Math.Abs(endLocationPoint.X - startLocationPoint.X);
             Height = Math.Abs(endLocationPoint.Y - startLocationPoint.Y);
 
-            if (Math.Abs(Width - _bckgnd.ActualWidth) + Math.Abs(Height - _bckgnd.ActualHeight) > 0.5)
+            if (Math.Abs(Width - _backgroundElement.ActualWidth) + Math.Abs(Height - _backgroundElement.ActualHeight) > 0.5)
             {
-                ScaleWindowContent(Width / _bckgnd.ActualWidth, Height / _bckgnd.ActualHeight);
+                ScaleWindowContent(Width / _backgroundElement.ActualWidth, Height / _backgroundElement.ActualHeight);
             }
         }
 
@@ -208,9 +213,9 @@ namespace LibVLCSharp.WPF
 
             Close();
 
-            _bckgnd.DataContextChanged -= Background_DataContextChanged;
-            _bckgnd.Loaded -= Background_Loaded;
-            _bckgnd.Unloaded -= Background_Unloaded;
+            _videoHost.DataContextChanged -= VideoHost_DataContextChanged;
+            _videoHost.Loaded -= VideoHost_Loaded;
+            _videoHost.Unloaded -= VideoHost_Unloaded;
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

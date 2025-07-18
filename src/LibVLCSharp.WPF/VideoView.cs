@@ -57,6 +57,11 @@ namespace LibVLCSharp.WPF
         private ForegroundWindow? ForegroundWindow { get; set; }
         private bool IsUpdatingContent { get; set; }
         private UIElement? ViewContent { get; set; }
+        
+        /// <summary>
+        /// Background element for this VideoView
+        /// </summary>
+        public FrameworkElement? BackgroundElement { get; set; } = null;
 
         /// <summary>
         /// ForegroundWindow management and MediaPlayer setup.
@@ -78,7 +83,7 @@ namespace LibVLCSharp.WPF
 
             _videoHwndHost = controlHost;
 
-            ForegroundWindow = new ForegroundWindow(_videoHwndHost)
+            ForegroundWindow = new ForegroundWindow(_videoHwndHost, BackgroundElement)
             {
                 OverlayContent = ViewContent
             };
