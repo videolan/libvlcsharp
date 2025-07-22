@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LibVLCSharp.NetCore.Sample": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
