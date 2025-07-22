@@ -99,7 +99,7 @@
       <Project>{239A82A5-19A1-4382-8F9B-4A9705648017}</Project>
       <Name>LibVLCSharp.Android.AWindow</Name>
     </ProjectReference>
-    <PackageReference Include="VideoLAN.LibVLC.Android" Version="3.2.0" />
+    <PackageReference Include="VideoLAN.LibVLC.Android" Version="3.6.5" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

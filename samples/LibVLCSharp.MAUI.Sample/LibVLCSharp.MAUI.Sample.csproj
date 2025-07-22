@@ -59,10 +59,10 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-		<PackageReference Include="VideoLAN.LibVLC.Android" Version="3.5.3" />
+		<PackageReference Include="VideoLAN.LibVLC.Android" Version="3.6.5" />
 	</ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-		<PackageReference Include="VideoLAN.LibVLC.iOS" Version="3.3.18" />
+		<PackageReference Include="VideoLAN.LibVLC.iOS" Version="3.6.1" />
 	</ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
