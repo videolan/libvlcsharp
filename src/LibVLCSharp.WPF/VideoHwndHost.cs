@@ -15,7 +15,7 @@ namespace LibVLCSharp.WPF
         protected override HandleRef BuildWindowCore(HandleRef hwndParent)
         {
             var windowHandle = User32Wrapper.CreateWindowEx(User32Wrapper.ExtendedWindow32Styles.WS_EX_TRANSPARENT, "static", string.Empty,
-                                                       User32Wrapper.Window32Styles.WS_CHILD | User32Wrapper.Window32Styles.WS_VISIBLE, 
+                                                       User32Wrapper.Window32Styles.WS_CHILD | User32Wrapper.Window32Styles.WS_VISIBLE | User32Wrapper.Window32Styles.WS_CLIPCHILDREN, 
                                                        0, 0, 0, 0, 
                                                        hwndParent.Handle, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
             return new HandleRef(this, windowHandle);

@@ -36,7 +36,12 @@ namespace LibVLCSharp.WPF
             /// <summary>
             /// The window is initially visible.
             /// </summary>
-            WS_VISIBLE = 0x10000000
+            WS_VISIBLE = 0x10000000,
+
+            /// <summary>
+            /// Excludes the area occupied by child windows when drawing occurs within the parent window. This style is used when creating the parent window.
+            /// </summary>
+            WS_CLIPCHILDREN = 0x02000000
         }
 
 
