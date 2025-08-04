@@ -1,3 +1,11 @@
+LibVLCSharp version 3.9.4
+=========================
+* Build: Move to .NET 9 SDK
+* Build: Move to SLNX
+* LibVLC: allow disabling default libvlcsharp libvlc options
+* Samples: update libvlc refs
+* WPF: Add WS_CLIPCHILDREN window style to fix white window background by @Luzyvert
+
 LibVLCSharp version 3.9.3
 =========================
 * Dependency: Update System.Memory
