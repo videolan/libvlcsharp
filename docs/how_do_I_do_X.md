@@ -297,3 +297,7 @@ mediaPlayer.Size(0, ref videoWidth, ref videoHeight);
 
 Do pay attention to the orientation of the video. You can check it analyzing the video track of the media.
 If the orientation turns out to be "Bottom right", you might want to switch width/height values.
+
+# How do I put UI controls and buttons over my video view?
+
+You might be encountering the airspace issue, which is the result of a tradeoff between performance and ease of use, and the way GUI frameworks such as WPF are implemented. See [this](../src/LibVLCSharp.WPF/README.md) for more info.
