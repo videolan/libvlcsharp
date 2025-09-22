@@ -51,6 +51,7 @@ namespace LibVLCSharp
 
         internal Picture(IntPtr pictureReference) : base(() => pictureReference, Native.LibVLCPictureRelease)
         {
+            Native.LibVLCPictureRetain(pictureReference);
         }
 
         /// <summary>
