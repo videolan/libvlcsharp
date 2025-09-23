@@ -9,7 +9,6 @@ using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Platform;
 using Avalonia.VisualTree;
-using LibVLCSharp;
 
 namespace LibVLCSharp.Avalonia
 {
@@ -18,6 +17,12 @@ namespace LibVLCSharp.Avalonia
     /// </summary>
     public class VideoView : NativeControlHost
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
+
         private IPlatformHandle? _platformHandle = null;
         private MediaPlayer? _mediaPlayer = null;
         private Window? _floatingContent = null;
@@ -321,7 +326,28 @@ namespace LibVLCSharp.Avalonia
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
             _platformHandle = base.CreateNativeControlCore(parent);
+
+            if (_platformHandle.Handle != IntPtr.Zero && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                EnsureClipChildren(_platformHandle.Handle);
+            }
+
             return _platformHandle;
+        }
+
+        private void EnsureClipChildren(IntPtr hwnd)
+        {
+            const int GWL_STYLE = -16;
+            const uint WS_CLIPCHILDREN = 0x02000000;
+
+            var style = GetWindowLong(hwnd, GWL_STYLE);
+            var hasClipChildren = (style & WS_CLIPCHILDREN) != 0;
+
+            if (!hasClipChildren)
+            {
+                var newStyle = style | WS_CLIPCHILDREN;
+                SetWindowLong(hwnd, GWL_STYLE, newStyle);
+            }
         }
 
         /// <inheritdoc />
