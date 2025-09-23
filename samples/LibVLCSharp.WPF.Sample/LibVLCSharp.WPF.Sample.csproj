@@ -2,12 +2,12 @@
   <PropertyGroup>
     <Title>LibVLCSharp.WPF.Sample</Title>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net6.0-windows</TargetFrameworks>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>LibVLCSharp.WPF.Sample</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20240819" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20250923" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp.WPF\LibVLCSharp.WPF.csproj" />

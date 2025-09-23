@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>LibVLCSharp.WinForms.Sample</Title>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net45;netcoreapp3.1;net6.0-windows</TargetFrameworks>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>LibVLCSharp.WinForms.Sample</RootNamespace>
     <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
@@ -12,7 +12,7 @@
     <TargetFrameworks>netcoreapp3.1;net6.0-windows</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20240819" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20250923" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\LibVLCSharp.WinForms\LibVLCSharp.WinForms.csproj" />
