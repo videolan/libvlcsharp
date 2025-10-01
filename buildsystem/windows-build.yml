@@ -10,6 +10,142 @@ steps:
       $arguments = "/i `"$msiFile`" /quiet"
       Start-Process msiexec.exe -ArgumentList $arguments -Wait
 
+
+- task: PowerShell@2
+  displayName: 'Install UWP SDK 19041'
+  inputs:
+    targetType: 'inline'
+    script: |
+      function Get-InstalledWindowsSDKRoot {
+          $key = "HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots"
+          try {
+              $vals = Get-ItemProperty -Path $key -ErrorAction Stop
+              return $vals.KitsRoot10
+          }
+          catch {
+              return $null
+          }
+      }
+
+      function Is-SDKInstalled19041 {
+          $root = Get-InstalledWindowsSDKRoot
+          if (-not $root) {
+              return $false
+          }
+          $candidate = Join-Path $root "Include\10.0.19041.0"
+          return (Test-Path $candidate)
+      }
+
+      function Download-SDKInstaller {
+          param (
+              [string] $DestinationPath
+          )
+          # Microsoft fwlink for Windows 10 SDK, version 2004 (10.0.19041.685)
+          $uri = "https://go.microsoft.com/fwlink/?linkid=2120843"
+          Write-Host "Downloading Windows SDK 10.0.19041 from $uri..."
+          try {
+              Invoke-WebRequest -Uri $uri -OutFile $DestinationPath -UseBasicParsing
+              return $true
+          }
+          catch {
+              Write-Error "Download failed: $_"
+              return $false
+          }
+      }
+
+      function Install-SDK {
+          param (
+              [string] $InstallerPath
+          )
+          Write-Host "Installing Windows SDK 10.0.19041 silently..."
+          Write-Host "Running: $InstallerPath /features + /quiet /norestart"
+
+          # Try multiple installation approaches
+          $installArgs = @(
+              @("/features", "+", "/quiet", "/norestart"),
+              @("/quiet", "/norestart", "/features", "OptionId.WindowsDesktopSoftwareDevelopmentKit"),
+              @("/S", "/v/qn")
+          )
+
+          foreach ($args in $installArgs) {
+              Write-Host "Trying: $InstallerPath $($args -join ' ')"
+              try {
+                  $process = Start-Process -FilePath $InstallerPath -ArgumentList $args -Wait -PassThru -NoNewWindow
+                  Write-Host "Exit code: $($process.ExitCode)"
+
+                  if ($process.ExitCode -eq 0 -or $process.ExitCode -eq 3010) {
+                      Write-Host "SDK installed successfully." -ForegroundColor Green
+                      return
+                  } elseif ($process.ExitCode -eq 1001) {
+                      Write-Warning "Exit code 1001: Another installation in progress or installer conflict"
+                      continue
+                  } else {
+                      Write-Warning "Attempt failed with exit code: $($process.ExitCode)"
+                      continue
+                  }
+              } catch {
+                  Write-Warning "Attempt failed with exception: $($_.Exception.Message)"
+                  continue
+              }
+          }
+
+          # If all attempts failed, check if SDK got installed anyway
+          if (Is-SDKInstalled19041) {
+              Write-Host "SDK appears to be installed despite installation errors." -ForegroundColor Yellow
+              return
+          }
+
+          Write-Error "All SDK installation attempts failed"
+          exit 1
+      }
+
+      # Main execution
+      if (-not (Is-SDKInstalled19041)) {
+          $tempInstaller = Join-Path $env:TEMP "winsdk_19041_setup.exe"
+
+          if (-not (Download-SDKInstaller -DestinationPath $tempInstaller)) {
+              throw "Failed to download Windows SDK 19041 installer."
+          }
+
+          Install-SDK -InstallerPath $tempInstaller
+
+          # Clean up
+          Remove-Item -Path $tempInstaller -ErrorAction SilentlyContinue
+      }
+      else {
+          Write-Host "Windows SDK 10.0.19041 already installed."
+      }
+
+      # Verify SDK installation and set environment variables
+      Write-Host "Verifying SDK installation..."
+      $sdkRoot = Get-InstalledWindowsSDKRoot
+      if ($sdkRoot) {
+          Write-Host "Windows SDK Root: $sdkRoot"
+          $sdkIncludePath = Join-Path $sdkRoot "Include\10.0.19041.0"
+          $sdkLibPath = Join-Path $sdkRoot "Lib\10.0.19041.0"
+
+          if (Test-Path $sdkIncludePath) {
+              Write-Host "SDK Include path exists: $sdkIncludePath"
+              $dirs = Get-ChildItem -Path $sdkIncludePath -Directory | Select-Object -ExpandProperty Name
+              Write-Host "Available SDK components: $($dirs -join ', ')"
+          } else {
+              Write-Error "SDK Include path not found: $sdkIncludePath"
+          }
+
+          if (Test-Path $sdkLibPath) {
+              Write-Host "SDK Lib path exists: $sdkLibPath"
+          } else {
+              Write-Error "SDK Lib path not found: $sdkLibPath"
+          }
+
+          # Set environment variables for this agent session
+          Write-Host "##vso[task.setvariable variable=WindowsSdkDir]$sdkRoot"
+          Write-Host "##vso[task.setvariable variable=WindowsSDKVersion]10.0.19041.0\"
+      } else {
+          Write-Error "Could not find Windows SDK installation root"
+          exit 1
+      }
+
 - task: JavaToolInstaller@0
   displayName: 'Setup Java 17'
   inputs:
