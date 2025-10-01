@@ -17,14 +17,66 @@ steps:
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
 
-- task: CmdLine@2
+- task: PowerShell@2
+  displayName: 'Install Android SDK Platforms'
   inputs:
+    targetType: 'inline'
     script: |
-      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" "platforms;android-27"
-      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" --licenses
-      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" "platforms;android-28"
-      echo y | "%ANDROID_HOME%\cmdline-tools\latest\bin\sdkmanager" --licenses
-  displayName: 'Install Android SDK'
+      Write-Host "ANDROID_HOME: $env:ANDROID_HOME"
+      Write-Host "ANDROID_SDK_ROOT: $env:ANDROID_SDK_ROOT"
+
+      # Find sdkmanager
+      $sdkManagerPaths = @(
+        "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat",
+        "$env:ANDROID_HOME\tools\bin\sdkmanager.bat",
+        "$env:ANDROID_SDK_ROOT\cmdline-tools\latest\bin\sdkmanager.bat",
+        "$env:ANDROID_SDK_ROOT\tools\bin\sdkmanager.bat"
+      )
+
+      $sdkManager = $null
+      foreach ($path in $sdkManagerPaths) {
+        if (Test-Path $path) {
+          $sdkManager = $path
+          Write-Host "Found sdkmanager at: $path"
+          break
+        }
+      }
+
+      if (-not $sdkManager) {
+        Write-Error "Could not find sdkmanager at any expected location"
+        Write-Host "Checked paths: $($sdkManagerPaths -join ', ')"
+        exit 1
+      }
+
+      # Check Java version
+      Write-Host "Checking Java version..."
+      try {
+        $javaVersion = java -version 2>&1 | Select-String "version" | ForEach-Object { $_.ToString() }
+        Write-Host "Java version: $javaVersion"
+      } catch {
+        Write-Warning "Could not determine Java version: $($_.Exception.Message)"
+      }
+
+      # Accept licenses and install platforms
+      Write-Host "Accepting Android SDK licenses..."
+      echo y | & $sdkManager --licenses
+
+      Write-Host "Installing Android API 27..."
+      echo y | & $sdkManager "platforms;android-27"
+      if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Failed to install Android API 27 (exit code: $LASTEXITCODE)"
+      }
+
+      Write-Host "Installing Android API 28..."
+      echo y | & $sdkManager "platforms;android-28"
+      if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Failed to install Android API 28 (exit code: $LASTEXITCODE)"
+      }
+
+      # Verify installations
+      $platforms = & $sdkManager --list | Select-String "platforms;android-"
+      Write-Host "Available platforms after installation:"
+      Write-Host $platforms
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'
