@@ -15,6 +15,25 @@ steps:
   displayName: 'Install mobile workloads'
   condition: ne( variables['Agent.OS'], 'Linux' )
 
+- task: PowerShell@2
+  displayName: 'Install Xamarin Workload'
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
+      $InstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+      $componentsToAdd = @("Component.Xamarin")
+      [string]$workloadArgs = $componentsToAdd | ForEach-Object { " --add " + $_ }
+      $Arguments = @('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"", $workloadArgs, '--quiet', '--norestart', '--nocache')
+      $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+      if ($process.ExitCode -eq 0) {
+        Write-Host "Xamarin components installed successfully"
+      } else {
+        Write-Error "Failed to install Xamarin components (exit code: $($process.ExitCode))"
+        exit 1
+      }
+
 - task: DotNetCoreCLI@2
   displayName: 'Install Cake'
   inputs:
