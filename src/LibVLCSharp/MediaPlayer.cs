@@ -439,7 +439,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_deinterlace")]
-            internal static extern void LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, int deinterlace, IntPtr deinterlaceType);
+            internal static extern int LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, int deinterlace, IntPtr deinterlaceType);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_int")]
@@ -1701,13 +1701,14 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="deinterlace">deinterlace state -1: auto (default), 0: disabled, 1: enabled</param>
         /// <param name="deinterlaceType">type of deinterlace filter, empty string to disable</param>
-        public void SetDeinterlace(int deinterlace, string deinterlaceType = "")
+        /// <returns>true on success, false if the mode was not recognised</returns>
+        public bool SetDeinterlace(int deinterlace, string deinterlaceType = "")
         {
             var deinterlaceTypeUtf8 = deinterlaceType.ToUtf8();
 
-            MarshalUtils.PerformInteropAndFree(() =>
+            return MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlace, deinterlaceTypeUtf8),
-                deinterlaceTypeUtf8);
+                deinterlaceTypeUtf8) == 0;
         }
 
         /// <summary>
