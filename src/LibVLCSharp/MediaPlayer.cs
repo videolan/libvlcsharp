@@ -439,7 +439,11 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_deinterlace")]
-            internal static extern void LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, int deinterlace, IntPtr deinterlaceType);
+            internal static extern int LibVLCVideoSetDeinterlace(IntPtr mediaPlayer, Deinterlace deinterlace, IntPtr deinterlaceType);
+            
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+               EntryPoint = "libvlc_video_get_deinterlace")]
+            internal static extern Deinterlace LibVLCVideoGetDeinterlace(IntPtr mediaPlayer, out IntPtr deinterlaceMode);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_marquee_int")]
@@ -1594,7 +1598,7 @@ namespace LibVLCSharp
 
         /// <summary>
         /// Get/set current video aspect ratio.
-        /// Set to null to reset to source aspect ratio
+        /// "fill" to fill the window or null to reset to source aspect ratio
         /// Invalid aspect ratios are ignored.
         /// </summary>
         public string? AspectRatio
@@ -1699,15 +1703,25 @@ namespace LibVLCSharp
         /// <summary>
         /// Enable or disable deinterlace filter
         /// </summary>
-        /// <param name="deinterlace">deinterlace state -1: auto (default), 0: disabled, 1: enabled</param>
+        /// <param name="deinterlace">deinterlace state: auto (default), disabled or enabled</param>
         /// <param name="deinterlaceType">type of deinterlace filter, empty string to disable</param>
-        public void SetDeinterlace(int deinterlace, string deinterlaceType = "")
+        /// <returns>true on success, false if the mode was not recognised</returns>
+        public bool SetDeinterlace(Deinterlace deinterlace, string deinterlaceType = "")
         {
             var deinterlaceTypeUtf8 = deinterlaceType.ToUtf8();
 
-            MarshalUtils.PerformInteropAndFree(() =>
+            return MarshalUtils.PerformInteropAndFree(() =>
                 Native.LibVLCVideoSetDeinterlace(NativeReference, deinterlace, deinterlaceTypeUtf8),
-                deinterlaceTypeUtf8);
+                deinterlaceTypeUtf8) == 0;
+        }
+
+        /// <summary>
+        /// Gets the deinterlacing parameters.
+        /// </summary>
+        public (string? deinterlaceMode, Deinterlace deinterlaceState) GetDeinterlace()
+        {
+            var result = Native.LibVLCVideoGetDeinterlace(NativeReference, out var deinterlaceMode);
+            return (deinterlaceMode.FromUtf8(true), result);
         }
 
         /// <summary>
@@ -3911,5 +3925,26 @@ namespace LibVLCSharp
         /// Side by side
         /// </summary>
         SideBySide
+    }
+
+    /// <summary>
+    /// Deinterlacing state
+    /// </summary>
+    public enum Deinterlace
+    {
+        /// <summary>
+        /// Selected automatically
+        /// </summary>
+        Auto = -1,
+
+        /// <summary>
+        /// Forcefully disabled
+        /// </summary>
+        ForceDisabled = 0,
+
+        /// <summary>
+        /// Forcefully enabled
+        /// </summary>
+        ForceEnabled = 1
     }
 }
