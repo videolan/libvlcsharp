@@ -25,6 +25,7 @@ stages:
     - template: mac-build.yml
 
   - job: Windows
+    timeoutInMinutes: 120
     pool:
       vmImage: 'windows-latest'
     steps:
