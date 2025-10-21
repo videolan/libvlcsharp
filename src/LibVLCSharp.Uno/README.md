@@ -11,8 +11,8 @@ This package depends on [LibVLCSharp](../LibVLCSharp/README.md). It also makes u
 
 Supported frameworks:
 
-- net8.0-android,
-- net8.0-ios,
+- net9.0-android,
+- net9.0-ios,
 - net8.0-windows10.0.19041.
 
 Supported platforms:
