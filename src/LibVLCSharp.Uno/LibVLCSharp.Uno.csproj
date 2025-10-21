@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>LibVLCSharp.Uno</Title>
     <Summary>Uno integration for LibVLCSharp</Summary>
-    <TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
+    <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <OutputType>Library</OutputType>

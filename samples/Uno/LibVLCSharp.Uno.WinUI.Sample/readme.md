@@ -1,6 +1,6 @@
 # To run the iOS sample
 
-dotnet build -t:Run -f net8.0-ios -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=xxx
+dotnet build -t:Run -f net9.0-ios -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=xxx
 
 > a few ways to get the device name
 
