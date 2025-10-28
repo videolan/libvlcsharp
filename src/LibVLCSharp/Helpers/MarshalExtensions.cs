@@ -89,7 +89,7 @@ namespace LibVLCSharp.Helpers
         /// <returns>a ptr to the UTF8 string that needs to be freed after use</returns>
         internal static IntPtr ToUtf8(this string? str)
         {
-            if (str == null)
+            if (str == null || str.Length == 0)
                 return IntPtr.Zero;
 
             var bytes = Encoding.UTF8.GetBytes(str);
