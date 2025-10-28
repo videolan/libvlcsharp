@@ -1704,9 +1704,9 @@ namespace LibVLCSharp
         /// Enable or disable deinterlace filter
         /// </summary>
         /// <param name="deinterlace">deinterlace state: auto (default), disabled or enabled</param>
-        /// <param name="deinterlaceType">type of deinterlace filter, empty string to disable</param>
+        /// <param name="deinterlaceType">type of deinterlace filter from <see cref="DeinterlaceFilter"/>, empty string to disable</param>
         /// <returns>true on success, false if the mode was not recognised</returns>
-        public bool SetDeinterlace(Deinterlace deinterlace, string deinterlaceType = "")
+        public bool SetDeinterlace(Deinterlace deinterlace, string? deinterlaceType = "")
         {
             var deinterlaceTypeUtf8 = deinterlaceType.ToUtf8();
 
@@ -1716,12 +1716,21 @@ namespace LibVLCSharp
         }
 
         /// <summary>
+        /// Enable or disable deinterlace filter
+        /// </summary>
+        /// <param name="deinterlace">deinterlace state: auto (default), disabled or enabled</param>
+        /// <param name="deinterlaceType">type of deinterlace filter</param>
+        /// <returns>true on success, false if the mode was not recognised</returns>
+        public bool SetDeinterlace(Deinterlace deinterlace, DeinterlaceFilter deinterlaceType)
+            => SetDeinterlace(deinterlace, deinterlaceType.ToFilterString());
+
+        /// <summary>
         /// Gets the deinterlacing parameters.
         /// </summary>
         public (string? deinterlaceMode, Deinterlace deinterlaceState) GetDeinterlace()
         {
             var result = Native.LibVLCVideoGetDeinterlace(NativeReference, out var deinterlaceMode);
-            return (deinterlaceMode.FromUtf8(true), result);
+            return (deinterlaceMode: deinterlaceMode.FromUtf8(true), deinterlaceState: result);
         }
 
         /// <summary>
@@ -3946,5 +3955,76 @@ namespace LibVLCSharp
         /// Forcefully enabled
         /// </summary>
         ForceEnabled = 1
+    }
+
+    /// <summary>
+    /// Deinterlace filter modes
+    /// </summary>
+    public enum DeinterlaceFilter
+    {
+        /// <summary>
+        ///
+        /// </summary>
+        Blend,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Discard,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Bob,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Linear,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Mean,
+
+        /// <summary>
+        ///
+        /// </summary>
+        X,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Yadif2x,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Phosphor,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Ivtc,
+
+        /// <summary>
+        ///
+        /// </summary>
+        Auto
+    }
+
+    /// <summary>
+    /// Extension methods for <see cref="DeinterlaceFilter"/>
+    /// </summary>
+    internal static class DeinterlaceFilterExtensions
+    {
+        /// <summary>
+        /// Converts the <see cref="DeinterlaceFilter"/> to its lowercase string representation
+        /// used by the native libVLC API.
+        /// </summary>
+        /// <param name="filter">The deinterlace filter</param>
+        /// <returns>The lowercase filter name</returns>
+        internal static string ToFilterString(this DeinterlaceFilter filter)
+            => filter.ToString().ToLowerInvariant();
     }
 }
