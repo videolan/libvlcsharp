@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using LibVLCSharp;
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -121,6 +122,41 @@ namespace LibVLCSharp.Platforms.Windows
         protected abstract void OnInitialized();
 
         /// <summary>
+        /// Tries to create a D3D11 device using the given DXGI factory and device creation flags.
+        /// </summary>
+        void TryCreateD3D11Device(SharpDX.DXGI.Factory2 dxgiFactory, DeviceCreationFlags deviceCreationFlags)
+        {
+            for(var i = 0; i < dxgiFactory.GetAdapterCount(); i++)
+            {
+                try
+                {
+                    var adapter = dxgiFactory.GetAdapter(i);
+                    _d3D11Device = new SharpDX.Direct3D11.Device(adapter, deviceCreationFlags);
+                    adapter.Dispose();
+                    adapter = null;
+                    break;
+                }
+                catch (SharpDXException)
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tries to create a WARP D3D11 device using the given device creation flags.
+        /// </summary>
+        void TryCreateWarpDevice(DeviceCreationFlags flags)
+        {
+            try
+            {
+                _d3D11Device = new SharpDX.Direct3D11.Device(DriverType.Warp, flags);
+            }
+            catch (SharpDXException)
+            {
+            }
+        }
+
+        /// <summary>
         /// Initializes the SwapChain for use with LibVLC
         /// </summary>
         void CreateSwapChain()
@@ -150,20 +186,19 @@ namespace LibVLCSharp.Platforms.Windows
 #else
                 dxgiFactory = new SharpDX.DXGI.Factory2(false);
 #endif
-                _d3D11Device = null;
-                for (var i = 0; i < dxgiFactory.GetAdapterCount(); i++)
+
+                TryCreateD3D11Device(dxgiFactory, deviceCreationFlags);
+
+                if (_d3D11Device is null)
                 {
-                    try
-                    {
-                        var adapter = dxgiFactory.GetAdapter(i);
-                        _d3D11Device = new SharpDX.Direct3D11.Device(adapter, deviceCreationFlags);
-                        adapter.Dispose();
-                        adapter = null;
-                        break;
-                    }
-                    catch (SharpDXException)
-                    {
-                    }
+                    // Fallback without video support
+                    deviceCreationFlags = deviceCreationFlags & ~DeviceCreationFlags.VideoSupport;
+                    TryCreateD3D11Device(dxgiFactory, deviceCreationFlags);
+                }
+                if (_d3D11Device is null)
+                {
+                    // Final fallback to WARP
+                    TryCreateWarpDevice(DeviceCreationFlags.BgraSupport);
                 }
 
                 if (_d3D11Device is null)
