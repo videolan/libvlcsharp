@@ -3,7 +3,7 @@
     <Title>LibVLCSharp.Uno</Title>
     <Summary>Uno integration for LibVLCSharp</Summary>
     <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net9.0-windows10.0.19041</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <OutputType>Library</OutputType>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
