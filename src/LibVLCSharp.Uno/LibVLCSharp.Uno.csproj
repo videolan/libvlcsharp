@@ -55,7 +55,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <Page Include="**\*.iOS.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('windows'))">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
   </ItemGroup>
 </Project>
