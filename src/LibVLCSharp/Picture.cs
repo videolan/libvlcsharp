@@ -86,7 +86,7 @@ namespace LibVLCSharp
         /// </summary>
         public uint Stride
         {
-            get => Type != PictureType.Argb ? 0 : Native.LibVLCPictureGetStride(NativeReference);
+            get => Type != PictureType.Argb && Type != PictureType.Rgba ? 0 : Native.LibVLCPictureGetStride(NativeReference);
         }
 
         /// <summary>
@@ -123,6 +123,16 @@ namespace LibVLCSharp
         /// <summary>
         /// Jpg picture
         /// </summary>
-        Jpg
+        Jpg,
+
+        /// <summary>
+        /// WebP picture
+        /// </summary>
+        WebP,
+
+        /// <summary>
+        /// Rgba picture
+        /// </summary>
+        Rgba
     }
 }
