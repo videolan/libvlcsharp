@@ -75,22 +75,6 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void SetExitHandler()
-        {
-            var called = false;
-            var exitCb = new ExitCallback(() =>
-            {
-                called = true;
-            });
-
-            _libVLC.SetExitHandler(exitCb);
-
-            _libVLC.Dispose();
-
-            Assert.IsTrue(called);
-        }
-
-        [Test]
         public void SetLogFile()
         {
             var path = Path.GetTempFileName();

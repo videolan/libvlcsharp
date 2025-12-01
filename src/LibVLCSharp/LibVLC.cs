@@ -79,10 +79,6 @@ namespace LibVLCSharp
             internal static extern int LibVLCAddInterface(IntPtr libVLC, IntPtr name);
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_set_exit_handler")]
-            internal static extern void LibVLCSetExitHandler(IntPtr libVLC, IntPtr cb, IntPtr opaque);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_user_agent")]
             internal static extern void LibVLCSetUserAgent(IntPtr libVLC, IntPtr name, IntPtr http);
 
@@ -317,7 +313,6 @@ namespace LibVLCSharp
                 UnsetDialogHandlers();
                 Native.LibVLCLogUnset(NativeReference);
                 _gcHandle.Free();
-                _exitCallback = null;
                 _log = null;
             }
 
@@ -358,41 +353,6 @@ namespace LibVLCSharp
             return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
         }
 #endif
-
-        internal ExitCallback? _exitCallback;
-
-        /// <summary>
-        /// <para>Registers a callback for the LibVLC exit event. This is mostly useful if</para>
-        /// <para>the VLC playlist and/or at least one interface are started with</para>
-        /// <para>libvlc_playlist_play() or libvlc_add_intf() respectively.</para>
-        /// <para>Typically, this function will wake up your application main loop (from</para>
-        /// <para>another thread).</para>
-        /// </summary>
-        /// <param name="cb">
-        /// <para>callback to invoke when LibVLC wants to exit,</para>
-        /// <para>or NULL to disable the exit handler (as by default)</para>
-        /// </param>
-        /// <remarks>
-        /// <para>This function should be called before the playlist or interface are</para>
-        /// <para>started. Otherwise, there is a small race condition: the exit event could</para>
-        /// <para>be raised before the handler is registered.</para>
-        /// <para>This function and libvlc_wait() cannot be used at the same time.</para>
-        /// </remarks>
-        public void SetExitHandler(ExitCallback cb)
-        {
-            _exitCallback = cb;
-            if (cb == null)
-            {
-                Native.LibVLCSetExitHandler(NativeReference, IntPtr.Zero, IntPtr.Zero);
-            }
-            else
-            {
-                Native.LibVLCSetExitHandler(
-                    NativeReference,
-                    Marshal.GetFunctionPointerForDelegate(ExitCallbackHandle),
-                    GCHandle.ToIntPtr(_gcHandle));
-            }
-        }
 
         /// <summary>
         /// <para>Sets the application name. LibVLC passes this as the user agent string</para>
@@ -772,18 +732,6 @@ namespace LibVLCSharp
         /// </returns>
         public int ABI => Native.LibVLCABIVersion();
 
-        #region Exit
-
-        static readonly InternalExitCallback ExitCallbackHandle = ExitCallback;
-
-        [MonoPInvokeCallback(typeof(InternalExitCallback))]
-        private static void ExitCallback(IntPtr libVLCHandle)
-        {
-            var libVLC = MarshalUtils.GetInstance<LibVLC>(libVLCHandle);
-            libVLC?._exitCallback?.Invoke();
-        }
-        #endregion
-
         #region Log
         static readonly InternalLogCallback LogCallbackHandle = LogCallback;
 
@@ -873,14 +821,6 @@ namespace LibVLCSharp
 
         #region internal callbacks
 
-        /// <summary>
-        /// Registers a callback for the LibVLC exit event.
-        /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play()
-        /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
-        /// </summary>
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void InternalExitCallback(IntPtr libVLCHandle);
-
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void InternalLogCallback(IntPtr data, LogLevel logLevel, IntPtr logContext, IntPtr format, IntPtr args);
 
@@ -948,16 +888,4 @@ namespace LibVLCSharp
         /// <summary>Error message</summary>
         Error = 4
     }
-
-    #region Callbacks
-
-
-    /// <summary>
-    /// Registers a callback for the LibVLC exit event.
-    /// This is mostly useful if the VLC playlist and/or at least one interface are started with libvlc_playlist_play()
-    /// or AddInterface() respectively. Typically, this function will wake up your application main loop (from another thread).
-    /// </summary>
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void ExitCallback();
-    #endregion
 }
