@@ -379,6 +379,9 @@ namespace LibVLCSharp.Shared
                 _gcHandle.Free();
                 _exitCallback = null;
                 _log = null;
+#if DESKTOP
+                CloseLogFile();
+#endif
             }
 
             base.Dispose(disposing);
