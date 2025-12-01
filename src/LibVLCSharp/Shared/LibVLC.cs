@@ -496,7 +496,9 @@ namespace LibVLCSharp.Shared
         {
             if (_logFileHandle == IntPtr.Zero) return true;
 
-            return MarshalUtils.Close(_logFileHandle);
+            var result = MarshalUtils.Close(_logFileHandle);
+            _logFileHandle = IntPtr.Zero;
+            return result;
         }
 
         /// <summary>Sets up logging to a file.
