@@ -314,6 +314,9 @@ namespace LibVLCSharp
                 Native.LibVLCLogUnset(NativeReference);
                 _gcHandle.Free();
                 _log = null;
+#if DESKTOP
+                CloseLogFile();
+#endif
             }
 
             base.Dispose(disposing);
