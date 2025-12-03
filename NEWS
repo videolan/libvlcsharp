@@ -1,3 +1,14 @@
+LibVLCSharp version 3.9.5
+=========================
+* Build: Relax .NET SDK enforcement
+* Build: Move to .NET 9 for Apple and Android targets (MAUI)
+* Core: LogFile: always close file handle on instance disposal
+* Core: LogFile: reset log file handle
+* Windows: Use fallbacks for D3D11 device creation by Petter Möllerström
+* Docs: Mention airspace in FAQ and Avalonia docs
+* Docs: Use main readme for all packages
+* CI and build improvements
+
 LibVLCSharp version 3.9.4
 =========================
 * Build: Move to .NET 9 SDK
