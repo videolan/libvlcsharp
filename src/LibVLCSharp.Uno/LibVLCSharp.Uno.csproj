@@ -3,7 +3,7 @@
     <Title>LibVLCSharp.Uno</Title>
     <Summary>Uno integration for LibVLCSharp</Summary>
     <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net9.0-windows10.0.19041</TargetFrameworks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <OutputType>Library</OutputType>
     <Description>LibVLCSharp.Uno is the integration of LibVLCSharp with the Uno Platform on Windows, iOS and Android.
@@ -13,6 +13,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <RootNamespace>LibVLCSharp.Uno</RootNamespace>
     <PackageId>LibVLCSharp.Uno</PackageId>
     <RuntimeIdentifiers Condition="$(TargetFramework.Contains('windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows10.0.19041'">
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
@@ -55,7 +56,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <Page Include="**\*.iOS.*xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.Contains('windows'))">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
   </ItemGroup>
 </Project>
