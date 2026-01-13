@@ -30,14 +30,14 @@ If you need Xamarin.Forms support, see LibVLCSharp.Forms.
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net40;net471;net6.0;net8.0;net9;net10.0</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);net9.0-android;net9.0-ios;net9.0-macos;net9.0-tvos</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0-windows10.0.17763.0;net9.0-windows10.0.19041;monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0-windows10.0.17763.0;net8.0-windows10.0.19041;net9.0-windows10.0.19041;net10.0-windows10.0.19041;monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
     <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
-    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('net9.0-windows10'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('-windows10'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <!-- https://github.com/novotnyllc/MSBuildSdkExtras/issues/305 -->
     <TargetFrameworkIdentifier Condition=" $([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETCoreApp' ">.NETCoreApp</TargetFrameworkIdentifier>
   </PropertyGroup>
