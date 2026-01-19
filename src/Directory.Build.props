@@ -1,4 +1,11 @@
 ﻿<Project>
+  <!-- Redirect to VS2022 for legacy Xamarin TFMs (VS2026+ compatibility) -->
+  <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows')) And ($(TargetFramework.Contains('monoandroid')) Or $(TargetFramework.Contains('xamarin')))">
+    <MSBuildExtensionsPath>C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild</MSBuildExtensionsPath>
+    <VsInstallRoot>C:\Program Files\Microsoft Visual Studio\2022\Community</VsInstallRoot>
+    <TargetFrameworkRootPath>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\</TargetFrameworkRootPath>
+  </PropertyGroup>
+
   <PropertyGroup Condition="$(TargetFramework.Contains('ios'))">
     <DefineConstants>$(DefineConstants);IOS;APPLE</DefineConstants>
   </PropertyGroup>
