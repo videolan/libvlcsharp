@@ -1,9 +1,13 @@
 ﻿<Project>
   <!-- Redirect to VS2022 for legacy Xamarin TFMs (VS2026+ compatibility) -->
   <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows')) And ($(TargetFramework.Contains('monoandroid')) Or $(TargetFramework.Contains('xamarin')))">
-    <MSBuildExtensionsPath>C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild</MSBuildExtensionsPath>
-    <VsInstallRoot>C:\Program Files\Microsoft Visual Studio\2022\Community</VsInstallRoot>
-    <TargetFrameworkRootPath>C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\</TargetFrameworkRootPath>
+    <VS2022Edition Condition="Exists('C:\Program Files\Microsoft Visual Studio\2022\Enterprise')">Enterprise</VS2022Edition>
+    <VS2022Edition Condition="'$(VS2022Edition)' == '' And Exists('C:\Program Files\Microsoft Visual Studio\2022\Professional')">Professional</VS2022Edition>
+    <VS2022Edition Condition="'$(VS2022Edition)' == '' And Exists('C:\Program Files\Microsoft Visual Studio\2022\Community')">Community</VS2022Edition>
+    <VS2022Root>C:\Program Files\Microsoft Visual Studio\2022\$(VS2022Edition)</VS2022Root>
+    <MSBuildExtensionsPath>$(VS2022Root)\MSBuild</MSBuildExtensionsPath>
+    <VsInstallRoot>$(VS2022Root)</VsInstallRoot>
+    <TargetFrameworkRootPath>$(VS2022Root)\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\</TargetFrameworkRootPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.Contains('ios'))">
