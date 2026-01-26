@@ -18,9 +18,49 @@ namespace LibVLCSharp.Avalonia
     /// </summary>
     public class VideoView : NativeControlHost
     {
+        #region Native Methods for Window Subclassing
+
+        private static class NativeMethods
+        {
+            public const int GWL_WNDPROC = -4;
+            public const int WM_WINDOWPOSCHANGING = 0x0046;
+            public const int SWP_NOSIZE = 0x0001;
+
+            public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct WINDOWPOS
+            {
+                public IntPtr hwnd;
+                public IntPtr hwndInsertAfter;
+                public int x;
+                public int y;
+                public int cx; // width
+                public int cy; // height
+                public uint flags;
+            }
+        }
+
+        #endregion
+
         private IPlatformHandle? _platformHandle = null;
         private MediaPlayer? _mediaPlayer = null;
         private Window? _floatingContent = null;
+
+        // Window subclassing for Viewbox scaling support
+        private IntPtr _originalWndProc = IntPtr.Zero;
+        private NativeMethods.WndProcDelegate? _wndProcDelegate;
+        private PixelSize _scaledSize;
+
         IDisposable? contentChangedHandler = null;
         IDisposable? isVisibleChangedHandler = null;
         IDisposable? floatingContentChangedHandler = null;
@@ -156,7 +196,106 @@ namespace LibVLCSharp.Avalonia
                 content.Clip = GetVisibleRegionAsGeometry(root, videoView, child.Margin);
             }
         }
-        
+
+        /// <summary>
+        /// Calculates the actual visual size of this control in screen pixels,
+        /// accounting for any transforms (including Viewbox scaling).
+        /// </summary>
+        private PixelSize GetActualVisualSize()
+        {
+            if (Bounds.Width <= 0 || Bounds.Height <= 0)
+                return default;
+
+            // PointToScreen accounts for all visual transforms including Viewbox scaling
+            var topLeft = this.PointToScreen(new Point(0, 0));
+            var bottomRight = this.PointToScreen(new Point(Bounds.Width, Bounds.Height));
+
+            var width = (int)Math.Abs(bottomRight.X - topLeft.X);
+            var height = (int)Math.Abs(bottomRight.Y - topLeft.Y);
+
+            return new PixelSize(Math.Max(1, width), Math.Max(1, height));
+        }
+
+        /// <summary>
+        /// Updates the cached scaled size used by the WndProc hook.
+        /// </summary>
+        private void UpdateScaledSize()
+        {
+            if (VisualRoot == null || !IsVisible)
+                return;
+
+            var newSize = GetActualVisualSize();
+            if (newSize.Width > 0 && newSize.Height > 0)
+            {
+                _scaledSize = newSize;
+            }
+        }
+
+        /// <summary>
+        /// Subclassed window procedure that intercepts WM_WINDOWPOSCHANGING to enforce scaled size.
+        /// </summary>
+        private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            if (msg == NativeMethods.WM_WINDOWPOSCHANGING && _scaledSize.Width > 0)
+            {
+                var windowPos = Marshal.PtrToStructure<NativeMethods.WINDOWPOS>(lParam);
+
+                // Only modify if this isn't a no-size operation and size differs from our target
+                if ((windowPos.flags & NativeMethods.SWP_NOSIZE) == 0)
+                {
+                    if (windowPos.cx != _scaledSize.Width || windowPos.cy != _scaledSize.Height)
+                    {
+                        windowPos.cx = _scaledSize.Width;
+                        windowPos.cy = _scaledSize.Height;
+                        Marshal.StructureToPtr(windowPos, lParam, false);
+                    }
+                }
+            }
+
+            return NativeMethods.CallWindowProc(_originalWndProc, hWnd, msg, wParam, lParam);
+        }
+
+        /// <summary>
+        /// Installs our window procedure hook to intercept size changes.
+        /// </summary>
+        private void InstallWndProcHook()
+        {
+            if (_platformHandle == null || _originalWndProc != IntPtr.Zero)
+                return;
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return;
+
+            // Keep delegate alive to prevent GC
+            _wndProcDelegate = WndProc;
+            var newWndProc = Marshal.GetFunctionPointerForDelegate(_wndProcDelegate);
+
+            _originalWndProc = NativeMethods.SetWindowLongPtr(
+                _platformHandle.Handle,
+                NativeMethods.GWL_WNDPROC,
+                newWndProc);
+        }
+
+        /// <summary>
+        /// Removes our window procedure hook.
+        /// </summary>
+        private void RemoveWndProcHook()
+        {
+            if (_platformHandle == null || _originalWndProc == IntPtr.Zero)
+                return;
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return;
+
+            NativeMethods.SetWindowLongPtr(
+                _platformHandle.Handle,
+                NativeMethods.GWL_WNDPROC,
+                _originalWndProc);
+
+            _originalWndProc = IntPtr.Zero;
+            _wndProcDelegate = null;
+        }
+
         private static RectangleGeometry? GetVisibleRegionAsGeometry(Visual parent, Visual child, Thickness childMargin)
         {
             var childPosition = child.TranslatePoint(new Point(0, 0), parent);
@@ -241,6 +380,12 @@ namespace LibVLCSharp.Avalonia
                 return;
             }
 
+            // Always subscribe to layout events for native control sizing (Viewbox support)
+            visualRoot.LayoutUpdated -= VisualRoot_UpdateOverlayPosition; // Prevent double subscription
+            visualRoot.LayoutUpdated += VisualRoot_UpdateOverlayPosition;
+            visualRoot.PositionChanged -= VisualRoot_UpdateOverlayPosition;
+            visualRoot.PositionChanged += VisualRoot_UpdateOverlayPosition;
+
             if (_floatingContent == null && Content != null)
             {
                 _floatingContent = new Window()
@@ -260,15 +405,16 @@ namespace LibVLCSharp.Avalonia
                 _floatingContent.PointerExited += FloatingContentOnPointerEvent;
                 _floatingContent.PointerPressed += FloatingContentOnPointerEvent;
                 _floatingContent.PointerReleased += FloatingContentOnPointerEvent;
-
-                visualRoot.LayoutUpdated += VisualRoot_UpdateOverlayPosition;
-                visualRoot.PositionChanged += VisualRoot_UpdateOverlayPosition;
             }
 
             ShowNativeOverlay(IsEffectivelyVisible);
         }
 
-        private void VisualRoot_UpdateOverlayPosition(object sender, EventArgs e) => UpdateOverlayPosition();
+        private void VisualRoot_UpdateOverlayPosition(object? sender, EventArgs e)
+        {
+            UpdateOverlayPosition();
+            UpdateScaledSize();
+        }
 
         private void FloatingContentOnPointerEvent(object? sender, PointerEventArgs e)
         {
@@ -321,12 +467,18 @@ namespace LibVLCSharp.Avalonia
         protected override IPlatformHandle CreateNativeControlCore(IPlatformHandle parent)
         {
             _platformHandle = base.CreateNativeControlCore(parent);
+
+            // Install WndProc hook to intercept WM_WINDOWPOSCHANGING for Viewbox scaling
+            InstallWndProcHook();
+
             return _platformHandle;
         }
 
         /// <inheritdoc />
         protected override void DestroyNativeControlCore(IPlatformHandle control)
         {
+            RemoveWndProcHook();
+
             contentChangedHandler?.Dispose();
             isVisibleChangedHandler?.Dispose();
             floatingContentChangedHandler?.Dispose();
