@@ -200,31 +200,50 @@ namespace LibVLCSharp.Avalonia
         /// <summary>
         /// Calculates the actual visual size of this control in screen pixels,
         /// accounting for any transforms (including Viewbox scaling).
+        /// Uses TransformToVisual to find actual screen rectangle, which accounts
+        /// for parent transforms like Viewbox even when Bounds doesn't change.
         /// </summary>
-        private PixelSize GetActualVisualSize()
+        /// <param name="localSize">The local size to transform. If null, uses Bounds.</param>
+        private PixelSize GetActualVisualSize(Size? localSize = null)
         {
-            if (Bounds.Width <= 0 || Bounds.Height <= 0)
+            if (VisualRoot is not TopLevel topLevel)
                 return default;
 
-            // PointToScreen accounts for all visual transforms including Viewbox scaling
-            var topLeft = this.PointToScreen(new Point(0, 0));
-            var bottomRight = this.PointToScreen(new Point(Bounds.Width, Bounds.Height));
+            var transform = this.TransformToVisual(topLevel);
+            if (transform == null)
+                return default;
 
-            var width = (int)Math.Abs(bottomRight.X - topLeft.X);
-            var height = (int)Math.Abs(bottomRight.Y - topLeft.Y);
+            // Use either provided size or current bounds
+            var size = localSize ?? Bounds.Size;
+            if (size.Width <= 0 || size.Height <= 0)
+                return default;
 
-            return new PixelSize(Math.Max(1, width), Math.Max(1, height));
+            // Transform the control's rectangle to window coordinates
+            // This accounts for all parent transforms including Viewbox
+            var topLeft = transform.Value.Transform(new Point(0, 0));
+            var bottomRight = transform.Value.Transform(new Point(size.Width, size.Height));
+
+            var width = Math.Abs(bottomRight.X - topLeft.X);
+            var height = Math.Abs(bottomRight.Y - topLeft.Y);
+
+            // Apply DPI scaling to get physical pixels
+            var dpiScale = topLevel.RenderScaling;
+            width *= dpiScale;
+            height *= dpiScale;
+
+            return new PixelSize(Math.Max(1, (int)width), Math.Max(1, (int)height));
         }
 
         /// <summary>
         /// Updates the cached scaled size used by the WndProc hook.
         /// </summary>
-        private void UpdateScaledSize()
+        /// <param name="localSize">The local size to use for calculation. If null, uses Bounds.</param>
+        private void UpdateScaledSize(Size? localSize = null)
         {
             if (VisualRoot == null || !IsVisible)
                 return;
 
-            var newSize = GetActualVisualSize();
+            var newSize = GetActualVisualSize(localSize);
             if (newSize.Width > 0 && newSize.Height > 0)
             {
                 _scaledSize = newSize;
@@ -240,7 +259,7 @@ namespace LibVLCSharp.Avalonia
             {
                 var windowPos = Marshal.PtrToStructure<NativeMethods.WINDOWPOS>(lParam);
 
-                // Only modify if this isn't a no-size operation and size differs from our target
+                // Only modify if this isn't a no-size operation
                 if ((windowPos.flags & NativeMethods.SWP_NOSIZE) == 0)
                 {
                     if (windowPos.cx != _scaledSize.Width || windowPos.cy != _scaledSize.Height)
@@ -274,6 +293,17 @@ namespace LibVLCSharp.Avalonia
                 _platformHandle.Handle,
                 NativeMethods.GWL_WNDPROC,
                 newWndProc);
+        }
+
+        /// <inheritdoc />
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            // Update scaled size BEFORE base.ArrangeOverride, so WM_WINDOWPOSCHANGING
+            // has the correct size when NativeControlHost tries to resize the native window.
+            // Use finalSize since Bounds isn't updated yet during ArrangeOverride.
+            UpdateScaledSize(finalSize);
+
+            return base.ArrangeOverride(finalSize);
         }
 
         /// <summary>
