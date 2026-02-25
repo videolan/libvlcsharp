@@ -1,3 +1,7 @@
+LibVLCSharp version 3.9.6
+=========================
+* Build: Add support to .NET10
+
 LibVLCSharp version 3.9.5
 =========================
 * Build: Relax .NET SDK enforcement
