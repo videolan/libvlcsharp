@@ -182,52 +182,52 @@ namespace LibVLCSharp
 
     /// <summary>
     /// frame metadata for HDR10 medias
-    /// similar to SMPTE ST 2086 mastering display color volume
+    /// similar to CTA-861-G with ranges from H265, based on SMPTE ST 2086 mastering display color volume
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct FrameHDR10Metadata
     {
         /// <summary>
-        /// red primary
+        /// [5,37 000] normalized x / [5,42 000] y chromacity in increments of 0.00002, 0=unknown
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public readonly ushort[] RedPrimary;
 
         /// <summary>
-        /// green primary
+        /// [5,37 000] normalized x / [5,42 000] y chromacity in increments of 0.00002, 0=unknown
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public readonly ushort[] GreenPrimary;
 
         /// <summary>
-        /// blue primary
+        /// [5,37 000] normalized x / [5,42 000] y chromacity in increments of 0.00002, 0=unknown
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public readonly ushort[] BluePrimary;
 
         /// <summary>
-        /// whitepoint
+        /// [5,37 000] normalized x / [5,42 000] y white point in increments of 0.00002, 0=unknown
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public readonly ushort[] WhitePoint;
 
         /// <summary>
-        /// Maximum mastering luminance
+        /// [50 000, 100 000 000] maximum luminance in 0.0001 cd/m², 0=unknown
         /// </summary>
         public uint MaxMasteringLuminance { get; }
 
         /// <summary>
-        /// Minimum mastering luminance
+        /// [1, 50 000] minimum luminance in 0.0001 cd/m², 0=unknown
         /// </summary>
         public uint MinMasteringLuminance { get; }
 
         /// <summary>
-        /// Maximum content light level
+        /// [1, 50 000] Maximum Content Light Level in cd/m², 0=unknown
         /// </summary>
         public ushort MaxContentLightLevel { get; }
 
         /// <summary>
-        /// Maximum frame average light level
+        /// [1, 50 000] Maximum Frame-Average Light Level in cd/m², 0=unknown
         /// </summary>
         public ushort MaxFrameAverageLightLevel { get; }
     }
