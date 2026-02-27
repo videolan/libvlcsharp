@@ -1,6 +1,6 @@
 ﻿using System;
-//using System.Timers;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace LibVLCSharp.Shared.Helpers
 {
@@ -25,13 +25,13 @@ namespace LibVLCSharp.Shared.Helpers
         private readonly MediaPlayer _mp;
         private readonly LibVLC _libVLC;
 
-        private Timer _timer;
+        private CancellationTokenSource? _cts;
+        private Task? _loopTask;
 
         private long _lastTs;
         private long _lastClock;
         private float _lastRate;
         private bool _hasFirstUpdate;
-
         private long _lastInterpolatedTime;
 
         /// <summary>
@@ -45,15 +45,12 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         /// <param name="mp">The associated <see cref="MediaPlayer"/> instance.</param>
         /// <param name="libVLC">The associated <see cref="LibVLC"/> instance.</param>
-        /// <param name="intervalMs">
         /// The interpolation update interval in milliseconds. Default is 50 ms.
-        /// </param>
-        public PreciseMediaTimer(MediaPlayer mp, LibVLC libVLC, int intervalMs = 16)
+        public PreciseMediaTimer(MediaPlayer mp, LibVLC libVLC)
         {
             _mp = mp ?? throw new ArgumentNullException(nameof(mp));
             _libVLC = libVLC ?? throw new ArgumentNullException(nameof(libVLC));
 
-            _timer = new Timer(OnTick, null, Timeout.Infinite, Timeout.Infinite);
             _mp.TimeChanged += OnTimeChanged;
         }
 
@@ -87,10 +84,19 @@ namespace LibVLCSharp.Shared.Helpers
             _hasFirstUpdate = true;
         }
 
+        private async Task RunLoop(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                OnTick();
+                await Task.Delay(16, token);
+            }
+        }
+
         /// <summary>
         /// Performs time interpolation using the LibVLC monotonic clock.
         /// </summary>
-        private void OnTick(object? state)
+        private void OnTick()
         {
             if (!_hasFirstUpdate || _mp.Length <= 0)
                 return;
@@ -135,13 +141,19 @@ namespace LibVLCSharp.Shared.Helpers
         {
             _hasFirstUpdate = false;
             _lastInterpolatedTime = 0;
-            _timer?.Change(0, 16);
+
+            _cts = new CancellationTokenSource();
+            _loopTask = RunLoop(_cts.Token);
         }
 
         /// <summary>
         /// Stops the interpolation timer.
         /// </summary>
-        public void Stop() => _timer?.Change(Timeout.Infinite, Timeout.Infinite);
+        public void Stop()
+        {
+            _cts?.Cancel();
+            _cts = null;
+        }
 
         /// <summary>
         /// Releases all resources used by the <see cref="PreciseMediaTimer"/>.
@@ -150,7 +162,6 @@ namespace LibVLCSharp.Shared.Helpers
         {
             Stop();
             _mp.TimeChanged -= OnTimeChanged;
-            _timer?.Dispose();
         }
     }
 }
