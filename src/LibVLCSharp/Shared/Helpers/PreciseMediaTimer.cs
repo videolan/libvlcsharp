@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Timers;
+//using System.Timers;
+using System.Threading;
 
 namespace LibVLCSharp.Shared.Helpers
 {
@@ -23,7 +24,8 @@ namespace LibVLCSharp.Shared.Helpers
     {
         private readonly MediaPlayer _mp;
         private readonly LibVLC _libVLC;
-        private readonly Timer _timer;
+
+        private Timer _timer;
 
         private long _lastTs;
         private long _lastClock;
@@ -51,12 +53,7 @@ namespace LibVLCSharp.Shared.Helpers
             _mp = mp ?? throw new ArgumentNullException(nameof(mp));
             _libVLC = libVLC ?? throw new ArgumentNullException(nameof(libVLC));
 
-            _timer = new Timer(intervalMs)
-            {
-                AutoReset = true
-            };
-
-            _timer.Elapsed += OnTick;
+            _timer = new Timer(OnTick, null, Timeout.Infinite, Timeout.Infinite);
             _mp.TimeChanged += OnTimeChanged;
         }
 
@@ -93,7 +90,7 @@ namespace LibVLCSharp.Shared.Helpers
         /// <summary>
         /// Performs time interpolation using the LibVLC monotonic clock.
         /// </summary>
-        private void OnTick(object? sender, ElapsedEventArgs e)
+        private void OnTick(object? state)
         {
             if (!_hasFirstUpdate || _mp.Length <= 0)
                 return;
@@ -138,23 +135,22 @@ namespace LibVLCSharp.Shared.Helpers
         {
             _hasFirstUpdate = false;
             _lastInterpolatedTime = 0;
-            _timer.Start();
+            _timer?.Change(0, 16);
         }
 
         /// <summary>
         /// Stops the interpolation timer.
         /// </summary>
-        public void Stop() => _timer.Stop();
+        public void Stop() => _timer?.Change(Timeout.Infinite, Timeout.Infinite);
 
         /// <summary>
         /// Releases all resources used by the <see cref="PreciseMediaTimer"/>.
         /// </summary>
         public void Dispose()
         {
-            _timer.Stop();
-            _timer.Elapsed -= OnTick;
+            Stop();
             _mp.TimeChanged -= OnTimeChanged;
-            _timer.Dispose();
+            _timer?.Dispose();
         }
     }
 }
