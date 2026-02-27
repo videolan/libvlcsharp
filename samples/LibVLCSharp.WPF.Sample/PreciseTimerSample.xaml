@@ -1,0 +1,28 @@
+﻿<Window x:Class="LibVLCSharp.WPF.Sample.PreciseTimerSample"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        Title="Precise Timer Sample" Height="450" Width="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Video -->
+        <vlc:VideoView x:Name="VideoView" Grid.Row="0"/>
+
+        <!-- Progress Bars -->
+        <StackPanel Grid.Row="1" Margin="10">
+            
+            <TextBlock Text="Precise Progress" Margin="0,10,0,0"/>
+            <ProgressBar x:Name="SmoothProgress" Height="20" Minimum="0" Maximum="1"/>
+
+            <Button Content="Start Precise Timer Test"
+                    Click="PreciseTimerClassTest_Click"
+                    Margin="0,10,0,0"/>
+
+        </StackPanel>
+    </Grid>
+</Window>
