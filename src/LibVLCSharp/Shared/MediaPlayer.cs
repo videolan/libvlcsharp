@@ -1305,6 +1305,7 @@ namespace LibVLCSharp.Shared
         }
 
         LibVLCVideoFormatCb? _videoFormatCb;
+        LibVLCVideoFormatCbEx? _videoFormatCbEx;
         LibVLCVideoCleanupCb? _videoCleanupCb;
         IntPtr _videoUserData = IntPtr.Zero;
 
@@ -1317,8 +1318,22 @@ namespace LibVLCSharp.Shared
         public void SetVideoFormatCallbacks(LibVLCVideoFormatCb formatCb, LibVLCVideoCleanupCb? cleanupCb)
         {
             _videoFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
+            _videoFormatCbEx = null;
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
+                (cleanupCb == null)? null : _videoCleanupCb);
+        }
+
+        /// <summary>
+        /// This variant passes pitches and lines as IntPtr to allow multi-plane data access.
+        /// </summary>
+        
+        public void SetVideoFormatCallbacksEx(LibVLCVideoFormatCbEx formatCb, LibVLCVideoCleanupCb? cleanupCb)
+        {
+            _videoFormatCbEx = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
+            _videoFormatCb = null;
+            _videoCleanupCb = cleanupCb;
+            Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackExHandle,
                 (cleanupCb == null)? null : _videoCleanupCb);
         }
 
@@ -1786,6 +1801,7 @@ namespace LibVLCSharp.Shared
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
         static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
         static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
+        static readonly LibVLCVideoFormatCbEx VideoFormatCallbackExHandle = VideoFormatCallbackEx;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
         private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
@@ -1825,6 +1841,18 @@ namespace LibVLCSharp.Shared
             if (mediaPlayer?._videoFormatCb != null)
             {
                 return mediaPlayer._videoFormatCb(ref mediaPlayer._videoUserData, chroma, ref width, ref height, ref pitches, ref lines);
+            }
+
+            return 0;
+        }
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoFormatCbEx))]
+        private static uint VideoFormatCallbackEx(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, IntPtr pitches, IntPtr lines)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoFormatCbEx != null)
+            {
+                return mediaPlayer._videoFormatCbEx(ref mediaPlayer._videoUserData, chroma, ref width, ref height, pitches, lines);
             }
 
             return 0;
@@ -2007,6 +2035,12 @@ namespace LibVLCSharp.Shared
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate uint LibVLCVideoFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
+
+        /// <summary>Callback prototype</summary>
+        /// <remarks>Passes pitches and lines as IntPtr to allow multi-plane data access.</remarks>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate uint LibVLCVideoFormatCbEx(ref IntPtr opaque, IntPtr chroma, ref uint width,
+            ref uint height, IntPtr pitches, IntPtr lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
         /// <param name="opaque">
