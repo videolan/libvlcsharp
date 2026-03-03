@@ -25,7 +25,11 @@ namespace LibVLCSharp.Shared.Helpers
         private readonly LibVLC _libVLC;
         private readonly int _intervalMs;
 
-        private Timer? _timer;
+#if NETSTANDARD1_1
+        private System.Timers.Timer? _timer;
+#else
+        private System.Threading.Timer? _timer;
+#endif
 
         private long _lastTs;
         private long _lastClock;
@@ -134,10 +138,17 @@ namespace LibVLCSharp.Shared.Helpers
             _hasFirstUpdate = false;
             _lastInterpolatedTime = 0;
 
+#if NETSTANDARD1_1
+            _timer = new System.Timers.Timer(_intervalMs);
+            _timer.Elapsed += (s, e) => OnTick(null);
+            _timer.AutoReset = true;
+            _timer.Start();
+#else
             if (_timer == null)
-                _timer = new Timer(OnTick, null, 0, _intervalMs);
+                _timer = new System.Threading.Timer(OnTick, null, 0, _intervalMs);
             else
                 _timer.Change(0, _intervalMs);
+#endif
         }
 
         /// <summary>
@@ -145,7 +156,11 @@ namespace LibVLCSharp.Shared.Helpers
         /// </summary>
         public void Stop()
         {
+#if NETSTANDARD1_1
+            _timer?.Stop();
+#else
             _timer?.Change(Timeout.Infinite, Timeout.Infinite);
+#endif
         }
 
         /// <summary>
@@ -155,7 +170,13 @@ namespace LibVLCSharp.Shared.Helpers
         {
             Stop();
             _mp.TimeChanged -= OnTimeChanged;
+
+#if NETSTANDARD1_1
             _timer?.Dispose();
+#else
+            _timer?.Dispose();
+#endif
+
             _timer = null;
         }
     }
