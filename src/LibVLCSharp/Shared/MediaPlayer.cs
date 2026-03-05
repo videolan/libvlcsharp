@@ -1305,7 +1305,7 @@ namespace LibVLCSharp.Shared
         }
 
         LibVLCVideoFormatCb? _videoFormatCb;
-        LibVLCVideoFormatCbEx? _videoFormatCbEx;
+        LibVLCVideoMultiPlaneFormatCb? _videoMultiPlaneFormatCb;
         LibVLCVideoCleanupCb? _videoCleanupCb;
         IntPtr _videoUserData = IntPtr.Zero;
 
@@ -1318,22 +1318,26 @@ namespace LibVLCSharp.Shared
         public void SetVideoFormatCallbacks(LibVLCVideoFormatCb formatCb, LibVLCVideoCleanupCb? cleanupCb)
         {
             _videoFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
-            _videoFormatCbEx = null;
+            _videoMultiPlaneFormatCb = null;
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
                 (cleanupCb == null)? null : _videoCleanupCb);
         }
 
         /// <summary>
-        /// This variant passes pitches and lines as IntPtr to allow multi-plane data access.
+        /// Set decoded video chroma and dimensions with multi-plane format access.
+        /// This variant exposes pitches and lines as IntPtr to allow direct
+        /// multi-plane access to the arrays provided by libVLC.
+        /// This only works in combination with libvlc_video_set_callbacks().
         /// </summary>
-        
-        public void SetVideoFormatCallbacksEx(LibVLCVideoFormatCbEx formatCb, LibVLCVideoCleanupCb? cleanupCb)
+        /// <param name="formatCb">callback to select the video format (cannot be NULL)</param>
+        /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
+        public void SetVideoFormatCallbacksMultiPlane(LibVLCVideoMultiPlaneFormatCb formatCb, LibVLCVideoCleanupCb? cleanupCb)
         {
-            _videoFormatCbEx = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
+            _videoMultiPlaneFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
             _videoFormatCb = null;
             _videoCleanupCb = cleanupCb;
-            Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackExHandle,
+            Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
                 (cleanupCb == null)? null : _videoCleanupCb);
         }
 
@@ -1801,7 +1805,6 @@ namespace LibVLCSharp.Shared
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
         static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
         static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
-        static readonly LibVLCVideoFormatCbEx VideoFormatCallbackExHandle = VideoFormatCallbackEx;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
         private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
@@ -1838,21 +1841,27 @@ namespace LibVLCSharp.Shared
         private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, ref uint pitches, ref uint lines)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            if (mediaPlayer?._videoFormatCb != null)
+            if (mediaPlayer == null)
+                return 0;
+
+            // Route to multi-plane callback 
+            if (mediaPlayer._videoMultiPlaneFormatCb != null)
             {
-                return mediaPlayer._videoFormatCb(ref mediaPlayer._videoUserData, chroma, ref width, ref height, ref pitches, ref lines);
+                unsafe
+                {
+                    fixed (uint* p = &pitches)
+                    fixed (uint* l = &lines)
+                    {
+                        return mediaPlayer._videoMultiPlaneFormatCb(
+                            ref mediaPlayer._videoUserData,chroma,ref width,ref height,(IntPtr)p,(IntPtr)l);
+                    }
+                }
             }
 
-            return 0;
-        }
-
-        [MonoPInvokeCallback(typeof(LibVLCVideoFormatCbEx))]
-        private static uint VideoFormatCallbackEx(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, IntPtr pitches, IntPtr lines)
-        {
-            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            if (mediaPlayer?._videoFormatCbEx != null)
+            // Otherwise standard callback
+            if (mediaPlayer._videoFormatCb != null)
             {
-                return mediaPlayer._videoFormatCbEx(ref mediaPlayer._videoUserData, chroma, ref width, ref height, pitches, lines);
+                return mediaPlayer._videoFormatCb(ref mediaPlayer._videoUserData, chroma, ref width, ref height, ref pitches, ref lines);
             }
 
             return 0;
@@ -2036,10 +2045,10 @@ namespace LibVLCSharp.Shared
         public delegate uint LibVLCVideoFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
 
-        /// <summary>Callback prototype</summary>
-        /// <remarks>Passes pitches and lines as IntPtr to allow multi-plane data access.</remarks>
+        /// <summary>Callback prototype to configure picture buffers format (multi-plane variant).</summary>
+        /// <remarks>Passes pitches and lines as IntPtr to allow direct multi-plane data access via Marshal or unsafe pointer arithmetic.</remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate uint LibVLCVideoFormatCbEx(ref IntPtr opaque, IntPtr chroma, ref uint width,
+        public delegate uint LibVLCVideoMultiPlaneFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, IntPtr pitches, IntPtr lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
@@ -2048,7 +2057,7 @@ namespace LibVLCSharp.Shared
         /// <para>(and possibly modified by</para>
         /// </param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LibVLCVideoCleanupCb(ref IntPtr opaque);
+        public delegate void LibVLCVideoCleanupCb(IntPtr opaque);
 
         /// <summary>Callback prototype to setup the audio playback.</summary>
         /// <param name="opaque">
