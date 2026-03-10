@@ -1343,7 +1343,7 @@ namespace LibVLCSharp.Shared
         static readonly LibVLCVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoCleanupCb))]
-        private static void VideoCleanupCallback(IntPtr opaque)
+        private static void VideoCleanupCallback(ref IntPtr opaque)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             mediaPlayer?._videoCleanupCb?.Invoke(mediaPlayer._videoUserData);
