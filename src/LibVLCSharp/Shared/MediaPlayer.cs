@@ -1346,7 +1346,7 @@ namespace LibVLCSharp.Shared
         private static void VideoCleanupCallback(ref IntPtr opaque)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
-            mediaPlayer?._videoCleanupCb?.Invoke(mediaPlayer._videoUserData);
+            mediaPlayer?._videoCleanupCb?.Invoke(ref mediaPlayer._videoUserData);
         }
 
         /// <summary>
