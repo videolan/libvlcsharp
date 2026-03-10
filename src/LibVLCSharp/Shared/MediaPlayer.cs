@@ -1321,7 +1321,7 @@ namespace LibVLCSharp.Shared
             _videoMultiPlaneFormatCb = null;
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
-                (cleanupCb == null)? null : _videoCleanupCb);
+                (cleanupCb == null)? null : VideoCleanupCallbackHandle);
         }
 
         /// <summary>
@@ -1338,7 +1338,15 @@ namespace LibVLCSharp.Shared
             _videoFormatCb = null;
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
-                (cleanupCb == null)? null : _videoCleanupCb);
+                (cleanupCb == null)? null : VideoCleanupCallbackHandle);
+        }
+        static readonly LibVLCVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
+
+        [MonoPInvokeCallback(typeof(LibVLCVideoCleanupCb))]
+        private static void VideoCleanupCallback(IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            mediaPlayer?._videoCleanupCb?.Invoke(mediaPlayer._videoUserData);
         }
 
         /// <summary>
