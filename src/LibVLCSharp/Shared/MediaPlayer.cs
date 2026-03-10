@@ -1846,27 +1846,40 @@ namespace LibVLCSharp.Shared
         }
 
         [MonoPInvokeCallback(typeof(LibVLCVideoFormatCb))]
-        private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, IntPtr pitches, IntPtr lines)
+        private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, ref uint pitches, ref uint lines)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer == null)
                 return 0;
 
-            // Route to multi-plane callback
+            // Route to multi-plane callback 
             if (mediaPlayer._videoMultiPlaneFormatCb != null)
             {
-                return mediaPlayer._videoMultiPlaneFormatCb(
-                    ref mediaPlayer._videoUserData,chroma,ref width,ref height,
-                    pitches,lines);
+                IntPtr pitchesPtr = Marshal.AllocHGlobal(sizeof(uint));
+                IntPtr linesPtr = Marshal.AllocHGlobal(sizeof(uint));
+                try
+                {
+                    Marshal.WriteInt32(pitchesPtr, (int)pitches);
+                    Marshal.WriteInt32(linesPtr, (int)lines);
+                    uint result = mediaPlayer._videoMultiPlaneFormatCb(
+                        ref mediaPlayer._videoUserData,chroma,ref width,ref height,pitchesPtr,
+                        linesPtr);
+                    pitches = (uint)Marshal.ReadInt32(pitchesPtr);
+                    lines = (uint)Marshal.ReadInt32(linesPtr);
+                    return result;
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(pitchesPtr);
+                    Marshal.FreeHGlobal(linesPtr);
+                }
             }
 
             // Otherwise use legacy single-plane callback
             if (mediaPlayer._videoFormatCb != null)
             {
-                uint pitch0 = (uint)Marshal.ReadInt32(pitches, 0);
-                uint line0 = (uint)Marshal.ReadInt32(lines, 0);
-                return mediaPlayer._videoFormatCb( ref mediaPlayer._videoUserData, chroma,ref width,
-                    ref height,ref pitch0,ref line0);
+                return mediaPlayer._videoFormatCb(
+                    ref mediaPlayer._videoUserData,chroma,ref width,ref height,ref pitches,ref lines);
             }
 
             return 0;
@@ -2064,7 +2077,7 @@ namespace LibVLCSharp.Shared
         /// <para>(and possibly modified by</para>
         /// </param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void LibVLCVideoCleanupCb(IntPtr opaque);
+        public delegate void LibVLCVideoCleanupCb(ref IntPtr opaque);
 
         /// <summary>Callback prototype to setup the audio playback.</summary>
         /// <param name="opaque">
