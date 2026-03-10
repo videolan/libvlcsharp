@@ -1305,7 +1305,7 @@ namespace LibVLCSharp.Shared
         }
 
         LibVLCVideoFormatCb? _videoFormatCb;
-        LibVLCVideoMultiPlaneFormatCb? _videoMultiPlaneFormatCb;
+        LibVLCVideoFormatCbMultiPlane? _videoMultiPlaneFormatCb;
         LibVLCVideoCleanupCb? _videoCleanupCb;
         IntPtr _videoUserData = IntPtr.Zero;
 
@@ -1332,7 +1332,7 @@ namespace LibVLCSharp.Shared
         /// </summary>
         /// <param name="formatCb">callback to select the video format (cannot be NULL)</param>
         /// <param name="cleanupCb">callback to release any allocated resources (or NULL)</param>
-        public void SetVideoFormatCallbacksMultiPlane(LibVLCVideoMultiPlaneFormatCb formatCb, LibVLCVideoCleanupCb? cleanupCb)
+        public void SetVideoFormatCallbacksMultiPlane(LibVLCVideoFormatCbMultiPlane formatCb, LibVLCVideoCleanupCb? cleanupCb)
         {
             _videoMultiPlaneFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
             _videoFormatCb = null;
@@ -1838,30 +1838,36 @@ namespace LibVLCSharp.Shared
         }
 
         [MonoPInvokeCallback(typeof(LibVLCVideoFormatCb))]
-        private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, ref uint pitches, ref uint lines)
+        private static uint VideoFormatCallback(ref IntPtr opaque, IntPtr chroma, ref uint width, ref uint height, IntPtr pitches, IntPtr lines)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer == null)
                 return 0;
 
-            // Route to multi-plane callback 
+            // Route to multi-plane callback
             if (mediaPlayer._videoMultiPlaneFormatCb != null)
             {
-                unsafe
-                {
-                    fixed (uint* p = &pitches)
-                    fixed (uint* l = &lines)
-                    {
-                        return mediaPlayer._videoMultiPlaneFormatCb(
-                            ref mediaPlayer._videoUserData,chroma,ref width,ref height,(IntPtr)p,(IntPtr)l);
-                    }
-                }
+                return mediaPlayer._videoMultiPlaneFormatCb(
+                    ref mediaPlayer._videoUserData,
+                    chroma,
+                    ref width,
+                    ref height,
+                    pitches,
+                    lines);
             }
 
-            // Otherwise standard callback
+            // Otherwise use legacy single-plane callback
             if (mediaPlayer._videoFormatCb != null)
             {
-                return mediaPlayer._videoFormatCb(ref mediaPlayer._videoUserData, chroma, ref width, ref height, ref pitches, ref lines);
+                uint pitch0 = (uint)Marshal.ReadInt32(pitches, 0);
+                uint line0 = (uint)Marshal.ReadInt32(lines, 0);
+                return mediaPlayer._videoFormatCb(
+                    ref mediaPlayer._videoUserData,
+                    chroma,
+                    ref width,
+                    ref height,
+                    ref pitch0,
+                    ref line0);
             }
 
             return 0;
@@ -2041,6 +2047,9 @@ namespace LibVLCSharp.Shared
         /// <para>to not break assumptions that might be held by optimized code</para>
         /// <para>in the video decoders, video filters and/or video converters.</para>
         /// </remarks>
+
+        // Legacy single-plane callback for compatibility
+        // Legacy single-plane callback (unchanged signature)
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate uint LibVLCVideoFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
@@ -2048,7 +2057,7 @@ namespace LibVLCSharp.Shared
         /// <summary>Callback prototype to configure picture buffers format (multi-plane variant).</summary>
         /// <remarks>Passes pitches and lines as IntPtr to allow direct multi-plane data access via Marshal or unsafe pointer arithmetic.</remarks>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate uint LibVLCVideoMultiPlaneFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
+        public delegate uint LibVLCVideoFormatCbMultiPlane(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, IntPtr pitches, IntPtr lines);
 
         /// <summary>Callback prototype to configure picture buffers format.</summary>
