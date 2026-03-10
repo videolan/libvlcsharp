@@ -1848,12 +1848,8 @@ namespace LibVLCSharp.Shared
             if (mediaPlayer._videoMultiPlaneFormatCb != null)
             {
                 return mediaPlayer._videoMultiPlaneFormatCb(
-                    ref mediaPlayer._videoUserData,
-                    chroma,
-                    ref width,
-                    ref height,
-                    pitches,
-                    lines);
+                    ref mediaPlayer._videoUserData,chroma,ref width,ref height,
+                    pitches,lines);
             }
 
             // Otherwise use legacy single-plane callback
@@ -1861,13 +1857,8 @@ namespace LibVLCSharp.Shared
             {
                 uint pitch0 = (uint)Marshal.ReadInt32(pitches, 0);
                 uint line0 = (uint)Marshal.ReadInt32(lines, 0);
-                return mediaPlayer._videoFormatCb(
-                    ref mediaPlayer._videoUserData,
-                    chroma,
-                    ref width,
-                    ref height,
-                    ref pitch0,
-                    ref line0);
+                return mediaPlayer._videoFormatCb( ref mediaPlayer._videoUserData, chroma,ref width,
+                    ref height,ref pitch0,ref line0);
             }
 
             return 0;
@@ -2049,7 +2040,6 @@ namespace LibVLCSharp.Shared
         /// </remarks>
 
         // Legacy single-plane callback for compatibility
-        // Legacy single-plane callback (unchanged signature)
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate uint LibVLCVideoFormatCb(ref IntPtr opaque, IntPtr chroma, ref uint width,
             ref uint height, ref uint pitches, ref uint lines);
