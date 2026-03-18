@@ -73,12 +73,16 @@ namespace LibVLCSharp.Shared
             var paths = new List<(string, string)>();
             string arch;
 
+#if !NET40 && !NETSTANDARD1_1
             if (PlatformHelper.IsMac)
             {
-                arch = Path.Combine(ArchitectureNames.MacOS64, Constants.Lib);
+                arch = RuntimeInformation.ProcessArchitecture switch
+                {
+                    Architecture.X64 => Path.Combine(ArchitectureNames.MacOS64, Constants.Lib),
+                    Architecture.Arm64 => Path.Combine(ArchitectureNames.MacOSArm64, Constants.Lib),
+                    _ => Path.Combine(ArchitectureNames.MacOS64, Constants.Lib),
+                };
             }
-
-#if !NET40 && !NETSTANDARD1_1
             else if (PlatformHelper.IsWindows)
             {
                 arch = RuntimeInformation.ProcessArchitecture switch
@@ -89,9 +93,8 @@ namespace LibVLCSharp.Shared
                     _ => PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86
                 };
             }
-#endif
-
             else
+#endif
             {
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
             }
@@ -138,11 +141,14 @@ namespace LibVLCSharp.Shared
 
             paths.Add((string.Empty, libvlcPath3));
 
-            // Add Win64 folders as fallback for WinArm64 to keep compatibility
-            if (arch == ArchitectureNames.WinArm64)
+            // Add x64 folders as fallback for ARM64 to keep compatibility
+            if (arch == ArchitectureNames.WinArm64 || arch == Path.Combine(ArchitectureNames.MacOSArm64, Constants.Lib))
             {
+                var fallbackArchitecture = arch == ArchitectureNames.WinArm64
+                    ? ArchitectureNames.Win64 : ArchitectureNames.MacOS64;
+                
                 var fallbackLibvlcDirPath1 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!,
-                    Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+                    Constants.LibrariesRepositoryFolderName, fallbackArchitecture);
 
                 var fallbackLibvlccorePath1 = LibVLCCorePath(fallbackLibvlcDirPath1);
                 var fallbackLibvlcPath1 = LibVLCPath(fallbackLibvlcDirPath1);
@@ -151,7 +157,7 @@ namespace LibVLCSharp.Shared
                 if (!string.IsNullOrEmpty(assemblyLocation))
                 {
                     var fallbackLibvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation)!,
-                        Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+                        Constants.LibrariesRepositoryFolderName, fallbackArchitecture);
 
                     var fallbackLibvlccorePath2 = LibVLCCorePath(fallbackLibvlcDirPath2);
                     var fallbackLibvlcPath2 = LibVLCPath(fallbackLibvlcDirPath2);
