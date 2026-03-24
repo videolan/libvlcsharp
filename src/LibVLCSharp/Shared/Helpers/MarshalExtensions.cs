@@ -155,6 +155,9 @@ namespace LibVLCSharp.Shared.Helpers
             if (nativeString == IntPtr.Zero)
                 return null;
 
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
+            var result = Marshal.PtrToStringUTF8(nativeString);
+#else
             var length = 0;
 
             while (Marshal.ReadByte(nativeString, length) != 0)
@@ -164,9 +167,11 @@ namespace LibVLCSharp.Shared.Helpers
 
             var buffer = new byte[length];
             Marshal.Copy(nativeString, buffer, 0, buffer.Length);
+            var result = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+#endif
             if (libvlcFree)
                 MarshalUtils.LibVLCFree(ref nativeString);
-            return Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+            return result;
         }
 
  #if !APPLE && !ANDROID && !NETSTANDARD2_1 && !NET40
