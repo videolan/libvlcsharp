@@ -7,7 +7,7 @@
 
 LibVLCSharp is based on LibVLC, so most of the LibVLC API documentation is very relevant to your experience using LibVLCSharp.
 
-You can find it here [LibVLC Doc](https://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc.html). It currently tracks VLC master (4.0). The search box at the top right allows you to search for LibVLC C API functions and get doc on it. You can also check out documentation from the LibVLC header files directly from the [VLC source code](https://code.videolan.org/videolan/vlc/tree/master/include/vlc).
+You can find it here [LibVLC Doc](https://videolan.videolan.me/vlc/master/index.html). It currently tracks VLC master (4.0). The search box at the top right allows you to search for LibVLC C API functions and get doc on it. You can also check out documentation from the LibVLC header files directly from the [VLC source code](https://code.videolan.org/videolan/vlc/tree/master/include/vlc).
 
 ## LibVLC on NuGet
 
