@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:LibVLCSharp.Avalonia.Sample.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LibVLCSharp.Avalonia.Sample.Views.VideoPlayer"
+             x:DataType="viewModels:MainWindowViewModel"
              DataContextChanged="OnDataContextChanged">
 
     <Design.DataContext>
