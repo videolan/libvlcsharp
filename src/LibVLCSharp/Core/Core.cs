@@ -84,13 +84,16 @@ namespace LibVLCSharp
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
             }
 
+#if NET6_0_OR_GREATER
+            var libvlcAssemblyLocation = AppContext.BaseDirectory;
+#else
             var libvlcAssemblyLocation = typeof(LibVLC).Assembly.Location;
-
 #if !NET45
-            if (string.IsNullOrEmpty(libvlcAssemblyLocation)) /* .NET 5 (single file / self contained) and later */
+            if (string.IsNullOrEmpty(libvlcAssemblyLocation))
             {
                 libvlcAssemblyLocation = AppContext.BaseDirectory;
             }
+#endif
 #endif
             var libvlcDirPath1 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!,
                 Constants.LibrariesRepositoryFolderName, arch);
@@ -100,7 +103,11 @@ namespace LibVLCSharp
             var libvlcPath1 = LibVLCPath(libvlcDirPath1);
             paths.Add((libvlccorePath1, libvlcPath1));
 
+#if NET6_0_OR_GREATER
+            var assemblyLocation = AppContext.BaseDirectory;
+#else
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly()?.Location;
+#endif
             if(!string.IsNullOrEmpty(assemblyLocation))
             { 
                 var libvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation)!,

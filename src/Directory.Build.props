@@ -48,6 +48,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Win32Release'">
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
   <PropertyGroup>
     <VersionPrefix>4.0.0</VersionPrefix>
     <LangVersion>9.0</LangVersion>

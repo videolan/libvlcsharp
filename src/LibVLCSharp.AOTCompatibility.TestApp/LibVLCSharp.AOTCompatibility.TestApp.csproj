@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <!-- PublishAot enables NativeAOT compilation on publish AND activates the
+         Roslyn trim/AOT analyzer during dotnet build, so issues are caught early
+         without needing a native toolchain. -->
+    <PublishAot>true</PublishAot>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+  </ItemGroup>
+</Project>

@@ -678,7 +678,7 @@ namespace LibVLCSharp.Uno
                 var menuItems = menuFlyout.Items;
                 var mediaPlayer = MediaPlayer;
                 var currentAspectRatio = Manager.Get<AspectRatioManager>().AspectRatio;
-                foreach (AspectRatio aspectRatio in Enum.GetValues(typeof(AspectRatio)))
+                foreach (AspectRatio aspectRatio in Enum.GetValues<AspectRatio>())
                 {
                     var menuItem = new ToggleMenuFlyoutItem
                     {
