@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -508,7 +511,11 @@ namespace LibVLCSharp.Shared.Helpers
         /// <typeparam name="T"></typeparam>
         /// <param name="ptr"></param>
         /// <returns></returns>
-        internal static T PtrToStructure<T>(IntPtr ptr)
+        internal static T PtrToStructure<
+#if NET6_0_OR_GREATER
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)]
+#endif
+            T>(IntPtr ptr)
         {
 #if NETSTANDARD1_1 || NET40
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
