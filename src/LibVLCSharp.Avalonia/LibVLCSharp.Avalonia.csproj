@@ -12,14 +12,13 @@ This package depends on LibVLCSharp as well as Avalonia.
 
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
     </Description>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <RootNamespace>LibVLCSharp.Avalonia</RootNamespace>
     <PackageId>LibVLCSharp.Avalonia</PackageId>
     <PackageTags>$(PackageTags);avalonia</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.4" />
+    <PackageReference Include="Avalonia" Version="11.3.13" />
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
   </ItemGroup>
 </Project>

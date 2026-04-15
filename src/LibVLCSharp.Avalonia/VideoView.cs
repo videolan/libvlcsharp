@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -24,6 +25,10 @@ namespace LibVLCSharp.Avalonia
         IDisposable? contentChangedHandler = null;
         IDisposable? isVisibleChangedHandler = null;
         IDisposable? floatingContentChangedHandler = null;
+
+        private static readonly Version AvaloniaVersion =
+            typeof(Application).Assembly.GetName().Version!;
+        private static readonly bool IsAvalonia12OrAbove = AvaloniaVersion.Major >= 12;
 
         /// <summary>
         /// MediaPlayer Data Bound property
@@ -151,9 +156,10 @@ namespace LibVLCSharp.Avalonia
                 _floatingContent.Position = newPosition;
             }
             
-            if (_floatingContent.Content is Visual content && VisualRoot is Visual root && this is Visual videoView && child != null)
+            var visualRoot = TopLevel.GetTopLevel(this);
+            if (_floatingContent.Content is Visual content && visualRoot != null && child != null)
             {
-                content.Clip = GetVisibleRegionAsGeometry(root, videoView, child.Margin);
+                content.Clip = GetVisibleRegionAsGeometry(visualRoot, this, child.Margin);
             }
         }
         
@@ -236,7 +242,7 @@ namespace LibVLCSharp.Avalonia
             if (!this.IsAttachedToVisualTree())
                 return;
 
-            if (VisualRoot is not Window visualRoot)
+            if (TopLevel.GetTopLevel(this) is not Window visualRoot)
             {
                 return;
             }
@@ -245,7 +251,6 @@ namespace LibVLCSharp.Avalonia
             {
                 _floatingContent = new Window()
                 {
-                    SystemDecorations = SystemDecorations.None,
                     TransparencyLevelHint = new[] { WindowTransparencyLevel.Transparent },
                     Background = Brushes.Transparent,
                     SizeToContent = SizeToContent.WidthAndHeight,
@@ -255,6 +260,7 @@ namespace LibVLCSharp.Avalonia
                     Opacity = 1.0,
                     DataContext = DataContext
                 };
+                SetWindowDecorationsNone(_floatingContent);
                 floatingContentChangedHandler = _floatingContent.Bind(ContentControl.ContentProperty, this.GetObservable(ContentProperty));
                 _floatingContent.PointerEntered += FloatingContentOnPointerEvent;
                 _floatingContent.PointerExited += FloatingContentOnPointerEvent;
@@ -268,7 +274,15 @@ namespace LibVLCSharp.Avalonia
             ShowNativeOverlay(IsEffectivelyVisible);
         }
 
-        private void VisualRoot_UpdateOverlayPosition(object sender, EventArgs e) => UpdateOverlayPosition();
+        private static void SetWindowDecorationsNone(Window window)
+        {
+            var prop = IsAvalonia12OrAbove
+                ? typeof(Window).GetProperty("WindowDecorations")
+                : typeof(Window).GetProperty("SystemDecorations");
+            prop!.SetValue(window, Enum.Parse(prop.PropertyType, "None"));
+        }
+
+        private void VisualRoot_UpdateOverlayPosition(object? sender, EventArgs e) => UpdateOverlayPosition();
 
         private void FloatingContentOnPointerEvent(object? sender, PointerEventArgs e)
         {
@@ -277,7 +291,7 @@ namespace LibVLCSharp.Avalonia
 
         private void ShowNativeOverlay(bool show)
         {
-            if (_floatingContent == null || _floatingContent.IsVisible == show || VisualRoot is not Window visualRoot)
+            if (_floatingContent == null || _floatingContent.IsVisible == show || TopLevel.GetTopLevel(this) is not Window visualRoot)
                 return;
 
             if (show && this.IsAttachedToVisualTree())
@@ -296,9 +310,9 @@ namespace LibVLCSharp.Avalonia
             InitializeNativeOverlay();
         }
 
-        private void Parent_DetachedFromVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        private void Parent_DetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
         {
-            if (VisualRoot is not Window visualRoot)
+            if (TopLevel.GetTopLevel(this) is not Window visualRoot)
             {
                 return;
             }
