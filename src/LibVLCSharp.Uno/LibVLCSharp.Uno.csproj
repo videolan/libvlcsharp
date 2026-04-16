@@ -14,6 +14,7 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <PackageId>LibVLCSharp.Uno</PackageId>
     <RuntimeIdentifiers Condition="$(TargetFramework.Contains('windows'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <IsAotCompatible>false</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)'!='net8.0-windows10.0.19041'">
     <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
