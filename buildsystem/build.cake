@@ -10,6 +10,22 @@ var solutionName = "LibVLCSharp";
 var solutionFile = IsRunningOnWindows() ? $"{solutionName}.slnx" : $"{solutionName}.Mac.slnx";
 var solutionPath = $"../src/{solutionFile}";
 var libvlcsharpCsproj = "../src/libvlcsharp/libvlcsharp.csproj";
+var libraryProjects = new string[]
+{
+    "../src/LibVLCSharp/LibVLCSharp.csproj",
+    "../src/LibVLCSharp.Android.AWindow/LibVLCSharp.Android.AWindow.csproj",
+    "../src/LibVLCSharp.Android.AWindowModern/LibVLCSharp.Android.AWindowModern.csproj",
+    "../src/LibVLCSharp.Avalonia/LibVLCSharp.Avalonia.csproj",
+    "../src/LibVLCSharp.Eto/LibVLCSharp.Eto.csproj",
+    "../src/LibVLCSharp.Forms/LibVLCSharp.Forms.csproj",
+    "../src/LibVLCSharp.Forms.Platforms.GTK/LibVLCSharp.Forms.Platforms.GTK.csproj",
+    "../src/LibVLCSharp.Forms.Platforms.WPF/LibVLCSharp.Forms.Platforms.WPF.csproj",
+    "../src/LibVLCSharp.GTK/LibVLCSharp.GTK.csproj",
+    "../src/LibVLCSharp.MAUI/LibVLCSharp.MAUI.csproj",
+    "../src/LibVLCSharp.Uno/LibVLCSharp.Uno.csproj",
+    "../src/LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj",
+    "../src/LibVLCSharp.WPF/LibVLCSharp.WPF.csproj",
+};
 
 var packagesDir = "../packages";
 var isCiBuild = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
@@ -65,6 +81,16 @@ Task("Build")
     .Does(() =>
 {
     Build(solutionPath);
+});
+
+Task("Build-Libraries")
+    .IsDependentOn("Restore-NuGet-Packages")
+    .Does(() =>
+{
+    foreach(var project in libraryProjects)
+    {
+        Build(project);
+    }
 });
 
 // just for (faster) testing
