@@ -79,6 +79,20 @@ namespace LibVLCSharp
             {
                 arch = Path.Combine(ArchitectureNames.MacOS64, Constants.Lib);
             }
+
+#if !NET40 && !NETSTANDARD1_1
+            else if (PlatformHelper.IsWindows)
+            {
+                arch = RuntimeInformation.ProcessArchitecture switch
+                {
+                    Architecture.X64 => ArchitectureNames.Win64,
+                    Architecture.X86 => ArchitectureNames.Win86,
+                    Architecture.Arm64 => ArchitectureNames.WinArm64,
+                    _ => PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86
+                };
+            }
+#endif
+
             else
             {
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
@@ -125,6 +139,27 @@ namespace LibVLCSharp
             var libvlcPath3 = LibVLCPath(Path.GetDirectoryName(libvlcAssemblyLocation)!);
 
             paths.Add((string.Empty, libvlcPath3));
+
+            // Add Win64 folders as fallback for WinArm64 to keep compatibility
+            if (arch == ArchitectureNames.WinArm64)
+            {
+                var fallbackLibvlcDirPath1 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!,
+                    Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+
+                var fallbackLibvlccorePath1 = LibVLCCorePath(fallbackLibvlcDirPath1);
+                var fallbackLibvlcPath1 = LibVLCPath(fallbackLibvlcDirPath1);
+                paths.Add((fallbackLibvlccorePath1, fallbackLibvlcPath1));
+            
+                if (!string.IsNullOrEmpty(assemblyLocation))
+                {
+                    var fallbackLibvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation)!,
+                        Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+
+                    var fallbackLibvlccorePath2 = LibVLCCorePath(fallbackLibvlcDirPath2);
+                    var fallbackLibvlcPath2 = LibVLCPath(fallbackLibvlcDirPath2);
+                    paths.Add((fallbackLibvlccorePath2, fallbackLibvlcPath2));
+                }
+            }
 
             if (PlatformHelper.IsMac)
             {

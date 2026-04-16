@@ -42,6 +42,7 @@ namespace LibVLCSharp
 
     internal static class ArchitectureNames
     {
+        internal const string WinArm64 = "win-arm64";
         internal const string Win64 = "win-x64";
         internal const string Win86 = "win-x86";
         internal const string MacOS64 = "osx-x64";
