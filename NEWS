@@ -1,3 +1,13 @@
+LibVLCSharp version 3.9.7
+=========================
+* Core: Add AOT support
+* Core: Use Marshal.PtrToStringUTF8 for modern TFMs
+* Core: Add Windows ARM64 native library loading with x64 fallback (requires VideoLAN.LibVLC.Windows 3.0.23.1)
+* Avalonia: Add Avalonia 12 compatibility
+* MAUI: Remove deprecated ClickGestureRecognizer from MediaPlayerElement
+* Docs: Fix libvlc documentation path
+* Samples: Update Avalonia sample to target Avalonia 12
+
 LibVLCSharp version 3.9.6
 =========================
 * Build: Add support to .NET10
