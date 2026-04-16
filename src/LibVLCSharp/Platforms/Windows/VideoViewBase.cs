@@ -23,7 +23,7 @@ namespace LibVLCSharp.Platforms.Windows
     /// VideoView base class for the UWP platform
     /// </summary>
     [TemplatePart(Name = PartSwapChainPanelName, Type = typeof(SwapChainPanel))]
-    public abstract class VideoViewBase : Control, IVideoView
+    public abstract partial class VideoViewBase : Control, IVideoView
     {
         private const string PartSwapChainPanelName = "SwapChainPanel";
 
