@@ -84,7 +84,7 @@ namespace LibVLCSharp.Uno.WinUI.Sample
         {
             LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
             MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
-            MediaPlayer.Play(new Media(LibVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            MediaPlayer.Play(new Media(LibVLC, "https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi",
                 FromType.FromLocation));
         }
 

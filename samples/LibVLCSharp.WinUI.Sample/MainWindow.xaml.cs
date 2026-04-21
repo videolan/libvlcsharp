@@ -37,7 +37,7 @@ namespace LibVLCSharp.WinUI.Sample
         {
             libvlc = new LibVLC(enableDebugLogs: true, e.SwapChainOptions);
             mp = new MediaPlayer(libvlc);
-            using var media = new Media(libvlc, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(libvlc, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
             mp.Play(media);
         }
     }

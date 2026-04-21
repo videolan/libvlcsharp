@@ -33,7 +33,7 @@ namespace LibVLCSharp.WinForms.Sample
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var media = new Media(_libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            var media = new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
             _mp.Play(media);
             media.Dispose();
         }

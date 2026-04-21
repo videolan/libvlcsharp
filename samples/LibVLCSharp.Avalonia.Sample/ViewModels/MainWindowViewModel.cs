@@ -22,7 +22,7 @@ namespace LibVLCSharp.Avalonia.Sample.ViewModels
                 return;
             }
             
-            using var media = new Media(_libVlc, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(_libVlc, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
             MediaPlayer.Play(media);
         }
         
