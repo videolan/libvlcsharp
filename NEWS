@@ -1,3 +1,8 @@
+LibVLCSharp version 3.9.7.1
+=========================
+* MAUI hotfix support for .NET 10
+* samples: update dead media URLs
+
 LibVLCSharp version 3.9.7
 =========================
 * Core: Add AOT support
