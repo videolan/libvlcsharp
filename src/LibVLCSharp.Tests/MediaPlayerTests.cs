@@ -35,7 +35,7 @@ namespace LibVLCSharp.Tests
         public async Task TrackDescription()
         {
             var mp = new MediaPlayer(_libVLC);
-            var media = new Media("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", FromType.FromLocation);
+            var media = new Media("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi", FromType.FromLocation);
             var tcs = new TaskCompletionSource<bool>();
 
             mp.Media = media;
@@ -251,7 +251,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
             mp.TimeChanged += (s, e) => Debug.WriteLine(e.Time);
-            mp.Play(new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
+            mp.Play(new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi")));
 
             await Task.Delay(4000);
             
@@ -263,7 +263,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))
+                Media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"))
             };
 
             await mp.PlayAsync();

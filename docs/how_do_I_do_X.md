@@ -86,7 +86,7 @@ Full list commands and arguments https://wiki.videolan.org/VLC_command-line_help
 ```csharp
 using(var libVLC = new LibVLC())
 {
-    var media = new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation);
+    var media = new Media(_libVLC, "https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi", FromType.FromLocation);
     using (var mp = new MediaPlayer(media))
     {
             mp.AddSlave(MediaSlaveType.Subtitle, "file:///C:\\Users\\Me\\Desktop\\subs.srt", true);
@@ -157,7 +157,7 @@ https://stackoverflow.com/questions/56487740/how-to-achieve-looping-playback-wit
 
 ```csharp
 using var libVLC = new LibVLC();
-using var media = new Media(libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
+using var media = new Media(libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
 
 await media.Parse(MediaParseOptions.ParseNetwork);
 

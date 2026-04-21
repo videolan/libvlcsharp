@@ -34,7 +34,7 @@ namespace LibVLCSharp.Android.Sample
 
             _videoView = new VideoView(this) { MediaPlayer = _mediaPlayer };
             AddContentView(_videoView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent));
-            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+            using var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
             _videoView.MediaPlayer.Play(media);
         }
 

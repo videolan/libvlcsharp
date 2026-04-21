@@ -361,7 +361,7 @@ namespace LibVLCSharp.CustomRendering.Direct3D11
             libvlc.Log += (s, e) => Debug.WriteLine(e.FormattedLog);
 
             mediaplayer = new MediaPlayer(libvlc);
-            using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
+            using var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
             mediaplayer.Media = media;
 
             mediaplayer.SetOutputCallbacks(VideoEngine.D3D11, OutputSetup, OutputCleanup, SetWindow, UpdateOuput, Swap, StartRendering, null, null, SelectPlane);

@@ -50,7 +50,7 @@ namespace LibVLCSharp.WPF.Sample
         {
             if (!parent.VideoView.MediaPlayer.IsPlaying)
             {
-                using var media = new Media(new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"));
+                using var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
                 parent.VideoView.MediaPlayer.Play(media);
             }
         }
