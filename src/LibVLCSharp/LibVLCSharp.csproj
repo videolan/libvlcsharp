@@ -30,14 +30,13 @@ If you need Xamarin.Forms support, see LibVLCSharp.Forms.
 LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Description>
     <TargetFrameworks>netstandard2.1;netstandard2.0;netstandard1.1;net40;net471;net6.0;net8.0;net9;net10.0</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsPlatform('Linux'))">$(TargetFrameworks);net9.0-android;net9.0-ios;net9.0-macos;net9.0-tvos;net10.0-android;net10.0-ios</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;net6.0-windows10.0.17763.0;net8.0-windows10.0.19041;net9.0-windows10.0.19041;net10.0-windows10.0.19041;monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);uap10.0.18362;monoandroid81;xamarin.ios10;xamarin.mac20</TargetFrameworks>
     <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeAWindow</TargetsForTfmSpecificBuildOutput>
     <RootNamespace>LibVLCSharp</RootNamespace>
     <PackageId>LibVLCSharp</PackageId>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
-    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('-windows10'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <!-- https://github.com/novotnyllc/MSBuildSdkExtras/issues/305 -->
     <TargetFrameworkIdentifier Condition=" $([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETCoreApp' ">.NETCoreApp</TargetFrameworkIdentifier>
   </PropertyGroup>
@@ -48,9 +47,6 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
   <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.Contains('windows10'))">
-    <DisableWinAppSDKPriGeneration>true</DisableWinAppSDKPriGeneration>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Platforms\**\*.cs" />
@@ -79,7 +75,7 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
   </ItemGroup>
   
-  <ItemGroup Condition="$(TargetFramework.StartsWith('uap')) Or $(TargetFramework.Contains('windows10')) ">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <Compile Include="Platforms\Windows\**\*.cs" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <Page Include="Themes\Generic.xaml">
@@ -87,22 +83,12 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  
-  <ItemGroup Condition="$(TargetFramework.Contains('windows10')) ">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
-  </ItemGroup>
 
   <ItemGroup Condition="$(DefineConstants.Contains('UWP'))">
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net40' ">
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net471' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.6.0" />
   </ItemGroup>

@@ -1,20 +1,19 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using LibVLCSharp.Shared;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
-using Windows.ApplicationModel;
 using Windows.System.Profile;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace LibVLCSharp.Platforms.Windows
 {
     /// <summary>
-    /// VideoView base class for the UWP platform
+    /// VideoView base class for the WinUI platform
     /// </summary>
     [TemplatePart(Name = PartSwapChainPanelName, Type = typeof(SwapChainPanel))]
     public abstract partial class VideoViewBase : Control, IVideoView
@@ -39,14 +38,10 @@ namespace LibVLCSharp.Platforms.Windows
             DefaultStyleKey = typeof(VideoView);
 
             Unloaded += (s, e) => DestroySwapChain();
-            if (!DesignMode.DesignModeEnabled)
-            {
-                Application.Current.Suspending += (s, e) => { Trim(); };
-            }
         }
 
         /// <summary>
-        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate. 
+        /// Invoked whenever application code or internal processes (such as a rebuilding layout pass) call ApplyTemplate.
         /// In simplest terms, this means the method is called just before a UI element displays in your app.
         /// Override this method to influence the default post-template logic of a class.
         /// </summary>
@@ -55,8 +50,6 @@ namespace LibVLCSharp.Platforms.Windows
             base.OnApplyTemplate();
             _panel = (SwapChainPanel)GetTemplateChild(PartSwapChainPanelName);
 
-            if (DesignMode.DesignModeEnabled)
-                return;
             DestroySwapChain();
 
             _panel.SizeChanged += (s, eventArgs) =>
@@ -78,12 +71,11 @@ namespace LibVLCSharp.Platforms.Windows
                     UpdateScale();
                 }
             };
-
         }
 
         /// <summary>
         /// Clears the current view restoring the initial visual state with the configured clear color.
-        /// This is a LibVLCSharp UWP-specific workaround for the following issue: https://code.videolan.org/videolan/vlc/-/issues/23667 
+        /// This is a LibVLCSharp Windows-specific workaround for the following issue: https://code.videolan.org/videolan/vlc/-/issues/23667
         /// </summary>
         /// <param name="clearColor">The color to clear the render target view with. Defaults to black.</param>
         public void Clear(RawColor4 clearColor = default)
@@ -134,7 +126,7 @@ namespace LibVLCSharp.Platforms.Windows
         /// </summary>
         void TryCreateD3D11Device(SharpDX.DXGI.Factory2 dxgiFactory, DeviceCreationFlags deviceCreationFlags)
         {
-            for(var i = 0; i < dxgiFactory.GetAdapterCount(); i++)
+            for (var i = 0; i < dxgiFactory.GetAdapterCount(); i++)
             {
                 try
                 {
@@ -169,15 +161,13 @@ namespace LibVLCSharp.Platforms.Windows
         /// </summary>
         void CreateSwapChain()
         {
-            // Do not create the swapchain when the VideoView is collapsed.
             if (_panel == null || _panel.ActualHeight == 0)
                 return;
 
             SharpDX.DXGI.Factory2? dxgiFactory = null;
             try
             {
-                var deviceCreationFlags =
-                    DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
+                var deviceCreationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.VideoSupport;
 
 #if DEBUG
                 if (AnalyticsInfo.VersionInfo.DeviceFamily != Mobile)
@@ -199,13 +189,11 @@ namespace LibVLCSharp.Platforms.Windows
 
                 if (_d3D11Device is null)
                 {
-                    // Fallback without video support
                     deviceCreationFlags = deviceCreationFlags & ~DeviceCreationFlags.VideoSupport;
                     TryCreateD3D11Device(dxgiFactory, deviceCreationFlags);
                 }
                 if (_d3D11Device is null)
                 {
-                    // Final fallback to WARP
                     TryCreateWarpDevice(DeviceCreationFlags.BgraSupport);
                 }
 
@@ -216,7 +204,6 @@ namespace LibVLCSharp.Platforms.Windows
 
                 var device = _d3D11Device.QueryInterface<SharpDX.DXGI.Device1>();
 
-                //Create the swapchain
                 var swapChainDescription = new SharpDX.DXGI.SwapChainDescription1
                 {
                     Width = (int)(_panel.ActualWidth * _panel.CompositionScaleX),
@@ -246,7 +233,6 @@ namespace LibVLCSharp.Platforms.Windows
                     panelNative.SwapChain = _swapChain;
                 }
 
-                // This is necessary so we can call Trim() on suspend
                 _device3 = device.QueryInterface<SharpDX.DXGI.Device3>();
                 if (_device3 == null)
                 {
@@ -355,7 +341,7 @@ namespace LibVLCSharp.Platforms.Windows
         }
 
         /// <summary>
-        /// When the app is suspended, UWP apps should call Trim so that the DirectX data is cleaned.
+        /// Trims DirectX resources when needed.
         /// </summary>
         void Trim()
         {
@@ -376,12 +362,12 @@ namespace LibVLCSharp.Platforms.Windows
         {
         }
 
-
         /// <summary>
         /// Identifies the <see cref="MediaPlayer"/> dependency property.
         /// </summary>
         public static DependencyProperty MediaPlayerProperty { get; } = DependencyProperty.Register(nameof(MediaPlayer), typeof(MediaPlayer),
             typeof(VideoViewBase), new PropertyMetadata(null, OnMediaPlayerChanged));
+
         /// <summary>
         /// MediaPlayer object connected to the view
         /// </summary>
@@ -409,5 +395,11 @@ namespace LibVLCSharp.Platforms.Windows
                 videoView.Attach();
             }
         }
+    }
+
+    [Guid("63aad0b8-7c24-40ff-85a8-640d944cc325")]
+    internal class ISwapChainPanelNative : SharpDX.DXGI.ISwapChainPanelNative
+    {
+        public ISwapChainPanelNative(IntPtr nativePtr) : base(nativePtr) { }
     }
 }

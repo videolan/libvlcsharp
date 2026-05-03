@@ -124,6 +124,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | UWP               | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Forms     | [LibVLCSharp.Forms][RLibVLCSharpForms]          | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
 | MAUI              | [LibVLCSharp.MAUI][RLibVLCSharpMAUI]            | [![LibVLCSharpMAUIBadge]][LibVLCSharpMAUI]        |
+| WinUI             | [LibVLCSharp.WinUI][RLibVLCSharpWinUI]          | [![LibVLCSharpWinUIBadge]][LibVLCSharpWinUI]      |
 | WPF               | [LibVLCSharp.WPF][RLibVLCSharpWPF]              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
 | Xamarin.Forms.WPF | [LibVLCSharp.Forms.WPF][RLibVLCSharpFormsWPF]   | [![LibVLCSharpFormsWPFBadge]][LibVLCSharpFormsWPF]|
 | GTK               | [LibVLCSharp.GTK][RLibVLCSharpGTK]              | [![LibVLCSharpGTKBadge]][LibVLCSharpGTK]          |
@@ -154,6 +155,7 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [RLibVLCSharpForms]: src/LibVLCSharp.Forms/README.md
 [RLibVLCSharpMAUI]: src/LibVLCSharp.MAUI/README.md
+[RLibVLCSharpWinUI]: src/LibVLCSharp.WinUI/README.md
 [RLibVLCSharpWPF]: src/LibVLCSharp.WPF/README.md
 [RLibVLCSharpFormsWPF]: src/LibVLCSharp.Forms.Platforms.WPF/README.md
 [RLibVLCSharpGTK]: src/LibVLCSharp.GTK/README.md
@@ -189,6 +191,9 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [LibVLCSharpMAUI]: https://www.nuget.org/packages/LibVLCSharp.MAUI/
 [LibVLCSharpMAUIBadge]: https://img.shields.io/nuget/v/LibVLCSharp.MAUI.svg
+
+[LibVLCSharpWinUI]: https://www.nuget.org/packages/LibVLCSharp.WinUI/
+[LibVLCSharpWinUIBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WinUI.svg
 
 [LibVLCSharpWPF]: https://www.nuget.org/packages/LibVLCSharp.WPF/
 [LibVLCSharpWPFBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WPF.svg

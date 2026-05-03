@@ -482,6 +482,29 @@
     <BuildType Solution="Ad-Hoc|*" Project="Debug" />
     <BuildType Solution="AppStore|*" Project="Debug" />
   </Project>
+  <Project Path="LibVLCSharp.WinUI/LibVLCSharp.WinUI.csproj">
+    <BuildType Solution="Ad-Hoc|*" Project="Debug" />
+    <BuildType Solution="AppStore|*" Project="Debug" />
+    <Platform Solution="*|ARM64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Platform Solution="*|x86" Project="x86" />
+    <Platform Solution="Ad-Hoc|Any CPU" Project="x86" />
+    <Platform Solution="Ad-Hoc|ARM" Project="x86" />
+    <Platform Solution="Ad-Hoc|iPhone" Project="x86" />
+    <Platform Solution="Ad-Hoc|iPhoneSimulator" Project="x86" />
+    <Platform Solution="AppStore|Any CPU" Project="x86" />
+    <Platform Solution="AppStore|ARM" Project="x86" />
+    <Platform Solution="AppStore|iPhone" Project="x86" />
+    <Platform Solution="AppStore|iPhoneSimulator" Project="x86" />
+    <Platform Solution="Debug|Any CPU" Project="x64" />
+    <Platform Solution="Debug|ARM" Project="x64" />
+    <Platform Solution="Debug|iPhone" Project="x64" />
+    <Platform Solution="Debug|iPhoneSimulator" Project="x64" />
+    <Platform Solution="Release|Any CPU" Project="x64" />
+    <Platform Solution="Release|ARM" Project="x64" />
+    <Platform Solution="Release|iPhone" Project="x64" />
+    <Platform Solution="Release|iPhoneSimulator" Project="x64" />
+  </Project>
   <Project Path="LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj">
     <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
     <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />

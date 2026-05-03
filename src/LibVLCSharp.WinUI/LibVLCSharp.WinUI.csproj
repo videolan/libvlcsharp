@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>LibVLCSharp.WinUI</Title>
+    <Summary>WinUI integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp is a cross-platform audio and video API for .NET platforms based on VideoLAN's LibVLC Library. It provides a comprehensive multimedia API that can be used across mobile, server and desktop to render video and output audio. Mono, .NET Framework and .NET Core runtimes are supported.
+
+LibVLCSharp.WinUI contains the integration with WinUI.
+
+This package contains the views that allows to display a video played with LibVLCSharp
+in a WinUI app. It depends on LibVLCSharp.
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
+    </Description>
+    <TargetFrameworks>net6.0-windows10.0.17763.0;net8.0-windows10.0.19041;net9.0-windows10.0.19041;net10.0-windows10.0.19041</TargetFrameworks>
+    <Configurations>Debug;Release;Win32Debug;Win32Release</Configurations>
+    <RootNamespace>LibVLCSharp</RootNamespace>
+    <PackageId>LibVLCSharp.WinUI</PackageId>
+    <PackageTags>$(PackageTags);winui</PackageTags>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <DisableWinAppSDKPriGeneration>true</DisableWinAppSDKPriGeneration>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) Or $(TargetFramework.StartsWith('net8.0'))">
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+</Project>
