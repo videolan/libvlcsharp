@@ -26,6 +26,6 @@ See the [Installation](../../README.md#installation) documentation for more info
 If you are in one of these situation, this package is made for you.
 
 - You want to build a console application that leverages the power of VLC for transcoding/streaming/recording/playing audio... without displaying the video anywhere
-- You want to build a Xamarin.iOS/Android/Mac/tvOS/UWP app (not Xamarin.Forms, for that, see [LibVLCSharp.Forms](../LibVLCSharp.Forms/README.md) )
+- You want to build a Xamarin.iOS/Android/Mac/tvOS app (not Xamarin.Forms, for that, see [LibVLCSharp.Forms](../LibVLCSharp.Forms/README.md) )
 
 For other platforms, see the [main documentation](../../README.md)
