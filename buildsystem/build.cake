@@ -25,6 +25,8 @@ var libraryProjects = new string[]
     "../src/LibVLCSharp.Uno/LibVLCSharp.Uno.csproj",
     "../src/LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj",
     "../src/LibVLCSharp.WPF/LibVLCSharp.WPF.csproj",
+    "../src/LibVLCSharp.UWP/LibVLCSharp.UWP.csproj",
+    "../src/LibVLCSharp.WinUI/LibVLCSharp.WinUI.csproj",
 };
 var testCsprojs = new string[]
 {
@@ -37,7 +39,7 @@ var isCiBuild = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
 var suffixVersion = $"alpha-{DateTime.Today.ToString("yyyyMMdd")}-{BuildSystem.AzurePipelines.Environment.Build.Id}";
 var feedzLVSSource = "https://f.feedz.io/videolan/preview/nuget/index.json";
 var FEEDZ = "FEEDZ";
-const uint totalPackageCount = 12;
+const uint totalPackageCount = 14;
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
