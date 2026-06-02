@@ -1,0 +1,52 @@
+<Project Sdk="MSBuild.Sdk.Extras">
+  <PropertyGroup>
+    <Title>LibVLCSharp.UWP</Title>
+    <Summary>UWP integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp.UWP contains the UWP VideoView integration for LibVLCSharp.
+
+This package contains the core LibVLCSharp APIs and the UWP view that allows to display video played with LibVLCSharp in a UWP app.
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.UWP.</Description>
+    <TargetFrameworks>uap10.0.18362</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net9.0-windows10.0.26100;net10.0-windows10.0.26100</TargetFrameworks>
+    <ProjectGuid>{D3B33E0E-2BC1-46EF-A483-6587B9A086A3}</ProjectGuid>
+    <RootNamespace>LibVLCSharp</RootNamespace>
+    <AssemblyName>LibVLCSharp</AssemblyName>
+    <PackageId>LibVLCSharp.UWP</PackageId>
+    <PackageTags>$(PackageTags);uwp</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <RuntimeIdentifiers Condition="$(TargetFramework.Contains('-windows10'))">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <TargetFrameworkIdentifier Condition=" $([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETCoreApp' ">.NETCoreApp</TargetFrameworkIdentifier>
+    <UseUwp Condition="$(TargetFramework.Contains('-windows10'))">true</UseUwp>
+    <UseUwpTools Condition="$(TargetFramework.Contains('-windows10'))">true</UseUwpTools>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\LibVLCSharp\Shared\**\*.cs" LinkBase="Shared" />
+    <Compile Include="..\LibVLCSharp\Properties\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\LibVLCSharp\Platforms\Windows\**\*.cs" LinkBase="Platforms\Windows" />
+    <Page Include="..\LibVLCSharp\Themes\Generic.xaml" Link="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.12" />
+  </ItemGroup>
+</Project>
