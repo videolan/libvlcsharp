@@ -27,7 +27,8 @@ It also contains a VLC MediaPlayerElement for the Uno Platform (UWP, Android, iO
     <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" Condition="!$(TargetFramework.Contains('windows'))" />
+    <ProjectReference Include="..\LibVLCSharp.WinUI\LibVLCSharp.WinUI.csproj" Condition="$(TargetFramework.Contains('windows'))" />
     <Compile Remove="**\*.UWP.cs" />
     <Compile Remove="**\*.Android.cs" />
     <Compile Remove="**\*.iOS.cs" />

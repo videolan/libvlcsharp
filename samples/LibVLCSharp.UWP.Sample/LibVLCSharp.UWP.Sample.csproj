@@ -173,9 +173,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LibVLCSharp\LibVLCSharp.csproj">
-      <Project>{d1c3b7c4-713b-46b2-b33a-e9298c819921}</Project>
-      <Name>LibVLCSharp</Name>
+    <ProjectReference Include="..\..\src\LibVLCSharp.UWP\LibVLCSharp.UWP.csproj">
+      <Project>{d3b33e0e-2bc1-46ef-a483-6587b9a086a3}</Project>
+      <Name>LibVLCSharp.UWP</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
