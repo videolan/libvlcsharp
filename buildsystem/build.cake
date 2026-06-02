@@ -152,7 +152,7 @@ void Build(string project)
         settings.WithProperty("VersionSuffix", suffixVersion);
     }
 
-    settings.ToolVersion = MSBuildToolVersion.VS2022;
+    settings.ToolVersion = MSBuildToolVersion.VS2026;
 
     MSBuild(project, settings);
 }
