@@ -23,7 +23,8 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" Condition="!$(TargetFramework.Contains('-windows'))" />
+    <ProjectReference Include="..\LibVLCSharp.WinUI\LibVLCSharp.WinUI.csproj" Condition="$(TargetFramework.Contains('-windows'))" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.70" />
   </ItemGroup>
 

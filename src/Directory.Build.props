@@ -22,10 +22,10 @@
   <PropertyGroup Condition="$(TargetFramework.Contains('android'))">
     <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('uap')) Or '$(MSBuildProjectName)' == 'LibVLCSharp.UWP'">
     <DefineConstants>$(DefineConstants);UWP;WINDOWS_MODERN</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.Contains('windows10'))">
+  <PropertyGroup Condition="$(TargetFramework.Contains('windows10')) And '$(MSBuildProjectName)' != 'LibVLCSharp.UWP'">
     <DefineConstants>$(DefineConstants);WINUI;WINDOWS_MODERN</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">

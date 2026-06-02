@@ -121,7 +121,8 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Xamarin.iOS       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.tvOS      | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Mac       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
-| UWP               | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| UWP               | [LibVLCSharp.UWP][RLibVLCSharpUWP]              | [![LibVLCSharpUWPBadge]][LibVLCSharpUWP]          |
+| WinUI             | [LibVLCSharp.WinUI][RLibVLCSharpWinUI]          | [![LibVLCSharpWinUIBadge]][LibVLCSharpWinUI]      |
 | Xamarin.Forms     | [LibVLCSharp.Forms][RLibVLCSharpForms]          | [![LibVLCSharpFormsBadge]][LibVLCSharpForms]      |
 | MAUI              | [LibVLCSharp.MAUI][RLibVLCSharpMAUI]            | [![LibVLCSharpMAUIBadge]][LibVLCSharpMAUI]        |
 | WPF               | [LibVLCSharp.WPF][RLibVLCSharpWPF]              | [![LibVLCSharpWPFBadge]][LibVLCSharpWPF]          |
@@ -159,6 +160,8 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 [RLibVLCSharpGTK]: src/LibVLCSharp.GTK/README.md
 [RLibVLCSharpFormsGTK]: src/LibVLCSharp.Forms.Platforms.GTK/README.md
 [RLibVLCSharpWinForms]: src/LibVLCSharp.WinForms/README.md
+[RLibVLCSharpUWP]: src/LibVLCSharp.UWP/README.md
+[RLibVLCSharpWinUI]: src/LibVLCSharp.WinUI/README.md
 [RLibVLCSharpUno]: src/LibVLCSharp.Uno/README.md
 [RLibVLCSharpAvalonia]: src/LibVLCSharp.Avalonia/README.md
 [RLibVLCSharpEto]: src/LibVLCSharp.Eto/README.md
@@ -183,6 +186,10 @@ See the docs for [preview builds installation details](docs/libvlc_preview.md).
 
 [LibVLCSharp]: https://www.nuget.org/packages/LibVLCSharp/
 [LibVLCSharpBadge]: https://img.shields.io/nuget/v/LibVLCSharp.svg
+[LibVLCSharpUWP]: https://www.nuget.org/packages/LibVLCSharp.UWP/
+[LibVLCSharpUWPBadge]: https://img.shields.io/nuget/v/LibVLCSharp.UWP.svg
+[LibVLCSharpWinUI]: https://www.nuget.org/packages/LibVLCSharp.WinUI/
+[LibVLCSharpWinUIBadge]: https://img.shields.io/nuget/v/LibVLCSharp.WinUI.svg
 
 [LibVLCSharpForms]: https://www.nuget.org/packages/LibVLCSharp.Forms/
 [LibVLCSharpFormsBadge]: https://img.shields.io/nuget/v/LibVLCSharp.Forms.svg
