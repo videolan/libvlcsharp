@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>LibVLCSharp.WinUI</Title>
+    <Summary>WinUI integration for LibVLCSharp</Summary>
+    <Description>LibVLCSharp.WinUI contains the WinUI VideoView integration for LibVLCSharp.
+
+This package contains the core LibVLCSharp APIs and the WinUI view that allows to display video played with LibVLCSharp in a WinUI app.
+
+LibVLC needs to be installed separately, see VideoLAN.LibVLC.Windows.</Description>
+    <TargetFrameworks>net6.0-windows10.0.17763.0;net8.0-windows10.0.19041;net9.0-windows10.0.19041;net10.0-windows10.0.19041</TargetFrameworks>
+    <ProjectGuid>{1377EBAF-FAB8-45DD-A65F-4C304FF72165}</ProjectGuid>
+    <RootNamespace>LibVLCSharp</RootNamespace>
+    <AssemblyName>LibVLCSharp</AssemblyName>
+    <PackageId>LibVLCSharp.WinUI</PackageId>
+    <PackageTags>$(PackageTags);winui</PackageTags>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <UseWinUI>true</UseWinUI>
+    <DisableWinAppSDKPriGeneration>true</DisableWinAppSDKPriGeneration>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <NoWarn>$(NoWarn);NU1510</NoWarn>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1510</WarningsNotAsErrors>
+    <TargetFrameworkIdentifier Condition=" $([MSBuild]::GetTargetFrameworkIdentifier('$(TargetFramework)')) == '.NETCoreApp' ">.NETCoreApp</TargetFrameworkIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\LibVLCSharp\Shared\**\*.cs" LinkBase="Shared" />
+    <Compile Include="..\LibVLCSharp\Properties\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\LibVLCSharp\Platforms\Windows\**\*.cs" LinkBase="Platforms\Windows" />
+    <Page Include="..\LibVLCSharp\Themes\Generic.xaml" Link="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7175" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" NoWarn="NU1510" />
+    <PackageReference Include="System.Private.Uri" Version="4.3.2" NoWarn="NU1510" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" NoWarn="NU1510" />
+  </ItemGroup>
+</Project>
