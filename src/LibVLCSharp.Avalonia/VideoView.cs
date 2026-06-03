@@ -154,6 +154,11 @@ namespace LibVLCSharp.Avalonia
             _floatingContent.MaxWidth = Bounds.Width;
             _floatingContent.MaxHeight = Bounds.Height;
 
+            if (!this.IsAttachedToVisualTree())
+            {
+                return;
+            }
+
             var newPosition = this.PointToScreen(topLeft);
 
             if (newPosition != _floatingContent.Position)
