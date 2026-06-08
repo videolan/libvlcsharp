@@ -26,6 +26,11 @@ var libraryProjects = new string[]
     "../src/LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj",
     "../src/LibVLCSharp.WPF/LibVLCSharp.WPF.csproj",
 };
+var testCsprojs = new string[]
+{
+    "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj",
+    "../src/LibVLCSharp.Avalonia.Tests/LibVLCSharp.Avalonia.Tests.csproj",
+};
 
 var packagesDir = "../packages";
 var isCiBuild = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
@@ -99,6 +104,20 @@ Task("Build-only-libvlcsharp")
     .Does(() =>
 {
     Build(libvlcsharpCsproj);
+});
+
+Task("Test")
+    .Does(() =>
+{
+    var settings = new DotNetTestSettings
+    {
+        Loggers = new []{ "console;verbosity=detailed" }
+    };
+
+    foreach(var project in testCsprojs)
+    {
+        DotNetTest(project, settings);
+    }
 });
 
 Task("CIDeploy")
