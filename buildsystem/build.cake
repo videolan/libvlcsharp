@@ -26,7 +26,11 @@ var libraryProjects = new string[]
     "../src/LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj",
     "../src/LibVLCSharp.WPF/LibVLCSharp.WPF.csproj",
 };
-var testCsproj = "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj";
+var testCsprojs = new string[]
+{
+    "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj",
+    "../src/LibVLCSharp.Avalonia.Tests/LibVLCSharp.Avalonia.Tests.csproj",
+};
 
 var packagesDir = "../packages";
 var isCiBuild = BuildSystem.AzurePipelines.IsRunningOnAzurePipelines;
@@ -100,7 +104,10 @@ Task("Test")
         Loggers = new []{ "console;verbosity=detailed" }
     };
 
-    DotNetTest(testCsproj, settings);
+    foreach(var project in testCsprojs)
+    {
+        DotNetTest(project, settings);
+    }
 });
 
 Task("CIDeploy")
