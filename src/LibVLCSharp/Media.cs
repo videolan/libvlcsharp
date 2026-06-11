@@ -484,7 +484,7 @@ namespace LibVLCSharp
         /// structure that contain the statistics about the media
         /// </summary>
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats)
-            ? default : mediaStats;
+            ? mediaStats : default;
 
         MediaEventManager? _eventManager;
         /// <summary>
