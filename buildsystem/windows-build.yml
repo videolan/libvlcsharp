@@ -1,5 +1,18 @@
 steps:
 - template: base-template.yml
+
+- task: PowerShell@2
+  displayName: 'Show Visual Studio and MSBuild'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+      & $vswhere -all -products * -format table
+      $vsPath = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+      Write-Host "Resolved Visual Studio path: $vsPath"
+      & "$vsPath\MSBuild\Current\Bin\MSBuild.exe" -version
+      dotnet --info
+
 - task: PowerShell@2
   displayName: 'Install gtksharp'
   inputs:
