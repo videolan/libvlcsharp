@@ -26,6 +26,9 @@ stages:
 
   - job: Windows
     timeoutInMinutes: 120
+    variables:
+      NUGET_PACKAGES: $(Agent.TempDirectory)\nuget\packages
+      NUGET_HTTP_CACHE_PATH: $(Agent.TempDirectory)\nuget\http-cache
     pool:
       vmImage: 'windows-2025-vs2026'
     steps:
