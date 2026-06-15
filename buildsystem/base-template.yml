@@ -23,6 +23,34 @@ steps:
     script: |
       Set-Location "C:\Program Files (x86)\Microsoft Visual Studio\Installer"
       $InstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+      if (-not (Test-Path $InstallPath)) {
+        Write-Host "Visual Studio 2022 Enterprise is not installed. Installing it for legacy Xamarin targets."
+        $Arguments = @(
+          '/c',
+          'vs_installer.exe',
+          'install',
+          '--channelUri',
+          'https://aka.ms/vs/17/release/channel',
+          '--productId',
+          'Microsoft.VisualStudio.Product.Enterprise',
+          '--installPath',
+          "`"$InstallPath`"",
+          '--add',
+          'Component.Xamarin',
+          '--quiet',
+          '--norestart',
+          '--nocache'
+        )
+        $process = Start-Process -FilePath cmd.exe -ArgumentList $Arguments -Wait -PassThru -WindowStyle Hidden
+        if ($process.ExitCode -ne 0 -and $process.ExitCode -ne 3010) {
+          Write-Error "Failed to install Visual Studio 2022 Xamarin components (exit code: $($process.ExitCode))"
+          exit 1
+        }
+
+        Write-Host "Visual Studio 2022 Xamarin components installed successfully"
+        return
+      }
+
       $componentsToAdd = @("Component.Xamarin")
       [string]$workloadArgs = $componentsToAdd | ForEach-Object { " --add " + $_ }
       $Arguments = @('/c', "vs_installer.exe", 'modify', '--installPath', "`"$InstallPath`"", $workloadArgs, '--quiet', '--norestart', '--nocache')

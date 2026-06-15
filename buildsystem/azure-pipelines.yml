@@ -27,7 +27,7 @@ stages:
   - job: Windows
     timeoutInMinutes: 120
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'windows-2025-vs2026'
     steps:
     - template: windows-build.yml
 
