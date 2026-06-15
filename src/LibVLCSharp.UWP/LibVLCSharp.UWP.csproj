@@ -39,6 +39,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.UWP.</Description>
 
   <ItemGroup>
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Private.Uri" Version="4.3.2" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
