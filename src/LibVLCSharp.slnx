@@ -142,7 +142,7 @@
       <Platform Solution="*|x64" Project="x64" />
       <Platform Solution="*|x86" Project="x86" />
     </Project>
-    <Project Path="../samples/LibVLCSharp.UWP.Sample/LibVLCSharp.UWP.Sample.csproj">
+    <Project Path="../samples/LibVLCSharp.UWP.Sample/LibVLCSharp.UWP.Sample.csproj" Id="b0796d95-fa72-4154-9668-1f939bf03816">
       <BuildType Solution="Ad-Hoc|*" Project="Release" />
       <BuildType Solution="AppStore|*" Project="Release" />
       <Platform Solution="*|ARM" Project="ARM" />
@@ -155,13 +155,11 @@
       <Platform Solution="AppStore|Any CPU" Project="x64" />
       <Platform Solution="AppStore|iPhone" Project="x64" />
       <Platform Solution="AppStore|iPhoneSimulator" Project="x64" />
-      <Platform Solution="Debug|Any CPU" Project="x86" />
       <Platform Solution="Debug|iPhone" Project="x86" />
       <Platform Solution="Debug|iPhoneSimulator" Project="x86" />
       <Platform Solution="Release|Any CPU" Project="x86" />
       <Platform Solution="Release|iPhone" Project="x86" />
       <Platform Solution="Release|iPhoneSimulator" Project="x86" />
-      <Build Solution="Debug|Any CPU" Project="false" />
       <Build Solution="Debug|iPhone" Project="false" />
       <Build Solution="Debug|iPhoneSimulator" Project="false" />
       <Build Solution="Release|Any CPU" Project="false" />
@@ -177,6 +175,7 @@
       <Deploy Solution="AppStore|Any CPU" />
       <Deploy Solution="AppStore|iPhone" />
       <Deploy Solution="AppStore|iPhoneSimulator" />
+      <Deploy Solution="Debug|Any CPU" />
     </Project>
     <Project Path="../samples/LibVLCSharp.Windows.Net45.Sample/LibVLCSharp.Windows.Net45.Sample.csproj">
       <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
@@ -510,10 +509,6 @@
   <Project Path="LibVLCSharp.UWP/LibVLCSharp.UWP.csproj">
     <BuildType Solution="Ad-Hoc|*" Project="Release" />
     <BuildType Solution="AppStore|*" Project="Release" />
-    <Platform Solution="*|ARM" Project="ARM" />
-    <Platform Solution="*|ARM64" Project="ARM64" />
-    <Platform Solution="*|x64" Project="x64" />
-    <Platform Solution="*|x86" Project="x86" />
   </Project>
   <Project Path="LibVLCSharp.WinUI/LibVLCSharp.WinUI.csproj">
     <BuildType Solution="Ad-Hoc|*" Project="Debug" />
