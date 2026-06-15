@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "LibVLCSharp.UWP.Modern (Package)": {
+      "commandName": "MsixPackage"
+    }
+  }
+}
