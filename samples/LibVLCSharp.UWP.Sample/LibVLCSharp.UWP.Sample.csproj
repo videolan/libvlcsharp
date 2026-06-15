@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>LibVLCSharp.UWP.Sample_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>2548F43BC6F3B7F19FA3CAA52025A97793AF02B0</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>314B15E708AD09630C5283843E3AE865F867FC02</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
