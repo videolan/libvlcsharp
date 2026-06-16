@@ -1,3 +1,11 @@
+LibVLCSharp version 3.10.0
+==========================
+* [BREAKING CHANGE] UWP and WinUI: the LibVLCSharp package no longer ships the UWP and WinUI VideoView targets. Apps using these views must reference the new LibVLCSharp.UWP or LibVLCSharp.WinUI package instead.
+* UWP: add net9.0-windows10.0.26100 and net10.0-windows10.0.26100 targets.
+* WinUI: add a dedicated LibVLCSharp.WinUI package.
+* Avalonia: fix VideoView updates when detached from the visual tree.
+* Build: update CI and MSBuild support for current Windows tooling.
+
 LibVLCSharp version 3.9.7.1
 =========================
 * MAUI hotfix support for .NET 10
