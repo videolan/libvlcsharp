@@ -1,5 +1,5 @@
 using System;
-using LibVLCSharp.Shared;
+using LibVLCSharp;
 
 // AOT Compatibility test for LibVLCSharp core.
 //
