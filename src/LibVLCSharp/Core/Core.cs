@@ -80,7 +80,7 @@ namespace LibVLCSharp
                 arch = Path.Combine(ArchitectureNames.MacOS64, Constants.Lib);
             }
 
-#if !NET40 && !NETSTANDARD1_1
+#if !NET45 && !NET40 && !NETSTANDARD1_1
             else if (PlatformHelper.IsWindows)
             {
                 arch = RuntimeInformation.ProcessArchitecture switch
