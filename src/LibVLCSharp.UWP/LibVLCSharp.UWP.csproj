@@ -28,9 +28,8 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.UWP.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\LibVLCSharp\Shared\**\*.cs" LinkBase="Shared" />
-    <Compile Include="..\LibVLCSharp\Properties\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\LibVLCSharp\Platforms\Windows\**\*.cs" LinkBase="Platforms\Windows" />
+    <Compile Include="..\LibVLCSharp\**\*.cs"
+             Exclude="..\LibVLCSharp\bin\**;..\LibVLCSharp\obj\**;..\LibVLCSharp\Platforms\Android\**;..\LibVLCSharp\Platforms\Apple\**" />
     <Page Include="..\LibVLCSharp\Themes\Generic.xaml" Link="Themes\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
