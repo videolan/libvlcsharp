@@ -8,4 +8,3 @@ The official UWP view for [LibVLCSharp](../LibVLCSharp/README.md).
 This package contains the core LibVLCSharp APIs and the UWP `VideoView` control.
 
 > BE CAREFUL: This project does not include **LibVLC** itself. Install `VideoLAN.LibVLC.UWP` separately.
-
