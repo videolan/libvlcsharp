@@ -12,6 +12,12 @@ namespace LibVLCSharp.UWP.Sample
         public MainPage()
         {
             InitializeComponent();
+            ViewModel = new MainViewModel();
         }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        public MainViewModel ViewModel { get; }
     }
 }

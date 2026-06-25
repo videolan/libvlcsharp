@@ -9,15 +9,12 @@
     xmlns:lvs="using:LibVLCSharp.Platforms.Windows"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.DataContext>
-        <local:MainViewModel />
-    </Page.DataContext>
 
     <Grid>
-      <lvs:VideoView MediaPlayer="{Binding MediaPlayer}">
+      <lvs:VideoView MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
             <interactivity:Interaction.Behaviors>
                 <interactivity:EventTriggerBehavior EventName="Initialized">
-                    <interactivity:InvokeCommandAction Command="{Binding InitializedCommand}"/>
+                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}"/>
                 </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
