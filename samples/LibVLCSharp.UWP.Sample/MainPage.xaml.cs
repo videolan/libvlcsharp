@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using LibVLCSharp.Platforms.Windows;
+using Windows.UI.Xaml.Controls;
 
 namespace LibVLCSharp.UWP.Sample
 {
@@ -19,5 +20,10 @@ namespace LibVLCSharp.UWP.Sample
         /// Gets the view model.
         /// </summary>
         public MainViewModel ViewModel { get; }
+
+        private void VideoView_Initialized(object sender, InitializedEventArgs e)
+        {
+            ViewModel.InitializedCommand.Execute(e);
+        }
     }
 }

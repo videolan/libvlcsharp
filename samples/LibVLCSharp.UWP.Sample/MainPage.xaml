@@ -5,18 +5,11 @@
     xmlns:local="using:LibVLCSharp.UWP.Sample"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:lvs="using:LibVLCSharp.Platforms.Windows"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-      <lvs:VideoView MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
-            <interactivity:Interaction.Behaviors>
-                <interactivity:EventTriggerBehavior EventName="Initialized">
-                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}"/>
-                </interactivity:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </lvs:VideoView>
+        <lvs:VideoView Initialized="VideoView_Initialized" MediaPlayer="{x:Bind ViewModel.MediaPlayer}" />
     </Grid>
 </Page>
