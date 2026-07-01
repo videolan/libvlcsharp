@@ -430,7 +430,6 @@ namespace LibVLCSharp
 
             var metaUtf8 = metaValue.ToUtf8();
             MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaSetMeta(NativeReference, metadataType, metaUtf8), metaUtf8);
-            _eventManager?.OnMetaChanged(metadataType);
         }
 
         /// <summary>Save the meta previously set</summary>
@@ -459,35 +458,6 @@ namespace LibVLCSharp
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats)
             ? mediaStats : default;
 
-        MediaEventManager? _eventManager;
-        /// <summary>
-        /// <para>Managed media event dispatcher.</para>
-        /// <para>LibVLC 4 removed the native media event manager. Media notifications emitted by playback
-        /// are bridged from the media player callbacks onto this dispatcher.</para>
-        /// </summary>
-        /// <returns>event manager object</returns>
-        MediaEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager != null) return _eventManager;
-                _eventManager = new MediaEventManager();
-                return _eventManager;
-            }
-        }
-
-        internal void SnapshotEvents() => EventManager.Snapshot(this);
-
-        internal void OnNativeMetaChanged() => EventManager.OnNativeMetaChanged(this);
-
-        internal void OnNativeParsedChanged(MediaParsedStatus parsedStatus) => EventManager.OnParsedChanged(parsedStatus);
-
-        internal void OnNativeDurationChanged(long duration) => EventManager.OnDurationChanged(duration);
-
-        internal void OnNativeSubItemsChanged() => EventManager.OnSubItemsChanged(this);
-
-        internal void OnNativeAttachedThumbnailsFound(IntPtr pictureList) => EventManager.OnAttachedThumbnailsFound(pictureList);
-
         /// <summary>Get duration (in microseconds) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
         public long Duration => Native.LibVLCMediaGetDuration(NativeReference);
@@ -503,7 +473,7 @@ namespace LibVLCSharp
         /// <para/>If 0, it will wait indefinitely. If &gt; 0, the timeout will be used.
         /// <para/>Note: in LibVLC 4 the timeout is interpreted in microseconds.
         /// </param>
-        /// <param name="cancellationToken">token to cancel the operation. In LibVLC 4 this replaces the removed ParseStop().</param>
+        /// <param name="cancellationToken">token to cancel the operation.</param>
         /// <returns>the parse status of the media</returns>
         /// <remarks>
         /// In LibVLC 4, parsing is performed by the new <see cref="MediaParser"/>. This convenience method
@@ -523,26 +493,6 @@ namespace LibVLCSharp
         /// </summary>
         /// <remarks>libvlc_media_is_parsed, LibVLC 4.0.0 or later</remarks>
         public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference);
-
-        /// <summary>Get Parsed status for media descriptor object.</summary>
-        /// <returns><see cref="MediaParsedStatus.Done"/> if the media has been parsed, otherwise <see cref="MediaParsedStatus.None"/>.</returns>
-        /// <remarks>
-        /// <para>libvlc_media_get_parsed_status was removed in LibVLC 4; this is now derived from libvlc_media_is_parsed.</para>
-        /// </remarks>
-        [Obsolete("Use IsParsed, or the status returned by ParseAsync. libvlc_media_get_parsed_status was removed in LibVLC 4.")]
-        public MediaParsedStatus ParsedStatus => IsParsed ? MediaParsedStatus.Done : MediaParsedStatus.None;
-
-        /// <summary>Stop the parsing of the media</summary>
-        /// <param name="libvlc">unused</param>
-        /// <remarks>
-        /// <para>libvlc_media_parse_stop was removed in LibVLC 4. Parsing is now cancelled via the</para>
-        /// <para>CancellationToken passed to <see cref="ParseAsync"/>. This method is a no-op kept for source compatibility.</para>
-        /// </remarks>
-        [Obsolete("Cancel parsing via the CancellationToken passed to ParseAsync in LibVLC 4.")]
-        public void ParseStop(LibVLC libvlc)
-        {
-            // No-op: libvlc_media_parse_stop was removed in LibVLC 4.
-        }
 
         /// <summary>
         /// Get the track list for one type
@@ -644,8 +594,7 @@ namespace LibVLCSharp
         /// <returns>the codec description</returns>
         public string CodecDescription(TrackType type, uint codec) => Native.LibVLCMediaGetCodecDescription(type, codec).FromUtf8()!;
 
-        /// <summary>Start an asynchronous thumbnail generation.
-        /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <summary>Start an asynchronous thumbnail generation.</summary>
         /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="time">The time at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
@@ -664,8 +613,7 @@ namespace LibVLCSharp
             return picture ?? throw new VLCException("Thumbnail generation failed");
         }
 
-        /// <summary>Start an asynchronous thumbnail generation.
-        /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <summary>Start an asynchronous thumbnail generation.</summary>
         /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="position">The position at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
@@ -862,72 +810,6 @@ namespace LibVLCSharp
         internal delegate void InternalCloseMedia(IntPtr opaque);
         #endregion
 
-        #region Events
-
-        /// <summary>
-        /// The meta information changed
-        /// </summary>
-        public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
-        {
-            add => EventManager.AddMetaChanged(value);
-            remove => EventManager.RemoveMetaChanged(value);
-        }
-
-        /// <summary>
-        /// The parsing status changed
-        /// </summary>
-        public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
-        {
-            add => EventManager.AddParsedChanged(value);
-            remove => EventManager.RemoveParsedChanged(value);
-        }
-
-        /// <summary>
-        /// A sub item was added to this media's MediaList
-        /// </summary>
-        public event EventHandler<MediaSubItemAddedEventArgs> SubItemAdded
-        {
-            add => EventManager.AddSubItemAdded(value);
-            remove => EventManager.RemoveSubItemAdded(value);
-        }
-
-        /// <summary>
-        /// The duration of the media changed
-        /// </summary>
-        public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
-        {
-            add => EventManager.AddDurationChanged(value);
-            remove => EventManager.RemoveDurationChanged(value);
-        }
-
-        /// <summary>
-        /// A sub item tree was added to this media
-        /// </summary>
-        public event EventHandler<MediaSubItemTreeAddedEventArgs> SubItemTreeAdded
-        {
-            add => EventManager.AddSubItemTreeAdded(value);
-            remove => EventManager.RemoveSubItemTreeAdded(value);
-        }
-
-        /// <summary>
-        /// A thumbnail was generated for this media
-        /// </summary>
-        public event EventHandler<MediaThumbnailGeneratedEventArgs> ThumbnailGenerated
-        {
-            add => EventManager.AddThumbnailGenerated(value);
-            remove => EventManager.RemoveThumbnailGenerated(value);
-        }
-
-        /// <summary>
-        /// Attached thumbnails were found on the media
-        /// </summary>
-        public event EventHandler<MediaAttachedThumbnailsFoundEventArgs> AttachedThumbnailsFound
-        {
-            add => EventManager.AddAttachedThumbnailsFound(value);
-            remove => EventManager.RemoveAttachedThumbnailsFound(value);
-        }
-
-        #endregion
     }
 
     #region enums

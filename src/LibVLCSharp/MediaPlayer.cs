@@ -719,7 +719,6 @@ namespace LibVLCSharp
         {
             _eventManager = eventManager;
             _gcHandle = GCHandle.Alloc(this);
-            _eventManager.SetCurrentMedia(media);
         }
 #endif
         /// <summary>
@@ -740,7 +739,6 @@ namespace LibVLCSharp
             }
             set
             {
-                EventManager.SetCurrentMedia(value);
                 Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
             }
         }
@@ -2124,7 +2122,18 @@ namespace LibVLCSharp
             if (tracks == null || tracks.Length == 0 || tracks.Any(t => t.TrackType != tracks[0].TrackType))
                 return;
 
-            throw new NotImplementedException();
+            var trackPointers = Marshal.AllocHGlobal(IntPtr.Size * tracks.Length);
+            try
+            {
+                for (var i = 0; i < tracks.Length; i++)
+                    Marshal.WriteIntPtr(trackPointers, i * IntPtr.Size, tracks[i].NativeReference);
+
+                Native.LibVLCMediaPlayerSelectTracks(NativeReference, tracks[0].TrackType, trackPointers, (UIntPtr)tracks.Length);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(trackPointers);
+            }
         }
 
         /// <summary>
@@ -2151,7 +2160,11 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="type">track type to select</param>
         /// <param name="ids">'ids' can contain more than one track id, delimited with ','</param>
-        public void Select(TrackType type, string ids) => Native.LibVLCMediaPlayerSelectTracksByIds(NativeReference, type, ids.ToUtf8());
+        public void Select(TrackType type, string ids)
+        {
+            var idsUtf8 = ids.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaPlayerSelectTracksByIds(NativeReference, type, idsUtf8), idsUtf8);
+        }
 
         /// <summary>
         /// Get the program list
@@ -2282,7 +2295,11 @@ namespace LibVLCSharp
         /// LibVLC 4.0 and later
         /// </summary>
         /// <param name="directory">path of the recording directory or NULL (use default path)</param>
-        public void StartRecording(string? directory = null) => Native.LibVLCMediaPlayerRecord(NativeReference, enable: true, directory.ToUtf8());
+        public void StartRecording(string? directory = null)
+        {
+            var directoryUtf8 = directory.ToUtf8();
+            MarshalUtils.PerformInteropAndFree(() => Native.LibVLCMediaPlayerRecord(NativeReference, enable: true, directoryUtf8), directoryUtf8);
+        }
 
         /// <summary>
         /// Stop recording
@@ -3351,24 +3368,6 @@ namespace LibVLCSharp
         {
             add => EventManager.Stopped += value;
             remove => EventManager.Stopped -= value;
-        }
-
-        /// <summary>
-        /// The mediaplayer went forward in the playback
-        /// </summary>
-        public event EventHandler<EventArgs> Forward
-        {
-            add => EventManager.AddForward(value);
-            remove => EventManager.RemoveForward(value);
-        }
-
-        /// <summary>
-        /// The mediaplayer went backward in the playback
-        /// </summary>
-        public event EventHandler<EventArgs> Backward
-        {
-            add => EventManager.AddBackward(value);
-            remove => EventManager.RemoveBackward(value);
         }
 
         /// <summary>

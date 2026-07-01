@@ -125,11 +125,6 @@ namespace LibVLCSharp
         {
         }
 
-        /// <summary>
-        /// Raised when a parse task finds attached pictures before parsing completes.
-        /// </summary>
-        public event EventHandler<MediaParserAttachmentsAddedEventArgs>? AttachmentsAdded;
-
         static IntPtr Create(LibVLC libVLC, MediaParserConfiguration? configuration)
         {
             var cfg = new ParserCfg
@@ -158,14 +153,15 @@ namespace LibVLCSharp
         /// <param name="media">the media to parse</param>
         /// <param name="options">parse flags</param>
         /// <param name="cancellationToken">token used to cancel the request</param>
+        /// <param name="attachmentsAdded">callback invoked when attached pictures are found before parsing completes</param>
         /// <returns>the terminal parse status</returns>
         public Task<MediaParsedStatus> ParseAsync(Media media, MediaParseOptions options = MediaParseOptions.ParseLocal,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, Action<MediaParserAttachmentsAddedEventArgs>? attachmentsAdded = null)
         {
             if (media == null)
                 throw new ArgumentNullException(nameof(media));
 
-            var state = new ParseState(this);
+            var state = new ParseState(attachmentsAdded);
             var handle = GCHandle.Alloc(state);
 
             var request = new ParserRequest
@@ -318,12 +314,12 @@ namespace LibVLCSharp
 
         class ParseState
         {
-            public ParseState(MediaParser parser)
+            public ParseState(Action<MediaParserAttachmentsAddedEventArgs>? attachmentsAdded)
             {
-                Parser = parser;
+                AttachmentsAdded = attachmentsAdded;
             }
 
-            public readonly MediaParser Parser;
+            public readonly Action<MediaParserAttachmentsAddedEventArgs>? AttachmentsAdded;
             public readonly TaskCompletionSource<MediaParsedStatus> CompletionSource = MarshalUtils.NewCompletionSource<MediaParsedStatus>();
             public IntPtr TaskHandle;
             public CancellationTokenRegistration Registration;
@@ -380,7 +376,7 @@ namespace LibVLCSharp
                 {
                     var handle = GCHandle.FromIntPtr(opaque);
                     var state = (ParseState)handle.Target!;
-                    state.Parser.OnAttachmentsAdded(task, pictureList);
+                    MediaParser.OnAttachmentsAdded(state, task, pictureList);
                 }
                 catch (Exception ex)
                 {
@@ -453,9 +449,9 @@ namespace LibVLCSharp
             }
         }
 
-        void OnAttachmentsAdded(IntPtr task, IntPtr pictureList)
+        static void OnAttachmentsAdded(ParseState state, IntPtr task, IntPtr pictureList)
         {
-            var handler = AttachmentsAdded;
+            var handler = state.AttachmentsAdded;
             if (handler == null)
                 return;
 
@@ -467,7 +463,7 @@ namespace LibVLCSharp
                 media = new Media(mediaPtr);
             }
 
-            handler(this, new MediaParserAttachmentsAddedEventArgs(media, PictureList.RetainPictures(pictureList)));
+            handler(new MediaParserAttachmentsAddedEventArgs(media, PictureList.RetainPictures(pictureList)));
         }
     }
 

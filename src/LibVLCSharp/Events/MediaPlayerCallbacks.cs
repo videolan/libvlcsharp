@@ -78,14 +78,6 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void ScreenshotTakenCb(IntPtr opaque, IntPtr filePath);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void MediaParsedCb(IntPtr opaque, IntPtr media);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void MediaMetaChangedCb(IntPtr opaque, IntPtr media);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void MediaSubitemsChangedCb(IntPtr opaque, IntPtr media);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void MediaAttachmentsAddedCb(IntPtr opaque, IntPtr media, IntPtr pictureList);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void VoutChangedCb(IntPtr opaque, uint voutCount);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void CorkChangedCb(IntPtr opaque, [MarshalAs(UnmanagedType.I1)] bool corked);
@@ -144,10 +136,6 @@ namespace LibVLCSharp
         static readonly ChapterSelectionChangedCb s_chapterSelectionChanged = OnChapterSelectionChanged;
         static readonly RecordingChangedCb s_recordingChanged = OnRecordingChanged;
         static readonly ScreenshotTakenCb s_screenshotTaken = OnScreenshotTaken;
-        static readonly MediaParsedCb s_mediaParsed = OnMediaParsed;
-        static readonly MediaMetaChangedCb s_mediaMetaChanged = OnMediaMetaChanged;
-        static readonly MediaSubitemsChangedCb s_mediaSubitemsChanged = OnMediaSubitemsChanged;
-        static readonly MediaAttachmentsAddedCb s_mediaAttachmentsAdded = OnMediaAttachmentsAdded;
         static readonly VoutChangedCb s_voutChanged = OnVoutChanged;
         static readonly CorkChangedCb s_corkChanged = OnCorkChanged;
         static readonly AudioVolumeChangedCb s_audioVolumeChanged = OnAudioVolumeChanged;
@@ -179,10 +167,6 @@ namespace LibVLCSharp
                 OnChapterSelectionChanged = Marshal.GetFunctionPointerForDelegate(s_chapterSelectionChanged),
                 OnRecordingChanged = Marshal.GetFunctionPointerForDelegate(s_recordingChanged),
                 OnScreenshotTaken = Marshal.GetFunctionPointerForDelegate(s_screenshotTaken),
-                OnMediaParsed = Marshal.GetFunctionPointerForDelegate(s_mediaParsed),
-                OnMediaMetaChanged = Marshal.GetFunctionPointerForDelegate(s_mediaMetaChanged),
-                OnMediaSubitemsChanged = Marshal.GetFunctionPointerForDelegate(s_mediaSubitemsChanged),
-                OnMediaAttachmentsAdded = Marshal.GetFunctionPointerForDelegate(s_mediaAttachmentsAdded),
                 OnVoutChanged = Marshal.GetFunctionPointerForDelegate(s_voutChanged),
                 OnCorkChanged = Marshal.GetFunctionPointerForDelegate(s_corkChanged),
                 OnAudioVolumeChanged = Marshal.GetFunctionPointerForDelegate(s_audioVolumeChanged),
@@ -223,10 +207,6 @@ namespace LibVLCSharp
         static void OnChapterSelectionChanged(IntPtr opaque, IntPtr title, uint titleIdx, IntPtr chapter, uint chapterIdx) => Guarded(() => Manager(opaque)?.OnChapterSelectionChanged((int)chapterIdx));
         static void OnRecordingChanged(IntPtr opaque, bool recording, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnRecordingChanged(recording, filePath));
         static void OnScreenshotTaken(IntPtr opaque, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnScreenshotTaken(filePath));
-        static void OnMediaParsed(IntPtr opaque, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaParsed(media));
-        static void OnMediaMetaChanged(IntPtr opaque, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaMetaChanged(media));
-        static void OnMediaSubitemsChanged(IntPtr opaque, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaSubItemsChanged(media));
-        static void OnMediaAttachmentsAdded(IntPtr opaque, IntPtr media, IntPtr pictureList) => Guarded(() => Manager(opaque)?.OnMediaAttachmentsAdded(media, pictureList));
         static void OnVoutChanged(IntPtr opaque, uint voutCount) => Guarded(() => Manager(opaque)?.OnVoutChanged((int)voutCount));
         static void OnCorkChanged(IntPtr opaque, bool corked) => Guarded(() => Manager(opaque)?.OnCorkChanged(corked));
         static void OnAudioVolumeChanged(IntPtr opaque, float volume) => Guarded(() => Manager(opaque)?.OnAudioVolumeChanged(volume));

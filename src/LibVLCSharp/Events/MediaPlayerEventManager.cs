@@ -21,8 +21,6 @@ namespace LibVLCSharp
         internal event EventHandler<EventArgs>? Playing;
         internal event EventHandler<EventArgs>? Paused;
         internal event EventHandler<EventArgs>? Stopped;
-        EventHandler<EventArgs>? _forward;
-        EventHandler<EventArgs>? _backward;
         internal event EventHandler<EventArgs>? Stopping;
         internal event EventHandler<EventArgs>? EncounteredError;
         internal event EventHandler<MediaPlayerTimeChangedEventArgs>? TimeChanged;
@@ -46,18 +44,6 @@ namespace LibVLCSharp
         internal event EventHandler<MediaPlayerProgramSelectedEventArgs>? ProgramSelected;
         internal event EventHandler<MediaPlayerProgramUpdatedEventArgs>? ProgramUpdated;
         internal event EventHandler<MediaPlayerRecordChangedEventArgs>? RecordChanged;
-        Media? _currentMedia;
-
-        internal void AddForward(EventHandler<EventArgs> handler) => _forward += handler;
-        internal void RemoveForward(EventHandler<EventArgs> handler) => _forward -= handler;
-        internal void AddBackward(EventHandler<EventArgs> handler) => _backward += handler;
-        internal void RemoveBackward(EventHandler<EventArgs> handler) => _backward -= handler;
-
-        internal void SetCurrentMedia(Media? media)
-        {
-            _currentMedia = media;
-            media?.SnapshotEvents();
-        }
 
         #region native callback dispatch
 
@@ -110,7 +96,6 @@ namespace LibVLCSharp
         internal void OnLengthChanged(long length)
         {
             LengthChanged?.Invoke(this, new MediaPlayerLengthChangedEventArgs(length));
-            _currentMedia?.OnNativeDurationChanged(length);
         }
 
         internal void OnTrackListChanged(ListAction action, TrackType type, IntPtr id)
@@ -164,30 +149,6 @@ namespace LibVLCSharp
         internal void OnScreenshotTaken(IntPtr filePath)
             => SnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filePath.FromUtf8() ?? string.Empty));
 
-        internal void OnMediaParsed(IntPtr media)
-        {
-            if (TryGetCurrentMedia(media, out var currentMedia))
-                currentMedia.OnNativeParsedChanged(MediaParsedStatus.Done);
-        }
-
-        internal void OnMediaMetaChanged(IntPtr media)
-        {
-            if (TryGetCurrentMedia(media, out var currentMedia))
-                currentMedia.OnNativeMetaChanged();
-        }
-
-        internal void OnMediaSubItemsChanged(IntPtr media)
-        {
-            if (TryGetCurrentMedia(media, out var currentMedia))
-                currentMedia.OnNativeSubItemsChanged();
-        }
-
-        internal void OnMediaAttachmentsAdded(IntPtr media, IntPtr pictureList)
-        {
-            if (TryGetCurrentMedia(media, out var currentMedia))
-                currentMedia.OnNativeAttachedThumbnailsFound(pictureList);
-        }
-
         internal void OnVoutChanged(int count)
             => Vout?.Invoke(this, new MediaPlayerVoutEventArgs(count));
 
@@ -212,17 +173,6 @@ namespace LibVLCSharp
 
         internal void OnAudioDeviceChanged(IntPtr device)
             => AudioDevice?.Invoke(this, new MediaPlayerAudioDeviceEventArgs(device.FromUtf8() ?? string.Empty));
-
-        bool TryGetCurrentMedia(IntPtr media, out Media currentMedia)
-        {
-            currentMedia = _currentMedia!;
-            // Compare against the live native reference: if the caller disposed the media while it
-            // was still playing, its NativeReference is IntPtr.Zero and we must not dispatch into it
-            // (calling native libvlc_media_* on a released handle crashes the process).
-            return currentMedia != null
-                   && media != IntPtr.Zero
-                   && media == currentMedia.NativeReference;
-        }
 
         #endregion
     }

@@ -10,7 +10,6 @@ namespace LibVLCSharp
     /// </summary>
     public class MediaList : Internal, IEnumerable<Media>
     {
-        MediaListEventManager? _eventManager;
         readonly object _syncLock = new object();
         bool _nativeLock;
 
@@ -127,11 +126,7 @@ namespace LibVLCSharp
         {
             if (media == null) throw new ArgumentNullException(nameof(media));
 
-            var index = Count;
-            EventManager.OnWillAddItem(media, index);
             var added = NativeSync(() => Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
-            if (added)
-                EventManager.OnItemAdded(media, index);
             return added;
         }
 
@@ -166,10 +161,7 @@ namespace LibVLCSharp
         {
             if (media == null) throw new ArgumentNullException(nameof(media));
 
-            EventManager.OnWillAddItem(media, position);
             var inserted = NativeSync(() => Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0);
-            if (inserted)
-                EventManager.OnItemAdded(media, position);
             return inserted;
         }
 
@@ -184,10 +176,7 @@ namespace LibVLCSharp
             if (media == null)
                 return false;
 
-            EventManager.OnWillDeleteItem(media, positionIndex);
             var removed = NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
-            if (removed)
-                EventManager.OnItemDeleted(media, positionIndex);
             return removed;
         }
 
@@ -266,72 +255,8 @@ namespace LibVLCSharp
             }
         }
 
-        /// <summary>
-        /// Managed media list event dispatcher.
-        /// LibVLC 4 removed the native media list event manager, so these events no longer fire;
-        /// the dispatcher is kept to preserve the public event API for source compatibility.
-        /// </summary>
-        MediaListEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager != null) return _eventManager;
-                _eventManager = new MediaListEventManager();
-                return _eventManager;
-            }
-        }
-
         /// <summary>Increments the native reference counter for this medialist instance</summary>
         internal void Retain() => Native.LibVLCMediaListRetain(NativeReference);
-
-        #region Events
-
-        /// <summary>
-        /// An item has been added to the MediaList
-        /// </summary>
-        public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
-        {
-            add => EventManager.AddItemAdded(value);
-            remove => EventManager.RemoveItemAdded(value);
-        }
-
-        /// <summary>
-        /// An item is about to be added to the MediaList
-        /// </summary>
-        public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
-        {
-            add => EventManager.AddWillAddItem(value);
-            remove => EventManager.RemoveWillAddItem(value);
-        }
-
-        /// <summary>
-        /// An item has been deleted from the MediaList
-        /// </summary>
-        public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
-        {
-            add => EventManager.AddItemDeleted(value);
-            remove => EventManager.RemoveItemDeleted(value);
-        }
-
-        /// <summary>
-        /// An item is about to be deleted from the MediaList
-        /// </summary>
-        public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
-        {
-            add => EventManager.AddWillDeleteItem(value);
-            remove => EventManager.RemoveWillDeleteItem(value);
-        }
-
-        /// <summary>
-        /// The media list reached its end
-        /// </summary>
-        public event EventHandler<EventArgs> EndReached
-        {
-            add => EventManager.AddEndReached(value);
-            remove => EventManager.RemoveEndReached(value);
-        }
-
-        #endregion
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection of media
