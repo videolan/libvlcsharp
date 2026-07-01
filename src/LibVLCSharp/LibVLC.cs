@@ -73,11 +73,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_release")]
             internal static extern void LibVLCRelease(IntPtr libVLC);
 
-#if DESKTOP
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_add_intf")]
-            internal static extern int LibVLCAddInterface(IntPtr libVLC, IntPtr name);
-#endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_user_agent")]
             internal static extern void LibVLCSetUserAgent(IntPtr libVLC, IntPtr name, IntPtr http);
@@ -96,7 +91,11 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 CharSet = CharSet.Ansi, EntryPoint = "libvlc_log_get_context")]
-            internal static extern void LibVLCLogGetContext(IntPtr ctx, out IntPtr module, out IntPtr file, out UIntPtr line);
+            internal static extern void LibVLCLogGetContext(IntPtr ctx, out IntPtr module, out IntPtr file, out uint line);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                CharSet = CharSet.Ansi, EntryPoint = "libvlc_log_get_object")]
+            internal static extern void LibVLCLogGetObject(IntPtr ctx, out IntPtr name, out IntPtr header, out UIntPtr id);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_log_set")]
@@ -148,7 +147,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_retain")]
-            internal static extern void LibVLCRetain(IntPtr libVLC);
+            internal static extern IntPtr LibVLCRetain(IntPtr libVLC);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_version")]
@@ -308,10 +307,14 @@ namespace LibVLCSharp
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
+            if (IsDisposed || NativeReference == IntPtr.Zero)
+                return;
+
             if (disposing)
             {
                 UnsetDialogHandlers();
-                Native.LibVLCLogUnset(NativeReference);
+                if (_logSubscriberCount > 0)
+                    Native.LibVLCLogUnset(NativeReference);
                 _gcHandle.Free();
                 _log = null;
 #if DESKTOP
@@ -343,19 +346,6 @@ namespace LibVLCSharp
         {
             return libvlc1?.NativeReference != libvlc2?.NativeReference;
         }
-
-#if DESKTOP
-        /// <summary>
-        /// Try to start a user interface for the libvlc instance.
-        /// </summary>
-        /// <param name="name">interface name, or null for default</param>
-        /// <returns>True if successful, false otherwise</returns>
-        public bool AddInterface(string? name)
-        {
-            var namePtr = name.ToUtf8();
-            return MarshalUtils.PerformInteropAndFree(() => Native.LibVLCAddInterface(NativeReference, namePtr) == 0, namePtr);
-        }
-#endif
 
         /// <summary>
         /// <para>Sets the application name. LibVLC passes this as the user agent string</para>
@@ -576,21 +566,28 @@ namespace LibVLCSharp
         /// </summary>
         public void UnsetDialogHandlers()
         {
-            if (DialogHandlersSet)
+            if (_login != null || _question != null || _displayProgress != null || _updateProgress != null)
             {
                 Native.LibVLCDialogSetCallbacks(NativeReference, default, IntPtr.Zero);
-                _error = null;
                 _login = null;
                 _question = null;
                 _displayProgress = null;
                 _updateProgress = null;
+            }
+
+            if (_error != null)
+            {
+                DisplayErrorHandle = IntPtr.Zero;
+                Native.LibVLCDialogSetErrorCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
+                _error = null;
             }
         }
 
         /// <summary>
         /// True if dialog handlers are set
         /// </summary>
-        public bool DialogHandlersSet => _error != null;
+        public bool DialogHandlersSet => _error != null || _login != null || _question != null ||
+            _displayProgress != null || _updateProgress != null;
         DisplayError? _error;
         DisplayLogin? _login;
         DisplayQuestion? _question;
@@ -680,11 +677,23 @@ namespace LibVLCSharp
         /// <param name="line">The source code file line number storage.</param>
         static void GetLogContext(IntPtr logContext, out string? module, out string? file, out uint? line)
         {
-            Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var linePtr);
+            Native.LibVLCLogGetContext(logContext, out var modulePtr, out var filePtr, out var lineNumber);
 
-            line = linePtr == UIntPtr.Zero ? null : (uint?)linePtr.ToUInt32();
+            line = lineNumber == 0 ? null : (uint?)lineNumber;
             module = modulePtr.FromUtf8();
             file = filePtr.FromUtf8();
+        }
+
+        /// <summary>
+        /// Gets log message object metadata.
+        /// </summary>
+        static void GetLogObject(IntPtr logContext, out string? name, out string? header, out UIntPtr? id)
+        {
+            Native.LibVLCLogGetObject(logContext, out var namePtr, out var headerPtr, out var objectId);
+
+            id = objectId == UIntPtr.Zero ? null : objectId;
+            name = namePtr.FromUtf8();
+            header = headerPtr.FromUtf8();
         }
 
         /// <summary>Increments the native reference counter for this libvlc instance</summary>
@@ -754,8 +763,10 @@ namespace LibVLCSharp
                 var message = MarshalUtils.GetLogMessage(format, args);
 
                 GetLogContext(logContext, out var module, out var file, out var line);
+                GetLogObject(logContext, out var objectName, out var objectHeader, out var objectId);
 
-                void logAction() => libVLC?._log?.Invoke(null, new LogEventArgs(logLevel, message, module, file, line));
+                void logAction() => libVLC?._log?.Invoke(null,
+                    new LogEventArgs(logLevel, message, module, file, line, objectName, objectHeader, objectId));
 
                 Task.Run(logAction);
             }
@@ -865,12 +876,17 @@ namespace LibVLCSharp
                 InternalCancelCallback cancel,
                 InternalUpdateProgressCallback updateProgress)
             {
+                // Version of struct libvlc_dialog_cbs. All callbacks are available since version 0.
+                Version = 0;
                 DisplayLogin = Marshal.GetFunctionPointerForDelegate(displayLogin);
                 DisplayQuestion = Marshal.GetFunctionPointerForDelegate(displayQuestion);
                 DisplayProgress = Marshal.GetFunctionPointerForDelegate(displayProgress);
                 Cancel = Marshal.GetFunctionPointerForDelegate(cancel);
                 UpdateProgress = Marshal.GetFunctionPointerForDelegate(updateProgress);
             }
+
+            // Starting with LibVLC 4, libvlc_dialog_cbs begins with a uint32_t version field.
+            internal readonly uint Version;
 
             internal readonly IntPtr DisplayLogin;
 

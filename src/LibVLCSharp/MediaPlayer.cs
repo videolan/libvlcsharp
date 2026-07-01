@@ -29,7 +29,7 @@ namespace LibVLCSharp
 #else
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new")]
-            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
+            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc, IntPtr cbs, IntPtr cbsOpaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_release")]
@@ -37,7 +37,7 @@ namespace LibVLCSharp
 #endif
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_new_from_media")]
-            internal static extern IntPtr LibVLCMediaPlayerNewFromMedia(IntPtr libvlc, IntPtr media);
+            internal static extern IntPtr LibVLCMediaPlayerNewFromMedia(IntPtr libvlc, IntPtr media, IntPtr cbs, IntPtr cbsOpaque);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -49,10 +49,14 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_player_get_media")]
             internal static extern IntPtr LibVLCMediaPlayerGetMedia(IntPtr mediaPlayer);
 
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_set_next_media")]
+            internal static extern void LibVLCMediaPlayerSetNextMedia(IntPtr mediaPlayer, IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_player_event_manager")]
-            internal static extern IntPtr LibVLCMediaPlayerEventManager(IntPtr mediaPlayer);
+                EntryPoint = "libvlc_media_player_get_next_media")]
+            internal static extern IntPtr LibVLCMediaPlayerGetNextMedia(IntPtr mediaPlayer);
+
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -245,7 +249,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_set_fullscreen")]
-            internal static extern void LibVLCSetFullscreen(IntPtr mediaPlayer, int fullscreen);
+            internal static extern void LibVLCSetFullscreen(IntPtr mediaPlayer, bool fullscreen);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -516,7 +520,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_retain")]
-            internal static extern void LibVLCMediaPlayerRetain(IntPtr mediaplayer);
+            internal static extern IntPtr LibVLCMediaPlayerRetain(IntPtr mediaplayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_selected_track")]
@@ -524,7 +528,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_tracklist")]
-            internal static extern IntPtr LibVLCMediaPlayerGetTrackList(IntPtr mediaplayer, TrackType type, bool selected);
+            internal static extern IntPtr LibVLCMediaPlayerGetTrackList(IntPtr mediaplayer, TrackType type, [MarshalAs(UnmanagedType.I1)] bool selected);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_get_track_from_id")]
@@ -578,7 +582,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_watch_time")]
-            internal static extern int LibVLCMediaPlayerWatchTime(IntPtr mediaplayer, long minimumPeriod, WatchTimeOnUpdate onUpdate, WatchTimeOnPaused? onPaused, WatchTimeOnSeek? onSeek, IntPtr opaque);
+            internal static extern int LibVLCMediaPlayerWatchTime(IntPtr mediaplayer, long minimumPeriod, IntPtr callbacks, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_unwatch_time")]
@@ -586,13 +590,29 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_time_point_interpolate")]
-            internal static extern int LibVLCMediaPlayerTimePointInterpolate(TimePoint point, long systemNow, ref long interpolatedTime,
+            internal static extern int LibVLCMediaPlayerTimePointInterpolate(ref TimePoint point, long systemNow, ref long interpolatedTime,
                 ref double interpolatedPosition);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_time_point_get_next_date")]
-            internal static extern long LibVLCMediaPlayerTimePointGetNextDate(TimePoint point, long systemNow, long interpolatedTime,
+            internal static extern long LibVLCMediaPlayerTimePointGetNextDate(ref TimePoint point, long systemNow, long interpolatedTime,
                 long nextInterval);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_lock")]
+            internal static extern void LibVLCMediaPlayerLock(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_unlock")]
+            internal static extern void LibVLCMediaPlayerUnlock(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_wait")]
+            internal static extern void LibVLCMediaPlayerWait(IntPtr mediaplayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_signal")]
+            internal static extern void LibVLCMediaPlayerSignal(IntPtr mediaplayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_audio_get_mixmode")]
@@ -667,8 +687,19 @@ namespace LibVLCSharp
         /// </param>
         /// <returns>a new media player object, or NULL on error.</returns>
         public MediaPlayer(LibVLC libVLC)
-            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
+            : this(libVLC, new MediaPlayerEventManager())
         {
+        }
+
+        MediaPlayer(LibVLC libVLC, MediaPlayerEventManager eventManager)
+#if UNITY
+            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
+#else
+            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference, MediaPlayerCallbacks.Pointer, eventManager.Register()),
+                   Native.LibVLCMediaPlayerRelease)
+#endif
+        {
+            _eventManager = eventManager;
             _gcHandle = GCHandle.Alloc(this);
         }
 
@@ -678,9 +709,17 @@ namespace LibVLCSharp
         /// <param name="media">The media to play. Afterwards the p_md can be safely destroyed.</param>
         /// <returns>a new media player object, or NULL on error.</returns>
         public MediaPlayer(LibVLC libvlc, Media media)
-            : base(() => Native.LibVLCMediaPlayerNewFromMedia(libvlc.NativeReference, media.NativeReference), Native.LibVLCMediaPlayerRelease)
+            : this(libvlc, media, new MediaPlayerEventManager())
         {
+        }
+
+        MediaPlayer(LibVLC libvlc, Media media, MediaPlayerEventManager eventManager)
+            : base(() => Native.LibVLCMediaPlayerNewFromMedia(libvlc.NativeReference, media.NativeReference, MediaPlayerCallbacks.Pointer, eventManager.Register()),
+                   Native.LibVLCMediaPlayerRelease)
+        {
+            _eventManager = eventManager;
             _gcHandle = GCHandle.Alloc(this);
+            _eventManager.SetCurrentMedia(media);
         }
 #endif
         /// <summary>
@@ -699,7 +738,27 @@ namespace LibVLCSharp
                 var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
                 return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
             }
-            set => Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+            set
+            {
+                EventManager.SetCurrentMedia(value);
+                Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+            }
+        }
+
+        /// <summary>
+        /// Get or set the media that will be played after the current media ends.
+        /// </summary>
+        /// <remarks>
+        /// The getter returns a retained media reference. Dispose the returned <see cref="Media"/> when done.
+        /// </remarks>
+        public Media? NextMedia
+        {
+            get
+            {
+                var mediaPtr = Native.LibVLCMediaPlayerGetNextMedia(NativeReference);
+                return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
+            }
+            set => Native.LibVLCMediaPlayerSetNextMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
         }
 
         /// <summary>
@@ -714,7 +773,7 @@ namespace LibVLCSharp
         /// <returns>
         /// Returns true if the playback will start successfully, false otherwise. 
         /// This function returns immediately, as it sends a command to the native library
-        /// but does not wait for wait for the state change. Use <see cref="PlayAsync"/>
+        /// but does not wait for wait for the state change. Use <see cref="PlayAsync()"/>
         /// if you want to wait asynchronously for playback to start.
         /// </returns>
         /// <remarks>
@@ -738,7 +797,7 @@ namespace LibVLCSharp
         /// <returns>
         /// Returns true if the playback will start successfully, false otherwise. 
         /// This function returns immediately, as it sends a command to the native library
-        /// but does not wait for wait for the state change. Use <see cref="PlayAsync"/>
+        /// but does not wait for wait for the state change. Use <see cref="PlayAsync()"/>
         /// if you want to wait asynchronously for playback to start.
         /// </returns>
         /// <remarks>
@@ -765,7 +824,7 @@ namespace LibVLCSharp
         /// </remarks>
         public Task<bool> PlayAsync()
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = MarshalUtils.NewCompletionSource<bool>();
 
             void MediaPlayer_Play(object? sender, EventArgs e) => tcs.SetResult(true);
 
@@ -778,6 +837,19 @@ namespace LibVLCSharp
                 sub: () => Playing += MediaPlayer_Play,
                 unsub: () => Playing -= MediaPlayer_Play,
                 tcs: tcs);
+        }
+
+        /// <summary>
+        /// Sets the Media, starts playback, and waits asynchronously for playback to start
+        /// </summary>
+        /// <returns>Task result of the async operation</returns>
+        /// <remarks>
+        /// Playback has actually started when this function returns (if return value is true).
+        /// </remarks>
+        public Task<bool> PlayAsync(Media media)
+        {
+            Media = media;
+            return PlayAsync();
         }
 
         /// <summary>
@@ -806,14 +878,14 @@ namespace LibVLCSharp
         /// </remarks>
         public Task PauseAsync()
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = MarshalUtils.NewCompletionSource<bool>();
 
             void MediaPlayer_Pause(object? sender, EventArgs e) => tcs.SetResult(true);
 
             return MarshalUtils.InternalAsync(
                 nativeCall: () => Pause(),
-                sub: () => Playing += MediaPlayer_Pause,
-                unsub: () => Playing -= MediaPlayer_Pause,
+                sub: () => Paused += MediaPlayer_Pause,
+                unsub: () => Paused -= MediaPlayer_Pause,
                 tcs: tcs);
         }
 
@@ -837,7 +909,7 @@ namespace LibVLCSharp
         /// </remarks>
         public Task<bool> StopAsync()
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = MarshalUtils.NewCompletionSource<bool>();
 
             void MediaPlayer_Stopped(object? sender, EventArgs e) => tcs.SetResult(true);
 
@@ -909,21 +981,24 @@ namespace LibVLCSharp
         }
 #endif
         /// <summary>
-        /// The movie length (in ms), or -1 if there is no media.
+        /// The movie length (in µs), or -1 if there is no media.
+        /// <para/> Note: in LibVLC 4 the time base changed from milliseconds to microseconds.
         /// </summary>
         public long Length => Native.LibVLCMediaPlayerGetLength(NativeReference);
 
         /// <summary>
-        /// Set the movie time (in ms). This has no effect if no media is being played.
+        /// Set the movie time (in µs). This has no effect if no media is being played.
         /// Not all formats and protocols support this.
+        /// <para/> Note: in LibVLC 4 the time base changed from milliseconds to microseconds.
         /// </summary>
-        /// <param name="time">the movie time (in ms)</param>
+        /// <param name="time">the movie time (in µs)</param>
         /// <param name="fast">prefer fast seeking or precise seeking</param>
         /// <returns>true on success, false otherwise</returns>
         public bool SetTime(long time, bool fast = false) => Native.LibVLCMediaPlayerSetTime(NativeReference, time, fast) == 0;
 
         /// <summary>
-        /// Get the movie time (in ms), or -1 if there is no media.
+        /// Get the movie time (in µs), or -1 if there is no media.
+        /// <para/> Note: in LibVLC 4 the time base changed from milliseconds to microseconds.
         /// </summary>
         public long Time => Native.LibVLCMediaPlayerGetTime(NativeReference);
 
@@ -950,7 +1025,7 @@ namespace LibVLCSharp
         /// <param name="time">the movie time to seek to</param>
         /// <param name="fast">prefer fast seeking or precise seeking</param>
         /// <returns>true on success, false otherwise</returns>
-        public bool SeekTo(TimeSpan time, bool fast = false) => SetTime((long)time.TotalMilliseconds, fast);
+        public bool SeekTo(TimeSpan time, bool fast = false) => SetTime(time.Ticks / 10, fast);
 
         /// <summary>
         /// Set movie chapter (if applicable).
@@ -1108,7 +1183,7 @@ namespace LibVLCSharp
         public bool Fullscreen
         {
             get => Native.LibVLCGetFullscreen(NativeReference);
-            set => Native.LibVLCSetFullscreen(NativeReference, value ? 1 : 0);
+            set => Native.LibVLCSetFullscreen(NativeReference, value);
         }
 
         /// <summary>
@@ -1689,7 +1764,7 @@ namespace LibVLCSharp
         /// <returns>Task result of the async operation</returns>
         public Task<bool> TakeSnapshotAsync(uint num, string? filePath, uint width, uint height)
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = MarshalUtils.NewCompletionSource<bool>();
 
             void MediaPlayer_SnapshotTaken(object? sender, MediaPlayerSnapshotTakenEventArgs e) => tcs.SetResult(true);
 
@@ -1934,7 +2009,7 @@ namespace LibVLCSharp
         /// Get the track list for one type
         /// LibVLC 4.0.0 and later.
         ///
-        ///<br/> You need to call libvlc_media_parse_request() or play the media
+        ///<br/> You need to parse with <see cref="MediaParser"/> or play the media
         ///at least once before calling this function. Not doing this will result in
         ///an empty list.
         ///
@@ -1961,7 +2036,7 @@ namespace LibVLCSharp
         /// Get the selected track list for one type
         /// LibVLC 4.0.0 and later.
         ///
-        ///<br/> You need to call libvlc_media_parse_request() or play the media
+        ///<br/> You need to parse with <see cref="MediaParser"/> or play the media
         ///at least once before calling this function. Not doing this will result in
         ///an empty list.
         ///
@@ -2239,8 +2314,7 @@ namespace LibVLCSharp
             _onPaused = onPaused;
             _onSeek = onSeek;
 
-            return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeOnUpdateHandle,
-                onPaused == null ? null : WatchTimeOnPausedHandle, onSeek == null ? null : WatchTimeOnSeekHandle, GCHandle.ToIntPtr(_gcHandle)) == 0;
+            return Native.LibVLCMediaPlayerWatchTime(NativeReference, minimumPeriod, WatchTimeCallbacks.Pointer, GCHandle.ToIntPtr(_gcHandle)) == 0;
         }
 
         /// <summary>
@@ -2248,6 +2322,27 @@ namespace LibVLCSharp
         /// </summary>
         /// <remarks>LibVLC 4.0.0 and later</remarks>
         public void UnwatchTime() => Native.LibVLCMediaPlayerUnwatchTime(NativeReference);
+
+        /// <summary>
+        /// Lock the media player internal recursive lock.
+        /// </summary>
+        /// <remarks>Pair every call with <see cref="Unlock"/>.</remarks>
+        public void Lock() => Native.LibVLCMediaPlayerLock(NativeReference);
+
+        /// <summary>
+        /// Unlock the media player internal recursive lock.
+        /// </summary>
+        public void Unlock() => Native.LibVLCMediaPlayerUnlock(NativeReference);
+
+        /// <summary>
+        /// Wait for a media player signalling event while the internal lock is held.
+        /// </summary>
+        public void Wait() => Native.LibVLCMediaPlayerWait(NativeReference);
+
+        /// <summary>
+        /// Signal all threads waiting on the media player signalling event.
+        /// </summary>
+        public void Signal() => Native.LibVLCMediaPlayerSignal(NativeReference);
 
         /// <summary>
         /// Interpolate a timer value to now
@@ -2259,7 +2354,7 @@ namespace LibVLCSharp
         /// <param name="interpolatedPosition">pointer where to set the interpolated position</param>
         /// <returns>true on success, false otherwise (if the interpolated time is negative, may happen during buffering)</returns>
         public bool Interpolate(TimePoint timepoint, long systemNow, ref long interpolatedTime, ref double interpolatedPosition)
-            => Native.LibVLCMediaPlayerTimePointInterpolate(timepoint, systemNow, ref interpolatedTime, ref interpolatedPosition) == 0;
+            => Native.LibVLCMediaPlayerTimePointInterpolate(ref timepoint, systemNow, ref interpolatedTime, ref interpolatedPosition) == 0;
 
         /// <summary>
         /// Get the date of the next interval
@@ -2276,7 +2371,7 @@ namespace LibVLCSharp
         /// <param name="nextIntervalTime">next interval, in microsecond (us)</param>
         /// <returns>the absolute system date, in microsecond (us), of the next interval.</returns>
         public long GetNextDate(TimePoint timepoint, long systemNow, long interpolatedTime, long nextIntervalTime)
-            => Native.LibVLCMediaPlayerTimePointGetNextDate(timepoint, systemNow, interpolatedTime, nextIntervalTime);
+            => Native.LibVLCMediaPlayerTimePointGetNextDate(ref timepoint, systemNow, interpolatedTime, nextIntervalTime);
 
         /// <summary>
         /// Get current audio mix-mode.
@@ -2318,12 +2413,12 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Jump the movie time (in ms).
+        /// Jump the movie time (in microseconds).
         /// </summary>
         /// <remarks>
         /// This will trigger a precise and relative seek (from the current time). This has no effect if no media is being played. Not all formats and protocols support this.
         /// </remarks>
-        /// <param name="time">the movie time (in ms)</param>
+        /// <param name="time">the relative movie time, in microseconds</param>
         /// <returns>true on success, false on error</returns>
         public bool JumpTime(long time) => Native.LibVLCMediaPlayerJumpTime(NativeReference, time) == 0;
 
@@ -2334,8 +2429,8 @@ namespace LibVLCSharp
         /// <para/>
         /// version LibVLC 4.0.0 and later
         /// </summary>
-        /// <param name="aTime">start time for the loop (in ms)</param>
-        /// <param name="bTime">end time for the loop (in ms)</param>
+        /// <param name="aTime">start time for the loop, in microseconds</param>
+        /// <param name="bTime">end time for the loop, in microseconds</param>
         /// <returns>true on success, false on error</returns>
         public bool SetABLoopTime(long aTime, long bTime) => Native.LibVLCMediaPlayerSetABloopTime(NativeReference, aTime, bTime) == 0;
 
@@ -2367,9 +2462,9 @@ namespace LibVLCSharp
         /// <para/>
         /// version LibVLC 4.0.0 and later
         /// </summary>
-        /// <param name="aTime">A time (in ms) or -1 (if the media doesn't have valid times)</param>
+        /// <param name="aTime">A time, in microseconds, or -1 (if the media doesn't have valid times)</param>
         /// <param name="aPosition">A position</param>
-        /// <param name="bTime">B time (in ms) or -1 (if the media doesn't have valid times)</param>
+        /// <param name="bTime">B time, in microseconds, or -1 (if the media doesn't have valid times)</param>
         /// <param name="bPosition">B position</param>
         /// <returns>A to B loop status</returns>
         public ABLoop GetABLoop(out long aTime, out double aPosition, out long bTime, out double bPosition) => Native.LibVLCMediaPlayerGetABloop(NativeReference, out aTime, out aPosition, out bTime, out bPosition);
@@ -2651,37 +2746,69 @@ namespace LibVLCSharp
         WatchTimeOnPaused? _onPaused;
         WatchTimeOnSeek? _onSeek;
 
-        static unsafe readonly WatchTimeOnUpdate WatchTimeOnUpdateHandle = WatchTimeOnUpdateCallback;
-        static unsafe readonly WatchTimeOnPaused WatchTimeOnPausedHandle = WatchTimeOnDiscontinuityCallback;
-        static unsafe readonly WatchTimeOnSeek WatchTimeOnSeekHandle = WatchTimeOnSeekCallback;
+        static readonly NativeWatchTimeOnUpdate WatchTimeOnUpdateHandle = WatchTimeOnUpdateCallback;
+        static readonly NativeWatchTimeOnPaused WatchTimeOnPausedHandle = WatchTimeOnDiscontinuityCallback;
+        static readonly NativeWatchTimeOnSeek WatchTimeOnSeekHandle = WatchTimeOnSeekCallback;
 
-        [MonoPInvokeCallback(typeof(OutputCleanup))]
-        private static unsafe void WatchTimeOnUpdateCallback(TimePoint timepoint, void* opaque)
+        [MonoPInvokeCallback(typeof(NativeWatchTimeOnUpdate))]
+        private static unsafe void WatchTimeOnUpdateCallback(IntPtr opaque, IntPtr timepoint)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer?._onUpdate != null)
             {
-                mediaPlayer._onUpdate(timepoint, opaque);
+                mediaPlayer._onUpdate(MarshalUtils.PtrToStructure<TimePoint>(timepoint), (void*)opaque);
             }
         }
 
-        [MonoPInvokeCallback(typeof(OutputCleanup))]
-        private static unsafe void WatchTimeOnDiscontinuityCallback(long systemDate, void* opaque)
+        [MonoPInvokeCallback(typeof(NativeWatchTimeOnPaused))]
+        private static unsafe void WatchTimeOnDiscontinuityCallback(IntPtr opaque, long systemDate)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer?._onPaused != null)
             {
-                mediaPlayer._onPaused(systemDate, opaque);
+                mediaPlayer._onPaused(systemDate, (void*)opaque);
             }
         }
 
-        [MonoPInvokeCallback(typeof(OutputCleanup))]
-        private static unsafe void WatchTimeOnSeekCallback(TimePoint? seekRequestValue, void* opaque)
+        [MonoPInvokeCallback(typeof(NativeWatchTimeOnSeek))]
+        private static unsafe void WatchTimeOnSeekCallback(IntPtr opaque, IntPtr seekRequestValue)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer?._onSeek != null)
             {
-                mediaPlayer._onSeek(seekRequestValue, opaque);
+                mediaPlayer._onSeek(
+                    seekRequestValue == IntPtr.Zero ? null : MarshalUtils.PtrToStructure<TimePoint>(seekRequestValue),
+                    (void*)opaque);
+            }
+        }
+
+        static class WatchTimeCallbacks
+        {
+            [StructLayout(LayoutKind.Sequential)]
+            struct NativeCallbacks
+            {
+                public uint Version;
+                public IntPtr OnUpdate;
+                public IntPtr OnPaused;
+                public IntPtr OnSeek;
+            }
+
+            static readonly IntPtr s_pointer = Build();
+            internal static IntPtr Pointer => s_pointer;
+
+            static IntPtr Build()
+            {
+                var cbs = new NativeCallbacks
+                {
+                    Version = 0,
+                    OnUpdate = Marshal.GetFunctionPointerForDelegate(WatchTimeOnUpdateHandle),
+                    OnPaused = Marshal.GetFunctionPointerForDelegate(WatchTimeOnPausedHandle),
+                    OnSeek = Marshal.GetFunctionPointerForDelegate(WatchTimeOnSeekHandle)
+                };
+
+                var ptr = Marshal.AllocHGlobal(MarshalUtils.SizeOf(cbs));
+                Marshal.StructureToPtr(cbs, ptr, false);
+                return ptr;
             }
         }
 
@@ -3116,6 +3243,9 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void WatchTimeOnUpdate(TimePoint timepoint, void* opaque);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        delegate void NativeWatchTimeOnUpdate(IntPtr opaque, IntPtr timepoint);
+
         /// <summary>
         /// Callback prototype that notify when the timer is paused.
         /// <para>
@@ -3133,6 +3263,9 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void WatchTimeOnPaused(long systemDate, void* opaque);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        delegate void NativeWatchTimeOnPaused(IntPtr opaque, long systemDate);
+
         /// <summary>
         /// Callback prototype that notify when the player is seeking or finished seeking
         /// </summary>
@@ -3142,23 +3275,17 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public unsafe delegate void WatchTimeOnSeek(TimePoint? seekRequestValue, void* opaque);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        delegate void NativeWatchTimeOnSeek(IntPtr opaque, IntPtr seekRequestValue);
+
         #endregion
 
         /// <summary>
         /// Get the Event Manager from which the media player send event.
+        /// In LibVLC 4 the dispatcher is created with the media player and fed by the
+        /// <c>libvlc_media_player_cbs</c> callbacks registered at construction.
         /// </summary>
-        MediaPlayerEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCMediaPlayerEventManager(NativeReference);
-                    _eventManager = new MediaPlayerEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
-        }
+        MediaPlayerEventManager EventManager => _eventManager!;
 
 
         #region events
@@ -3168,8 +3295,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerMediaChangedEventArgs> MediaChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerMediaChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerMediaChanged, value);
+            add => EventManager.MediaChanged += value;
+            remove => EventManager.MediaChanged -= value;
         }
 
         /// <summary>
@@ -3177,8 +3304,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> NothingSpecial
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerNothingSpecial, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerNothingSpecial, value);
+            add => EventManager.NothingSpecial += value;
+            remove => EventManager.NothingSpecial -= value;
         }
 
         /// <summary>
@@ -3186,8 +3313,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Opening
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerOpening, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerOpening, value);
+            add => EventManager.Opening += value;
+            remove => EventManager.Opening -= value;
         }
 
         /// <summary>
@@ -3195,8 +3322,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerBufferingEventArgs> Buffering
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerBuffering, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerBuffering, value);
+            add => EventManager.Buffering += value;
+            remove => EventManager.Buffering -= value;
         }
 
         /// <summary>
@@ -3204,8 +3331,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Playing
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerPlaying, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerPlaying, value);
+            add => EventManager.Playing += value;
+            remove => EventManager.Playing -= value;
         }
 
         /// <summary>
@@ -3213,8 +3340,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Paused
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerPaused, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerPaused, value);
+            add => EventManager.Paused += value;
+            remove => EventManager.Paused -= value;
         }
 
         /// <summary>
@@ -3222,8 +3349,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Stopped
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerStopped, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerStopped, value);
+            add => EventManager.Stopped += value;
+            remove => EventManager.Stopped -= value;
         }
 
         /// <summary>
@@ -3231,8 +3358,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Forward
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerForward, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerForward, value);
+            add => EventManager.AddForward(value);
+            remove => EventManager.RemoveForward(value);
         }
 
         /// <summary>
@@ -3240,8 +3367,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Backward
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerBackward, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerBackward, value);
+            add => EventManager.AddBackward(value);
+            remove => EventManager.RemoveBackward(value);
         }
 
         /// <summary>
@@ -3249,8 +3376,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Stopping
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerStopping, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerStopping, value);
+            add => EventManager.Stopping += value;
+            remove => EventManager.Stopping -= value;
         }
 
         /// <summary>
@@ -3258,8 +3385,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> EncounteredError
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerEncounteredError, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerEncounteredError, value);
+            add => EventManager.EncounteredError += value;
+            remove => EventManager.EncounteredError -= value;
         }
 
         /// <summary>
@@ -3267,8 +3394,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerTimeChangedEventArgs> TimeChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerTimeChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerTimeChanged, value);
+            add => EventManager.TimeChanged += value;
+            remove => EventManager.TimeChanged -= value;
         }
 
         /// <summary>
@@ -3276,8 +3403,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerPositionChangedEventArgs> PositionChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerPositionChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerPositionChanged, value);
+            add => EventManager.PositionChanged += value;
+            remove => EventManager.PositionChanged -= value;
         }
 
         /// <summary>
@@ -3285,8 +3412,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerSeekableChangedEventArgs> SeekableChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerSeekableChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerSeekableChanged, value);
+            add => EventManager.SeekableChanged += value;
+            remove => EventManager.SeekableChanged -= value;
         }
 
         /// <summary>
@@ -3294,8 +3421,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerPausableChangedEventArgs> PausableChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerPausableChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerPausableChanged, value);
+            add => EventManager.PausableChanged += value;
+            remove => EventManager.PausableChanged -= value;
         }
 
         /// <summary>
@@ -3303,8 +3430,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerChapterChangedEventArgs> ChapterChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerChapterChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerChapterChanged, value);
+            add => EventManager.ChapterChanged += value;
+            remove => EventManager.ChapterChanged -= value;
         }
 
         /// <summary>
@@ -3312,8 +3439,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerSnapshotTakenEventArgs> SnapshotTaken
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerSnapshotTaken, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerSnapshotTaken, value);
+            add => EventManager.SnapshotTaken += value;
+            remove => EventManager.SnapshotTaken -= value;
         }
 
         /// <summary>
@@ -3321,8 +3448,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerLengthChangedEventArgs> LengthChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerLengthChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerLengthChanged, value);
+            add => EventManager.LengthChanged += value;
+            remove => EventManager.LengthChanged -= value;
         }
 
         /// <summary>
@@ -3330,8 +3457,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerVoutEventArgs> Vout
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerVout, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerVout, value);
+            add => EventManager.Vout += value;
+            remove => EventManager.Vout -= value;
         }
 
         /// <summary>
@@ -3339,8 +3466,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerESAddedEventArgs> ESAdded
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerESAdded, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerESAdded, value);
+            add => EventManager.ESAdded += value;
+            remove => EventManager.ESAdded -= value;
         }
 
         /// <summary>
@@ -3348,8 +3475,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerESDeletedEventArgs> ESDeleted
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerESDeleted, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerESDeleted, value);
+            add => EventManager.ESDeleted += value;
+            remove => EventManager.ESDeleted -= value;
         }
 
         /// <summary>
@@ -3357,8 +3484,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerESSelectedEventArgs> ESSelected
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerESSelected, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerESSelected, value);
+            add => EventManager.ESSelected += value;
+            remove => EventManager.ESSelected -= value;
         }
 
         /// <summary>
@@ -3366,8 +3493,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerAudioDeviceEventArgs> AudioDevice
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerAudioDevice, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerAudioDevice, value);
+            add => EventManager.AudioDevice += value;
+            remove => EventManager.AudioDevice -= value;
         }
 
         /// <summary>
@@ -3375,8 +3502,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Corked
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerCorked, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerCorked, value);
+            add => EventManager.Corked += value;
+            remove => EventManager.Corked -= value;
         }
 
         /// <summary>
@@ -3384,8 +3511,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Uncorked
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerUncorked, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerUncorked, value);
+            add => EventManager.Uncorked += value;
+            remove => EventManager.Uncorked -= value;
         }
 
         /// <summary>
@@ -3393,8 +3520,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Muted
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerMuted, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerMuted, value);
+            add => EventManager.Muted += value;
+            remove => EventManager.Muted -= value;
         }
 
         /// <summary>
@@ -3402,8 +3529,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<EventArgs> Unmuted
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerUnmuted, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerUnmuted, value);
+            add => EventManager.Unmuted += value;
+            remove => EventManager.Unmuted -= value;
         }
 
         /// <summary>
@@ -3411,8 +3538,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerAudioVolume, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerAudioVolume, value);
+            add => EventManager.AudioVolume += value;
+            remove => EventManager.AudioVolume -= value;
         }
 
         /// <summary>
@@ -3420,8 +3547,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerProgramAddedEventArgs> ProgramAdded
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerProgramAdded, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramAdded, value);
+            add => EventManager.ProgramAdded += value;
+            remove => EventManager.ProgramAdded -= value;
         }
 
         /// <summary>
@@ -3429,8 +3556,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerProgramDeletedEventArgs> ProgramDeleted
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerProgramDeleted, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramDeleted, value);
+            add => EventManager.ProgramDeleted += value;
+            remove => EventManager.ProgramDeleted -= value;
         }
 
         /// <summary>
@@ -3438,8 +3565,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerProgramUpdatedEventArgs> ProgramUpdated
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerProgramUpdated, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramUpdated, value);
+            add => EventManager.ProgramUpdated += value;
+            remove => EventManager.ProgramUpdated -= value;
         }
 
         /// <summary>
@@ -3447,8 +3574,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerProgramSelectedEventArgs> ProgramSelected
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerProgramSelected, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerProgramSelected, value);
+            add => EventManager.ProgramSelected += value;
+            remove => EventManager.ProgramSelected -= value;
         }
 
         /// <summary>
@@ -3456,8 +3583,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<MediaPlayerRecordChangedEventArgs> RecordChanged
         {
-            add => EventManager.AttachEvent(EventType.MediaPlayerRecordChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaPlayerRecordChanged, value);
+            add => EventManager.RecordChanged += value;
+            remove => EventManager.RecordChanged -= value;
         }
         #endregion
 
@@ -3470,9 +3597,15 @@ namespace LibVLCSharp
         {
             base.Dispose(disposing);
 
-            if (disposing && _gcHandle.IsAllocated)
+            if (disposing)
             {
-                _gcHandle.Free();
+                // The native player has been released above, so it no longer references the cbs_opaque handle.
+                _eventManager?.Unregister();
+
+                if (_gcHandle.IsAllocated)
+                {
+                    _gcHandle.Free();
+                }
             }
         }
     }
