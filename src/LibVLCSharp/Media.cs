@@ -40,8 +40,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_new_callbacks")]
-            internal static extern IntPtr LibVLCMediaNewCallbacks(InternalOpenMedia openCb, InternalReadMedia readCb,
-                InternalSeekMedia? seekCb, InternalCloseMedia closeCb, IntPtr opaque);
+            internal static extern IntPtr LibVLCMediaNewCallbacks(IntPtr callbacks, IntPtr opaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_add_option")]
@@ -72,10 +71,6 @@ namespace LibVLCSharp
             internal static extern int LibVLCMediaSaveMeta(IntPtr libvlc, IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_event_manager")]
-            internal static extern IntPtr LibVLCMediaEventManager(IntPtr media);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_stats")]
             internal static extern bool LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
 
@@ -88,16 +83,9 @@ namespace LibVLCSharp
             internal static extern long LibVLCMediaGetDuration(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_parse_request")]
-            internal static extern int LibVLCMediaParseRequest(IntPtr libvlc, IntPtr media, MediaParseOptions mediaParseOptions, int timeout);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_get_parsed_status")]
-            internal static extern MediaParsedStatus LibVLCMediaGetParsedStatus(IntPtr media);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_parse_stop")]
-            internal static extern void LibVLCMediaParseStop(IntPtr libvlc, IntPtr media);
+                EntryPoint = "libvlc_media_is_parsed")]
+            [return: MarshalAs(UnmanagedType.I1)]
+            internal static extern bool LibVLCMediaIsParsed(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_set_user_data")]
@@ -137,25 +125,11 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_retain")]
-            internal static extern void LibVLCMediaRetain(IntPtr media);
+            internal static extern IntPtr LibVLCMediaRetain(IntPtr media);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_codec_description")]
             internal static extern IntPtr LibVLCMediaGetCodecDescription(TrackType type, uint codec);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_thumbnail_request_by_time")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestByTime(IntPtr libvlc, IntPtr media, long time, ThumbnailerSeekSpeed speed,
-                uint width, uint height, bool crop, PictureType pictureType, long timeout);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_thumbnail_request_by_pos")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestByPosition(IntPtr libvlc, IntPtr media, double position, ThumbnailerSeekSpeed speed,
-                uint width, uint height, bool crop, PictureType pictureType, long timeout);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_thumbnail_request_destroy")]
-            internal static extern IntPtr LibVLCMediaThumbnailRequestDestroy(IntPtr thumbnailRequest);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_meta_extra")]
@@ -297,10 +271,8 @@ namespace LibVLCSharp
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
-            return Native.LibVLCMediaNewCallbacks(OpenMediaCallbackHandle,
-                ReadMediaCallbackHandle,
-                input.CanSeek ? SeekMediaCallbackHandle : null,
-                CloseMediaCallbackHandle,
+            return Native.LibVLCMediaNewCallbacks(
+                input.CanSeek ? MediaOpenCallbacks.SeekablePointer : MediaOpenCallbacks.UnseekablePointer,
                 GCHandle.ToIntPtr(input.GcHandle));
         }
 
@@ -486,93 +458,46 @@ namespace LibVLCSharp
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats)
             ? mediaStats : default;
 
-        MediaEventManager? _eventManager;
-        /// <summary>
-        /// <para>Get event manager from media descriptor object.</para>
-        /// <para>NOTE: this function doesn't increment reference counting.</para>
-        /// </summary>
-        /// <returns>event manager object</returns>
-        MediaEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager != null) return _eventManager;
-                var eventManagerPtr = Native.LibVLCMediaEventManager(NativeReference);
-                _eventManager = new MediaEventManager(eventManagerPtr);
-                return _eventManager;
-            }
-        }
-
-        /// <summary>Get duration (in ms) of media descriptor object item.</summary>
+        /// <summary>Get duration (in microseconds) of media descriptor object item.</summary>
         /// <returns>duration of media item or -1 on error</returns>
         public long Duration => Native.LibVLCMediaGetDuration(NativeReference);
 
         /// <summary>
         /// Parse the media asynchronously with options.
         /// It uses a flag to specify parse options (see <see cref="MediaParseOptions"/>). All these flags can be combined. By default, the media is parsed only if it's a local file.
-        /// <para/> Note: Parsing can be aborted with ParseStop().
         /// </summary>
         /// <param name="libvlc">LibVLC instance that is to parse the media</param>
         /// <param name="options">Parse options flags. They can be combined</param>
         /// <param name="timeout">maximum time allowed to preparse the media.
         /// <para/>If -1, the default "preparse-timeout" option will be used as a timeout.
-        /// <para/>If 0, it will wait indefinitely. If > 0, the timeout will be used (in milliseconds).
+        /// <para/>If 0, it will wait indefinitely. If &gt; 0, the timeout will be used.
+        /// <para/>Note: in LibVLC 4 the timeout is interpreted in microseconds.
         /// </param>
-        /// <param name="cancellationToken">token to cancel the operation</param>
+        /// <param name="cancellationToken">token to cancel the operation.</param>
         /// <returns>the parse status of the media</returns>
-        public Task<MediaParsedStatus> ParseAsync(LibVLC libvlc, MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
+        /// <remarks>
+        /// In LibVLC 4, parsing is performed by the new <see cref="MediaParser"/>. This convenience method
+        /// spins up a one-shot parser internally; create a long-lived <see cref="MediaParser"/> yourself if
+        /// you need to parse many medias.
+        /// </remarks>
+        public async Task<MediaParsedStatus> ParseAsync(LibVLC libvlc, MediaParseOptions options = MediaParseOptions.ParseLocal, int timeout = -1, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var tcs = new TaskCompletionSource<MediaParsedStatus>();
-
-            var ctr = cancellationToken.Register(() =>
-            {
-                Native.LibVLCMediaParseStop(libvlc.NativeReference, NativeReference);
-                tcs.TrySetCanceled();
-            });
-
-            void OnParsedChanged (object? sender, MediaParsedChangedEventArgs mediaParsedChangedEventArgs)
-                => tcs.TrySetResult(mediaParsedChangedEventArgs.ParsedStatus);
-
-            return MarshalUtils.InternalAsync(
-                nativeCall: () =>
-                {
-                    var result = Native.LibVLCMediaParseRequest(libvlc.NativeReference, NativeReference, options, timeout);
-                    if (result == -1)
-                    {
-                        tcs.TrySetResult(MediaParsedStatus.Failed);
-                    }
-                },
-                sub: () => ParsedChanged += OnParsedChanged,
-                unsub: () => ParsedChanged -= OnParsedChanged,
-                tcs,
-                ctr);
+            using var parser = new MediaParser(libvlc, new MediaParserConfiguration { Timeout = timeout });
+            return await parser.ParseAsync(this, options, cancellationToken).ConfigureAwait(false);
         }
 
-        /// <summary>Get Parsed status for media descriptor object.</summary>
-        /// <returns>a value of the libvlc_media_parsed_status_t enum</returns>
-        /// <remarks>
-        /// <para>libvlc_MediaParsedChanged</para>
-        /// <para>libvlc_media_parsed_status_t</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public MediaParsedStatus ParsedStatus => Native.LibVLCMediaGetParsedStatus(NativeReference);
-
-        /// <summary>Stop the parsing of the media</summary>
-        /// <param name="libvlc">LibVLC instance that is to cease or give up parsing the media</param>
-        /// <remarks>
-        /// <para>When the media parsing is stopped, the libvlc_MediaParsedChanged event will</para>
-        /// <para>be sent with the libvlc_media_parsed_status_timeout status.</para>
-        /// <para>libvlc_media_parse_request</para>
-        /// <para>LibVLC 3.0.0 or later</para>
-        /// </remarks>
-        public void ParseStop(LibVLC libvlc) => Native.LibVLCMediaParseStop(libvlc.NativeReference, NativeReference);
+        /// <summary>
+        /// True if the media has been parsed (via <see cref="ParseAsync"/>, a <see cref="MediaParser"/>, or by being played).
+        /// </summary>
+        /// <remarks>libvlc_media_is_parsed, LibVLC 4.0.0 or later</remarks>
+        public bool IsParsed => Native.LibVLCMediaIsParsed(NativeReference);
 
         /// <summary>
         /// Get the track list for one type
         /// LibVLC 4.0.0 and later.
-        /// You need to call libvlc_media_parse_request() or play the media
+        /// You need to parse with <see cref="MediaParser"/> or play the media
         /// at least once before calling this function.Not doing this will result in
         /// an empty list.
         /// </summary>
@@ -611,7 +536,7 @@ namespace LibVLCSharp
         /// <para>A slave is an external input source that may contains an additional subtitle</para>
         /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
         /// <para>This function must be called before the media is parsed (via</para>
-        /// <para>libvlc_media_parse_request()) or before the media is played (via</para>
+        /// <para><see cref="MediaParser"/>) or before the media is played (via</para>
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
@@ -630,7 +555,7 @@ namespace LibVLCSharp
         /// <para>A slave is an external input source that may contains an additional subtitle</para>
         /// <para>track (like a .srt) or an additional audio track (like a .ac3).</para>
         /// <para>This function must be called before the media is parsed (via</para>
-        /// <para>libvlc_media_parse_request()) or before the media is played (via</para>
+        /// <para><see cref="MediaParser"/>) or before the media is played (via</para>
         /// <para>libvlc_media_player_play())</para>
         /// <para>LibVLC 3.0.0 and later.</para>
         /// </remarks>
@@ -669,8 +594,7 @@ namespace LibVLCSharp
         /// <returns>the codec description</returns>
         public string CodecDescription(TrackType type, uint codec) => Native.LibVLCMediaGetCodecDescription(type, codec).FromUtf8()!;
 
-        /// <summary>Start an asynchronous thumbnail generation.
-        /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <summary>Start an asynchronous thumbnail generation.</summary>
         /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="time">The time at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
@@ -678,19 +602,18 @@ namespace LibVLCSharp
         /// <param name="height">The thumbnail height</param>
         /// <param name="crop">Should the picture be cropped to preserve aspect ratio</param>
         /// <param name="pictureType">The thumbnail picture type</param>
-        /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
+        /// <param name="timeout">A timeout value in microseconds, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, long time, ThumbnailerSeekSpeed speed,
+        public async Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, long time, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return ThumbnailRequestInternal(() =>
-                            Native.LibVLCMediaThumbnailRequestByTime(libvlc.NativeReference, NativeReference, time, speed, width, height, crop, pictureType, timeout),
-                            cancellationToken);
+            using var parser = new MediaParser(libvlc, new MediaParserConfiguration { Timeout = timeout });
+            var picture = await parser.ThumbnailAsync(this, width, height, pictureType, crop, time, null, speed, false, cancellationToken).ConfigureAwait(false);
+            return picture ?? throw new VLCException("Thumbnail generation failed");
         }
 
-        /// <summary>Start an asynchronous thumbnail generation.
-        /// If the request is successfuly queued, the MediaThumbnailGenerated event is guaranteed to be emited.</summary>
+        /// <summary>Start an asynchronous thumbnail generation.</summary>
         /// <param name="libvlc">LibVLC instance to generate the thumbnail with</param>
         /// <param name="position">The position at which the thumbnail should be generated</param>
         /// <param name="speed">The seeking speed</param>
@@ -698,54 +621,15 @@ namespace LibVLCSharp
         /// <param name="height">The thumbnail height</param>
         /// <param name="crop">Should the picture be cropped to preserve aspect ratio</param>
         /// <param name="pictureType">The thumbnail picture type</param>
-        /// <param name="timeout">A timeout value in ms, or 0 to disable timeout</param>
+        /// <param name="timeout">A timeout value in microseconds, or 0 to disable timeout</param>
         /// <param name="cancellationToken">The cancellation token needed to cancel the thumbnail generation</param>
         /// <returns>A valid Picture object or null in case of failure</returns>
-        public Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, double position, ThumbnailerSeekSpeed speed,
+        public async Task<Picture> GenerateThumbnailAsync(LibVLC libvlc, double position, ThumbnailerSeekSpeed speed,
                 uint width, uint height, bool crop, PictureType pictureType, long timeout = 0, CancellationToken cancellationToken = default)
         {
-            return ThumbnailRequestInternal(() =>
-                Native.LibVLCMediaThumbnailRequestByPosition(libvlc.NativeReference, NativeReference, position, speed, width, height, crop, pictureType, timeout),
-                cancellationToken);
-        }
-
-        Task<Picture> ThumbnailRequestInternal(Func<IntPtr> nativeCall, CancellationToken cancellationToken = default)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            ThumbnailerRequest request = default;
-            var tcs = new TaskCompletionSource<Picture>();
-
-            var ctr = cancellationToken.Register(() =>
-            {
-                if (request.Valid)
-                    Native.LibVLCMediaThumbnailRequestDestroy(request.NativeReference);
-                tcs.TrySetCanceled();
-            });
-
-            void OnThumbnailGenerated(object? sender, MediaThumbnailGeneratedEventArgs mediaThumbnailGeneratedEventArgs)
-            {
-                if (mediaThumbnailGeneratedEventArgs.Thumbnail != null)
-                    tcs.TrySetResult(mediaThumbnailGeneratedEventArgs.Thumbnail);
-                else
-                    tcs.TrySetCanceled();
-            }
-
-            return MarshalUtils.InternalAsync(
-                nativeCall: () =>
-                {
-                    var result = nativeCall();
-                    request = new ThumbnailerRequest(result);
-                },
-                sub: () => ThumbnailGenerated += OnThumbnailGenerated,
-                unsub: () =>
-                {
-                    ThumbnailGenerated -= OnThumbnailGenerated;
-                    if (request.Valid)
-                        Native.LibVLCMediaThumbnailRequestDestroy(request.NativeReference);
-                },
-                tcs: tcs,
-                ctr: ctr);
+            using var parser = new MediaParser(libvlc, new MediaParserConfiguration { Timeout = timeout });
+            var picture = await parser.ThumbnailAsync(this, width, height, pictureType, crop, null, position, speed, false, cancellationToken).ConfigureAwait(false);
+            return picture ?? throw new VLCException("Thumbnail generation failed");
         }
 
         /// <summary>
@@ -788,6 +672,38 @@ namespace LibVLCSharp
         static readonly InternalReadMedia ReadMediaCallbackHandle = ReadMediaCallback;
         static readonly InternalSeekMedia SeekMediaCallbackHandle = SeekMediaCallback;
         static readonly InternalCloseMedia CloseMediaCallbackHandle = CloseMediaCallback;
+
+        static class MediaOpenCallbacks
+        {
+            [StructLayout(LayoutKind.Sequential)]
+            struct NativeCallbacks
+            {
+                public uint Version;
+                public IntPtr Open;
+                public IntPtr Read;
+                public IntPtr Seek;
+                public IntPtr Close;
+            }
+
+            internal static readonly IntPtr SeekablePointer = Build(includeSeek: true);
+            internal static readonly IntPtr UnseekablePointer = Build(includeSeek: false);
+
+            static IntPtr Build(bool includeSeek)
+            {
+                var cbs = new NativeCallbacks
+                {
+                    Version = 0,
+                    Open = Marshal.GetFunctionPointerForDelegate(OpenMediaCallbackHandle),
+                    Read = Marshal.GetFunctionPointerForDelegate(ReadMediaCallbackHandle),
+                    Seek = includeSeek ? Marshal.GetFunctionPointerForDelegate(SeekMediaCallbackHandle) : IntPtr.Zero,
+                    Close = Marshal.GetFunctionPointerForDelegate(CloseMediaCallbackHandle)
+                };
+
+                var ptr = Marshal.AllocHGlobal(MarshalUtils.SizeOf(cbs));
+                Marshal.StructureToPtr(cbs, ptr, false);
+                return ptr;
+            }
+        }
 
         [MonoPInvokeCallback(typeof(InternalOpenMedia))]
         static int OpenMediaCallback(IntPtr opaque, ref IntPtr data, out ulong size)
@@ -894,72 +810,6 @@ namespace LibVLCSharp
         internal delegate void InternalCloseMedia(IntPtr opaque);
         #endregion
 
-        #region Events
-
-        /// <summary>
-        /// The meta information changed
-        /// </summary>
-        public event EventHandler<MediaMetaChangedEventArgs> MetaChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaMetaChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaMetaChanged, value);
-        }
-
-        /// <summary>
-        /// The parsing status changed
-        /// </summary>
-        public event EventHandler<MediaParsedChangedEventArgs> ParsedChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaParsedChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaParsedChanged, value);
-        }
-
-        /// <summary>
-        /// A sub item was added to this media's MediaList
-        /// </summary>
-        public event EventHandler<MediaSubItemAddedEventArgs> SubItemAdded
-        {
-            add => EventManager.AttachEvent(EventType.MediaSubItemAdded, value);
-            remove => EventManager.DetachEvent(EventType.MediaSubItemAdded, value);
-        }
-
-        /// <summary>
-        /// The duration of the media changed
-        /// </summary>
-        public event EventHandler<MediaDurationChangedEventArgs> DurationChanged
-        {
-            add => EventManager.AttachEvent(EventType.MediaDurationChanged, value);
-            remove => EventManager.DetachEvent(EventType.MediaDurationChanged, value);
-        }
-
-        /// <summary>
-        /// A sub item tree was added to this media
-        /// </summary>
-        public event EventHandler<MediaSubItemTreeAddedEventArgs> SubItemTreeAdded
-        {
-            add => EventManager.AttachEvent(EventType.MediaSubItemTreeAdded, value);
-            remove => EventManager.DetachEvent(EventType.MediaSubItemTreeAdded, value);
-        }
-
-        /// <summary>
-        /// A thumbnail was generated for this media
-        /// </summary>
-        public event EventHandler<MediaThumbnailGeneratedEventArgs> ThumbnailGenerated
-        {
-            add => EventManager.AttachEvent(EventType.MediaThumbnailGenerated, value);
-            remove => EventManager.DetachEvent(EventType.MediaThumbnailGenerated, value);
-        }
-
-        /// <summary>
-        /// Attached thumbnails were found on the media
-        /// </summary>
-        public event EventHandler<MediaAttachedThumbnailsFoundEventArgs> AttachedThumbnailsFound
-        {
-            add => EventManager.AttachEvent(EventType.MediaAttachedThumbnailsFound, value);
-            remove => EventManager.DetachEvent(EventType.MediaAttachedThumbnailsFound, value);
-        }
-
-        #endregion
     }
 
     #region enums
@@ -980,34 +830,29 @@ namespace LibVLCSharp
         Opening = 1,
 
         /// <summary>
-        /// Buffering media
-        /// </summary>
-        Buffering = 2,
-
-        /// <summary>
         /// Playing media
         /// </summary>
-        Playing = 3,
+        Playing = 2,
 
         /// <summary>
         /// Paused media
         /// </summary>
-        Paused = 4,
+        Paused = 3,
 
         /// <summary>
         /// Stopped media
         /// </summary>
-        Stopped = 5,
+        Stopped = 4,
 
         /// <summary>
         /// Stopping media
         /// </summary>
-        Stopping = 6,
+        Stopping = 5,
 
         /// <summary>
         /// Error media
         /// </summary>
-        Error = 7
+        Error = 6
     }
 
     /// <summary>
@@ -1076,6 +921,27 @@ namespace LibVLCSharp
         /// Cubemap layout standard
         /// </summary>
         CubemapLayoutStandard = 256
+    }
+
+    /// <summary>
+    /// Video multiview (stereoscopy) mode
+    /// </summary>
+    public enum VideoMultiview
+    {
+        /// <summary>No stereoscopy: 2D picture.</summary>
+        MultiView2D = 0,
+        /// <summary>Side-by-side</summary>
+        StereoSideBySide = 1,
+        /// <summary>Top-bottom</summary>
+        StereoTopBottom = 2,
+        /// <summary>Row sequential</summary>
+        StereoRow = 3,
+        /// <summary>Column sequential</summary>
+        StereoCol = 4,
+        /// <summary>Frame sequential</summary>
+        StereoFrame = 5,
+        /// <summary>Checkerboard pattern</summary>
+        StereoCheckerboard = 6
     }
 
     /// <summary>Type of a media slave: subtitle or generic (audio/video).</summary>
@@ -1259,7 +1125,7 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Parse flags used by libvlc_media_parse_request()
+    /// Parse flags used by libvlc_parser_queue()
     /// </summary>
     [Flags]
     public enum MediaParseOptions
@@ -1283,8 +1149,7 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Parse status used sent by libvlc_media_parse_request() or returned by
-    /// libvlc_media_get_parsed_status()
+    /// Managed parse status returned by <see cref="Media.ParseAsync"/>.
     /// </summary>
     public enum MediaParsedStatus
     {
@@ -1389,20 +1254,6 @@ namespace LibVLCSharp
         /// The file size
         /// </summary>
         Size = 1
-    }
-
-    /// <summary>
-    /// Thumbnailer request holder
-    /// </summary>
-    internal readonly struct ThumbnailerRequest
-    {
-        internal readonly IntPtr NativeReference;
-        internal readonly bool Valid => NativeReference != IntPtr.Zero;
-
-        internal ThumbnailerRequest(IntPtr nativeReference)
-        {
-            NativeReference = nativeReference;
-        }
     }
 
 #endregion

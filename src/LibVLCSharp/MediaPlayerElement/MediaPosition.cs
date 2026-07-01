@@ -12,14 +12,14 @@ namespace LibVLCSharp.MediaPlayerElement
         /// </summary>
         /// <param name="position">position as percentage, between 0.0 and 1.0</param>
         /// <param name="seekBarPosition">seek bar position</param>
-        /// <param name="length">media length in milliseconds</param>
+        /// <param name="length">media length in microseconds (LibVLC 4 time base)</param>
         public MediaPosition(double position, double seekBarPosition, long length)
         {
             Position = position;
             SeekBarPosition = seekBarPosition;
             var elapsedTime = position * length;
-            ElapsedTime = TimeSpan.FromMilliseconds(elapsedTime);
-            RemainingTime = TimeSpan.FromMilliseconds(length - elapsedTime);
+            ElapsedTime = TimeSpan.FromMilliseconds(elapsedTime / 1000.0);
+            RemainingTime = TimeSpan.FromMilliseconds((length - elapsedTime) / 1000.0);
         }
 
         /// <summary>

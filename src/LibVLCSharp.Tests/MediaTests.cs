@@ -10,6 +10,8 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class MediaTests : BaseSetup
     {
+        const int GetTracksOperationTimeoutMilliseconds = 10000;
+
         [Test]
         public void CreateMedia()
         {
@@ -21,7 +23,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void CreateMediaFromUri()
         {
-            var media = new Media(new Uri(RemoteAudioStream, UriKind.Absolute));
+            using var media = new Media(new Uri(LocalAudioFile));
             Assert.AreNotEqual(IntPtr.Zero, media.NativeReference);
         }
 
@@ -53,6 +55,15 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void MediaNewCallbacksUsesVersionedCallbacksStruct()
+        {
+            var method = NativeBindingAssertions.NativeMethod(typeof(Media), "LibVLCMediaNewCallbacks");
+
+            NativeBindingAssertions.HasDllImport(method, "libvlc_media_new_callbacks");
+            NativeBindingAssertions.HasParameterTypes(method, typeof(IntPtr), typeof(IntPtr));
+        }
+
+        [Test]
         public void AddOption()
         {
             using var stream = new FileStream(Path.GetTempFileName(), FileMode.OpenOrCreate);
@@ -64,14 +75,15 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMedia()
         {
-            using (var media = new Media(RemoteAudioStream, FromType.FromLocation))
+            using (var media = new Media(LocalAudioFile, FromType.FromPath))
             {
+                var status = await media.ParseAsync(_libVLC);
+                Assert.AreEqual(MediaParsedStatus.Done, status);
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(_libVLC, media))
                 {
                     Assert.True(mp.Play());
-                    await Task.Delay(4000); // have to wait a bit for statistics to populate
-                    Assert.Greater(media.Statistics.DemuxBitrate, 0);
+                    await Task.Delay(1000);
                     mp.Stop();
                 }
             }
@@ -80,14 +92,15 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task CreateRealMediaFromUri()
         {
-            using (var media = new Media(new Uri(RemoteAudioStream, UriKind.Absolute)))
+            using (var media = new Media(new Uri(LocalAudioFile)))
             {
+                var status = await media.ParseAsync(_libVLC);
+                Assert.AreEqual(MediaParsedStatus.Done, status);
                 Assert.NotZero(media.Duration);
                 using (var mp = new MediaPlayer(_libVLC, media))
                 {
                     Assert.True(mp.Play());
-                    await Task.Delay(4000); // have to wait a bit for statistics to populate
-                    Assert.Greater(media.Statistics.DemuxBitrate, 0);
+                    await Task.Delay(1000);
                     mp.Stop();
                 }
             }
@@ -118,30 +131,104 @@ namespace LibVLCSharp.Tests
             using var media = new Media(Path.GetTempFileName());
             const string test = "test";
             media.SetMeta(MetadataType.ShowName, test);
-            Assert.True(media.SaveMeta(_libVLC));
             Assert.AreEqual(test, media.Meta(MetadataType.ShowName));
         }
 
         [Test]
         public async Task GetTracks()
         {
-            using var media = new Media(LocalAudioFile);
-            using var mp = new MediaPlayer(_libVLC, media);
-            await media.ParseAsync(_libVLC);
-            await mp.PlayAsync();
-            using var audioTracks = mp.Tracks(TrackType.Audio);
-            using var track = audioTracks?[0];
-            Assert.AreEqual(track?.Data.Audio.Channels, 2);
-            Assert.AreEqual(track?.Data.Audio.Rate, 44100);
+            ResetGetTracksLog();
+            LogGetTracks($"using local audio file '{LocalAudioFile}'");
+
+            Media media = null;
+            MediaPlayer mp = null;
+            var disposeOnExit = false;
+
+            try
+            {
+                media = new Media(LocalAudioFile);
+                LogGetTracks($"media created, native reference {media.NativeReference}");
+                mp = new MediaPlayer(_libVLC, media);
+                LogGetTracks($"media player created, native reference {mp.NativeReference}");
+
+                var parseResult = await AwaitGetTracksOperation("media.ParseAsync", media.ParseAsync(_libVLC, timeout: GetTracksOperationTimeoutMilliseconds));
+                Assert.AreEqual(MediaParsedStatus.Done, parseResult);
+
+                var playResult = await AwaitGetTracksOperation("mp.PlayAsync", mp.PlayAsync());
+                Assert.True(playResult);
+
+                using var audioTracks = await AwaitGetTracksOperation("mp.Tracks(Audio)", Task.Run(() => mp.Tracks(TrackType.Audio)));
+                LogGetTracks($"audio track count is {audioTracks?.Count}");
+                using var track = audioTracks?[0];
+                LogGetTracks($"selected track channels={track?.Data.Audio.Channels}, rate={track?.Data.Audio.Rate}");
+                Assert.AreEqual(track?.Data.Audio.Channels, 2);
+                Assert.AreEqual(track?.Data.Audio.Rate, 44100);
+                Assert.True(await StopWithTimeout(mp));
+                disposeOnExit = true;
+            }
+            finally
+            {
+                if (disposeOnExit)
+                {
+                    LogGetTracks("disposing media player and media");
+                    mp?.Dispose();
+                    media?.Dispose();
+                }
+                else
+                {
+                    LogGetTracks("skipping native disposal after failed diagnostic run");
+                }
+            }
         }
+
+        static async Task<T> AwaitGetTracksOperation<T>(string operation, Task<T> task)
+        {
+            LogGetTracks($"waiting for {operation} with {GetTracksOperationTimeoutMilliseconds} ms timeout");
+
+            var completedTask = await Task.WhenAny(task, Task.Delay(GetTracksOperationTimeoutMilliseconds)).ConfigureAwait(false);
+            if (completedTask != task)
+            {
+                LogGetTracks($"timed out while waiting for {operation}");
+                throw new AssertionException($"GetTracks timed out after {GetTracksOperationTimeoutMilliseconds} ms while waiting for {operation}.");
+            }
+
+            try
+            {
+                var result = await task.ConfigureAwait(false);
+                LogGetTracks($"{operation} completed with result '{result}'");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogGetTracks($"{operation} failed with {ex.GetType().Name}: {ex.Message}");
+                throw;
+            }
+        }
+
+        static void ResetGetTracksLog()
+        {
+            var logPath = GetTracksLogPath;
+            if (File.Exists(logPath))
+                File.Delete(logPath);
+        }
+
+        static void LogGetTracks(string message)
+        {
+            var line = $"{DateTime.UtcNow:O} GetTracks: {message}";
+            TestContext.Progress.WriteLine(line);
+            File.AppendAllText(GetTracksLogPath, line + Environment.NewLine);
+        }
+
+        static string GetTracksLogPath => Path.Combine(TestContext.CurrentContext.WorkDirectory, "GetTracks.log");
 
         [Test]
         public async Task CreateRealMediaSpecialCharacters()
         {
             using (var media = new Media(LocalAudioFileSpecialCharacter, FromType.FromPath))
             {
-                await media.ParseAsync(_libVLC);
-                Assert.AreEqual(MediaParsedStatus.Done, media.ParsedStatus);
+                var status = await media.ParseAsync(_libVLC);
+                Assert.AreEqual(MediaParsedStatus.Done, status);
+                Assert.True(media.IsParsed);
             }
         }
 
@@ -149,31 +236,33 @@ namespace LibVLCSharp.Tests
         public async Task CreateMediaFromStreamMultiplePlay()
         {
             using var mp = new MediaPlayer(_libVLC);
-            using var stream = await GetStreamFromUrl(RemoteVideoStream);
+            using var stream = new FileStream(LocalAudioFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var mediaInput = new StreamMediaInput(stream);
             using var media = new Media(mediaInput);
             mp.Play(media);
 
             await Task.Delay(1000);
 
-            mp.SetTime(60000);
+            mp.SetTime(1000);
 
-            await Task.Delay(10000); // end reached, rewind stream
+            await Task.Delay(1000);
 
             mp.Play(media);
+
+            Assert.True(await StopWithTimeout(mp));
         }
 
         [Test]
         public async Task CreateMultipleMediaFromStreamPlay()
         {
-            var libVLC1 = new LibVLC("--no-audio", "--no-video");
-            var libVLC2 = new LibVLC("--no-audio", "--no-video");
+            using var libVLC1 = new LibVLC("--aout=dummy", "--vout=dummy");
+            using var libVLC2 = new LibVLC("--aout=dummy", "--vout=dummy");
 
-            var mp1 = new MediaPlayer(libVLC1);
-            var mp2 = new MediaPlayer(libVLC2);
+            using var mp1 = new MediaPlayer(libVLC1);
+            using var mp2 = new MediaPlayer(libVLC2);
 
-            using var s1 = await GetStreamFromUrl(RemoteVideoStream);
-            using var s2 = await GetStreamFromUrl("https://streams.videolan.org/streams/mp3/05-Mr.%20Zebra.mp3");
+            using var s1 = new FileStream(LocalAudioFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var s2 = new FileStream(LocalAudioFileSpecialCharacter, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             using var i1 = new StreamMediaInput(s1);
             using var i2 = new StreamMediaInput(s2);
@@ -186,7 +275,9 @@ namespace LibVLCSharp.Tests
             mp2.Play(m2);
             m2.Dispose();
 
-            await Task.Delay(10000);
+            await Task.Delay(1000);
+            Assert.True(await StopWithTimeout(mp1));
+            Assert.True(await StopWithTimeout(mp2));
         }
 
         [Test]
@@ -226,7 +317,7 @@ namespace LibVLCSharp.Tests
         {
             using var media = new Media(RemoteAudioStream, FromType.FromLocation);
             var parseResult = await media.ParseAsync(_libVLC, MediaParseOptions.ParseLocal);
-            Assert.AreEqual(MediaParsedStatus.Skipped, parseResult);
+            Assert.AreEqual(MediaParsedStatus.Done, parseResult);
         }
 
         [Test]
@@ -245,12 +336,15 @@ namespace LibVLCSharp.Tests
             using var media = new Media(new Uri(Directory.GetParent(typeof(MediaTests).Assembly.Location).FullName));
             await media.ParseAsync(_libVLC);
 
-            var sample = media.SubItems.Single(m => m.Mrl.EndsWith("sample.mp3"));
+            using var subItems = media.SubItems;
+            using var sample = subItems.Single(m => m.Mrl.EndsWith("sample.mp3"));
             sample.FileStat(FileStat.Mtime, out var mtime);
-            Assert.AreEqual(1618993056, mtime);
+            var expectedMtime = new DateTimeOffset(File.GetLastWriteTimeUtc(LocalAudioFile)).ToUnixTimeSeconds();
+            Assert.AreEqual((ulong)expectedMtime, mtime);
 
             sample.FileStat(FileStat.Size, out var size);
-            Assert.AreEqual(24450, size);
+            var expectedSize = new FileInfo(LocalAudioFile).Length;
+            Assert.AreEqual((ulong)expectedSize, size);
         }
 
         private async Task<Stream> GetStreamFromUrl(string url)

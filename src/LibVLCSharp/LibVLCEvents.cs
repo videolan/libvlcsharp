@@ -1,511 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 
 namespace LibVLCSharp
 {
-    /// <summary>LibVLCEvent types</summary>
-    internal enum EventType
-    {
-        MediaMetaChanged = 0,
-        MediaSubItemAdded,
-        MediaDurationChanged,
-        MediaParsedChanged,
-        MediaSubItemTreeAdded = MediaParsedChanged + 3,
-        MediaThumbnailGenerated,
-        MediaAttachedThumbnailsFound,
-        MediaPlayerMediaChanged = 0x100,
-        MediaPlayerNothingSpecial,
-        MediaPlayerOpening,
-        MediaPlayerBuffering,
-        MediaPlayerPlaying,
-        MediaPlayerPaused,
-        MediaPlayerStopped,
-        MediaPlayerForward,
-        MediaPlayerBackward,
-        MediaPlayerStopping,
-        MediaPlayerEncounteredError,
-        MediaPlayerTimeChanged,
-        MediaPlayerPositionChanged,
-        MediaPlayerSeekableChanged,
-        MediaPlayerPausableChanged,
-        MediaPlayerSnapshotTaken = MediaPlayerPausableChanged + 2,
-        MediaPlayerLengthChanged,
-        MediaPlayerVout,
-        MediaPlayerESAdded = MediaPlayerVout + 2,
-        MediaPlayerESDeleted,
-        MediaPlayerESSelected,
-        MediaPlayerCorked,
-        MediaPlayerUncorked,
-        MediaPlayerMuted,
-        MediaPlayerUnmuted,
-        MediaPlayerAudioVolume,
-        MediaPlayerAudioDevice,
-        MediaPlayerESUpdated,
-        MediaPlayerProgramAdded,
-        MediaPlayerProgramDeleted,
-        MediaPlayerProgramSelected,
-        MediaPlayerProgramUpdated,
-
-        /// <remarks>
-        /// <para>The title list changed, call</para>
-        /// <para>libvlc_media_player_get_full_title_descriptions() to get the new list.</para>
-        /// </remarks>
-        MediaPlayerTitleListChanged,
-        MediaPlayerTitleSelectionChanged,
-        MediaPlayerChapterChanged,
-        MediaPlayerRecordChanged,
-        MediaListItemAdded = 0x200,
-        MediaListWillAddItem,
-        MediaListItemDeleted,
-        MediaListWillDeleteItem,
-        MediaListEndReached,
-        MediaListViewItemAdded = 0x300,
-        MediaListViewWillAddItem,
-        MediaListViewItemDeleted,
-        MediaListViewWillDeleteItem,
-        MediaListPlayerPlayed = 0x400,
-        MediaListPlayerNextItemSet,
-        MediaListPlayerStopped,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        RendererDiscovererItemAdded = 0x502,
-
-        /// <remarks>
-        /// <para>Useless event, it will be triggered only when calling</para>
-        /// <para>libvlc_media_discoverer_stop()</para>
-        /// </remarks>
-        RendererDiscovererItemDeleted,
-
-        /// <remarks>
-        /// <para>The current media set into the <see cref="MediaPlayer"/> is stopping.</para>
-        /// This event can be used to notify when the media callbacks, initialized
-        /// from <see cref="MediaInput"/>, should be interrupted, and in
-        /// particular the <see cref="MediaInput.Read(IntPtr, uint)"/>. 
-        /// <para>It can also be used to signal the application state that any input resource (webserver, file mounting,
-        /// etc) can be discarded.</para>
-        /// Output resources still need to be active until the player switches to the <see cref="VLCState.Stopped"/> state.
-        /// </remarks>
-        MediaPlayerMediaStopping
-    }
-
-    /// <summary>Renderer item</summary>
-    /// <remarks>
-    /// <para>This struct is passed by a</para>
-    /// <para>or deleted.</para>
-    /// <para>An item is valid until the</para>
-    /// <para>is called with the same pointer.</para>
-    /// <para>libvlc_renderer_discoverer_event_manager()</para>
-    /// </remarks>
-    /// <summary>A LibVLC event</summary>
-    [StructLayout(LayoutKind.Sequential)]
-    internal readonly struct LibVLCEvent
-    {
-        internal readonly EventType Type;
-
-        internal readonly IntPtr Sender;
-
-        internal readonly EventUnion Union;
-
-        [StructLayout(LayoutKind.Explicit)]
-        internal readonly struct EventUnion
-        {
-            // media
-            [FieldOffset(0)]
-            internal readonly MediaMetaChanged MediaMetaChanged;
-            [FieldOffset(0)]
-            internal readonly MediaSubItemAdded MediaSubItemAdded;
-            [FieldOffset(0)]
-            internal readonly MediaDurationChanged MediaDurationChanged;
-            [FieldOffset(0)]
-            internal readonly MediaParsedChanged MediaParsedChanged;
-            [FieldOffset(0)]
-            internal readonly MediaThumbnailGenerated MediaThumbnailGenerated;
-            [FieldOffset(0)]
-            internal readonly MediaSubItemTreeAdded MediaSubItemTreeAdded;
-            [FieldOffset(0)]
-            internal readonly MediaAttachedThumbnailsFound MediaAttachedThumbnailsFound;
-
-            // mediaplayer
-            [FieldOffset(0)]
-            internal readonly MediaPlayerBuffering MediaPlayerBuffering;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerChapterChanged MediaPlayerChapterChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerPositionChanged MediaPlayerPositionChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerTimeChanged MediaPlayerTimeChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerSeekableChanged MediaPlayerSeekableChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerPausableChanged MediaPlayerPausableChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerVoutChanged MediaPlayerVoutChanged;
-
-            // medialist
-            [FieldOffset(0)]
-            internal readonly MediaListItemAdded MediaListItemAdded;
-            [FieldOffset(0)]
-            internal readonly MediaListWillAddItem MediaListWillAddItem;
-            [FieldOffset(0)]
-            internal readonly MediaListItemDeleted MediaListItemDeleted;
-            [FieldOffset(0)]
-            internal readonly MediaListWillDeleteItem MediaListWillDeleteItem;
-            [FieldOffset(0)]
-            internal readonly MediaListPlayerNextItemSet MediaListPlayerNextItemSet;
-
-            // mediaplayer
-            [FieldOffset(0)]
-            internal readonly MediaPlayerSnapshotTaken MediaPlayerSnapshotTaken;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerLengthChanged MediaPlayerLengthChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerMediaChanged MediaPlayerMediaChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerMediaStopping MediaPlayerMediaStopping;
-            [FieldOffset(0)]
-            internal readonly EsChanged EsChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerProgramChanged MediaPlayerProgramChanged;
-            [FieldOffset(0)]
-            internal readonly MediaPlayerProgramSelectionChanged MediaPlayerProgramSelectionChanged;
-            [FieldOffset(0)]
-            internal readonly VolumeChanged MediaPlayerVolumeChanged;
-            [FieldOffset(0)]
-            internal readonly AudioDeviceChanged AudioDeviceChanged;
-            [FieldOffset(0)]
-            internal readonly RecordChanged RecordChanged;
-
-            // renderer discoverer
-            [FieldOffset(0)]
-            internal readonly RendererDiscovererItemAdded RendererDiscovererItemAdded;
-            [FieldOffset(0)]
-            internal readonly RendererDiscovererItemDeleted RendererDiscovererItemDeleted;
-        }
-
-        #region Media
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaMetaChanged
-        {
-            internal readonly MetadataType MetaType;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaSubItemAdded
-        {
-            internal readonly IntPtr NewChild;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaDurationChanged
-        {
-            internal readonly long NewDuration;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaParsedChanged
-        {
-            internal readonly MediaParsedStatus NewStatus;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaThumbnailGenerated
-        {
-            internal readonly IntPtr Thumbnail;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaSubItemTreeAdded
-        {
-            internal readonly IntPtr MediaInstance;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaAttachedThumbnailsFound
-        {
-            internal readonly IntPtr Thumbmails;
-        }
-
-        #endregion
-
-        #region MediaPlayer
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerBuffering
-        {
-            internal readonly float NewCache;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerChapterChanged
-        {
-            internal readonly int NewChapter;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerPositionChanged
-        {
-            internal readonly float NewPosition;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerTimeChanged
-        {
-            internal readonly long NewTime;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerSeekableChanged
-        {
-            internal readonly int NewSeekable;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerPausableChanged
-        {
-            internal readonly int NewPausable;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerVoutChanged
-        {
-            internal readonly int NewCount;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerSnapshotTaken
-        {
-            internal readonly IntPtr Filename;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerLengthChanged
-        {
-            internal readonly long NewLength;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct EsChanged
-        {
-            internal readonly TrackType Type;
-            internal readonly IntPtr Id;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerProgramChanged
-        {
-            internal readonly int Id;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerProgramSelectionChanged
-        {
-            internal readonly int UnselectedId;
-            internal readonly int SelectedId;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct AudioDeviceChanged
-        {
-            internal readonly IntPtr Device;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct RecordChanged
-        {
-            internal readonly bool IsRecording;
-            internal readonly IntPtr RecordedFilePath;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerMediaChanged
-        {
-            internal readonly IntPtr NewMedia;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaPlayerMediaStopping
-        {
-            internal readonly IntPtr Media;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct VolumeChanged
-        {
-            internal readonly float Volume;
-        }
-
-        #endregion
-
-        #region MediaList
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaListItemAdded
-        {
-            internal readonly IntPtr MediaInstance;
-            internal readonly int Index;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaListWillAddItem
-        {
-            internal readonly IntPtr MediaInstance;
-            internal readonly int Index;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaListItemDeleted
-        {
-            internal readonly IntPtr MediaInstance;
-            internal readonly int Index;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaListWillDeleteItem
-        {
-            internal readonly IntPtr MediaInstance;
-            internal readonly int Index;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct MediaListPlayerNextItemSet
-        {
-            internal readonly IntPtr MediaInstance;
-        }
-
-        #endregion MediaList
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct RendererDiscovererItemAdded
-        {
-            internal readonly IntPtr item;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal readonly struct RendererDiscovererItemDeleted
-        {
-            internal readonly IntPtr item;
-        }
-    }
-
-    #region Media events
-
-    /// <summary>
-    /// Media metadata changed
-    /// </summary>
-    public class MediaMetaChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Type of the metadata that changed
-        /// </summary>
-        public readonly MetadataType MetadataType;
-
-        internal MediaMetaChangedEventArgs(MetadataType metadataType)
-        {
-            MetadataType = metadataType;
-        }
-    }
-
-    /// <summary>
-    /// Media parsed status changed
-    /// </summary>
-    public class MediaParsedChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The new parsed status
-        /// </summary>
-        public readonly MediaParsedStatus ParsedStatus;
-
-        internal MediaParsedChangedEventArgs(MediaParsedStatus parsedStatus)
-        {
-            ParsedStatus = parsedStatus;
-        }
-    }
-
-    /// <summary>
-    /// Media sub item added
-    /// </summary>
-    public class MediaSubItemAddedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The newly added media subitem
-        /// </summary>
-        public readonly Media SubItem;
-
-        internal MediaSubItemAddedEventArgs(IntPtr mediaPtr)
-        {
-            SubItem = new Media(mediaPtr);
-        }
-    }
-
-    /// <summary>
-    /// The duration of the media changed
-    /// </summary>
-    public class MediaDurationChangedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// The new media duration
-        /// </summary>
-        public readonly long Duration;
-
-        internal MediaDurationChangedEventArgs(long duration)
-        {
-            Duration = duration;
-        }
-    }
-
-    /// <summary>
-    /// A new thumbnail picture was generated
-    /// </summary>
-    public class MediaThumbnailGeneratedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// New thumbnail
-        /// </summary>
-        public readonly Picture? Thumbnail;
-
-        internal MediaThumbnailGeneratedEventArgs(IntPtr thumbnailPtr)
-        {
-            Thumbnail = thumbnailPtr == IntPtr.Zero ? null : new Picture(thumbnailPtr);
-        }
-    }
-
-    /// <summary>
-    /// Attached thumbnails have been found during pre-parsing or playback
-    /// </summary>
-    public class MediaAttachedThumbnailsFoundEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Attached thumbnails
-        /// </summary>
-        public readonly PictureList? AttachedThumbnails;
-
-        internal MediaAttachedThumbnailsFoundEventArgs(IntPtr pictureList)
-        {
-            AttachedThumbnails = pictureList == IntPtr.Zero ? null : new PictureList(pictureList);
-        }
-    }
-
-    /// <summary>
-    /// A media sub item tree has been added
-    /// </summary>
-    public class MediaSubItemTreeAddedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// New media sub item tree
-        /// </summary>
-        public readonly Media SubItem;
-
-        internal MediaSubItemTreeAddedEventArgs(IntPtr subItemPtr)
-        {
-            SubItem = new Media(subItemPtr);
-        }
-    }
-
-    #endregion
-
     #region MediaPlayer events
 
     /// <summary>
@@ -861,72 +357,43 @@ namespace LibVLCSharp
 
     #endregion
 
-    #region MediaList events
+    #region MediaDiscoverer events
 
     /// <summary>
-    /// Base class for MediaList events
+    /// A media discoverer found a new media item.
     /// </summary>
-    public abstract class MediaListBaseEventArgs : EventArgs
+    public class MediaDiscovererMediaAddedEventArgs : EventArgs
     {
         /// <summary>
-        /// Current node
+        /// The newly discovered media
         /// </summary>
         public readonly Media Media;
 
         /// <summary>
-        /// Current index
+        /// The parent media of the newly discovered media, if any
         /// </summary>
-        public readonly int Index;
+        public readonly Media? Parent;
 
+        internal MediaDiscovererMediaAddedEventArgs(IntPtr parentPtr, IntPtr mediaPtr)
+        {
+            Media = new Media(mediaPtr);
+            Parent = parentPtr == IntPtr.Zero ? null : new Media(parentPtr);
+        }
+    }
+
+    /// <summary>
+    /// A media discoverer removed a media item.
+    /// </summary>
+    public class MediaDiscovererMediaRemovedEventArgs : EventArgs
+    {
         /// <summary>
-        /// Default constructor
+        /// The removed media
         /// </summary>
-        /// <param name="media">Current node</param>
-        /// <param name="index">Current index</param>
-        internal protected MediaListBaseEventArgs(Media media, int index)
-        {
-            Media = media;
-            Index = index;
-        }
-    }
+        public readonly Media Media;
 
-    /// <summary>
-    /// An item has been added to the MediaList
-    /// </summary>
-    public class MediaListItemAddedEventArgs : MediaListBaseEventArgs
-    {
-        internal MediaListItemAddedEventArgs(Media media, int index) : base(media, index)
+        internal MediaDiscovererMediaRemovedEventArgs(IntPtr mediaPtr)
         {
-        }
-    }
-
-    /// <summary>
-    /// An item is about to be added to the MediaList
-    /// </summary>
-    public class MediaListWillAddItemEventArgs : MediaListBaseEventArgs
-    {
-        internal MediaListWillAddItemEventArgs(Media media, int index) : base(media, index)
-        {
-        }
-    }
-
-    /// <summary>
-    /// An item has been deleted from the MediaList
-    /// </summary>
-    public class MediaListItemDeletedEventArgs : MediaListBaseEventArgs
-    {
-        internal MediaListItemDeletedEventArgs(Media media, int index) : base(media, index)
-        {
-        }
-    }
-
-    /// <summary>
-    /// An item is about to be deleted from the MediaList
-    /// </summary>
-    public class MediaListWillDeleteItemEventArgs : MediaListBaseEventArgs
-    {
-        internal MediaListWillDeleteItemEventArgs(Media media, int index) : base(media, index)
-        {
+            Media = new Media(mediaPtr);
         }
     }
 
@@ -973,13 +440,17 @@ namespace LibVLCSharp
     /// </summary>
     public sealed class LogEventArgs : EventArgs
     {
-        internal LogEventArgs(LogLevel level, string message, string? module, string? sourceFile, uint? sourceLine)
+        internal LogEventArgs(LogLevel level, string message, string? module, string? sourceFile, uint? sourceLine,
+            string? objectName, string? objectHeader, UIntPtr? objectId)
         {
             Level = level;
             Message = message;
             Module = module;
             SourceFile = sourceFile;
             SourceLine = sourceLine;
+            ObjectName = objectName;
+            ObjectHeader = objectHeader;
+            ObjectId = objectId;
             FormattedLog = $"{module} {level}: {message}";
         }
 
@@ -1010,6 +481,21 @@ namespace LibVLCSharp
         /// This may be <see langword="null"/> if that info is not available, i.e. always if you are using a release version of VLC.
         /// </summary>
         public uint? SourceLine { get; }
+
+        /// <summary>
+        /// The type name of the VLC object that emitted the message.
+        /// </summary>
+        public string? ObjectName { get; }
+
+        /// <summary>
+        /// Optional object header associated with the log message.
+        /// </summary>
+        public string? ObjectHeader { get; }
+
+        /// <summary>
+        /// Temporarily unique native object identifier, or <see langword="null"/> if no object was associated with the message.
+        /// </summary>
+        public UIntPtr? ObjectId { get; }
 
         /// <summary>
         /// Helper property with already formatted log message

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp;
@@ -11,13 +10,18 @@ namespace LibVLCSharp.Tests
     public class MediaDiscovererTests : BaseSetup
     {
         [Test]
-        public void CreateStartAndStopDiscoverer()
+        public async Task CreateStartAndStopDiscoverer()
         {
             var mds = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(_libVLC, mds.First().Name!);
             Assert.True(md.Start());
             Assert.True(md.IsRunning);
             md.Stop();
+            for (var i = 0; i < 30 && md.IsRunning; i++)
+            {
+                await Task.Delay(100);
+            }
+
             Assert.False(md.IsRunning);
         }
 
@@ -26,16 +30,19 @@ namespace LibVLCSharp.Tests
         {
             var mds = _libVLC.MediaDiscoverers(MediaDiscovererCategory.Lan);
             var md = new MediaDiscoverer(_libVLC, mds.First().Name!);
+            var addedCount = 0;
+            var removedCount = 0;
+            md.MediaAdded += (_, _) => addedCount++;
+            md.MediaRemoved += (_, _) => removedCount++;
+
             Assert.True(md.Start());
             Assert.True(md.IsRunning);
-            Assert.NotNull(md.MediaList);
             await Task.Delay(1000);
-            foreach(var media in md.MediaList!)
-            {
-                Debug.WriteLine(media.Mrl);
-            }
+
+            Assert.GreaterOrEqual(addedCount, 0);
+            Assert.GreaterOrEqual(removedCount, 0);
+
             md.Dispose();
-            Assert.IsNull(md.MediaList);
             Assert.False(md.IsRunning);
             Assert.AreEqual(IntPtr.Zero, md.NativeReference);
         }

@@ -29,6 +29,24 @@ namespace LibVLCSharp
         {
         }
 
+        internal static IReadOnlyList<Picture> RetainPictures(IntPtr pictureListPtr)
+        {
+            if (pictureListPtr == IntPtr.Zero)
+                return new Picture[0];
+
+            var count = Native.LibVLCPictureListCount(pictureListPtr).ToUInt32();
+            var pictures = new List<Picture>((int)count);
+
+            for (var i = 0U; i < count; i++)
+            {
+                var picturePtr = Native.LibVLCPictureListAt(pictureListPtr, (UIntPtr)i);
+                if (picturePtr != IntPtr.Zero)
+                    pictures.Add(new Picture(picturePtr));
+            }
+
+            return pictures;
+        }
+
         /// <summary>
         /// Get count on picture list items.
         /// </summary>
@@ -98,4 +116,3 @@ namespace LibVLCSharp
         }
     }
 }
-

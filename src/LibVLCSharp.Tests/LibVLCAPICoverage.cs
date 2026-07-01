@@ -1,11 +1,11 @@
-﻿using LibVLCSharp;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LibVLCSharp.Tests
@@ -14,135 +14,106 @@ namespace LibVLCSharp.Tests
     public class LibVLCAPICoverage
     {
         const string LibVLCSymURL = "https://raw.githubusercontent.com/videolan/vlc/master/lib/libvlc.sym";
-        const string LibVLCDeprecatedSymUrl = "https://raw.githubusercontent.com/videolan/vlc/master/include/vlc/deprecated.h";
+
+        static readonly string[] AllowedNonLibVLCExports =
+        {
+            "libvlc_unity_get_texture",
+            "libvlc_unity_media_player_new",
+            "libvlc_unity_media_player_release"
+        };
 
         [Test]
         public async Task CheckLibVLCCoverage()
         {
-            string[] libvlcSymbols;
-            string[] libvlcdeprecatedSym;
+            var repoRoot = FindRepositoryRoot();
+            var libVLCSharpPath = Path.Combine(repoRoot, "src", "LibVLCSharp");
 
+            var exportedSymbols = await ReadExportedSymbols();
+            var dllImports = ReadDllImports(libVLCSharpPath);
+
+            var allowedExtraImports = new HashSet<string>(AllowedNonLibVLCExports);
+            var extraDllImports = dllImports
+                .Where(symbol => !allowedExtraImports.Contains(symbol))
+                .Except(exportedSymbols)
+                .OrderBy(symbol => symbol)
+                .ToArray();
+            var missingDllImports = exportedSymbols
+                .Except(dllImports)
+                .OrderBy(symbol => symbol)
+                .ToArray();
+
+            Debug.WriteLine($"{exportedSymbols.Count} LibVLC symbols exported");
+            Debug.WriteLine($"{dllImports.Count} LibVLCSharp DllImport entry points found");
+            Debug.WriteLine($"{missingDllImports.Length} missing LibVLCSharp DllImport entry points");
+            Debug.WriteLine($"{extraDllImports.Length} extra LibVLCSharp DllImport entry points");
+
+            Assert.Zero(
+                missingDllImports.Length,
+                "Missing LibVLCSharp DllImport entry points:" + Environment.NewLine + string.Join(Environment.NewLine, missingDllImports));
+            Assert.Zero(
+                extraDllImports.Length,
+                "Extra LibVLCSharp DllImport entry points:" + Environment.NewLine + string.Join(Environment.NewLine, extraDllImports));
+        }
+
+        static string FindRepositoryRoot()
+        {
+            var directory = new DirectoryInfo(AppContext.BaseDirectory);
+            while (directory != null)
+            {
+                if (File.Exists(Path.Combine(directory.FullName, "src", "LibVLCSharp", "LibVLCSharp.csproj")))
+                {
+                    return directory.FullName;
+                }
+
+                directory = directory.Parent;
+            }
+
+            Assert.Fail("Could not find repository root containing src/LibVLCSharp/LibVLCSharp.csproj");
+            return string.Empty;
+        }
+
+        static async Task<HashSet<string>> ReadExportedSymbols()
+        {
             using (var httpClient = new HttpClient())
             {
-                libvlcSymbols = (await httpClient.GetStringAsync(LibVLCSymURL)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                libvlcdeprecatedSym = (await httpClient.GetStringAsync(LibVLCDeprecatedSymUrl)).Split(new[] { '\r', '\n' }).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                var symbols = await httpClient.GetStringAsync(LibVLCSymURL);
+                return symbols
+                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(line => line.Trim())
+                    .Where(line => IsCheckedSymbol(line))
+                    .Where(line => !IsExcludedSymbol(line))
+                    .ToHashSet();
             }
+        }
 
-            var dllImports = new List<string>();
+        static HashSet<string> ReadDllImports(string sourcePath)
+        {
+            var symbols = new HashSet<string>();
 
-            // retrieving EventManager using reflection because the type is internal
-            var eventManager = typeof(MediaPlayer).GetRuntimeProperties()
-                .First(n => n.Name.Equals("EventManager"))
-                .PropertyType
-                .BaseType!;
-
-            var libvlcTypes = new List<Type>
+            foreach (var file in Directory.EnumerateFiles(sourcePath, "*.cs", SearchOption.AllDirectories))
             {
-                typeof(LibVLC),
-                typeof(MediaPlayer),
-                typeof(Media),
-                typeof(MediaDiscoverer),
-                typeof(RendererDiscoverer),
-                typeof(RendererItem),
-                typeof(Dialog),
-                typeof(MediaList),
-                typeof(Equalizer),
-                typeof(Picture),
-                eventManager
-            };
-
-            var deprecatedSymbolsLine = new List<string>();
-
-            for (var i = 0; i < libvlcdeprecatedSym.Count(); i++)
-            {
-                var currentLine = libvlcdeprecatedSym[i];
-                if(currentLine.StartsWith("LIBVLC_DEPRECATED"))
+                var source = File.ReadAllText(file);
+                foreach (Match match in Regex.Matches(source, @"EntryPoint\s*=\s*""(libvlc_[^""]+)"""))
                 {
-                    deprecatedSymbolsLine.Add(libvlcdeprecatedSym[i + 1]);
-                }
-            }
-
-            var deprecatedSymbols = new List<string>();
-
-            foreach (var symLine in deprecatedSymbolsLine)
-            {
-                var libvlcIndexStart = symLine.IndexOf("libvlc");
-                var sym1 = symLine.Substring(libvlcIndexStart);
-                var finalSymbol = new string(sym1.TakeWhile(c => c != '(').ToArray());
-
-                if (finalSymbol.Contains('*'))
-                {
-                    finalSymbol = finalSymbol.Substring(finalSymbol.IndexOf('*') + 1);
-                }
-
-                deprecatedSymbols.Add(finalSymbol.Trim());
-            }
-
-            var implementedButHidden = new List<string>
-            {
-                "libvlc_media_player_set_android_context", // android build only
-                "libvlc_free" // hidden in internal type
-            };
-
-            // not implemented symbols for lack of use case or user interest
-            var notImplementedOnPurpose = new List<string>
-            {
-                "libvlc_clock", "libvlc_dialog_get_context", "libvlc_dialog_set_context",
-                "libvlc_event_type_name", "libvlc_log_get_object", "libvlc_vlm", "libvlc_media_list_player", "libvlc_media_library"
-            };
-
-            var exclude = new List<string>();
-            exclude.AddRange(implementedButHidden);
-            exclude.AddRange(notImplementedOnPurpose);
-
-            foreach (var libvlcType in libvlcTypes)
-            {
-                var r = libvlcType.GetNestedType("Native", BindingFlags.NonPublic);
-                if (r == null) continue;
-
-                foreach (var method in r.GetRuntimeMethods())
-                {
-                    foreach (var attr in method.CustomAttributes)
+                    var symbol = match.Groups[1].Value;
+                    if (IsCheckedSymbol(symbol) && !IsExcludedSymbol(symbol))
                     {
-                        if (attr.AttributeType.Name.Equals("DllImportAttribute"))
-                        {
-                            var arg = attr.NamedArguments.FirstOrDefault(a => a.MemberName.Equals("EntryPoint"));
-                            if (arg == default) continue;
-
-                            var sym = (string)arg.TypedValue.Value!;
-
-                            dllImports.Add(sym);
-                        }
+                        symbols.Add(symbol);
                     }
                 }
             }
 
-            var unusedDllImports = dllImports.Except(libvlcSymbols);
+            return symbols;
+        }
 
-            var missingApis = libvlcSymbols
-                .Where(symbol => !exclude.Any(excludeSymbol => symbol.StartsWith(excludeSymbol))) // Filters out excluded symbols
-                .Except(dllImports)
-                .Except(deprecatedSymbols);
+        static bool IsCheckedSymbol(string symbol)
+        {
+            return symbol.StartsWith("libvlc_", StringComparison.Ordinal);
+        }
 
-            var missingApisCount = missingApis.Count();
-
-            Debug.WriteLine($"we have {dllImports.Count} dll import statements");
-            Debug.WriteLine($"{missingApisCount} missing APIs implementation");
-
-            foreach (var miss in missingApis)
-            {
-                Debug.WriteLine(miss);
-            }
-
-            var unusedDllImportsCount = unusedDllImports.Count();
-            Debug.WriteLine($"{unusedDllImportsCount} unused DllImports implementation");
-            foreach (var unused in unusedDllImports)
-            {
-                Debug.WriteLine(unused);
-            }
-
-            Assert.Zero(missingApisCount);
-            Assert.Zero(unusedDllImportsCount);
+        static bool IsExcludedSymbol(string symbol)
+        {
+            return symbol.StartsWith("libvlc_media_list_player", StringComparison.Ordinal);
         }
     }
 }

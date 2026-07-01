@@ -574,6 +574,19 @@ namespace LibVLCSharp.Helpers
             }
         }
 
+        /// <summary>
+        /// Creates a <see cref="TaskCompletionSource{T}"/> whose continuations run asynchronously so that awaiters
+        /// are not resumed synchronously on a native LibVLC callback thread. net45 lacks
+        /// <c>TaskCreationOptions.RunContinuationsAsynchronously</c> (added in .NET 4.6), so it falls back to
+        /// the plain constructor there.
+        /// </summary>
+        internal static TaskCompletionSource<T> NewCompletionSource<T>() =>
+#if NET45
+            new TaskCompletionSource<T>();
+#else
+            new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+#endif
+
         // These delegates allow the definition of generic functions with [OUT] parameters
         internal delegate UIntPtr CategoryArrayOut<T>(IntPtr nativeRef, T enumType, out IntPtr array) where T : Enum;
         internal delegate uint ArrayOut(IntPtr nativeRef, out IntPtr array);

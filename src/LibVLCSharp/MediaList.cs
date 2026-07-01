@@ -10,7 +10,6 @@ namespace LibVLCSharp
     /// </summary>
     public class MediaList : Internal, IEnumerable<Media>
     {
-        MediaListEventManager? _eventManager;
         readonly object _syncLock = new object();
         bool _nativeLock;
 
@@ -31,10 +30,6 @@ namespace LibVLCSharp
                 EntryPoint = "libvlc_media_list_release")]
             internal static extern void LibVLCMediaListRelease(IntPtr mediaList);
 
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_discoverer_media_list")]
-            internal static extern IntPtr LibVLCMediaDiscovererMediaList(IntPtr discovererMediaList);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_set_media")]
@@ -86,12 +81,12 @@ namespace LibVLCSharp
             internal static extern void LibVLCMediaListUnlock(IntPtr mediaList);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_list_event_manager")]
-            internal static extern IntPtr LibVLCMediaListEventManager(IntPtr mediaList);
+                EntryPoint = "libvlc_media_list_media")]
+            internal static extern IntPtr LibVLCMediaListMedia(IntPtr mediaList);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_retain")]
-            internal static extern void LibVLCMediaListRetain(IntPtr mediaList);
+            internal static extern IntPtr LibVLCMediaListRetain(IntPtr mediaList);
         }
 
         /// <summary>
@@ -100,16 +95,6 @@ namespace LibVLCSharp
         /// <param name="media"></param>
         public MediaList(Media media)
             : base(() => Native.LibVLCMediaSubitems(media.NativeReference), Native.LibVLCMediaListRelease)
-        {
-        }
-
-        /// <summary>
-        /// Get media service discover media list.
-        /// </summary>
-        /// <param name="mediaDiscoverer"></param>
-        public MediaList(MediaDiscoverer mediaDiscoverer)
-            : base(() => Native.LibVLCMediaDiscovererMediaList(mediaDiscoverer.NativeReference),
-                Native.LibVLCMediaListRelease)
         {
         }
 
@@ -137,7 +122,13 @@ namespace LibVLCSharp
         /// </summary>
         /// <param name="media">a media instance</param>
         /// <returns>true on success, false if the media list is read-only</returns>
-        public bool AddMedia(Media media) => NativeSync(() => Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
+        public bool AddMedia(Media media)
+        {
+            if (media == null) throw new ArgumentNullException(nameof(media));
+
+            var added = NativeSync(() => Native.LibVLCMediaListAddMedia(NativeReference, media.NativeReference) == 0);
+            return added;
+        }
 
         T NativeSync<T>(Func<T> operation)
         {
@@ -166,19 +157,28 @@ namespace LibVLCSharp
         /// <param name="media">a media instance</param>
         /// <param name="position">position in the array where to insert</param>
         /// <returns>true on success, false if the media list is read-only</returns>
-        public bool InsertMedia(Media media, int position) =>
-            NativeSync(() =>
-            {
-                if (media == null) throw new ArgumentNullException(nameof(media));
-                return Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0;
-            });
+        public bool InsertMedia(Media media, int position)
+        {
+            if (media == null) throw new ArgumentNullException(nameof(media));
+
+            var inserted = NativeSync(() => Native.LibVLCMediaListInsertMedia(NativeReference, media.NativeReference, position) == 0);
+            return inserted;
+        }
 
         /// <summary>
         /// Remove media instance from media list on a position.
         /// </summary>
         /// <param name="positionIndex">position in the array where to remove the iteam</param>
         /// <returns>true on success, false if the media list is read-only or the item was not found</returns>
-        public bool RemoveIndex(int positionIndex) => NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
+        public bool RemoveIndex(int positionIndex)
+        {
+            var media = this[positionIndex];
+            if (media == null)
+                return false;
+
+            var removed = NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
+            return removed;
+        }
 
         /// <summary>
         /// Get count on media list items.
@@ -242,71 +242,21 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Get libvlc_event_manager from this media list instance. The
-        /// p_event_manager is immutable, so you don't have to hold the lock
+        /// Get the media instance associated with this media list instance, if any.
+        /// This is the inverse of <see cref="SetMedia(Media)"/>.
+        /// The native reference count of the returned media is incremented, so dispose it when done.
         /// </summary>
-        MediaListEventManager EventManager
+        public Media? AssociatedMedia
         {
             get
             {
-                if (_eventManager != null) return _eventManager;
-                var ptr = Native.LibVLCMediaListEventManager(NativeReference);
-                _eventManager = new MediaListEventManager(ptr);
-                return _eventManager;
+                var ptr = Native.LibVLCMediaListMedia(NativeReference);
+                return ptr == IntPtr.Zero ? null : new Media(ptr);
             }
         }
 
         /// <summary>Increments the native reference counter for this medialist instance</summary>
         internal void Retain() => Native.LibVLCMediaListRetain(NativeReference);
-
-        #region Events
-
-        /// <summary>
-        /// An item has been added to the MediaList
-        /// </summary>
-        public event EventHandler<MediaListItemAddedEventArgs> ItemAdded
-        {
-            add => EventManager.AttachEvent(EventType.MediaListItemAdded, value);
-            remove => EventManager.DetachEvent(EventType.MediaListItemAdded, value);
-        }
-
-        /// <summary>
-        /// An item is about to be added to the MediaList
-        /// </summary>
-        public event EventHandler<MediaListWillAddItemEventArgs> WillAddItem
-        {
-            add => EventManager.AttachEvent(EventType.MediaListWillAddItem, value);
-            remove => EventManager.DetachEvent(EventType.MediaListWillAddItem, value);
-        }
-
-        /// <summary>
-        /// An item has been deleted from the MediaList
-        /// </summary>
-        public event EventHandler<MediaListItemDeletedEventArgs> ItemDeleted
-        {
-            add => EventManager.AttachEvent(EventType.MediaListItemDeleted, value);
-            remove => EventManager.DetachEvent(EventType.MediaListItemDeleted, value);
-        }
-
-        /// <summary>
-        /// An item is about to be deleted from the MediaList
-        /// </summary>
-        public event EventHandler<MediaListWillDeleteItemEventArgs> WillDeleteItem
-        {
-            add => EventManager.AttachEvent(EventType.MediaListWillDeleteItem, value);
-            remove => EventManager.DetachEvent(EventType.MediaListWillDeleteItem, value);
-        }
-
-        /// <summary>
-        /// The media list reached its end
-        /// </summary>
-        public event EventHandler<EventArgs> EndReached
-        {
-            add => EventManager.AttachEvent(EventType.MediaListEndReached, value);
-            remove => EventManager.DetachEvent(EventType.MediaListEndReached, value);
-        }
-
-        #endregion
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection of media

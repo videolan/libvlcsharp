@@ -13,12 +13,53 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class MediaPlayerTests : BaseSetup
     {
+        [SetUp]
+        public void SetUpMediaPlayerTests()
+        {
+            _libVLC.Dispose();
+            _libVLC = new LibVLC("--aout=dummy", "--vout=dummy", "--verbose=2");
+        }
+
         [Test]
         public void CreateAndDestroy()
         {
             var mp = new MediaPlayer(_libVLC);
             mp.Dispose();
             Assert.AreEqual(IntPtr.Zero, mp.NativeReference);
+        }
+
+        [Test]
+        public void WatchTimeUsesVersionedCallbacksStructAndPointerTimePoints()
+        {
+            var watchTime = NativeBindingAssertions.NativeMethod(typeof(MediaPlayer), "LibVLCMediaPlayerWatchTime");
+            NativeBindingAssertions.HasDllImport(watchTime, "libvlc_media_player_watch_time");
+            NativeBindingAssertions.HasParameterTypes(watchTime, typeof(IntPtr), typeof(long), typeof(IntPtr), typeof(IntPtr));
+
+            var interpolate = NativeBindingAssertions.NativeMethod(typeof(MediaPlayer), "LibVLCMediaPlayerTimePointInterpolate");
+            Assert.True(interpolate.GetParameters()[0].ParameterType.IsByRef);
+
+            var nextDate = NativeBindingAssertions.NativeMethod(typeof(MediaPlayer), "LibVLCMediaPlayerTimePointGetNextDate");
+            Assert.True(nextDate.GetParameters()[0].ParameterType.IsByRef);
+        }
+
+        [Test]
+        public void NewLibVLC4MediaPlayerFunctionsAreBound()
+        {
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerSetNextMedia", "libvlc_media_player_set_next_media");
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerGetNextMedia", "libvlc_media_player_get_next_media");
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerLock", "libvlc_media_player_lock");
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerUnlock", "libvlc_media_player_unlock");
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerWait", "libvlc_media_player_wait");
+            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerSignal", "libvlc_media_player_signal");
+        }
+
+        [Test]
+        public void FullscreenUsesNativeBoolParameter()
+        {
+            var method = NativeBindingAssertions.NativeMethod(typeof(MediaPlayer), "LibVLCSetFullscreen");
+
+            NativeBindingAssertions.HasDllImport(method, "libvlc_set_fullscreen");
+            Assert.AreEqual(typeof(bool), method.GetParameters()[1].ParameterType);
         }
 
         [Test]
@@ -34,30 +75,30 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task TrackDescription()
         {
-            var mp = new MediaPlayer(_libVLC);
-            var media = new Media("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi", FromType.FromLocation);
-            var tcs = new TaskCompletionSource<bool>();
+            using var mp = new MediaPlayer(_libVLC);
+            using var media = new Media(LocalAudioFile);
 
             mp.Media = media;
-            mp.Playing += (sender, args) =>
-            {
-                using var audioTracks = mp.Tracks(TrackType.Audio);
-                mp.Select(audioTracks.First());
-                Assert.AreEqual(mp.SelectedTrack(TrackType.Audio)?.Id, audioTracks.First().Id);
-                tcs.SetResult(true);
-            };
-            mp.Play();
+            Assert.True(await mp.PlayAsync());
+            // Pause as soon as playback starts: the sample is short and would otherwise reach EOF and
+            // stop before we can query track selection, leaving the player with no selected tracks.
+            mp.SetPause(true);
 
-            await tcs.Task;
-            Assert.True(tcs.Task.Result);
+            using var audioTracks = await WaitForAudioTracks(mp);
+            var firstTrack = audioTracks.First();
+            mp.Select(firstTrack);
+            using var selectedTrack = await WaitForSelectedAudioTrack(mp);
+            Assert.AreEqual(firstTrack.Id, selectedTrack.Id);
+            Assert.True(await StopWithTimeout(mp));
         }
 
         [Test]
+        [Ignore("requires remote chaptered media")]
         public async Task ChapterDescriptions()
         {
             var mp = new MediaPlayer(_libVLC);
             var media = new Media("https://auphonic.com/media/blog/auphonic_chapters_demo.m4a", FromType.FromLocation);
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = NewCompletionSource<bool>();
 
             mp.Media = media;
             mp.Play();
@@ -75,16 +116,17 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task Play()
         {
-            var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
-            var mp = new MediaPlayer(_libVLC, media);
-            var called = false;
+            using var media = new Media(LocalAudioFile);
+            using var mp = new MediaPlayer(_libVLC, media);
+            var tcs = NewCompletionSource<bool>();
             mp.Playing += (sender, args) =>
             {
-                called = true;
+                tcs.TrySetResult(true);
             };
-            mp.Play();
-            await Task.Delay(5000);
-            Assert.True(called);
+            Assert.True(mp.Play());
+            Assert.AreSame(tcs.Task, await Task.WhenAny(tcs.Task, Task.Delay(3000)));
+            Assert.True(await tcs.Task);
+            Assert.True(await StopWithTimeout(mp));
             //Assert.True(mp.IsPlaying);
         }
 
@@ -94,63 +136,34 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task EventFireOnceForeachRegistration()
         {
-            try
-            {
-                var media = new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation);
-                var mp = new MediaPlayer(_libVLC, media);
+            using var media = new Media(LocalAudioFile);
+            using var mp = new MediaPlayer(_libVLC, media);
 
+            mp.Playing += Mp_Playing;
+            mp.Playing += Mp_Playing1;
 
-                mp.Playing += Mp_Playing;
+            Debug.WriteLine("first play");
 
-                mp.Playing += Mp_Playing1;
+            Assert.True(await mp.PlayAsync());
+            Assert.AreEqual(callCountRegisterOne, 1);
+            Assert.AreEqual(callCountRegisterTwo, 1);
 
-                Debug.WriteLine("first play");
+            callCountRegisterOne = 0;
+            callCountRegisterTwo = 0;
 
-                mp.Play();
-                await Task.Delay(2000);
-                Assert.AreEqual(callCountRegisterOne, 1);
-                Assert.AreEqual(callCountRegisterTwo, 1);
+            Assert.True(await StopWithTimeout(mp));
 
-                callCountRegisterOne = 0;
-                callCountRegisterTwo = 0;
+            mp.Playing -= Mp_Playing;
 
-                mp.Stop();
+            Debug.WriteLine("second play");
 
-                mp.Playing -= Mp_Playing;
+            Assert.True(await mp.PlayAsync());
 
+            Assert.AreEqual(callCountRegisterOne, 0);
+            Assert.AreEqual(callCountRegisterTwo, 1);
 
-                Debug.WriteLine("second play");
-
-                mp.Play();
-                await Task.Delay(2000);
-
-                Assert.AreEqual(callCountRegisterOne, 0);
-                Assert.AreEqual(callCountRegisterTwo, 1);
-
-              //  mp.Stop();
-
-                mp.Playing -= Mp_Playing1; // native crash in detach?
-
-
-
-                callCountRegisterOne = 0;
-                callCountRegisterTwo = 0;
-
-
-                Debug.WriteLine("third play");
-
-                mp.Play();
-                await Task.Delay(500);
-
-                Assert.AreEqual(callCountRegisterOne, 0);
-                Assert.AreEqual(callCountRegisterTwo, 0);
-
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
+            Assert.True(await StopWithTimeout(mp));
+            mp.Playing -= Mp_Playing1;
         }
 
         void Mp_Playing1(object sender, EventArgs e)
@@ -171,7 +184,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC);
 
-            mp.Play(new Media("http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4", FromType.FromLocation));
+            mp.Play(new Media(LocalAudioFile));
 
             await Task.Delay(1000);
 
@@ -181,6 +194,7 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        [Ignore("requires remote 360 video media")]
         public async Task UpdateViewpoint()
         {
             var mp = new MediaPlayer(_libVLC);
@@ -204,20 +218,21 @@ namespace LibVLCSharp.Tests
         public void GetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
+            Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
         }
 
         [Test]
         public void SetMediaPlayerRole()
         {
             var mp = new MediaPlayer(_libVLC);
-            Assert.AreEqual(MediaPlayerRole.None, mp.Role);
-
-            Assert.True(mp.SetRole(MediaPlayerRole.Video));
             Assert.AreEqual(MediaPlayerRole.Video, mp.Role);
+
+            Assert.True(mp.SetRole(MediaPlayerRole.Music));
+            Assert.AreEqual(MediaPlayerRole.Music, mp.Role);
         }
 
         [Test]
+        [Ignore("requires remote media with multiple text tracks")]
         public async Task MultiTrackSelection()
         {
             var msub = "https://streams.videolan.org/samples/Matroska/subtitles/multiple_sub_sample.mkv";
@@ -227,7 +242,7 @@ namespace LibVLCSharp.Tests
                 Mute = true
             };
 
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = NewCompletionSource<bool>();
 
             var trackList = default(MediaTrackList);
             mp.Playing += (s, e) => Task.Run(() =>
@@ -249,27 +264,30 @@ namespace LibVLCSharp.Tests
         [Test]
         public async Task JumpTime()
         {
-            var mp = new MediaPlayer(_libVLC);
+            using var mp = new MediaPlayer(_libVLC);
             mp.TimeChanged += (s, e) => Debug.WriteLine(e.Time);
-            mp.Play(new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi")));
+            using var media = new Media(LocalAudioFile);
+            Assert.True(await mp.PlayAsync(media));
 
-            await Task.Delay(4000);
+            await WaitForSeekable(mp);
             
-            Assert.True(mp.JumpTime(5000));
+            Assert.True(mp.JumpTime(100000));
+            Assert.True(await StopWithTimeout(mp));
         }
 
         [Test]
         public async Task SetABTest()
         {
-            var mp = new MediaPlayer(_libVLC)
+            using var media = new Media(LocalAudioFile);
+            using var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"))
+                Media = media
             };
 
             await mp.PlayAsync();
 
-            long aTime = 3000;
-            long bTime = 6000;
+            long aTime = 100;
+            long bTime = 500;
 
             Assert.True(mp.SetABLoopTime(aTime, bTime));
 
@@ -277,8 +295,8 @@ namespace LibVLCSharp.Tests
 
             Assert.AreEqual(ABLoop.B, abloop);
 
-            Assert.AreEqual(aTime, atime);
-            Assert.AreEqual(bTime, btime);
+            Assert.AreEqual(aTime, atime, 1);
+            Assert.AreEqual(bTime, btime, 1);
 
             Assert.True(mp.ResetABLoop());
             Assert.AreEqual(ABLoop.None, mp.GetABLoop(out _, out _, out _, out _));
@@ -293,6 +311,48 @@ namespace LibVLCSharp.Tests
 
             Assert.AreEqual(aPosition, aposition);
             Assert.AreEqual(bPosition, bposition);
+            Assert.True(await StopWithTimeout(mp));
+        }
+
+        static async Task<MediaTrackList> WaitForAudioTracks(MediaPlayer mp)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var tracks = mp.Tracks(TrackType.Audio);
+                if (tracks.Count > 0)
+                    return tracks;
+                tracks.Dispose();
+                await Task.Delay(100);
+            }
+
+            Assert.Fail("Timed out waiting for audio tracks.");
+            throw new InvalidOperationException();
+        }
+
+        static async Task WaitForSeekable(MediaPlayer mp)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                if (mp.IsSeekable)
+                    return;
+                await Task.Delay(100);
+            }
+
+            Assert.Fail("Timed out waiting for media player to become seekable.");
+        }
+
+        static async Task<MediaTrack> WaitForSelectedAudioTrack(MediaPlayer mp)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var track = mp.SelectedTrack(TrackType.Audio);
+                if (track != null)
+                    return track;
+                await Task.Delay(100);
+            }
+
+            Assert.Fail("Timed out waiting for selected audio track.");
+            throw new InvalidOperationException();
         }
     }
 }

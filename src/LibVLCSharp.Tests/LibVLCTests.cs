@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using LibVLCSharp;
 using NUnit.Framework;
@@ -19,9 +20,17 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void AddInterface()
+        public void LogObjectBindingIsAvailable()
         {
-            Assert.True(_libVLC.AddInterface(string.Empty));
+            NativeBindingAssertions.HasDllImport(typeof(LibVLC), "LibVLCLogGetObject", "libvlc_log_get_object");
+        }
+
+        [Test]
+        public void RemovedLibVLC3AddInterfaceIsNotExposed()
+        {
+            Assert.Null(typeof(LibVLC).GetMethod("AddInterface", BindingFlags.Instance | BindingFlags.Public));
+            Assert.False(NativeBindingAssertions.NativeMethods(typeof(LibVLC))
+                .Any(m => NativeBindingAssertions.DllImportEntryPoint(m) == "libvlc_add_intf"));
         }
 
         [Test]
@@ -103,7 +112,7 @@ namespace LibVLCSharp.Tests
         [Test]
         public void LibVLCVersion()
         {
-            Assert.True(_libVLC.Version.StartsWith("3"));
+            Assert.True(_libVLC.Version.StartsWith("4"));
         }
 
         [Test]

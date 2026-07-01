@@ -18,11 +18,11 @@ namespace LibVLCSharp
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_new")]
-            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, IntPtr name);
+            internal static extern IntPtr LibVLCRendererDiscovererNew(IntPtr libvlc, IntPtr name, IntPtr cbs, IntPtr cbsOpaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_discoverer_release")]
-            internal static extern void LibVLCRendererDiscovererRelease(IntPtr rendererDiscoverer);
+                EntryPoint = "libvlc_renderer_discoverer_destroy")]
+            internal static extern void LibVLCRendererDiscovererDestroy(IntPtr rendererDiscoverer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_start")]
@@ -31,10 +31,6 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_stop")]
             internal static extern void LibVLCRendererDiscovererStop(IntPtr rendererDiscoverer);
-
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_discoverer_event_manager")]
-            internal static extern IntPtr LibVLCRendererDiscovererEventManager(IntPtr rendererDiscoverer);
         }
 
         /// <summary>
@@ -46,6 +42,11 @@ namespace LibVLCSharp
         /// or let libvlcsharp find it for you
         /// </param>
         public RendererDiscoverer(LibVLC libVLC, string? name = null)
+            : this(libVLC, name, new RendererDiscovererEventManager())
+        {
+        }
+
+        RendererDiscoverer(LibVLC libVLC, string? name, RendererDiscovererEventManager eventManager)
             : base(() =>
             {
                 if(string.IsNullOrEmpty(name))
@@ -58,24 +59,14 @@ namespace LibVLCSharp
                 }
 
                 var nameUtf8 = name.ToUtf8();
-                return MarshalUtils.PerformInteropAndFree(() => 
-                    Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, nameUtf8), nameUtf8);
-            }, Native.LibVLCRendererDiscovererRelease)
+                return MarshalUtils.PerformInteropAndFree(() =>
+                    Native.LibVLCRendererDiscovererNew(libVLC.NativeReference, nameUtf8, RendererDiscovererCallbacks.Pointer, eventManager.Register()), nameUtf8);
+            }, Native.LibVLCRendererDiscovererDestroy)
         {
+            _eventManager = eventManager;
         }
 
-        private RendererDiscovererEventManager EventManager
-        {
-            get
-            {
-                if (_eventManager == null)
-                {
-                    var eventManagerPtr = Native.LibVLCRendererDiscovererEventManager(NativeReference);
-                    _eventManager = new RendererDiscovererEventManager(eventManagerPtr);
-                }
-                return _eventManager;
-            }
-        }
+        RendererDiscovererEventManager EventManager => _eventManager!;
 
         /// <summary>
         /// Start the renderer discovery
@@ -89,12 +80,27 @@ namespace LibVLCSharp
         public void Stop() => Native.LibVLCRendererDiscovererStop(NativeReference);
 
         /// <summary>
+        /// Dispose override. Releases the native discoverer then frees the callbacks opaque handle.
+        /// </summary>
+        /// <param name="disposing">true if called from a method</param>
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                // The native discoverer has been destroyed above, so it no longer references the cbs_opaque handle.
+                _eventManager?.Unregister();
+            }
+        }
+
+        /// <summary>
         /// Raised when a renderer item has been found
         /// </summary>
         public event EventHandler<RendererDiscovererItemAddedEventArgs> ItemAdded
         {
-            add => EventManager.AttachEvent(EventType.RendererDiscovererItemAdded, value);
-            remove => EventManager.DetachEvent(EventType.RendererDiscovererItemAdded, value);
+            add => EventManager.ItemAdded += value;
+            remove => EventManager.ItemAdded -= value;
         }
 
         /// <summary>
@@ -102,8 +108,8 @@ namespace LibVLCSharp
         /// </summary>
         public event EventHandler<RendererDiscovererItemDeletedEventArgs> ItemDeleted
         {
-            add => EventManager.AttachEvent(EventType.RendererDiscovererItemDeleted, value);
-            remove => EventManager.DetachEvent(EventType.RendererDiscovererItemDeleted, value);
+            add => EventManager.ItemDeleted += value;
+            remove => EventManager.ItemDeleted -= value;
         }
     }
 
@@ -126,8 +132,8 @@ namespace LibVLCSharp
             internal static extern void LibVLCRendererItemRelease(IntPtr rendererItem);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_renderer_item_hold")]
-            internal static extern IntPtr LibVLCRendererItemHold(IntPtr rendererItem);
+                EntryPoint = "libvlc_renderer_item_retain")]
+            internal static extern IntPtr LibVLCRendererItemRetain(IntPtr rendererItem);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_item_type")]
@@ -145,7 +151,7 @@ namespace LibVLCSharp
         internal RendererItem(IntPtr reference) : 
             base(() => reference, Native.LibVLCRendererItemRelease)
         {
-            Native.LibVLCRendererItemHold(reference);
+            Native.LibVLCRendererItemRetain(reference);
         }
 
         /// <summary>
