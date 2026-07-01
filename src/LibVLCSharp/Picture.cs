@@ -14,7 +14,7 @@ namespace LibVLCSharp
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_picture_retain")]
-            internal static extern void LibVLCPictureRetain(IntPtr picture);
+            internal static extern IntPtr LibVLCPictureRetain(IntPtr picture);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_picture_release")]
@@ -100,7 +100,7 @@ namespace LibVLCSharp
         public uint Height => Native.LibVLCPictureGetHeight(NativeReference);
 
         /// <summary>
-        /// The time at which this picture was generated, in milliseconds
+        /// The time at which this picture was generated, in microseconds
         /// </summary>
         public long Time => Native.LibVLCPictureGetTime(NativeReference);
     }
