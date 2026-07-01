@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests
@@ -11,17 +12,22 @@ namespace LibVLCSharp.Tests
         public async Task RetrieveAttachedThumbnails()
         {
             using var media = new Media(new Uri(AttachedThumbnailsMedia));
-            uint thumbnailsFound = 0;
-            media.AttachedThumbnailsFound += (sender, args) =>
+            using var parser = new MediaParser(_libVLC);
+            var thumbnails = new List<Picture>();
+
+            var status = await parser.ParseAsync(media, attachmentsAdded: args =>
             {
-                thumbnailsFound = args.AttachedThumbnails.Count;
-                foreach(var thumbnail in args.AttachedThumbnails)
-                {
-                    Assert.AreEqual(PictureType.Png, thumbnail.Type);
-                }
-            };
-            await media.ParseAsync(_libVLC);
-            Assert.AreEqual(2, thumbnailsFound);
+                args.Media?.Dispose();
+                thumbnails.AddRange(args.Pictures);
+            });
+
+            Assert.AreEqual(MediaParsedStatus.Done, status);
+            Assert.AreEqual(2, thumbnails.Count);
+            foreach(var thumbnail in thumbnails)
+            {
+                Assert.AreEqual(PictureType.Png, thumbnail.Type);
+                thumbnail.Dispose();
+            }
         }
     }
 }
