@@ -10,6 +10,7 @@ namespace LibVLCSharp
     /// <see cref="MediaPlayer.Interpolate(TimePoint, long, ref long, ref double)" /> will read these values and return an interpolated time.
     /// Also see <see cref="MediaPlayer.WatchTimeOnUpdate"/>
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct TimePoint
     {
         /// <summary>

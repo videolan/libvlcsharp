@@ -28,7 +28,7 @@ namespace LibVLCSharp.Helpers
         /// <param name="s">ModuleDescriptionStructure from interop</param>
         /// <returns>public ModuleDescription to be consumed by the user</returns>
         internal static ModuleDescription Build(this ModuleDescriptionStructure s) =>
-            new ModuleDescription(s.Name.FromUtf8(), s.ShortName.FromUtf8(), s.LongName.FromUtf8(), s.Help.FromUtf8());
+            new ModuleDescription(s.Name.FromUtf8(), s.ShortName.FromUtf8(), s.LongName.FromUtf8(), s.Help.FromUtf8(), s.HelpHtml.FromUtf8());
 
         /// <summary>
         /// Helper method that creates a user friendly type from the internal interop structure.

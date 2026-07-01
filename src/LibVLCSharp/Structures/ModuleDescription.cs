@@ -10,6 +10,7 @@ namespace LibVLCSharp
         internal readonly IntPtr ShortName;
         internal readonly IntPtr LongName;
         internal readonly IntPtr Help;
+        internal readonly IntPtr HelpHtml;
         internal readonly IntPtr Next;
     }
 
@@ -25,12 +26,14 @@ namespace LibVLCSharp
         /// <param name="shortName">Module short name</param>
         /// <param name="longName">Module long name</param>
         /// <param name="help">Module help</param>
-        internal ModuleDescription(string? name, string? shortName, string? longName, string? help)
+        /// <param name="helpHtml">Module help in HTML form</param>
+        internal ModuleDescription(string? name, string? shortName, string? longName, string? help, string? helpHtml)
         {
             Name = name;
             ShortName = shortName;
             LongName = longName;
             Help = help;
+            HelpHtml = helpHtml;
         }
 
         /// <summary>
@@ -52,5 +55,10 @@ namespace LibVLCSharp
         /// Module help
         /// </summary>
         public readonly string? Help;
+
+        /// <summary>
+        /// Module help in HTML form
+        /// </summary>
+        public readonly string? HelpHtml;
     }
 }

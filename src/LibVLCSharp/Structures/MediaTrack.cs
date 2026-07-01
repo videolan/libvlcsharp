@@ -20,8 +20,10 @@ namespace LibVLCSharp
         internal readonly IntPtr Language;
         internal readonly IntPtr Description;
         internal readonly IntPtr StrId;
+        [MarshalAs(UnmanagedType.I1)]
         internal readonly bool IdStable;
         internal readonly IntPtr Name;
+        [MarshalAs(UnmanagedType.I1)]
         internal readonly bool Selected;
     }
 
@@ -108,6 +110,11 @@ namespace LibVLCSharp
         /// Video viewpoint
         /// </summary>
         public readonly VideoViewpoint Pose;
+
+        /// <summary>
+        /// Video multiview mode
+        /// </summary>
+        public readonly VideoMultiview Multiview;
     }
 
     /// <summary>
@@ -133,15 +140,15 @@ namespace LibVLCSharp
         internal struct Native
         {
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_media_track_hold")]
-            internal static extern IntPtr LibVLCMediaTrackHold(IntPtr mediaTrack);
+                EntryPoint = "libvlc_media_track_retain")]
+            internal static extern IntPtr LibVLCMediaTrackRetain(IntPtr mediaTrack);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_track_release")]
             internal static extern void LibVLCMediaTrackRelease(IntPtr mediaTrack);
         }
         internal MediaTrack(IntPtr mediaTrackPtr)
-            : base(() => Native.LibVLCMediaTrackHold(mediaTrackPtr), Native.LibVLCMediaTrackRelease)
+            : base(() => Native.LibVLCMediaTrackRetain(mediaTrackPtr), Native.LibVLCMediaTrackRelease)
         {
             MediaTrackStructure = MarshalUtils.PtrToStructure<MediaTrackStructure>(mediaTrackPtr);
 
@@ -311,7 +318,7 @@ namespace LibVLCSharp
 
         internal class MediaTrackListEnumerator : IEnumerator<MediaTrack>
         {
-            uint position = 0;
+            int position = -1;
             MediaTrackList? _mediaTrackList;
 
             internal MediaTrackListEnumerator(MediaTrackList mediaTrackList)
@@ -322,17 +329,17 @@ namespace LibVLCSharp
             public bool MoveNext()
             {
                 position++;
-                return position < (_mediaTrackList?.Count ?? 0);
+                return position >= 0 && (uint)position < (_mediaTrackList?.Count ?? 0);
             }
 
             void IEnumerator.Reset()
             {
-                position = 0;
+                position = -1;
             }
 
             public void Dispose()
             {
-                position = 0;
+                position = -1;
                 _mediaTrackList = default;
             }
 
@@ -346,7 +353,9 @@ namespace LibVLCSharp
                     {
                         throw new ObjectDisposedException(nameof(MediaTrackListEnumerator));
                     }
-                    return _mediaTrackList[position] ?? throw new ArgumentOutOfRangeException(nameof(position));
+                    return position >= 0
+                        ? _mediaTrackList[(uint)position] ?? throw new ArgumentOutOfRangeException(nameof(position))
+                        : throw new InvalidOperationException();
                 }
             }
         }

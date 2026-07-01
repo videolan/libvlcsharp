@@ -178,6 +178,17 @@ namespace LibVLCSharp
         /// </summary>
         [FieldOffset(0)]
         public IntPtr Surface;
+
+        /// <summary>
+        /// Pointer to an ANativeWindow used for video rendering (Android, <see cref="VideoEngine.Anw"/>).
+        /// </summary>
+        /// <remarks>
+        /// The native union also carries a second ANativeWindow for subtitle rendering at a
+        /// pointer-sized offset; it is not exposed here because <see cref="FieldOffsetAttribute"/>
+        /// cannot express an architecture-dependent offset portably.
+        /// </remarks>
+        [FieldOffset(0)]
+        public IntPtr AnwVideo;
     }
 
     /// <summary>
@@ -260,7 +271,12 @@ namespace LibVLCSharp
         /// <summary>
         /// Direct3D9 rendering engine
         /// </summary>
-        D3D9
+        D3D9,
+
+        /// <summary>
+        /// Android ANativeWindow rendering engine
+        /// </summary>
+        Anw
     }
 
     /// <summary>

@@ -48,7 +48,7 @@ namespace LibVLCSharp
         static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
 #if !UNITY
-        static void Log(string message)
+        internal static void Log(string message)
         {
 #if !UWP10_0 && !NETSTANDARD1_1
             Trace.WriteLine(message);
