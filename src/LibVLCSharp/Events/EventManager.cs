@@ -1,138 +1,50 @@
-﻿using LibVLCSharp.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace LibVLCSharp
 {
+    /// <summary>
+    /// Base class for the managed event dispatchers.
+    ///
+    /// Starting with LibVLC 4, the native <c>libvlc_event_attach</c>/<c>libvlc_event_detach</c> API and the
+    /// per-object event managers were removed. Events are now delivered through a versioned callbacks struct
+    /// passed to the owning object's constructor (e.g. <c>libvlc_media_player_new</c>). This class no longer
+    /// talks to native code: it only stores the managed subscribers. The native callbacks struct dispatches
+    /// into the typed <c>On...</c> methods of the concrete subclasses, which in turn raise the managed events.
+    /// </summary>
     internal abstract class EventManager
     {
-        internal readonly struct Native
-        {
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_attach")]
-            internal static extern int LibVLCEventAttach(IntPtr eventManager, EventType eventType, InternalEventCallback eventCallback,
-                IntPtr userData);
+        GCHandle _self;
 
-            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "libvlc_event_detach")]
-            internal static extern void LibVLCEventDetach(IntPtr eventManager, EventType eventType, InternalEventCallback eventCallback,
-                IntPtr userData);
+        /// <summary>
+        /// Allocates a GCHandle on this dispatcher and returns the opaque pointer to be passed as the
+        /// <c>cbs_opaque</c> argument of the native constructor. Must be paired with <see cref="Unregister"/>.
+        /// </summary>
+        internal IntPtr Register()
+        {
+            if (!_self.IsAllocated)
+                _self = GCHandle.Alloc(this);
+            return GCHandle.ToIntPtr(_self);
         }
 
         /// <summary>
-        /// The class that manages one type of event
+        /// Frees the GCHandle allocated by <see cref="Register"/>. Called when the owning object is disposed.
         /// </summary>
-        internal class EventTypeManager: IDisposable
+        internal void Unregister()
         {
-            internal Action<IntPtr> EventHandler { get; }
-            internal GCHandle Handle { get; }
-
-            internal EventTypeManager(Action<IntPtr> eventHandler)
-            {
-                EventHandler = eventHandler;
-                Handle = GCHandle.Alloc(this);
-            }
-
-            internal int HandlerCount { get; set; } = 0;
-
-            public void Dispose()
-            {
-                Handle.Free();
-            }
-        }
-
-        internal IntPtr NativeReference;
-        readonly Dictionary<EventType, EventTypeManager> _eventManagers = new Dictionary<EventType, EventTypeManager>();
-
-        internal protected EventManager(IntPtr ptr)
-        {
-            if (ptr == IntPtr.Zero)
-                throw new NullReferenceException(nameof(ptr));
-
-            NativeReference = ptr;
-        }
-
-        private bool AttachNativeEvent(EventType eventType, EventTypeManager eventManager)
-        {
-            return Native.LibVLCEventAttach(NativeReference, eventType, EventCallbackHandle, GCHandle.ToIntPtr(eventManager.Handle)) == 0;
-        }
-
-        private void DetachNativeEvent(EventType eventType, EventTypeManager eventManager)
-        {
-            Native.LibVLCEventDetach(NativeReference, eventType, EventCallbackHandle, GCHandle.ToIntPtr(eventManager.Handle));
+            if (_self.IsAllocated)
+                _self.Free();
         }
 
         /// <summary>
-        /// Increments the reference count to the event handler method.
+        /// Resolves the dispatcher instance from the opaque pointer passed to a native callback.
         /// </summary>
-        /// <param name="eventType">The event type</param>
-        /// <param name="eventHandler">The event handler for this event type</param>
-        protected void Attach(EventType eventType, Action<IntPtr> eventHandler)
+        internal static T? FromOpaque<T>(IntPtr opaque) where T : EventManager
         {
-            lock(_eventManagers)
-            {
-                if(!_eventManagers.TryGetValue(eventType, out var mgr))
-                {
-                    mgr = new EventTypeManager(eventHandler);
-                    if (AttachNativeEvent(eventType, mgr))
-                    {
-                        _eventManagers.Add(eventType, mgr);
-                    }
-                    else
-                    {
-                        mgr.Dispose();
-                        throw new VLCException($"Could not attach event {eventType}");
-                    }
-                }
-                mgr.HandlerCount++;
-            }
+            if (opaque == IntPtr.Zero)
+                return null;
+            return GCHandle.FromIntPtr(opaque).Target as T;
         }
 
-        protected void Detach(EventType eventType)
-        {
-            lock (_eventManagers)
-            {
-                if (_eventManagers.TryGetValue(eventType, out var mgr))
-                {
-                    mgr.HandlerCount--;
-                    if (mgr.HandlerCount == 0)
-                    {
-                        DetachNativeEvent(eventType, mgr);
-                        mgr.Dispose();
-                        _eventManagers.Remove(eventType);
-                    }
-                }
-            }
-        }
-
-        static readonly InternalEventCallback EventCallbackHandle = EventCallback;
-
-        [MonoPInvokeCallback(typeof(InternalEventCallback))]
-        private static void EventCallback(IntPtr evt, IntPtr userData)
-        {
-            var eventManager = MarshalUtils.GetInstance<EventTypeManager>(userData);
-#if UNITY // .NET exceptions in native callbacks crash Unity
-            try
-            {
-                eventManager?.EventHandler(evt);
-            }
-            catch (Exception ex)
-            {
-                Core.Log(ex.ToString());
-            }
-#else
-            eventManager?.EventHandler(evt);
-#endif
-        }
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void InternalEventCallback(IntPtr evt, IntPtr userData);
-
-        internal protected LibVLCEvent RetrieveEvent(IntPtr eventPtr) => MarshalUtils.PtrToStructure<LibVLCEvent>(eventPtr);
-
-        internal protected void OnEventUnhandled(object sender, EventType eventType)
-            => throw new InvalidOperationException($"eventType {nameof(eventType)} unhandled by type {sender.GetType().Name}");
-        
-        internal protected abstract void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
-        internal protected abstract void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler) where T : EventArgs;
     }
 }
