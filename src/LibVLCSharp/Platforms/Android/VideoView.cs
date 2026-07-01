@@ -154,9 +154,12 @@ namespace LibVLCSharp
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (disposing)
+            {
+                Detach();
+            }
 
-            Detach();
+            base.Dispose(disposing);
         }
 
         void AWindow.ISurfaceCallback.OnSurfacesCreated(AWindow? aWindow)
