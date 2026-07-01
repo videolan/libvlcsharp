@@ -1,115 +1,43 @@
-﻿using System;
-using LibVLCSharp.Helpers;
+using System;
 
 namespace LibVLCSharp
 {
+    /// <summary>
+    /// Managed dispatcher for media list events.
+    ///
+    /// LibVLC 4 removed the native media list event manager (<c>libvlc_media_list_event_manager</c>) and the
+    /// <c>libvlc_event_attach</c>/<c>libvlc_event_detach</c> API. Mutations performed through this wrapper
+    /// synthesize the legacy media list events to preserve the public event API.
+    /// </summary>
     internal class MediaListEventManager : EventManager
     {
-        EventHandler<MediaListItemAddedEventArgs>? _mediaListItemAdded;
-        EventHandler<MediaListWillAddItemEventArgs>? _mediaListWillAddItem;
-        EventHandler<MediaListItemDeletedEventArgs>? _mediaListItemDeleted;
-        EventHandler<MediaListWillDeleteItemEventArgs>? _mediaListWillDeleteItem;
-        EventHandler<EventArgs>? _mediaListEndReached;
+        EventHandler<MediaListItemAddedEventArgs>? _itemAdded;
+        EventHandler<MediaListWillAddItemEventArgs>? _willAddItem;
+        EventHandler<MediaListItemDeletedEventArgs>? _itemDeleted;
+        EventHandler<MediaListWillDeleteItemEventArgs>? _willDeleteItem;
+        EventHandler<EventArgs>? _endReached;
 
-        public MediaListEventManager(IntPtr ptr) : base(ptr)
-        {
-        }
+        internal void AddItemAdded(EventHandler<MediaListItemAddedEventArgs> handler) => _itemAdded += handler;
+        internal void RemoveItemAdded(EventHandler<MediaListItemAddedEventArgs> handler) => _itemAdded -= handler;
+        internal void AddWillAddItem(EventHandler<MediaListWillAddItemEventArgs> handler) => _willAddItem += handler;
+        internal void RemoveWillAddItem(EventHandler<MediaListWillAddItemEventArgs> handler) => _willAddItem -= handler;
+        internal void AddItemDeleted(EventHandler<MediaListItemDeletedEventArgs> handler) => _itemDeleted += handler;
+        internal void RemoveItemDeleted(EventHandler<MediaListItemDeletedEventArgs> handler) => _itemDeleted -= handler;
+        internal void AddWillDeleteItem(EventHandler<MediaListWillDeleteItemEventArgs> handler) => _willDeleteItem += handler;
+        internal void RemoveWillDeleteItem(EventHandler<MediaListWillDeleteItemEventArgs> handler) => _willDeleteItem -= handler;
+        internal void AddEndReached(EventHandler<EventArgs> handler) => _endReached += handler;
+        internal void RemoveEndReached(EventHandler<EventArgs> handler) => _endReached -= handler;
 
-        protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
-        {
-            switch (eventType)
-            {
-                case EventType.MediaListItemAdded:
-                    _mediaListItemAdded += eventHandler as EventHandler<MediaListItemAddedEventArgs>;
-                    Attach(eventType, OnItemAdded);
-                    break;
-                case EventType.MediaListWillAddItem:
-                    _mediaListWillAddItem += eventHandler as EventHandler<MediaListWillAddItemEventArgs>;
-                    Attach(eventType, OnWillAddItem);
-                    break;
-                case EventType.MediaListItemDeleted:
-                    _mediaListItemDeleted += eventHandler as EventHandler<MediaListItemDeletedEventArgs>;
-                    Attach(eventType, OnItemDeleted);
-                    break;
-                case EventType.MediaListViewWillDeleteItem:
-                    _mediaListWillDeleteItem += eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>;
-                    Attach(eventType, OnWillDeleteItem);
-                    break;
-                case EventType.MediaListEndReached:
-                    _mediaListEndReached += eventHandler as EventHandler<EventArgs>;
-                    Attach(eventType, OnEndReached);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
-            }
-        }
+        internal void OnWillAddItem(Media media, int index)
+            => _willAddItem?.Invoke(this, new MediaListWillAddItemEventArgs(media, index));
 
-        protected internal override void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
-        {
-            switch (eventType)
-            {
-                case EventType.MediaListItemAdded:
-                    _mediaListItemAdded -= eventHandler as EventHandler<MediaListItemAddedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaListWillAddItem:
-                    _mediaListWillAddItem -= eventHandler as EventHandler<MediaListWillAddItemEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaListItemDeleted:
-                    _mediaListItemDeleted -= eventHandler as EventHandler<MediaListItemDeletedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaListViewWillDeleteItem:
-                    _mediaListWillDeleteItem -= eventHandler as EventHandler<MediaListWillDeleteItemEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaListEndReached:
-                    _mediaListEndReached -= eventHandler as EventHandler<EventArgs>;
-                    Detach(eventType);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
-            }
-        }
+        internal void OnItemAdded(Media media, int index)
+            => _itemAdded?.Invoke(this, new MediaListItemAddedEventArgs(media, index));
 
-        void OnItemAdded(IntPtr ptr)
-        {
-            var itemAdded = RetrieveEvent(ptr).Union.MediaListItemAdded;
+        internal void OnWillDeleteItem(Media media, int index)
+            => _willDeleteItem?.Invoke(this, new MediaListWillDeleteItemEventArgs(media, index));
 
-            _mediaListItemAdded?.Invoke(this,
-                new MediaListItemAddedEventArgs(new Media(itemAdded.MediaInstance), itemAdded.Index));
-        }
-
-        void OnWillAddItem(IntPtr ptr)
-        {
-            var willAddItem = RetrieveEvent(ptr).Union.MediaListWillAddItem;
-
-            _mediaListWillAddItem?.Invoke(this,
-                new MediaListWillAddItemEventArgs(new Media(willAddItem.MediaInstance), willAddItem.Index));
-        }
-
-        void OnItemDeleted(IntPtr ptr)
-        {
-            var itemDeleted = RetrieveEvent(ptr).Union.MediaListItemDeleted;
-
-            _mediaListItemDeleted?.Invoke(this,
-                new MediaListItemDeletedEventArgs(new Media(itemDeleted.MediaInstance), itemDeleted.Index));
-        }
-
-        void OnWillDeleteItem(IntPtr ptr)
-        {
-            var willDeleteItem = RetrieveEvent(ptr).Union.MediaListWillDeleteItem;
-
-            _mediaListWillDeleteItem?.Invoke(this,
-                new MediaListWillDeleteItemEventArgs(new Media(willDeleteItem.MediaInstance), willDeleteItem.Index));
-        }
-
-        void OnEndReached(IntPtr ptr)
-        {
-            _mediaListEndReached?.Invoke(this, EventArgs.Empty);
-        }
+        internal void OnItemDeleted(Media media, int index)
+            => _itemDeleted?.Invoke(this, new MediaListItemDeletedEventArgs(media, index));
     }
 }

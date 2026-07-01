@@ -1,62 +1,24 @@
-﻿using System;
+using System;
 
 namespace LibVLCSharp
 {
+    /// <summary>
+    /// Managed dispatcher for renderer discoverer events.
+    ///
+    /// In LibVLC 4 the native event manager was removed; items are delivered through the
+    /// <c>libvlc_renderer_discoverer_cbs</c> struct (see <see cref="RendererDiscovererCallbacks"/>)
+    /// registered at construction. This class only stores the managed subscribers and maps the typed
+    /// native callbacks onto the existing <c>RendererDiscoverer</c> events.
+    /// </summary>
     internal class RendererDiscovererEventManager : EventManager
     {
-        EventHandler<RendererDiscovererItemAddedEventArgs>? _itemAdded;
-        EventHandler<RendererDiscovererItemDeletedEventArgs>? _itemDeleted;
+        internal event EventHandler<RendererDiscovererItemAddedEventArgs>? ItemAdded;
+        internal event EventHandler<RendererDiscovererItemDeletedEventArgs>? ItemDeleted;
 
-        internal RendererDiscovererEventManager(IntPtr ptr) : base(ptr)
-        {
-        }
+        internal void OnItemAdded(IntPtr item)
+            => ItemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(item)));
 
-        protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
-        {
-            switch(eventType)
-            {
-                case EventType.RendererDiscovererItemAdded:
-                    _itemAdded += eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>;
-                    Attach(eventType, OnItemAdded);
-                    break;
-                case EventType.RendererDiscovererItemDeleted:
-                    _itemDeleted += eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>;
-                    Attach(eventType, OnItemDeleted);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
-            }
-        }
-
-        protected internal override void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
-        {
-            switch (eventType)
-            {
-                case EventType.RendererDiscovererItemAdded:
-                    _itemAdded -= eventHandler as EventHandler<RendererDiscovererItemAddedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.RendererDiscovererItemDeleted:
-                    _itemDeleted -= eventHandler as EventHandler<RendererDiscovererItemDeletedEventArgs>;
-                    Detach(eventType);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
-            }
-        }
-
-        void OnItemDeleted(IntPtr args)
-        {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemDeleted;
-            _itemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(rendererItem.item)));
-        }
-
-        void OnItemAdded(IntPtr args)
-        {
-            var rendererItem = RetrieveEvent(args).Union.RendererDiscovererItemAdded;
-            _itemAdded?.Invoke(this, new RendererDiscovererItemAddedEventArgs(new RendererItem(rendererItem.item)));
-        }
+        internal void OnItemRemoved(IntPtr item)
+            => ItemDeleted?.Invoke(this, new RendererDiscovererItemDeletedEventArgs(new RendererItem(item)));
     }
 }

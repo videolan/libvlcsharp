@@ -1,137 +1,156 @@
-﻿using System;
+using System;
 
 namespace LibVLCSharp
 {
+    /// <summary>
+    /// Managed dispatcher for media events.
+    ///
+    /// LibVLC 4 removed the native media event manager (<c>libvlc_media_event_manager</c>) and the
+    /// <c>libvlc_event_attach</c>/<c>libvlc_event_detach</c> API. Media notifications emitted by the player
+    /// are delivered through <c>libvlc_media_player_cbs</c> and bridged back onto this existing event API.
+    /// </summary>
     internal class MediaEventManager : EventManager
     {
-        EventHandler<MediaMetaChangedEventArgs>? _mediaMetaChanged;
-        EventHandler<MediaParsedChangedEventArgs>? _mediaParsedChanged;
-        EventHandler<MediaSubItemAddedEventArgs>? _mediaSubItemAdded;
-        EventHandler<MediaDurationChangedEventArgs>? _mediaDurationChanged;
-        EventHandler<MediaSubItemTreeAddedEventArgs>? _mediaSubItemTreeAdded;
-        EventHandler<MediaThumbnailGeneratedEventArgs>? _mediaThumbnailGenerated;
-        EventHandler<MediaAttachedThumbnailsFoundEventArgs>? _mediaAttachedThumbnailsFound;
-
-        public MediaEventManager(IntPtr ptr) : base(ptr)
+        static readonly MetadataType[] s_metadataTypes =
         {
+            MetadataType.Title,
+            MetadataType.Artist,
+            MetadataType.Genre,
+            MetadataType.Copyright,
+            MetadataType.Album,
+            MetadataType.TrackNumber,
+            MetadataType.Description,
+            MetadataType.Rating,
+            MetadataType.Date,
+            MetadataType.Setting,
+            MetadataType.URL,
+            MetadataType.Language,
+            MetadataType.NowPlaying,
+            MetadataType.Publisher,
+            MetadataType.EncodedBy,
+            MetadataType.ArtworkURL,
+            MetadataType.TrackID,
+            MetadataType.TrackTotal,
+            MetadataType.Director,
+            MetadataType.Season,
+            MetadataType.Episode,
+            MetadataType.ShowName,
+            MetadataType.Actors,
+            MetadataType.AlbumArtist,
+            MetadataType.DiscNumber,
+            MetadataType.DiscTotal
+        };
+
+        EventHandler<MediaMetaChangedEventArgs>? _metaChanged;
+        EventHandler<MediaParsedChangedEventArgs>? _parsedChanged;
+        EventHandler<MediaSubItemAddedEventArgs>? _subItemAdded;
+        EventHandler<MediaDurationChangedEventArgs>? _durationChanged;
+        EventHandler<MediaSubItemTreeAddedEventArgs>? _subItemTreeAdded;
+        EventHandler<MediaThumbnailGeneratedEventArgs>? _thumbnailGenerated;
+        EventHandler<MediaAttachedThumbnailsFoundEventArgs>? _attachedThumbnailsFound;
+        readonly string?[] _metadataSnapshot = new string?[s_metadataTypes.Length];
+        int _subItemCount;
+
+        internal void AddMetaChanged(EventHandler<MediaMetaChangedEventArgs> handler) => _metaChanged += handler;
+        internal void RemoveMetaChanged(EventHandler<MediaMetaChangedEventArgs> handler) => _metaChanged -= handler;
+        internal void AddParsedChanged(EventHandler<MediaParsedChangedEventArgs> handler) => _parsedChanged += handler;
+        internal void RemoveParsedChanged(EventHandler<MediaParsedChangedEventArgs> handler) => _parsedChanged -= handler;
+        internal void AddSubItemAdded(EventHandler<MediaSubItemAddedEventArgs> handler) => _subItemAdded += handler;
+        internal void RemoveSubItemAdded(EventHandler<MediaSubItemAddedEventArgs> handler) => _subItemAdded -= handler;
+        internal void AddDurationChanged(EventHandler<MediaDurationChangedEventArgs> handler) => _durationChanged += handler;
+        internal void RemoveDurationChanged(EventHandler<MediaDurationChangedEventArgs> handler) => _durationChanged -= handler;
+        internal void AddSubItemTreeAdded(EventHandler<MediaSubItemTreeAddedEventArgs> handler) => _subItemTreeAdded += handler;
+        internal void RemoveSubItemTreeAdded(EventHandler<MediaSubItemTreeAddedEventArgs> handler) => _subItemTreeAdded -= handler;
+        internal void AddThumbnailGenerated(EventHandler<MediaThumbnailGeneratedEventArgs> handler) => _thumbnailGenerated += handler;
+        internal void RemoveThumbnailGenerated(EventHandler<MediaThumbnailGeneratedEventArgs> handler) => _thumbnailGenerated -= handler;
+        internal void AddAttachedThumbnailsFound(EventHandler<MediaAttachedThumbnailsFoundEventArgs> handler) => _attachedThumbnailsFound += handler;
+        internal void RemoveAttachedThumbnailsFound(EventHandler<MediaAttachedThumbnailsFoundEventArgs> handler) => _attachedThumbnailsFound -= handler;
+
+        internal void Snapshot(Media media)
+        {
+            SnapshotMetadata(media);
+            _subItemCount = SubItemCount(media);
         }
 
-        protected internal override void AttachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
+        internal void OnMetaChanged(MetadataType metadataType)
         {
-            switch (eventType)
+            _metaChanged?.Invoke(this, new MediaMetaChangedEventArgs(metadataType));
+        }
+
+        internal void OnNativeMetaChanged(Media media)
+        {
+            for (var i = 0; i < s_metadataTypes.Length; i++)
             {
-                case EventType.MediaMetaChanged:
-                    _mediaMetaChanged += eventHandler as EventHandler<MediaMetaChangedEventArgs>;
-                    Attach(eventType, OnMetaChanged);
-                    break;
-                case EventType.MediaParsedChanged:
-                    _mediaParsedChanged += eventHandler as EventHandler<MediaParsedChangedEventArgs>;
-                    Attach(eventType, OnParsedChanged);
-                    break;
-                case EventType.MediaSubItemAdded:
-                    _mediaSubItemAdded += eventHandler as EventHandler<MediaSubItemAddedEventArgs>;
-                    Attach(eventType, OnSubItemAdded);
-                    break;
-                case EventType.MediaDurationChanged:
-                    _mediaDurationChanged += eventHandler as EventHandler<MediaDurationChangedEventArgs>;
-                    Attach(eventType, OnDurationChanged);
-                    break;
-                case EventType.MediaSubItemTreeAdded:
-                    _mediaSubItemTreeAdded += eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
-                    Attach(eventType, OnSubItemTreeAdded);
-                    break;
-                case EventType.MediaThumbnailGenerated:
-                    _mediaThumbnailGenerated += eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
-                    Attach(eventType, OnThumbnailGenerated);
-                    break;
-                case EventType.MediaAttachedThumbnailsFound:
-                    _mediaAttachedThumbnailsFound += eventHandler as EventHandler<MediaAttachedThumbnailsFoundEventArgs>;
-                    Attach(eventType, OnAttachedThumbnailsFound);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
+                var current = media.Meta(s_metadataTypes[i]);
+                if (current == _metadataSnapshot[i])
+                    continue;
+
+                _metadataSnapshot[i] = current;
+                OnMetaChanged(s_metadataTypes[i]);
             }
         }
 
-        protected internal override void DetachEvent<T>(EventType eventType, EventHandler<T> eventHandler)
+        internal void OnParsedChanged(MediaParsedStatus parsedStatus)
         {
-            switch (eventType)
+            _parsedChanged?.Invoke(this, new MediaParsedChangedEventArgs(parsedStatus));
+        }
+
+        internal void OnDurationChanged(long duration)
+        {
+            _durationChanged?.Invoke(this, new MediaDurationChangedEventArgs(duration));
+        }
+
+        internal void OnSubItemsChanged(Media media)
+        {
+            MediaList? subItems = null;
+            try
             {
-                case EventType.MediaMetaChanged:
-                    _mediaMetaChanged -= eventHandler as EventHandler<MediaMetaChangedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaParsedChanged:
-                    _mediaParsedChanged -= eventHandler as EventHandler<MediaParsedChangedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaSubItemAdded:
-                    _mediaSubItemAdded -= eventHandler as EventHandler<MediaSubItemAddedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaDurationChanged:
-                    _mediaDurationChanged -= eventHandler as EventHandler<MediaDurationChangedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaSubItemTreeAdded:
-                    _mediaSubItemTreeAdded -= eventHandler as EventHandler<MediaSubItemTreeAddedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaThumbnailGenerated:
-                    _mediaThumbnailGenerated -= eventHandler as EventHandler<MediaThumbnailGeneratedEventArgs>;
-                    Detach(eventType);
-                    break;
-                case EventType.MediaAttachedThumbnailsFound:
-                    _mediaAttachedThumbnailsFound -= eventHandler as EventHandler<MediaAttachedThumbnailsFoundEventArgs>;
-                    Detach(eventType);
-                    break;
-                default:
-                    OnEventUnhandled(this, eventType);
-                    break;
+                subItems = media.SubItems;
+                var index = 0;
+                foreach (var subItem in subItems)
+                {
+                    if (index >= _subItemCount)
+                    {
+                        _subItemAdded?.Invoke(this, new MediaSubItemAddedEventArgs(subItem));
+                        _subItemTreeAdded?.Invoke(this, new MediaSubItemTreeAddedEventArgs(subItem));
+                    }
+                    index++;
+                }
+                _subItemCount = subItems.Count;
+            }
+            finally
+            {
+                subItems?.Dispose();
             }
         }
 
-        void OnSubItemTreeAdded(IntPtr ptr)
+        internal void OnAttachedThumbnailsFound(IntPtr pictureList)
         {
-            _mediaSubItemTreeAdded?.Invoke(this,
-                new MediaSubItemTreeAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemTreeAdded.MediaInstance));
+            _attachedThumbnailsFound?.Invoke(this, new MediaAttachedThumbnailsFoundEventArgs(pictureList));
         }
 
-        void OnDurationChanged(IntPtr ptr)
+        void SnapshotMetadata(Media media)
         {
-            _mediaDurationChanged?.Invoke(this,
-                new MediaDurationChangedEventArgs(RetrieveEvent(ptr).Union.MediaDurationChanged.NewDuration));
+            for (var i = 0; i < s_metadataTypes.Length; i++)
+                _metadataSnapshot[i] = media.Meta(s_metadataTypes[i]);
         }
 
-        void OnSubItemAdded(IntPtr ptr)
+        static int SubItemCount(Media media)
         {
-            _mediaSubItemAdded?.Invoke(this,
-                new MediaSubItemAddedEventArgs(RetrieveEvent(ptr).Union.MediaSubItemAdded.NewChild));
-        }
-
-        void OnParsedChanged(IntPtr ptr)
-        {
-            _mediaParsedChanged?.Invoke(this,
-                new MediaParsedChangedEventArgs(RetrieveEvent(ptr).Union.MediaParsedChanged.NewStatus));
-        }
-
-        void OnMetaChanged(IntPtr ptr)
-        {
-            _mediaMetaChanged?.Invoke(this,
-                new MediaMetaChangedEventArgs(RetrieveEvent(ptr).Union.MediaMetaChanged.MetaType));
-        }
-
-        void OnThumbnailGenerated(IntPtr ptr)
-        {
-            _mediaThumbnailGenerated?.Invoke(this,
-                new MediaThumbnailGeneratedEventArgs(RetrieveEvent(ptr).Union.MediaThumbnailGenerated.Thumbnail));
-        }
-
-        void OnAttachedThumbnailsFound(IntPtr ptr)
-        {
-            _mediaAttachedThumbnailsFound?.Invoke(this,
-                new MediaAttachedThumbnailsFoundEventArgs(RetrieveEvent(ptr).Union.MediaAttachedThumbnailsFound.Thumbmails));
+            MediaList? subItems = null;
+            try
+            {
+                subItems = media.SubItems;
+                return subItems.Count;
+            }
+            catch
+            {
+                return 0;
+            }
+            finally
+            {
+                subItems?.Dispose();
+            }
         }
     }
 }
