@@ -27,6 +27,14 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_dismiss")]
             internal static extern int LibVLCDialogDismiss(IntPtr dialogId);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_dialog_set_context")]
+            internal static extern void LibVLCDialogSetContext(IntPtr dialogId, IntPtr context);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_dialog_get_context")]
+            internal static extern IntPtr LibVLCDialogGetContext(IntPtr dialogId);
         }
 
         Dialog(IntPtr id)
@@ -84,6 +92,26 @@ namespace LibVLCSharp
             _id = IntPtr.Zero;
 
             return result;
+        }
+
+        /// <summary>
+        /// Associate an opaque pointer with this dialog, or retrieve the one previously associated.
+        /// Useful to keep track of application state across the dialog callbacks.
+        /// </summary>
+        public IntPtr Context
+        {
+            get
+            {
+                if (_id == IntPtr.Zero)
+                    throw new VLCException("Calling method on dismissed Dialog instance");
+                return Native.LibVLCDialogGetContext(_id);
+            }
+            set
+            {
+                if (_id == IntPtr.Zero)
+                    throw new VLCException("Calling method on dismissed Dialog instance");
+                Native.LibVLCDialogSetContext(_id, value);
+            }
         }
 
         /// <summary>
