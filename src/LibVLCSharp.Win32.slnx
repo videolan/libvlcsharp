@@ -48,6 +48,10 @@
     <BuildType Solution="Win32Debug|*" Project="Debug" />
     <BuildType Solution="Win32Release|Any CPU" Project="Release" />
   </Project>
+  <Project Path="LibVLCSharp.Tests/LibVLCSharp.Tests.csproj">
+    <BuildType Solution="Win32Debug|*" Project="Release" />
+    <BuildType Solution="Win32Release|*" Project="Release" />
+  </Project>
   <Project Path="LibVLCSharp.WinForms/LibVLCSharp.WinForms.csproj">
     <BuildType Solution="Win32Debug|ARM" Project="Debug" />
     <BuildType Solution="Win32Debug|ARM64" Project="Debug" />
