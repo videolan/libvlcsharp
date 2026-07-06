@@ -16,7 +16,7 @@
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="NUnitLite" Version="3.13.2" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20260629" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20260706" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
@@ -26,6 +26,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="sample.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sample-video.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="multiple-images.mp3">

@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,14 +45,89 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public void NewLibVLC4MediaPlayerFunctionsAreBound()
+        public void MediaPlayerCallbacksMatchHeaderLayout()
         {
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerSetNextMedia", "libvlc_media_player_set_next_media");
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerGetNextMedia", "libvlc_media_player_get_next_media");
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerLock", "libvlc_media_player_lock");
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerUnlock", "libvlc_media_player_unlock");
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerWait", "libvlc_media_player_wait");
-            NativeBindingAssertions.HasDllImport(typeof(MediaPlayer), "LibVLCMediaPlayerSignal", "libvlc_media_player_signal");
+            var callbacksType = typeof(MediaPlayer).Assembly.GetType("LibVLCSharp.MediaPlayerCallbacks");
+            Assert.NotNull(callbacksType);
+
+            var nativeCallbacks = callbacksType!.GetNestedType("NativeCallbacks", BindingFlags.NonPublic);
+            Assert.NotNull(nativeCallbacks);
+
+            var fields = nativeCallbacks!.GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .Select(field => field.Name)
+                .ToArray();
+
+            CollectionAssert.AreEqual(new[]
+            {
+                "Version",
+                "OnMediaChanged",
+                "OnMediaStopping",
+                "OnStateChanged",
+                "OnBufferingChanged",
+                "OnCapabilitiesChanged",
+                "OnPositionChanged",
+                "OnLengthChanged",
+                "OnTrackListChanged",
+                "OnTrackSelectionChanged",
+                "OnProgramListChanged",
+                "OnProgramSelectionChanged",
+                "OnTitlesChanged",
+                "OnTitleSelectionChanged",
+                "OnChapterSelectionChanged",
+                "OnRecordingChanged",
+                "OnScreenshotTaken",
+                "OnMediaParsed",
+                "OnMediaMetaChanged",
+                "OnMediaSubitemsChanged",
+                "OnMediaAttachmentsAdded",
+                "OnNextFrameStatus",
+                "OnPrevFrameStatus",
+                "OnVoutChanged",
+                "OnCorkChanged",
+                "OnAudioVolumeChanged",
+                "OnAudioMuteChanged",
+                "OnAudioDeviceChanged"
+            }, fields);
+
+            var pointer = (IntPtr)callbacksType.GetProperty("Pointer", BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null)!;
+            var nativeCallbacksInstance = Marshal.PtrToStructure(pointer, nativeCallbacks);
+            Assert.AreNotEqual(IntPtr.Zero, nativeCallbacks.GetField("OnNextFrameStatus")!.GetValue(nativeCallbacksInstance));
+            Assert.AreNotEqual(IntPtr.Zero, nativeCallbacks.GetField("OnPrevFrameStatus")!.GetValue(nativeCallbacksInstance));
+        }
+
+        [Test]
+        public async Task PreviousFrameReportsStatusWithLoadedMedia()
+        {
+            using var mp = new MediaPlayer(_libVLC);
+            using var media = new Media(LocalVideoFile);
+            var nextFrameStatus = NewCompletionSource<bool>();
+            var previousFrameStatus = NewCompletionSource<bool>();
+
+            mp.NextFrameStatus += (sender, args) =>
+            {
+                nextFrameStatus.TrySetResult(args.Success);
+            };
+            mp.PreviousFrameStatus += (sender, args) =>
+            {
+                previousFrameStatus.TrySetResult(args.Success);
+            };
+
+            Assert.True(await mp.PlayAsync(media));
+            using var videoTracks = await WaitForVideoTracks(mp);
+
+            mp.NextFrame();
+            Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
+            Assert.False(await nextFrameStatus.Task);
+
+            nextFrameStatus = NewCompletionSource<bool>();
+            mp.NextFrame();
+            Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
+            Assert.True(await nextFrameStatus.Task);
+
+            mp.PreviousFrame();
+            Assert.AreSame(previousFrameStatus.Task, await Task.WhenAny(previousFrameStatus.Task, Task.Delay(3000)));
+            Assert.True(await previousFrameStatus.Task);
+            await mp.StopAsync();
         }
 
         [Test]
@@ -326,6 +403,21 @@ namespace LibVLCSharp.Tests
             }
 
             Assert.Fail("Timed out waiting for audio tracks.");
+            throw new InvalidOperationException();
+        }
+
+        static async Task<MediaTrackList> WaitForVideoTracks(MediaPlayer mp)
+        {
+            for (var i = 0; i < 30; i++)
+            {
+                var tracks = mp.Tracks(TrackType.Video);
+                if (tracks.Count > 0)
+                    return tracks;
+                tracks.Dispose();
+                await Task.Delay(100);
+            }
+
+            Assert.Fail("Timed out waiting for video tracks.");
             throw new InvalidOperationException();
         }
 

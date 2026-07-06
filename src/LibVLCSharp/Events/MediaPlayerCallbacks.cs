@@ -38,7 +38,7 @@ namespace LibVLCSharp
 
     /// <summary>
     /// Managed mirror of the native <c>libvlc_media_player_cbs</c> struct passed to
-    /// <c>libvlc_media_player_new</c>/<c>libvlc_media_player_new_from_media</c> in LibVLC 4.
+    /// <c>libvlc_media_player_new</c>/<c>libvlc_media_player_new_from_media</c>.
     ///
     /// The struct content (the function pointers) is identical for every media player; only the
     /// <c>cbs_opaque</c> pointer differs per instance. We therefore build a single immutable native
@@ -78,6 +78,8 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void ScreenshotTakenCb(IntPtr opaque, IntPtr filePath);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void FrameStatusCb(IntPtr opaque, int status);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void VoutChangedCb(IntPtr opaque, uint voutCount);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void CorkChangedCb(IntPtr opaque, [MarshalAs(UnmanagedType.I1)] bool corked);
@@ -114,6 +116,8 @@ namespace LibVLCSharp
             public IntPtr OnMediaMetaChanged;
             public IntPtr OnMediaSubitemsChanged;
             public IntPtr OnMediaAttachmentsAdded;
+            public IntPtr OnNextFrameStatus;
+            public IntPtr OnPrevFrameStatus;
             public IntPtr OnVoutChanged;
             public IntPtr OnCorkChanged;
             public IntPtr OnAudioVolumeChanged;
@@ -136,6 +140,8 @@ namespace LibVLCSharp
         static readonly ChapterSelectionChangedCb s_chapterSelectionChanged = OnChapterSelectionChanged;
         static readonly RecordingChangedCb s_recordingChanged = OnRecordingChanged;
         static readonly ScreenshotTakenCb s_screenshotTaken = OnScreenshotTaken;
+        static readonly FrameStatusCb s_nextFrameStatus = OnNextFrameStatus;
+        static readonly FrameStatusCb s_previousFrameStatus = OnPreviousFrameStatus;
         static readonly VoutChangedCb s_voutChanged = OnVoutChanged;
         static readonly CorkChangedCb s_corkChanged = OnCorkChanged;
         static readonly AudioVolumeChangedCb s_audioVolumeChanged = OnAudioVolumeChanged;
@@ -167,6 +173,8 @@ namespace LibVLCSharp
                 OnChapterSelectionChanged = Marshal.GetFunctionPointerForDelegate(s_chapterSelectionChanged),
                 OnRecordingChanged = Marshal.GetFunctionPointerForDelegate(s_recordingChanged),
                 OnScreenshotTaken = Marshal.GetFunctionPointerForDelegate(s_screenshotTaken),
+                OnNextFrameStatus = Marshal.GetFunctionPointerForDelegate(s_nextFrameStatus),
+                OnPrevFrameStatus = Marshal.GetFunctionPointerForDelegate(s_previousFrameStatus),
                 OnVoutChanged = Marshal.GetFunctionPointerForDelegate(s_voutChanged),
                 OnCorkChanged = Marshal.GetFunctionPointerForDelegate(s_corkChanged),
                 OnAudioVolumeChanged = Marshal.GetFunctionPointerForDelegate(s_audioVolumeChanged),
@@ -207,6 +215,8 @@ namespace LibVLCSharp
         static void OnChapterSelectionChanged(IntPtr opaque, IntPtr title, uint titleIdx, IntPtr chapter, uint chapterIdx) => Guarded(() => Manager(opaque)?.OnChapterSelectionChanged((int)chapterIdx));
         static void OnRecordingChanged(IntPtr opaque, bool recording, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnRecordingChanged(recording, filePath));
         static void OnScreenshotTaken(IntPtr opaque, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnScreenshotTaken(filePath));
+        static void OnNextFrameStatus(IntPtr opaque, int status) => Guarded(() => Manager(opaque)?.OnNextFrameStatus(status));
+        static void OnPreviousFrameStatus(IntPtr opaque, int status) => Guarded(() => Manager(opaque)?.OnPreviousFrameStatus(status));
         static void OnVoutChanged(IntPtr opaque, uint voutCount) => Guarded(() => Manager(opaque)?.OnVoutChanged((int)voutCount));
         static void OnCorkChanged(IntPtr opaque, bool corked) => Guarded(() => Manager(opaque)?.OnCorkChanged(corked));
         static void OnAudioVolumeChanged(IntPtr opaque, float volume) => Guarded(() => Manager(opaque)?.OnAudioVolumeChanged(volume));

@@ -6,10 +6,10 @@ namespace LibVLCSharp
     /// <summary>
     /// Managed dispatcher for media player events.
     ///
-    /// In LibVLC 4 the native event manager was removed; events are delivered through the
-    /// <c>libvlc_media_player_cbs</c> struct (see <see cref="MediaPlayerCallbacks"/>) registered at
-    /// construction. This class only stores the managed subscribers and maps the typed native callbacks
-    /// onto the existing <c>MediaPlayer</c> events, preserving the public event API.
+    /// Events are delivered through the <c>libvlc_media_player_cbs</c> struct (see
+    /// <see cref="MediaPlayerCallbacks"/>) registered at construction. This class only stores the managed
+    /// subscribers and maps the typed native callbacks onto the existing <c>MediaPlayer</c> events,
+    /// preserving the public event API.
     /// </summary>
     internal class MediaPlayerEventManager : EventManager
     {
@@ -44,6 +44,8 @@ namespace LibVLCSharp
         internal event EventHandler<MediaPlayerProgramSelectedEventArgs>? ProgramSelected;
         internal event EventHandler<MediaPlayerProgramUpdatedEventArgs>? ProgramUpdated;
         internal event EventHandler<MediaPlayerRecordChangedEventArgs>? RecordChanged;
+        internal event EventHandler<MediaPlayerFrameStatusEventArgs>? NextFrameStatus;
+        internal event EventHandler<MediaPlayerFrameStatusEventArgs>? PreviousFrameStatus;
 
         #region native callback dispatch
 
@@ -148,6 +150,12 @@ namespace LibVLCSharp
 
         internal void OnScreenshotTaken(IntPtr filePath)
             => SnapshotTaken?.Invoke(this, new MediaPlayerSnapshotTakenEventArgs(filePath.FromUtf8() ?? string.Empty));
+
+        internal void OnNextFrameStatus(int status)
+            => NextFrameStatus?.Invoke(this, new MediaPlayerFrameStatusEventArgs(status));
+
+        internal void OnPreviousFrameStatus(int status)
+            => PreviousFrameStatus?.Invoke(this, new MediaPlayerFrameStatusEventArgs(status));
 
         internal void OnVoutChanged(int count)
             => Vout?.Invoke(this, new MediaPlayerVoutEventArgs(count));

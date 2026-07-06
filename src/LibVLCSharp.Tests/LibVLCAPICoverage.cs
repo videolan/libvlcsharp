@@ -76,14 +76,18 @@ namespace LibVLCSharp.Tests
         {
             using (var httpClient = new HttpClient())
             {
-                var symbols = await httpClient.GetStringAsync(LibVLCSymURL);
-                return symbols
-                    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(line => line.Trim())
-                    .Where(line => IsCheckedSymbol(line))
-                    .Where(line => !IsExcludedSymbol(line))
-                    .ToHashSet();
+                return ReadSymbols(await httpClient.GetStringAsync(LibVLCSymURL));
             }
+        }
+
+        static HashSet<string> ReadSymbols(string symbols)
+        {
+            return symbols
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => line.Trim())
+                .Where(line => IsCheckedSymbol(line))
+                .Where(line => !IsExcludedSymbol(line))
+                .ToHashSet();
         }
 
         static HashSet<string> ReadDllImports(string sourcePath)

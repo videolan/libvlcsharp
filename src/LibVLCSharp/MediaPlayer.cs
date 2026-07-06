@@ -233,6 +233,10 @@ namespace LibVLCSharp
             internal static extern void LibVLCMediaPlayerNextFrame(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_media_player_previous_frame")]
+            internal static extern void LibVLCMediaPlayerPreviousFrame(IntPtr mediaPlayer);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_navigate")]
             internal static extern void LibVLCMediaPlayerNavigate(IntPtr mediaPlayer, uint navigate);
 
@@ -1132,6 +1136,14 @@ namespace LibVLCSharp
         public void NextFrame()
         {
             Native.LibVLCMediaPlayerNextFrame(NativeReference);
+        }
+
+        /// <summary>
+        /// Display the previous frame (if supported)
+        /// </summary>
+        public void PreviousFrame()
+        {
+            Native.LibVLCMediaPlayerPreviousFrame(NativeReference);
         }
 
         /// <summary>
@@ -3584,6 +3596,24 @@ namespace LibVLCSharp
         {
             add => EventManager.RecordChanged += value;
             remove => EventManager.RecordChanged -= value;
+        }
+
+        /// <summary>
+        /// The status of a next-frame request changed.
+        /// </summary>
+        public event EventHandler<MediaPlayerFrameStatusEventArgs> NextFrameStatus
+        {
+            add => EventManager.NextFrameStatus += value;
+            remove => EventManager.NextFrameStatus -= value;
+        }
+
+        /// <summary>
+        /// The status of a previous-frame request changed.
+        /// </summary>
+        public event EventHandler<MediaPlayerFrameStatusEventArgs> PreviousFrameStatus
+        {
+            add => EventManager.PreviousFrameStatus += value;
+            remove => EventManager.PreviousFrameStatus -= value;
         }
         #endregion
 

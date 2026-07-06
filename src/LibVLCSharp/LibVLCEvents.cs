@@ -355,6 +355,22 @@ namespace LibVLCSharp
         }
     }
 
+    /// <summary>
+    /// The result of a next-frame or previous-frame request.
+    /// </summary>
+    public class MediaPlayerFrameStatusEventArgs : EventArgs
+    {
+        /// <summary>
+        /// True when the native frame request succeeded.
+        /// </summary>
+        public readonly bool Success;
+
+        internal MediaPlayerFrameStatusEventArgs(int status)
+        {
+            Success = status == 0;
+        }
+    }
+
     #endregion
 
     #region MediaDiscoverer events
