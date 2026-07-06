@@ -1,5 +1,11 @@
 LibVLCSharp version 3.10.0
 ==========================
+* [BREAKING CHANGE] Core: media parsing and thumbnailing now use the parser APIs. Media events such as ParsedChanged, MetaChanged, SubItemAdded, DurationChanged, ThumbnailGenerated and AttachedThumbnailsFound were removed; use ParseAsync/MediaParser and IsParsed instead.
+* [BREAKING CHANGE] Core: Media.ParseStop and Media.ParsedStatus were removed.
+* [BREAKING CHANGE] Core: MediaList item events and EndReached were removed.
+* [BREAKING CHANGE] Core: MediaDiscoverer no longer exposes MediaList; use MediaAdded and MediaRemoved events.
+* [BREAKING CHANGE] Core: LibVLC.AddInterface and MediaPlayer Forward/Backward events were removed.
+* [BREAKING CHANGE] Core: media player position values are double precision and time-based seek/playback APIs now use microseconds.
 * [BREAKING CHANGE] UWP and WinUI: the LibVLCSharp package no longer ships the UWP and WinUI VideoView targets. Apps using these views must reference the new LibVLCSharp.UWP or LibVLCSharp.WinUI package instead.
 * UWP: add net9.0-windows10.0.26100 and net10.0-windows10.0.26100 targets.
 * WinUI: add a dedicated LibVLCSharp.WinUI package.
