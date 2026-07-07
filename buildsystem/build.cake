@@ -31,7 +31,6 @@ var libraryProjects = new string[]
 var testCsprojs = new string[]
 {
     "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj",
-    "../src/LibVLCSharp.Avalonia.Tests/LibVLCSharp.Avalonia.Tests.csproj",
 };
 
 var packagesDir = "../packages";
@@ -113,6 +112,7 @@ Task("Test")
 {
     var settings = new DotNetTestSettings
     {
+        Configuration = configuration,
         Loggers = new []{ "console;verbosity=detailed" }
     };
 

@@ -234,6 +234,14 @@ steps:
     custom: 'cake'
     workingDirectory: buildsystem
 
+- task: DotNetCoreCLI@2
+  displayName: 'Test'
+  inputs:
+    command: custom
+    custom: 'cake'
+    arguments: '--target Test'
+    workingDirectory: buildsystem
+
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: 'nugets'
