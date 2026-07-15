@@ -17,7 +17,7 @@ namespace LibVLCSharp
 #if UNITY
             [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_unity_media_player_new")]
-            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc);
+            internal static extern IntPtr LibVLCMediaPlayerNew(IntPtr libvlc, IntPtr cbs, IntPtr cbsOpaque);
 
             [DllImport(Constants.UnityPlugin, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_unity_media_player_release")]
@@ -696,12 +696,8 @@ namespace LibVLCSharp
         }
 
         MediaPlayer(LibVLC libVLC, MediaPlayerEventManager eventManager)
-#if UNITY
-            : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference), Native.LibVLCMediaPlayerRelease)
-#else
             : base(() => Native.LibVLCMediaPlayerNew(libVLC.NativeReference, MediaPlayerCallbacks.Pointer, eventManager.Register()),
                    Native.LibVLCMediaPlayerRelease)
-#endif
         {
             _eventManager = eventManager;
             _gcHandle = GCHandle.Alloc(this);
