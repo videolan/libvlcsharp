@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 #if NET6_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
@@ -61,8 +61,8 @@ namespace LibVLCSharp.Shared.Helpers
             [DllImport(Constants.Libc, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsnprintf_linux(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
 
-            [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
-            public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+            [DllImport(Constants.Msvcrt, EntryPoint = "_vscprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vscprintf_windows(IntPtr format, IntPtr args);
 #pragma warning restore IDE1006 // Naming Styles
         }
 
@@ -181,7 +181,11 @@ namespace LibVLCSharp.Shared.Helpers
             return Native.vsnprintf_linux(buffer, size, format, args);
 #else
             if (PlatformHelper.IsWindows)
-                return Native.vsnprintf_windows(buffer, size, format, args);
+            {
+                if (buffer == IntPtr.Zero && size == UIntPtr.Zero)
+                    return Native.vscprintf_windows(format, args);
+                return -1;
+            }
             else if (PlatformHelper.IsLinux)
                 return Native.vsnprintf_linux(buffer, size, format, args);
             return -1;
