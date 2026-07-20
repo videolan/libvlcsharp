@@ -26,6 +26,7 @@ namespace LibVLCSharp
         internal const string LibrariesRepositoryFolderName = "libvlc";
 
         internal const string Msvcrt = "msvcrt";
+        internal const string UcrtStdio = "api-ms-win-crt-stdio-l1-1-0.dll";
         internal const string Libc = "libc";
         internal const string LibSystem = "libSystem";
         internal const string Kernel32 = "kernel32";
