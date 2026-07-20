@@ -45,6 +45,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!-- Minimum supported dependency. Windows App SDK 1.8 is incompatible with .NET MAUI 9;
+         newer consumers can resolve a higher version through NuGet. -->
+    <MicrosoftWindowsAppSDKVersion>1.7.250909003</MicrosoftWindowsAppSDKVersion>
+    <MicrosoftWindowsSDKBuildToolsVersion>10.0.22621.756</MicrosoftWindowsSDKBuildToolsVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
