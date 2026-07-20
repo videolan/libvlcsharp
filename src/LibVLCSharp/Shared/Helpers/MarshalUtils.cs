@@ -55,14 +55,29 @@ namespace LibVLCSharp.Shared.Helpers
             [DllImport(Constants.Libc, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsprintf_linux(IntPtr buffer, IntPtr format, IntPtr args);
 
-            [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
-            public static extern int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args);
-
             [DllImport(Constants.Libc, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsnprintf_linux(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
 
+#if UWP
+            [DllImport(Constants.UcrtStdio, EntryPoint = "__stdio_common_vsprintf", CallingConvention = CallingConvention.Cdecl)]
+            static extern int stdio_common_vsprintf(ulong options, IntPtr buffer, UIntPtr size,
+                IntPtr format, IntPtr locale, IntPtr args);
+
+            const ulong StandardSnprintfBehavior = 2;
+            static readonly UIntPtr Unbounded = IntPtr.Size == 8 ? new UIntPtr(ulong.MaxValue) : new UIntPtr(uint.MaxValue);
+
+            public static int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args)
+                => stdio_common_vsprintf(0, buffer, Unbounded, format, IntPtr.Zero, args);
+
+            public static int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args)
+                => stdio_common_vsprintf(StandardSnprintfBehavior, buffer, size, format, IntPtr.Zero, args);
+#else
+            [DllImport(Constants.Msvcrt, EntryPoint = "vsprintf", CallingConvention = CallingConvention.Cdecl)]
+            public static extern int vsprintf_windows(IntPtr buffer, IntPtr format, IntPtr args);
+
             [DllImport(Constants.Msvcrt, EntryPoint = "vsnprintf", CallingConvention = CallingConvention.Cdecl)]
             public static extern int vsnprintf_windows(IntPtr buffer, UIntPtr size, IntPtr format, IntPtr args);
+#endif
 #pragma warning restore IDE1006 // Naming Styles
         }
 
