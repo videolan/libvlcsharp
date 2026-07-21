@@ -76,9 +76,17 @@ namespace LibVLCSharp.WPF
             }
 
             _wndhost = GetWindow(_bckgnd);
-            Trace.Assert(_wndhost != null);
+
             if (_wndhost == null)
             {
+                if (PresentationSource.FromVisual(_bckgnd) is HwndSource)
+                {
+                    // Possibly Hosted WPF in a non-window source.
+                    // Therefore overlay would not be supported.
+                    return;
+                }
+
+                Trace.Assert(false, "VideoView is not hosted in a Window or HwndSource.");
                 return;
             }
 
