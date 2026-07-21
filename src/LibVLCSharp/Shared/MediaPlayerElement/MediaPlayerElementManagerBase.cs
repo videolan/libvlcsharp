@@ -41,6 +41,7 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         }
 
         private IDispatcher? Dispatcher { get; }
+        private bool _disposed;
 
         private IVideoControl? _videoView;
         /// <summary>
@@ -203,13 +204,15 @@ namespace LibVLCSharp.Shared.MediaPlayerElement
         /// </summary>
         public virtual void Dispose()
         {
-            if (MediaPlayer != null)
-            {
-                UnsubscribeEvents(MediaPlayer);
-            }
-            VideoView = null;
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
             MediaPlayer = null;
+            VideoView = null;
             LibVLC = null;
+            GC.SuppressFinalize(this);
         }
     }
 }
