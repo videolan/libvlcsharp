@@ -138,6 +138,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Unity3D - Android | [VLC for Unity (Android)][VLCUnityStore]        | [![VLCUnityBadge]][VLCUnityStore]                 |
 | Unity3D - iOS     | [VLC for Unity (iOS)][VLCUnityStore]            | [![VLCUnityBadge]][VLCUnityStore]                 |
 | Unity3D - macOS   | [VLC for Unity (macOS)][VLCUnityStore]          | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - Linux   | [VLC for Unity (Linux)][VLCUnityStore]          | [![VLCUnityBadge]][VLCUnityStore]                 |
 
 ### Pre-release versions
 
