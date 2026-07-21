@@ -315,7 +315,8 @@ namespace LibVLCSharp
                 UnsetDialogHandlers();
                 if (_logSubscriberCount > 0)
                     Native.LibVLCLogUnset(NativeReference);
-                _gcHandle.Free();
+                if (_gcHandle.IsAllocated)
+                    _gcHandle.Free();
                 _log = null;
 #if DESKTOP
                 CloseLogFile();
