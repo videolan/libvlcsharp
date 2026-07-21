@@ -145,7 +145,7 @@ namespace LibVLCSharp.MediaPlayerElement
             mediaPlayer.Stopping -= OnStateChangedAsync;
             mediaPlayer.NothingSpecial -= OnStateChangedAsync;
             mediaPlayer.Paused -= OnStateChangedAsync;
-            mediaPlayer.Opening += OnStateChangedAsync;
+            mediaPlayer.Opening -= OnStateChangedAsync;
             mediaPlayer.Playing -= OnStateChangedAsync;
             mediaPlayer.Stopped -= OnStateChangedAsync;
         }

@@ -3,3 +3,4 @@
 [assembly: InternalsVisibleTo("LibVLCSharp.Forms")]
 [assembly: InternalsVisibleTo("LibVLCSharp.MAUI")]
 [assembly: InternalsVisibleTo("LibVLCSharp.Uno")]
+[assembly: InternalsVisibleTo("LibVLCSharp.Tests")]
