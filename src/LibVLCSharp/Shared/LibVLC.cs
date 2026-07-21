@@ -372,11 +372,15 @@ namespace LibVLCSharp.Shared
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
+            if (IsDisposed)
+                return;
+
             if (disposing)
             {
                 UnsetDialogHandlers();
                 Native.LibVLCLogUnset(NativeReference);
-                _gcHandle.Free();
+                if (_gcHandle.IsAllocated)
+                    _gcHandle.Free();
                 _exitCallback = null;
                 _log = null;
 #if DESKTOP
