@@ -120,6 +120,15 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void DisposeLibVLCIsIdempotent()
+        {
+            _libVLC.Dispose();
+            _libVLC.Dispose();
+
+            Assert.That(_libVLC.NativeReference, Is.EqualTo(IntPtr.Zero));
+        }
+
+        [Test]
         public void LibVLCVersion()
         {
             Assert.That(_libVLC.Version.StartsWith("3"));
