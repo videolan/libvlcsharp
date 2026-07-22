@@ -53,7 +53,7 @@ namespace LibVLCSharp.WPF.Sample
         {
             if (!VideoView.MediaPlayer.IsPlaying)
             {
-                using(var media = new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi")))
+                using(var media = new Media(_libVLC, new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi")))
                     VideoView.MediaPlayer.Play(media);
             }
         }

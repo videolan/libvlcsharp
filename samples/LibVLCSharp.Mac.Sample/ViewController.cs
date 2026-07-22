@@ -29,7 +29,7 @@ namespace LibVLCSharp.Mac.Sample
 
             View = _videoView;
 
-            var media = new Media(_libVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4"));
+            var media = new Media(_libVLC, new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
             _videoView.MediaPlayer.Play(media);
             media.Dispose();
         }

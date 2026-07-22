@@ -89,7 +89,7 @@ namespace ConsoleApp1
                 ":sout-keep"
             };
 
-            mediaPlayer.SetMedia(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"), mediaOptions);
+            mediaPlayer.SetMedia(new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"), mediaOptions);
 
             bool playFinished = false;
             mediaPlayer.PositionChanged += (sender, e) =>
@@ -137,7 +137,7 @@ namespace ConsoleApp1
                 ":sout-keep"
             };
 
-            mediaPlayer.Media = new Media(new Uri("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov"), mediaOptions);
+            mediaPlayer.Media = new Media(new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"), mediaOptions);
 
             bool playFinished = false;
             mediaPlayer.PositionChanged += (sender, e) =>

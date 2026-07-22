@@ -86,7 +86,7 @@ Full list commands and arguments https://wiki.videolan.org/VLC_command-line_help
 ```csharp
 using(var libVLC = new LibVLC())
 {
-    var media = new Media(_libVLC, "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", FromType.FromLocation);
+    var media = new Media(_libVLC, "https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi", FromType.FromLocation);
     using (var mp = new MediaPlayer(media))
     {
             mp.AddSlave(MediaSlaveType.Subtitle, "file:///C:\\Users\\Me\\Desktop\\subs.srt", true);

@@ -38,7 +38,7 @@ namespace LibVLCSharp.MAUI.Sample
         internal void Initialize(string[] swapchainOptions = null)
         {
             LibVLC = new LibVLC(enableDebugLogs: true, swapchainOptions);
-            using var media = new Media(LibVLC, new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
+            using var media = new Media(LibVLC, new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
 
             MediaPlayer = new Shared.MediaPlayer(LibVLC)
             {

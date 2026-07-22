@@ -20,7 +20,7 @@ namespace LibVLCSharp.Tests
         {
             var mp = new MediaPlayer(_libVLC)
             {
-                Media = new Media(_libVLC, "http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4",
+                Media = new Media(_libVLC, "https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi",
                     FromType.FromLocation)
             };
 
