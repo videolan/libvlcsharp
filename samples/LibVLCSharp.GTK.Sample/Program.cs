@@ -26,7 +26,7 @@ namespace LibVLCSharp.GTK.Sample
             myWin.ShowAll();
 
             //Starts playing
-            using var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
+            using var media = new Media(new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
 
             mediaPlayer.Play(media);
 

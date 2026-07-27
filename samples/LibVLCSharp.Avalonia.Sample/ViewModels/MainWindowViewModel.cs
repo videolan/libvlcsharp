@@ -22,7 +22,7 @@ namespace LibVLCSharp.Avalonia.Sample.ViewModels
                 return;
             }
             
-            using var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
+            using var media = new Media(new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
             MediaPlayer.Play(media);
         }
         

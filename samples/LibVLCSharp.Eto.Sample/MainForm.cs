@@ -25,7 +25,7 @@ namespace LibVLCSharp.Eto.Sample
         protected override void OnShown(EventArgs e)
         {
             videoView.MediaPlayer = _mp;
-            var media = new Media(new Uri("https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_stereo.avi"));
+            var media = new Media(new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
             _mp.Play(media);
             media.Dispose();
             base.OnShown(e);

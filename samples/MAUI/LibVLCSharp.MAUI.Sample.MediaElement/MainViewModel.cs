@@ -55,7 +55,7 @@ namespace LibVLCSharp.MAUI.Sample.MediaElement
 
             if (MediaPlayer == null)
             {
-                var media = new Media(new Uri("http://streams.videolan.org/streams/mkv/multiple_tracks.mkv"));
+                var media = new Media(new Uri("https://streams.videolan.org/streams/mkv/multiple_tracks.mkv"));
                 MediaPlayer = new MediaPlayer(LibVLC)
                 {
                     EnableHardwareDecoding = true
