@@ -12,3 +12,24 @@ steps:
   inputs:
     projects: src/LibVLCSharp/LibVLCSharp.csproj
     arguments: '/p:UNITY=true -c Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run AOT callback compatibility audit'
+  inputs:
+    command: run
+    projects: src/LibVLCSharp.AOTCompatibility.TestApp/LibVLCSharp.AOTCompatibility.TestApp.csproj
+    arguments: '--configuration Release'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish NativeAOT compatibility app'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: src/LibVLCSharp.AOTCompatibility.TestApp/LibVLCSharp.AOTCompatibility.TestApp.csproj
+    arguments: >-
+      --configuration Release
+      --runtime linux-x64
+      --self-contained true
+      --output $(Agent.TempDirectory)/libvlcsharp-aot
+    zipAfterPublish: false
+    modifyOutputPath: false
