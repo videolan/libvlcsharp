@@ -71,7 +71,9 @@ namespace LibVLCSharp
             }
         }
 
+        [MonoPInvokeCallback(typeof(MediaAddedCb))]
         static void OnMediaAdded(IntPtr opaque, IntPtr parent, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaAdded(parent, media));
+        [MonoPInvokeCallback(typeof(MediaRemovedCb))]
         static void OnMediaRemoved(IntPtr opaque, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaRemoved(media));
     }
 }

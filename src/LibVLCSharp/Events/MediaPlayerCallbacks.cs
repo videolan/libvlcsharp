@@ -202,25 +202,45 @@ namespace LibVLCSharp
             }
         }
 
+        [MonoPInvokeCallback(typeof(MediaChangedCb))]
         static void OnMediaChanged(IntPtr opaque, IntPtr media) => Guarded(() => Manager(opaque)?.OnMediaChanged(media));
+        [MonoPInvokeCallback(typeof(StateChangedCb))]
         static void OnStateChanged(IntPtr opaque, VLCState state) => Guarded(() => Manager(opaque)?.OnStateChanged(state));
+        [MonoPInvokeCallback(typeof(BufferingChangedCb))]
         static void OnBufferingChanged(IntPtr opaque, float buffering) => Guarded(() => Manager(opaque)?.OnBuffering(buffering));
+        [MonoPInvokeCallback(typeof(CapabilitiesChangedCb))]
         static void OnCapabilitiesChanged(IntPtr opaque, Capability oldCaps, Capability newCaps) => Guarded(() => Manager(opaque)?.OnCapabilitiesChanged(newCaps));
+        [MonoPInvokeCallback(typeof(PositionChangedCb))]
         static void OnPositionChanged(IntPtr opaque, long time, double pos) => Guarded(() => Manager(opaque)?.OnPositionChanged(time, pos));
+        [MonoPInvokeCallback(typeof(LengthChangedCb))]
         static void OnLengthChanged(IntPtr opaque, long length) => Guarded(() => Manager(opaque)?.OnLengthChanged(length));
+        [MonoPInvokeCallback(typeof(TrackListChangedCb))]
         static void OnTrackListChanged(IntPtr opaque, ListAction action, TrackType type, IntPtr id) => Guarded(() => Manager(opaque)?.OnTrackListChanged(action, type, id));
+        [MonoPInvokeCallback(typeof(TrackSelectionChangedCb))]
         static void OnTrackSelectionChanged(IntPtr opaque, TrackType type, IntPtr unselectedId, IntPtr selectedId) => Guarded(() => Manager(opaque)?.OnTrackSelectionChanged(type, unselectedId, selectedId));
+        [MonoPInvokeCallback(typeof(ProgramListChangedCb))]
         static void OnProgramListChanged(IntPtr opaque, ListAction action, int groupId) => Guarded(() => Manager(opaque)?.OnProgramListChanged(action, groupId));
+        [MonoPInvokeCallback(typeof(ProgramSelectionChangedCb))]
         static void OnProgramSelectionChanged(IntPtr opaque, int unselectedGroupId, int selectedGroupId) => Guarded(() => Manager(opaque)?.OnProgramSelectionChanged(unselectedGroupId, selectedGroupId));
+        [MonoPInvokeCallback(typeof(ChapterSelectionChangedCb))]
         static void OnChapterSelectionChanged(IntPtr opaque, IntPtr title, uint titleIdx, IntPtr chapter, uint chapterIdx) => Guarded(() => Manager(opaque)?.OnChapterSelectionChanged((int)chapterIdx));
+        [MonoPInvokeCallback(typeof(RecordingChangedCb))]
         static void OnRecordingChanged(IntPtr opaque, bool recording, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnRecordingChanged(recording, filePath));
+        [MonoPInvokeCallback(typeof(ScreenshotTakenCb))]
         static void OnScreenshotTaken(IntPtr opaque, IntPtr filePath) => Guarded(() => Manager(opaque)?.OnScreenshotTaken(filePath));
+        [MonoPInvokeCallback(typeof(FrameStatusCb))]
         static void OnNextFrameStatus(IntPtr opaque, int status) => Guarded(() => Manager(opaque)?.OnNextFrameStatus(status));
+        [MonoPInvokeCallback(typeof(FrameStatusCb))]
         static void OnPreviousFrameStatus(IntPtr opaque, int status) => Guarded(() => Manager(opaque)?.OnPreviousFrameStatus(status));
+        [MonoPInvokeCallback(typeof(VoutChangedCb))]
         static void OnVoutChanged(IntPtr opaque, uint voutCount) => Guarded(() => Manager(opaque)?.OnVoutChanged((int)voutCount));
+        [MonoPInvokeCallback(typeof(CorkChangedCb))]
         static void OnCorkChanged(IntPtr opaque, bool corked) => Guarded(() => Manager(opaque)?.OnCorkChanged(corked));
+        [MonoPInvokeCallback(typeof(AudioVolumeChangedCb))]
         static void OnAudioVolumeChanged(IntPtr opaque, float volume) => Guarded(() => Manager(opaque)?.OnAudioVolumeChanged(volume));
+        [MonoPInvokeCallback(typeof(AudioMuteChangedCb))]
         static void OnAudioMuteChanged(IntPtr opaque, bool muted) => Guarded(() => Manager(opaque)?.OnAudioMuteChanged(muted));
+        [MonoPInvokeCallback(typeof(AudioDeviceChangedCb))]
         static void OnAudioDeviceChanged(IntPtr opaque, IntPtr device) => Guarded(() => Manager(opaque)?.OnAudioDeviceChanged(device));
     }
 }

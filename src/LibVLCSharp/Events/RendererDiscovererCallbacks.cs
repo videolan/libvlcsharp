@@ -73,7 +73,9 @@ namespace LibVLCSharp
             }
         }
 
+        [MonoPInvokeCallback(typeof(ItemAddedCb))]
         static void OnItemAdded(IntPtr opaque, IntPtr item) => Guarded(() => Manager(opaque)?.OnItemAdded(item));
+        [MonoPInvokeCallback(typeof(ItemRemovedCb))]
         static void OnItemRemoved(IntPtr opaque, IntPtr item) => Guarded(() => Manager(opaque)?.OnItemRemoved(item));
     }
 }

@@ -370,6 +370,7 @@ namespace LibVLCSharp
                 return ptr;
             }
 
+            [MonoPInvokeCallback(typeof(OnAttachmentsAddedCb))]
             static void OnAttachmentsAdded(IntPtr opaque, IntPtr task, IntPtr pictureList)
             {
                 try
@@ -384,6 +385,7 @@ namespace LibVLCSharp
                 }
             }
 
+            [MonoPInvokeCallback(typeof(OnParsedCb))]
             static void OnParsed(IntPtr opaque, IntPtr task, ParserStatus status)
             {
                 try
@@ -429,6 +431,7 @@ namespace LibVLCSharp
                 return ptr;
             }
 
+            [MonoPInvokeCallback(typeof(OnEndedCb))]
             static void OnEnded(IntPtr opaque, IntPtr task, IntPtr picture)
             {
                 try
