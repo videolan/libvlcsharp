@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.MediaPlayerElement;
+using LibVLCSharp;
+using LibVLCSharp.MediaPlayerElement;
 using NUnit.Framework;
 
 namespace LibVLCSharp.Tests
@@ -52,7 +52,7 @@ namespace LibVLCSharp.Tests
                 .GetValue(mediaPlayer);
 
             return (Delegate)eventManager?.GetType()
-                .GetField("_mediaPlayerOpening", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetField("Opening", BindingFlags.Instance | BindingFlags.NonPublic)
                 .GetValue(eventManager);
         }
 
