@@ -336,7 +336,7 @@ namespace LibVLCSharp
         /// Shared native libvlc_parser_cbs (on_parsed). One copy is shared by all parse requests; the per-request
         /// state is carried through cbs_opaque.
         /// </summary>
-        static class ParserCallbacks
+        internal static class ParserCallbacks
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             delegate void OnParsedCb(IntPtr opaque, IntPtr task, ParserStatus status);
@@ -405,7 +405,7 @@ namespace LibVLCSharp
         /// <summary>
         /// Shared native libvlc_thumbnailer_cbs (on_ended).
         /// </summary>
-        static class ThumbnailerCallbacks
+        internal static class ThumbnailerCallbacks
         {
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             delegate void OnEndedCb(IntPtr opaque, IntPtr task, IntPtr picture);

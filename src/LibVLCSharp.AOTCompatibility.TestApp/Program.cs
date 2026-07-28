@@ -29,6 +29,8 @@ _ = typeof(StreamMediaInput);
 AssertNativeCallbacksAreAotCompatible(typeof(MediaPlayerCallbacks));
 AssertNativeCallbacksAreAotCompatible(typeof(MediaDiscovererCallbacks));
 AssertNativeCallbacksAreAotCompatible(typeof(RendererDiscovererCallbacks));
+AssertNativeCallbacksAreAotCompatible(typeof(MediaParser.ParserCallbacks));
+AssertNativeCallbacksAreAotCompatible(typeof(MediaParser.ThumbnailerCallbacks));
 
 Console.WriteLine("LibVLCSharp AOT compatibility OK");
 
