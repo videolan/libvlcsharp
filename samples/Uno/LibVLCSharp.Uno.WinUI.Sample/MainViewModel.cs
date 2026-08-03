@@ -83,8 +83,6 @@ namespace LibVLCSharp.Uno.WinUI.Sample
         private void Initialize(string[] swapChainOptions)
         {
             LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
-            LibVLC.Log += (s, e) => System.Diagnostics.Debug.WriteLine($"[VLC:{e.Level}] {e.Module}: {e.Message}");
-
             MediaPlayer = new LibVLCSharp.Shared.MediaPlayer(LibVLC);
             MediaPlayer.Play(new Media(LibVLC, "https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi",
                 FromType.FromLocation));

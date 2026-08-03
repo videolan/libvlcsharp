@@ -53,7 +53,7 @@ namespace LibVLCSharp.Uno
         {
             DefaultStyleKey = typeof(PlaybackControls);
 
-            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread()), new DisplayInformation(), new DisplayRequestAdapter());
+            Manager = new MediaPlayerElementManager(new DispatcherAdapter(Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread()), new DisplayInformation(this), new DisplayRequestAdapter());
             Manager.Get<AspectRatioManager>().AspectRatioChanged += AspectRatioChanged;
             var autoHideManager = Manager.Get<AutoHideNotifier>();
             autoHideManager.Shown += (sender, e) => VisualStateManager.GoToState(this, ControlPanelFadeInState, true);
