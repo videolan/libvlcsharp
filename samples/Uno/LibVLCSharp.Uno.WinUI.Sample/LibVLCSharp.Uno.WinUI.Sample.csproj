@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>
-      net9.0-android;
-      net9.0-ios;
-    </TargetFrameworks>
+    <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+
+		<WindowsPackageType>None</WindowsPackageType>
 
     <OutputType>Exe</OutputType>
     <UnoSingleProject>true</UnoSingleProject>
@@ -28,6 +28,9 @@
 	  <Nullable>enable</Nullable>
 	  <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 
+    <WinAppSdkVersion>1.8.260710003</WinAppSdkVersion>
+    <WinAppSdkBuildToolsVersion>10.0.26100.7175</WinAppSdkBuildToolsVersion>
+
 	  <!--
       Adding NoWarn to remove build warnings
       NU1507: Warning when there are multiple package sources when using CPM with no source mapping
@@ -42,12 +45,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\LibVLCSharp.Uno\LibVLCSharp.Uno.csproj" />
-    <ProjectReference Include="..\..\..\src\LibVLCSharp\LibVLCSharp.csproj" />
+    <ProjectReference Include="..\..\..\src\LibVLCSharp\LibVLCSharp.csproj" Condition="!$(TargetFramework.Contains('-windows'))" />
   </ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
 		<PackageReference Include="VideoLAN.LibVLC.Android" Version="3.5.3" />
 	</ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
 		<PackageReference Include="VideoLAN.LibVLC.iOS" Version="3.3.18" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
 	</ItemGroup>
 </Project>
