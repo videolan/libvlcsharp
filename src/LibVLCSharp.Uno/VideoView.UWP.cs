@@ -8,6 +8,11 @@ namespace LibVLCSharp.Uno
     /// </summary>
     public class VideoView : VideoView<InitializedEventArgs>, IVideoView, IVideoControl
     {
+        public VideoView()
+        {
+            DefaultStyleKey = typeof(VideoView);
+        }
+
         /// <summary>
         /// Creates args for <see cref="VideoView{TInitializedEventArgs}.Initialized"/> event
         /// </summary>
