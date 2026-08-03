@@ -684,7 +684,7 @@ namespace LibVLCSharp.Uno
                 {
                     var menuItem = new ToggleMenuFlyoutItem
                     {
-                        Text = ResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
+                        Text = StringResourceLoader.GetString($"{nameof(AspectRatio)}{aspectRatio}"),
                         IsChecked = aspectRatio == currentAspectRatio,
                         Command = new ActionCommand<AspectRatio>(AspectRatioMenuItemClick),
                         CommandParameter = aspectRatio
@@ -778,7 +778,7 @@ namespace LibVLCSharp.Uno
 
         private void AddNoneItem(MenuFlyout menuflyout)
         {
-            AddTrack(menuflyout, null, ResourceLoader.GetString("None") ?? string.Empty);
+            AddTrack(menuflyout, null, StringResourceLoader.GetString("None"));
         }
 
         private void AddTrack(MenuFlyout menuflyout, int? trackId, string trackName)
@@ -969,7 +969,7 @@ namespace LibVLCSharp.Uno
             {
                 AddCastMenuItem(items, renderer.Name);
             }
-            AddCastMenuItem(items, ResourceLoader.GetString("Disconnect"), true);
+            AddCastMenuItem(items, StringResourceLoader.GetString("Disconnect"), true);
             ((Button)sender).Flyout = castMenu;
         }
 
@@ -1034,7 +1034,7 @@ namespace LibVLCSharp.Uno
             var errorTextBlock = ErrorTextBlock;
             if (errorTextBlock != null)
             {
-                errorTextBlock.Text = string.Format(ResourceLoader.GetString("Error") ?? string.Empty, Manager.Get<StateManager>().MediaResourceLocator);
+                errorTextBlock.Text = string.Format(StringResourceLoader.GetString("Error"), Manager.Get<StateManager>().MediaResourceLocator);
                 VisualStateManager.GoToState(this, ErrorState, true);
             }
         }

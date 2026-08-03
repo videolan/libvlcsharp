@@ -21,12 +21,8 @@ namespace LibVLCSharp.Uno
             {
                 return;
             }
-            var resourceLoader = ResourceLoader;
-            if (resourceLoader != null)
-            {
-                ToolTipService.SetToolTip(element, string.Format(resourceLoader.GetString(resource),
-                    args.Select(arg => resourceLoader.GetString(arg)).Cast<object>().ToArray()));
-            }
+            ToolTipService.SetToolTip(element, string.Format(StringResourceLoader.GetString(resource),
+                args.Select(StringResourceLoader.GetString).Cast<object>().ToArray()));
         }
     }
 }
