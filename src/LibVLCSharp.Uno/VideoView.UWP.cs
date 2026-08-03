@@ -8,6 +8,9 @@ namespace LibVLCSharp.Uno
     /// </summary>
     public class VideoView : VideoView<InitializedEventArgs>, IVideoView, IVideoControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VideoView"/> class.
+        /// </summary>
         public VideoView()
         {
             DefaultStyleKey = typeof(VideoView);
