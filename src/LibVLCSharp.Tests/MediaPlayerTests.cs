@@ -15,13 +15,6 @@ namespace LibVLCSharp.Tests
     [TestFixture]
     public class MediaPlayerTests : BaseSetup
     {
-        [SetUp]
-        public void SetUpMediaPlayerTests()
-        {
-            _libVLC.Dispose();
-            _libVLC = new LibVLC("--aout=dummy", "--vout=dummy", "--verbose=2");
-        }
-
         [Test]
         public void CreateAndDestroy()
         {
@@ -102,6 +95,21 @@ namespace LibVLCSharp.Tests
             using var media = new Media(LocalVideoFile);
             var nextFrameStatus = NewCompletionSource<bool>();
             var previousFrameStatus = NewCompletionSource<bool>();
+            var playerPaused = NewCompletionSource<bool>();
+            var nextFrameDisplayed = NewCompletionSource<bool>();
+            var waitForNextFrameDisplay = 0;
+
+            unsafe void OnTimeUpdated(TimePoint timePoint, void* opaque)
+            {
+                if (Volatile.Read(ref waitForNextFrameDisplay) != 0)
+                    nextFrameDisplayed.TrySetResult(true);
+            }
+
+            unsafe void OnTimePaused(long systemDate, void* opaque)
+                => playerPaused.TrySetResult(true);
+
+            unsafe bool StartWatchingTime()
+                => mp.WatchTime(0, OnTimeUpdated, OnTimePaused, null);
 
             mp.NextFrameStatus += (sender, args) =>
             {
@@ -112,22 +120,33 @@ namespace LibVLCSharp.Tests
                 previousFrameStatus.TrySetResult(args.Success);
             };
 
-            Assert.True(await mp.PlayAsync(media));
-            using var videoTracks = await WaitForVideoTracks(mp);
+            Assert.True(StartWatchingTime());
+            try
+            {
+                Assert.True(await mp.PlayAsync(media));
+                using var videoTracks = await WaitForVideoTracks(mp);
 
-            mp.NextFrame();
-            Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
-            Assert.False(await nextFrameStatus.Task);
+                mp.NextFrame();
+                Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
+                Assert.False(await nextFrameStatus.Task);
+                Assert.AreSame(playerPaused.Task, await Task.WhenAny(playerPaused.Task, Task.Delay(3000)));
 
-            nextFrameStatus = NewCompletionSource<bool>();
-            mp.NextFrame();
-            Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
-            Assert.True(await nextFrameStatus.Task);
+                nextFrameStatus = NewCompletionSource<bool>();
+                Volatile.Write(ref waitForNextFrameDisplay, 1);
+                mp.NextFrame();
+                Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
+                Assert.True(await nextFrameStatus.Task);
+                Assert.AreSame(nextFrameDisplayed.Task, await Task.WhenAny(nextFrameDisplayed.Task, Task.Delay(3000)));
 
-            mp.PreviousFrame();
-            Assert.AreSame(previousFrameStatus.Task, await Task.WhenAny(previousFrameStatus.Task, Task.Delay(3000)));
-            Assert.True(await previousFrameStatus.Task);
-            await mp.StopAsync();
+                mp.PreviousFrame();
+                Assert.AreSame(previousFrameStatus.Task, await Task.WhenAny(previousFrameStatus.Task, Task.Delay(3000)));
+                Assert.True(await previousFrameStatus.Task);
+            }
+            finally
+            {
+                mp.UnwatchTime();
+            }
+            Assert.True(await StopWithTimeout(mp));
         }
 
         [Test]

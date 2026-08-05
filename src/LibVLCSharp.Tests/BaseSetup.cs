@@ -15,7 +15,7 @@ namespace LibVLCSharp.Tests
         [SetUp]
         public void SetUp()
         {
-            _libVLC = new LibVLC(/*"--no-audio", "--no-video", */"--verbose=2");
+            _libVLC = new LibVLC("--aout=dummy", "--vout=dummy", "--quiet");
         }
 
         [TearDown]

@@ -11,6 +11,7 @@ namespace LibVLCSharp.Tests
     public class MediaTests : BaseSetup
     {
         const int GetTracksOperationTimeoutMilliseconds = 10000;
+        const int GetTracksParseTimeoutMicroseconds = GetTracksOperationTimeoutMilliseconds * 1000;
 
         [Test]
         public void CreateMedia()
@@ -151,7 +152,7 @@ namespace LibVLCSharp.Tests
                 mp = new MediaPlayer(_libVLC, media);
                 LogGetTracks($"media player created, native reference {mp.NativeReference}");
 
-                var parseResult = await AwaitGetTracksOperation("media.ParseAsync", media.ParseAsync(_libVLC, timeout: GetTracksOperationTimeoutMilliseconds));
+                var parseResult = await AwaitGetTracksOperation("media.ParseAsync", media.ParseAsync(_libVLC, timeout: GetTracksParseTimeoutMicroseconds));
                 Assert.AreEqual(MediaParsedStatus.Done, parseResult);
 
                 var playResult = await AwaitGetTracksOperation("mp.PlayAsync", mp.PlayAsync());
@@ -289,7 +290,7 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
-        public async Task ParseShouldTimeoutWith1MillisecondLimit()
+        public async Task ParseShouldTimeoutWith1MicrosecondLimit()
         {
             using var media = new Media(LocalAudioFile);
             var parseResult = await media.ParseAsync(_libVLC, timeout: 1);
