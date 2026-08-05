@@ -194,6 +194,19 @@ namespace LibVLCSharp.Shared
                 loadResult = LoadNativeLibrary(libvlcPath, out LibvlcHandle);
                 if (!loadResult)
                     Log($"Failed to load required native libraries at {libvlcPath}");
+                
+#if NET5_0_OR_GREATER
+                // register custom resolver to load library from provided path
+                NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (dll, _, _) =>
+                {
+                    return dll switch
+                    {
+                        Constants.LibraryName => NativeLibrary.Load(libvlcPath),
+                        Constants.CoreLibraryName => NativeLibrary.Load(libvlccorePath),
+                        _ => IntPtr.Zero
+                    };
+                });
+#endif
                 return;
             }
 
@@ -203,8 +216,21 @@ namespace LibVLCSharp.Shared
             {
                 LoadNativeLibrary(libvlccore, out LibvlccoreHandle);
                 var loadResult = LoadNativeLibrary(libvlc, out LibvlcHandle);
-                if (loadResult)
-                    break;
+                if (!loadResult) continue;
+                
+#if NET5_0_OR_GREATER
+                // register custom resolver to load library from discovered path
+                NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (dll, _, _) =>
+                {
+                    return dll switch
+                    {
+                        Constants.LibraryName => NativeLibrary.Load(libvlc),
+                        Constants.CoreLibraryName => NativeLibrary.Load(libvlccore),
+                        _ => IntPtr.Zero
+                    };
+                });
+#endif
+                break;
             }
 
             if (!LibVLCLoaded)
