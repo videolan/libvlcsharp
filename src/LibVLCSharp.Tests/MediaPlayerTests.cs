@@ -111,6 +111,18 @@ namespace LibVLCSharp.Tests
             unsafe bool StartWatchingTime()
                 => mp.WatchTime(0, OnTimeUpdated, OnTimePaused, null);
 
+            async Task StepNextFrame()
+            {
+                nextFrameStatus = NewCompletionSource<bool>();
+                nextFrameDisplayed = NewCompletionSource<bool>();
+                Volatile.Write(ref waitForNextFrameDisplay, 1);
+                mp.NextFrame();
+                Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
+                Assert.True(await nextFrameStatus.Task);
+                Assert.AreSame(nextFrameDisplayed.Task, await Task.WhenAny(nextFrameDisplayed.Task, Task.Delay(3000)));
+                Volatile.Write(ref waitForNextFrameDisplay, 0);
+            }
+
             mp.NextFrameStatus += (sender, args) =>
             {
                 nextFrameStatus.TrySetResult(args.Success);
@@ -131,12 +143,10 @@ namespace LibVLCSharp.Tests
                 Assert.False(await nextFrameStatus.Task);
                 Assert.AreSame(playerPaused.Task, await Task.WhenAny(playerPaused.Task, Task.Delay(3000)));
 
-                nextFrameStatus = NewCompletionSource<bool>();
-                Volatile.Write(ref waitForNextFrameDisplay, 1);
-                mp.NextFrame();
-                Assert.AreSame(nextFrameStatus.Task, await Task.WhenAny(nextFrameStatus.Task, Task.Delay(3000)));
-                Assert.True(await nextFrameStatus.Task);
-                Assert.AreSame(nextFrameDisplayed.Task, await Task.WhenAny(nextFrameDisplayed.Task, Task.Delay(3000)));
+                // The player might have paused before its first frame was displayed. Advance twice so
+                // PreviousFrame cannot legitimately report -EAGAIN for being on the first frame.
+                await StepNextFrame();
+                await StepNextFrame();
 
                 mp.PreviousFrame();
                 Assert.AreSame(previousFrameStatus.Task, await Task.WhenAny(previousFrameStatus.Task, Task.Delay(3000)));
