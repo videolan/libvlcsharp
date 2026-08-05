@@ -1,3 +1,12 @@
+LibVLCSharp version 3.10.1
+==========================
+* Uno: add support for the WinUI 3 Windows target and a Windows sample head.
+* Android: fix VideoView disposal.
+* UWP: fix native log callback interop.
+* MediaPlayerElement: fix event teardown and allow platform services to be collected.
+* WinUI and Uno: centralize the Windows App SDK dependency floor for .NET MAUI 9 compatibility.
+* Samples and docs: modernize the UWP sample, update stale media URLs.
+
 LibVLCSharp version 3.10.0
 ==========================
 * [BREAKING CHANGE] Core: media parsing and thumbnailing now use the parser APIs. Media events such as ParsedChanged, MetaChanged, SubItemAdded, DurationChanged, ThumbnailGenerated and AttachedThumbnailsFound were removed; use ParseAsync/MediaParser and IsParsed instead.
