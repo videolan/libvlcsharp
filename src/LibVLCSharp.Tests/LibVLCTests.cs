@@ -120,6 +120,39 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void DisposeLibVLCIsIdempotent()
+        {
+            const string childProcessVariable = "LIBVLCSHARP_DOUBLE_DISPOSE_CHILD";
+            if (Environment.GetEnvironmentVariable(childProcessVariable) == "1")
+            {
+                var childLibVLC = new LibVLC("--no-audio", "--no-video");
+                childLibVLC.Dispose();
+                childLibVLC.Dispose();
+                Assert.That(childLibVLC.NativeReference, Is.EqualTo(IntPtr.Zero));
+                return;
+            }
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? "dotnet",
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(LibVLCTests).Assembly.Location);
+            startInfo.ArgumentList.Add($"--test={typeof(LibVLCTests).FullName}.{nameof(DisposeLibVLCIsIdempotent)}");
+            startInfo.ArgumentList.Add("--workers=1");
+            startInfo.ArgumentList.Add("--noheader");
+            startInfo.Environment[childProcessVariable] = "1";
+
+            using (var process = Process.Start(startInfo))
+            {
+                Assert.That(process, Is.Not.Null);
+                Assert.That(process.WaitForExit(60_000), Is.True, "The double-dispose child process should terminate");
+                Assert.That(process.ExitCode, Is.Zero,
+                    "Disposing LibVLC twice should not crash the process");
+            }
+        }
+
+        [Test]
         public void LibVLCVersion()
         {
             Assert.That(_libVLC.Version.StartsWith("3"));
