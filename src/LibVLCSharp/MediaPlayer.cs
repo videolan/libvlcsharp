@@ -728,7 +728,10 @@ namespace LibVLCSharp
         /// Note: It is safe to release the Media on the C# side after it's been set on the MediaPlayer successfully
         /// </summary>
         /// <remarks>
-        /// Each time this getter is called, the native media instance reference count is incremented. So, once you're done with the Media object after accessing it with this property, you should dispose of it.
+        /// The getter returns the media currently used by the player. After setting a new media while
+        /// another media is playing, the previous media is returned until <see cref="MediaChanged"/>
+        /// announces the switch. Each getter call increments the native media reference count, so dispose
+        /// the returned <see cref="Media"/> when done.
         /// </remarks>
         public Media? Media
         {
@@ -1005,7 +1008,7 @@ namespace LibVLCSharp
         /// This has no effect if playback is not enabled.
         /// This might not work depending on the underlying input format and protocol.
         /// </summary>
-        /// <param name="position">the position</param>
+        /// <param name="position">the position in the range [0, 1]</param>
         /// <param name="fast">prefer fast seeking or precise seeking</param>
         /// <returns>true on success, false otherwise</returns>
         public bool SetPosition(double position, bool fast = false) => Native.LibVLCMediaPlayerSetPosition(NativeReference, position, fast) == 0;

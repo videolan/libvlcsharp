@@ -458,8 +458,11 @@ namespace LibVLCSharp
         public MediaStats Statistics => Native.LibVLCMediaGetStats(NativeReference, out var mediaStats)
             ? mediaStats : default;
 
-        /// <summary>Get duration (in microseconds) of media descriptor object item.</summary>
-        /// <returns>duration of media item or -1 on error</returns>
+        /// <summary>
+        /// Get the duration (in microseconds) of the media descriptor. The duration may be known after
+        /// parsing or playback, or when it was advertised by the source (for example, by a playlist).
+        /// </summary>
+        /// <returns>duration of media item or -1 if it is unknown</returns>
         public long Duration => Native.LibVLCMediaGetDuration(NativeReference);
 
         /// <summary>
