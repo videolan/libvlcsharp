@@ -1096,7 +1096,12 @@ namespace LibVLCSharp
         /// <summary>
         /// Disc total metadata
         /// </summary>
-        DiscTotal = 25
+        DiscTotal = 25,
+
+        /// <summary>
+        /// Compilation metadata
+        /// </summary>
+        Compilation = 26
     }
 
     /// <summary>

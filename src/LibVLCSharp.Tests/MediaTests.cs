@@ -136,6 +136,12 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void CompilationMetadataMatchesNativeValue()
+        {
+            Assert.AreEqual(26, (int)MetadataType.Compilation);
+        }
+
+        [Test]
         public async Task GetTracks()
         {
             ResetGetTracksLog();
