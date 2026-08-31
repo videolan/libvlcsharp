@@ -37,6 +37,22 @@ namespace LibVLCSharp
     }
 
     /// <summary>
+    /// The mediaplayer's playback rate changed
+    /// </summary>
+    public class MediaPlayerRateChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The new playback rate
+        /// </summary>
+        public readonly float Rate;
+
+        internal MediaPlayerRateChangedEventArgs(float rate)
+        {
+            Rate = rate;
+        }
+    }
+
+    /// <summary>
     /// The mediaplayer's time changed
     /// </summary>
     public class MediaPlayerTimeChangedEventArgs : EventArgs

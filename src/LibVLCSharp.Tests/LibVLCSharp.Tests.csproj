@@ -17,7 +17,7 @@
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="NUnitLite" Version="3.13.2" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20260706" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="4.0.0-alpha-20260831" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />

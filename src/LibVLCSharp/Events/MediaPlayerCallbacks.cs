@@ -58,6 +58,8 @@ namespace LibVLCSharp
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void BufferingChangedCb(IntPtr opaque, float buffering);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void RateChangedCb(IntPtr opaque, float rate);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void CapabilitiesChangedCb(IntPtr opaque, Capability oldCaps, Capability newCaps);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void PositionChangedCb(IntPtr opaque, long time, double pos);
@@ -100,6 +102,7 @@ namespace LibVLCSharp
             public IntPtr OnMediaStopping;       // not bridged (NULL)
             public IntPtr OnStateChanged;
             public IntPtr OnBufferingChanged;
+            public IntPtr OnRateChanged;
             public IntPtr OnCapabilitiesChanged;
             public IntPtr OnPositionChanged;
             public IntPtr OnLengthChanged;
@@ -130,6 +133,7 @@ namespace LibVLCSharp
         static readonly MediaChangedCb s_mediaChanged = OnMediaChanged;
         static readonly StateChangedCb s_stateChanged = OnStateChanged;
         static readonly BufferingChangedCb s_bufferingChanged = OnBufferingChanged;
+        static readonly RateChangedCb s_rateChanged = OnRateChanged;
         static readonly CapabilitiesChangedCb s_capabilitiesChanged = OnCapabilitiesChanged;
         static readonly PositionChangedCb s_positionChanged = OnPositionChanged;
         static readonly LengthChangedCb s_lengthChanged = OnLengthChanged;
@@ -163,6 +167,7 @@ namespace LibVLCSharp
                 OnMediaChanged = Marshal.GetFunctionPointerForDelegate(s_mediaChanged),
                 OnStateChanged = Marshal.GetFunctionPointerForDelegate(s_stateChanged),
                 OnBufferingChanged = Marshal.GetFunctionPointerForDelegate(s_bufferingChanged),
+                OnRateChanged = Marshal.GetFunctionPointerForDelegate(s_rateChanged),
                 OnCapabilitiesChanged = Marshal.GetFunctionPointerForDelegate(s_capabilitiesChanged),
                 OnPositionChanged = Marshal.GetFunctionPointerForDelegate(s_positionChanged),
                 OnLengthChanged = Marshal.GetFunctionPointerForDelegate(s_lengthChanged),
@@ -208,6 +213,8 @@ namespace LibVLCSharp
         static void OnStateChanged(IntPtr opaque, VLCState state) => Guarded(() => Manager(opaque)?.OnStateChanged(state));
         [MonoPInvokeCallback(typeof(BufferingChangedCb))]
         static void OnBufferingChanged(IntPtr opaque, float buffering) => Guarded(() => Manager(opaque)?.OnBuffering(buffering));
+        [MonoPInvokeCallback(typeof(RateChangedCb))]
+        static void OnRateChanged(IntPtr opaque, float rate) => Guarded(() => Manager(opaque)?.OnRateChanged(rate));
         [MonoPInvokeCallback(typeof(CapabilitiesChangedCb))]
         static void OnCapabilitiesChanged(IntPtr opaque, Capability oldCaps, Capability newCaps) => Guarded(() => Manager(opaque)?.OnCapabilitiesChanged(newCaps));
         [MonoPInvokeCallback(typeof(PositionChangedCb))]

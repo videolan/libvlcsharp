@@ -3363,6 +3363,15 @@ namespace LibVLCSharp
         }
 
         /// <summary>
+        /// The mediaplayer's playback rate changed
+        /// </summary>
+        public event EventHandler<MediaPlayerRateChangedEventArgs> RateChanged
+        {
+            add => EventManager.RateChanged += value;
+            remove => EventManager.RateChanged -= value;
+        }
+
+        /// <summary>
         /// The mediaplayer started playing a media
         /// </summary>
         public event EventHandler<EventArgs> Playing

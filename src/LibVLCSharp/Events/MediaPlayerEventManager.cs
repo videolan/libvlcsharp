@@ -18,6 +18,7 @@ namespace LibVLCSharp
         internal event EventHandler<EventArgs>? NothingSpecial;
         internal event EventHandler<EventArgs>? Opening;
         internal event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
+        internal event EventHandler<MediaPlayerRateChangedEventArgs>? RateChanged;
         internal event EventHandler<EventArgs>? Playing;
         internal event EventHandler<EventArgs>? Paused;
         internal event EventHandler<EventArgs>? Stopped;
@@ -82,6 +83,9 @@ namespace LibVLCSharp
 
         internal void OnBuffering(float cache)
             => Buffering?.Invoke(this, new MediaPlayerBufferingEventArgs(cache));
+
+        internal void OnRateChanged(float rate)
+            => RateChanged?.Invoke(this, new MediaPlayerRateChangedEventArgs(rate));
 
         internal void OnCapabilitiesChanged(Capability newCaps)
         {

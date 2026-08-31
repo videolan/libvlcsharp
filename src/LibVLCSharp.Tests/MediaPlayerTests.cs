@@ -57,6 +57,7 @@ namespace LibVLCSharp.Tests
                 "OnMediaStopping",
                 "OnStateChanged",
                 "OnBufferingChanged",
+                "OnRateChanged",
                 "OnCapabilitiesChanged",
                 "OnPositionChanged",
                 "OnLengthChanged",
@@ -84,8 +85,21 @@ namespace LibVLCSharp.Tests
 
             var pointer = (IntPtr)callbacksType.GetProperty("Pointer", BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null)!;
             var nativeCallbacksInstance = Marshal.PtrToStructure(pointer, nativeCallbacks);
+            Assert.AreNotEqual(IntPtr.Zero, nativeCallbacks.GetField("OnRateChanged")!.GetValue(nativeCallbacksInstance));
             Assert.AreNotEqual(IntPtr.Zero, nativeCallbacks.GetField("OnNextFrameStatus")!.GetValue(nativeCallbacksInstance));
             Assert.AreNotEqual(IntPtr.Zero, nativeCallbacks.GetField("OnPrevFrameStatus")!.GetValue(nativeCallbacksInstance));
+        }
+
+        [Test]
+        public void RateChangedReportsPlaybackRate()
+        {
+            using var mediaPlayer = new MediaPlayer(_libVLC);
+            float? receivedRate = null;
+            mediaPlayer.RateChanged += (sender, args) => receivedRate = args.Rate;
+
+            Assert.True(mediaPlayer.SetRate(1.25f));
+
+            Assert.AreEqual(1.25f, receivedRate);
         }
 
         [Test]
