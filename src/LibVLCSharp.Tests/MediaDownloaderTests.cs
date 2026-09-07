@@ -70,12 +70,10 @@ namespace LibVLCSharp.Tests
         {
             using var media = new Media(LocalAudioFile);
             using var output = new MemoryStream();
-            using var request = _downloader.Queue(media, (buffer, length, position, total) =>
+            using var request = _downloader.Queue(media, (buffer, position, total) =>
             {
-                var bytes = new byte[length];
-                Marshal.Copy(buffer, bytes, 0, length);
-                output.Write(bytes, 0, length);
-                return length;
+                output.Write(buffer);
+                return buffer.Length;
             });
             media.Dispose();
             Assert.AreEqual(DownloadStatus.Finished, await request.Completion.WaitAsync(Timeout));
@@ -92,13 +90,11 @@ namespace LibVLCSharp.Tests
             using var media = new Media(LocalAudioFile);
             using var output = new MemoryStream();
             bool partial = true;
-            using var request = _downloader.Queue(media, (buffer, length, position, total) =>
+            using var request = _downloader.Queue(media, (buffer, position, total) =>
             {
-                var consumed = partial ? length / 2 : length;
+                var consumed = partial ? buffer.Length / 2 : buffer.Length;
                 partial = false;
-                var bytes = new byte[consumed];
-                Marshal.Copy(buffer, bytes, 0, consumed);
-                output.Write(bytes, 0, consumed);
+                output.Write(buffer.Slice(0, consumed));
                 return consumed;
             }, status => { if (status == DownloadStatus.Paused) paused.TrySetResult(true); });
             await paused.Task.WaitAsync(Timeout);
@@ -113,7 +109,7 @@ namespace LibVLCSharp.Tests
         public async Task BufferCanTerminateDownload(int result, DownloadStatus expected)
         {
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => result);
+            using var request = _downloader.Queue(media, (buffer, position, total) => result);
             Assert.AreEqual(expected, await request.Completion.WaitAsync(Timeout));
             Assert.Zero(request.Cancel());
             Assert.DoesNotThrow(() => request.SetPause(false));
@@ -124,7 +120,7 @@ namespace LibVLCSharp.Tests
         {
             var failure = new IOException("Destination failed");
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => throw failure);
+            using var request = _downloader.Queue(media, (buffer, position, total) => throw failure);
             Assert.AreSame(failure, Assert.ThrowsAsync<IOException>(async () => await request.Completion.WaitAsync(Timeout)));
         }
 
@@ -133,7 +129,7 @@ namespace LibVLCSharp.Tests
         public void InvalidBufferResultFaultsCompletion(bool negative)
         {
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => negative ? -3 : length + 1);
+            using var request = _downloader.Queue(media, (buffer, position, total) => negative ? -3 : buffer.Length + 1);
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await request.Completion.WaitAsync(Timeout));
         }
 
@@ -143,7 +139,7 @@ namespace LibVLCSharp.Tests
         {
             var paused = NewCompletionSource<bool>();
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => 0,
+            using var request = _downloader.Queue(media, (buffer, position, total) => 0,
                 status => { if (status == DownloadStatus.Paused) paused.TrySetResult(true); });
             await paused.Task.WaitAsync(Timeout);
             if (disposeDownloader) _downloader.Dispose();
@@ -156,7 +152,7 @@ namespace LibVLCSharp.Tests
         {
             var paused = NewCompletionSource<bool>();
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => 0,
+            using var request = _downloader.Queue(media, (buffer, position, total) => 0,
                 status => { if (status == DownloadStatus.Paused) paused.TrySetResult(true); });
             await paused.Task.WaitAsync(Timeout);
             request.Dispose();
@@ -176,7 +172,7 @@ namespace LibVLCSharp.Tests
             using var disposalStarted = new ManualResetEventSlim();
             using var media = new Media(LocalAudioFile);
             Action inspectMedia = null;
-            using var request = _downloader.Queue(media, (buffer, length, position, total) =>
+            using var request = _downloader.Queue(media, (buffer, position, total) =>
             {
                 if (!stateCallback) Interlocked.Exchange(ref inspectMedia, null)?.Invoke();
                 return 0;
@@ -232,7 +228,7 @@ namespace LibVLCSharp.Tests
             var callbackResult = NewCompletionSource<Media>();
             using var media = new Media(LocalAudioFile);
             Action inspectMedia = null;
-            using var request = _downloader.Queue(media, (buffer, length, position, total) =>
+            using var request = _downloader.Queue(media, (buffer, position, total) =>
             {
                 if (!stateCallback) Interlocked.Exchange(ref inspectMedia, null)?.Invoke();
                 return 0;
@@ -262,7 +258,7 @@ namespace LibVLCSharp.Tests
         public async Task GetMediaThrowsAfterDisposal(bool disposeDownloader)
         {
             using var media = new Media(LocalAudioFile);
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => length);
+            using var request = _downloader.Queue(media, (buffer, position, total) => buffer.Length);
             await request.Completion.WaitAsync(Timeout);
             if (disposeDownloader) _downloader.Dispose();
             else request.Dispose();
@@ -276,7 +272,7 @@ namespace LibVLCSharp.Tests
             using var media = new Media(LocalAudioFile);
             Assert.True(media.AddSlave(MediaSlaveType.Audio, 4, uri));
             MediaSlave[] slaves = null;
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => length,
+            using var request = _downloader.Queue(media, (buffer, position, total) => buffer.Length,
                 slaves: result => slaves = result);
             Assert.AreEqual(DownloadStatus.Finished, await request.Completion.WaitAsync(Timeout));
             request.Dispose();
@@ -293,7 +289,7 @@ namespace LibVLCSharp.Tests
             {
                 File.WriteAllText(playlist, "#EXTM3U\n" + new Uri(LocalAudioFile).AbsoluteUri + "\n");
                 using var media = new Media(playlist);
-                using var request = _downloader.Queue(media, (buffer, length, position, total) => length,
+                using var request = _downloader.Queue(media, (buffer, position, total) => buffer.Length,
                     subitems: list => subitem = list[0]);
                 Assert.AreEqual(DownloadStatus.Error, await request.Completion.WaitAsync(Timeout));
                 Assert.NotNull(subitem);
@@ -310,7 +306,7 @@ namespace LibVLCSharp.Tests
         public async Task MissingSourceReportsError()
         {
             using var media = new Media(Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".mp3"));
-            using var request = _downloader.Queue(media, (buffer, length, position, total) => length);
+            using var request = _downloader.Queue(media, (buffer, position, total) => buffer.Length);
             Assert.AreEqual(DownloadStatus.Error, await request.Completion.WaitAsync(Timeout));
         }
     }

@@ -7,6 +7,7 @@ LibVLCSharp version 3.10.1
 * WinUI and Uno: centralize the Windows App SDK dependency floor for .NET MAUI 9 compatibility.
 * Samples and docs: modernize the UWP sample, update stale media URLs.
 * Core: expose LibVLC 4 compilation metadata and playback-rate change notifications.
+* Core: expose the LibVLC 4 downloader API with pause/resume, cancellation and discovery callbacks; add a downloader CLI sample.
 
 LibVLCSharp version 3.10.0
 ==========================

@@ -48,7 +48,7 @@ namespace LibVLCSharp
         }
 
         [MonoPInvokeCallback(typeof(BufferCallback))]
-        static IntPtr OnBuffer(IntPtr opaque, IntPtr task, IntPtr buffer, UIntPtr length, ulong position, ulong total)
+        static unsafe IntPtr OnBuffer(IntPtr opaque, IntPtr task, IntPtr buffer, UIntPtr length, ulong position, ulong total)
         {
             var state = MarshalUtils.GetInstance<DownloadRequest>(opaque);
             if (state == null) return new IntPtr(-1);
@@ -56,7 +56,7 @@ namespace LibVLCSharp
             {
                 if (state.Failure != null) return new IntPtr(-1);
                 var count = checked((int)length.ToUInt64());
-                var consumed = state.OnBuffer(buffer, count, position, total);
+                var consumed = state.OnBuffer(new ReadOnlySpan<byte>(buffer.ToPointer(), count), position, total);
                 if (consumed < -2 || consumed > count)
                     throw new ArgumentOutOfRangeException("returnValue", consumed,
                         $"The download buffer callback must return a byte count between 0 and {count}, " +

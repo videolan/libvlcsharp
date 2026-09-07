@@ -13,6 +13,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Samples/">
+    <Project Path="../samples/LibVLCSharp.Downloader.Cli.Sample/LibVLCSharp.Downloader.Cli.Sample.csproj" />
     <Project Path="../samples/LibVLCSharp.Android.Sample/LibVLCSharp.Android.Sample.csproj">
       <BuildType Solution="Ad-Hoc|Any CPU" Project="Release" />
       <BuildType Solution="Ad-Hoc|ARM" Project="Debug" />

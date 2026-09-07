@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LibVLCSharp
 {
@@ -21,17 +24,15 @@ namespace LibVLCSharp
         Error = 5
     }
 
-    /// <summary>Consumes a borrowed native buffer, valid only during the callback.</summary>
-    /// <param name="buffer">Buffer to copy or consume synchronously.</param>
-    /// <param name="length">Number of available bytes (currently at most about 64 KB).</param>
+    /// <summary>Consumes a borrowed native buffer without copying it into a managed array.</summary>
+    /// <param name="buffer">Bytes valid only during this callback. Copy them to retain them for asynchronous work.</param>
     /// <param name="position">Total bytes read from the source, including buffered bytes.</param>
     /// <param name="total">Current total size of the source in bytes.</param>
     /// <returns>Bytes consumed, -1 for error, or -2 for cancellation. A partial read automatically pauses the request.</returns>
-    /// <remarks>
-    /// GetMedia is safe to call on an undisposed request. Do not block, call downloader methods or
-    /// request Cancel, SetPause or Dispose, or wait for completion inside this callback.
-    /// </remarks>
-    public delegate int DownloadBufferCallback(IntPtr buffer, int length, ulong position, ulong total);
+    /// <remarks>Keep the callback short. Do not block, call downloader methods or request Cancel, SetPause or Dispose,
+    /// or wait for completion inside it. Resume partial reads from another thread.
+    /// GetMedia is safe to call on an undisposed request.</remarks>
+    public delegate int DownloadBufferCallback(ReadOnlySpan<byte> buffer, ulong position, ulong total);
 
     /// <summary>Downloads finite files with the LibVLC 4 downloader API.</summary>
     /// <remarks>
@@ -107,7 +108,8 @@ namespace LibVLCSharp
 
         /// <summary>Queue a download. Dispose the returned request when it is no longer needed.</summary>
         /// <param name="media">Source media, retained by the native request.</param>
-        /// <param name="onBuffer">Required buffer consumer.</param>
+        /// <param name="onBuffer">Required synchronous consumer of a span over the native buffer, without an intermediate copy.
+        /// The span is valid only during the callback; copy bytes that must be retained.</param>
         /// <param name="stateChanged">Optional state observer.</param>
         /// <param name="subitems">Optional observer of a borrowed list, disposed after the callback. Retain individual media by accessing list items.</param>
         /// <param name="slaves">Optional observer of copied audio/subtitle slave descriptions.</param>
@@ -144,6 +146,63 @@ namespace LibVLCSharp
                 }
                 _requests.Add(state);
                 return state;
+            }
+        }
+
+        /// <summary>Download to a new file, completing after all bytes have been written and flushed.</summary>
+        /// <param name="media">Source media.</param>
+        /// <param name="outputPath">Destination path. An existing file is never overwritten.</param>
+        /// <param name="progress">Optional progress reporting bytes written to the destination.</param>
+        /// <param name="cancellationToken">Cancels downloading and destination writes.</param>
+        /// <remarks>A partial file is left in place on cancellation or failure. Native download failures throw
+        /// <see cref="IOException"/>; cancellation throws <see cref="OperationCanceledException"/>.</remarks>
+        public async Task DownloadAsync(Media media, string outputPath, IProgress<DownloadProgress>? progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (media == null) throw new ArgumentNullException(nameof(media));
+            if (outputPath == null) throw new ArgumentNullException(nameof(outputPath));
+            cancellationToken.ThrowIfCancellationRequested();
+            CheckDisposed();
+            if (media.NativeReference == IntPtr.Zero) throw new ObjectDisposedException(nameof(media));
+            using var output = new FileStream(outputPath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+                65536, useAsync: true);
+            await DownloadAsync(media, output, progress, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>Download to a writable stream, completing after all bytes have been written and flushed.</summary>
+        /// <param name="media">Source media.</param>
+        /// <param name="output">Destination stream. Written from its current position and left open.</param>
+        /// <param name="progress">Optional progress reporting bytes written to the destination.</param>
+        /// <param name="cancellationToken">Cancels downloading and destination writes.</param>
+        /// <remarks>Uses bounded, pooled buffers and writes outside native callbacks. Do not use the destination
+        /// concurrently until the task completes. Partial output is retained on cancellation or failure.
+        /// Native download failures throw <see cref="IOException"/>; cancellation (including CancelAll or downloader
+        /// disposal) throws <see cref="OperationCanceledException"/>. Destination exceptions propagate to the caller.</remarks>
+        public async Task DownloadAsync(Media media, Stream output, IProgress<DownloadProgress>? progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (media == null) throw new ArgumentNullException(nameof(media));
+            if (output == null) throw new ArgumentNullException(nameof(output));
+            if (!output.CanWrite) throw new ArgumentException("The destination stream must be writable.", nameof(output));
+            cancellationToken.ThrowIfCancellationRequested();
+            using var writer = new DownloadWriter();
+            using var request = Queue(media, writer.OnBuffer, writer.OnStateChanged);
+            var completion = writer.ObserveCompletionAsync(request);
+            try
+            {
+                await writer.WriteAsync(request, output, progress, cancellationToken).ConfigureAwait(false);
+                var status = await request.Completion.ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                if (status == DownloadStatus.Cancelled) throw new OperationCanceledException(cancellationToken);
+                if (status != DownloadStatus.Finished) throw new IOException($"Download ended with {status}.");
+                await output.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                // Stop the producer before returning pooled buffers or allowing the caller to dispose its stream.
+                try { request.Cancel(); }
+                catch (ObjectDisposedException) { } // Downloader disposal already cancels its requests.
+                await completion.ConfigureAwait(false);
             }
         }
 
