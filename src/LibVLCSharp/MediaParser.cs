@@ -57,12 +57,16 @@ namespace LibVLCSharp
             internal static extern void LibVLCParserDestroy(IntPtr parser);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_parser_queue")]
-            internal static extern IntPtr LibVLCParserQueue(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+                EntryPoint = "libvlc_parser_task_new_parse")]
+            internal static extern IntPtr LibVLCParserTaskNewParse(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_parser_queue_thumbnailing")]
-            internal static extern IntPtr LibVLCParserQueueThumbnailing(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+                EntryPoint = "libvlc_parser_task_new_thumbnail")]
+            internal static extern IntPtr LibVLCParserTaskNewThumbnail(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_parser_submit")]
+            internal static extern int LibVLCParserSubmit(IntPtr parser, IntPtr task);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_parser_cancel_request")]
@@ -175,20 +179,14 @@ namespace LibVLCSharp
             try
             {
                 Marshal.StructureToPtr(request, requestPtr, false);
-                var task = Native.LibVLCParserQueue(NativeReference, requestPtr, ParserCallbacks.Pointer, GCHandle.ToIntPtr(handle));
+                var task = Native.LibVLCParserTaskNewParse(NativeReference, requestPtr, ParserCallbacks.Pointer, GCHandle.ToIntPtr(handle));
                 if (task == IntPtr.Zero)
                 {
                     handle.Free();
-                    throw new VLCException("Failed to queue the parse request");
+                    throw new VLCException("Failed to create the parse task");
                 }
 
-                state.TaskHandle = task;
-                if (cancellationToken.CanBeCanceled)
-                    state.Registration = cancellationToken.Register(() =>
-                    {
-                        Native.LibVLCParserCancelRequest(NativeReference, task);
-                        TrySetCanceled(state.CompletionSource, cancellationToken);
-                    });
+                Submit(task, handle, state.CompletionSource, ref state.Registration, cancellationToken);
             }
             finally
             {
@@ -211,7 +209,8 @@ namespace LibVLCSharp
         /// <param name="speed">the seek speed</param>
         /// <param name="hardwareDecoding">true to enable the hardware decoder</param>
         /// <param name="cancellationToken">token used to cancel the request</param>
-        /// <returns>the generated picture, or null on error/timeout/cancellation</returns>
+        /// <returns>the generated picture, or null on error/timeout</returns>
+        /// <exception cref="OperationCanceledException">the request was cancelled through <paramref name="cancellationToken"/></exception>
         public Task<Picture?> ThumbnailAsync(Media media, uint width, uint height,
             PictureType pictureType = PictureType.Argb, bool crop = false,
             long? seekTime = null, double? seekPosition = null,
@@ -252,16 +251,14 @@ namespace LibVLCSharp
             try
             {
                 Marshal.StructureToPtr(request, requestPtr, false);
-                var task = Native.LibVLCParserQueueThumbnailing(NativeReference, requestPtr, ThumbnailerCallbacks.Pointer, GCHandle.ToIntPtr(handle));
+                var task = Native.LibVLCParserTaskNewThumbnail(NativeReference, requestPtr, ThumbnailerCallbacks.Pointer, GCHandle.ToIntPtr(handle));
                 if (task == IntPtr.Zero)
                 {
                     handle.Free();
-                    throw new VLCException("Failed to queue the thumbnail request");
+                    throw new VLCException("Failed to create the thumbnail task");
                 }
 
-                state.TaskHandle = task;
-                if (cancellationToken.CanBeCanceled)
-                    state.Registration = cancellationToken.Register(() => Native.LibVLCParserCancelRequest(NativeReference, task));
+                Submit(task, handle, state.CompletionSource, ref state.Registration, cancellationToken);
             }
             finally
             {
@@ -269,6 +266,34 @@ namespace LibVLCSharp
             }
 
             return state.CompletionSource.Task;
+        }
+
+        /// <summary>
+        /// Registers the cancellation before submitting the task: libvlc_parser_submit() may invoke the completion
+        /// callback before it returns, and that callback disposes the registration before releasing the task.
+        /// Cancelling a task that is not submitted yet is a no-op.
+        /// </summary>
+        void Submit<T>(IntPtr task, GCHandle handle, TaskCompletionSource<T> completionSource,
+            ref CancellationTokenRegistration registration, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.CanBeCanceled)
+                registration = cancellationToken.Register(() =>
+                {
+                    Native.LibVLCParserCancelRequest(NativeReference, task);
+                    TrySetCanceled(completionSource, cancellationToken);
+                });
+
+            if (!cancellationToken.IsCancellationRequested && Native.LibVLCParserSubmit(NativeReference, task) == 0)
+                return;
+
+            // Not submitted: no callback will be invoked.
+            registration.Dispose();
+            Native.LibVLCParserTaskRelease(task);
+            handle.Free();
+
+            if (!cancellationToken.IsCancellationRequested)
+                throw new VLCException("Failed to submit the parser task");
+            TrySetCanceled(completionSource, cancellationToken);
         }
 
         static libvlc_media_parse_flag ToNativeParseFlags(MediaParseOptions options)
@@ -321,14 +346,12 @@ namespace LibVLCSharp
 
             public readonly Action<MediaParserAttachmentsAddedEventArgs>? AttachmentsAdded;
             public readonly TaskCompletionSource<MediaParsedStatus> CompletionSource = MarshalUtils.NewCompletionSource<MediaParsedStatus>();
-            public IntPtr TaskHandle;
             public CancellationTokenRegistration Registration;
         }
 
         class ThumbnailState
         {
             public readonly TaskCompletionSource<Picture?> CompletionSource = MarshalUtils.NewCompletionSource<Picture?>();
-            public IntPtr TaskHandle;
             public CancellationTokenRegistration Registration;
         }
 
@@ -443,7 +466,9 @@ namespace LibVLCSharp
                     var result = picture == IntPtr.Zero ? null : new Picture(picture);
                     Native.LibVLCParserTaskRelease(task);
                     handle.Free();
-                    state.CompletionSource.TrySetResult(result);
+                    // The request may already be cancelled, the picture then has no owner.
+                    if (!state.CompletionSource.TrySetResult(result))
+                        result?.Dispose();
                 }
                 catch (Exception ex)
                 {

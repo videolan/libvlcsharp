@@ -1133,7 +1133,7 @@ namespace LibVLCSharp
     }
 
     /// <summary>
-    /// Parse flags used by libvlc_parser_queue()
+    /// Parse flags used by libvlc_parser_task_new_parse()
     /// </summary>
     [Flags]
     public enum MediaParseOptions
