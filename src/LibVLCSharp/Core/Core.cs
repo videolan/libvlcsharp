@@ -61,7 +61,7 @@ namespace LibVLCSharp
         static bool _libvlcLoaded;
         internal static bool LibVLCLoaded
         {
-#if (DESKTOP && !NETSTANDARD1_1) || WINUI
+#if (DESKTOP && !NETSTANDARD1_1) || WINUI || MAC
             get => _libvlcLoaded || LibvlcHandle != IntPtr.Zero;
 #else
             get => _libvlcLoaded;
@@ -69,7 +69,16 @@ namespace LibVLCSharp
             set => _libvlcLoaded = value;
         }
 
-#if DESKTOP && !NETSTANDARD1_1 || WINUI
+#if DESKTOP && !NETSTANDARD1_1 || WINUI || MAC
+#if !NET40 && !NETSTANDARD1_1
+        internal static string MacOSArchitectureFolder(Architecture architecture) => architecture switch
+        {
+            Architecture.X64 => "osx-x64",
+            Architecture.Arm64 => "osx-arm64",
+            _ => throw new PlatformNotSupportedException($"Unsupported macOS process architecture: {architecture}")
+        };
+#endif
+
         static List<(string libvlccore, string libvlc)> ComputeLibVLCSearchPaths()
         {
             var paths = new List<(string, string)>();
@@ -77,7 +86,17 @@ namespace LibVLCSharp
 
             if (PlatformHelper.IsMac)
             {
+#if !NET40 && !NETSTANDARD1_1
+                arch = Path.Combine(MacOSArchitectureFolder(RuntimeInformation.ProcessArchitecture), Constants.Lib);
+#else
                 arch = Path.Combine(ArchitectureNames.MacOS64, Constants.Lib);
+#endif
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var packagedDirectory = Path.Combine(baseDirectory, Constants.LibrariesRepositoryFolderName, arch);
+                paths.Add((LibVLCCorePath(packagedDirectory), LibVLCPath(packagedDirectory)));
+                paths.Add((LibVLCCorePath(baseDirectory), LibVLCPath(baseDirectory)));
+                var legacyLibDirectory = Path.Combine(baseDirectory, Constants.Lib);
+                paths.Add((LibVLCCorePath(legacyLibDirectory), LibVLCPath(legacyLibDirectory)));
             }
 
 #if !NET45 && !NET40 && !NETSTANDARD1_1
@@ -180,7 +199,9 @@ namespace LibVLCSharp
                 bool loadResult;
                 var libvlccorePath = LibVLCCorePath(libvlcDirectoryPath!);
                 loadResult = LoadNativeLibrary(libvlccorePath, out LibvlccoreHandle);
-                if (!loadResult)
+                // Older macOS packages contain a standalone libvlc.dylib.
+                // If a separate core is present, it must still load successfully.
+                if (!loadResult && (!PlatformHelper.IsMac || File.Exists(libvlccorePath)))
                 {
                     Log($"Failed to load required native libraries at {libvlccorePath}");
                     return;
