@@ -90,8 +90,12 @@ namespace LibVLCSharp.Shared.Helpers
 #if APPLE
             return AppleLogCallback(format, args);
 #else
-            // special marshalling is needed on Linux desktop 64 bits.
+            // x86_64 uses a mutable va_list structure. Each formatting call needs its own copy.
+#if ANDROID
+            if (RuntimeInformation.ProcessArchitecture == Architecture.X64)
+#else
             if (PlatformHelper.IsLinuxDesktop && PlatformHelper.IsX64BitProcess)
+#endif
             {
                 return LinuxX64LogCallback(format, args);
             }
