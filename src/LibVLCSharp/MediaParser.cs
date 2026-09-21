@@ -57,12 +57,16 @@ namespace LibVLCSharp
             internal static extern void LibVLCParserDestroy(IntPtr parser);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_parser_queue")]
-            internal static extern IntPtr LibVLCParserQueue(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+                EntryPoint = "libvlc_parser_task_new_parse")]
+            internal static extern IntPtr LibVLCParserTaskNewParse(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_parser_queue_thumbnailing")]
-            internal static extern IntPtr LibVLCParserQueueThumbnailing(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+                EntryPoint = "libvlc_parser_task_new_thumbnail")]
+            internal static extern IntPtr LibVLCParserTaskNewThumbnail(IntPtr parser, IntPtr request, IntPtr cbs, IntPtr cbsOpaque);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_parser_submit")]
+            internal static extern int LibVLCParserSubmit(IntPtr parser, IntPtr task);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_parser_cancel_request")]
@@ -175,11 +179,18 @@ namespace LibVLCSharp
             try
             {
                 Marshal.StructureToPtr(request, requestPtr, false);
-                var task = Native.LibVLCParserQueue(NativeReference, requestPtr, ParserCallbacks.Pointer, GCHandle.ToIntPtr(handle));
+                var task = Native.LibVLCParserTaskNewParse(NativeReference, requestPtr, ParserCallbacks.Pointer, GCHandle.ToIntPtr(handle));
                 if (task == IntPtr.Zero)
                 {
                     handle.Free();
-                    throw new VLCException("Failed to queue the parse request");
+                    throw new VLCException("Failed to create the parse task");
+                }
+
+                if (Native.LibVLCParserSubmit(NativeReference, task) != 0)
+                {
+                    Native.LibVLCParserTaskRelease(task);
+                    handle.Free();
+                    throw new VLCException("Failed to submit the parse task");
                 }
 
                 state.TaskHandle = task;
@@ -252,11 +263,18 @@ namespace LibVLCSharp
             try
             {
                 Marshal.StructureToPtr(request, requestPtr, false);
-                var task = Native.LibVLCParserQueueThumbnailing(NativeReference, requestPtr, ThumbnailerCallbacks.Pointer, GCHandle.ToIntPtr(handle));
+                var task = Native.LibVLCParserTaskNewThumbnail(NativeReference, requestPtr, ThumbnailerCallbacks.Pointer, GCHandle.ToIntPtr(handle));
                 if (task == IntPtr.Zero)
                 {
                     handle.Free();
-                    throw new VLCException("Failed to queue the thumbnail request");
+                    throw new VLCException("Failed to create the thumbnail task");
+                }
+
+                if (Native.LibVLCParserSubmit(NativeReference, task) != 0)
+                {
+                    Native.LibVLCParserTaskRelease(task);
+                    handle.Free();
+                    throw new VLCException("Failed to submit the thumbnail task");
                 }
 
                 state.TaskHandle = task;
