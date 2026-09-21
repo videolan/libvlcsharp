@@ -1,5 +1,9 @@
 ﻿#if APPLE
 using System;
+#if MAC
+using System.IO;
+using System.Runtime.InteropServices;
+#endif
 
 namespace LibVLCSharp.Shared
 {
@@ -9,6 +13,10 @@ namespace LibVLCSharp.Shared
     /// </summary>
     public static partial class Core
     {
+#if MAC
+        static IntPtr LibvlcHandle;
+        static IntPtr LibvlccoreHandle;
+#endif
         /// <summary>
         /// Load the native libvlc library (if necessary, depending on platform)
         /// <para/> Ensure that you installed the VideoLAN.LibVLC.[YourPlatform] package in your target project
@@ -22,6 +30,37 @@ namespace LibVLCSharp.Shared
         /// </param>
         public static void Initialize(string? libvlcDirectoryPath = null)
         {
+#if MAC
+            if (string.IsNullOrEmpty(libvlcDirectoryPath))
+            {
+                // Load the VideoLAN.LibVLC.Mac runtime tree by path before any libvlc
+                // P/Invoke: its libvlc.dylib only finds libvlccore once that is loaded,
+                // and Mono (Xamarin.Mac) caches a failed P/Invoke lookup for good.
+                var packagedDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                    Constants.LibrariesRepositoryFolderName,
+                    MacOSArchitectureFolder(RuntimeInformation.ProcessArchitecture), Constants.Lib);
+                if (File.Exists(LibVLCPath(packagedDirectory)))
+                {
+                    libvlcDirectoryPath = packagedDirectory;
+                }
+            }
+            if (string.IsNullOrEmpty(libvlcDirectoryPath))
+            {
+                // Preserve Apple loading through the runtime or an already loaded
+                // library. Only a missing library triggers explicit path discovery;
+                // version mismatches and missing entry points must still propagate.
+                try
+                {
+                    EnsureVersionsMatch();
+                    LibVLCLoaded = true;
+                    return;
+                }
+                catch (DllNotFoundException)
+                {
+                }
+            }
+            LoadLibVLC(libvlcDirectoryPath);
+#endif
             EnsureVersionsMatch();
             LibVLCLoaded = true;
         }
