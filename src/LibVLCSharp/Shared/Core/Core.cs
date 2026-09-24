@@ -73,12 +73,15 @@ namespace LibVLCSharp.Shared
             var paths = new List<(string, string)>();
             string arch;
 
+#if !NET40 && !NETSTANDARD1_1
             if (PlatformHelper.IsMac)
             {
-                arch = Path.Combine(ArchitectureNames.MacOS64, Constants.Lib);
+                arch = RuntimeInformation.ProcessArchitecture switch
+                {
+                    Architecture.Arm64 => ArchitectureNames.MacOSArm64,
+                    _ => ArchitectureNames.MacOS64,
+                };
             }
-
-#if !NET40 && !NETSTANDARD1_1
             else if (PlatformHelper.IsWindows)
             {
                 arch = RuntimeInformation.ProcessArchitecture switch
@@ -89,9 +92,8 @@ namespace LibVLCSharp.Shared
                     _ => PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86
                 };
             }
-#endif
-
             else
+#endif
             {
                 arch = PlatformHelper.IsX64BitProcess ? ArchitectureNames.Win64 : ArchitectureNames.Win86;
             }
@@ -138,11 +140,14 @@ namespace LibVLCSharp.Shared
 
             paths.Add((string.Empty, libvlcPath3));
 
-            // Add Win64 folders as fallback for WinArm64 to keep compatibility
-            if (arch == ArchitectureNames.WinArm64)
+            // Add x64 folders as fallback for ARM64 to keep compatibility
+            if (arch == ArchitectureNames.WinArm64 || arch == ArchitectureNames.MacOSArm64)
             {
+                var fallbackArchitecture = arch == ArchitectureNames.WinArm64
+                    ? ArchitectureNames.Win64 : ArchitectureNames.MacOS64;
+                
                 var fallbackLibvlcDirPath1 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!,
-                    Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+                    Constants.LibrariesRepositoryFolderName, fallbackArchitecture);
 
                 var fallbackLibvlccorePath1 = LibVLCCorePath(fallbackLibvlcDirPath1);
                 var fallbackLibvlcPath1 = LibVLCPath(fallbackLibvlcDirPath1);
@@ -151,7 +156,7 @@ namespace LibVLCSharp.Shared
                 if (!string.IsNullOrEmpty(assemblyLocation))
                 {
                     var fallbackLibvlcDirPath2 = Path.Combine(Path.GetDirectoryName(assemblyLocation)!,
-                        Constants.LibrariesRepositoryFolderName, ArchitectureNames.Win64);
+                        Constants.LibrariesRepositoryFolderName, fallbackArchitecture);
 
                     var fallbackLibvlccorePath2 = LibVLCCorePath(fallbackLibvlcDirPath2);
                     var fallbackLibvlcPath2 = LibVLCPath(fallbackLibvlcDirPath2);
@@ -161,9 +166,8 @@ namespace LibVLCSharp.Shared
 
             if (PlatformHelper.IsMac)
             {
-                var libvlcPath4 = Path.Combine(Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!,
-                    Constants.Lib), $"{Constants.LibVLC}{LibraryExtension}");
-                var libvlccorePath4 = LibVLCCorePath(Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!, Constants.Lib));
+                var libvlcPath4 = Path.Combine(Path.GetDirectoryName(libvlcAssemblyLocation)!, $"{Constants.LibVLC}{LibraryExtension}");
+                var libvlccorePath4 = LibVLCCorePath(Path.GetDirectoryName(libvlcAssemblyLocation)!);
                 paths.Add((libvlccorePath4, libvlcPath4));
             }
 
@@ -188,6 +192,19 @@ namespace LibVLCSharp.Shared
                 loadResult = LoadNativeLibrary(libvlcPath, out LibvlcHandle);
                 if (!loadResult)
                     Log($"Failed to load required native libraries at {libvlcPath}");
+                
+#if NET5_0_OR_GREATER
+                // register custom resolver to load library from provided path
+                NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (dll, _, _) =>
+                {
+                    return dll switch
+                    {
+                        Constants.LibraryName => NativeLibrary.Load(libvlcPath),
+                        Constants.CoreLibraryName => NativeLibrary.Load(libvlccorePath),
+                        _ => IntPtr.Zero
+                    };
+                });
+#endif
                 return;
             }
 
@@ -197,8 +214,21 @@ namespace LibVLCSharp.Shared
             {
                 LoadNativeLibrary(libvlccore, out LibvlccoreHandle);
                 var loadResult = LoadNativeLibrary(libvlc, out LibvlcHandle);
-                if (loadResult)
-                    break;
+                if (!loadResult) continue;
+                
+#if NET5_0_OR_GREATER
+                // register custom resolver to load library from discovered path
+                NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), (dll, _, _) =>
+                {
+                    return dll switch
+                    {
+                        Constants.LibraryName => NativeLibrary.Load(libvlc),
+                        Constants.CoreLibraryName => NativeLibrary.Load(libvlccore),
+                        _ => IntPtr.Zero
+                    };
+                });
+#endif
+                break;
             }
 
             if (!LibVLCLoaded)
