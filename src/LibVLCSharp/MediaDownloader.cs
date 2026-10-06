@@ -49,8 +49,12 @@ namespace LibVLCSharp
             internal static extern IntPtr LibVLCDownloaderNew(IntPtr instance, ref Configuration configuration);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
-                EntryPoint = "libvlc_downloader_queue")]
-            internal static extern IntPtr LibVLCDownloaderQueue(IntPtr downloader, ref Request request, IntPtr callbacks, IntPtr opaque);
+                EntryPoint = "libvlc_downloader_task_new")]
+            internal static extern IntPtr LibVLCDownloaderTaskNew(IntPtr downloader, ref Request request, IntPtr callbacks, IntPtr opaque);
+
+            [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
+                EntryPoint = "libvlc_downloader_submit")]
+            internal static extern int LibVLCDownloaderSubmit(IntPtr downloader, IntPtr task);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_downloader_cancel")]
@@ -116,8 +120,8 @@ namespace LibVLCSharp
         /// <remarks>
         /// Callbacks can run before Queue returns, on native threads. Keep them short and do not call
         /// downloader methods or request Cancel, SetPause or Dispose, or wait for other threads, inside them.
-        /// Resume partial reads from another thread. GetMedia is safe to call from a callback once the
-        /// request has been returned by Queue and until it is disposed.
+        /// Resume partial reads from another thread. GetMedia is safe to call from a callback until the
+        /// request is disposed.
         /// Buffer/discovery exceptions fault Completion; state observer exceptions are logged.
         /// </remarks>
         public DownloadRequest Queue(Media media, DownloadBufferCallback onBuffer,
@@ -135,12 +139,19 @@ namespace LibVLCSharp
                 var request = new Request { Version = 0, Media = media.NativeReference };
                 try
                 {
-                    state.Handle = Native.LibVLCDownloaderQueue(NativeReference, ref request,
+                    state.Handle = Native.LibVLCDownloaderTaskNew(NativeReference, ref request,
                         MediaDownloaderCallbacks.Pointer, GCHandle.ToIntPtr(state.Pin));
-                    if (state.Handle == IntPtr.Zero) throw new VLCException("Failed to queue the download request");
+                    if (state.Handle == IntPtr.Zero) throw new VLCException("Failed to create the download task");
+                    if (Native.LibVLCDownloaderSubmit(NativeReference, state.Handle) != 0)
+                        throw new VLCException("Failed to submit the download task");
                 }
                 catch
                 {
+                    if (state.Handle != IntPtr.Zero)
+                    {
+                        Native.LibVLCDownloaderTaskRelease(state.Handle);
+                        state.Handle = IntPtr.Zero;
+                    }
                     if (state.TryBeginCompletion()) state.Pin.Free();
                     throw;
                 }

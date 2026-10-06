@@ -18,7 +18,8 @@ namespace LibVLCSharp.Tests
             var methods = NativeBindingAssertions.NativeMethods(typeof(MediaDownloader));
             CollectionAssert.AreEquivalent(new[]
             {
-                "libvlc_downloader_new", "libvlc_downloader_queue", "libvlc_downloader_cancel",
+                "libvlc_downloader_new", "libvlc_downloader_task_new", "libvlc_downloader_submit",
+                "libvlc_downloader_cancel",
                 "libvlc_downloader_set_pause", "libvlc_downloader_destroy",
                 "libvlc_downloader_task_get_media", "libvlc_downloader_task_release"
             }, methods.Select(NativeBindingAssertions.DllImportEntryPoint));
