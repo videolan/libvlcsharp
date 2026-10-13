@@ -1,3 +1,10 @@
+LibVLCSharp version 3.10.2
+==========================
+* Core: make LibVLC disposal idempotent.
+* Core: optimize StreamMediaInput by no longer querying stream Position and Length on every read.
+* macOS: add Apple Silicon (arm64) support. Native library discovery now picks the osx-arm64 or osx-x64 folder of the VideoLAN.LibVLC.Mac runtime layout based on the process architecture, and still finds libraries from older package layouts.
+* Android: fix log callback argument handling on x86_64.
+
 LibVLCSharp version 3.10.1
 ==========================
 * Uno: add support for the WinUI 3 Windows target and a Windows sample head.
