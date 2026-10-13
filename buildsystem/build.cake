@@ -73,6 +73,16 @@ Task("Restore-NuGet-Packages")
     DotNetRestore(solutionPath);
 });
 
+Task("Restore-Library-Packages")
+    .IsDependentOn("Clean")
+    .Does(() =>
+{
+    foreach(var project in libraryProjects)
+    {
+        DotNetRestore(project);
+    }
+});
+
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .Does(() =>
@@ -81,7 +91,7 @@ Task("Build")
 });
 
 Task("Build-Libraries")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("Restore-Library-Packages")
     .Does(() =>
 {
     foreach(var project in libraryProjects)
