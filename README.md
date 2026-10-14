@@ -59,7 +59,7 @@ Most things you can achieve with the regular VLC desktop app, you can also achie
 
 ### MediaPlayerElement
 
-Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iOS/Android) and Uno platform (iOS/Android/UWP).
+Full featured video control available in LibVLCSharp.MAUI (Android/iOS/Windows), LibVLCSharp.Uno (Android/iOS/WinUI) and LibVLCSharp.Forms (Xamarin.Forms, Android/iOS).
 
 <h3 align="center">
   <img src="src/assets/media-element.jpg"/>
@@ -67,28 +67,37 @@ Full featured video control for Xamarin.Forms available in LibVLCSharp.Forms (iO
 
 ## Supported platforms
 
-Mono, .NET Framework and .NET Core runtimes are supported.
+.NET, .NET Framework, .NET Core and Mono runtimes are supported.
 
-- Xamarin.Android
-- Xamarin.iOS
-- Xamarin.tvOS
-- Xamarin.Mac (Cocoa)
-- Windows Classic (WPF, WinForms, GTK)
-- Windows Universal (UWP for Desktop, mobile and Xbox)
-- Linux including desktop, server and Raspberry Pi (GTK)
-- Xamarin.Forms
-- MAUI
-- Uno Platform 5 (WinUI, Android, iOS)
-- Avalonia (Windows, macOS, Linux)
-- .NET Standard 2.0+
+- .NET 6, 8, 9 and 10 (including ASP.NET Core)
+- .NET for Android and .NET for iOS (.NET 9 and 10)
+- .NET for macOS and .NET for tvOS (.NET 9)
+- .NET Standard 2.0 and 2.1
 - .NET Framework 4.5 and later
-- .NET Core (including ASP.NET Core)
+- .NET Core 3.1
+- Windows Classic (WPF, WinForms, GTK), x86, x64 and ARM64
+- Windows Universal (UWP for Desktop and Xbox, including .NET 9 and 10 UWP)
+- WinUI 3 (Windows App SDK)
+- macOS, Intel (x64) and Apple Silicon (arm64)
+- Linux including desktop, server and Raspberry Pi (GTK)
+- MAUI (Android, iOS, Windows)
+- Uno Platform (WinUI, Android, iOS)
+- Avalonia (Windows, macOS, Linux)
+- Eto.Forms
+- Xamarin (legacy)
+  - Xamarin.Android
+  - Xamarin.iOS
+  - Xamarin.tvOS
+  - Xamarin.Mac (Cocoa)
+  - Xamarin.Forms
 - [Unity3D](https://code.videolan.org/videolan/vlc-unity)
   - Windows Classic
   - Android
   - UWP
   - iOS
   - macOS
+  - Linux
+  - Embedded Linux
 
 ## Installation
 
@@ -100,7 +109,7 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 | ----------------- | ----------------------------------- | -------------------------------------- |--------------------|
 | Windows           | VideoLAN.LibVLC.Windows             | [![LibVLCWindowsBadge]][LibVLCWindows] | Windows XP         |
 | UWP               | VideoLAN.LibVLC.UWP                 | [![LibVLCWin10Badge]][LibVLCWin10]     | Windows 10         |
-| Mac               | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         | macOS 10.7         |
+| Mac (x64, arm64)  | VideoLAN.LibVLC.Mac                 | [![LibVLCMacBadge]][LibVLCMac]         | macOS 10.7         |
 | Android           | VideoLAN.LibVLC.Android             | [![LibVLCAndroidBadge]][LibVLCAndroid] | Android 2.3        |
 | iOS               | VideoLAN.LibVLC.iOS                 | [![LibVLCiOSBadge]][LibVLCiOS]         | iOS 8.4            |
 | tvOS              | VideoLAN.LibVLC.tvOS                | [![LibVLCtvOSBadge]][LibVLCtvOS]       | tvOS 10.2          |
@@ -110,13 +119,18 @@ LibVLC is the actual VLC engine written mostly in C/C++ and compiled for your ta
 dotnet add package VideoLAN.LibVLC.[Windows|UWP|Android|iOS|Mac|tvOS]
 ```
 
-2. Install **LibVLCSharp** _or_ **LibVLCSharp.Forms** (if you plan on using Xamarin.Forms)
+2. Install **LibVLCSharp**, plus the UI package matching your framework if you need a `VideoView` (e.g. **LibVLCSharp.MAUI**, **LibVLCSharp.WPF**, **LibVLCSharp.Avalonia**...)
 
 LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interact with native code from C#/F#.
 
 | Platform          | LibVLCSharp Package                             | NuGet                                             |
 | ----------------- | ----------------------------------------------- | ------------------------------------------------- |
 | .NET Standard     | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| .NET 6+           | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| .NET for Android  | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| .NET for iOS      | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| .NET for tvOS     | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
+| .NET for macOS    | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.Android   | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.iOS       | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
 | Xamarin.tvOS      | [LibVLCSharp](src/LibVLCSharp/README.md)        | [![LibVLCSharpBadge]][LibVLCSharp]                |
@@ -139,6 +153,7 @@ LibVLCSharp is the .NET wrapper that consumes `LibVLC` and allows you to interac
 | Unity3D - iOS     | [VLC for Unity (iOS)][VLCUnityStore]            | [![VLCUnityBadge]][VLCUnityStore]                 |
 | Unity3D - macOS   | [VLC for Unity (macOS)][VLCUnityStore]          | [![VLCUnityBadge]][VLCUnityStore]                 |
 | Unity3D - Linux   | [VLC for Unity (Linux)][VLCUnityStore]          | [![VLCUnityBadge]][VLCUnityStore]                 |
+| Unity3D - Embedded Linux | [VLC for Unity (Embedded Linux)][VLCUnityStore] | [![VLCUnityBadge]][VLCUnityStore]          |
 
 ### Pre-release versions
 
@@ -302,7 +317,7 @@ Console.ReadKey();
 - [`RendererDiscoverer.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/RendererDiscoverer.cs): Use this to find and use a Chromecast or other distant renderers.
 - [`Dialog.cs`](https://code.videolan.org/videolan/LibVLCSharp/-/blob/master/src/LibVLCSharp/Dialog.cs): Dialogs can be raised from the `libvlc` engine in some cases. Register callbacks with this object.
 
-The [LibVLCSharp.Forms](src/LibVLCSharp.Forms/README.md) and [Uno](src/LibVLCSharp.Uno/README.md) packages features a `MediaPlayerElement` control, similar to the ones provided by the .NET Framework on WPF and UWP. It currently supports iOS, Android and UWP (Uno only).
+The [LibVLCSharp.MAUI](src/LibVLCSharp.MAUI/README.md), [Uno](src/LibVLCSharp.Uno/README.md) and [LibVLCSharp.Forms](src/LibVLCSharp.Forms/README.md) packages feature a `MediaPlayerElement` control, similar to the ones provided by the .NET Framework on WPF and UWP. It currently supports Android, iOS and Windows (MAUI and Uno only).
 
 ## Roadmap
 
