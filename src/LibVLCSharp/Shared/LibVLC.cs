@@ -145,7 +145,7 @@ namespace LibVLCSharp.Shared
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_dialog_set_callbacks")]
-            internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, DialogCallbacks callbacks, IntPtr data);
+            internal static extern void LibVLCDialogSetCallbacks(IntPtr libVLC, IntPtr callbacks, IntPtr data);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_renderer_discoverer_list_get")]
@@ -677,7 +677,7 @@ namespace LibVLCSharp.Shared
         /// You can interact with this dialog by calling Dialog.PostLogin() to post an answer or Dialog.Dismiss() to cancel this dialog.</param>
         /// <param name="displayProgress">Called when a progress dialog needs to be displayed.</param>
         /// <param name="updateProgress">Called when a progress dialog needs to be updated.</param>
-        public void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
+        public unsafe void SetDialogHandlers(DisplayError error, DisplayLogin login, DisplayQuestion question,
             DisplayProgress displayProgress, UpdateProgress updateProgress)
         {
             _error = error ?? throw new ArgumentNullException(nameof(error));
@@ -686,7 +686,8 @@ namespace LibVLCSharp.Shared
             _displayProgress = displayProgress ?? throw new ArgumentNullException(nameof(displayProgress));
             _updateProgress = updateProgress ?? throw new ArgumentNullException(nameof(updateProgress));
 
-            Native.LibVLCDialogSetCallbacks(NativeReference, DialogCb, GCHandle.ToIntPtr(_gcHandle));
+            var callbacks = DialogCb;
+            Native.LibVLCDialogSetCallbacks(NativeReference, (IntPtr)(&callbacks), GCHandle.ToIntPtr(_gcHandle));
         }
 
         /// <summary>
@@ -696,7 +697,7 @@ namespace LibVLCSharp.Shared
         {
             if (DialogHandlersSet)
             {
-                Native.LibVLCDialogSetCallbacks(NativeReference, default, IntPtr.Zero);
+                Native.LibVLCDialogSetCallbacks(NativeReference, IntPtr.Zero, IntPtr.Zero);
                 _error = null;
                 _login = null;
                 _question = null;
