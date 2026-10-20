@@ -8,10 +8,15 @@ namespace LibVLCSharp
     /// <summary>
     /// The MediaList holds a list of Media types
     /// </summary>
+    /// <remarks>
+    /// Media returned by the indexer or the enumerator are owned by the list and stay valid until the
+    /// list is disposed. Call <see cref="Media.Retain"/> to keep one longer.
+    /// </remarks>
     public class MediaList : Internal, IEnumerable<Media>
     {
         readonly object _syncLock = new object();
         bool _nativeLock;
+        readonly Dictionary<IntPtr, Media> _items = new Dictionary<IntPtr, Media>();
 
         readonly struct Native
         {
@@ -172,10 +177,6 @@ namespace LibVLCSharp
         /// <returns>true on success, false if the media list is read-only or the item was not found</returns>
         public bool RemoveIndex(int positionIndex)
         {
-            var media = this[positionIndex];
-            if (media == null)
-                return false;
-
             var removed = NativeSync(() => Native.LibVLCMediaListRemoveIndex(NativeReference, positionIndex) == 0);
             return removed;
         }
@@ -186,15 +187,28 @@ namespace LibVLCSharp
         public int Count => NativeSync(() => Native.LibVLCMediaListCount(NativeReference));
 
         /// <summary>
-        /// Gets the element at the specified index
+        /// Gets the element at the specified index.
+        /// The media is owned by the list and stays valid until the list is disposed;
+        /// call <see cref="Media.Retain"/> to keep it longer.
         /// </summary>
-        /// <param name="position">position in array where to insert</param>
-        /// <returns>media instance at position, or null if not found.
-        /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
+        /// <param name="position">position of the media in the list</param>
+        /// <returns>media instance at position, or null if not found</returns>
         public Media? this[int position] => NativeSync(() =>
         {
             var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
-            return ptr == IntPtr.Zero ? null : new Media(ptr);
+            if (ptr == IntPtr.Zero)
+                return null;
+
+            // item_at_index retained the media; the cached wrapper already holds a reference.
+            if (_items.TryGetValue(ptr, out var cached) && cached.NativeReference != IntPtr.Zero)
+            {
+                Media.Native.LibVLCMediaRelease(ptr);
+                return cached;
+            }
+
+            var media = new Media(ptr);
+            _items[ptr] = media;
+            return media;
         });
 
         /// <summary>
@@ -244,19 +258,33 @@ namespace LibVLCSharp
         /// <summary>
         /// Get the media instance associated with this media list instance, if any.
         /// This is the inverse of <see cref="SetMedia(Media)"/>.
-        /// The native reference count of the returned media is incremented, so dispose it when done.
+        /// Each call increments the native media reference count and returns a new
+        /// <see cref="Media"/> instance, so dispose it when done.
         /// </summary>
-        public Media? AssociatedMedia
+        /// <returns>the associated media, or null if none</returns>
+        public Media? GetAssociatedMedia()
         {
-            get
-            {
-                var ptr = Native.LibVLCMediaListMedia(NativeReference);
-                return ptr == IntPtr.Zero ? null : new Media(ptr);
-            }
+            var ptr = Native.LibVLCMediaListMedia(NativeReference);
+            return ptr == IntPtr.Zero ? null : new Media(ptr);
         }
 
         /// <summary>Increments the native reference counter for this medialist instance</summary>
         internal void Retain() => Native.LibVLCMediaListRetain(NativeReference);
+
+        /// <summary>
+        /// Release the media handed out by this list, then the list itself
+        /// </summary>
+        /// <param name="disposing">true if called from a method</param>
+        protected override void Dispose(bool disposing)
+        {
+            lock (_syncLock)
+            {
+                foreach (var media in _items.Values)
+                    media.Dispose();
+                _items.Clear();
+            }
+            base.Dispose(disposing);
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection of media

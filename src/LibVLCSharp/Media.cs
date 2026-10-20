@@ -517,13 +517,26 @@ namespace LibVLCSharp
             return new MediaTrackList(trackListPtr);
         }
 
+        readonly object _subItemsLock = new object();
+        MediaList? _subItems;
+
         /// <summary>
-        /// <para>Get subitems of media descriptor object. This will increment</para>
-        /// <para>the reference count of supplied media descriptor object. Use</para>
-        /// <para>libvlc_media_list_release() to decrement the reference counting.</para>
+        /// Get subitems of media descriptor object.
+        /// The list is owned by this media and stays valid until the media is disposed;
+        /// disposing it earlier is allowed, the next access then returns a new list.
         /// </summary>
-        /// <returns>list of media descriptor subitems or NULL</returns>
-        public MediaList SubItems => new MediaList(Native.LibVLCMediaSubitems(NativeReference));
+        public MediaList SubItems
+        {
+            get
+            {
+                lock (_subItemsLock)
+                {
+                    if (_subItems == null || _subItems.NativeReference == IntPtr.Zero)
+                        _subItems = new MediaList(Native.LibVLCMediaSubitems(NativeReference));
+                    return _subItems;
+                }
+            }
+        }
 
         /// <summary>
         /// The type of the media
@@ -655,11 +668,31 @@ namespace LibVLCSharp
             return NativeReference.GetHashCode();
         }
 
-        /// <summary>Increments the native reference counter for the media</summary>
-        internal void Retain()
+        /// <summary>
+        /// Get a new reference to this media.
+        /// Use it to keep a media beyond the lifetime of its source, such as an event handler or
+        /// the <see cref="MediaList"/> it came from. Dispose the returned instance when done.
+        /// </summary>
+        /// <returns>a new <see cref="Media"/> instance sharing the same native media</returns>
+        public Media Retain()
         {
-            if (NativeReference != IntPtr.Zero)
-                Native.LibVLCMediaRetain(NativeReference);
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(Media));
+            return new Media(Native.LibVLCMediaRetain(NativeReference));
+        }
+
+        /// <summary>
+        /// Release the subitems list handed out by this media, then the media itself
+        /// </summary>
+        /// <param name="disposing">true if called from a method</param>
+        protected override void Dispose(bool disposing)
+        {
+            lock (_subItemsLock)
+            {
+                _subItems?.Dispose();
+                _subItems = null;
+            }
+            base.Dispose(disposing);
         }
 
         internal override void OnNativeInstanciationError()

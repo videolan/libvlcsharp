@@ -103,6 +103,61 @@ namespace LibVLCSharp.Tests
         }
 
         [Test]
+        public void GetMediaReturnsIndependentReference()
+        {
+            using var mp = new MediaPlayer(_libVLC);
+            Assert.IsNull(mp.GetMedia());
+            Assert.IsNull(mp.GetNextMedia());
+
+            using var media = new Media(LocalVideoFile);
+            using var next = new Media(LocalAudioFile);
+            mp.Media = media;
+            mp.NextMedia = next;
+
+            for (var i = 0; i < 3; i++)
+            {
+                using var current = mp.GetMedia();
+                Assert.AreEqual(media, current);
+            }
+
+            using var nextMedia = mp.GetNextMedia();
+            Assert.AreEqual(next, nextMedia);
+        }
+
+        [Test]
+        public void MediaChangedReportsRetainableAndNullMedia()
+        {
+            using var mp = new MediaPlayer(_libVLC);
+            using var changed = new ManualResetEventSlim();
+            Media retained = null;
+            var receivedNull = false;
+            mp.MediaChanged += (sender, args) =>
+            {
+                if (args.Media == null)
+                    receivedNull = true;
+                else
+                    retained = args.Media.Retain();
+                changed.Set();
+            };
+
+            using (var media = new Media(LocalVideoFile))
+            {
+                mp.Media = media;
+                Assert.True(changed.Wait(TimeSpan.FromSeconds(5)));
+                Assert.AreEqual(media, retained);
+            }
+
+            using (var current = mp.GetMedia())
+                Assert.AreEqual(current, retained);
+
+            changed.Reset();
+            mp.Media = null;
+            Assert.True(changed.Wait(TimeSpan.FromSeconds(5)));
+            Assert.True(receivedNull);
+            retained.Dispose();
+        }
+
+        [Test]
         public async Task PreviousFrameReportsStatusWithLoadedMedia()
         {
             using var mp = new MediaPlayer(_libVLC);
