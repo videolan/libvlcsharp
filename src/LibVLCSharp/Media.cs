@@ -655,11 +655,17 @@ namespace LibVLCSharp
             return NativeReference.GetHashCode();
         }
 
-        /// <summary>Increments the native reference counter for the media</summary>
-        internal void Retain()
+        /// <summary>
+        /// Get a new reference to this media.
+        /// Use it to keep a media passed to an event handler beyond the handler, since
+        /// those are only valid while the handler runs. Dispose the returned instance when done.
+        /// </summary>
+        /// <returns>a new <see cref="Media"/> instance sharing the same native media</returns>
+        public Media Retain()
         {
-            if (NativeReference != IntPtr.Zero)
-                Native.LibVLCMediaRetain(NativeReference);
+            if (NativeReference == IntPtr.Zero)
+                throw new ObjectDisposedException(nameof(Media));
+            return new Media(Native.LibVLCMediaRetain(NativeReference));
         }
 
         internal override void OnNativeInstanciationError()

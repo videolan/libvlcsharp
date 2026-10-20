@@ -172,7 +172,7 @@ namespace LibVLCSharp
         /// <returns>true on success, false if the media list is read-only or the item was not found</returns>
         public bool RemoveIndex(int positionIndex)
         {
-            var media = this[positionIndex];
+            using var media = ItemAt(positionIndex);
             if (media == null)
                 return false;
 
@@ -186,12 +186,13 @@ namespace LibVLCSharp
         public int Count => NativeSync(() => Native.LibVLCMediaListCount(NativeReference));
 
         /// <summary>
-        /// Gets the element at the specified index
+        /// Gets the element at the specified index.
+        /// Each call increments the native media reference count and returns a new
+        /// <see cref="Media"/> instance, so dispose it when done.
         /// </summary>
-        /// <param name="position">position in array where to insert</param>
-        /// <returns>media instance at position, or null if not found.
-        /// In case of success, Media.Retain() is called to increase the refcount on the media. </returns>
-        public Media? this[int position] => NativeSync(() =>
+        /// <param name="position">position of the media in the list</param>
+        /// <returns>media instance at position, or null if not found</returns>
+        public Media? ItemAt(int position) => NativeSync(() =>
         {
             var ptr = Native.LibVLCMediaListItemAtIndex(NativeReference, position);
             return ptr == IntPtr.Zero ? null : new Media(ptr);
@@ -244,15 +245,14 @@ namespace LibVLCSharp
         /// <summary>
         /// Get the media instance associated with this media list instance, if any.
         /// This is the inverse of <see cref="SetMedia(Media)"/>.
-        /// The native reference count of the returned media is incremented, so dispose it when done.
+        /// Each call increments the native media reference count and returns a new
+        /// <see cref="Media"/> instance, so dispose it when done.
         /// </summary>
-        public Media? AssociatedMedia
+        /// <returns>the associated media, or null if none</returns>
+        public Media? GetAssociatedMedia()
         {
-            get
-            {
-                var ptr = Native.LibVLCMediaListMedia(NativeReference);
-                return ptr == IntPtr.Zero ? null : new Media(ptr);
-            }
+            var ptr = Native.LibVLCMediaListMedia(NativeReference);
+            return ptr == IntPtr.Zero ? null : new Media(ptr);
         }
 
         /// <summary>Increments the native reference counter for this medialist instance</summary>
@@ -303,7 +303,7 @@ namespace LibVLCSharp
                     {
                         throw new ObjectDisposedException(nameof(MediaListEnumerator));
                     }
-                    return _mediaList[position] ?? throw new ArgumentOutOfRangeException(nameof(position));
+                    return _mediaList.ItemAt(position) ?? throw new ArgumentOutOfRangeException(nameof(position));
                 }
             }
         }

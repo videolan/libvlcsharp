@@ -722,24 +722,15 @@ namespace LibVLCSharp
         }
 #endif
         /// <summary>
-        /// Get the media used by the media_player.
         /// Set the media that will be used by the media_player.
         /// If any, previous md will be released.
         /// Note: It is safe to release the Media on the C# side after it's been set on the MediaPlayer successfully
         /// </summary>
         /// <remarks>
-        /// The getter returns the media currently used by the player. After setting a new media while
-        /// another media is playing, the previous media is returned until <see cref="MediaChanged"/>
-        /// announces the switch. Each getter call increments the native media reference count, so dispose
-        /// the returned <see cref="Media"/> when done.
+        /// Use <see cref="GetMedia"/> to retrieve the media currently used by the player.
         /// </remarks>
         public Media? Media
         {
-            get
-            {
-                var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
-                return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
-            }
             set
             {
                 Native.LibVLCMediaPlayerSetMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
@@ -747,19 +738,43 @@ namespace LibVLCSharp
         }
 
         /// <summary>
-        /// Get or set the media that will be played after the current media ends.
+        /// Get the media used by the media_player.
         /// </summary>
         /// <remarks>
-        /// The getter returns a retained media reference. Dispose the returned <see cref="Media"/> when done.
+        /// After setting a new media while another media is playing, the previous media is returned until
+        /// <see cref="MediaChanged"/> announces the switch. Each call increments the native media reference
+        /// count and returns a new <see cref="LibVLCSharp.Media"/> instance, so dispose it when done.
+        /// </remarks>
+        /// <returns>the media associated with the player, or null if none</returns>
+        public Media? GetMedia()
+        {
+            var mediaPtr = Native.LibVLCMediaPlayerGetMedia(NativeReference);
+            return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
+        }
+
+        /// <summary>
+        /// Set the media that will be played after the current media ends.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="GetNextMedia"/> to retrieve the next media.
         /// </remarks>
         public Media? NextMedia
         {
-            get
-            {
-                var mediaPtr = Native.LibVLCMediaPlayerGetNextMedia(NativeReference);
-                return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
-            }
             set => Native.LibVLCMediaPlayerSetNextMedia(NativeReference, value?.NativeReference ?? IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Get the media that will be played after the current media ends.
+        /// </summary>
+        /// <remarks>
+        /// Each call increments the native media reference count and returns a new
+        /// <see cref="LibVLCSharp.Media"/> instance, so dispose it when done.
+        /// </remarks>
+        /// <returns>the next media, or null if none</returns>
+        public Media? GetNextMedia()
+        {
+            var mediaPtr = Native.LibVLCMediaPlayerGetNextMedia(NativeReference);
+            return mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
         }
 
         /// <summary>
@@ -782,7 +797,7 @@ namespace LibVLCSharp
         /// </remarks>
         public bool Play()
         {
-            var media = Media;
+            var media = GetMedia();
             if (media != null)
             {
                 media.AddOption(Configuration);

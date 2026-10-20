@@ -59,7 +59,7 @@ namespace LibVLCSharp.MediaPlayerElement
             get 
             {
                 var mrl = string.Empty;
-                var media = MediaPlayer?.Media;
+                var media = MediaPlayer?.GetMedia();
                 if(media != null)
                 {
                     mrl = media.Mrl;

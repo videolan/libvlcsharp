@@ -10,13 +10,14 @@ namespace LibVLCSharp
     public class MediaPlayerMediaChangedEventArgs : EventArgs
     {
         /// <summary>
-        /// New mediaplayer's media
+        /// New mediaplayer's media, or null if the player has no media.
+        /// Only valid while the event handler runs; call <see cref="Media.Retain"/> to keep it longer.
         /// </summary>
-        public readonly Media Media;
+        public readonly Media? Media;
 
         internal MediaPlayerMediaChangedEventArgs(IntPtr mediaPtr)
         {
-            Media = new Media(mediaPtr);
+            Media = mediaPtr == IntPtr.Zero ? null : new Media(mediaPtr);
         }
     }
 
@@ -397,12 +398,14 @@ namespace LibVLCSharp
     public class MediaDiscovererMediaAddedEventArgs : EventArgs
     {
         /// <summary>
-        /// The newly discovered media
+        /// The newly discovered media.
+        /// Only valid while the event handler runs; call <see cref="Media.Retain"/> to keep it longer.
         /// </summary>
         public readonly Media Media;
 
         /// <summary>
-        /// The parent media of the newly discovered media, if any
+        /// The parent media of the newly discovered media, if any.
+        /// Only valid while the event handler runs; call <see cref="Media.Retain"/> to keep it longer.
         /// </summary>
         public readonly Media? Parent;
 
@@ -419,7 +422,8 @@ namespace LibVLCSharp
     public class MediaDiscovererMediaRemovedEventArgs : EventArgs
     {
         /// <summary>
-        /// The removed media
+        /// The removed media.
+        /// Only valid while the event handler runs; call <see cref="Media.Retain"/> to keep it longer.
         /// </summary>
         public readonly Media Media;
 
