@@ -72,6 +72,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_get_stats")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaGetStats(IntPtr media, out MediaStats statistics);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,

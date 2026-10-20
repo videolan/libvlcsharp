@@ -68,6 +68,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_list_is_readonly")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaListIsReadonly(IntPtr mediaList);
 
 

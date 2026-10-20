@@ -11,7 +11,9 @@ namespace LibVLCSharp
     {
         internal readonly int GroupId;
         internal readonly IntPtr Name;
-        internal readonly bool  Selected;
+        [MarshalAs(UnmanagedType.I1)]
+        internal readonly bool Selected;
+        [MarshalAs(UnmanagedType.I1)]
         internal readonly bool Scrambled;
     }
 

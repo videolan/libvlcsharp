@@ -61,6 +61,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_playing")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaPlayerIsPlaying(IntPtr mediaPlayer);
 
 
@@ -197,15 +198,18 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_is_seekable")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaPlayerIsSeekable(IntPtr mediaPlayer);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_can_pause")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaPlayerCanPause(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_media_player_program_scrambled")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCMediaPlayerProgramScrambled(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -258,6 +262,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_get_fullscreen")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCGetFullscreen(IntPtr mediaPlayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -576,6 +581,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_output_callbacks")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCVideoSetOutputCallbacks(IntPtr mediaplayer, VideoEngine engine, OutputSetup? outputSetup,
                 OutputCleanup? outputCleanup, SetWindow? setWindow, UpdateOutput updateOutput, Swap swap, MakeCurrent makeCurrent,
                 GetProcAddress? getProcAddress, FrameMetadata? metadata, OutputSelectPlane? selectPlane, IntPtr opaque);
@@ -632,6 +638,7 @@ namespace LibVLCSharp
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_get_teletext_transparency")]
+            [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool LibVLCVideoGetTeletextTransparency(IntPtr mediaplayer);
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -3210,7 +3217,8 @@ namespace LibVLCSharp
         /// <param name="enter">true to set the context as current, false to unset it</param>
         /// <returns>true on success</returns>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool MakeCurrent(IntPtr opaque, bool enter);
+        [return: MarshalAs(UnmanagedType.I1)]
+        public delegate bool MakeCurrent(IntPtr opaque, [MarshalAs(UnmanagedType.I1)] bool enter);
 
         /// <summary>
         /// Callback prototype to load opengl functions
@@ -3259,6 +3267,7 @@ namespace LibVLCSharp
         /// <param name="output">handle of the rendering output for the given plane</param>
         /// <returns>true on success</returns>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         public unsafe delegate bool OutputSelectPlane(IntPtr opaque, UIntPtr plane, void* output);
 
         /// <summary>
