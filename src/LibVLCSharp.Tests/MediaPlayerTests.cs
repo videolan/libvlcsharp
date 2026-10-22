@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LibVLCSharp;
@@ -100,6 +101,53 @@ namespace LibVLCSharp.Tests
             Assert.True(mediaPlayer.SetRate(1.25f));
 
             Assert.AreEqual(1.25f, receivedRate);
+        }
+
+        [Test]
+        public async Task VideoFormatCleanupCallbackReceivesUserData()
+        {
+            const uint width = 64;
+            const uint height = 64;
+            var userData = new IntPtr(0x1234);
+            var buffer = Marshal.AllocHGlobal((int)(width * height * 4));
+            var firstFrame = NewCompletionSource<bool>();
+            var cleanupUserData = NewCompletionSource<IntPtr>();
+
+            try
+            {
+                using var mp = new MediaPlayer(_libVLC);
+                using var media = new Media(LocalVideoFile);
+
+                mp.SetVideoCallbacks((opaque, planes) =>
+                {
+                    Marshal.WriteIntPtr(planes, buffer);
+                    firstFrame.TrySetResult(true);
+                    return IntPtr.Zero;
+                }, null, null);
+                mp.SetVideoFormatCallbacks((ref IntPtr opaque, IntPtr chroma, ref uint w, ref uint h, ref uint pitches, ref uint lines) =>
+                {
+                    Marshal.Copy(Encoding.ASCII.GetBytes("RV32"), 0, chroma, 4);
+                    w = width;
+                    h = height;
+                    pitches = width * 4;
+                    lines = height;
+                    opaque = userData;
+                    return 1;
+                }, (ref IntPtr opaque) => cleanupUserData.TrySetResult(opaque));
+
+                Assert.True(mp.Play(media));
+                Assert.AreSame(firstFrame.Task, await Task.WhenAny(firstFrame.Task, Task.Delay(10000)), "no video frame was rendered");
+
+                // closing the video output calls the cleanup callback
+                Assert.True(await StopWithTimeout(mp));
+
+                Assert.AreSame(cleanupUserData.Task, await Task.WhenAny(cleanupUserData.Task, Task.Delay(10000)), "cleanup callback was not called");
+                Assert.AreEqual(userData, await cleanupUserData.Task);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
         }
 
         [Test]

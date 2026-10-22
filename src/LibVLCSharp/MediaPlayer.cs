@@ -360,7 +360,7 @@ namespace LibVLCSharp
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format_callbacks")]
             internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup,
-                LibVLCVideoCleanupCb? cleanup);
+                InternalVideoCleanupCb? cleanup);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -2642,7 +2642,7 @@ namespace LibVLCSharp
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
         static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
         static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
-        static readonly LibVLCVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
+        static readonly InternalVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
         private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
@@ -2687,8 +2687,8 @@ namespace LibVLCSharp
             return 0;
         }
 
-        [MonoPInvokeCallback(typeof(LibVLCVideoCleanupCb))]
-        private static void VideoCleanupCallback(ref IntPtr opaque)
+        [MonoPInvokeCallback(typeof(InternalVideoCleanupCb))]
+        private static void VideoCleanupCallback(IntPtr opaque)
         {
             var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
             if (mediaPlayer?._videoCleanupCb != null)
@@ -2952,6 +2952,12 @@ namespace LibVLCSharp
         /// </param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVideoCleanupCb(ref IntPtr opaque);
+
+        /// <summary>
+        /// Native libvlc_video_cleanup_cb, which receives the opaque pointer itself (void*), not a pointer to it
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalVideoCleanupCb(IntPtr opaque);
 
         /// <summary>Callback prototype to setup the audio playback.</summary>
         /// <param name="opaque">
