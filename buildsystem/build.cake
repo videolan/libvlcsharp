@@ -31,6 +31,7 @@ var libraryProjects = new string[]
 var testCsprojs = new string[]
 {
     "../src/LibVLCSharp.Tests/LibVLCSharp.Tests.csproj",
+    "../src/LibVLCSharp.Avalonia.Tests/LibVLCSharp.Avalonia.Tests.csproj",
 };
 
 var packagesDir = "../packages";
@@ -72,6 +73,16 @@ Task("Restore-NuGet-Packages")
     DotNetRestore(solutionPath);
 });
 
+Task("Restore-Library-Packages")
+    .IsDependentOn("Clean")
+    .Does(() =>
+{
+    foreach(var project in libraryProjects)
+    {
+        DotNetRestore(project);
+    }
+});
+
 Task("unity")
     .Does(() =>
 {
@@ -90,7 +101,7 @@ Task("Build")
 });
 
 Task("Build-Libraries")
-    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("Restore-Library-Packages")
     .Does(() =>
 {
     foreach(var project in libraryProjects)
