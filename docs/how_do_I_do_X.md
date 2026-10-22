@@ -157,7 +157,7 @@ https://stackoverflow.com/questions/56487740/how-to-achieve-looping-playback-wit
 
 ```csharp
 using var libVLC = new LibVLC();
-using var media = new Media(libVLC, new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"));
+using var media = new Media(libVLC, new Uri("https://streams.videolan.org/misc/unity-samples/BigBuckBunny.avi"));
 
 await media.Parse(MediaParseOptions.ParseNetwork);
 
