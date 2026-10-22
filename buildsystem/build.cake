@@ -113,6 +113,7 @@ Task("Test")
 {
     var settings = new DotNetTestSettings
     {
+        Configuration = configuration,
         Loggers = new []{ "console;verbosity=detailed" }
     };
 
