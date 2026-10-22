@@ -358,7 +358,7 @@ namespace LibVLCSharp.Shared
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
                 EntryPoint = "libvlc_video_set_format_callbacks")]
             internal static extern void LibVLCVideoSetFormatCallbacks(IntPtr mediaPlayer, LibVLCVideoFormatCb setup,
-                LibVLCVideoCleanupCb? cleanup);
+                InternalVideoCleanupCb? cleanup);
 
 
             [DllImport(Constants.LibraryName, CallingConvention = CallingConvention.Cdecl,
@@ -1319,7 +1319,7 @@ namespace LibVLCSharp.Shared
             _videoFormatCb = formatCb ?? throw new ArgumentNullException(nameof(formatCb));
             _videoCleanupCb = cleanupCb;
             Native.LibVLCVideoSetFormatCallbacks(NativeReference, VideoFormatCallbackHandle,
-                (cleanupCb == null)? null : _videoCleanupCb);
+                (cleanupCb == null) ? null : VideoCleanupCallbackHandle);
         }
 
         /// <summary>
@@ -1786,6 +1786,7 @@ namespace LibVLCSharp.Shared
         static readonly LibVLCVideoUnlockCb VideoUnlockCallbackHandle = VideoUnlockCallback;
         static readonly LibVLCVideoDisplayCb VideoDisplayCallbackHandle = VideoDisplayCallback;
         static readonly LibVLCVideoFormatCb VideoFormatCallbackHandle = VideoFormatCallback;
+        static readonly InternalVideoCleanupCb VideoCleanupCallbackHandle = VideoCleanupCallback;
 
         [MonoPInvokeCallback(typeof(LibVLCVideoLockCb))]
         private static IntPtr VideoLockCallback(IntPtr opaque, IntPtr planes)
@@ -1828,6 +1829,16 @@ namespace LibVLCSharp.Shared
             }
 
             return 0;
+        }
+
+        [MonoPInvokeCallback(typeof(InternalVideoCleanupCb))]
+        private static void VideoCleanupCallback(IntPtr opaque)
+        {
+            var mediaPlayer = MarshalUtils.GetInstance<MediaPlayer>(opaque);
+            if (mediaPlayer?._videoCleanupCb != null)
+            {
+                mediaPlayer._videoCleanupCb(ref mediaPlayer._videoUserData);
+            }
         }
 
         static readonly LibVLCAudioPlayCb AudioPlayCallbackHandle = AudioPlayCallback;
@@ -2015,6 +2026,12 @@ namespace LibVLCSharp.Shared
         /// </param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LibVLCVideoCleanupCb(ref IntPtr opaque);
+
+        /// <summary>
+        /// Native libvlc_video_cleanup_cb, which receives the opaque pointer itself (void*), not a pointer to it
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void InternalVideoCleanupCb(IntPtr opaque);
 
         /// <summary>Callback prototype to setup the audio playback.</summary>
         /// <param name="opaque">
