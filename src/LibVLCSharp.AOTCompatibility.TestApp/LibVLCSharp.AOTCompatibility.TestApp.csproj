@@ -12,5 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibVLCSharp\LibVLCSharp.csproj" />
+    <TrimmerRootAssembly Include="LibVLCSharp" />
   </ItemGroup>
 </Project>

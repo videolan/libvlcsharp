@@ -4,3 +4,4 @@
 [assembly: InternalsVisibleTo("LibVLCSharp.MAUI")]
 [assembly: InternalsVisibleTo("LibVLCSharp.Uno")]
 [assembly: InternalsVisibleTo("LibVLCSharp.Tests")]
+[assembly: InternalsVisibleTo("LibVLCSharp.AOTCompatibility.TestApp")]
