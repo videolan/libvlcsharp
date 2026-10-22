@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 using NUnit.Framework;
@@ -190,6 +192,56 @@ namespace LibVLCSharp.Tests
             mp.Dispose();
 
             Assert.That(IntPtr.Zero == mp.NativeReference);
+        }
+
+        [Test]
+        public async Task VideoFormatCleanupCallbackReceivesUserData()
+        {
+            const uint width = 64;
+            const uint height = 64;
+            var userData = new IntPtr(0x1234);
+            var buffer = Marshal.AllocHGlobal((int)(width * height * 4));
+            // continuations must not run on the libvlc thread raising the callback, or Stop() would deadlock
+            var firstFrame = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var cleanupUserData = new TaskCompletionSource<IntPtr>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            try
+            {
+                // the visualization renders video from the local audio file
+                using var libVLC = new LibVLC("--aout=adummy", "--audio-visual=visual");
+                using var mp = new MediaPlayer(libVLC);
+                using var media = new Media(libVLC, RealMp3Path);
+
+                mp.SetVideoCallbacks((opaque, planes) =>
+                {
+                    Marshal.WriteIntPtr(planes, buffer);
+                    firstFrame.TrySetResult(true);
+                    return IntPtr.Zero;
+                }, null, null);
+                mp.SetVideoFormatCallbacks((ref IntPtr opaque, IntPtr chroma, ref uint w, ref uint h, ref uint pitches, ref uint lines) =>
+                {
+                    Marshal.Copy(Encoding.ASCII.GetBytes("RV32"), 0, chroma, 4);
+                    w = width;
+                    h = height;
+                    pitches = width * 4;
+                    lines = height;
+                    opaque = userData;
+                    return 1;
+                }, (ref IntPtr opaque) => cleanupUserData.TrySetResult(opaque));
+
+                Assert.That(mp.Play(media));
+                Assert.That(await Task.WhenAny(firstFrame.Task, Task.Delay(10000)), Is.SameAs(firstFrame.Task), "no video frame was rendered");
+
+                // closing the video output calls the cleanup callback
+                mp.Stop();
+
+                Assert.That(await Task.WhenAny(cleanupUserData.Task, Task.Delay(10000)), Is.SameAs(cleanupUserData.Task), "cleanup callback was not called");
+                Assert.That(cleanupUserData.Task.Result, Is.EqualTo(userData));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
         }
 
         [Test]
