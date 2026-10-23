@@ -79,7 +79,7 @@ namespace LibVLCSharp.MAUI
         private View _gestureListener;
 
         /// <summary>
-        /// Defaut Constructor.
+        /// Default Constructor.
         /// </summary>
         public SwipeToUnLockView()
         {
@@ -91,7 +91,7 @@ namespace LibVLCSharp.MAUI
         }
 
         /// <summary>
-        /// The event wich will trigger when the view is completely swiped.
+        /// The event which will trigger when the view is completely swiped.
         /// </summary>
         public event EventHandler? SlideCompleted = null;
 
