@@ -143,7 +143,7 @@ namespace LibVLCSharp.WPF
             }
 
             /*
-             * Note that _bckgnd.ActualWidth and _bckgnd.ActualWidth are in local coordinates
+             * Note that _bckgnd.ActualWidth and _bckgnd.ActualHeight are in local coordinates
              * and not in screen coordinates.
              *
              * Sizes in local and screen coordinates differ when a scale transformation has
