@@ -115,7 +115,7 @@ namespace LibVLCSharp
         /// <param name="onBuffer">Required synchronous consumer of a span over the native buffer, without an intermediate copy.
         /// The span is valid only during the callback; copy bytes that must be retained.</param>
         /// <param name="stateChanged">Optional state observer.</param>
-        /// <param name="subitems">Optional observer of a borrowed list, disposed after the callback. Retain individual media by accessing list items.</param>
+        /// <param name="subitems">Optional observer of a borrowed list, disposed after the callback. Keep individual media with <see cref="Media.Retain"/>.</param>
         /// <param name="slaves">Optional observer of copied audio/subtitle slave descriptions.</param>
         /// <remarks>
         /// Callbacks can run before Queue returns, on native threads. Keep them short and do not call

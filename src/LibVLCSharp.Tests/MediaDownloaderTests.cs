@@ -291,7 +291,7 @@ namespace LibVLCSharp.Tests
                 File.WriteAllText(playlist, "#EXTM3U\n" + new Uri(LocalAudioFile).AbsoluteUri + "\n");
                 using var media = new Media(playlist);
                 using var request = _downloader.Queue(media, (buffer, position, total) => buffer.Length,
-                    subitems: list => subitem = list[0]);
+                    subitems: list => subitem = list[0].Retain());
                 Assert.AreEqual(DownloadStatus.Error, await request.Completion.WaitAsync(Timeout));
                 Assert.NotNull(subitem);
                 Assert.AreEqual(Uri.UnescapeDataString(new Uri(LocalAudioFile).AbsoluteUri), Uri.UnescapeDataString(subitem.Mrl));
