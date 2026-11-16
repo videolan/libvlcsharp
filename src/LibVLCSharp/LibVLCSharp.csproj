@@ -89,6 +89,9 @@ LibVLC needs to be installed separately, see VideoLAN.LibVLC.* packages.</Descri
       <HintPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Xamarin.VisualStudio\Xamarin.Mac.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.1' And '$(TargetFramework)' != 'net40' And '$(TargetFramework)' != 'net45' And !$(DefineConstants.Contains('UWP')) ">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+  </ItemGroup>
   <Target Name="IncludeAWindow">
     <ItemGroup>
       <BuildOutputInPackage Condition="$(TargetFramework.Contains('monoandroid'))" Include="$(OutputPath)LibVLCSharp.Android.AWindow.dll" />

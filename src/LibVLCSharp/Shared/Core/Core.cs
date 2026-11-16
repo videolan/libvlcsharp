@@ -7,6 +7,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using LibVLCSharp.Shared.Helpers;
 
+#if !UWP10_0 && !NETSTANDARD1_1 && !NET45 && !NET40
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+#endif
+
 namespace LibVLCSharp.Shared
 {
     /// <summary>
@@ -47,6 +52,31 @@ namespace LibVLCSharp.Shared
         static string LibVLCPath(string dir) => Path.Combine(dir, $"{Constants.LibraryName}{LibraryExtension}");
         static string LibVLCCorePath(string dir) => Path.Combine(dir, $"{Constants.CoreLibraryName}{LibraryExtension}");
         static string LibraryExtension => PlatformHelper.IsWindows ? Constants.WindowsLibraryExtension : Constants.MacLibraryExtension;
+
+#if !UWP10_0 && !NETSTANDARD1_1 && !NET45 && !NET40
+        static ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
+        static ILogger _logger = NullLogger.Instance;
+
+        /// <summary>
+        /// Initializes LibVLC and sends LibVLCSharp's managed logs to the given factory.
+        /// <para/> If <paramref name="loggerFactory"/> is null, logs are discarded.
+        /// <para/> The factory is set before native libraries are loaded, so startup messages are captured too.
+        /// </summary>
+        /// <param name="loggerFactory">The factory used to create LibVLCSharp's logger.</param>
+        /// <param name="libvlcDirectoryPath">The path to the directory that contains libvlc and libvlccore.
+        /// See <see cref="Initialize(string)"/>.</param>
+        public static void InitializeWithLogger(ILoggerFactory loggerFactory, string? libvlcDirectoryPath = null)
+        {
+            _loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+            _logger = _loggerFactory.CreateLogger("LibVLCSharp");
+            Initialize(libvlcDirectoryPath);
+        }
+
+        static void Log(string message)
+        {
+            _logger.LogDebug("{Message}", message);
+        }
+#else
         static void Log(string message)
         {
 #if !UWP10_0 && !NETSTANDARD1_1
@@ -55,6 +85,7 @@ namespace LibVLCSharp.Shared
             Debug.WriteLine(message);
 #endif
         }
+#endif
 
         static bool _libvlcLoaded;
         static internal bool LibVLCLoaded
